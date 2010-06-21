@@ -1,0 +1,37 @@
+move media-gfx/gimp-print net-print/gutenprint
+move app-vim/ant app-vim/ant_menu
+move media-libs/x264-svn media-libs/x264
+move media-video/x264-svn-encoder media-video/x264-encoder
+move media-fonts/skinenigmang-fonts media-fonts/vdrsymbols-ttf
+move sys-fs/cryptsetup-luks sys-fs/cryptsetup
+move sys-fs/fuse-python dev-python/fuse-python
+move app-admin/dirvish app-backup/dirvish
+move x11-drivers/xf86-video-amd x11-drivers/xf86-video-geode
+move x11-misc/grpn sci-calculators/grpn
+move xfce-extra/squeeze app-arch/squeeze
+move app-admin/skey sys-auth/skey
+move app-admin/otpcalc sys-auth/otpcalc
+move xfce-extra/xarchiver app-arch/xarchiver
+move gnome-extra/zim x11-misc/zim
+move xfce-extra/xfmedia media-video/xfmedia
+slotmove x11-libs/openmotif 2.1 0
+slotmove x11-libs/openmotif 2.2 0
+slotmove x11-libs/openmotif 2.3 0
+slotmove x11-libs/lesstif 2.1 0
+move app-doc/chmlib dev-libs/chmlib
+move app-doc/kchmviewer app-text/kchmviewer
+move media-fonts/ttf-sil-charis media-fonts/sil-charis
+move media-fonts/ttf-sil-arabicfonts media-fonts/sil-arabicfonts
+move media-fonts/ttf-sil-ezra media-fonts/sil-ezra
+move media-fonts/ttf-gentium media-fonts/sil-gentium
+move x11-misc/xchm app-text/xchm
+move media-fonts/ttf-sil-abyssinica media-fonts/sil-abyssinica
+move media-fonts/ttf-sil-doulos media-fonts/sil-doulos
+move media-fonts/ttf-sil-padauk media-fonts/sil-padauk
+move media-fonts/ttf-sil-galatia media-fonts/sil-galatia
+move xfce-extra/xfmpc media-sound/xfmpc
+move media-fonts/fireflysung media-fonts/opendesktop-fonts
+move app-portage/portage-manpages app-portage/eclass-manpages
+move gnome-extra/gnome2-user-docs gnome-extra/gnome-user-docs
+move gnome-base/control-center gnome-base/gnome-control-center
+move media-video/cinelerra-cvs media-video/cinelerra

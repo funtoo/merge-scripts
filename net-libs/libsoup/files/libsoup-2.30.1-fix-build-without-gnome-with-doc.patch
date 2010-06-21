@@ -1,0 +1,58 @@
+From c8ff78e489ccf5becd1ae309222b7977510558e6 Mon Sep 17 00:00:00 2001
+From: Priit Laes <plaes@plaes.org>
+Date: Thu, 25 Feb 2010 20:59:51 +0200
+Subject: [PATCH] Split docs into libsoup and libsoup-gnome.
+
+Fixes Gentoo Bug 268592, patch adapted from upstream patch.
+
+Modified to apply to a release tarball (no libsoup-2.4-docs.sgml.in)
+Hence, to be applied ONLY when !gnome && doc
+---
+ docs/reference/Makefile.am           |    5 ++++-
+ docs/reference/libsoup-2.4-docs.sgml |    2 ++
+ 2 files changed, 6 insertions(+), 1 deletions(-)
+
+diff --git a/docs/reference/Makefile.am b/docs/reference/Makefile.am
+index 64d3cf8..8b91b7f 100644
+--- a/docs/reference/Makefile.am
++++ b/docs/reference/Makefile.am
+@@ -38,6 +38,9 @@ IGNORE_HFILES= soup.h soup-marshal.h soup-enum-types.h \
+ 	soup-proxy-resolver.h soup-proxy-resolver-gnome.h \
+ 	soup-proxy-resolver-static.h
+ 
++IGNORE_HFILES += soup-cookie-jar-sqlite.h \
++   soup-gnome.h soup-gnome-features.h
++
+ # Images to copy into HTML directory.
+ HTML_IMAGES = 
+ 
+@@ -62,7 +65,7 @@ GTKDOC_CFLAGS =				\
+ 	$(GNUTLS_CFLAGS)		\
+ 	$(LIBPROXY_LIBS)
+ 
+-GTKDOC_LIBS = $(top_builddir)/libsoup/libsoup-gnome-2.4.la
++GTKDOC_LIBS = $(top_builddir)/libsoup/libsoup-2.4.la
+ 
+ # include common portion ...
+ include $(top_srcdir)/gtk-doc.make
+diff --git a/docs/reference/libsoup-2.4-docs.sgml b/docs/reference/libsoup-2.4-docs.sgml
+index 3cb3d11..707e525 100644
+--- a/docs/reference/libsoup-2.4-docs.sgml
++++ b/docs/reference/libsoup-2.4-docs.sgml
+@@ -52,11 +52,13 @@
+     <xi:include href="xml/soup-value-utils.xml"/>
+   </chapter>
+ 
++<!--
+   <chapter>
+     <title>GNOME integration</title>
+     <xi:include href="xml/soup-gnome-features.xml"/>
+     <xi:include href="xml/soup-cookie-jar-sqlite.xml"/>
+   </chapter>
++-->
+ 
+   <chapter>
+     <title>Low-level Networking API</title>
+-- 
+1.7.0
+

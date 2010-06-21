@@ -1,0 +1,34 @@
+# Daniel Robbins <drobbins@funtoo.org> (20 Apr 2010)
+# udev-146-r2 works with latest RHEL-based openvz-sources, but
+# udev-151+ does not. 146 can move to unstable now.
+>=sys-fs/udev-147
+
+# Piotr Karbowski <jabberuser@gmail.com> (15 April 2010)
+# Mask new xorg-server due depends on newer udev.
+>=x11-base/xorg-server-1.8.0
+# +24-04-2010: Mask synaptics which depends on xorg-server-1.8.0.
+=x11-drivers/xf86-input-synaptics-1.2.2-r2
+
+# Daniel Robbins <drobbins@funtoo.org> (6 Aug 2009)
+# Mask new versions for caution, and these should all
+# be tested and upgraded together. This helps ensure that
+# any new glibc upgrade will be built against any upgraded
+# linux-headers.
+
+# For toolchain upgrade ll-2010.2:
+>sys-libs/glibc-2.10.1-r1
+>sys-kernel/linux-headers-2.6.32
+>sys-devel/gcc-4.4.3
+>sys-devel/binutils-2.20.1
+
+# Daniel Robbins <drobbins@funtoo.org> (02 Aug 2009)
+# let's watch upstream bugs for a bit:
+>=dev-lang/python-3
+
+# Daniel Robbins <drobbins@funtooo.org> (22 Jul 2009)
+# I only recommend the 2.6.18 stable openvz-sources
+>=sys-kernel/openvz-sources-2.6.19
+
+# Dantrell B. <dantrell@mirthil.org> (24 Feb 2009)
+# Masked for caution.
+>=dev-lang/php-5.3.0_beta1

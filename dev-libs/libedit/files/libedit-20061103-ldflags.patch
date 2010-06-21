@@ -1,0 +1,8 @@
+--- netbsd-cvs/Makefile.orig	2009-01-04 23:09:48.705130795 +0100
++++ netbsd-cvs/Makefile	2009-01-04 23:09:55.836326665 +0100
+@@ -118,4 +118,4 @@
+ libedit.a: $(OOBJS)
+ 	$(AR) -r $@ .a/*
+ libedit.so: $(OOBJS)
+-	$(CC) --shared -o $@ .so/* $(LIBS) -Wl,-soname,libedit.so
++	$(CC) $(LDFLAGS) --shared -o $@ .so/* $(LIBS) -Wl,-soname,libedit.so

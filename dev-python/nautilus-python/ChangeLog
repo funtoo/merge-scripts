@@ -1,0 +1,28 @@
+# ChangeLog for dev-python/nautilus-python
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/dev-python/nautilus-python/ChangeLog,v 1.4 2010/03/29 11:10:25 fauli Exp $
+
+  29 Mar 2010; Christian Faulhammer <fauli@gentoo.org>
+  -nautilus-python-0.5.1-r1.ebuild,
+  -files/nautilus-python-0.5.1-CVE-2009-0317.patch,
+  -files/nautilus-python-0.5.1-submenu-example.patch:
+  clean up
+
+  28 Mar 2010; Peter Volkov <pva@gentoo.org> nautilus-python-0.6.1.ebuild:
+  Dropped eel from DEPEND, bug #301922#c2, thank Michael Weber and Rion for
+  report.
+
+*nautilus-python-0.6.1 (23 Jan 2010)
+
+  23 Jan 2010; Peter Volkov <pva@gentoo.org> +nautilus-python-0.6.1.ebuild:
+  Version bump, bug #301922, thank Christian Faulhammer for report.
+
+*nautilus-python-0.5.1-r1 (20 Aug 2009)
+
+  20 Aug 2009; Peter Volkov <pva@gentoo.org>
+  +nautilus-python-0.5.1-r1.ebuild,
+  +files/nautilus-python-0.5.1-CVE-2009-0317.patch,
+  +files/nautilus-python-0.5.1-submenu-example.patch, +metadata.xml:
+  Initial import: merged bazaar and rion overlays. Bug #78021, thank Caleb
+  Shay, Christian Faulhammer and Rion.
+

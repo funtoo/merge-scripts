@@ -1,0 +1,96 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/default/bsd/fbsd/package.use.mask,v 1.11 2010/04/22 18:30:24 aballier Exp $
+
+# Jim Ramsay <lack@gentoo.org> (5 Nov 2008)
+# app-admin/gkrellm may pull in net-libs/libntlm, which is not keyworded
+app-admin/gkrellm ntlm
+
+# As per UberLord's requests
+sys-apps/openrc pam
+
+# Doug Goldstein <cardoe@gentoo.org> (10 Sep 2007)
+# ConsoleKit now works with everything but the pam module
+sys-auth/consolekit pam
+
+# Jim Ramsay <lack@gentoo.org> (7 Sep 2007)
+# app-admin/gkrellm may pull in hddtemp, which is not yet available here
+app-admin/gkrellm hddtemp
+
+# Threaded Postgres is a total no go - initdb hands and psql
+# segfaults when result set requires a pager
+dev-db/libpq threads
+dev-db/postgresql threads
+
+# Somehow, check's tests are broken..
+dev-libs/confuse test
+dev-util/checkstyle test
+
+# Dillo won't run on FreeBSD
+# PDA masked until we can do some testing on it
+mail-client/claws-mail dillo pda
+
+# Original spell plugin uses ispell that requires
+# miscfiles.. that in turn does not work
+net-irc/rbot spell
+
+# Diego Pettenò <flameeyes@gentoo.org> (18 Jan 2007)
+# Vixie-Cron uses pam useflag for pam_limits.so that is provided
+# by Linux-PAM we don't use for now.
+sys-process/vixie-cron pam
+
+x11-misc/xscreensaver new-login
+
+# net-wireless/aircrack-ng - wireless capture tools not needed.
+net-wireless/aircrack-ng wifi
+
+# sane-backends not yet keyworded, xv doesn't build
+dev-python/imaging scanner X
+
+# Uses consolekit, which currently doesn't build
+gnome-base/gdm pam
+
+# Accessibility stuff uses festival, which doesn't build
+gnome-base/gnome accessibility
+
+# Test this later
+gnome-base/gnome ldap 
+
+# spell causes epiphany to segfault, so disable for the time being
+www-client/epiphany spell
+
+# Gilles Dartiguelongue <eva@gentoo.org> (22 Oct 2007)
+# GNU attr isn't supported
+dev-libs/glib xattr
+gnome-base/gnome-vfs acl
+
+# Joe Peterson <lavajoe@gentoo.org> (21 Nov 2007)
+# The following new swig USE flags are not supported (yet):
+dev-lang/swig clisp
+dev-lang/swig chicken
+
+# Diego Pettenò <flameeyes@gentoo.org> (21 Feb 2008)
+# ConsoleKit's PAM module only works on Linux right now.
+# pam_cracklib is only provided by Linux-PAM which is not usable on
+# Gentoo/FreeBSD.
+# Javier Villavicencio <the_paya@gentoo.org> (31 Jul 2008)
+# pam_ssh deps on Linux-PAM.
+# Diego Pettenò <flameeyes@gentoo.org> (1 Aug 2008)
+# sha512 is only supported by Linux-PAM's pam_unix for now
+sys-auth/pambase consolekit cracklib ssh sha512
+
+# Alexis Ballier <aballier@gentoo.org> (7 Apr 2008)
+# bug #216855
+# octave needs fftw which does not work of fbsd
+dev-lang/swig octave
+
+# Alexis Ballier <aballier@gentoo.org> (31 Jan 2009)
+# app-misc/tracker should work but needs some code fixups and it uses the fdatasync system call
+# that we do not have (bug #257052)
+# Mask it for now
+gnome-base/nautilus tracker
+media-video/totem tracker
+
+# Alexis Ballier <aballier@gentoo.org> (15 May 2009)
+# Needs xulrunner 1.9
+net-libs/libproxy xulrunner

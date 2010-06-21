@@ -1,0 +1,6 @@
+# Copyright 1999-2008 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/default/linux/sparc/10.0/use.mask,v 1.1 2009/08/06 06:51:40 ssuominen Exp $
+
+# this is not a multilib profile
+multilib

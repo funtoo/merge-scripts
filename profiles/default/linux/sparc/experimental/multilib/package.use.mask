@@ -1,0 +1,6 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/default/linux/sparc/experimental/multilib/package.use.mask,v 1.2 2009/07/31 11:19:09 ssuominen Exp $
+
+# Needs all X libraries in both 32 and 64 bit..
+sys-devel/gcc gtk

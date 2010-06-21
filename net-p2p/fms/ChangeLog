@@ -1,0 +1,111 @@
+# ChangeLog for net-p2p/fms
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/net-p2p/fms/ChangeLog,v 1.18 2010/04/05 12:19:37 tommy Exp $
+
+*fms-0.3.53 (05 Apr 2010)
+
+  05 Apr 2010; Thomas Sachau (Tommy[D]) <tommy@gentoo.org>
+  -fms-0.3.43.ebuild, +fms-0.3.53.ebuild:
+  Version bump
+
+  31 Mar 2010; Thomas Sachau (Tommy[D]) <tommy@gentoo.org> files/fms:
+  Apply changes from bug 273138
+
+*fms-0.3.51 (13 Mar 2010)
+
+  13 Mar 2010; Thomas Sachau (Tommy[D]) <tommy@gentoo.org>
+  -fms-0.3.42.ebuild, +fms-0.3.51.ebuild:
+  Version bump
+
+*fms-0.3.43 (02 Oct 2009)
+
+  02 Oct 2009; Thomas Sachau (Tommy[D]) <tommy@gentoo.org>
+  +fms-0.3.43.ebuild:
+  Version bump
+
+*fms-0.3.42 (01 Sep 2009)
+
+  01 Sep 2009; Thomas Sachau (Tommy[D]) <tommy@gentoo.org>
+  -files/utf8.patch, -fms-0.3.41.ebuild, +fms-0.3.42.ebuild:
+  Version bump
+
+*fms-0.3.41 (02 Aug 2009)
+
+  02 Aug 2009; Thomas Sachau (Tommy[D]) <tommy@gentoo.org>
+  -fms-0.3.39.ebuild, -fms-0.3.40.ebuild, +fms-0.3.41.ebuild,
+  files/fms-use-system-libs.patch:
+  Version bump, drop old versions
+
+*fms-0.3.40 (26 Jun 2009)
+
+  26 Jun 2009; Thomas Sachau (Tommy[D]) <tommy@gentoo.org>
+  -fms-0.3.36.ebuild, -fms-0.3.38.ebuild, fms-0.3.39.ebuild,
+  +fms-0.3.40.ebuild:
+  Version bump, adjust sqlite dependency
+
+*fms-0.3.39 (29 May 2009)
+
+  29 May 2009; Thomas Sachau (Tommy[D]) <tommy@gentoo.org>
+  +fms-0.3.39.ebuild:
+  Version bump
+
+  14 May 2009; Thomas Sachau (Tommy[D]) <tommy@gentoo.org>
+  -fms-0.3.32.ebuild, -fms-0.3.34.ebuild, -fms-0.3.35.ebuild,
+  fms-0.3.36.ebuild, +fms-0.3.38.ebuild:
+  Version bump, remove old versions, fix broken dobin due to cmake-utils
+  eclass change
+
+*fms-0.3.38 (14 May 2009)
+
+  14 May 2009; Thomas Sachau (Tommy[D]) <tommy@gentoo.org>
+  -fms-0.3.32.ebuild, -fms-0.3.34.ebuild, -fms-0.3.35.ebuild,
+  fms-0.3.36.ebuild, +fms-0.3.38.ebuild:
+  Version bump, fix broken dobin due to cmake-utils eclass change
+
+*fms-0.3.36 (03 May 2009)
+
+  03 May 2009; Thomas Sachau (Tommy[D]) <tommy@gentoo.org>
+  +fms-0.3.36.ebuild:
+  Version bump
+
+*fms-0.3.35 (08 Apr 2009)
+
+  08 Apr 2009; Thomas Sachau (Tommy[D]) <tommy@gentoo.org>
+  +files/fms-use-system-libs.patch, +fms-0.3.35.ebuild:
+  Version bump
+
+*fms-0.3.34 (19 Mar 2009)
+
+  19 Mar 2009; Thomas Sachau (Tommy[D]) <tommy@gentoo.org>
+  +files/utf8.patch, metadata.xml, -fms-0.3.29.ebuild,
+  -fms-0.3.31-r1.ebuild, +fms-0.3.34.ebuild:
+  Version bump, remove old
+
+*fms-0.3.32 (01 Mar 2009)
+
+  01 Mar 2009; Thomas Sachau (Tommy[D]) <tommy@gentoo.org>
+  +fms-0.3.32.ebuild:
+  Version bump
+
+*fms-0.3.31-r1 (12 Feb 2009)
+
+  12 Feb 2009; Thomas Sachau (Tommy[D]) <tommy@gentoo.org> files/fms,
+  -fms-0.3.31.ebuild, +fms-0.3.31-r1.ebuild:
+  Fixing the init.d script, thanks to Dennis Nezic for the pointer
+
+*fms-0.3.31 (10 Feb 2009)
+
+  10 Feb 2009; Thomas Sachau (Tommy[D]) <tommy@gentoo.org>
+  +fms-0.3.31.ebuild:
+  Version bump
+
+  05 Feb 2009; Thomas Sachau (Tommy[D]) <tommy@gentoo.org> files/fms:
+  Fix init.d script, only sleep on restart
+
+*fms-0.3.29 (05 Feb 2009)
+
+  05 Feb 2009; Thomas Sachau (Tommy[D]) <tommy@gentoo.org> +files/fms,
+  +fms-0.3.29.ebuild:
+  Initial commit. Fixes bug 240087. Thanks to Dennis Nezic for the initial
+  ebuild.
+

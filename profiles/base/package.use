@@ -1,0 +1,8 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/base/package.use,v 1.26 2009/12/04 19:54:54 zmedico Exp $
+
+# Zac Medico <zmedico@gentoo.org> (04 Dec 2009)
+# Bug #295615 - Disable cxx by default, in order to avoid a die
+# in pkg_setup with default USE settings (cxx requires sasl).
+net-nds/openldap -cxx

@@ -1,0 +1,12 @@
+# Copyright 2004-2009 Gentoo Foundation.
+# Distributed under the terms of the GNU General Public License, v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/default/bsd/fbsd/amd64/7.2/make.defaults,v 1.2 2010/06/11 14:10:31 ulm Exp $
+# System-wide defaults for the x86 G/FBSD 7.2 Portage system
+
+CHOST="x86_64-gentoo-freebsd7.2"
+CHOST_amd64_fbsd="x86_64-gentoo-freebsd7.2"
+CHOST_x86_fbsd="i686-gentoo-freebsd7.2"
+
+# Diego Pettenò <flameeyes@gentoo.org> (2 Dec 2006)
+# Turn this on by default as we don't have Java 1.4 and 1.5 at all
+USE="${USE} java6"

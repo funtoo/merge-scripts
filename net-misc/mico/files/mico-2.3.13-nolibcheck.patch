@@ -1,0 +1,32 @@
+don't check for libbsd and libelf, they aren't needed anywhere.
+
+--- configure.in.orig	2009-02-02 14:34:14.000000000 +0100
++++ configure.in	2009-02-02 14:37:45.000000000 +0100
+@@ -1237,9 +1237,7 @@
+ 
+ 
+ AC_CHECK_LIB(socket, open)
+-AC_CHECK_LIB(bsd, open)
+ 
+-AC_CHECK_LIB(elf, open)
+ AC_CHECK_LIB(dl, open)
+ AC_CHECK_LIB(dld, open)
+ AC_CHECK_LIB(ld, open)
+--- configure.orig	2009-02-02 14:34:02.000000000 +0100
++++ configure	2009-02-02 14:36:34.000000000 +0100
+@@ -5864,6 +5864,7 @@
+ echo $ac_n "checking for open in -lbsd""... $ac_c" 1>&6
+ echo "configure:5866: checking for open in -lbsd" >&5
+ ac_lib_var=`echo bsd'_'open | sed 'y%./+-%__p_%'`
++eval ac_cv_lib_$ac_lib_var=no
+ if eval "test \"`echo '$''{'ac_cv_lib_$ac_lib_var'+set}'`\" = set"; then
+   echo $ac_n "(cached) $ac_c" 1>&6
+ else
+@@ -5915,6 +5916,7 @@
+ echo $ac_n "checking for open in -lelf""... $ac_c" 1>&6
+ echo "configure:5917: checking for open in -lelf" >&5
+ ac_lib_var=`echo elf'_'open | sed 'y%./+-%__p_%'`
++eval ac_cv_lib_$ac_lib_var=no
+ if eval "test \"`echo '$''{'ac_cv_lib_$ac_lib_var'+set}'`\" = set"; then
+   echo $ac_n "(cached) $ac_c" 1>&6
+ else

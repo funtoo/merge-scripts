@@ -1,0 +1,139 @@
+diff -urpN mediatomb-0.11.0.orig/src/cds_resource_manager.cc mediatomb-0.11.0/src/cds_resource_manager.cc
+--- mediatomb-0.11.0.orig/src/cds_resource_manager.cc	2008-05-26 23:14:56.000000000 +1000
++++ mediatomb-0.11.0/src/cds_resource_manager.cc	2008-05-26 23:14:56.000000000 +1000
+@@ -184,6 +184,30 @@ void CdsResourceManager::addResources(Re
+                 t_res->addAttribute(MetadataHandler::getResAttrName(R_DURATION),
+                         duration);
+ 
++            int freq = tp->getSampleFreq();
++            if (freq == SOURCE)
++            {
++                String frequency = item->getResource(0)->getAttribute(MetadataHandler::getResAttrName(R_SAMPLEFREQUENCY));
++                if (string_ok(frequency))
++                     t_res->addAttribute(MetadataHandler::getResAttrName(R_SAMPLEFREQUENCY), frequency);
++            }
++            else if (freq != OFF)
++            {
++                t_res->addAttribute(MetadataHandler::getResAttrName(R_SAMPLEFREQUENCY), String::from(freq));
++            }
++
++            int chan = tp->getNumChannels();
++            if (chan == SOURCE)
++            {
++                String nchannels = item->getResource(0)->getAttribute(MetadataHandler::getResAttrName(R_NRAUDIOCHANNELS));
++                if (string_ok(nchannels))
++                     t_res->addAttribute(MetadataHandler::getResAttrName(R_NRAUDIOCHANNELS), nchannels);
++            }
++            else if (chan != OFF)
++            {
++                t_res->addAttribute(MetadataHandler::getResAttrName(R_NRAUDIOCHANNELS), String::from(chan));
++            }
++
+             if (tp->isThumbnail())
+                 t_res->addOption(_(RESOURCE_CONTENT_TYPE), _(EXIF_THUMBNAIL));
+ 
+diff -urpN mediatomb-0.11.0.orig/src/config_manager.cc mediatomb-0.11.0/src/config_manager.cc
+--- mediatomb-0.11.0.orig/src/config_manager.cc	2008-05-26 23:14:56.000000000 +1000
++++ mediatomb-0.11.0/src/config_manager.cc	2008-05-26 23:14:56.000000000 +1000
+@@ -2092,6 +2092,43 @@ Ref<TranscodingProfileList> ConfigManage
+                 prof->setAcceptURL(false);
+         }
+ 
++        if (child->getChildByName(_("sample-frequency")) != nil)
++        {
++            param = child->getChildText(_("sample-frequency"));
++            if (param == "source")
++                prof->setSampleFreq(SOURCE);
++            else if (param == "off")
++                prof->setSampleFreq(OFF);
++            else
++            {
++                int freq = param.toInt();
++                if (freq <= 0)
++                    throw _Exception(_("Error in config file: incorrect "
++                                       "parameter for <sample-frequency> "
++                                       "tag"));
++
++                prof->setSampleFreq(freq);
++            }
++        }
++
++        if (child->getChildByName(_("audio-channels")) != nil)
++        {
++            param = child->getChildText(_("audio-channels"));
++            if (param == "source")
++                prof->setNumChannels(SOURCE);
++            else if (param == "off")
++                prof->setNumChannels(OFF);
++            else
++            {
++                int chan = param.toInt();
++                if (chan <= 0)
++                    throw _Exception(_("Error in config file: incorrect "
++                                       "parameter for <number-of-channels> "
++                                       "tag"));
++                prof->setNumChannels(chan);
++            }
++        }
++
+         if (child->getChildByName(_("hide-original-resource")) != nil)
+         {
+             param = child->getChildText(_("hide-original-resource"));
+diff -urpN mediatomb-0.11.0.orig/src/transcoding/transcoding.cc mediatomb-0.11.0/src/transcoding/transcoding.cc
+--- mediatomb-0.11.0.orig/src/transcoding/transcoding.cc	2008-05-26 23:14:56.000000000 +1000
++++ mediatomb-0.11.0/src/transcoding/transcoding.cc	2008-05-26 23:14:56.000000000 +1000
+@@ -52,6 +52,8 @@ TranscodingProfile::TranscodingProfile()
+     accept_url = true;
+     hide_orig_res = false;
+     thumbnail = false;
++    sample_frequency = SOURCE; // keep original
++    number_of_channels = SOURCE;
+     attributes = Ref<Dictionary>(new Dictionary());
+     fourcc_list = Ref<Array<StringBase> >(new Array<StringBase>());
+     fourcc_mode = FCC_None;
+@@ -66,6 +68,8 @@ TranscodingProfile::TranscodingProfile(t
+     accept_url = true;
+     hide_orig_res = false;
+     thumbnail = false;
++    sample_frequency = SOURCE; // keep original
++    number_of_channels = SOURCE;
+     buffer_size = 0;
+     chunk_size = 0;
+     initial_fill_size = 0;
+diff -urpN mediatomb-0.11.0.orig/src/transcoding/transcoding.h mediatomb-0.11.0/src/transcoding/transcoding.h
+--- mediatomb-0.11.0.orig/src/transcoding/transcoding.h	2008-05-26 23:14:56.000000000 +1000
++++ mediatomb-0.11.0/src/transcoding/transcoding.h	2008-05-26 23:14:56.000000000 +1000
+@@ -39,6 +39,9 @@
+ #include "dictionary.h"
+ #include "object_dictionary.h"
+ 
++#define SOURCE  (-1)
++#define OFF       0
++
+ typedef enum transcoding_type_t
+ {
+     TR_None,
+@@ -164,6 +167,14 @@ public:
+     /// \brief Provides information on the mode of the list
+     avi_fourcc_listmode_t getAVIFourCCListMode() { return fourcc_mode; }
+ 
++    /// \brief Sample frequency handling
++    void setSampleFreq(int freq) { sample_frequency = freq; }
++    int getSampleFreq() { return sample_frequency; }
++
++    /// \brief Number of channels
++    void setNumChannels(int chans) { number_of_channels = chans; }
++    int getNumChannels() { return number_of_channels; }
++
+ protected:
+     zmm::String name;
+     zmm::String tm;
+@@ -178,6 +189,8 @@ protected:
+     size_t chunk_size;
+     size_t initial_fill_size;
+     transcoding_type_t tr_type;
++    int number_of_channels;
++    int sample_frequency;
+     zmm::Ref<Dictionary> attributes;
+     zmm::Ref<zmm::Array<zmm::StringBase> > fourcc_list;
+     avi_fourcc_listmode_t fourcc_mode;

@@ -1,0 +1,39 @@
+# Copyright 1999-2005 Gentoo Foundation.
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/hardened/packages.build,v 1.4 2007/02/11 17:08:53 phreak Exp $
+
+app-arch/bzip2
+app-arch/tar
+app-shells/bash
+net-misc/rsync
+net-misc/wget
+sys-apps/baselayout
+sys-devel/autoconf
+sys-devel/automake
+sys-devel/libtool
+sys-apps/coreutils
+sys-apps/debianutils
+sys-apps/diffutils
+sys-apps/file
+sys-apps/findutils
+sys-apps/gawk
+sys-apps/grep
+sys-apps/less
+sys-apps/net-tools
+sys-apps/portage
+sys-apps/sed
+sys-apps/texinfo
+sys-devel/binutils
+sys-devel/bison
+sys-devel/flex
+sys-devel/gcc
+sys-devel/gettext
+sys-devel/gnuconfig
+sys-devel/make
+sys-devel/patch
+dev-lang/perl
+dev-lang/python
+virtual/editor
+virtual/gzip
+virtual/libc
+virtual/os-headers

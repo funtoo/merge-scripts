@@ -1,0 +1,253 @@
+# ChangeLog for media-tv/xbmc
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/media-tv/xbmc/ChangeLog,v 1.59 2010/06/19 00:57:39 abcd Exp $
+
+  19 Jun 2010; Jonathan Callen <abcd@gentoo.org> xbmc-9999.ebuild:
+  Moving dev-util/cvs* to dev-vcs/cvs*
+
+  23 May 2010; Mike Frysinger <vapier@gentoo.org> xbmc-9999.ebuild:
+  Run autotools in more subdirs, update docdir install, and convert to
+  emake+DESTDIR for installing.
+
+  23 May 2010; Mike Frysinger <vapier@gentoo.org> xbmc-9999.ebuild:
+  Make hal support optional via USE=hal now that upstream supports it
+  #319193 by hal.
+
+  23 May 2010; Mike Frysinger <vapier@gentoo.org> xbmc-9.11-r4.ebuild,
+  xbmc-9999.ebuild:
+  Sync recent updates between the release/live ebuilds.
+
+*xbmc-9.11-r4 (23 May 2010)
+
+  23 May 2010; Mike Frysinger <vapier@gentoo.org> +xbmc-9.11-r4.ebuild,
+  +files/xbmc-9.11-TexturePacker-parallel-build.patch,
+  +files/xbmc-9.11-shader-upscalers.patch:
+  Force python-2.4 usage #304521 by Domen Kožar. Apply upshader patch from
+  upstream #306661 by zehner. Install the xbmc-send helper python script
+  #309885 by James Broadhead.
+
+  23 May 2010; Mike Frysinger <vapier@gentoo.org> xbmc-9999.ebuild,
+  metadata.xml:
+  Stop installing web styles since they no longer exist #305969 by Thomas
+  Andersson. Require opengl support in libsdl #311891 by Stijn Tintel, and
+  require -minimal support in libcdio #311893 by Stijn Tintel. Update dodoc
+  line #316081 by Diego E. Pettenò. Add USE=vaapi support #319701 by hal.
+
+  23 May 2010; Mike Frysinger <vapier@gentoo.org> xbmc-9.11-r3.ebuild:
+  Update dodoc line #316081 by Diego E. Pettenò.
+
+  14 May 2010; Samuli Suominen <ssuominen@gentoo.org> xbmc-9.11-r3.ebuild:
+  Don't apply -libpng14.patch with libpng12 wrt #319721 by Martin von
+  Gagern.
+
+  10 May 2010; Samuli Suominen <ssuominen@gentoo.org> xbmc-9.11-r3.ebuild,
+  +files/xbmc-9.11-libpng14.patch:
+  Fix building with libpng14 wrt #319113 by Manuel Nickschas.
+
+  07 Apr 2010; Patrick Lauer <patrick@gentoo.org> xbmc-9.11.ebuild,
+  xbmc-9.11-r3.ebuild, xbmc-9999.ebuild:
+  Fixing samba deps
+
+  07 Apr 2010; Tomáš Chvátal <scarabeus@gentoo.org> xbmc-9.11.ebuild,
+  xbmc-9.11-r3.ebuild, xbmc-9999.ebuild:
+  Drop unrar-gpl dependencies. Unrar-gpl cant open most rars that are
+  around.
+
+*xbmc-9.11-r3 (18 Mar 2010)
+
+  18 Mar 2010; Fabio Erculiani <lxnay@gentoo.org> -xbmc-9.11-r2.ebuild,
+  +xbmc-9.11-r3.ebuild,
+  +files/xbmc-9.11-use-cdio-system-headers-on-non-win32.patch:
+  backport libcdio patch from trunk, makes DVD playback working, close
+  #303030, upstream reference #8026
+
+*xbmc-9.11-r2 (18 Mar 2010)
+
+  18 Mar 2010; Fabio Erculiani <lxnay@gentoo.org> -xbmc-9.11-r1.ebuild,
+  +xbmc-9.11-r2.ebuild:
+  temp. workaround inability to play DVDs, see bug #303030
+
+  07 Mar 2010; Mike Frysinger <vapier@gentoo.org> xbmc-9999.ebuild:
+  Pull in libmodplug #305911 by Michael Lange. Disable the webserver for now
+  #305229 by Jan Vansteenkiste.
+
+  25 Jan 2010; Samuli Suominen <ssuominen@gentoo.org> xbmc-9.11-r1.ebuild,
+  xbmc-9999.ebuild:
+  Require SLOT="0" of media-libs/jpeg for headers.
+
+  18 Jan 2010; Mike Frysinger <vapier@gentoo.org> xbmc-9.11-r1.ebuild,
+  xbmc-9999.ebuild:
+  Disable support for USE=-opengl #298529 by Diego E. Pettenò.
+
+*xbmc-9.11-r1 (17 Jan 2010)
+
+  17 Jan 2010; Mike Frysinger <vapier@gentoo.org> +xbmc-9.11-r1.ebuild,
+  +files/xbmc-9.11-jpeg-speedup.patch:
+  Add fix from upstream for high cpu usage with jpeg images #300909 by
+  mikopp.
+
+  17 Jan 2010; Mike Frysinger <vapier@gentoo.org> xbmc-9.11.ebuild,
+  xbmc-9999.ebuild:
+  Require USE=smbclient with newer versions of samba #301233 by Darren
+  Smith.
+
+  05 Jan 2010; Mike Frysinger <vapier@gentoo.org> xbmc-9.11.ebuild,
+  xbmc-9999.ebuild:
+  Update vdpau dependency #299398 by Fabio Erculiani.
+
+*xbmc-9.11 (26 Dec 2009)
+
+  26 Dec 2009; Mike Frysinger <vapier@gentoo.org> +xbmc-9.11.ebuild,
+  +files/xbmc-9.11-wavpack.patch:
+  Version bump #298226 by hal.
+
+*xbmc-9.11_rc1 (19 Dec 2009)
+
+  19 Dec 2009; Mike Frysinger <vapier@gentoo.org> +xbmc-9.11_rc1.ebuild,
+  +files/xbmc-9.11_rc1-wavpack.patch, xbmc-9999.ebuild:
+  Version bump #297520.
+
+  18 Dec 2009; Mike Frysinger <vapier@gentoo.org> -xbmc-9.04.ebuild,
+  -xbmc-9.04.1.ebuild, -files/xbmc-9.04-gcc.patch:
+  Punt older versions with random build problems.
+
+  15 Dec 2009; Mike Frysinger <vapier@gentoo.org> xbmc-9999.ebuild:
+  Regen libbdnav autotools when needed #296792 by Martin Berkemeier.
+
+  04 Dec 2009; Mike Frysinger <vapier@gentoo.org> xbmc-9999.ebuild:
+  Install all webui styles #293093 by hal.
+
+  04 Dec 2009; Mike Frysinger <vapier@gentoo.org> xbmc-9999.ebuild:
+  Enable epatch_user #293109 by hal.
+
+  22 Nov 2009; Mike Frysinger <vapier@gentoo.org> xbmc-9999.ebuild:
+  Drop pmount depend now #293108 by hal. Switch back to external faad2
+  #294059 by Michael Lawrence. Add USE="avahi css aac midi xrandr" and add
+  missing deps for USE="pulseaudio vdpau" #293968 by Craig Andrews.
+
+  08 Nov 2009; Mike Frysinger <vapier@gentoo.org> xbmc-9999.ebuild:
+  Control squish altivec/sse support via USE #290564 by Francisco González.
+
+  08 Nov 2009; Mike Frysinger <vapier@gentoo.org> xbmc-9999.ebuild:
+  Pull in jbigkit/tiff #289621 by Michael Lange.
+
+  17 Oct 2009; Mike Frysinger <vapier@gentoo.org> xbmc-9999.ebuild:
+  Force libass-0.9.7+ #285328#10.
+
+  17 Oct 2009; Samuli Suominen <ssuominen@gentoo.org> xbmc-9999.ebuild:
+  Remove libmpcdec (SV7) support.
+
+  01 Oct 2009; Mike Frysinger <vapier@gentoo.org> xbmc-9999.ebuild,
+  -files/xbmc-9999-libass.patch:
+  Drop libass patch as upstream has fixed things.
+
+  26 Sep 2009; Mike Frysinger <vapier@gentoo.org> xbmc-9999.ebuild,
+  +files/xbmc-9999-libass.patch:
+  Fix by Jan Vansteenkiste for building with newer versions of libass
+  #285328 by Dirk Best.
+
+  26 Sep 2009; Mike Frysinger <vapier@gentoo.org> xbmc-9.04.ebuild,
+  xbmc-9.04.1.ebuild, xbmc-9999.ebuild:
+  Update SVN paths as upstream has moved stuff around.
+
+  05 Sep 2009; Mike Frysinger <vapier@gentoo.org> xbmc-9999.ebuild:
+  Generate autotools since upstream no longer includes them in svn #283722
+  by Kevin.
+
+*xbmc-9.04.1 (05 Sep 2009)
+
+  05 Sep 2009; Mike Frysinger <vapier@gentoo.org> +xbmc-9.04.1.ebuild:
+  Version bump #283608 by zehner.
+
+  27 Aug 2009; Mike Frysinger <vapier@gentoo.org> xbmc-9999.ebuild:
+  Force internal faad2 for now #278400. Pull in more deps #279062 #281078.
+
+  27 Aug 2009; Mike Frysinger <vapier@gentoo.org> xbmc-9999.ebuild:
+  Drop unzip step since upstream has integrated it #282739 by Jan
+  Vansteenkiste.
+
+  27 Jul 2009; Stephanie Lockwood-Childs <wormo@gentoo.org>
+  xbmc-9.04.ebuild, xbmc-9999.ebuild:
+  Use http instead of https for source download (thanks to Xake, bug #279174)
+
+  20 Jul 2009; Mike Frysinger <vapier@gentoo.org> xbmc-9999.ebuild:
+  Add more libraries to DEPEND #278294 by BT and move to external libraries
+  #275844 by candrews.
+
+  20 Jul 2009; Mike Frysinger <vapier@gentoo.org> files/xbmc-9.04-gcc.patch:
+  Update gcc-4.4 patch #277562 by Diego E. Pettenò.
+
+  29 May 2009; Mike Frysinger <vapier@gentoo.org> xbmc-9.04.ebuild,
+  xbmc-9999.ebuild:
+  Allow unrar-gpl for unrar needs #270728 by Mathy Vanvoorden.
+
+*xbmc-9.04 (16 May 2009)
+
+  16 May 2009; Mike Frysinger <vapier@gentoo.org> +xbmc-9.04.ebuild,
+  +files/xbmc-9.04-gcc.patch:
+  Version bump #269400 by Tim Bastiaenssens.
+
+  16 May 2009; Mike Frysinger <vapier@gentoo.org> xbmc-9999.ebuild:
+  Add libsamplerate to DEPEND #269673 by Jan Vansteenkiste.
+
+  29 Apr 2009; Mike Frysinger <vapier@gentoo.org> xbmc-9999:
+  Dont install session anymore since upstream does it #267631 by BT and Jan
+  Vansteenkiste, and stop bothering with the xbmc.sh wrapper since it has
+  been updated as well.
+
+  27 Apr 2009; Mike Frysinger <vapier@gentoo.org> xbmc-9999:
+  Pull in zip as the build process likes to make zips #266414 by Robert
+  Kerr.
+
+  26 Mar 2009; Mike Frysinger <vapier@gentoo.org> xbmc-9999.ebuild:
+  Fix readline detection in python subdir #262822 by Scott.
+
+  26 Mar 2009; Mike Frysinger <vapier@gentoo.org> metadata.xml,
+  xbmc-9999.ebuild:
+  Add USE=vdpau #263435 by Michael Lange.
+
+  23 Mar 2009; Mike Frysinger <vapier@gentoo.org> xbmc-9999.ebuild:
+  Require libcdio #263430 by BT.
+
+  23 Mar 2009; Mike Frysinger <vapier@gentoo.org> xbmc-9999.ebuild:
+  Require audio/video USE flags in libsdl #263349.
+
+  07 Mar 2009; Mike Frysinger <vapier@gentoo.org> xbmc-9999.ebuild:
+  Pull in xdpyinfo #261556 by Michael Lange.
+
+  07 Mar 2009; Mike Frysinger <vapier@gentoo.org> xbmc-9999.ebuild:
+  Drop tre from DEPEND #261501 by BT.
+
+  05 Mar 2009; Mike Frysinger <vapier@gentoo.org> xbmc-9999.ebuild:
+  Add mesa-progs to the depend list #261226 by Michalis Adamidis.
+
+  24 Feb 2009; Mike Frysinger <vapier@gentoo.org> -files/xbmc-fribidi.patch,
+  -files/xbmc-readsector.patch, xbmc-9999.ebuild:
+  And now the fribidi/readsector patches have been merged upstream.
+
+  23 Feb 2009; Mike Frysinger <vapier@gentoo.org> xbmc-9999.ebuild:
+  Upstream now allows SVN_REV to override svnversion.
+
+  22 Feb 2009; Mike Frysinger <vapier@gentoo.org> xbmc-9999.ebuild:
+  MACDll build flags have been merged upstream.
+
+  22 Feb 2009; Mike Frysinger <vapier@gentoo.org>
+  -files/xbmc-alsa-params.patch, xbmc-9999.ebuild:
+  Upstream has fixed the ALSA bug, so drop our workaround.
+
+  21 Feb 2009; Mike Frysinger <vapier@gentoo.org> -files/xbmc-noexec.patch,
+  xbmc-9999.ebuild:
+  The noexec patch has been merged upstream.
+
+  21 Feb 2009; Mike Frysinger <vapier@gentoo.org> xbmc-9999.ebuild:
+  Generate an Xsession so people can log in with xbmc in full screen.
+
+*xbmc-9999 (21 Feb 2009)
+
+  21 Feb 2009; Mike Frysinger <vapier@gentoo.org>
+  +files/xbmc-alsa-params.patch, +files/xbmc-fribidi.patch,
+  +files/xbmc-noexec.patch, +files/xbmc-readsector.patch, +metadata.xml,
+  +xbmc-9999.ebuild:
+  Initial ebuild by many people at #198849 (Peter Fern, Rick Harris, etc...)
+  cleaned up by me.
+

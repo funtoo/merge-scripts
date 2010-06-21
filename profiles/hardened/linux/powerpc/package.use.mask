@@ -1,0 +1,7 @@
+# Diego Pettenò <flameeyes@gentoo.org> (10 Nov 2007)
+# Tests for Linux-PAM 0.99 require >=sys-libs/glibc-2.4
+>=sys-libs/pam-0.99.8 test
+
+# Brent Baude <ranger@gentoo.org> (1 Feb 2008)
+# Masking hb and hb2 USE flags as no suitable solution for evms exists
+sys-fs/evms hb hb2

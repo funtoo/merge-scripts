@@ -1,0 +1,26 @@
+diff -ur musepack-tools-458.orig/libmpcdec/CMakeLists.txt musepack-tools-458/libmpcdec/CMakeLists.txt
+--- musepack-tools-458.orig/libmpcdec/CMakeLists.txt	2009-12-09 15:44:52.000000000 +0200
++++ musepack-tools-458/libmpcdec/CMakeLists.txt	2009-12-09 15:55:48.000000000 +0200
+@@ -1,2 +1,22 @@
+ include_directories(${libmpc_SOURCE_DIR}/include)
++
+ add_library(mpcdec_static STATIC huffman mpc_decoder mpc_reader streaminfo mpc_bits_reader mpc_demux requant synth_filter ${libmpc_SOURCE_DIR}/common/crc32)
++
++set_target_properties(mpcdec_static PROPERTIES OUTPUT_NAME mpcdec CLEAN_DIRECT_OUTPUT 1)                                                                    
++if(NOT MSVC)                                                                                                                                                
++  target_link_libraries(mpcdec_static m)                                                                                                                    
++endif(NOT MSVC)
++
++if(SHARED)
++  add_library(mpcdec_shared SHARED huffman mpc_decoder mpc_reader streaminfo mpc_bits_reader mpc_demux requant synth_filter ${libmpc_SOURCE_DIR}/common/crc32)
++  set_target_properties(mpcdec_shared PROPERTIES OUTPUT_NAME mpcdec CLEAN_DIRECT_OUTPUT 1 VERSION 7.0.1 SOVERSION 7)
++  if(NOT MSVC)
++    target_link_libraries(mpcdec_shared m)
++  endif(NOT MSVC)                                                                                                                                             
++endif(SHARED)
++
++install(TARGETS mpcdec_static LIBRARY DESTINATION "lib${LIB_SUFFIX}" ARCHIVE DESTINATION "lib${LIB_SUFFIX}")
++
++if(SHARED)
++  install(TARGETS mpcdec_shared LIBRARY DESTINATION "lib${LIB_SUFFIX}" ARCHIVE DESTINATION "lib${LIB_SUFFIX}")
++endif(SHARED)

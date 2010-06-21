@@ -1,0 +1,71 @@
+# ChangeLog for virtual/perl-Digest-SHA
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/virtual/perl-Digest-SHA/ChangeLog,v 1.18 2010/02/13 19:24:54 armin76 Exp $
+
+  13 Feb 2010; Raúl Porcel <armin76@gentoo.org>
+  perl-Digest-SHA-5.48.ebuild:
+  Add ~m68k/~s390/~sh wrt #300221
+
+  18 Jan 2010; Fabian Groffen <grobian@gentoo.org>
+  perl-Digest-SHA-5.48.ebuild:
+  Transfer Prefix Keywords
+
+  17 Jan 2010; Torsten Veller <tove@gentoo.org>
+  -perl-Digest-SHA-5.45.ebuild, -perl-Digest-SHA-5.46.ebuild:
+  Cleanup
+
+  10 Jan 2010; Markus Meier <maekke@gentoo.org> perl-Digest-SHA-5.48.ebuild:
+  add ~arm, bug #300221
+
+*perl-Digest-SHA-5.48 (09 Jan 2010)
+
+  09 Jan 2010; Torsten Veller <tove@gentoo.org>
+  +perl-Digest-SHA-5.48.ebuild:
+  Version bump
+
+  07 Jan 2010; Torsten Veller <tove@gentoo.org> perl-Digest-SHA-5.45.ebuild,
+  perl-Digest-SHA-5.46.ebuild, perl-Digest-SHA-5.47.ebuild:
+  Empty HOMEPAGE and LICENSE
+
+  19 Sep 2009; nixnut <nixnut@gentoo.org> perl-Digest-SHA-5.47.ebuild:
+  ppc stable #284068
+
+  18 Sep 2009; Torsten Veller <tove@gentoo.org> perl-Digest-SHA-5.47.ebuild:
+  Stable on amd64 (#284068)
+
+  17 Sep 2009; Jeroen Roovers <jer@gentoo.org> perl-Digest-SHA-5.47.ebuild:
+  Stable for HPPA (bug #284068).
+
+  15 Sep 2009; Torsten Veller <tove@gentoo.org> perl-Digest-SHA-5.47.ebuild:
+  Add missing keywords (#284068)
+
+  11 Sep 2009; Christian Faulhammer <fauli@gentoo.org>
+  perl-Digest-SHA-5.47.ebuild:
+  stable x86
+
+  25 Aug 2009; Torsten Veller <tove@gentoo.org> perl-Digest-SHA-5.47.ebuild:
+  Add support for perl-5.10.1
+
+  08 Dec 2008; Raúl Porcel <armin76@gentoo.org>
+  perl-Digest-SHA-5.46.ebuild:
+  alpha stable
+
+  06 Dec 2008; Tobias Scherbaum <dertobi123@gentoo.org>
+  perl-Digest-SHA-5.46.ebuild:
+  ppc stable, bug #235912
+
+  02 Dec 2008; Brent Baude <ranger@gentoo.org> perl-Digest-SHA-5.46.ebuild:
+  Marking perl-Digest-SHA-5.46 ppc64 for bug 235912
+
+  20 Nov 2008; Jeroen Roovers <jer@gentoo.org> perl-Digest-SHA-5.47.ebuild:
+  Marked ~hppa too (thanks to LuckyLuke).
+
+*perl-Digest-SHA-5.47 (01 Nov 2008)
+*perl-Digest-SHA-5.46 (01 Nov 2008)
+*perl-Digest-SHA-5.45 (01 Nov 2008)
+
+  01 Nov 2008; Yuval Yaari <yuval@gentoo.org> +metadata.xml,
+  +perl-Digest-SHA-5.45.ebuild, +perl-Digest-SHA-5.46.ebuild,
+  +perl-Digest-SHA-5.47.ebuild:
+  Adding virtuals for dual-lifed modules that come with perl-5.10
+

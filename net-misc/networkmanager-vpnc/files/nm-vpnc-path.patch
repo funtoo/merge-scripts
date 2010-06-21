@@ -1,0 +1,12 @@
+diff -urN NetworkManager-vpnc-0.5.0.orig/src/nm-vpnc-service.c NetworkManager-vpnc-0.5.0/src/nm-vpnc-service.c
+--- NetworkManager-vpnc-0.5.0.orig/src/nm-vpnc-service.c	2005-11-15 14:28:05.000000000 -0600
++++ NetworkManager-vpnc-0.5.0/src/nm-vpnc-service.c	2005-11-15 14:29:06.000000000 -0600
+@@ -51,6 +51,8 @@
+ 	"/usr/sbin/vpnc",
+ 	"/sbin/vpnc",
+	"/usr/local/sbin/vpnc",
++	"/usr/bin/vpnc",
++	"/bin/vpnc",
+ 	NULL
+ };
+ 

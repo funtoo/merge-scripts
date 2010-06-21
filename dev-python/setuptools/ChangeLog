@@ -1,0 +1,485 @@
+# ChangeLog for dev-python/setuptools
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/dev-python/setuptools/ChangeLog,v 1.110 2010/06/15 14:28:49 arfrever Exp $
+
+  15 Jun 2010; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  setuptools-0.6.12.ebuild:
+  amd64 stable (tested by rullzer) (bug #322679).
+
+  14 Jun 2010; Pawel Hajdan jr <phajdan.jr@gentoo.org>
+  setuptools-0.6.12.ebuild:
+  x86 stable wrt bug #322679
+
+  11 Jun 2010; Jeroen Roovers <jer@gentoo.org> setuptools-0.6.12.ebuild:
+  Stable for HPPA (bug #322679).
+
+*setuptools-0.6.13 (31 May 2010)
+
+  31 May 2010; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  +setuptools-0.6.13.ebuild:
+  Version bump.
+
+*setuptools-0.6.12 (06 May 2010)
+
+  06 May 2010; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  +setuptools-0.6.12.ebuild,
+  +files/distribute-0.6.12-disable_versioned_easy_install.patch,
+  +files/distribute-0.6.12-fix_deprecation_warnings.patch:
+  Version bump.
+
+  13 Feb 2010; Raúl Porcel <armin76@gentoo.org> setuptools-0.6.10.ebuild:
+  alpha/arm/ia64/s390/sh/sparc stable wrt #300709
+
+  04 Feb 2010; Jeroen Roovers <jer@gentoo.org> setuptools-0.6.10.ebuild:
+  Stable for HPPA (bug #300709).
+
+  01 Feb 2010; Christian Faulhammer <fauli@gentoo.org>
+  setuptools-0.6.10.ebuild:
+  stable x86, bug 300709
+
+  24 Jan 2010; Tom Gall <tgall@gentoo.org> setuptools-0.6.10.ebuild:
+  stable on ppc64, bug #300709
+
+  19 Jan 2010; nixnut <nixnut@gentoo.org> setuptools-0.6.10.ebuild:
+  ppc stable #300709
+
+  12 Jan 2010; <hwoarang@gentoo.org> setuptools-0.6.10.ebuild:
+  Stable on amd64 wrt bug #300709
+
+  09 Jan 2010; Christian Faulhammer <fauli@gentoo.org>
+  setuptools-0.6.10.ebuild:
+  keyword ~x86-freebsd
+
+  29 Dec 2009; Raúl Porcel <armin76@gentoo.org> setuptools-0.6.8-r1.ebuild:
+  alpha/ia64/s390/sh/sparc stable wrt #295696
+
+  20 Dec 2009; Fabian Groffen <grobian@gentoo.org>
+  setuptools-0.6.8-r1.ebuild, setuptools-0.6.10.ebuild:
+  Merged keywords from Prefix overlay, applied small fix for Prefix (bug
+  #295035)
+
+  16 Dec 2009; Markus Meier <maekke@gentoo.org> setuptools-0.6.8-r1.ebuild:
+  amd64/arm/x86 stable, bug #295696
+
+  16 Dec 2009; Brent Baude <ranger@gentoo.org> setuptools-0.6.8-r1.ebuild:
+  Marking setuptools-0.6.8-r1 ppc64 for bug 295696
+
+*setuptools-0.6.10 (12 Dec 2009)
+
+  12 Dec 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  +setuptools-0.6.10.ebuild:
+  Version bump.
+
+*setuptools-0.6.8-r1 (12 Dec 2009)
+
+  12 Dec 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  -setuptools-0.6.8.ebuild, +setuptools-0.6.8-r1.ebuild,
+  files/distribute-0.6.8-fix_tests.patch:
+  Fix a bug in a patch and rename 0.6.8 to 0.6.8-r1 without changes in the
+  ebuild.
+
+  09 Dec 2009; nixnut <nixnut@gentoo.org> setuptools-0.6.8.ebuild:
+  ppc stable #295696
+
+  08 Dec 2009; Jeroen Roovers <jer@gentoo.org> setuptools-0.6.8.ebuild:
+  Stable for HPPA (bug #295696).
+
+  04 Dec 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  files/distribute-0.6.8-C_locale_tests.patch:
+  Update patch (bug #287439).
+
+  18 Nov 2009; Raúl Porcel <armin76@gentoo.org> setuptools-0.6.6.ebuild:
+  ia64/s390/sh/sparc stable wrt #291915
+
+  16 Nov 2009; Markus Meier <maekke@gentoo.org> setuptools-0.6.6.ebuild:
+  amd64/arm/x86 stable, bug #291915
+
+  15 Nov 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  setuptools-0.6.8.ebuild, +files/distribute-0.6.8-fix_tests.patch:
+  Fix tests with Python 3.1.
+
+  12 Nov 2009; Jeroen Roovers <jer@gentoo.org> setuptools-0.6.3-r3.ebuild,
+  setuptools-0.6.4.ebuild, setuptools-0.6.6.ebuild:
+  Fix whitespace again (bug #292903).
+
+  11 Nov 2009; Jeroen Roovers <jer@gentoo.org> setuptools-0.6.3-r3.ebuild,
+  setuptools-0.6.4.ebuild, setuptools-0.6.6.ebuild:
+  Stable for HPPA (bug #291915). Fix whitespace.
+
+  11 Nov 2009; Brent Baude <ranger@gentoo.org> setuptools-0.6.6.ebuild:
+  Marking setuptools-0.6.6 ppc64 for bug 291915
+
+  08 Nov 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  setuptools-0.6.6.ebuild, setuptools-0.6.8.ebuild,
+  +files/distribute-0.6.8-C_locale_tests.patch:
+  Skip test failing with C locale (bug #287439).
+
+  08 Nov 2009; Tobias Klausmann <klausman@gentoo.org>
+  setuptools-0.6.6.ebuild:
+  Stable on alpha, bug #291915
+
+  08 Nov 2009; Mounir Lamouri <volkmar@gentoo.org> setuptools-0.6.6.ebuild:
+  Stable for ppc, bug 291915
+
+  06 Nov 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  setuptools-0.6-r1.ebuild, setuptools-0.6.3-r3.ebuild,
+  setuptools-0.6.4.ebuild, setuptools-0.6.6.ebuild, setuptools-0.6.8.ebuild:
+  Fix building after last improvement to distutils.eclass (bug #292095).
+
+*setuptools-0.6.8 (02 Nov 2009)
+
+  02 Nov 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  -setuptools-0.6.7.ebuild, +setuptools-0.6.8.ebuild:
+  Version bump.
+
+*setuptools-0.6.7 (01 Nov 2009)
+
+  01 Nov 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  +setuptools-0.6.7.ebuild:
+  Version bump.
+
+  29 Oct 2009; Markus Meier <maekke@gentoo.org> setuptools-0.6.4.ebuild:
+  amd64/x86 stable, bug #289312
+
+  24 Oct 2009; Tobias Klausmann <klausman@gentoo.org>
+  setuptools-0.6.4.ebuild:
+  Stable on alpha, bug #289312
+
+  24 Oct 2009; nixnut <nixnut@gentoo.org> setuptools-0.6.4.ebuild:
+  ppc stable #289312
+
+  18 Oct 2009; Jeroen Roovers <jer@gentoo.org> setuptools-0.6.4.ebuild:
+  Stable for HPPA (bug #289312).
+
+  16 Oct 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  setuptools-0.6.6.ebuild:
+  Don't try to 2to3 some files (bug #289026).
+
+*setuptools-0.6.6 (16 Oct 2009)
+
+  16 Oct 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  +setuptools-0.6.6.ebuild:
+  Version bump.
+
+*setuptools-0.6.4 (11 Oct 2009)
+
+  11 Oct 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  -setuptools-0.6_rc9.ebuild, +setuptools-0.6.4.ebuild:
+  Version bump.
+
+  06 Oct 2009; Raúl Porcel <armin76@gentoo.org> setuptools-0.6-r1.ebuild:
+  ia64/s390/sh/sparc stable wrt #284972
+
+  03 Oct 2009; Diego E. Pettenò <flameeyes@gentoo.org>
+  +setuptools-0.6.3-r2.ebuild:
+  Restore older revision.
+
+*setuptools-0.6.3-r3 (02 Oct 2009)
+
+  02 Oct 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  -setuptools-0.6.3-r2.ebuild, +setuptools-0.6.3-r3.ebuild:
+  Add new revision to ensure that dev-python/setuptools is installed by
+  default for Python 2 and Python 3.
+
+  01 Oct 2009; Tobias Klausmann <klausman@gentoo.org>
+  setuptools-0.6-r1.ebuild:
+  Stable on alpha, bug #284972
+
+  30 Sep 2009; Daniel Robbins <drobbins@funtoo.org>
+  setuptools-0.6.3-r2.ebuild: proper removal of blocker via pkg_preinst
+  script.
+
+*setuptools-0.6.3-r2 (29 Sep 2009)
+
+  29 Sep 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  -setuptools-0.6.3-r1.ebuild, +setuptools-0.6.3-r2.ebuild:
+  Ensure that <dev-python/setuptools-0.6.3-r2 isn't installed before
+  installation of newer versions (bug #286895).
+
+*setuptools-0.6.3-r1 (28 Sep 2009)
+
+  28 Sep 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  -setuptools-0.6.1-r1.ebuild, -files/distribute-0.6.1-USER_SITE.patch,
+  -files/distribute-0.6.1-provide_setuptools.patch,
+  -setuptools-0.6.2.ebuild,
+  -files/distribute-0.6.2-provide_setuptools.patch,
+  -setuptools-0.6.3.ebuild, +setuptools-0.6.3-r1.ebuild:
+  Don't use no longer needed patch.
+
+*setuptools-0.6.3 (27 Sep 2009)
+
+  27 Sep 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  +setuptools-0.6.3.ebuild:
+  Version bump.
+
+  27 Sep 2009; nixnut <nixnut@gentoo.org> setuptools-0.6-r1.ebuild:
+  ppc stable #284972
+
+*setuptools-0.6.2 (26 Sep 2009)
+
+  26 Sep 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  +setuptools-0.6.2.ebuild,
+  +files/distribute-0.6.2-provide_setuptools.patch:
+  Version bump.
+
+  26 Sep 2009; Brent Baude <ranger@gentoo.org> setuptools-0.6-r1.ebuild:
+  Marking setuptools-0.6-r1 ppc64 for bug 284972
+
+  18 Sep 2009; Markus Meier <maekke@gentoo.org> setuptools-0.6-r1.ebuild:
+  amd64/arm stable, bug #284972
+
+  18 Sep 2009; Jeroen Roovers <jer@gentoo.org> setuptools-0.6-r1.ebuild:
+  Stable for HPPA (bug #284972).
+
+  16 Sep 2009; Christian Faulhammer <fauli@gentoo.org>
+  setuptools-0.6-r1.ebuild:
+  stable x86, bug 284972
+
+*setuptools-0.6.1-r1 (13 Sep 2009)
+
+  13 Sep 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  +setuptools-0.6.1-r1.ebuild:
+  Fix version.
+
+*setuptools-0.6.1 (10 Sep 2009)
+
+  10 Sep 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  +setuptools-0.6.1.ebuild, +files/distribute-0.6.1-USER_SITE.patch,
+  +files/distribute-0.6.1-provide_setuptools.patch:
+  Version bump.
+
+*setuptools-0.6-r1 (11 Aug 2009)
+
+  11 Aug 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  -setuptools-0.6.ebuild, +setuptools-0.6-r1.ebuild,
+  +files/distribute-0.6-provide_setuptools.patch:
+  Provide setuptools.
+
+*setuptools-0.6 (09 Aug 2009)
+
+  09 Aug 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  -setuptools-0.6_rc7-r1.ebuild, -setuptools-0.6_rc8.ebuild,
+  -setuptools-0.6_rc8-r1.ebuild, +setuptools-0.6.ebuild,
+  +files/distribute-0.6-sandbox.patch,
+  -files/setuptools-0.6_rc8-svn-1.5.patch:
+  Version bump.
+
+*setuptools-0.6_rc9-r1 (28 Jul 2009)
+
+  28 Jul 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  +setuptools-0.6_rc9-r1.ebuild:
+  Set SUPPORT_PYTHON_ABIS.
+
+  27 Apr 2009; Jeroen Roovers <jer@gentoo.org> setuptools-0.6_rc9.ebuild:
+  Stable for HPPA (bug #267209).
+
+  26 Apr 2009; RaÃºl Porcel <armin76@gentoo.org> setuptools-0.6_rc9.ebuild:
+  arm/ia64/s390/sh/sparc stable wrt #267209
+
+  24 Apr 2009; Brent Baude <ranger@gentoo.org> setuptools-0.6_rc9.ebuild:
+  stable ppc, bug 267209
+
+  24 Apr 2009; Brent Baude <ranger@gentoo.org> setuptools-0.6_rc9.ebuild:
+  stable ppc64, bug 267209
+
+  23 Apr 2009; Markus Meier <maekke@gentoo.org> setuptools-0.6_rc9:
+  amd64/x86 stable, bug #267209
+
+  23 Apr 2009; Tobias Klausmann <klausman@gentoo.org> setuptools-0.6_rc9:
+  Stable on alpha, bug #267209
+
+*setuptools-0.6_rc9 (10 Oct 2008)
+
+  10 Oct 2008; Rob Cakebread <pythonhead@gentoo.org>
+  +setuptools-0.6_rc9.ebuild:
+  Version bump.
+
+  18 Jul 2008; Santiago M. Mola <coldwind@gentoo.org>
+  setuptools-0.6_rc8-r1.ebuild:
+  amd64 stable wrt bug #231954, thanks to Chad A. Simmons.
+
+  18 Jul 2008; Alexis Ballier <aballier@gentoo.org>
+  setuptools-0.6_rc8-r1.ebuild:
+  keyword ~sparc-fbsd
+
+  18 Jul 2008; Jeroen Roovers <jer@gentoo.org> setuptools-0.6_rc8-r1.ebuild:
+  Stable for HPPA (bug #231954).
+
+  17 Jul 2008; Markus Rothe <corsair@gentoo.org>
+  setuptools-0.6_rc8-r1.ebuild:
+  Stable on ppc64; bug #231954
+
+  16 Jul 2008; RaÃºl Porcel <armin76@gentoo.org>
+  setuptools-0.6_rc8-r1.ebuild:
+  alpha/ia64/sparc/x86 stable wrt #231954
+
+  16 Jul 2008; nixnut <nixnut@gentoo.org> setuptools-0.6_rc8-r1.ebuild:
+  Stable on ppc wrt bug 231954
+
+*setuptools-0.6_rc8-r1 (13 May 2008)
+
+  13 May 2008; Ali Polatel <hawking@gentoo.org>
+  +files/setuptools-0.6_rc8-svn-1.5.patch, +setuptools-0.6_rc8-r1.ebuild:
+  Revbump. Added patch from distutils mailing list by Augie Fackler for
+  subversion-1.5. Thanks to Darren Dale, #220389.
+
+*setuptools-0.6_rc8 (23 Feb 2008)
+
+  23 Feb 2008; Tiziano MÃ¼ller <dev-zero@gentoo.org>
+  -setuptools-0.6_rc3.ebuild, -setuptools-0.6_rc6.ebuild,
+  +setuptools-0.6_rc8.ebuild:
+  Version bump. Dropped old versions.
+
+  31 Dec 2007; Joseph Jezak <josejx@gentoo.org>
+  setuptools-0.6_rc7-r1.ebuild:
+  Marked ppc stable.
+
+  05 Dec 2007; RaÃºl Porcel <armin76@gentoo.org>
+  setuptools-0.6_rc7-r1.ebuild:
+  alpha/ia64/sparc/x86 stable
+
+  04 Dec 2007; Jeroen Roovers <jer@gentoo.org> setuptools-0.6_rc7-r1.ebuild:
+  Stable for HPPA too.
+
+  01 Dec 2007; Markus Rothe <corsair@gentoo.org>
+  setuptools-0.6_rc7-r1.ebuild:
+  Stable on ppc64
+
+  19 Nov 2007; Joshua Kinard <kumba@gentoo.org>
+  setuptools-0.6_rc7-r1.ebuild:
+  Marked unstable on mips, per #191550.
+
+  12 Nov 2007; Samuli Suominen <drac@gentoo.org>
+  setuptools-0.6_rc7-r1.ebuild:
+  amd64 stable
+
+  09 Nov 2007; Jeroen Roovers <jer@gentoo.org> setuptools-0.6_rc6.ebuild:
+  Stable for HPPA (bug #198346).
+
+  07 Nov 2007; Lukasz Strzygowski <lucass@gentoo.org>
+  setuptools-0.6_rc7-r1.ebuild:
+  Skip test_packageindex.py, bug #198312. Added NEED_PYTHON.
+
+*setuptools-0.6_rc7-r1 (04 Nov 2007)
+
+  04 Nov 2007; Ali Polatel <hawking@gentoo.org>
+  +files/setuptools-0.6_rc7-noexe.patch, -setuptools-0.6_rc5.ebuild,
+  -setuptools-0.6_rc7.ebuild, +setuptools-0.6_rc7-r1.ebuild:
+  Revbump. Don't install windows executables, bug 198023
+
+*setuptools-0.6_rc7 (04 Oct 2007)
+
+  04 Oct 2007; <kutsuya@gentoo.org> +setuptools-0.6_rc7.ebuild:
+  Version bump. Removed src_unpack(), because not needed in this version.
+
+  26 Sep 2007; Brent Baude <ranger@gentoo.org> setuptools-0.6_rc6.ebuild:
+  Marking setuptools-0.6_rc6 ppc64 for dep in bug 189096
+
+  19 Sep 2007; Ali Polatel <hawking@gentoo.org> setuptools-0.6_rc6.ebuild:
+  remove tests that access the network; bug 191117 thanks to MichaÅ Kiedrowicz
+
+  24 Aug 2007; RaÃºl Porcel <armin76@gentoo.org> setuptools-0.6_rc6.ebuild:
+  alpha/ia64/x86 stable
+
+  14 Aug 2007; Gustavo Zacarias <gustavoz@gentoo.org>
+  setuptools-0.6_rc6.ebuild:
+  Stable on sparc
+
+  05 Jul 2007; Samuli Suominen <drac@gentoo.org> setuptools-0.6_rc6.ebuild:
+  Keyword for ~arm as it's required by many packages, elementtree for example.
+
+*setuptools-0.6_rc6 (31 May 2007)
+
+  31 May 2007; Rob Cakebread <pythonhead@gentoo.org>
+  -setuptools-0.6_rc1.ebuild, +setuptools-0.6_rc6.ebuild:
+  Version bump, dropped oldest version.
+
+  30 Mar 2007; Jeroen Roovers <jer@gentoo.org> setuptools-0.6_rc5.ebuild:
+  Marked ~hppa (bug #172817).
+
+  13 Feb 2007; Markus Rothe <corsair@gentoo.org> setuptools-0.6_rc5.ebuild:
+  Added ~ppc64; bug #166675
+
+  06 Feb 2007; Simon Stelling <blubb@gentoo.org> setuptools-0.6_rc3.ebuild:
+  stable on amd64; bug 163759
+
+  03 Feb 2007; nixnut <nixnut@gentoo.org> setuptools-0.6_rc3.ebuild:
+  Stable on ppc wrt bug 163759
+
+  25 Jan 2007; Christian Faulhammer <opfer@gentoo.org>
+  setuptools-0.6_rc3.ebuild:
+  stable x86; bug #163759
+
+*setuptools-0.6_rc5 (21 Jan 2007)
+
+  21 Jan 2007; Lukasz Strzygowski <lucass@gentoo.org>
+  +setuptools-0.6_rc5.ebuild:
+  Version bump, bug #162835.
+
+  10 Oct 2006; Marien Zwart <marienz@gentoo.org>
+  -setuptools-0.6_alpha10.ebuild, -setuptools-0.6_alpha11.ebuild,
+  -setuptools-0.6_beta2.ebuild:
+  Remove old versions.
+
+*setuptools-0.6_rc3 (21 Sep 2006)
+
+  21 Sep 2006; Marien Zwart <marienz@gentoo.org> +setuptools-0.6_rc3.ebuild:
+  Version bump, use a tarball instead of a zipfile, remove chmods that are no
+  longer necessary.
+
+  10 Sep 2006; Javier Villavicencio <the_paya@gentoo.org>
+  setuptools-0.6_rc1.ebuild:
+  Add ~x86-fbsd keyword.
+
+*setuptools-0.6_rc1 (01 Aug 2006)
+
+  01 Aug 2006; Lukasz Strzygowski <lucass@gentoo.org>
+  +setuptools-0.6_rc1.ebuild:
+  Version bump, bug #142373.
+
+*setuptools-0.6_alpha11 (03 Apr 2006)
+
+  03 Apr 2006; Marien Zwart <marienz@gentoo.org>
+  -setuptools-0.6_alpha9.ebuild, +setuptools-0.6_alpha11.ebuild:
+  Version bump with some ebuild cleanup and an added src_test, remove old ebuild.
+
+  19 Mar 2006; Mark Loeser <halcy0n@gentoo.org>
+  setuptools-0.6_alpha9.ebuild, setuptools-0.6_alpha10.ebuild:
+  Add DEPEND on app-arch/unzip
+
+  10 Mar 2006; Aron Griffis <agriffis@gentoo.org>
+  setuptools-0.6_alpha10.ebuild:
+  Mark 0.6_alpha10 ~ia64
+
+  19 Feb 2006; Bryan Ãstergaard <kloeri@gentoo.org>
+  setuptools-0.6_alpha10.ebuild:
+  Add ~alpha keyword, bug 121880.
+
+*setuptools-0.6_alpha10 (19 Feb 2006)
+
+  19 Feb 2006; Marien Zwart <marienz@gentoo.org>
+  +setuptools-0.6_alpha10.ebuild:
+  Version bump.
+
+  18 Feb 2006; Doug Goldstein <cardoe@gentoo.org>
+  setuptools-0.6_alpha9.ebuild:
+  adding ~ppc
+
+  07 Feb 2006; Jason Wever <weeve@gentoo.org> setuptools-0.6_alpha9.ebuild:
+  Added ~sparc keyword wrt bug #121880.
+
+*setuptools-0.6_alpha9 (05 Feb 2006)
+
+  05 Feb 2006; Marien Zwart <marienz@gentoo.org>
+  -setuptools-0.6_alpha5.ebuild, +setuptools-0.6_alpha9.ebuild:
+  Bump to alpha9, use the new --single-version-externally-managed switch to
+  install. Drop alpha5 which does not support that switch (the switch will be
+  used in ebuilds depending on setuptools).
+
+*setuptools-0.6_alpha5 (15 Oct 2005)
+
+  15 Oct 2005; Rob Cakebread <pythonhead@gentoo.org> +metadata.xml,
+  +setuptools-0.6_alpha5.ebuild:
+  Initial commit. Thank you Geoffrey Clements <geoff@electron.me.uk> and
+  Thomas Fullhart <kayos@genetikayos.com> for the ebuild. bug #108227
+

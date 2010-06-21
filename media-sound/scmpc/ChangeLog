@@ -1,0 +1,34 @@
+# ChangeLog for media-sound/scmpc
+# Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/media-sound/scmpc/ChangeLog,v 1.8 2009/03/16 19:07:14 angelos Exp $
+
+*scmpc-0.14.0_pre20080316 (16 Mar 2009)
+
+  16 Mar 2009; Christoph Mende <angelos@gentoo.org> +files/scmpc-2.init,
+  +scmpc-0.14.0_pre20080316.ebuild:
+  Added a pre-release snapshot
+
+  22 Dec 2008; Christoph Mende <angelos@gentoo.org> files/scmpc.init:
+  We don't need mpd for the init script, so just replace it with use mpd
+
+  05 Nov 2008; Christoph Mende <angelos@gentoo.org> scmpc-0.2.2.ebuild:
+  Changed SRC_URI to use mirror://
+
+  06 Dec 2007; Christian Faulhammer <opfer@gentoo.org> scmpc-0.2.2.ebuild:
+  stable x86, bug 201429
+
+  01 Aug 2007; Christoph Mende <angelos@gentoo.org> scmpc-0.2.2.ebuild:
+  Stable on amd64
+
+  28 Jun 2007; Raúl Porcel <armin76@gentoo.org> scmpc-0.2.2.ebuild:
+  Add ~x86 wrt #183351
+
+  27 Jun 2007; Christoph Mende <angelos@gentoo.org> +files/scmpc.init:
+  Added an init script, thanks to Avuton Olrich
+
+*scmpc-0.2.2 (26 Jun 2007)
+
+  26 Jun 2007; Christoph Mende <angelos@gentoo.org> +metadata.xml,
+  +scmpc-0.2.2.ebuild:
+  Initial import
+

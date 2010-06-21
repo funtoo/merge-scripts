@@ -1,0 +1,9 @@
+# Copyright 1999-2010 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/dev-lang/php/files/eblits/common-v1.eblit,v 1.1 2010/05/27 23:05:04 mabi Exp $
+
+php_set_ini_dir() {
+	PHP_INI_DIR="/etc/php/${1}-php${PHP_MV}"
+	PHP_EXT_INI_DIR="${PHP_INI_DIR}/ext"
+	PHP_EXT_INI_DIR_ACTIVE="${PHP_INI_DIR}/ext-active"
+}

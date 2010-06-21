@@ -1,0 +1,395 @@
+# ChangeLog for sys-kernel/xen-sources
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/sys-kernel/xen-sources/ChangeLog,v 1.69 2010/06/16 17:57:39 patrick Exp $
+
+*xen-sources-2.6.34 (16 Jun 2010)
+
+  16 Jun 2010; Patrick Lauer <patrick@gentoo.org>
+  +xen-sources-2.6.34.ebuild:
+  Bump to .34, thanks to Andrew Lyon
+
+  26 Apr 2010; Robin H. Johnson <robbat2@gentoo.org> metadata.xml:
+  Update Manifest for deblob support in kernel-2 eclass.
+
+*xen-sources-2.6.32-r1 (07 Apr 2010)
+*xen-sources-2.6.31-r14 (07 Apr 2010)
+
+  07 Apr 2010; Patrick Lauer <patrick@gentoo.org>
+  -xen-sources-2.6.29-r4.ebuild, -xen-sources-2.6.31-r10.ebuild,
+  +xen-sources-2.6.31-r14.ebuild, +xen-sources-2.6.32-r1.ebuild:
+  Bump, remove old. Thanks to Andrew Lyon
+
+*xen-sources-2.6.31-r11 (22 Feb 2010)
+
+  22 Feb 2010; Patrick Lauer <patrick@gentoo.org>
+  +xen-sources-2.6.31-r11.ebuild:
+  Bump of the .31 kernel, thanks to Andrew Lyon
+
+  16 Jan 2010; Christian Faulhammer <fauli@gentoo.org>
+  xen-sources-2.6.18-r12.ebuild:
+  stable x86, bug 293714
+
+*xen-sources-2.6.29-r4 (06 Jan 2010)
+
+  06 Jan 2010; Patrick Lauer <patrick@gentoo.org>
+  +xen-sources-2.6.29-r4.ebuild, xen-sources-2.6.31-r10.ebuild:
+  Adding .29 as it is presumably more stable than .31. Enjoy.
+
+*xen-sources-2.6.31-r10 (06 Jan 2010)
+
+  06 Jan 2010; Patrick Lauer <patrick@gentoo.org>
+  +xen-sources-2.6.31-r10.ebuild:
+  Bump to 2.6.31, based on the work by Andrew Lyon at
+  http://code.google.com/p/gentoo-xen-kernel/ May not work, use at your own
+  peril. Good luck.
+
+  06 Jan 2010; Patrick Lauer <patrick@gentoo.org>
+  -xen-sources-2.6.20-r7.ebuild, -xen-sources-2.6.21.ebuild:
+  Removing old unsupported versions that never worked well
+
+*xen-sources-2.6.27-r1 (09 Dec 2008)
+
+  09 Dec 2008; Daniel Robbins <drobbins@funtoo.org>,
+  +xen-sources-2.6.27-r1.ebuild: new ebuild from DestroyFX
+  (Gentoo Quebec) - Bump Xen 3.3 patchs to 2.6.27 kernel.
+
+*xen-sources-2.6.18-r12 (31 Aug 2008)
+
+  31 Aug 2008; Robert Buchholz <rbu@gentoo.org>
+  -xen-sources-2.6.18-r10.ebuild, xen-sources-2.6.18-r11.ebuild,
+  +xen-sources-2.6.18-r12.ebuild, xen-sources-2.6.20-r7.ebuild,
+  xen-sources-2.6.21.ebuild:
+  Version bump to Xen 3.3 (bug #201792), and security updates.
+  Add empty IUSE.
+
+*xen-sources-2.6.18-r11 (19 Jun 2008)
+
+  19 Jun 2008; Robert Buchholz <rbu@gentoo.org>
+  +xen-sources-2.6.18-r11.ebuild:
+  Security update
+
+  04 May 2008; Robert Buchholz <rbu@gentoo.org>
+  xen-sources-2.6.18-r10.ebuild, xen-sources-2.6.20-r7.ebuild,
+  xen-sources-2.6.21.ebuild:
+  Update HOMEPAGE (xen.xensource.com -> xen.org)
+
+  24 Feb 2008; Michael Marineau <marineam@gentoo.org>
+  -xen-sources-2.6.22.ebuild:
+  Remove xen-sources-2.6.22 for now, it was buggier than I thought
+
+*xen-sources-2.6.22 (23 Feb 2008)
+
+  23 Feb 2008; Michael Marineau <marineam@gentoo.org>
+  +xen-sources-2.6.22.ebuild:
+  Add a 2.6.22 kernel, based on Suse's xen patches.
+
+*xen-sources-2.6.21 (23 Feb 2008)
+*xen-sources-2.6.20-r7 (23 Feb 2008)
+*xen-sources-2.6.18-r10 (23 Feb 2008)
+
+  23 Feb 2008; Michael Marineau <marineam@gentoo.org>
+  -xen-sources-2.6.18-r6.ebuild, -xen-sources-2.6.18-r7.ebuild,
+  -xen-sources-2.6.18-r8.ebuild, -xen-sources-2.6.18-r9.ebuild,
+  +xen-sources-2.6.18-r10.ebuild, -xen-sources-2.6.20-r5.ebuild,
+  -xen-sources-2.6.20-r6.ebuild, +xen-sources-2.6.20-r7.ebuild,
+  +xen-sources-2.6.21.ebuild:
+  Add 2.6.21 based kernel and some security bumps all around. Everything has
+  CVE 2008-0600 fixed now. Clean out older kernels.
+
+*xen-sources-2.6.18-r9 (16 Feb 2008)
+
+  16 Feb 2008; Michael Marineau <marineam@gentoo.org>
+  +xen-sources-2.6.18-r9.ebuild:
+  Bump 2.6.18 to the xen 3.2.0 patch
+
+*xen-sources-2.6.18-r8 (19 Nov 2007)
+
+  19 Nov 2007; Michael Marineau <marineam@gentoo.org>
+  -files/xen-sources-2.6.16.52-ipt-reject-fix.patch,
+  -files/xen-sources-2.6.16.52-sctp-skb_linearize-fix.patch,
+  -xen-sources-2.6.16.52.ebuild, +xen-sources-2.6.18-r8.ebuild:
+  Bump 2.6.18 to latest Xen patch from 3.1.2. Remove old 2.6.16 kernel.
+
+*xen-sources-2.6.20-r6 (15 Oct 2007)
+
+  15 Oct 2007; Michael Marineau <marineam@gentoo.org>
+  xen-sources-2.6.18-r7.ebuild, +xen-sources-2.6.20-r6.ebuild:
+  Bump 2.6.20 to xen-patches 4, includes the new HIGHPTE fix.
+  Update 2.6.18 to xen-patches 7 (no bump, only includes a minor update).
+
+*xen-sources-2.6.18-r7 (15 Oct 2007)
+
+  15 Oct 2007; Michael Marineau <marineam@gentoo.org>
+  +xen-sources-2.6.18-r7.ebuild:
+  Bump to xen-patches 6, based on Xen 3.1.1
+
+*xen-sources-2.6.18-r6 (10 Oct 2007)
+
+  10 Oct 2007; Michael Marineau <marineam@gentoo.org>
+  -xen-sources-2.6.18-r4.ebuild, -xen-sources-2.6.18-r5.ebuild,
+  +xen-sources-2.6.18-r6.ebuild:
+  Bump to xen-patches 5, includes a lot of security updates.
+
+*xen-sources-2.6.20-r5 (10 Oct 2007)
+
+  10 Oct 2007; Michael Marineau <marineam@gentoo.org>
+  -xen-sources-2.6.20-r3.ebuild, -xen-sources-2.6.20-r4.ebuild,
+  +xen-sources-2.6.20-r5.ebuild:
+  Disable CONFIG_HIGHPTE and fix CVE-2007-4573.
+
+*xen-sources-2.6.20-r4 (26 Sep 2007)
+
+  26 Sep 2007; Michael Marineau <marineam@gentoo.org>
+  -xen-sources-2.6.18-r3.ebuild, -xen-sources-2.6.20-r2.ebuild,
+  +xen-sources-2.6.20-r4.ebuild:
+  Bump 2.6.20 to genpatches 18, includes 2.6.20.20.
+
+*xen-sources-2.6.18-r5 (14 Sep 2007)
+
+  14 Sep 2007; Michael Marineau <marineam@gentoo.org>
+  +xen-sources-2.6.18-r5.ebuild:
+  Bump to xen-patches-2.6.18-4, adds a few security patches.
+
+*xen-sources-2.6.20-r3 (06 Sep 2007)
+*xen-sources-2.6.18-r4 (06 Sep 2007)
+
+  06 Sep 2007; Michael Marineau <marineam@gentoo.org>
+  +xen-sources-2.6.18-r4.ebuild, +xen-sources-2.6.20-r3.ebuild:
+  2.6.18-r4 adds a handful of security patches, I thought I had committed this
+  last week, oops. 2.6.20-r3 syncs up with the latest patches in Fedora and should
+  fix a handful of bugs.
+
+  25 Aug 2007; Michael Marineau <marineam@gentoo.org>
+  xen-sources-2.6.20-r2.ebuild:
+  Restore the dependency on >=binutils-2.17 that was accidently dropped.
+
+*xen-sources-2.6.20-r2 (24 Aug 2007)
+*xen-sources-2.6.18-r3 (24 Aug 2007)
+
+  24 Aug 2007; Michael Marineau <marineam@gentoo.org>
+  -files/xen-sources-2.6.16.28-CVE-2006-3468.patch,
+  -files/xen-sources-2.6.16.28-CVE-2006-6333.patch,
+  -files/CVE-2005-4352.patch, -files/CVE-2006-4572.patch,
+  -files/CVE-2006-5619.patch, -files/CVE-2006-6056.patch,
+  -files/CVE-2006-6060.patch, -files/dvb-core-ule-sndu.patch,
+  -xen-sources-2.6.16.28.ebuild, -xen-sources-2.6.16.28-r1.ebuild,
+  -xen-sources-2.6.16.28-r2.ebuild, -xen-sources-2.6.16.33.ebuild,
+  -xen-sources-2.6.16.49.ebuild, +xen-sources-2.6.18-r3.ebuild,
+  +xen-sources-2.6.20-r2.ebuild:
+  Copy Xen 3.1.0 related ebuilds over from the Xen project overlay.
+  Remove Xen 3.0.2.
+
+  15 Jul 2007; Michael Marineau <marineam@gentoo.org>
+  +files/xen-sources-2.6.16.52-sctp-skb_linearize-fix.patch,
+  xen-sources-2.6.16.52.ebuild:
+  Add fix for sctp compile error, resolves bug #185406.
+
+*xen-sources-2.6.16.52 (10 Jul 2007)
+
+  10 Jul 2007; Michael Marineau <marineam@gentoo.org>
+  +files/xen-sources-2.6.16.52-ipt-reject-fix.patch,
+  +xen-sources-2.6.16.52.ebuild:
+  Version bump and fix ip tables REJECT compile failure
+
+  02 Jul 2007; Piotr Jaroszyński <peper@gentoo.org>
+  xen-sources-2.6.16.28.ebuild, xen-sources-2.6.16.28-r1.ebuild:
+  (QA) RESTRICT clean up.
+
+*xen-sources-2.6.16.49 (02 May 2007)
+*xen-sources-2.6.16.33 (02 May 2007)
+
+  02 May 2007; Michael Marineau <marineam@gentoo.org>
+  +xen-sources-2.6.16.33.ebuild, +xen-sources-2.6.16.49.ebuild:
+  Add 2.6.16.33 and .39 for Xen 3.0.4
+
+*xen-sources-2.6.16.28-r2 (27 Jan 2007)
+
+  27 Jan 2007; Andrew Ross <aross@gentoo.org> +files/CVE-2005-4352.patch,
+  +files/CVE-2006-4572.patch, +files/CVE-2006-5619.patch,
+  +files/CVE-2006-6056.patch, +files/CVE-2006-6060.patch,
+  +files/dvb-core-ule-sndu.patch, +xen-sources-2.6.16.28-r2.ebuild:
+  Security fixes: CVE-2005-4352 (bug #158792), CVE-2006-4572 (bug #154327),
+  CVE-2006-5619 (bug #154323), CVE-2006-6056 (bug #158786), CVE-2006-6060 (bug
+  #155769) and dvb-core (bug #144870)
+
+*xen-sources-2.6.16.28-r1 (16 Dec 2006)
+
+  16 Dec 2006; Andrew Ross <aross@gentoo.org>
+  +files/xen-sources-2.6.16.28-CVE-2006-6333.patch,
+  +xen-sources-2.6.16.28-r1.ebuild:
+  Fix CVE-2006-6333 (bug #157186).
+
+  16 Dec 2006; Andrew Ross <aross@gentoo.org>
+  -files/xen-sources-2.6.16.26-CVE-2006-2935.patch,
+  -xen-sources-2.6.16.26.ebuild, -xen-sources-2.6.16.26-r1.ebuild:
+  Remove due to CVE-2006-3745 (bug #144820), which doesn't affect 2.6.16.28
+
+*xen-sources-2.6.16.28 (10 Sep 2006)
+
+  10 Sep 2006; Andrew Ross <aross@gentoo.org>
+  +files/xen-sources-2.6.16.28-CVE-2006-3468.patch,
+  +xen-sources-2.6.16.28.ebuild:
+  Version bump to fix bugs #143538 (CVE-2006-4145), #139641 (CVE-2006-2936), and
+  #141503 (CVE-2006-3468).
+
+*xen-sources-2.6.16.26-r1 (26 Aug 2006)
+
+  26 Aug 2006; Andrew Ross <aross@gentoo.org>
+  +files/xen-sources-2.6.16.26-CVE-2006-2935.patch,
+  +xen-sources-2.6.16.26-r1.ebuild:
+  Fix possible buffer overflow (CVE-2006-2935), bug #139321
+
+  16 Aug 2006; Andrew Ross <aross@gentoo.org> metadata.xml:
+  Add xen herd and remove chrb and agriffis as maintainers.
+
+*xen-sources-2.6.16.26 (19 Jul 2006)
+
+  19 Jul 2006; Chris Bainbridge <chrb@gentoo.org>
+  -xen-sources-2.6.16.18.ebuild, +xen-sources-2.6.16.26.ebuild:
+  Version bump for #140444.
+
+*xen-sources-2.6.16.18 (28 May 2006)
+
+  28 May 2006; <chrb@gentoo.org> -xen-sources-2.6.16.16.ebuild,
+  +xen-sources-2.6.16.18.ebuild:
+  Version bump.
+
+*xen-sources-2.6.16.16 (19 May 2006)
+
+  19 May 2006; <chrb@gentoo.org> +xen-sources-2.6.16.16.ebuild:
+  Version bump, thanks to Tuan Van in #133441, and prompting from Tim Yamin ;-)
+  Older versions removed, contain security problems.
+
+*xen-sources-2.6.16-r1 (10 Apr 2006)
+
+  10 Apr 2006; <chrb@gentoo.org> -xen-sources-2.6.16.ebuild,
+  +xen-sources-2.6.16-r1.ebuild:
+  dont install two source trees, dont set ARCH, #129431
+
+  10 Apr 2006; <chrb@gentoo.org> files/digest-xen-sources-2.6.16, Manifest:
+  new digest
+
+*xen-sources-2.6.16 (09 Apr 2006)
+
+  09 Apr 2006; <chrb@gentoo.org> +xen-sources-2.6.16.ebuild:
+  bump, #129191
+
+  30 Mar 2006; Aron Griffis <agriffis@gentoo.org>
+  xen-sources-2.6.12.6-r3.ebuild, xen-sources-2.6.16_rc5.ebuild:
+  Fix app-emulation/xen dependency to use 3.0.1_p<cset> syntax #127667
+
+  03 Mar 2006; <chrb@gentoo.org> xen-sources-2.6.16_rc5.ebuild:
+  change depend to accept revisions
+
+*xen-sources-2.6.16_rc5 (02 Mar 2006)
+*xen-sources-2.6.12.6-r3 (02 Mar 2006)
+
+  02 Mar 2006; <chrb@gentoo.org> -files/mkbuildtree.patch,
+  -xen-sources-2.6.12.6-r2.ebuild, +xen-sources-2.6.12.6-r3.ebuild,
+  -xen-sources-2.6.16_rc3-r1.ebuild, +xen-sources-2.6.16_rc5.ebuild:
+  Bump unstable and get rid of mkbuildtree patch for 2.6.12.6.
+
+  24 Feb 2006; <chrb@gentoo.org> xen-sources-2.6.12.6-r2.ebuild:
+  fix depend, bug #123854
+
+*xen-sources-2.6.16_rc3-r1 (21 Feb 2006)
+
+  21 Feb 2006; <chrb@gentoo.org> -xen-sources-2.6.16_rc3.ebuild,
+  +xen-sources-2.6.16_rc3-r1.ebuild:
+  fix makefile, bug #123494
+
+*xen-sources-2.6.16_rc3 (19 Feb 2006)
+
+  19 Feb 2006; <chrb@gentoo.org> xen-sources-2.6.12.6-r2.ebuild,
+  +xen-sources-2.6.16_rc3.ebuild:
+  new xen-unstable snapshot
+
+  05 Feb 2006; <chrb@gentoo.org> xen-sources-2.6.12.6-r2.ebuild:
+  fix config
+
+*xen-sources-2.6.12.6-r2 (05 Feb 2006)
+
+  05 Feb 2006; <chrb@gentoo.org> -xen-sources-2.6.12.6-r1.ebuild,
+  +xen-sources-2.6.12.6-r2.ebuild:
+  use official tarball
+
+  04 Feb 2006; <chrb@gentoo.org> -xen-sources-2.6.12.6.ebuild,
+  xen-sources-2.6.12.6-r1.ebuild:
+  fix new archive
+
+*xen-sources-2.6.12.6-r1 (03 Feb 2006)
+
+  03 Feb 2006; <chrb@gentoo.org> +xen-sources-2.6.12.6-r1.ebuild:
+  bump
+
+  26 Dec 2005; <chrb@gentoo.org> -xen-sources-2.6.11.12.ebuild:
+  Remove xen-2 as bugs are no longer being fixed upstream.
+
+  21 Dec 2005; Alex Howells <astinus@gentoo.org>
+  xen-sources-2.6.12.6.ebuild:
+  Marking ~amd64 so Xen3 (app-emulation/xen) installs properly
+
+*xen-sources-2.6.12.6 (06 Dec 2005)
+
+  06 Dec 2005; <chrb@gentoo.org> -xen-sources-2.6.12.5-r4.ebuild,
+  +xen-sources-2.6.12.6.ebuild:
+  Xen-3.0.0 release.
+
+  30 Nov 2005; <chrb@gentoo.org> -xen-sources-2.6.12.5-r2.ebuild,
+  -xen-sources-2.6.12.5-r3.ebuild, xen-sources-2.6.12.5-r4.ebuild:
+  add revision to install dir, bug #110752
+
+*xen-sources-2.6.12.5-r4 (28 Nov 2005)
+
+  28 Nov 2005; <chrb@gentoo.org> +xen-sources-2.6.12.5-r4.ebuild:
+  bump
+
+*xen-sources-2.6.12.5-r3 (22 Nov 2005)
+
+  22 Nov 2005; <chrb@gentoo.org> +xen-sources-2.6.12.5-r3.ebuild:
+  version bump
+
+  05 Nov 2005; <chrb@gentoo.org> -xen-sources-2.6.12.5-r1.ebuild:
+  remove ebuild
+
+*xen-sources-2.6.12.5-r2 (27 Oct 2005)
+
+  27 Oct 2005; <chrb@gentoo.org> +xen-sources-2.6.12.5-r2.ebuild:
+  bump
+
+  27 Oct 2005; <chrb@gentoo.org> xen-sources-2.6.12.5-r1.ebuild:
+  depend on xen-r1 ebuild
+
+  10 Oct 2005; Chris Bainbridge <chrb@gentoo.org>
+  xen-sources-2.6.12.5-r1.ebuild:
+  fix bad snapshot
+
+*xen-sources-2.6.12.5-r1 (08 Oct 2005)
+
+  08 Oct 2005; Chris Bainbridge <chrb@gentoo.org> +files/mkbuildtree.patch,
+  -xen-sources-2.6.12.5.ebuild, +xen-sources-2.6.12.5-r1.ebuild:
+  Version bump for new xen-3 snapshot.
+
+*xen-sources-2.6.11.12 (22 Sep 2005)
+
+  22 Sep 2005; Chris Bainbridge <chrb@gentoo.org>
+  -xen-sources-2.6.11.10.ebuild, +xen-sources-2.6.11.12.ebuild:
+  Version bump, thanks to Micheal Marineau for pointing it out
+
+  19 Sep 2005; Chris Bainbridge <chrb@gentoo.org>
+  xen-sources-2.6.12.5.ebuild:
+  Change depend for version bump
+
+  08 Sep 2005; Chris Bainbridge <chrb@gentoo.org>
+  xen-sources-2.6.11.10.ebuild, xen-sources-2.6.12.5.ebuild:
+  fix SRC_URI.
+
+*xen-sources-2.6.12.5 (07 Sep 2005)
+*xen-sources-2.6.11.10 (07 Sep 2005)
+
+  07 Sep 2005; Chris Bainbridge <chrb@gentoo.org>
+  +xen-sources-2.6.11.10.ebuild~, +xen-sources-2.6.12.5.ebuild~,
+  +metadata.xml, +xen-sources-2.6.11.10.ebuild,
+  +xen-sources-2.6.12.5.ebuild:
+  New package. Thanks to the many who contributed in bug #70161.
+

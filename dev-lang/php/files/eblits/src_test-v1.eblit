@@ -1,0 +1,54 @@
+# Copyright 1999-2010 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/dev-lang/php/files/eblits/src_test-v1.eblit,v 1.1 2010/05/27 23:05:04 mabi Exp $
+
+eblit-php-src_test() {
+	vecho ">>> Test phase [test]: ${CATEGORY}/${PF}"
+
+	if [[ ! -x "${S}/sapi/cli/php" ]] ; then
+		ewarn "Test phase requires USE=cli, skipping"
+		return
+	else
+		export TEST_PHP_EXECUTABLE="${S}/sapi/cli/php"
+	fi
+
+	if [[ -x "${S}/sapi/cgi/php-cgi" ]] ; then
+		export TEST_PHP_CGI_EXECUTABLE="${S}/sapi/cgi/php-cgi"
+	fi
+	
+	
+	REPORT_EXIT_STATUS=1 "${TEST_PHP_EXECUTABLE}" -n  -d "session.save_path=${T}" \
+		"${S}/run-tests.php" -n -q -d "session.save_path=${T}"
+
+	for name in ${EXPECTED_TEST_FAILURES}; do
+		mv "${name}.out" "${name}.out.orig" 2>/dev/null
+	done
+
+	local failed="$(find -name '*.out')"
+	if [[ ${failed} != "" ]] ; then
+		ewarn "The following test cases failed unexpectedly:"
+		for name in ${failed}; do
+			ewarn "  ${name/.out/}"
+		done
+	else
+		einfo "No unexpected test failures, all fine"
+	fi
+
+	if [[ ${PHP_SHOW_UNEXPECTED_TEST_PASS} == "1" ]] ; then
+		local passed=""
+		for name in ${EXPECTED_TEST_FAILURES}; do
+			[[ -f "${name}.diff" ]] && continue
+			passed="${passed} ${name}"
+		done
+		if [[ ${passed} != "" ]] ; then
+			einfo "The following test cases passed unexpectedly:"
+			for name in ${passed}; do
+				ewarn "  ${passed}"
+			done
+		else
+			einfo "None of the known-to-fail tests passed, all fine"
+		fi
+	fi
+}
+
+

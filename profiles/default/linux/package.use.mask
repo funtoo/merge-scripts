@@ -1,0 +1,16 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/default/linux/package.use.mask,v 1.16 2009/08/20 18:55:43 flameeyes Exp $
+
+sys-devel/gcc hardened
+sys-libs/glibc hardened
+
+# Diego E. Pettenò <flameeyes@gentoo.org> (20 Aug 2009)
+#
+# Mask oss USE flag for PulseAudio; it's present for compatibility
+# with FreeBSD and other operating systems that have no better
+# interfaces, but people would probably abuse it with Linux as well.
+#
+# Older versions also had an OSS compatibility wrapper on that USE so
+# they are excluded.
+>=media-sound/pulseaudio-0.9.16_rc5 oss

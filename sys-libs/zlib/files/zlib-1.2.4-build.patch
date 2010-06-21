@@ -1,0 +1,34 @@
+--- zlib-1.2.4/win32/Makefile.gcc
++++ zlib-1.2.4/win32/Makefile.gcc
+@@ -30,21 +30,23 @@
+ #LOC = -DASMV
+ #LOC = -DDEBUG -g
+ 
+-CC = gcc
+-CFLAGS = $(LOC) -O3 -Wall
++CC ?= gcc
++CFLAGS ?= $(LOC) -O3 -Wall
+ 
+-AS = $(CC)
+-ASFLAGS = $(LOC) -Wall
++AS ?= $(CC)
++ASFLAGS ?= $(LOC) -Wall
+ 
+ LD = $(CC)
+-LDFLAGS = $(LOC) -s
++LDFLAGS ?= $(LOC)
+ 
+-AR = ar
++AR ?= ar
+ ARFLAGS = rcs
+ 
+-RC = windres
++RC ?= windres
+ RCFLAGS = --define GCC_WINDRES
+ 
++DLLWRAP ?= dllwrap
++
+-STRIP = strip
++STRIP = #
+
+ CP = cp -fp

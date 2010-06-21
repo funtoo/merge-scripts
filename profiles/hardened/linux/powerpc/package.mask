@@ -1,0 +1,8 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/hardened/linux/powerpc/package.mask,v 1.9 2009/12/03 17:48:37 nixnut Exp $
+
+# Wulf C. Krueger <philantrop@gentoo.org> (22 Sep 2007)
+# Needs OOo.
+app-text/bibus
+

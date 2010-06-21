@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<herd>sound</herd>
+	<longdescription>
+		pympd is a GTK+ front end client for the music playing daemon MPD
+	</longdescription>
+</pkgmetadata>

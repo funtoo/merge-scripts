@@ -1,0 +1,105 @@
+# ChangeLog for net-misc/mediatomb
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/net-misc/mediatomb/ChangeLog,v 1.17 2010/04/18 12:29:11 maekke Exp $
+
+  18 Apr 2010; Markus Meier <maekke@gentoo.org> mediatomb-0.12.1.ebuild:
+  amd64 stable, bug #284886
+
+  16 Apr 2010; Christian Faulhammer <fauli@gentoo.org>
+  mediatomb-0.12.1.ebuild:
+  stable x86, security bug 284886
+
+  15 Apr 2010; Jeremy Olexa <darkside@gentoo.org> metadata.xml:
+  Change maintainer to myself
+
+*mediatomb-0.12.1 (08 Apr 2010)
+
+  08 Apr 2010; Jeremy Olexa <darkside@gentoo.org> +mediatomb-0.12.1.ebuild:
+  Version bump to fix YouTube issues and other small bug fixes. Re-introduce
+  USE=libextractor for bug 312855
+
+  04 Apr 2010; Jeremy Olexa <darkside@gentoo.org>
+  mediatomb-0.12.0-r1.ebuild:
+  Add ~arm, tested on armv7 platform
+
+*mediatomb-0.12.0-r1 (30 Mar 2010)
+
+  30 Mar 2010; Jeremy Olexa <darkside@gentoo.org> -mediatomb-0.12.0.ebuild,
+  +mediatomb-0.12.0-r1.ebuild, +files/mediatomb-0.12.0.confd,
+  +files/mediatomb-0.12.0.initd:
+  minor revbump to grab new init/conf files from bug 264235 that I forgot
+
+  29 Mar 2010; Jeremy Olexa <darkside@gentoo.org> +mediatomb-0.12.0.ebuild,
+  +files/mediatomb-0.12.0.config, metadata.xml:
+  The long awaited mediatomb version bump. Closes bugs: 274627, 284886,
+  281432 - including security bug. Many thanks to BT for the help and
+  motivation
+
+*mediatomb-0.12.0 (29 Mar 2010)
+
+  29 Mar 2010; Jeremy Olexa <darkside@gentoo.org> +mediatomb-0.12.0.ebuild,
+  +files/mediatomb-0.12.0.config:
+  The long awaited mediatomb version bump from upstream, closes bug 264235.
+  Many thanks to BT for the help
+
+  29 Dec 2009; Raúl Porcel <armin76@gentoo.org> mediatomb-0.11.0.ebuild:
+  Add ~arm
+
+  22 Dec 2009; Samuli Suominen <ssuominen@gentoo.org>
+  mediatomb-0.11.0.ebuild:
+  Remove USE expat wrt #297864.
+
+*mediatomb-0.11.0-r2 (25 May 2009)
+
+  25 May 2009; Daniel Robbins <drobbins@funtoo.org>
+  +mediatomb-0.11.0-r2.ebuild, +mediatomb-0.12.0_pre20081223-r1.ebuild: 
+  glibc-2.10 fix from gentoo.
+
+  22 May 2009; Diego E. PettenÃ² <flameeyes@gentoo.org>
+  mediatomb-0.11.0.ebuild, +files/mediatomb-0.11.0+glibc-2.10.patch:
+  Add patch to build with glibc-2.10, closes bug #270715.
+
+*mediatomb-0.11.0-r1 (30 Dec 2008)
+
+*mediatomb-0.12.0_pre20081223 (30 Dec 2008)
+
+*mediatomb-9999 (30 Dec 2008)
+
+  30 Dec 2008; Daniel Robbins <drobbins@funtoo.org>
+  +mediatomb-0.11.0-r1.ebuild: Add Sony Playstation 3 PCM patch and tweaked
+  default USE. Patch from BT (amak79@gmail.com)
+
+  30 Dec 2008; Daniel Robbins <drobbins@funtoo.org>
+  +mediatomb-0.12.0_pre20081223: New SVN-based ebuild with support for Sony 
+  Playstation 3 PCM/transcoding. This version has been enhanced to have a working
+  out-of-the-box Playstation 3 configuration.
+  
+  30 Dec 2008; Daniel Robbins <drobbins@funtoo.org>
+  +mediatomb-9999.ebuild: New live SVN ebuild, submitted by BT (amak79@gmail.com).
+
+  25 Oct 2008; Pieter Van den Abeele <pvdabeel@gentoo.org> mediatomb-0.11.0.ebuild:
+  keyworded ~ppc. Closes bug #219420
+
+  08 Jun 2008; Kenneth Prugh <ken69267@gentoo.org> mediatomb-0.11.0.ebuild:
+  amd64 stable, bug #224287
+
+  05 Jun 2008; Christian Faulhammer <opfer@gentoo.org>
+  mediatomb-0.11.0.ebuild:
+  stable x86, bug 224287
+
+  26 Apr 2008; Markus Meier <maekke@gentoo.org> mediatomb-0.11.0.ebuild:
+  add ~x86, bug #217747
+
+  21 Apr 2008; Diego PettenÃ² <flameeyes@gentoo.org>
+  +files/mediatomb-0.11.0+curl-7.18.patch, mediatomb-0.11.0.ebuild:
+  Add patch to fix building with curl 7.18, thanks to Åukasz Dudek.
+
+*mediatomb-0.11.0 (27 Mar 2008)
+
+  27 Mar 2008; Diego PettenÃ² <flameeyes@gentoo.org>
+  +files/mediatomb-0.11.0-newffmpeg.patch, +files/mediatomb-0.11.0.config,
+  +files/mediatomb.confd, +files/mediatomb.initd, +metadata.xml,
+  +mediatomb-0.11.0.ebuild:
+  Initial import of mediatomb, an UPnP media server compatible with Sony
+  PlayStation 3. Thanks to BT in bug #172799 for the ebuild.
+

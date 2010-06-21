@@ -1,0 +1,43 @@
+# Copyright 2004-2009 Gentoo Foundation.
+# Distributed under the terms of the GNU General Public License, v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/default/bsd/fbsd/make.defaults,v 1.3 2009/01/24 07:59:26 the_paya Exp $
+
+# Sandbox should work now, leaving commented for testing.
+# FEATURES="-sandbox"
+
+USERLAND="BSD"
+KERNEL="FreeBSD"
+ELIBC="FreeBSD"
+
+MAKE="gmake"
+
+USE="berkdb crypt ipv6 ncurses nls pam perl python readline ssl tcpd zlib"
+
+# Javier Villavicencio <the_paya@gentoo.org> (22 Jan 2009)
+# Enabled again for testing.
+# USE="${USE} -ipv6"
+
+# 2006/03/07 - Donnie Berkholz <dberkholz@gentoo.org>
+# Modular X: Support direct rendering by default
+USE="${USE} dri"
+
+# 2006/04/19 - Chris Gianelloni <wolf31o2@gentoo.org>
+# Make sure dev-lang/php works right.  See bug #120088 for more info.
+USE="${USE} cli pcre reflection session spl"
+
+# 2006/04/21 - Donnie Berkholz <dberkholz@gentoo.org>
+# Modular X: Build the Xorg X server by default
+USE="${USE} xorg"
+
+# 2006/08/18 - Donnie Berkholz <dberkholz@gentoo.org>
+# Defaults for video drivers
+VIDEO_CARDS="dummy fbdev vmware"
+
+# 2006/10/22 - Diego Pettenò <flameeyes@gentoo.org>
+# FreeBSD only uses Open Sound System, so enable it even if Linux defaults for it to off.
+USE="${USE} oss"
+
+# 2006/10/30 - Diego Pettenò <flameeyes@gentoo.org>
+# Enable iconv by default for mplayer upon Luca's request
+USE="${USE} iconv"
+

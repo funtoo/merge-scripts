@@ -1,0 +1,24 @@
+# ChangeLog for dev-perl/UNIVERSAL-isa
+# Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/dev-perl/UNIVERSAL-isa/ChangeLog,v 1.1 2009/10/10 12:19:00 tove Exp $
+
+  10 Oct 2009; Torsten Veller <tove@gentoo.org> +UNIVERSAL-isa-1.03.ebuild,
+  +metadata.xml:
+  Import from perl-experimental
+
+  26 Jun 2009; Kent Fredric <kentfredric@gmail.com>
+  -UNIVERSAL-isa-0.06-r1.ebuild, -UNIVERSAL-isa-0.06.ebuild,
+  -UNIVERSAL-isa-1.01.ebuild:
+  Removing ebuilds no longer installable ( mirror cleaned )
+
+*UNIVERSAL-isa-1.03 (26 Jun 2009)
+
+  26 Jun 2009; Kent Fredric <kentfredric@gmail.com>
+  +UNIVERSAL-isa-1.03.ebuild:
+  Bumped
+
+*UNIVERSAL-isa-1.02 (04 Jun 2009)
+
+  04 Jun 2009; Torsten Veller <tove@gentoo.org> +UNIVERSAL-isa-1.02.ebuild:
+  Version bump
+

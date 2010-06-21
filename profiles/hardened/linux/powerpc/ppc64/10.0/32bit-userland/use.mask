@@ -1,0 +1,2 @@
+# We mask this since we're not really a multilib profile
+multilib

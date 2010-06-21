@@ -1,0 +1,14 @@
+--- NetworkManager-vpnc-0.5.0.orig/nm-vpnc-service.conf	2005-11-13 01:22:50.000000000 -0500
++++ NetworkManager-vpnc-0.5.0/nm-vpnc-service.conf	2005-11-13 14:35:12.000000000 -0500
+@@ -7,6 +7,11 @@
+ 		<allow send_destination="org.freedesktop.NetworkManager.vpnc"/>
+ 		<allow send_interface="org.freedesktop.NetworkManager.vpnc"/>
+ 	</policy>
++	<policy at_console="true">
++		<allow own="org.freedesktop.NetworkManager.vpnc"/>
++		<allow send_destination="org.freedesktop.NetworkManager.vpnc"/>
++		<allow send_interface="org.freedesktop.NetworkManager.vpnc"/>
++	</policy>
+ 	<policy context="default">
+ 		<deny own="org.freedesktop.NetworkManager.vpnc"/>
+ 		<deny send_destination="org.freedesktop.NetworkManager.vpnc"/>

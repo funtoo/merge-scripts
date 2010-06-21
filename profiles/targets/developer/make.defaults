@@ -1,0 +1,14 @@
+# Copyright 1999-2008 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/targets/developer/make.defaults,v 1.4 2010/06/09 17:03:37 phajdan.jr Exp $
+
+FEATURES="collision-protect cvs digest multilib-strict sign splitdebug stricter test test-fail-continue userpriv usersandbox"
+
+# Disable branding (from desktop)
+USE="-branding"
+
+# As much as it pains me, we hope that developers know what they're doing.
+I_KNOW_WHAT_I_AM_DOING="yes"
+
+# Enable asneeded for GNU ld.
+LD_AS_NEEDED="1"

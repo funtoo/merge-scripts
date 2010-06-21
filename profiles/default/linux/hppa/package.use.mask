@@ -1,0 +1,37 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/default/linux/hppa/package.use.mask,v 1.8 2009/07/31 11:17:54 ssuominen Exp $
+
+# DON'T TOUCH THIS FILE. Instead, file a bug and assign it to <hppa@gentoo.org>.
+
+# Jeroen Roovers <jer@gentoo.org> (15 Aug 2008)
+# HPPA still isn't supported with anything but -O0.
+www-client/mozilla-firefox custom-optimization
+net-libs/xulrunner custom-optimization
+
+# Jeroen Roovers <jer@gentoo.org> (18 Jul 2008)
+# Mask precompiled headers (pch) USE flag for x11-libs/qt-* (bug #223775).
+x11-libs/qt-assistant pch 
+x11-libs/qt-core pch
+x11-libs/qt-dbus pch
+x11-libs/qt-demo pch
+x11-libs/qt-gui pch
+x11-libs/qt-opengl pch
+x11-libs/qt-phonon pch
+x11-libs/qt-qt3support pch
+x11-libs/qt-script pch
+x11-libs/qt-sql pch
+x11-libs/qt-svg pch
+x11-libs/qt-test pch
+x11-libs/qt-webkit pch
+x11-libs/qt-xmlpatterns pch
+
+# Jeroen Roovers <jer@gentoo.org> (15 Jul 2008)
+# media-libs/openinventor isn't ported to HPPA.
+sci-physics/geant openinventor
+
+# Jeroen Roovers <jer@gentoo.org> (17 Jun 2008)
+# loudmouth doesn't work properly (bugs #215125 and #225395).
+app-office/abiword-plugins jabber
+
+# DON'T TOUCH THIS FILE. Instead, file a bug and assign it to <hppa@gentoo.org>.

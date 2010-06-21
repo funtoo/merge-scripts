@@ -1,0 +1,112 @@
+diff --git a/include/scoreboard.h b/include/scoreboard.h
+index bf43cd3..75a2e1f 100644
+--- a/include/scoreboard.h
++++ b/include/scoreboard.h
+@@ -138,6 +138,7 @@ typedef struct {
+                                          */
+     apr_time_t restart_time;
+     int             lb_limit;
++    unsigned short  load_percentage;
+ } global_score;
+ 
+ /* stuff which the parent generally writes and the children rarely read */
+diff --git a/server/mpm/prefork/prefork.c b/server/mpm/prefork/prefork.c
+index 3849c22..21130bd 100644
+--- a/server/mpm/prefork/prefork.c
++++ b/server/mpm/prefork/prefork.c
+@@ -836,6 +836,18 @@ static void perform_idle_server_maintenance(apr_pool_t *p)
+             last_non_dead = i;
+         }
+     }
++
++    {
++        unsigned short load_percentage = (100 * (total_non_dead - idle_count)) / total_non_dead;
++
++        if (load_percentage != ap_scoreboard_image->global->load_percentage) {
++            ap_log_error(APLOG_MARK, APLOG_NOTICE, 0, ap_server_conf, 
++                "changing load percentage from %u to %u (total non dead = %u, idle count = %u)", 
++                ap_scoreboard_image->global->load_percentage, load_percentage, total_non_dead, idle_count);
++            ap_scoreboard_image->global->load_percentage = load_percentage;
++        }
++    }
++
+     ap_max_daemons_limit = last_non_dead + 1;
+     if (idle_count > ap_daemons_max_free) {
+         /* kill off one child... we use the pod because that'll cause it to
+diff --git a/server/protocol.c b/server/protocol.c
+index e5b2e03..49f1888 100644
+--- a/server/protocol.c
++++ b/server/protocol.c
+@@ -834,6 +834,36 @@ AP_DECLARE(void) ap_get_mime_headers(request_rec *r)
+     apr_brigade_destroy(tmp_bb);
+ }
+ 
++static apr_interval_time_t adjust_timeout(apr_interval_time_t timeout) {
++	unsigned int percentage = ap_scoreboard_image->global->load_percentage;
++
++	if (percentage <= 50) {
++		return timeout;
++	}
++	if (percentage <= 60) {
++		return timeout / 2;
++	}
++	if (percentage <= 70) {
++		return timeout / 4;
++	}
++	if (percentage <= 80) {
++		return timeout / 8;
++	}
++	if (percentage <= 90) {
++		return timeout / 16;
++	}
++	if (percentage <= 95) {
++		return timeout / 32;
++	}
++	if (percentage <= 97) {
++		return 1000000; // one second in microseconds
++	}
++	if (percentage <= 99) {
++		return 500000; // half second
++	}
++	return 100000; // 0.1 seconds
++}
++
+ request_rec *ap_read_request(conn_rec *conn)
+ {
+     request_rec *r;
+@@ -843,6 +873,7 @@ request_rec *ap_read_request(conn_rec *conn)
+     apr_bucket_brigade *tmp_bb;
+     apr_socket_t *csd;
+     apr_interval_time_t cur_timeout;
++    apr_interval_time_t adj_timeout;
+ 
+     apr_pool_create(&p, conn->pool);
+     apr_pool_tag(p, "request");
+@@ -909,9 +940,10 @@ request_rec *ap_read_request(conn_rec *conn)
+      */
+     csd = ap_get_module_config(conn->conn_config, &core_module);
+     apr_socket_timeout_get(csd, &cur_timeout);
+-    if (cur_timeout != conn->base_server->timeout) {
+-        apr_socket_timeout_set(csd, conn->base_server->timeout);
+-        cur_timeout = conn->base_server->timeout;
++    adj_timeout = adjust_timeout(conn->base_server->timeout);
++    if (cur_timeout != adj_timeout) {
++        apr_socket_timeout_set(csd, adj_timeout);
++        cur_timeout = adj_timeout;
+     }
+ 
+     if (!r->assbackwards) {
+@@ -967,9 +999,10 @@ request_rec *ap_read_request(conn_rec *conn)
+     /* Toggle to the Host:-based vhost's timeout mode to fetch the
+      * request body and send the response body, if needed.
+      */
+-    if (cur_timeout != r->server->timeout) {
+-        apr_socket_timeout_set(csd, r->server->timeout);
+-        cur_timeout = r->server->timeout;
++    adj_timeout = adjust_timeout(r->server->timeout);
++    if (cur_timeout != adj_timeout) {
++        apr_socket_timeout_set(csd, adj_timeout);
++        cur_timeout = adj_timeout;
+     }
+ 
+     /* we may have switched to another server */

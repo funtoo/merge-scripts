@@ -1,0 +1,7 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/hardened/amd64/package.mask,v 1.5 2009/07/31 11:00:12 ssuominen Exp $
+
+# Andrew Ross <aross@gentoo.org>
+# grub needs a multilib profile to compile on amd64 - use sys-boot/grub-static
+sys-boot/grub

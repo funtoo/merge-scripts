@@ -1,0 +1,78 @@
+Index: flac-1.2.1/src/test_grabbag/cuesheet/Makefile.am
+===================================================================
+--- flac-1.2.1.orig/src/test_grabbag/cuesheet/Makefile.am
++++ flac-1.2.1/src/test_grabbag/cuesheet/Makefile.am
+@@ -20,7 +20,7 @@ EXTRA_DIST = \
+ 	test_cuesheet.dsp \
+ 	test_cuesheet.vcproj
+ 
+-noinst_PROGRAMS = test_cuesheet
++check_PROGRAMS = test_cuesheet
+ test_cuesheet_SOURCES = \
+ 	main.c
+ test_cuesheet_LDADD = \
+Index: flac-1.2.1/src/test_grabbag/picture/Makefile.am
+===================================================================
+--- flac-1.2.1.orig/src/test_grabbag/picture/Makefile.am
++++ flac-1.2.1/src/test_grabbag/picture/Makefile.am
+@@ -20,7 +20,7 @@ EXTRA_DIST = \
+ 	test_picture.dsp \
+ 	test_picture.vcproj
+ 
+-noinst_PROGRAMS = test_picture
++check_PROGRAMS = test_picture
+ test_picture_SOURCES = \
+ 	main.c
+ test_picture_LDADD = \
+Index: flac-1.2.1/src/test_libFLAC/Makefile.am
+===================================================================
+--- flac-1.2.1.orig/src/test_libFLAC/Makefile.am
++++ flac-1.2.1/src/test_libFLAC/Makefile.am
+@@ -22,7 +22,7 @@ EXTRA_DIST = \
+ 
+ INCLUDES = -I$(top_srcdir)/src/libFLAC/include
+ 
+-noinst_PROGRAMS = test_libFLAC
++check_PROGRAMS = test_libFLAC
+ test_libFLAC_LDADD = \
+ 	$(top_builddir)/src/share/grabbag/libgrabbag.la \
+ 	$(top_builddir)/src/share/replaygain_analysis/libreplaygain_analysis.la \
+Index: flac-1.2.1/src/test_libFLAC++/Makefile.am
+===================================================================
+--- flac-1.2.1.orig/src/test_libFLAC++/Makefile.am
++++ flac-1.2.1/src/test_libFLAC++/Makefile.am
+@@ -20,7 +20,7 @@ EXTRA_DIST = \
+ 	test_libFLAC++.dsp \
+ 	test_libFLAC++.vcproj
+ 
+-noinst_PROGRAMS = test_libFLAC++
++check_PROGRAMS = test_libFLAC++
+ test_libFLAC___LDADD = \
+ 	$(top_builddir)/src/share/grabbag/libgrabbag.la \
+ 	$(top_builddir)/src/share/replaygain_analysis/libreplaygain_analysis.la \
+Index: flac-1.2.1/src/test_seeking/Makefile.am
+===================================================================
+--- flac-1.2.1.orig/src/test_seeking/Makefile.am
++++ flac-1.2.1/src/test_seeking/Makefile.am
+@@ -24,7 +24,7 @@ AM_CFLAGS = @OGG_CFLAGS@
+ 
+ INCLUDES = 
+ 
+-noinst_PROGRAMS = test_seeking
++check_PROGRAMS = test_seeking
+ test_seeking_LDADD = \
+ 	$(top_builddir)/src/libFLAC/libFLAC.la \
+ 	@OGG_LIBS@ \
+Index: flac-1.2.1/src/test_streams/Makefile.am
+===================================================================
+--- flac-1.2.1.orig/src/test_streams/Makefile.am
++++ flac-1.2.1/src/test_streams/Makefile.am
+@@ -20,7 +20,7 @@ EXTRA_DIST = \
+ 	test_streams.dsp \
+ 	test_streams.vcproj
+ 
+-noinst_PROGRAMS = test_streams
++check_PROGRAMS = test_streams
+ test_streams_SOURCES = \
+ 	main.c
+ test_streams_LDADD = -lm

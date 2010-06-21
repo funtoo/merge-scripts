@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+  <herd>sound</herd>
+  <maintainer>
+	<email>angelos@gentoo.org</email>
+	<name>Christoph Mende</name>
+  </maintainer>
+  <use>
+	<flag name="cdio">Use libcdio for ISO9660 parsing support</flag>
+	<flag name="cue">Support CUE Sheet Parser Library</flag>
+	<flag name="curl">Support for web stream listening</flag>
+	<flag name="fifo">Support writing audio to a FIFO</flag>
+	<flag name="fluidsynth">Enables Fluidsynth MIDI software synthesis</flag>
+	<flag name="id3">Support for ID3 tags</flag>
+	<flag name="lame">Support for MP3 streaming via Icecast2</flag>
+	<flag name="lastfmradio">Support listening to last.fm radio stations</flag>
+	<flag name="libmms">Support for Microsoft Media Server (MMS) streams via libmms</flag>
+	<flag name="network">Enables network streaming support</flag>
+	<flag name="pipe">Support writing audio to a pipe</flag>
+	<flag name="sid">Build with SID (Commodore 64 Audio) support</flag>
+	<flag name="zip">Support for ZIP files</flag>
+  </use>
+</pkgmetadata>

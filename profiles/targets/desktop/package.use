@@ -1,0 +1,13 @@
+# Copyright 1999-2010 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/targets/desktop/package.use,v 1.5 2010/03/30 11:30:34 ssuominen Exp $
+
+# Theo Chatzimichos <tampakrap@gentoo.org> (30 Mar 2010)
+# Enable thunar for xfdesktop only in desktop profile, as it brings too many
+# reverse deps and only desktop profile users should get the full desktop
+xfce-base/xfdesktop thunar
+
+# Chris Gianelloni <wolf31o2@gentoo.org> (26 Mar 2008)
+# While we may need LDAP client support, who needs the server on a desktop?
+# Did I mention that this also fixes the horrible perl dependency hell, too?
+net-nds/openldap minimal

@@ -1,0 +1,46 @@
+--- src/av_mpeg4_part2.c	2007-11-26 12:47:43.000000000 -0800
++++ src/av_mpeg4_part2-1.c	2008-04-23 20:37:45.000000000 -0700
+@@ -26,7 +26,7 @@
+ #include <sys/stat.h>
+ #include <fcntl.h>
+ 
+-#include <ffmpeg/avcodec.h>
++#include <libavcodec/avcodec.h>
+ 
+ #include "dlna_internals.h"
+ #include "profiles.h"
+--- src/profiles.h	2007-11-26 12:47:43.000000000 -0800
++++ src/profiles1.h	2008-04-23 20:36:25.000000000 -0700
+@@ -22,8 +22,8 @@
+ #ifndef _PROFILES_H_
+ #define _PROFILES_H_
+ 
+-#include <ffmpeg/avcodec.h>
+-#include <ffmpeg/avformat.h>
++#include <libavcodec/avcodec.h>
++#include <libavformat/avformat.h>
+ 
+ #include "dlna_internals.h"
+ #include "containers.h"
+--- src/av_mpeg4_part10.c	2007-11-26 12:47:43.000000000 -0800
++++ src/av_mpeg4_part10-1.c	2008-04-23 20:36:51.000000000 -0700
+@@ -26,7 +26,7 @@
+ #include <sys/stat.h>
+ #include <fcntl.h>
+ 
+-#include <ffmpeg/avcodec.h>
++#include <libavcodec/avcodec.h>
+ 
+ #include "dlna_internals.h"
+ #include "profiles.h"
+--- src/containers.c	2007-11-26 12:47:43.000000000 -0800
++++ src/containers1.c	2008-04-23 20:37:17.000000000 -0700
+@@ -4,7 +4,7 @@
+ #include <sys/stat.h>
+ #include <fcntl.h>
+ 
+-#include <ffmpeg/avformat.h>
++#include <libavformat/avformat.h>
+ 
+ #include "containers.h"
+ #include "profiles.h"

@@ -1,0 +1,26 @@
+diff -Nru a/xen/drivers/char/console.c b/xen/drivers/char/console.c
+--- a/xen/drivers/char/console.c	2008-08-22 17:49:09.000000000 +0800
++++ b/xen/drivers/char/console.c	2009-02-19 18:39:47.000000000 +0800
+@@ -919,7 +919,7 @@
+     console_start_sync();
+     printk("\n****************************************\n");
+     printk("Panic on CPU %d:\n", smp_processor_id());
+-    printk(buf);
++    printk("%s", buf);
+     printk("****************************************\n\n");
+     if ( opt_noreboot )
+         printk("Manual reset required ('noreboot' specified)\n");
+diff -Nru a/xen/tools/symbols.c b/xen/tools/symbols.c
+--- a/xen/tools/symbols.c	2008-08-22 17:49:10.000000000 +0800
++++ b/xen/tools/symbols.c	2009-02-19 18:36:35.000000000 +0800
+@@ -80,8 +80,9 @@
+ 	rc = fscanf(in, "%llx %c %499s\n", &s->addr, &stype, str);
+ 	if (rc != 3) {
+ 		if (rc != EOF) {
++			char* z;
+ 			/* skip line */
+-			fgets(str, 500, in);
++			z = fgets(str, 500, in);
+ 		}
+ 		return -1;
+ 	}

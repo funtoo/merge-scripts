@@ -1,0 +1,14 @@
+# Copyright 1999-2007 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/hardened/make.defaults,v 1.19 2009/07/07 18:26:48 gengor Exp $
+
+STAGE1_USE="hardened pic"
+USE="sysfs urandom xorg"
+INPUT_DEVICES="mouse keyboard evdev"
+
+# 2008/07/09 - Doug Goldstein <cardoe@gentoo.org>
+# Adding LDFLAGS="-Wl,-O1 for all Linux profiles by default
+# after discussion on the gentoo-dev ML. As we bang out a clear
+# direction with how LDFLAGS will be set by default, this entry
+# may move.
+LDFLAGS="-Wl,-O1"

@@ -1,0 +1,24 @@
+#!/sbin/runscript
+
+depend() {
+	need net #MYSQL#
+}
+
+start() {
+	ebegin "Starting MediaTomb"
+	install -d `dirname $MEDIATOMB_PIDFILE`
+	chown mediatomb:mediatomb `dirname $MEDIATOMB_PIDFILE`
+	start-stop-daemon --start --quiet --exec /usr/bin/mediatomb \
+		--pidfile ${MEDIATOMB_PIDFILE} -- --daemon \
+		--pidfile ${MEDIATOMB_PIDFILE} --user ${MEDIATOMB_USER} \
+		--group ${MEDIATOMB_GROUP} --logfile ${MEDIATOMB_LOGFILE} \
+		--config ${MEDIATOMB_CONFIG} --port ${MEDIATOMB_PORT} \
+		--interface ${MEDIATOMB_INTERFACE} ${MEDIATOMB_OPTIONS}
+	eend $?
+}
+
+stop () {
+	ebegin "Stopping MediaTomb"
+	SSD_STARTWAIT="15000" start-stop-daemon --stop --quiet --pidfile ${MEDIATOMB_PIDFILE}
+	eend $?
+}

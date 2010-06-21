@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<herd>graphics</herd>
+	<use>
+		<flag name='autotrace'>
+			use <pkg>media-gfx/autotrace</pkg> to convert bitmaps into vector
+			graphics
+		</flag>
+		<flag name='fpx'>
+			enable <pkg>media-libs/libfpx</pkg> support
+		</flag>
+		<flag name='gs'>
+			enable ghostscript support
+		</flag>
+		<flag name='hdri'>
+			enable High Dynamic Range Images formats
+		</flag>
+		<flag name='lqr'>
+			enable experimental liquid rescale support
+		</flag>
+		<flag name='q32'>
+			set quantum depth to 32
+		</flag>
+		<flag name='q8'>
+			set quantum depth to 8
+		</flag>
+	</use>
+</pkgmetadata>

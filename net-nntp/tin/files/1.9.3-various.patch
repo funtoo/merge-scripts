@@ -1,0 +1,28 @@
+--- tin-1.9.3/src/Makefile.in.orig	2008-12-27 20:47:46.605018835 +0000
++++ tin-1.9.3/src/Makefile.in	2008-12-27 20:49:52.017693843 +0000
+@@ -334,8 +334,6 @@
+	@$(INSTALL) -m 444 $(DOCDIR)/tin.1 $(DESTDIR)$(INS_MANUAL_DIR)$(INS_MANUAL_EXT)/$(PROJECT).$(INS_MANUAL_EXT)
+	@( $(CD) $(DESTDIR)$(INS_MANUAL_DIR)$(INS_MANUAL_EXT) && $(RM) -f r$(PROJECT).$(INS_MANUAL_EXT) && $(LN) $(PROJECT).$(INS_MANUAL_EXT) r$(PROJECT).$(INS_MANUAL_EXT) )
+	@$(INSTALL) -m 444 $(DOCDIR)/tin.5 $(DESTDIR)$(INS_MANUAL_DIR)5/$(PROJECT).5
+-	@-if test ! -f $(DESTDIR)$(INS_MANUAL_DIR)5/mbox.5 ; then $(INSTALL) -m 444 $(DOCDIR)/mbox.5 $(DESTDIR)$(INS_MANUAL_DIR)5/mbox.5 ; else $(ECHO) "  ... skipping $(DESTDIR)$(INS_MANUAL_DIR)5/mbox.5 - file already exists" ; fi
+-	@-if test ! -f $(DESTDIR)$(INS_MANUAL_DIR)5/mmdf.5 ; then $(INSTALL) -m 444 $(DOCDIR)/mmdf.5 $(DESTDIR)$(INS_MANUAL_DIR)5/mmdf.5 ; else $(ECHO) "  ... skipping $(DESTDIR)$(INS_MANUAL_DIR)5/mmdf.5 - file already exists" ; fi
+
+ uninstall_manpage :
+	@$(ECHO) "Uninstalling $(PROJECT) manual page in $(DESTDIR)$(INS_MANUAL_DIR)$(INS_MANUAL_EXT) ..."
+@@ -363,7 +361,6 @@
+	@$(INSTALL) -m 755 $(TOLDIR)/w2r.pl $(DESTDIR)$(INS_BINARY_DIR)/w2r.pl
+	@$(INSTALL) -m 755 $(TOLDIR)/opt-case.pl $(DESTDIR)$(INS_BINARY_DIR)/opt-case.pl
+	@$(INSTALL) -m 755 $(TOLDIR)/tinews.pl $(DESTDIR)$(INS_BINARY_DIR)/tinews.pl
+-	@$(INSTALL) -m 755 $(TOLDIR)/url_handler.pl $(DESTDIR)$(INS_BINARY_DIR)/url_handler.pl
+	@$(INSTALL) -m 444 $(DOCDIR)/w2r.1 $(DESTDIR)$(INS_MANUAL_DIR)$(INS_MANUAL_EXT)/w2r.pl.$(INS_MANUAL_EXT)
+	@$(INSTALL) -m 444 $(DOCDIR)/opt-case.1 $(DESTDIR)$(INS_MANUAL_DIR)$(INS_MANUAL_EXT)/opt-case.pl.$(INS_MANUAL_EXT)
+	@$(INSTALL) -m 444 $(DOCDIR)/tinews.1 $(DESTDIR)$(INS_MANUAL_DIR)$(INS_MANUAL_EXT)/tinews.pl.$(INS_MANUAL_EXT)
+@@ -383,7 +380,7 @@
+ install : $(DESTDIR)$(INS_BINARY_DIR)
+	@$(MAKE) all
+	@$(ECHO) "Installing $(EXE) v$(VER) to $(DESTDIR)$(INS_BINARY_DIR) ..."
+-	@$(INSTALL) -s $(BINDIR)/$(EXE) $(DESTDIR)$(INS_BINARY_DIR)/$(EXE)
++	@$(INSTALL) $(BINDIR)/$(EXE) $(DESTDIR)$(INS_BINARY_DIR)/$(EXE)
+	@( $(CD) $(DESTDIR)$(INS_BINARY_DIR) && $(RM) -f r$(EXE) && $(LN) $(EXE) r$(EXE) )
+	@$(MAKE) install_helpers
+	@$(MAKE) install_manpage

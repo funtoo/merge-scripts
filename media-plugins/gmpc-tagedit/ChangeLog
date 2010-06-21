@@ -1,0 +1,27 @@
+# ChangeLog for media-plugins/gmpc-tagedit
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/media-plugins/gmpc-tagedit/ChangeLog,v 1.4 2010/05/25 09:26:54 angelos Exp $
+
+*gmpc-tagedit-0.20.0 (25 May 2010)
+
+  25 May 2010; Christoph Mende <angelos@gentoo.org>
+  -gmpc-tagedit-0.19.0.ebuild, +gmpc-tagedit-0.20.0.ebuild:
+  Version bump
+
+*gmpc-tagedit-0.19.0 (29 Sep 2009)
+
+  29 Sep 2009; Samuli Suominen <ssuominen@gentoo.org>
+  +gmpc-tagedit-0.19.0.ebuild:
+  Version bump.
+
+  06 Jun 2009; Samuli Suominen <ssuominen@gentoo.org>
+  gmpc-tagedit-0.18.0.ebuild:
+  Add dev-util/gob to DEPEND wrt #272519, thanks to onox <denkpadje at
+  gmail.com>.
+
+*gmpc-tagedit-0.18.0 (13 Mar 2009)
+
+  13 Mar 2009; Christoph Mende <angelos@gentoo.org>
+  +gmpc-tagedit-0.18.0.ebuild:
+  Initial import
+

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<herd>no-herd</herd>
+	<maintainer>
+	  <email>pva@gentoo.org</email>
+	  <name>Peter Volkov</name>
+	</maintainer>
+	<maintainer>
+	  <email>yaleks@gentoo.ru</email>
+	  <name>Aleksandr Yakimov</name>
+	</maintainer>
+	<longdescription lang="en">
+		Cuneiform is an multi-language OCR system.
+	</longdescription>
+	<use>
+		<flag name='imagemagick'>Enables support of various input 
+			formats using <pkg>media-gfx/imagemagick</pkg>. 
+			Otherwise only uncompressed BMP files are supported.
+		</flag>
+	</use>
+</pkgmetadata>
+

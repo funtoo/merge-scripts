@@ -1,0 +1,6 @@
+*>=sys-devel/binutils-2.13.90.0.4
+
+>=x11-base/xorg-x11-6.8.0-r4
+
+*sys-devel/libtool
+*virtual/dev-manager 

@@ -1,0 +1,25 @@
+Patch to compile with gcc-4.3, thanks to Malcolm MacLeod <mmacleod@webmail.co.za>
+
+diff -ru mico.orig/include/mico/throw.h mico/include/mico/throw.h
+--- mico.orig/include/mico/throw.h	2008-07-25 15:41:44.000000000 +0200
++++ mico/include/mico/throw.h	2009-02-09 16:16:54.000000000 +0100
+@@ -25,7 +25,7 @@
+ #define __mico_throw_h__
+ 
+ #include <stdarg.h>
+-#include <string.h>
++#include <cstring>
+ 
+ #ifdef HAVE_EXCEPTIONS
+ #define MICO_CATCHANY(x) try { x; } catch (...) {}
+diff -ru mico.orig/orb/fast_array.cc mico/orb/fast_array.cc
+--- mico.orig/orb/fast_array.cc	2008-07-25 15:41:43.000000000 +0200
++++ mico/orb/fast_array.cc	2009-02-09 16:17:29.000000000 +0100
+@@ -40,6 +40,7 @@
+ 
+ #endif // FAST_PCH
+ 
++#include <limits.h>
+ 
+ using namespace std;
+ 

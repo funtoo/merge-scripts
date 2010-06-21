@@ -1,0 +1,30 @@
+# Joseph Jezak <josejx@gentoo.org> (Mar 20 2009)
+# Mask Ruby -> Oracle bindings
+dev-ruby/ruby-dbi oracle
+
+# Brent Baude <ranger@gentoo.org> (September 17 2008)
+# # Masking clisp use from swig
+dev-lang/swig clisp 
+
+# Jean-Noël Rivasseau <elvanor@gentoo.org> (01 Aug 2008)
+# Disabling gcj flag, no gcc-4.3.1 yet
+dev-java/eclipse-ecj gcj
+
+# Diego Pettenò <flameeyes@gentoo.org> (10 Nov 2007)
+# Tests for Linux-PAM 0.99 require >=sys-libs/glibc-2.4
+>=sys-libs/pam-0.99.8 test
+#Brent Baude <ranger@gentoo.org> (1 Feb 2008)
+# Masking hb and hb2 USE flags as no suitable solution for evms exists
+sys-fs/evms hb hb2
+
+# Mart Raudsepp <leio@gentoo.org> (02 Apr 2008)
+# media-plugins/gst-plugins-mythtv not keyworded
+media-plugins/gst-plugins-meta mythtv
+
+# Brent Baude <ranger@gentoo.org> (11 June 2008)
+# Masking out passwdqc from pambase since passwdqc 
+sys-auth/pambase passwdqc
+
+# Daniel Gryniewicz <dang@gentoo.org> (25 Jul 2008)
+# Mask unkeyworded webkit from liferea
+net-news/liferea webkit

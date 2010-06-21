@@ -1,0 +1,22 @@
+--- Makefile.am
++++ Makefile.am
+@@ -51,7 +51,7 @@
+ 
+ DEFS=-DPKGDATADIR=\"$(pkgdatadir)\" -DSYSCONFDIR=\"$(sysconfdir)\" \
+ 	-DBINDIR=\"$(bindir)\" -DMUTTLOCALEDIR=\"$(datadir)/locale\" \
+-	-DHAVE_CONFIG_H=1
++	-DHAVE_CONFIG_H=1 -DPREFIX=\"$(prefix)/..\"
+ 
+ AM_CPPFLAGS=-I. -I$(top_srcdir) $(IMAP_INCLUDES) $(LIBGPGME_CFLAGS) -Iintl
+ 
+--- init.c
++++ init.c
+@@ -2862,7 +2862,7 @@
+   else
+   {
+     /* Default search path from RFC1524 */
+-    MailcapPath = safe_strdup ("~/.mailcap:" PKGDATADIR "/mailcap:" SYSCONFDIR "/mailcap:/etc/mailcap:/usr/etc/mailcap:/usr/local/etc/mailcap");
++    MailcapPath = safe_strdup ("~/.mailcap:" PKGDATADIR "/mailcap:" SYSCONFDIR "/mailcap:" PREFIX "/etc/mailcap:/etc/mailcap:/usr/etc/mailcap:/usr/local/etc/mailcap");
+   }
+ 
+   Tempdir = safe_strdup ((p = getenv ("TMPDIR")) ? p : "/tmp");

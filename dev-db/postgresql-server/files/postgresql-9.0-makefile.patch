@@ -1,0 +1,18 @@
+--- GNUmakefile.in.old  2010-01-22 17:07:56.574071514 +0100
++++ GNUmakefile.in      2010-01-22 17:08:13.644073319 +0100
+@@ -9,7 +9,6 @@
+ include $(top_builddir)/src/Makefile.global
+
+ all:
+-	$(MAKE) -C doc all
+	$(MAKE) -C src all
+	$(MAKE) -C config all
+	@echo "All of PostgreSQL successfully made. Ready to install."
+@@ -18,7 +17,6 @@
+	$(MAKE) -C doc $@
+
+ install:
+-	$(MAKE) -C doc $@
+	$(MAKE) -C src $@
+	$(MAKE) -C config $@
+	@echo "PostgreSQL installation complete."

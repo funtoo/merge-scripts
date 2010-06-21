@@ -1,0 +1,10 @@
+# ChangeLog for media-sound/quimup
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/media-sound/quimup/ChangeLog,v 1.1 2010/06/03 20:04:11 angelos Exp $
+
+*quimup-1.1.0 (03 Jun 2010)
+
+  03 Jun 2010; Christoph Mende <angelos@gentoo.org> +quimup-1.1.0.ebuild,
+  +metadata.xml:
+  Initial import
+

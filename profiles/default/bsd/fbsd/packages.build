@@ -1,0 +1,49 @@
+# Copyright 2004-2009 Gentoo Foundation.
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/default/bsd/fbsd/packages.build,v 1.2 2009/07/21 13:07:44 aballier Exp $
+
+# This file describes the packages needed to build a stage 1 based on this
+# profile.  Packages in this file are built in order.
+
+# Please do not move perl before baselayout doing so will break lib -> lib64
+# symlinks on systems that use them.
+
+app-arch/bzip2
+dev-libs/openssl
+app-arch/libarchive
+app-shells/bash
+net-misc/rsync
+net-misc/wget
+sys-apps/openrc
+sys-apps/baselayout
+sys-apps/diffutils
+sys-apps/file
+sys-apps/gawk
+sys-apps/grep
+sys-apps/less
+sys-apps/portage
+sys-apps/sed
+sys-apps/texinfo
+sys-devel/binutils
+sys-devel/bison
+sys-devel/flex
+sys-devel/gcc
+dev-libs/libiconv
+sys-devel/gettext
+sys-devel/gnuconfig
+sys-devel/make
+sys-devel/patch
+dev-lang/perl
+dev-lang/python
+app-editors/nano
+virtual/editor
+virtual/gzip
+virtual/libc
+virtual/os-headers
+sys-freebsd/freebsd-lib
+sys-freebsd/freebsd-libexec
+sys-freebsd/freebsd-bin
+sys-freebsd/freebsd-sbin
+sys-freebsd/freebsd-ubin
+sys-freebsd/freebsd-usbin
+sys-freebsd/freebsd-contrib

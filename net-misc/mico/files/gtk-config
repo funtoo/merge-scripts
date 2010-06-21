@@ -1,0 +1,2 @@
+#!/bin/sh
+exec pkg-config gtk+-2.0 $(printf "%s" "$*" | sed s:--version:--modversion:)

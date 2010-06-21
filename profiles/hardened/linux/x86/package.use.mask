@@ -1,0 +1,13 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/hardened/linux/x86/package.use.mask,v 1.13 2010/02/11 18:39:16 reavertm Exp $
+
+# Maciej Mrozowski <reavertm@gentoo.org> (11 Feb 2010)
+# Depends on >=sys-devel/gdb-7.0 which is masked on hardened
+>=dev-util/kdevelop-3.9.98 cxx
+
+# cyrus-sasl doesn't work w/ USE=berkdb (#192753)
+dev-libs/cyrus-sasl berkdb
+
+# missing the necessary linux-headers dep
+>=net-fs/netatalk-2.0.3-r3 xfs

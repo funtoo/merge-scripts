@@ -1,0 +1,8 @@
+# Copyright 1999-2008 Gentoo Foundation.
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/hardened/linux/amd64/make.defaults,v 1.2 2009/07/09 00:47:47 gengor Exp $
+
+USE="justify"
+
+CFLAGS="-O2 -pipe"
+CXXFLAGS="${CFLAGS}"

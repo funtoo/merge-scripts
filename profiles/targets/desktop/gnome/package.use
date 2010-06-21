@@ -1,0 +1,17 @@
+# Copyright 1999-2010 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/targets/desktop/gnome/package.use,v 1.1 2010/04/09 15:23:01 pacho Exp $
+
+# Pacho Ramos <pacho@gentoo.org> (09 Apr 2010)
+# Required by gnome-base/gvfs and sys-apps/devicekit-disks. Enabling them,
+# people emerging gnome-base/gnome won't need to change USE flags as will get
+# proper defaults.
+sys-fs/udev extras
+sys-apps/parted device-mapper
+
+# The following are required by ekiga-3
+net-libs/opal sip
+net-libs/ptlib wav
+
+# Required by app-admin/sabayon
+x11-base/xorg-server kdrive

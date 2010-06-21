@@ -1,0 +1,42 @@
+# ChangeLog for dev-perl/Class-XSAccessor
+# Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/dev-perl/Class-XSAccessor/ChangeLog,v 1.5 2009/12/24 20:30:19 tove Exp $
+
+  24 Dec 2009; Torsten Veller <tove@gentoo.org>
+  -Class-XSAccessor-1.03.ebuild:
+  Cleanup
+
+  23 Dec 2009; Fabian Groffen <grobian@gentoo.org>
+  Class-XSAccessor-1.05.ebuild:
+  Marked ~x86-solaris, bug #296509
+
+  23 Nov 2009; Torsten Veller <tove@gentoo.org>
+  Class-XSAccessor-1.05.ebuild:
+  Add a blocker for Class-XSAccessor-Array because it was merged
+
+*Class-XSAccessor-1.05 (22 Nov 2009)
+
+  22 Nov 2009; Robin H. Johnson <robbat2@gentoo.org>
+  +Class-XSAccessor-1.05.ebuild:
+  Version bump via perl-bump experimental tool.
+
+  06 Oct 2009; Torsten Veller <tove@gentoo.org>
+  +Class-XSAccessor-1.03.ebuild, +metadata.xml:
+  Import from perl-experimental
+
+*Class-XSAccessor-1.03 (04 Jun 2009)
+
+  04 Jun 2009; Torsten Veller <tove@gentoo.org>
+  +Class-XSAccessor-1.03.ebuild:
+  Version bump
+
+  28 May 2009; Torsten Veller <tove@gentoo.org>
+  -Class-XSAccessor-0.14.ebuild, Class-XSAccessor-1.02.ebuild:
+  Add ~amd64. Cleanup
+
+*Class-XSAccessor-1.02 (17 May 2009)
+
+  17 May 2009; Torsten Veller <tove@gentoo.org>
+  +Class-XSAccessor-1.02.ebuild:
+  Version bump
+

@@ -1,0 +1,26 @@
+# ChangeLog for Gentoo/alpha profile directory
+# Copyright 1999-2008 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/default/linux/alpha/ChangeLog,v 1.6 2008/11/10 11:03:53 armin76 Exp $
+
+  10 Nov 2008; Raúl Porcel <armin76@gentoo.org> -package.use.mask:
+  Punt package.use.mask, this goes to arch/alpha
+
+  09 Nov 2008; Tobias Klausmann <klausman@gentoo.org> package.use.mask:
+  Mask dxr3 USE flag for mplayer due to lack of hardware for testing
+
+  17 Sep 2008; Jose Luis Rivero <yoswink@gentoo.org>
+  -2008.0/no-nptl/deprecated, -2008.0/no-nptl/package.mask,
+  -2008.0/no-nptl/parent:
+  Remove the deprecated 2008/no-nptl profile
+
+  19 Aug 2008; Jose Luis Rivero <yoswink@gentoo.org>
+  2008.0/no-nptl/package.mask:
+  package mask gcc-4.3 since it needs >=glibc-2.6
+
+  13 Aug 2008; Raúl Porcel <armin76@gentoo.org>
+  +2008.0/no-nptl/package.mask:
+  P.mask iproute2 on no-nptl profile
+
+  11 Aug 2008; Raúl Porcel <armin76@gentoo.org> +2008.0/no-nptl/deprecated:
+  Deprecate the no-nptl profile
+

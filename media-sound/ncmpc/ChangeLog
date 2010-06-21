@@ -1,0 +1,198 @@
+# ChangeLog for media-sound/ncmpc
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/media-sound/ncmpc/ChangeLog,v 1.52 2010/06/03 19:09:26 angelos Exp $
+
+*ncmpc-0.16.1-r1 (03 Jun 2010)
+
+  03 Jun 2010; Christoph Mende <angelos@gentoo.org> -ncmpc-0.16.1.ebuild,
+  +ncmpc-0.16.1-r1.ebuild, +files/ncmpc-0.16.1-lyrics-backtrace.patch:
+  Fix backtrace that happens when trying to use the leoslyrics plugin (bug
+  316397)
+
+*ncmpc-0.16.1 (03 Jun 2010)
+
+  03 Jun 2010; Christoph Mende <angelos@gentoo.org> +ncmpc-0.16.1.ebuild,
+  metadata.xml:
+  Taking over package and bumping to 0.16.1 (bug #303791)
+
+  02 Jun 2010; Torsten Veller <tove@gentoo.org> metadata.xml:
+  Remove omp from metadata.xml (#147119)
+
+  10 Oct 2009; Raúl Porcel <armin76@gentoo.org> ncmpc-0.14.ebuild:
+  sparc/x86 stable wrt #285975
+
+  27 Sep 2009; nixnut <nixnut@gentoo.org> ncmpc-0.14.ebuild:
+  ppc stable #285975
+
+  27 Sep 2009; Brent Baude <ranger@gentoo.org> ncmpc-0.14.ebuild:
+  Marking ncmpc-0.14 ppc64 for bug 285975
+
+  25 Sep 2009; Dawid Węgliński <cla@gentoo.org> ncmpc-0.14.ebuild:
+  Stable on amd64 (bug #285975)
+
+  22 Sep 2009; Jeroen Roovers <jer@gentoo.org> ncmpc-0.14.ebuild:
+  Stable for HPPA (bug #285975).
+
+*ncmpc-0.14 (22 May 2009)
+
+  22 May 2009; Samuli Suominen <ssuominen@gentoo.org> +ncmpc-0.14.ebuild:
+  Version bump.
+
+  21 May 2009; Brent Baude <ranger@gentoo.org> ncmpc-0.13.ebuild:
+  stable ppc, bug 269460
+
+  20 May 2009; Raúl Porcel <armin76@gentoo.org> ncmpc-0.13.ebuild:
+  sparc stable wrt #269460
+
+  14 May 2009; Markus Meier <maekke@gentoo.org> ncmpc-0.13.ebuild:
+  amd64/x86 stable, bug #269460
+
+  12 May 2009; Jeroen Roovers <jer@gentoo.org> ncmpc-0.13.ebuild:
+  Stable for HPPA (bug #269460).
+
+  11 May 2009; Samuli Suominen <ssuominen@gentoo.org> ncmpc-0.13.ebuild:
+  Remove USE lirc so we can request this version for stable wrt #165839 and
+  #250015.
+
+*ncmpc-0.13 (11 Jan 2009)
+
+  11 Jan 2009; Thomas Anderson <gentoofan23@gentoo.org> ncmpc-0.12.ebuild,
+  +ncmpc-0.13.ebuild:
+  Version bump, add configure option for multilib fix for amd64.
+
+*ncmpc-0.12 (05 Dec 2008)
+
+  05 Dec 2008; David Shakaryan <omp@gentoo.org> metadata.xml,
+  -ncmpc-0.12_beta2.ebuild, +ncmpc-0.12.ebuild:
+  Version bump.
+
+*ncmpc-0.12_beta2 (28 Nov 2008)
+
+  28 Nov 2008; David Shakaryan <omp@gentoo.org> metadata.xml,
+  +ncmpc-0.12_beta2.ebuild:
+  Version bump; finally a new release.
+
+  28 Nov 2008; David Shakaryan <omp@gentoo.org> -ncmpc-0.11.0.ebuild,
+  -ncmpc-0.11.1.ebuild, -ncmpc-0.11.1-r1.ebuild:
+  Remove older versions.
+
+  22 Sep 2008; David Shakaryan <omp@gentoo.org> metadata.xml:
+  Add myself as the maintainer of media-sound/ncmpc.
+
+  30 May 2008; Christian Heim <phreak@gentoo.org> metadata.xml:
+  Removing Andrej Kacian (Ticho) from metadata.xml (as per #59986).
+
+  09 Oct 2007; Christoph Mende <angelos@gentoo.org> ncmpc-0.11.1-r2.ebuild:
+  Stable on amd64 wrt bug #193881
+
+  06 Oct 2007; Tobias Scherbaum <dertobi123@gentoo.org>
+  ncmpc-0.11.1-r2.ebuild:
+  ppc stable, bug #193881
+
+  03 Oct 2007; Ferris McCormick <fmccor@gentoo.org> ncmpc-0.11.1-r2.ebuild:
+  Sparc stable --- Bug #193881 --- thanks to Friedrich Oslage.
+
+  02 Oct 2007; Andrej Kacian <ticho@gentoo.org> ncmpc-0.11.1-r2.ebuild:
+  Stable on x86, bug #193881.
+
+  26 Sep 2007; Jeroen Roovers <jer@gentoo.org> ncmpc-0.11.1-r2.ebuild:
+  Stable for HPPA (Unicode support, bug #193881).
+
+  01 May 2007; Marius Mauch <genone@gentoo.org> ncmpc-0.11.1-r1.ebuild,
+  ncmpc-0.11.1-r2.ebuild:
+  Replacing einfo with elog
+
+  04 Apr 2007; Andrej Kacian <ticho@gentoo.org> ncmpc-0.11.1-r2.ebuild:
+  Only apply patch to use libncursesw for wide chars if ncurses has been built
+  with unicode support. Bug #155177, suggested by Mathias Gumz <akira at
+  fluxbox.org>.
+
+*ncmpc-0.11.1-r2 (28 Mar 2007)
+
+  28 Mar 2007; Andrej Kacian <ticho@gentoo.org>
+  +files/0.11.1-widechars.patch, +ncmpc-0.11.1-r2.ebuild:
+  Apply patch from Sebastian <sebastian_ml at gmx.net> to add support for
+  unicode wide characters. Bug #155177.
+
+  20 Feb 2007; Markus Rothe <corsair@gentoo.org> ncmpc-0.11.1-r1.ebuild:
+  Added ~ppc64
+
+  29 Oct 2006; Andrej Kacian <ticho@gentoo.org> ncmpc-0.11.0.ebuild,
+  ncmpc-0.11.1.ebuild, ncmpc-0.11.1-r1.ebuild:
+  Added pkgconfig to DEPEND to solve bug #153354 by "Evil Compile Person"
+  <bugs at dev.gentooexperimental.org>.
+
+  10 Sep 2006; Javier Villavicencio <the_paya@gentoo.org>
+  ncmpc-0.11.1-r1.ebuild:
+  Add ~x86-fbsd keyword.
+
+  08 Mar 2006; Diego Pettenò <flameeyes@gentoo.org> ncmpc-0.11.0.ebuild,
+  ncmpc-0.11.1.ebuild, ncmpc-0.11.1-r1.ebuild:
+  Drop virtual/libc dependency.
+
+  07 Feb 2006; Simon Stelling <blubb@gentoo.org> ncmpc-0.11.1-r1.ebuild:
+  stable on amd64
+
+  21 Nov 2005; Guy Martin <gmsoft@gentoo.org> ncmpc-0.11.1-r1.ebuild:
+  Stable on hppa.
+
+  11 Nov 2005; Michael Hanselmann <hansmi@gentoo.org>
+  ncmpc-0.11.1-r1.ebuild:
+  Stable on ppc.
+
+  26 Oct 2005; Gustavo Zacarias <gustavoz@gentoo.org>
+  ncmpc-0.11.1-r1.ebuild:
+  Stable on sparc
+
+  25 Oct 2005; Andrej Kacian <ticho@gentoo.org> ncmpc-0.11.1-r1.ebuild:
+  Stable on x86.
+
+  12 Sep 2005; Michael Hanselmann <hansmi@gentoo.org> ncmpc-0.11.1.ebuild:
+  Stable on ppc.
+
+  12 Sep 2005; Gustavo Zacarias <gustavoz@gentoo.org> ncmpc-0.11.1.ebuild:
+  Stable on sparc
+
+*ncmpc-0.11.1-r1 (08 Sep 2005)
+
+  08 Sep 2005; Thomas Matthijs <axxo@gentoo.org> -ncmpc-0.10.1.ebuild,
+  ncmpc-0.11.1.ebuild, +ncmpc-0.11.1-r1.ebuild:
+  fix bug #61212
+
+  22 May 2005; Guy Martin <gmsoft@gentoo.org> ncmpc-0.11.1.ebuild:
+  Stable on hppa.
+
+*ncmpc-0.11.1 (11 Feb 2005)
+
+  11 Feb 2005; Thomas Matthijs <axxo@gentoo.org> metadata.xml,
+  +ncmpc-0.11.1.ebuild:
+  version bump
+
+  15 Sep 2004; Jeremy Huddleston <eradicator@gentoo.org> ncmpc-0.11.0.ebuild:
+  Stable amd64, sparc.
+
+  29 Jul 2004; Brian Harring <ferringb@gentoo.org> ncmpc-0.11.0.ebuild:
+  Stable on x86.
+
+  24 Jul 2004; Lars Weiler <pylon@gentoo.org> ncmpc-0.11.0.ebuild:
+  Stable on ppc.
+
+*ncmpc-0.11.0 (17 Jul 2004)
+
+  17 Jul 2004; Brian Harring <ferringb@gentoo.org> ncmpc-0.10.1.ebuild,
+  +ncmpc-0.11.0.ebuild:
+  stabling 0.10.1 for x86 and ppc, adding 0.11.0.
+
+  12 Jul 2004; Jeremy Huddleston <eradicator@gentoo.org> ncmpc-0.10.1.ebuild:
+  ~amd64
+
+  09 Jul 2004; Ciaran McCreesh <ciaranm@gentoo.org> ncmpc-0.10.1.ebuild:
+  Added ~sparc, bug #56543
+
+*ncmpc-0.10.1 (27 Jun 2004)
+
+  27 Jun 2004; Brian Harring <ferringb@gentoo.org> ChangeLog metadata.xml
+  ncmpc-0.10.1.ebuild files/digest-ncmpc-0.10.1
+  
+  Initial import.  Ebuild submitted by Florian Rohde <floggy@kistenkatze.de>.
+  See bug #48025.  

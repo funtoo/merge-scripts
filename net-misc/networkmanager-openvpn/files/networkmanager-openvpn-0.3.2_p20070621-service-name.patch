@@ -1,0 +1,17 @@
+Fixes bug http://bugzilla.gnome.org/show_bug.cgi?id=447577
+
+Index: openvpn/nm-openvpn-service.name.in
+===================================================================
+--- openvpn/nm-openvpn-service.name.in  (revision 2653)
++++ openvpn/nm-openvpn-service.name.in  (working copy)
+@@ -1,8 +1,8 @@
+ [VPN Connection]
+ name=openvpn
+ service=org.freedesktop.NetworkManager.openvpn
+-program=@bindir@/nm-openvpn-service
++program=@BINDIR@/nm-openvpn-service
+
+ [GNOME]
+-auth-dialog=@libexecdir@/nm-openvpn-auth-dialog
++auth-dialog=@LIBEXECDIR@/nm-openvpn-auth-dialog
+ properties=@prefix@/${LIB}/libnm-openvpn-properties

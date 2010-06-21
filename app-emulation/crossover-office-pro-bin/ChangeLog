@@ -1,0 +1,108 @@
+# ChangeLog for app-emulation/crossover-office-pro-bin
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/app-emulation/crossover-office-pro-bin/ChangeLog,v 1.17 2010/04/30 13:17:15 vapier Exp $
+
+*crossover-office-pro-bin-9.0.1 (30 Apr 2010)
+
+  30 Apr 2010; Mike Frysinger <vapier@gentoo.org>
+  +crossover-office-pro-bin-9.0.1.ebuild:
+  Version bump #317377 by Michiel de Bruijne.
+
+*crossover-office-pro-bin-9.0.0 (20 Apr 2010)
+
+  20 Apr 2010; Mike Frysinger <vapier@gentoo.org>
+  +crossover-office-pro-bin-9.0.0.ebuild:
+  Version bump #311943 by Pacho Ramos.
+
+*crossover-office-pro-bin-8.0.0 (23 Aug 2009)
+*crossover-office-pro-bin-7.1.0 (23 Aug 2009)
+*crossover-office-pro-bin-7.0.2 (23 Aug 2009)
+
+  23 Aug 2009; Mike Frysinger <vapier@gentoo.org>
+  +crossover-office-pro-bin-7.0.2.ebuild,
+  +crossover-office-pro-bin-7.1.0.ebuild,
+  +crossover-office-pro-bin-8.0.0.ebuild:
+  Version bump #231440 by Pacho Ramos, Robert A., Marcus D. Hanwell, and
+  Paul Hartman.
+
+*crossover-office-pro-bin-7.1.0 (23 Dec 2008)
+
+  23 Dec 2008; Eric R. Stoeckel, Jr. <dev454@gmail.com>
+  +crossover-office-pro-bin-7.1.0.ebuild: 
+  Version bump to newest supported build and added menu item to Office category.
+
+*crossover-office-pro-bin-6.2.0 (02 Dec 2007)
+
+  02 Dec 2007; Mike Frysinger <vapier@gentoo.org>
+  +crossover-office-pro-bin-6.2.0.ebuild:
+  Version bump #194581 by Tom Simnett.
+
+*crossover-office-pro-bin-6.1.0 (04 Aug 2007)
+
+  04 Aug 2007; Mike Frysinger <vapier@gentoo.org>
+  +crossover-office-pro-bin-6.1.0.ebuild:
+  Version bump #187417 by Ross.
+
+  02 Jul 2007; Piotr Jaroszyński <peper@gentoo.org>
+  crossover-office-pro-bin-4.2.ebuild,
+  crossover-office-pro-bin-5.0.0.ebuild,
+  crossover-office-pro-bin-5.0.1.ebuild,
+  crossover-office-pro-bin-5.0.3.ebuild,
+  crossover-office-pro-bin-6.0.0.ebuild:
+  (QA) RESTRICT clean up.
+
+  04 Mar 2007; Marius Mauch <genone@gentoo.org>
+  crossover-office-pro-bin-4.2.ebuild,
+  crossover-office-pro-bin-5.0.0.ebuild,
+  crossover-office-pro-bin-5.0.1.ebuild,
+  crossover-office-pro-bin-5.0.3.ebuild,
+  crossover-office-pro-bin-6.0.0.ebuild:
+  Replacing einfo with elog
+
+  26 Jan 2007; Mike Frysinger <vapier@gentoo.org>
+  crossover-office-pro-bin-6.0.0.ebuild:
+  Update conf install path #163648 by Pacho Ramos.
+
+*crossover-office-pro-bin-6.0.0 (16 Jan 2007)
+
+  16 Jan 2007; Mike Frysinger <vapier@gentoo.org>
+  +crossover-office-pro-bin-6.0.0.ebuild:
+  Version bump #162299 by Jan Hendrik Grahl.
+
+  24 Sep 2006; Mike Frysinger <vapier@gentoo.org>
+  crossover-office-pro-bin-4.2.ebuild,
+  crossover-office-pro-bin-5.0.0.ebuild,
+  crossover-office-pro-bin-5.0.1.ebuild,
+  crossover-office-pro-bin-5.0.3.ebuild:
+  Clean up X RDEPEND, add desktop-file-utils as crossover uses that to
+  generate menu entires, and stabilize.
+
+*crossover-office-pro-bin-5.0.3 (20 Jul 2006)
+
+  20 Jul 2006; Mike Frysinger <vapier@gentoo.org>
+  +crossover-office-pro-bin-5.0.3.ebuild:
+  Version bump #140950 by riskable.
+
+  25 Jan 2006; Mike Frysinger <vapier@gentoo.org>
+  crossover-office-pro-bin-4.2.ebuild,
+  crossover-office-pro-bin-5.0.0.ebuild,
+  crossover-office-pro-bin-5.0.1.ebuild:
+  Add support for modular X by Markus Ullmann #120287.
+
+*crossover-office-pro-bin-5.0.1 (15 Jan 2006)
+
+  15 Jan 2006; Mike Frysinger <vapier@gentoo.org>
+  +crossover-office-pro-bin-5.0.1.ebuild:
+  Version bump for security #118101.
+
+*crossover-office-pro-bin-5.0.0 (30 Oct 2005)
+
+  30 Oct 2005; Mike Frysinger <vapier@gentoo.org>
+  +crossover-office-pro-bin-5.0.0.ebuild:
+  Version bump #110721 by Jean Darcoux.
+
+*crossover-office-pro-bin-4.2 (19 Apr 2005)
+
+  19 Apr 2005; Mike Frysinger <vapier@gentoo.org>
+  +crossover-office-pro-bin-4.2.ebuild:
+  Initial import from #84163 by Sridhar Dhanapalan / HezniK.

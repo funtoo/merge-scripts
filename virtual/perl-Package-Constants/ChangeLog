@@ -1,0 +1,63 @@
+# ChangeLog for virtual/perl-Package-Constants
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/virtual/perl-Package-Constants/ChangeLog,v 1.14 2010/01/17 14:14:33 tove Exp $
+
+  17 Jan 2010; Torsten Veller <tove@gentoo.org>
+  -perl-Package-Constants-0.01.ebuild:
+  Cleanup
+
+  07 Jan 2010; Torsten Veller <tove@gentoo.org>
+  perl-Package-Constants-0.01.ebuild, perl-Package-Constants-0.02.ebuild:
+  Set empty HOMEPAGE and LICENSE
+
+  05 Jan 2010; nixnut <nixnut@gentoo.org>
+  perl-Package-Constants-0.02.ebuild:
+  ppc stable #288026
+
+  15 Dec 2009; Jonathan Callen <abcd@gentoo.org>
+  perl-Package-Constants-0.02.ebuild:
+  QA: Add prefix keywords
+
+  14 Dec 2009; Raúl Porcel <armin76@gentoo.org>
+  perl-Package-Constants-0.02.ebuild:
+  alpha/ia64/m68k/s390/sh/sparc stable wrt #288026
+
+  10 Dec 2009; Brent Baude <ranger@gentoo.org>
+  perl-Package-Constants-0.02.ebuild:
+  Marking perl-Package-Constants-0.02 ppc64 stable for bug 288026
+
+  07 Dec 2009; Markus Meier <maekke@gentoo.org>
+  perl-Package-Constants-0.02.ebuild:
+  arm stable, bug #288026
+
+  07 Dec 2009; Jeroen Roovers <jer@gentoo.org>
+  perl-Package-Constants-0.02.ebuild:
+  Stable for HPPA (bug #288026).
+
+  07 Dec 2009; Torsten Veller <tove@gentoo.org> metadata.xml:
+  Add perl herd
+
+  04 Dec 2009; Torsten Veller <tove@gentoo.org>
+  perl-Package-Constants-0.02.ebuild:
+  Stable on amd64 (#288026)
+
+  04 Dec 2009; Christian Faulhammer <fauli@gentoo.org>
+  perl-Package-Constants-0.02.ebuild:
+  x86 stable, bug 288026
+
+  25 Aug 2009; Torsten Veller <tove@gentoo.org>
+  perl-Package-Constants-0.02.ebuild:
+  Add support for perl-5.10.1
+
+  19 Aug 2009; Torsten Veller <tove@gentoo.org>
+  perl-Package-Constants-0.01.ebuild, perl-Package-Constants-0.02.ebuild:
+  Fix DESCRIPTION. Thanks to Kent Fredric
+
+*perl-Package-Constants-0.02 (10 Aug 2009)
+*perl-Package-Constants-0.01 (10 Aug 2009)
+
+  10 Aug 2009; Torsten Veller <tove@gentoo.org>
+  +perl-Package-Constants-0.01.ebuild, +perl-Package-Constants-0.02.ebuild,
+  +metadata.xml:
+  Add virtual for Package-Constants
+

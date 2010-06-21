@@ -1,0 +1,21 @@
+http://bugs.gentoo.org/310225
+
+--- configure
++++ configure
+@@ -43,11 +43,11 @@
+       echo '  configure [--zprefix] [--prefix=PREFIX]  [--eprefix=EXPREFIX]'
+       echo '    [--static] [--64] [--libdir=LIBDIR] [--includedir=INCLUDEDIR]'
+         exit 0 ;;
+-    -p*=* | --prefix=*) prefix=`echo $1 | sed 's/[-a-z_]*=//'`; shift ;;
+-    -e*=* | --eprefix=*) exec_prefix=`echo $1 | sed 's/[-a-z_]*=//'`; shift ;;
+-    -l*=* | --libdir=*) libdir=`echo $1 | sed 's/[-a-z_]*=//'`; shift ;;
+-    -i*=* | --includedir=*) includedir=`echo $1 | sed 's/[-a-z_]*=//'`;shift ;;
+-    -u*=* | --uname=*) uname=`echo $1 | sed 's/[-a-z_]*=//'`;shift ;;
++    -p*=* | --prefix=*) prefix=`echo $1 | sed 's/.*=//'`; shift ;;
++    -e*=* | --eprefix=*) exec_prefix=`echo $1 | sed 's/.*=//'`; shift ;;
++    -l*=* | --libdir=*) libdir=`echo $1 | sed 's/.*=//'`; shift ;;
++    -i*=* | --includedir=*) includedir=`echo $1 | sed 's/.*=//'`;shift ;;
++    -u*=* | --uname=*) uname=`echo $1 | sed 's/.*=//'`;shift ;;
+     -p* | --prefix) prefix="$2"; shift; shift ;;
+     -e* | --eprefix) exec_prefix="$2"; shift; shift ;;
+     -l* | --libdir) libdir="$2"; shift; shift ;;

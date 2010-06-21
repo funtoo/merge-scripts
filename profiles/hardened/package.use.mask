@@ -1,0 +1,11 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/hardened/package.use.mask,v 1.23 2010/04/10 15:35:30 ssuominen Exp $
+
+sys-devel/gcc -hardened
+sys-libs/glibc -hardened
+
+# Fails with gcc-3.4.x SSP, bug #230415.
+app-cdr/cdrdao gcdmaster
+
+www-apps/mediawiki math

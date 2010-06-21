@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config version="1" xmlns="http://mediatomb.cc/config/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://mediatomb.cc/config/1 http://mediatomb.cc/config/1.xsd">
+  <server>
+    <ui enabled="yes" show-tooltips="yes">
+      <accounts enabled="no" session-timeout="30">
+        <account user="mediatomb" password="mediatomb"/>
+      </accounts>
+    </ui>
+    <name>MediaTomb</name>
+    <udn></udn>
+    <home>/var/lib/mediatomb</home>
+    <webroot>/usr/share/mediatomb/web</webroot>
+    <storage>
+      <sqlite3 enabled="yes">
+        <database-file>mediatomb.db</database-file>
+      </sqlite3>
+      <mysql enabled="no">
+        <host>?</host>
+        <port>?</port>
+        <username>?</username>
+        <password>?</password>
+        <database>?</database>
+      </mysql>
+    </storage>
+    <!-- PS3 requires "yes"
+         Please ensure that this MediaTomb configuration provides reasonable defaults so that it
+         works "out of the box" for the SONY Playstation 3, particularly for streaming lossless
+         FLAC 16/44.1 files as well as video. The goal is to make the MediaTomb ebuild more and
+         more user friendly and "emerge and go," starting with the PS3. Thanks! -Daniel Robbins
+    -->
+    <protocolInfo extend="yes"/>
+    <extended-runtime-options>
+      <ffmpegthumbnailer enabled="yes">
+        <thumbnail-size>160</thumbnail-size>
+        <seek-percentage>5</seek-percentage>
+        <filmstrip-overlay>no</filmstrip-overlay>
+        <workaround-bugs>no</workaround-bugs>
+      </ffmpegthumbnailer>
+      <mark-played-items enabled="no" suppress-cds-updates="yes">
+        <string mode="prepend">*</string>
+      </mark-played-items>
+    </extended-runtime-options>
+  </server>
+  <import hidden-files="no">
+    <autoscan use-inotify="auto">
+	<!-- update the "location" attributes below to point to the locations of your media -->
+	<directory location="/home/video/archive" mode="inotify" recursive="yes" hidden-files="no"/>
+	<directory location="/home/music/archive" mode="inotify" recursive="yes" hidden-files="no"/>
+	<directory location="/home/pictures" mode="inotify" recursive="yes" hidden-files="no"/>
+    </autoscan>
+    <scripting script-charset="UTF-8">
+      <common-script>/usr/share/mediatomb/js/common.js</common-script>
+      <playlist-script>/usr/share/mediatomb/js/playlists.js</playlist-script>
+      <virtual-layout type="builtin">
+        <import-script>/usr/share/mediatomb/js/import.js</import-script>
+        <dvd-script>/usr/share/mediatomb/js/import-dvd.js</dvd-script>
+      </virtual-layout>
+    </scripting>
+    <mappings>
+      <extension-mimetype ignore-unknown="no">
+        <map from="mp3" to="audio/mpeg"/>
+        <map from="ogg" to="application/ogg"/>
+        <map from="asf" to="video/x-ms-asf"/>
+        <map from="asx" to="video/x-ms-asf"/>
+        <map from="wma" to="audio/x-ms-wma"/>
+        <map from="wax" to="audio/x-ms-wax"/>
+        <map from="wmv" to="video/x-ms-wmv"/>
+        <map from="wvx" to="video/x-ms-wvx"/>
+        <map from="wm" to="video/x-ms-wm"/>
+        <map from="wmx" to="video/x-ms-wmx"/>
+        <map from="m3u" to="audio/x-mpegurl"/>
+        <map from="pls" to="audio/x-scpls"/>
+        <map from="flv" to="video/x-flv"/>
+        <map from="avi" to="video/divx"/>
+        <map from="divx" to="video/divx"/>
+        <map from="mkv" to="video/x-matroska"/>
+	<map from="cr2" to="image/cr2"/>
+	<map from="CR2" to="image/cr2"/>
+	<map from="nef" to="image/nef"/>
+	<map from="NEF" to="image/nef"/>
+	<map from="png" to="image/png"/>
+	<map from="PNG" to="image/png"/>
+      </extension-mimetype>
+      <mimetype-upnpclass>
+        <map from="audio/*" to="object.item.audioItem.musicTrack"/>
+        <map from="video/*" to="object.item.videoItem"/>
+        <map from="image/*" to="object.item.imageItem"/>
+      </mimetype-upnpclass>
+      <mimetype-contenttype>
+        <treat mimetype="audio/mpeg" as="mp3"/>
+        <treat mimetype="application/ogg" as="ogg"/>
+        <treat mimetype="audio/x-flac" as="flac"/>
+        <treat mimetype="image/jpeg" as="jpg"/>
+        <treat mimetype="audio/x-mpegurl" as="playlist"/>
+        <treat mimetype="audio/x-scpls" as="playlist"/>
+        <treat mimetype="audio/x-wav" as="pcm"/>
+        <treat mimetype="audio/L16" as="pcm"/>
+        <treat mimetype="video/x-msvideo" as="avi"/>
+        <treat mimetype="video/mp4" as="mp4"/>
+        <treat mimetype="audio/mp4" as="mp4"/>
+        <treat mimetype="video/divx" as="avi"/>
+        <treat mimetype="application/x-iso9660" as="dvd"/>
+        <treat mimetype="application/x-iso9660-image" as="dvd"/>
+      </mimetype-contenttype>
+    </mappings>
+    <online-content>
+      <YouTube enabled="yes" refresh="28800" update-at-start="yes" purge-after="604800" racy-content="exclude">
+        <!-- Use the "user" attribute to point to YouTube users that you want to follow - you can view
+             their public playlists. -->
+        <favorites user="NationalGeographic"/>
+        <playlists user="PlayStation"/>
+        <subscriptions user="sceablog"/>
+        <uploads user="Google"/>
+        <standardfeed feed="most_viewed" time-range="today"/>
+        <standardfeed feed="recently_featured" time-range="today"/>
+      </YouTube>
+      <!-- If you have a fast enough internet connection, you can view higher resolution apple trailers
+           by setting the "resolution" attribute to 720p -->
+      <AppleTrailers enabled="yes" refresh="43200" update-at-start="yes" resolution="720p"/>
+    </online-content>
+  </import>
+  <transcoding enabled="yes">
+    <mimetype-profile-mappings>
+      <transcode mimetype="application/ogg" using="oggflac2raw"/>
+      <transcode mimetype="application/ogg" using="vlcmpeg"/>
+      <transcode mimetype="audio/x-flac" using="oggflac2raw"/>
+      <transcode mimetype="video/divx" using="vlcmpeg"/>
+      <transcode mimetype="video/quicktime" using="vlcmpeg"/>
+      <transcode mimetype="video/x-flv" using="vlcmpeg"/>
+      <transcode mimetype="video/x-matroska" using="vlcmpeg"/>
+      <transcode mimetype="video/x-ms-asf" using="vlcmpeg"/>
+      <transcode mimetype="image/nef" using="nef2jpeg"/>
+    </mimetype-profile-mappings>
+    <profiles>
+    <profile name="nef2jpeg" enabled="yes" type="external">
+        <mimetype>image/jpeg</mimetype>
+	<agent command="/usr/lib/mediatomb/bin/dcraw-transcode" arguments="%in %out"/>
+	<accept-url>no</accept-url>
+	<first-resource>yes</first-resource>
+	<hide-original-resource>yes</hide-original-resource>
+	<buffer size="10485760" chunk-size="262144" fill-size="524288"/>
+     </profile>
+      <profile name="oggflac2raw" enabled="yes" type="external">
+        <mimetype>audio/L16</mimetype>
+        <accept-url>no</accept-url>
+        <first-resource>yes</first-resource>
+        <hide-original-resource>yes</hide-original-resource>
+        <accept-ogg-theora>no</accept-ogg-theora>
+        <sample-frequency>source</sample-frequency>
+        <audio-channels>source</audio-channels>
+        <agent command="ogg123" arguments="-d raw -o byteorder:big -f %out %in"/>
+        <buffer size="1048576" chunk-size="131072" fill-size="262144"/>
+      </profile>
+      <profile name="vlcmpeg" enabled="yes" type="external">
+        <mimetype>video/mpeg</mimetype>
+        <accept-url>yes</accept-url>
+        <first-resource>yes</first-resource>
+        <hide-original-resource>yes</hide-original-resource>
+        <accept-ogg-theora>yes</accept-ogg-theora>
+        <sample-frequency>48000</sample-frequency>
+        <audio-channels>2</audio-channels>
+        <avi-fourcc-list mode="ignore">
+            <fourcc>XVID</fourcc>
+            <fourcc>DX50</fourcc>
+        </avi-fourcc-list>
+        <agent command="vlc" arguments="-I dummy %in --sout #transcode{vcodec=mp2v,vb=4096,fps=25,acodec=mpga,ab=192,samplerate=48000,channels=2,soverlay,audio-sync}:standard{access=file,mux=ps,dst=%out} vlc://quit"/>
+        <buffer size="10485760" chunk-size="262144" fill-size="524288"/>
+      </profile>
+    </profiles>
+  </transcoding>
+</config>

@@ -1,0 +1,13 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/hardened/linux/use.mask,v 1.9 2009/10/13 23:02:35 gengor Exp $
+
+-hardened
+
+emul-linux-x86
+
+# tcc is x86-only
+tcc
+
+# precompiled headers are not compat with ASLR.
+pch

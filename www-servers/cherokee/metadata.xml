@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+  <herd>www-servers</herd>
+  <maintainer>
+    <email>bass@gentoo.org</email>
+    <name>José Alberto Suárez López</name>
+  </maintainer>
+  <use>
+	  <flag name='admin'>Install web based cherokee conf tool</flag>
+	  <flag name='coverpage'>Installs the default cherokee coverpage</flag>
+  </use>
+</pkgmetadata>

@@ -1,0 +1,787 @@
+# ChangeLog for dev-lang/ghc
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/dev-lang/ghc/ChangeLog,v 1.179 2010/06/17 20:47:56 kolmodin Exp $
+
+  17 Jun 2010; Lennart Kolmodin <kolmodin@gentoo.org> ghc-6.12.3.ebuild:
+  Change SRC_URI to use ghc-bins from the mirroring system for ghc 6.12.3.
+
+  17 Jun 2010; Lennart Kolmodin <kolmodin@gentoo.org> ghc-6.6.1.ebuild:
+  Remove the post dependency on dev-haskell/filepath, as this package is
+  actually already part of ghc since version 6.6.1.
+  See bug #324411.
+
+*ghc-6.12.3 (16 Jun 2010)
+
+  16 Jun 2010; Lennart Kolmodin <kolmodin@gentoo.org> ghc-6.12.1.ebuild,
+  +files/ghc-6.12.2-configure-CHOST-part2.patch, +ghc-6.12.3.ebuild:
+  Version bump to 6.12.3.
+  So far we've got binaries for amd64, ppc64 and x86.
+  Also changed so that the masked ghc 6.12.1 ebuild uses haskell-updater-1*.
+
+  12 Jun 2010; Lennart Kolmodin <kolmodin@gentoo.org> ghc-6.10.4-r1.ebuild:
+  Edit the ghc-wrapper installed by USE=binary to include GHC_CFLAGS from
+  the user's compilation.
+  This solves problems for hardend users, as the ghc binaries are not build
+  on hardend systems. See bug #313635 for details.
+  Patch by xake@rymdraket.net.
+
+  31 May 2010; Joseph Jezak <josejx@gentoo.org> ghc-6.10.4-r1.ebuild,
+  ghc-6.12.1.ebuild:
+  Added ghc 6.10.4 and 6.12.1 binaries for ppc, marked ~ppc.
+
+  25 Mar 2010; Lennart Kolmodin <kolmodin@gentoo.org>
+  files/ghc-6.12.1-configure-CHOST.patch:
+  Fix building with CHOST="i486-pc-linux-gnu".
+  Issue reported by Sergey Mironov <ierton@gmail.com>,
+  patch contributed by Sergei Trofimovich <slyfox@inbox.ru>.
+  For details, see bug #310963.
+
+*ghc-6.12.1 (26 Jan 2010)
+
+  26 Jan 2010; <kolmodin@gentoo.org> +ghc-6.12.1.ebuild:
+  Version bump, currently masked for testing.
+
+*ghc-6.10.4-r1 (05 Dec 2009)
+
+  05 Dec 2009; <kolmodin@gentoo.org> +ghc-6.10.4-r1.ebuild,
+  +files/ghc-6.10.4-autoconf.patch, +files/ghc-6.10.4-libm-detection.patch:
+  Attempt to fix a lot of recent trouble with building ghc-6.10.4;
+  * bug #295487, could not build with >=autoconf-2.64;
+    patch by int-e, reported by Tobias Hommel <tobi@keksbude.net>
+  * bug #292772, add CFLAGS to ghc wrapper enables hardended to build;
+    reported and fixed by Zhang, Hongjiu <secludedsage@gmail.com> with the
+    help of ivanm, trofi, dcoutts and igloo.
+  * bug #293208, undefined reference to `sqrt', libm detection trouble;
+    Roie Kerstein and Renato Gallo found and tracked down the bug,
+    asuffield suggested the fix and Sergei Trofimovich <slyfox@inbox.ru>
+    patched.
+
+  31 Oct 2009; <kolmodin@gentoo.org> -ghc-6.10.2.ebuild, -ghc-6.10.3.ebuild,
+  metadata.xml:
+  Remove previous ghc versions 6.10.2 and 6.10.3 as 6.10.4 now is unmasked.
+  Remove ghcmakebinary USE flag from metadata, it was unused.
+
+  16 Sep 2009; Lennart Kolmodin <kolmodin@gentoo.org> ghc-6.10.4.ebuild,
+  +files/ghc-6.10.4-ppc64-always-minimal-toc.patch,
+  +files/ghc-6.10.4-propagate-hc-options-to-all-libraries.patch:
+  Add blocker on <haddock-2.4.2. Older versions will not work with this
+  version of ghc. We add the block in ghc rather than in haddock, as blocks
+  can't be trusted to be retroactive.
+
+  Also add ppc64 binary and patches,
+  work done by Sergei Trofimovich <slyfox@community.haskell.org>.
+
+  10 Sep 2009; Christian Faulhammer <fauli@gentoo.org> ghc-6.8.2-r1.ebuild:
+  stable x86/amd64, bug 283155
+
+  02 Aug 2009; Lennart Kolmodin <kolmodin@gentoo.org> ghc-6.8.2.ebuild:
+  Make ppc work in pkg_setup.
+
+  02 Aug 2009; Lennart Kolmodin <kolmodin@gentoo.org> ghc-6.10.4.ebuild:
+  Add sparc binary for ghc 6.10.4. Binary compiled by
+  Duncan Coutts <duncan.coutts@worc.ox.ac.uk>.
+
+  01 Aug 2009; <mabi@gentoo.org> ghc-6.8.2.ebuild:
+  ~ppc added back
+
+  29 Jul 2009; Lennart Kolmodin <kolmodin@gentoo.org> Manifest:
+  Fix broken manifest, ghc-6.8.2-ia64. Reported by Jeremy Olexa (darkside).
+
+  22 Jul 2009; Lennart Kolmodin <kolmodin@gentoo.org> ghc-6.10.4.ebuild:
+  Add amd64 binary for ghc-6.10.4.
+
+*ghc-6.10.4 (22 Jul 2009)
+
+  22 Jul 2009; Lennart Kolmodin <kolmodin@gentoo.org> +ghc-6.10.4.ebuild:
+  Version bump, GHC 6.10.4 is masked for testing.
+
+*ghc-6.10.3 (10 May 2009)
+
+  10 May 2009; Lennart Kolmodin <kolmodin@gentoo.org> +ghc-6.10.3.ebuild:
+  Version bump, ghc 6.10.3, masked for testing.
+
+  19 Apr 2009; Lennart Kolmodin <kolmodin@gentoo.org> ghc-6.10.2.ebuild:
+  Minor QA.
+
+*ghc-6.10.2 (19 Apr 2009)
+
+  19 Apr 2009; Lennart Kolmodin <kolmodin@gentoo.org> +ghc-6.10.2.ebuild:
+  Add ghc-6.10.2, currently masked for testing.
+
+*ghc-6.8.2-r1 (17 Apr 2009)
+
+  17 Apr 2009; Lennart Kolmodin <kolmodin@gentoo.org> +ghc-6.8.2-r1.ebuild:
+  Add a restricted version of ghc 6.8.2 (-r1), but that can handle
+  >=sys-libs/readline-6. Previous ghc versions depends on =readline-5, which
+  gives problems now that readline-6 is in the tree. To allow other readline
+  versions we have bundled a precompiled readline-5 package, making the ghc
+  bootstrap process work. Thus, this also forced us to remove the USE=binary
+  flag. See bug #259867.
+
+  27 Dec 2008; Caleb Cushing <xenoterracide@gmail.com> ghc.6.10.1.ebuild:
+  ghc-6.10.1.ebuild ~M Bug #252176
+
+  04 Oct 2008; Raúl Porcel <armin76@gentoo.org> ghc-6.8.2.ebuild:
+  alpha/ia64 stable
+
+  02 Oct 2008; Ferris McCormick <fmccor@gentoo.org> ghc-6.8.2.ebuild:
+  Sparc stable, originally part of Bug #230919, and now suggested by Bug #239368.
+
+  26 Aug 2008; Raúl Porcel <armin76@gentoo.org> ghc-6.8.2.ebuild:
+  Make ia64 an unregistered arch, as it breaks some stuff
+
+  23 Aug 2008; Jeroen Roovers <jer@gentoo.org> metadata.xml:
+  Add GLEP 56 USE flag descriptions.
+
+  15 Jul 2008; Jeroen Roovers <jer@gentoo.org> ghc-6.8.2.ebuild:
+  Stable for HPPA (bug #230919).
+
+  06 Jul 2008; Markus Meier <maekke@gentoo.org> ghc-6.8.2.ebuild:
+  amd64/x86 stable, bug #230919
+
+  28 Apr 2008; Raúl Porcel <armin76@gentoo.org> ghc-6.8.2.ebuild:
+  Upload again the binaries for alpha, and add ~ia64 wrt #206643
+
+  01 Mar 2008; Raúl Porcel <armin76@gentoo.org> ghc-6.6.1.ebuild,
+  ghc-6.8.2.ebuild:
+  Add ~alpha
+
+  29 Jan 2008; Jeroen Roovers <jer@gentoo.org> ghc-6.8.2.ebuild:
+  Marked ~hppa (bug #206643).
+
+  26 Jan 2008; Duncan Coutts <dcoutts@gentoo.org> ghc-6.8.2.ebuild:
+  Drop ~alpha ~hppa ~ia64 ~ppc ~ppc64 keywords as per bug #206643.
+  They will have to wait for new binaries. Also fix a few minor QA bugs.
+
+  23 Dec 2007; Luis F. Araujo <araujo@gentoo.org> ghc-6.4.2.ebuild:
+  Droping the last reference to virtual/x11
+
+  24 Dec 2007; Lennart Kolmodin <kolmodin@gentoo.org> files/ghc-updater:
+  Fix ghc-updater to be baselayout independent wrt functions.sh.
+  Fixes bug #190043, thanks to Jakub Moc <jakub@gentoo.org>.
+
+*ghc-6.8.2 (19 Dec 2007)
+
+  19 Dec 2007; Lennart Kolmodin <kolmodin@gentoo.org> +ghc-6.8.2.ebuild:
+  First version of the 6.8 branch. It's currently package.mask'ed.
+
+  16 Dec 2007; nixnut <nixnut@gentoo.org> ghc-6.6.1.ebuild:
+  Stable on ppc wrt bug 201984
+
+  13 Dec 2007; Duncan Coutts <dcoutts@gentoo.org> files/ghc-updater,
+  ghc-6.2.2.ebuild, ghc-6.4.2.ebuild, ghc-6.6.ebuild, ghc-6.6.1.ebuild:
+  Stop providing virtual/ghc. Nothing in portage has depended on it for some
+  time.
+
+  12 Dec 2007; Ferris McCormick <fmccor@gentoo.org> ghc-6.6.1.ebuild:
+  Sparc stable --- needed for Bug #201984 generally.
+
+  26 Nov 2007; Jeroen Roovers <jer@gentoo.org> ghc-6.6.1.ebuild:
+  Stable for HPPA. Do not install LICENSE.
+
+  15 Nov 2007; Steve Dibb <beandog@gentoo.org> ghc-6.6.1.ebuild:
+  amd64 stable, bug 196616
+
+  05 Nov 2007; Duncan Coutts <dcoutts@gentoo.org> ghc-6.2.2.ebuild,
+  ghc-6.4.2.ebuild:
+  Use new unified ghc ebuild for 6.2.2 and 6.4.2. This merges the
+  functionality of ghc-bin into the ghc ebuild and eliminates virtual/ghc.
+  To get the binary version emerge with the "binary" USE flag.
+
+  05 Nov 2007; Duncan Coutts <dcoutts@gentoo.org> ghc-6.6.1.ebuild:
+  Add sparc and ppc binaries. Also fix some var quoting QA warnings.
+
+  23 Oct 2007; Christian Faulhammer <opfer@gentoo.org> ghc-6.6.1.ebuild:
+  stable x86, bug 196616
+
+  29 Aug 2007; Jeroen Roovers <jer@gentoo.org> ghc-6.6.1.ebuild:
+  Marked ~hppa (bug #187147).
+
+  26 Aug 2007; Lennart Kolmodin <kolmodin@gentoo.org> files/ghc-updater:
+  Update ghc-updater to new baselayout.
+  Thanks to Jeroen Roovers <jer@gentoo.org>, bug #190043.
+
+  17 Aug 2007; Lennart Kolmodin <kolmodin@gentoo.org>
+  +files/ghc-bash-completion, ghc-6.6.1.ebuild:
+  Add optional bash completion support for ghc-pkg.
+  Fixes to properly remove the leftover package.conf{,.old} files upon
+  uninstall of this package.
+  Tweaking mk/build.mk regarding arches we don't yet support for this GHC
+  version.
+
+  08 Aug 2007; Lennart Kolmodin <kolmodin@gentoo.org> ghc-6.6.ebuild:
+  Set SplitObjs=NO if >=gcc-4.2 is used.
+
+  28 Jul 2007; Lennart Kolmodin <kolmodin@gentoo.org> ghc-6.6.1.ebuild:
+  Disable the split objects feature when using >=gcc-4.2.
+
+  25 Jul 2007; Duncan Coutts <dcoutts@gentoo.org> +ghc-6.6.ebuild:
+  Add ghc-6.6 back since it has binaries for alpha, ppc and sparc that we do
+  not have yet for 6.6.1.
+
+  25 Jul 2007; Duncan Coutts <dcoutts@gentoo.org> -ghc-6.6.ebuild,
+  ghc-6.6.1.ebuild:
+  Update 6.6.1 and remove 6.6 ebuilds.
+
+  22 Jul 2007; Hans de Graaff <graaff@gentoo.org> ghc-6.4.2.ebuild:
+  Drop virtual/x11 references.
+
+  11 Jul 2007; Duncan Coutts <dcoutts@gentoo.org> ghc-6.6.1.ebuild:
+  Add ia64 binary for ghc-6.6.1. Added ~ia64 to keywords.
+
+  10 Jul 2007; Duncan Coutts <dcoutts@gentoo.org>
+  files/ghc-6.5-norelax.patch:
+  Fix sparc "norelax" patch.
+
+  10 Jul 2007; Duncan Coutts <dcoutts@gentoo.org>
+  -files/ghc-6.2.hardened.patch, -files/ghc-6.4.1-configure.patch,
+  -files/ghc-6.4.1-gcc41.patch, -files/ghc-6.4.1-openal.patch,
+  files/ghc-6.5-norelax.patch, files/ghc-updater, ghc-6.2.2.ebuild,
+  -ghc-6.4.1-r2.ebuild, -ghc-6.4.1-r3.ebuild, ghc-6.4.2.ebuild,
+  ghc-6.6.ebuild, ghc-6.6.1.ebuild:
+  Remove ghc-6.4.1. Now that we have 6.4.2, we don't need an older version
+  on the 6.4.x branch. Remove old ia64 hacks that are no longer necessary.
+  Make the ghc-6.2.2 ebuild work again by taking many of the improvements
+  from the 6.4.2 ebuild.
+
+  09 Jul 2007; Duncan Coutts <dcoutts@gentoo.org> ghc-6.6.1.ebuild:
+  Oops, alpha doesnt have a binary yet, so cant mark ~alpha yet.
+
+  08 Jul 2007; Duncan Coutts <dcoutts@gentoo.org> ghc-6.6.1.ebuild:
+  Bump dep on cabal and no longer hide ghc's built-in cabal.
+
+*ghc-6.6.1 (06 Jul 2007)
+
+  06 Jul 2007; Duncan Coutts <dcoutts@gentoo.org> +ghc-6.6.1.ebuild:
+  Add new version, ghc-6.6.1. So far only binaries for x86 and amd64. More
+  arches to follow.
+
+  06 Jul 2007; Duncan Coutts <dcoutts@gentoo.org> ghc-6.6.ebuild:
+  Fix mirror url for the docs.
+
+  06 Jul 2007; Duncan Coutts <dcoutts@gentoo.org> ghc-6.6.ebuild:
+  Add ~sparc and ~alpha to KEYWORDS. Both were included for old ghc-bin-6.6.
+
+  05 Jul 2007; Duncan Coutts <dcoutts@gentoo.org> +files/10ghc,
+  ghc-6.6.ebuild:
+  Merge ghc and ghc-bin ebuilds. emerge ghc with USE="binary" to get a binary
+  version. The ghc-bin ebuild will not be used anymore. This ghc ebuild is
+  able to bootstrap without a separate ghc-bin ebuild by downloading a binary
+  version specially for the purpose.
+
+  06 Apr 2007; Chris Parrott <cparrott@gentoo.org>
+  +files/ghc-6.6-nothreadedrts.patch, ghc-6.6.ebuild:
+  added patches to workaround RTS problem on sparc
+
+  29 Mar 2007; Markus Rothe <corsair@gentoo.org> ghc-6.4.2.ebuild,
+  ghc-6.6.ebuild:
+  Build unregisterised on ppc64; bug #145466
+
+  10 Mar 2007; <kolmodin@gentoo.org> +files/ghc-6.5-norelax.patch:
+  Add missing ghc-6.6 patch.
+
+*ghc-6.6 (07 Mar 2007)
+
+  07 Mar 2007; <kolmodin@gentoo.org> +ghc-6.6.ebuild:
+  Bump version. Big changes ahead... wrt ghc-extra-libs, etc
+
+  06 Jan 2007; Andres Loeh <kosmikus@gentoo.org> ghc-6.2.2.ebuild,
+  ghc-6.4.1-r2.ebuild, ghc-6.4.1-r3.ebuild, ghc-6.4.2.ebuild:
+  Fixed elog / einfo usage.
+
+  03 Oct 2006; Duncan Coutts <dcoutts@gentoo.org>
+  +files/ghc-6.4.2-sparcmangler.patch, ghc-6.4.2.ebuild:
+  Add fmccor's sparc mangler patch. Fixes bug #144752.
+
+  03 Oct 2006; Duncan Coutts <dcoutts@gentoo.org> ghc-6.4.1-r3.ebuild,
+  ghc-6.4.2.ebuild:
+  Use ${T} rather than ${TMP}
+
+  28 Aug 2006; Jeroen Roovers <jer@gentoo.org> ghc-6.4.2.ebuild:
+  Stable for HPPA (bug #140369).
+
+  21 Aug 2006; Daniel Gryniewicz <dang@gentoo.org> ghc-6.4.2.ebuild:
+  Marked stable on amd64 for bug #140369
+
+  16 Aug 2006; Joshua Jackson <tsunam@gentoo.org> ghc-6.4.2.ebuild:
+  Stable x86; bug #140369
+
+  02 Aug 2006; Duncan Coutts <dcoutts@gentoo.org> ghc-6.4.2.ebuild:
+  Dont strip binaries on install. See QA warnings in bug #140369.
+  Also dep on freealut now that it's been split out of openal.
+
+  24 Jul 2006; Gustavo Zacarias <gustavoz@gentoo.org> ghc-6.4.2.ebuild:
+  Stable on sparc wrt #140369
+
+  23 Jul 2006; Tobias Scherbaum <dertobi123@gentoo.org> ghc-6.4.2.ebuild:
+  ppc stable, bug #140369
+
+  20 Jul 2006; Markus Rothe <corsair@gentoo.org> ghc-6.4.2.ebuild:
+  Stable on ppc64; bug #140369
+
+  15 Jun 2006; Duncan Coutts <dcoutts@gentoo.org> ghc-6.4.1-r3.ebuild,
+  ghc-6.4.2.ebuild:
+  Patch to fix a mis-compilation in the rts due to strict aliasing,
+  should be fixed upstream for 6.4.3 and 6.6. Fixes bug #135651.
+
+  21 May 2006; Markus Rothe <corsair@gentoo.org> ghc-6.4.1-r2.ebuild:
+  Stable on ppc64
+
+  19 May 2006; Duncan Coutts <dcoutts@gentoo.org> ghc-6.4.1-r3.ebuild,
+  ghc-6.4.2.ebuild:
+  Add note to users of hardened gcc-3.x
+
+  18 May 2006; Duncan Coutts <dcoutts@gentoo.org>
+  +files/ghc-6.4.2-sparc32plus.patch, ghc-6.4.1-r3.ebuild, ghc-6.4.2.ebuild:
+  Support gcc-4.x better at the expense of hardened gcc-3.x.
+  Switching between gcc-3.x and gcc-4.x will now just work. Switching between
+  vanilla and hardened gcc will now require re-emerging rather than just
+  working. It should also enable anyone who has broken their ghc installation
+  by upgrading to gcc-4.x to get things working again by re-emerging ghc-6.4.2,
+  ghc-6.4.1-r3 or ghc-bin-6.4.1-r1.
+  Only build OpenAL/ALUT bindings if the OpenGL bindings will also be built
+  (since one depends on the other).
+  Fix GHCi on sparc when using the V8+ ABI (eg CFLAGS="-march=ultrasparc").
+
+  12 May 2006; Duncan Coutts <dcoutts@gentoo.org>
+  +files/ghc-6.4.2-alut.patch, ghc-6.4.2.ebuild:
+  Re-enable alut package and add hack for ia64
+
+  05 May 2006; Chris Parrott <cparrott@gentoo.org> ghc-6.4.2.ebuild:
+  Temporarily disabled openal USE flag, pending fix to openal bindings.
+
+  03 May 2006; Duncan Coutts <dcoutts@gentoo.org> ghc-6.4.1-r3.ebuild,
+  ghc-6.4.2.ebuild:
+  Ignore debugging CFLAGS (they don't help and just cause problems). Update to
+  PDEPEND on cabal-1.1.4. Disable ALUT bindings (because media-libs/freealut
+  is not available on sufficient arches). Add ~x86-fbsd to KEYWORDS.
+
+  02 May 2006; Duncan Coutts <dcoutts@gentoo.org> ghc-6.4.1-r2.ebuild,
+  ghc-6.4.1-r3.ebuild:
+  Patch to fix make-3.81 hanging (backport of the fix in ghc-6.4.2)
+
+  27 Apr 2006; Duncan Coutts <dcoutts@gentoo.org>
+  -files/ghc-6.4-powerpc.patch, +ghc-6.4.2.ebuild:
+  Remove old unused patch
+
+*ghc-6.4.2 (27 Apr 2006)
+
+  27 Apr 2006; Duncan Coutts <dcoutts@gentoo.org> +ghc-6.4.2.ebuild:
+  New minor version
+
+  27 Apr 2006; Duncan Coutts <dcoutts@gentoo.org> ghc-6.4.1-r3.ebuild:
+  We dont need the java/fop stuff since were only building html docs
+
+  27 Apr 2006; Marien Zwart <marienz@gentoo.org> files/digest-ghc-6.2.2,
+  files/digest-ghc-6.4.1-r2, Manifest:
+  Fixing SHA256 digest, pass four
+
+  06 Apr 2006; Duncan Coutts <dcoutts@gentoo.org> ghc-6.4.1-r3.ebuild:
+  -O* flags (from the users CFLAGS) breaks ghc on too many systems so don't
+  add it to ghc's CFLAGS. Also remove ia64 GOT patch that didn't help.
+
+  28 Mar 2006; Duncan Coutts <dcoutts@gentoo.org> ghc-6.4.1-r2.ebuild:
+  Enable SplitObjs on ppc. This gives much smaller binaries.
+
+  28 Mar 2006; Duncan Coutts <dcoutts@gentoo.org> ghc-6.4.1-r3.ebuild:
+  Change the use of CFLAGS again. Filter out -O2 on arches where it breaks.
+
+  27 Mar 2006; Duncan Coutts <dcoutts@gentoo.org> -ghc-6.4.ebuild:
+  Remove 6.4 since 6.4.1 is stable and 6.4 was rather buggy anyway.
+
+  27 Mar 2006; Duncan Coutts <dcoutts@gentoo.org>
+  +files/ghc-6.4.1-gcc41.patch:
+  Add missing patch file
+
+*ghc-6.4.1-r3 (26 Mar 2006)
+
+  26 Mar 2006; Duncan Coutts <dcoutts@gentoo.org> +ghc-6.4.1-r3.ebuild:
+  Add support for ia64. Change the way we do the CFLAGS and GHC_CFLAGS again.
+  Make limited use of users CFLAGS. Support gcc-4.1. Fix parallel make.
+
+  23 Mar 2006; Chris White <chriswhite@gentoo.org> ghc-6.4.1-r2.ebuild:
+  Marked ghc-6.4.1-r2 amd64/x86 stable for bug #126134.
+
+  21 Mar 2006; Gustavo Zacarias <gustavoz@gentoo.org> ghc-6.4.1-r2.ebuild:
+  Stable on sparc wrt #126134
+
+  20 Mar 2006; <nixnut@gentoo.org> ghc-6.4.1-r2.ebuild:
+  Stable on ppc. Bug #126134
+
+  18 Mar 2006; Duncan Coutts <dcoutts@gentoo.org> ghc-6.4.1-r2.ebuild:
+  Enable SplitObjs on sparc. This means that a stripped hello world binary is
+  now 500K rather than 2.5Mb. It may work on ppc too, this needs testing.
+
+  15 Mar 2006; Duncan Coutts <dcoutts@gentoo.org> ghc-6.4.1-r2.ebuild:
+  A further fix for the executable stack issue.
+  (It seems we need -Wa,--noexecstack in SRC_CC_OPTS as well as SRC_HC_OPTS)
+
+  13 Mar 2006; Duncan Coutts <dcoutts@gentoo.org> files/ghc-updater,
+  ghc-6.4.1-r2.ebuild:
+  Improvements to ghc-updater thanks to kosmikus and with help from ferdy
+
+  13 Mar 2006; Jeroen Roovers <jer@gentoo.org> ghc-6.4.1-r2.ebuild:
+  Marked ~hppa (bug #125389).
+
+  13 Mar 2006; Duncan Coutts <dcoutts@gentoo.org> ghc-6.4.1-r2.ebuild:
+  Fix omission in hppa support.
+
+  10 Mar 2006; Duncan Coutts <dcoutts@gentoo.org> ghc-6.4.1-r2.ebuild:
+  Change what flags we use to disable hardened gcc and how we set them. We now
+  use one set of flags rather than picking them conditionally.
+  Use an option which should fix the executable-stack problem (bug #123698).
+  Prepare for hppa arch support and misc minor tidy-ups.
+
+  01 Mar 2006; Markus Rothe <corsair@gentoo.org> ghc-6.4.1-r2.ebuild:
+  Added ~ppc64; bug #88362
+
+  24 Feb 2006; Duncan Coutts <dcoutts@gentoo.org>
+  -files/ghc-6.0.1.haddock.patch:
+  Remove old unused patch.
+
+*ghc-6.4.1-r2 (16 Feb 2006)
+
+  16 Feb 2006; Luis F. Araujo <araujo@gentoo.org> +ghc-6.4.1-r2.ebuild:
+  Added support for modular X. New flags support to enable/disable X, hgl and
+  openal
+
+  10 Feb 2006; <dcoutts@gentoo.org> -ghc-6.0.1.ebuild:
+  Remove the last ghc-6.0.x version. (There's no way to bootstrap it anyway)
+
+  10 Feb 2006; <dcoutts@gentoo.org> ghc-6.4.1-r1.ebuild:
+  Marked ~alpha with permission of ferdy.
+
+  16 Nov 2005; Andres Loeh <kosmikus@gentoo.org> ghc-6.4.1-r1.ebuild:
+  Reduced the amount of output during the build slightly to work around bug
+  #111183.
+
+*ghc-6.4.1-r1 (21 Oct 2005)
+
+  21 Oct 2005; <dcoutts@gentoo.org> +ghc-6.4.1-r1.ebuild:
+  Add new revision ghc-6.4.1-r1 which now PDEPENDs on cabal.
+
+  06 Oct 2005; <dcoutts@gentoo.org> ghc-6.4.1.ebuild:
+  Revert to using virtual/ghc in DEPEND since the other method had no advantages.
+
+  06 Oct 2005; <dcoutts@gentoo.org> +files/depsort.py, files/ghc-updater:
+  Make the ghc-updater script work better.
+
+  04 Oct 2005; Luis F. Araujo <araujo@gentoo.org> ghc-6.2.2.ebuild:
+  Blocked ghc6.4 in ghc6.2.2
+
+  04 Oct 2005; Gustavo Zacarias <gustavoz@gentoo.org> ghc-6.4.1.ebuild:
+  Back to the ~ppc
+
+  04 Oct 2005; <dcoutts@gentoo.org> ghc-6.4.1.ebuild:
+  Add ~sparc to KEYWORDS and enable GHCi on sparc.
+
+  23 Sep 2005; <dcoutts@gentoo.org> ghc-6.4.1.ebuild:
+  Disabled java USE flag due to bug #106992
+
+*ghc-6.4.1 (22 Sep 2005)
+
+  22 Sep 2005; <dcoutts@gentoo.org> +ghc-6.4.1.ebuild:
+  Version bump.
+
+  01 Sep 2005; Gustavo Zacarias <gustavoz@gentoo.org> ghc-6.2.2.ebuild:
+  Stable on sparc
+
+  31 Aug 2005; Gustavo Zacarias <gustavoz@gentoo.org> ghc-6.4.ebuild:
+  Fixed to build on ppc for real
+
+  17 Aug 2005; <dcoutts@gentoo.org> ghc-6.4.ebuild:
+  Add ~sparc to KEYWORDS since it was missing and we've already got ghc-bin-6.4
+
+  17 Aug 2005; Andres Loeh <loeh@gentoo.org> -files/ghc-5.04.3-r1.patch,
+  -files/ghc-6.2.1-linker.patch.bz2, -files/ghc-6.2.documentation.patch,
+  -files/ghc-6.2.hardened.patch.bz2, -files/lndir.c, -ghc-6.2.ebuild,
+  -ghc-6.2-r1.ebuild, -ghc-6.2.1-r1.ebuild, ghc-6.2.2.ebuild:
+  Removed ~amd64 keyword for ghc-6.2.2, because ghc-6.2.2 is broken on this
+  arch. Cleaned up old versions.
+
+  20 May 2005; <dcoutts@gentoo.org> ghc-6.2.2.ebuild:
+  Add ~sparc to KEYWORDS and disable GHCi support on sparc since it does not
+  work reliably.
+
+  11 May 2005; Andres Loeh <kosmikus@gentoo.org> ghc-6.4.ebuild:
+  Removing ~ppc64 from ghc-6.4 again (hopefully temporarily), see comment #24
+  of bug #68930.
+
+  11 May 2005; Andres Loeh <kosmikus@gentoo.org> files/ghc-updater:
+  Changes to ghc-updater, to make it a bit more useful for the update to ghc-6.4.
+
+  09 May 2005; Markus Rothe <corsair@gentoo.org>
+  +files/ghc-6.4-powerpc.patch, ghc-6.4.ebuild:
+  Added patch for ppc64 and added ~ppc64 to KEYWORDS
+
+  09 Apr 2005; Michael Hanselmann <hansmi@gentoo.org> ghc-6.2.2.ebuild:
+  Stable on ppc.
+
+  25 Mar 2005; Andres Loeh <kosmikus@gentoo.org> ghc-6.2.2.ebuild,
+  ghc-6.4.ebuild:
+  ghc-6.4 supports registered builds on amd64. ghci is still not supported on
+  amd64, but it fails with a more informative error message now (bug #82541).
+
+  23 Mar 2005; Andres Loeh <kosmikus@gentoo.org> ghc-6.4.ebuild:
+  Added dependency on haddock.
+
+  23 Mar 2005; Andres Loeh <kosmikus@gentoo.org> ghc-6.4.ebuild:
+  Added missing dependency on libxslt, and slightly cleaned up the ebuild.
+
+*ghc-6.4 (11 Mar 2005)
+
+  11 Mar 2005; Andres Loeh <kosmikus@gentoo.org> +ghc-6.4.ebuild,
+  -ghc-6.4_pre20050308.ebuild:
+  Updated ghc-6.4 snapshot to ghc-6.4 release. This version is still masked
+  for testing.
+
+*ghc-6.4_pre20050308 (09 Mar 2005)
+
+  09 Mar 2005; Andres Loeh <kosmikus@gentoo.org> ghc-6.4_pre20050308.ebuild:
+  Added a ghc-6.4 snapshot for testing purposes.
+
+  19 Feb 2005; Jason Wever <weeve@gentoo.org> ghc-6.0.1.ebuild,
+  ghc-6.2-r1.ebuild, ghc-6.2.1-r1.ebuild, ghc-6.2.2.ebuild, ghc-6.2.ebuild:
+  Masked on SPARC as it doesn't build.
+
+  25 Jan 2005; Andres Loeh <kosmikus@gentoo.org> ghc-6.2.2.ebuild:
+  Dependency resolution for virtuals changed in portage. Temporily adapted the
+  ebuild to quit with an informative error message until a real solution comes
+  to mind. (Bug #79509)
+
+  19 Jan 2005; Andres Loeh <kosmikus@gentoo.org> ghc-6.2.2.ebuild:
+  Marked stable on x86.
+
+  25 Nov 2004; Andres Loeh <kosmikus@gentoo.org> ghc-6.2.2.ebuild:
+  The amd64 build is unregistered (bug #58588).
+
+  24 Nov 2004; Andres Loeh <kosmikus@gentoo.org> ghc-6.2.2.ebuild:
+  Added ~amd64 flag, cf. bug #58588.
+
+  22 Nov 2004; Andres Loeh <kosmikus@gentoo.org> +files/ghc-updater,
+  ghc-6.2.2.ebuild:
+  Modified ebuild to use ghc-package.eclass (bug #69270) and to include
+  ghc-updater script (bug #69142).
+
+  26 Oct 2004; Andres Loeh <kosmikus@gentoo.org> ghc-6.2.2.ebuild:
+  Modified CFLAG testing code, following discussion in bug #59709.
+
+  24 Oct 2004; Matthieu Sozeau <mattam@gentoo.org> ghc-6.2.2.ebuild:
+  Tested on ppc.
+
+*ghc-6.2.2 (18 Oct 2004)
+
+  18 Oct 2004; Andres Loeh <kosmikus@gentoo.org> ghc-6.0.ebuild,
+  ghc-6.2.1-r1.ebuild, ghc-6.2.1.ebuild, ghc-6.2.2.ebuild:
+  New version. Included mattam's fix for #59709. Removed some old versions.
+
+  19 Oct 2004; Mamoru KOMACHI <usata@gentoo.org> ghc-6.0.1.ebuild,
+  ghc-6.0.ebuild, ghc-6.2-r1.ebuild, ghc-6.2.1-r1.ebuild, ghc-6.2.1.ebuild,
+  ghc-6.2.ebuild:
+  Fixed missing dependencies; bug #68021.
+
+  24 Sep 2004; <SeJo@gentoo.org> ghc-6.2.ebuild:
+  stable bump due to bug 59753
+
+  01 Jul 2004; Jeremy Huddleston <eradicator@gentoo.org> ghc-6.0.1.ebuild,
+  ghc-6.0.ebuild, ghc-6.2-r1.ebuild, ghc-6.2.1-r1.ebuild, ghc-6.2.1.ebuild,
+  ghc-6.2.ebuild:
+  virtual/glibc -> virtual/libc
+
+*ghc-6.2.1-r1 (15 Jun 2004)
+
+  15 Jun 2004; Andres Loeh <kosmikus@gentoo.org> ghc-6.2.1-r1.ebuild,
+  files/ghc-6.2.1-linker.patch.bz2:
+  Patch for ghci's linker to help loading HOpenGL. Thanks to Sven Panne.
+
+  03 Jun 2004; Aron Griffis <agriffis@gentoo.org> ghc-6.0.1.ebuild,
+  ghc-6.0.ebuild, ghc-6.2-r1.ebuild, ghc-6.2.1.ebuild, ghc-6.2.ebuild:
+  Fix use invocation
+
+  18 May 2004; Mamoru KOMACHI <usata@gentoo.org> ghc-6.0.1.ebuild,
+  ghc-6.0.ebuild, ghc-6.2-r1.ebuild, ghc-6.2.1.ebuild, ghc-6.2.ebuild:
+  Changed app-text/tetex to virtual/tetex.
+
+  13 May 2004; Andres Loeh <kosmikus@gentoo.org> ghc-6.2.1.ebuild:
+  fixed patch for ghc-6.2.1; threaded rts now enabled by default (#50758)
+
+  12 May 2004; Alexander Gabert <pappy@gentoo.org> ghc-6.2.1.ebuild:
+  added new hardened PIE SSP switches
+
+  12 May 2004; Alexander Gabert <pappy@gentoo.org>
+  -files/ghc-6.2.hardened-gcc.patch.bz2, +files/ghc-6.2.hardened.patch.bz2,
+  ghc-6.0.1.ebuild, ghc-6.2-r1.ebuild, ghc-6.2.ebuild:
+  added new hardened switches for nonPIE and nonSSP building
+
+  02 Apr 2004; Matthieu Sozeau <mattam@gentoo.org> ghc-6.2.1.ebuild:
+  Add support for ppc on ghc-6.2.1.
+
+  31 Mar 2004; Andres Loeh <kosmikus@gentoo.org> ghc-5.04.3-r1.ebuild,
+  ghc-6.2-r1.ebuild:
+  Marked ghc-6.2-r1 stable on x86. Removed 5 series due to bug #46212.
+
+  23 Mar 2004; Matthieu Sozeau <mattam@gentoo.org> ghc-6.2.ebuild:
+  Added ~ppc keyword, highly experimental build (linux-ppc is not entirely
+  supported yet).
+
+*ghc-6.2.1 (22 Mar 2004)
+
+  22 Mar 2004; Andres Loeh <kosmikus@gentoo.org> ghc-6.2.1.ebuild:
+  Version bump.
+
+*ghc-6.2-r1 (11 Mar 2004)
+
+  11 Mar 2004; Andres Loeh <kosmikus@gentoo.org> ghc-6.2-r1.ebuild,
+  files/ghc-6.2.hardened-gcc.patch.bz2:
+  Disabling propolice in the resulting ghc when using gcc-hardened (cf. bug
+  #36154).
+
+  20 Feb 2004; Andres Loeh <kosmikus@gentoo.org> ghc-6.2.ebuild:
+  Fixed a problem building libraries using recent binutils (#40128).
+
+  11 Jan 2004; Andres Loeh <kosmikus@gentoo.org> ghc-5.04.3-r1.ebuild:
+  moved setup checks to pkg_setup (bug #33962).
+
+  22 Dec 2003; Andres Loeh <kosmikus@gentoo.org> ghc-6.2.ebuild:
+  Haddock got called even with USE=-doc.
+
+  19 Dec 2003; Andres Loeh <kosmikus@gentoo.org> ghc-6.2.ebuild:
+  GHC 6.2 needs haddock-0.6 (bug #36108)
+
+*ghc-6.2 (17 Dec 2003)
+
+  17 Dec 2003; Andres Loeh <kosmikus@gentoo.org> ghc-6.2.ebuild,
+  files/ghc-6.2.documentation.patch:
+  New GHC version 6.2.
+
+  17 Dec 2003: Andres Loeh <kosmikus@gentoo.org> ghc-6.0.1.ebuild,
+  files/ghc-6.0.1.haddock.patch:
+  Added patch needed to compile documentation with haddock-0.6.
+
+  11 Nov 2003; Alexander Gabert <pappy@gentoo.org> ghc-5.04.3-r1.ebuild,
+  ghc-6.0.1.ebuild:
+  added ghc-6.0.1 bugfix from ghc-5.04.3-r1 bug30789
+
+  22 Oct 2003; Andres Loeh <kosmikus@gentoo.org> ghc-5.04.3-r1.ebuild,
+  ghc-6.0.1.ebuild, ghc-6.0.ebuild:
+  Added libgmp to runtime dependencies, closing bug #31321.
+
+  12 Oct 2003; Alexander Gabert <pappy@gentoo.org> ghc-5.04.3-r1.ebuild:
+  added hardened-gcc -yet_exec flag mechanism and CFLAGS for ghc if hardened-gcc
+  is used
+
+*ghc-6.0.1 (31 Jul 2003)
+
+  31 Jul 2003; Andres Loeh <kosmikus@gentoo.org> ghc-6.0.1.ebuild:
+  Version bump.
+
+  30 Jul 2003; Andres Loeh <kosmikus@gentoo.org> ghc-6.0.ebuild:
+  Fixed bug that caused ghc to be built with HOpenGL despite -opengl being set.
+
+  29 Jul 2003; Andres Loeh <kosmikus@gentoo.org> ghc-5.04.3-r1.ebuild:
+  Marked 5.04.3-r1 stable. It fixes a couple of problems that keep appearing
+  with 5.04.3.
+
+  02 Jul 2003; Andres Loeh <kosmikus@gentoo.org> ghc-5.04.3-r1.ebuild:
+  Removed implicit X11 dependency (bug 23708). Thanks to Aaron Son
+  <aaron@clamp.net> for discovering the problem.
+
+*ghc-6.0 (01 Jun 2003)
+
+  01 Jun 2003; Andres Loeh <kosmikus@gentoo.org> ghc-6.0.ebuild:
+  Version bump. Will probably remain in testing until new version is released,
+  as this version is considered to be beta by the developers. The ebuild has
+  been somewhat simplified: GHC's build system now supports bootstrapping to get
+  GHCi running automatically if necessary.
+
+  21 May 2003; Andres Loeh <kosmikus@gentoo.org> ghc-5.04.3-r1.ebuild,
+  files/ghc-5.04.3-r1.patch:
+  Added a dependency to haddock when generating docs. This should fix bug
+  #20989. Thanks to Mikael A <snikkt@yahoo.com> and Peter Lennartz
+  <peterl@cs.uu.nl> for identifying the problem.
+
+*ghc-5.04.3-r1 (09 May 2003)
+
+  09 May 2003; Andres Loeh <kosmikus@gentoo.org> ghc-5.04.3-r1.ebuild:
+  Fixed bug that caused ghci to fail with glibc-2.3.2 (reported by Ralf Hinze
+  <ralf@informatik.uni-bonn.de>). Also added the generation of documentation
+  again (had been missing for a while). To get full documentation, set the "doc"
+  USE flag.
+
+*ghc-5.04.2 (21 Mar 2003)
+
+  21 Mar 2003; George Shapovalov <george@gentoo.org> ghc-5.04.3.ebuild :
+  new version
+  Now with all virtuals in place should build off existing ghc nicely..
+
+  21 Mar 2003; George Shapovalov <george@gentoo.org> ghc-5.04.2.ebuild :
+  created new virtual: virtual/ghc.
+  Made ghc depend on virtual/ghc (and provide one) instead of on dev-lang/ghc-bin
+  ghc-bin in turn now also provides virtual/ghc, this closes #10155
+
+  13 Mar 2003; George Shapovalov <george@gentoo.org> ghc-5.04.2.ebuild :
+  fix for when ghc gets bootstrapped off different version.
+  Thanks to Andres Loeh <andres@cs.uu.nl> and Ralf Hinze <ralf@informatik.uni-bonn.de>.
+
+  08 Mar 2003; George Shapovalov <george@gentoo.org> ghc-5.04.2.ebuild :
+
+  updated the ebuild to correctly build (namely to build ghci) if bootstrapped off different (older)
+  version. See #10155 for details.
+
+*ghc-5.04i.2 (12 Feb 2003)
+
+  12 Feb 2003; George Shapovalov <george@gentoo.org> ghc-5.04.2.ebuild, files/digest-ghc-5.04.2 :
+
+  The long awaited update. (#10155)
+  Fixes things on x86. !!!Needs testing on sparc!!! (has good chances to work on sparc,
+  provided ghc-bin-5.04.2 works)
+  ebuild bootstraps ghc from ghc-bin and contains remarks 
+  on how to "maintain" it correctly  (in short: for general purpose no special attention required)
+
+  17 Jan 2003; Matthew Turk <satai@gentoo.org> :
+  Looks like it didn't take...  Trying again!
+
+  09 Jan 2003; Matthew Turk <satai@gentoo.org> :
+  Changed the docbook-sgml-dtd dependency to one that *exists*.
+
+  06 Dec 2002; Rodney Rees <manson@gentoo.org> : changed sparc ~sparc keywords
+ 
+*ghc-5.04.ebuild (08 Aug 2002)
+
+  19 Aug 2002; George Shapovalov <george@gentoo.org> ghc-5.04.ebuild :
+
+  fixed header, added >=dev-libs/gmp-4.1 dependency
+
+  08 Jul 2002; George Shapovalov <george@gentoo.org> ghc-5.04.ebuild, files/ghc-5.04-gentoo.patch.bz2 :
+
+  new version,
+  bzipped patched (too large otherwise),
+  will keep uncompressed for 5.02.3 anc compressed for 5.04 until new version 
+  is tested (to have one working meanwhile)
+
+  ebuild (and large patching work) submitted by:
+  Sven Moritz Hallberg <pesco@gmx.de>
+
+*ghc-5.02.3.ebuild (09 Jun 2002)
+
+  18 Jun 2002; George Shapovalov <george@gentoo.org> ghc-5.02.3.ebuild :
+
+  Few improvements by Sven Moritz Hallberg :
+  Build DocBook documentation only if USEing 'doc'. Require DocBook DTD 3.1 in
+  that case.
+
+  Thanks to a bug report by Matthew Walton I've noticed that GHC requires the
+  DocBook DTD 3.1, not 4.1.
+  
+  09 Jun 2002; George Shapovalov <george@gentoo.org> all :
+  
+  First submission
+  From the home page:
+
+  The Glasgow Haskell Compiler is a robust, fully-featured, optimising compiler 
+  and interactive environment for Haskell 98, GHC compiles Haskell to either 
+  native code or C.  It implements numerous experimental language extensions 
+  to Haskell 98; for example: concurrency, a foreign language interface, 
+  multi-parameter type classes, scoped type variables, existential and universal 
+  quantification, unboxed types, exceptions, weak pointers, and so on.  GHC comes 
+  with a generational garbage collector, and a space and time profiler. 

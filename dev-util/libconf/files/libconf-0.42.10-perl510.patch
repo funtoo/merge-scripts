@@ -1,0 +1,11 @@
+--- perl-Libconf-0.42.10/bindings/c/src/conf2xml.c	2005-11-07 01:02:03.000000000 -0800
++++ perl-Libconf-0.42.10/bindings/c/src/conf2xml.c.new	2008-07-22 17:01:33.000000000 -0700
+@@ -19,7 +19,7 @@
+     char *embedding[] = { "", "-e", "0" };
+ 
+     if (my_perl != NULL) conf2xml_free();
+-    PERL_SYS_INIT3(&argc,&argv,&env);
++    PERL_SYS_INIT3(NULL,NULL,NULL);
+     my_perl = perl_alloc();
+     perl_construct( my_perl );
+     perl_parse(my_perl, xs_init, 3, embedding, (char **)NULL);

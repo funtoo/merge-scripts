@@ -1,0 +1,32 @@
+# Copyright 1999-2005 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/hardened/amd64/multilib/make.defaults,v 1.5 2009/06/08 18:37:16 solar Exp $
+
+FEATURES="sandbox autoconfig"
+USE="${USE} multilib"
+MULTILIB_ABIS="x86 amd64"
+DEFAULT_ABI="amd64"
+ABI=${DEFAULT_ABI}
+
+#CFLAGS_amd64="-m64"
+#LDFLAGS_amd64="-m elf_x86_64"
+CHOST_amd64="x86_64-pc-linux-gnu"
+CDEFINE_amd64="__x86_64__"
+LIBDIR_amd64="lib64"
+
+# Added -L/emul* workaround to aid compilation of 32bit packages
+# See bug #88725 for more info - Herbie Hopkins <herbs@gentoo.org> 2005/04/19
+CFLAGS_x86="-m32 -L/emul/linux/x86/lib -L/emul/linux/x86/usr/lib"
+LDFLAGS_x86="-m elf_i386 -L/emul/linux/x86/lib -L/emul/linux/x86/usr/lib"
+CHOST_x86="i686-pc-linux-gnu"
+CDEFINE_x86="__i386__"
+LIBDIR_x86="lib32"
+
+# In case someone wants to help out by setting FEATURES="multilib-strict"
+MULTILIB_STRICT_DIRS="/lib /usr/lib /usr/kde/*/lib /usr/qt/*/lib /usr/X11R6/lib"
+MULTILIB_STRICT_DENY="64-bit.*shared object"
+MULTILIB_STRICT_EXEMPT="(perl5|gcc|gcc-lib|eclipse-3|debug|portage)"
+
+# Hack to tell baselayout to use symlinks for /lib, /usr/lib, and /usr/local/lib
+SYMLINK_LIB="yes"
+PORTAGE_BINHOST="http://tinderbox.dev.gentoo.org/hardened/amd64/multilib/"

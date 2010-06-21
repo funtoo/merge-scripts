@@ -1,0 +1,11 @@
+--- ext/gd/libgd/gd_png.c
++++ ext/gd/libgd/gd_png.c
+@@ -139,7 +139,7 @@
+ 		return NULL;
+ 	}
+ 
+-	if (!png_check_sig (sig, 8)) { /* bad signature */
++	if (png_sig_cmp (sig, 0, 8)) { /* bad signature */
+ 		return NULL;
+ 	}
+ 

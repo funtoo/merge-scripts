@@ -1,0 +1,79 @@
+# Copyright 2006 Gentoo Foundation.
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/targets/vserver/packages.build,v 1.1 2008/04/06 15:40:56 wolf31o2 Exp $
+
+# This file describes the packages needed to build a stage 1 based on this
+# profile.  Packages in this file are built in order.
+
+# Please do not move perl before baselayout doing so will break lib -> lib64
+# symlinks on systems that use them.
+
+# While shadow could be in here, it breaks stage 1 and stage 2 building for the
+# releases.  PLEASE DO NOT ENABLE THIS UNLESS YOU HAVE THOROUGHLY TEST IT!
+
+# We need to remove all packages, and add them afterwards to get
+# the right order of packages. Not doing so will break lib -> lib64
+# symlinks due to baselayout-vserver getting injected in the end
+
+-app-arch/bzip2
+-app-arch/tar
+-app-shells/bash
+-net-misc/rsync
+-net-misc/wget
+-sys-apps/baselayout
+-sys-apps/coreutils
+-sys-apps/debianutils
+-sys-apps/diffutils
+-sys-apps/file
+-sys-apps/findutils
+-sys-apps/gawk
+-sys-apps/grep
+-sys-apps/less
+-sys-apps/net-tools
+-sys-apps/sed
+-sys-apps/texinfo
+-sys-devel/binutils
+-sys-devel/bison
+-sys-devel/flex
+-sys-devel/gcc
+-sys-devel/gettext
+-sys-devel/gnuconfig
+-sys-devel/make
+-sys-devel/patch
+-dev-lang/perl
+-dev-lang/python
+-virtual/editor
+-virtual/gzip
+-virtual/libc
+-virtual/os-headers
+-virtual/portage
+
+app-arch/bzip2
+app-arch/tar
+app-shells/bash
+net-misc/rsync
+net-misc/wget
+sys-apps/baselayout-vserver
+sys-apps/coreutils
+sys-apps/diffutils
+sys-apps/file
+sys-apps/findutils
+sys-apps/gawk
+sys-apps/grep
+sys-apps/less
+sys-apps/net-tools
+sys-apps/sed
+sys-apps/texinfo
+sys-devel/binutils
+sys-devel/bison
+sys-devel/flex
+sys-devel/gcc
+sys-devel/gettext
+sys-devel/gnuconfig
+sys-devel/make
+sys-devel/patch
+virtual/editor
+virtual/gzip
+virtual/libc
+virtual/os-headers
+virtual/portage

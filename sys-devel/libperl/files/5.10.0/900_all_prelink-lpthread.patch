@@ -1,0 +1,11 @@
+--- hints/linux.sh.orig	2003-02-14 18:11:50.000000000 -0800
++++ hints/linux.sh	2003-02-14 18:12:01.000000000 -0800
+@@ -43,7 +43,7 @@
+ # 'kaffe' has a /usr/lib/libnet.so which is not at all relevent for perl.
+ set `echo X "$libswanted "| sed -e 's/ bsd / /' -e 's/ net / /'`
+ shift
+-libswanted="$*"
++libswanted="pthread $*"
+ 
+ # If you have glibc, then report the version for ./myconfig bug reporting.
+ # (Configure doesn't need to know the specific version since it just uses

@@ -1,0 +1,142 @@
+# ChangeLog for media-plugins/gmpc-coveramazon
+# Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/media-plugins/gmpc-coveramazon/ChangeLog,v 1.31 2009/11/19 09:02:17 angelos Exp $
+
+  19 Nov 2009; Christoph Mende <angelos@gentoo.org>
+  gmpc-coveramazon-0.18.0.ebuild:
+  Fixed typo
+
+  17 Nov 2009; Christoph Mende <angelos@gentoo.org>
+  gmpc-coveramazon-0.18.0.ebuild:
+  Adding blocker for gmpc-0.19 since the plugin API changed (bug 293287)
+
+  09 Jun 2009; Christian Faulhammer <fauli@gentoo.org>
+  gmpc-coveramazon-0.18.0.ebuild:
+  stable x86, bug 272335
+
+  06 Jun 2009; nixnut <nixnut@gentoo.org> gmpc-coveramazon-0.18.0.ebuild:
+  ppc stable #272335
+
+  03 Jun 2009; Thomas Anderson <gentoofan23@gentoo.org>
+  gmpc-coveramazon-0.18.0.ebuild:
+  stable amd64, bug 272335
+
+  03 Jun 2009; Ferris McCormick <fmccor@gentoo.org>
+  gmpc-coveramazon-0.18.0.ebuild:
+  Sparc stable, Bug #272335.
+
+  20 Mar 2009; Brent Baude <ranger@gentoo.org>
+  gmpc-coveramazon-0.17.0.ebuild:
+  Marking gmpc-coveramazon-0.17.0 ppc stable for bug 259793
+
+  20 Mar 2009; Raúl Porcel <armin76@gentoo.org>
+  gmpc-coveramazon-0.17.0.ebuild:
+  x86 stable wrt #259793
+
+*gmpc-coveramazon-0.18.0 (12 Mar 2009)
+
+  12 Mar 2009; Christoph Mende <angelos@gentoo.org>
+  +gmpc-coveramazon-0.18.0.ebuild:
+  Version bump
+
+  27 Feb 2009; Tiago Cunha <tcunha@gentoo.org>
+  gmpc-coveramazon-0.17.0.ebuild:
+  stable amd64/sparc, bug 259793
+
+  03 Jan 2009; Christoph Mende <angelos@gentoo.org>
+  -gmpc-coveramazon-0.15.5.0.ebuild:
+  Cleaned up
+
+  03 Jan 2009; Christoph Mende <angelos@gentoo.org>
+  gmpc-coveramazon-0.17.0.ebuild:
+  Bumped to EAPI2 to replace built_with_use+die
+
+  29 Dec 2008; Tiago Cunha <tcunha@gentoo.org>
+  gmpc-coveramazon-0.16.0.ebuild:
+  stable sparc, bug 251332
+
+  26 Dec 2008; Christoph Mende <angelos@gentoo.org>
+  gmpc-coveramazon-0.17.0.ebuild:
+  Removed unneeded multilib hack
+
+  26 Dec 2008; Christoph Mende <angelos@gentoo.org>
+  gmpc-coveramazon-0.17.0.ebuild:
+  Removed unneeded multilib hack
+
+*gmpc-coveramazon-0.17.0 (26 Dec 2008)
+
+  26 Dec 2008; Christoph Mende <angelos@gentoo.org>
+  +gmpc-coveramazon-0.17.0.ebuild:
+  Version bump
+
+  20 Dec 2008; nixnut <nixnut@gentoo.org> gmpc-coveramazon-0.16.0.ebuild:
+  Stable on ppc wrt bug 251332
+
+  17 Dec 2008; Markus Meier <maekke@gentoo.org>
+  gmpc-coveramazon-0.16.0.ebuild:
+  amd64/x86 stable, bug #251332
+
+*gmpc-coveramazon-0.16.0 (24 Sep 2008)
+
+  24 Sep 2008; Christoph Mende <angelos@gentoo.org>
+  +gmpc-coveramazon-0.16.0.ebuild:
+  Version bump
+
+  20 Mar 2008; Christoph Mende <angelos@gentoo.org>
+  -gmpc-coveramazon-0.14.0.ebuild, -gmpc-coveramazon-0.15.0.ebuild:
+  Remove old
+
+  17 Mar 2008; Ferris McCormick <fmccor@gentoo.org>
+  gmpc-coveramazon-0.15.5.0.ebuild:
+  Sparc stable --- part of Bug #212077.
+
+  16 Mar 2008; Markus Meier <maekke@gentoo.org>
+  gmpc-coveramazon-0.15.5.0.ebuild:
+  x86 stable, bug #212077
+
+  02 Mar 2008; nixnut <nixnut@gentoo.org> gmpc-coveramazon-0.15.5.0.ebuild:
+  Stable on ppc wrt bug 212077
+
+  02 Mar 2008; Christoph Mende <angelos@gentoo.org>
+  gmpc-coveramazon-0.15.5.0.ebuild:
+  Stable on amd64, bug #212077
+
+*gmpc-coveramazon-0.15.5.0 (27 Jan 2008)
+
+  27 Jan 2008; Christoph Mende <angelos@gentoo.org> metadata.xml,
+  +gmpc-coveramazon-0.15.5.0.ebuild:
+  Taking over maintainership and version bump (Bug #202995 by Jesse Adelman)
+
+  07 Aug 2007; Gustavo Zacarias <gustavoz@gentoo.org>
+  gmpc-coveramazon-0.15.0.ebuild:
+  Stable on sparc
+
+  25 Jul 2007; Gustavo Zacarias <gustavoz@gentoo.org>
+  gmpc-coveramazon-0.15.0.ebuild:
+  Keyworded ~ppc
+
+  04 Jul 2007; Andrej Kacian <ticho@gentoo.org>
+  gmpc-coveramazon-0.14.0.ebuild, gmpc-coveramazon-0.15.0.ebuild:
+  Add check for correct USE flag for x11-libs/gtk+-2. Bug #184160, by Avuton
+  Olrich <avuton at gmail.com>.
+
+  03 Jul 2007; Christoph Mende <angelos@gentoo.org>
+  gmpc-coveramazon-0.15.0.ebuild:
+  Added ~amd64 wrt bug #183855
+
+*gmpc-coveramazon-0.15.0 (19 Jun 2007)
+
+  19 Jun 2007; Andrej Kacian <ticho@gentoo.org>
+  +gmpc-coveramazon-0.15.0.ebuild:
+  Version bump.
+
+  27 Apr 2007; Gustavo Zacarias <gustavoz@gentoo.org>
+  gmpc-coveramazon-0.14.0.ebuild:
+  Keyworded ~sparc wrt #176243
+
+*gmpc-coveramazon-0.14.0 (15 Apr 2007)
+
+  15 Apr 2007; Andrej Kacian <ticho@gentoo.org> +metadata.xml,
+  +gmpc-coveramazon-0.14.0.ebuild:
+  Initial commit. Bug #173241, by fabien Zouaoui <fabien at zouaoui.org>.
+

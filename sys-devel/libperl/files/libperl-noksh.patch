@@ -1,0 +1,16 @@
+diff -burN perl-5.8.4.orig/Configure perl-5.8.4/Configure
+--- perl-5.8.4.orig/Configure	2004-04-01 05:48:18.000000000 -0800
++++ perl-5.8.4/Configure	2004-06-09 12:02:54.694172368 -0700
+@@ -164,6 +164,12 @@
+ 	;;
+ esac
+ 
++# 2004.06.09 rac
++# having $newsh persist as ksh here is bad news if ksh doesn't really
++# exist. this causes us to toss away a perfectly good working test in
++# bash in favour of more exotic external options. see bug 42665.
++test -x "${newsh}" || unset newsh
++
+ : if needed set CDPATH to a harmless value that is not chatty
+ : avoid bash 2.02 problems with empty CDPATH.
+ case "$CDPATH" in

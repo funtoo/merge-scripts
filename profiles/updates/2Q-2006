@@ -1,0 +1,40 @@
+move net-wireless/madwifi-tools net-wireless/madwifi-ng-tools
+move net-wireless/madwifi-driver net-wireless/madwifi-ng
+move games-simulation/bcsdemo games-simulation/bcs-demo
+move media-libs/alut media-libs/freealut
+move games-strategy/dominions2-demo-bin games-strategy/dominions2-demo
+move dev-libs/pam_pkcs11 sys-auth/pam_pkcs11
+move app-cdr/kio_burn app-cdr/konqburn
+slotmove =media-libs/libdc1394-1* 0 1
+slotmove =media-libs/libdc1394-2* 0 2
+move dev-embedded/sdcc-cvs dev-embedded/sdcc-svn
+move app-emulation/vmware-linux-tools app-emulation/vmware-workstation-tools
+move dev-lisp/mit-scheme dev-scheme/mit-scheme
+move dev-lisp/mzscheme dev-scheme/mzscheme
+move dev-lisp/guile-pg dev-scheme/guile-pg
+move dev-lisp/kawa dev-scheme/kawa
+move www-apps/nut sys-power/nut
+move media-tv/v4l-dvb-cvs media-tv/v4l-dvb-hg
+move sys-apps/pmtools sys-power/pmtools
+move app-crypt/gpg-agent app-crypt/gnupg
+move app-mobilephone/obexfs sys-fs/obexfs
+move app-i18n/scim-chinese app-i18n/scim-pinyin
+move games-fps/avp-cvs games-fps/avp
+move net-libs/nfsidmap net-libs/libnfsidmap
+move net-misc/resolvconf-gentoo net-dns/resolvconf-gentoo
+move x11-misc/matchbox-nest x11-misc/xoo
+move games-puzzle/pouetchess games-board/pouetchess
+move app-i18n/jless-iso254 app-i18n/jless
+move app-text/ghostscript-afpl app-text/ghostscript-gpl
+move sci-misc/camfr sci-physics/camfr
+move sci-misc/lightspeed sci-physics/lightspeed
+move sci-misc/mpb sci-physics/mpb
+move sci-misc/xfoil sci-physics/xfoil
+move sci-chemistry/abinit sci-physics/abinit
+move sci-libs/root sci-physics/root
+move dev-libs/libgc dev-libs/boehm-gc
+move net-analyzer/ethereal net-analyzer/wireshark
+move sec-policy/selinux-ethereal sec-policy/selinux-wireshark
+slotmove =gnome-base/gnome-common-2* 2 3
+move dev-php/PEAR-PHPUnit dev-php4/phpunit
+move dev-php5/PEAR-PHPUnit2 dev-php5/phpunit

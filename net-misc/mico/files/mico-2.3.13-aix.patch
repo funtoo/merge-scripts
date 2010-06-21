@@ -1,0 +1,12 @@
+Do not add '-lstdc++' explicitly, this is c++ compiler's job.
+--- admin/mico-shld.aix.in.orig	2009-04-02 17:33:03 +0200
++++ admin/mico-shld.aix.in	2009-04-02 17:33:22 +0200
+@@ -87,7 +87,7 @@
+ 
+ 
+ ldcmd="@SHARED_CC@ @LDSOFLAGS@ @DLFLAGS@ $libdirs @LDFLAGS@ \
+- -Wl,-bE:lib.exp,-bnoentry -o '$outfile' $args @LIBS@ -lstdc++"
++ -Wl,-bE:lib.exp,-bnoentry -o '$outfile' $args @LIBS@"
+ 
+ echo "$ldcmd"
+ eval "$ldcmd"

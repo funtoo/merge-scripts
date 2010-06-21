@@ -1,0 +1,139 @@
+# ChangeLog for dev-python/apsw
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/dev-python/apsw/ChangeLog,v 1.29 2010/06/11 17:36:12 phajdan.jr Exp $
+
+  11 Jun 2010; Pawel Hajdan jr <phajdan.jr@gentoo.org>
+  apsw-3.6.23.1.1.ebuild:
+  x86 stable wrt bug #319727
+
+*apsw-3.6.23.1.1 (13 Apr 2010)
+
+  13 Apr 2010; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  -apsw-3.6.20.1.ebuild, -apsw-3.6.21.1.ebuild, +apsw-3.6.23.1.1.ebuild:
+  Version bump.
+
+  01 Mar 2010; Pawel Hajdan jr <phajdan.jr@gentoo.org> apsw-3.6.22.1.ebuild:
+  x86 stable wrt bug #305179
+
+  02 Feb 2010; Christian Faulhammer <fauli@gentoo.org> apsw-3.6.21.1.ebuild:
+  stable x86, bug 300705
+
+*apsw-3.6.22.1 (12 Jan 2010)
+
+  12 Jan 2010; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  +apsw-3.6.22.1.ebuild:
+  Version bump.
+
+  28 Dec 2009; Markus Meier <maekke@gentoo.org> apsw-3.6.20.1.ebuild:
+  x86 stable, bug #296039
+
+*apsw-3.6.21.1 (11 Dec 2009)
+
+  11 Dec 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  +apsw-3.6.21.1.ebuild:
+  Version bump.
+
+  11 Dec 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  apsw-3.6.20.1.ebuild, +files/apsw-3.6.20.1-fix_tests.patch:
+  Fix tests (bug #295063).
+
+  07 Dec 2009; Mike Frysinger <vapier@gentoo.org> apsw-3.6.18.1.ebuild,
+  apsw-3.6.19.1.ebuild, apsw-3.6.20.1.ebuild:
+  Enable verbose output in tests.
+
+*apsw-3.6.20.1 (20 Nov 2009)
+
+  20 Nov 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  +apsw-3.6.20.1.ebuild:
+  Version bump.
+
+  20 Nov 2009; Markus Meier <maekke@gentoo.org> apsw-3.6.18.1.ebuild:
+  x86 stable, bug #288095
+
+*apsw-3.6.19.1 (07 Nov 2009)
+
+  07 Nov 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  +apsw-3.6.19.1.ebuild:
+  Version bump.
+
+*apsw-3.6.18.1 (07 Oct 2009)
+
+  07 Oct 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  -apsw-3.6.6.2.1.ebuild, +apsw-3.6.18.1.ebuild:
+  Version bump.
+
+  08 Sep 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  apsw-3.6.17.1.ebuild:
+  Set SUPPORT_PYTHON_ABIS.
+
+*apsw-3.6.17.1 (07 Sep 2009)
+
+  07 Sep 2009; Patrick Lauer <patrick@gentoo.org> +apsw-3.6.17.1.ebuild:
+  Bump
+
+*apsw-3.6.11.1 (10 Apr 2009)
+
+  10 Apr 2009; Daniel Robbins <drobbins@funtoo.org> +apsw-3.6.11.1.ebuild:
+  New 3.6.11-r1 release from upstream
+
+  09 Jan 2009; Patrick Lauer <patrick@gentoo.org> -apsw-3.6.3.1.ebuild:
+  Removing old
+
+*apsw-3.6.6.2.1 (13 Dec 2008)
+
+  13 Dec 2008; Alin NÄstac <mrness@gentoo.org> -apsw-3.3.13.1.ebuild,
+  +apsw-3.6.6.2.1.ebuild:
+  Version bump that compiles successfully with sqlite-3.6.6.2 (#250685).
+
+  09 Nov 2008; Steve Arnold <nerdboy@gentoo.org> apsw-3.6.3.1.ebuild:
+  fixed required sqlite version, since package fails otherwise
+
+  09 Nov 2008; Markus Meier <maekke@gentoo.org> apsw-3.5.9.2.ebuild:
+  x86 stable, bug #245268
+
+*apsw-3.6.3.1 (02 Nov 2008)
+
+  02 Nov 2008; Alin NÄstac <mrness@gentoo.org> +apsw-3.6.3.1.ebuild:
+  Version bump.
+
+*apsw-3.5.9.2 (15 Aug 2008)
+
+  15 Aug 2008; Alin NÄstac <mrness@gentoo.org>
+  +files/apsw-3.5.9.2-gentoo.patch, -apsw-3.3.5.1.ebuild,
+  -apsw-3.3.10.1.ebuild, +apsw-3.5.9.2.ebuild:
+  Version bump.
+
+  06 Jul 2008; Christian Faulhammer <opfer@gentoo.org> apsw-3.3.13.1.ebuild:
+  stable x86, bug 230377
+
+*apsw-3.3.13.1 (23 Mar 2007)
+
+  23 Mar 2007; Alin NÄstac <mrness@gentoo.org> +apsw-3.3.13.1.ebuild:
+  Version bump.
+
+*apsw-3.3.10.1 (14 Feb 2007)
+
+  14 Feb 2007; Tiziano MÃ¼ller <dev-zero@gentoo.org> +apsw-3.3.10.1.ebuild:
+  Version bump plus cleanup. Added tests and docs.
+
+  15 Nov 2006; Alin Nastac <mrness@gentoo.org> -apsw-3.2.7.1.ebuild:
+  Remove old version.
+
+  17 Sep 2006; Alin Nastac <mrness@gentoo.org> apsw-3.3.5.1.ebuild:
+  Stable on x86.
+
+  31 Jul 2006; Tom Gall <tgall@gentoo.org> apsw-3.3.5.1.ebuild:
+  added ~ppc64
+  
+*apsw-3.3.5.1 (02 Jun 2006)
+
+  02 Jun 2006; Alin Nastac <mrness@gentoo.org> apsw-3.2.7.1.ebuild,
+  +apsw-3.3.5.1.ebuild:
+  Stable on x86. Version bump.
+
+*apsw-3.2.7.1 (02 Apr 2006)
+
+  02 Apr 2006; Alin Nastac <mrness@gentoo.org> +metadata.xml,
+  +apsw-3.2.7.1.ebuild:
+  Initial import from bug #100296, thanks to Lorenzo Luengo <loluengo@vtr.net>.
+

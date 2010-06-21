@@ -1,0 +1,5 @@
+# Copyright 1999-2010 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/targets/desktop/gnome/make.defaults,v 1.3 2010/04/09 15:23:01 pacho Exp $
+
+USE="eds evo gdu gnome gnome-keyring gstreamer nautilus policykit startup-notification"

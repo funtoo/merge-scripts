@@ -1,0 +1,21 @@
+# ChangeLog for dev-perl/Module-Starter
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/dev-perl/Module-Starter/ChangeLog,v 1.1 2010/02/15 12:53:56 tove Exp $
+
+  15 Feb 2010; Torsten Veller <tove@gentoo.org> +Module-Starter-1.54.ebuild,
+  +metadata.xml:
+  Import to gentoo from perl-experimental
+
+*Module-Starter-1.54 (10 Dec 2009)
+
+  10 Dec 2009; Kent Fredric <kentfredric@gmail.com>
+  +Module-Starter-1.54.ebuild:
+  Bumped
+
+*Module-Starter-1.52 (13 Aug 2009)
+
+  13 Aug 2009; Kent Fredric <kentfredric@gmail.com>
+  Module-Starter-1.42.ebuild, -Module-Starter-1.46.ebuild,
+  Module-Starter-1.50.ebuild, +Module-Starter-1.52.ebuild:
+  Bumped to 1.52. Deleted Upstream-absent,EAPI=2, SRC_TEST=do
+

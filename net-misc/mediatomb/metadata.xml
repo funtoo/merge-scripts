@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+  <herd>video</herd>
+  <maintainer>
+    <email>darkside@gentoo.org</email>
+  </maintainer>
+  <use>
+	<flag name="inotify">Enable inotify filesystem monitoring support</flag>
+	<flag name="lastfm">Enable last.fm support</flag>
+	<flag name="libextractor">Use libextractor to gather files' metadata.</flag>
+	<flag name="mysql">Use <pkg>dev-db/mysql</pkg> as backend rather than
+	SQLite3. If	this USE flag is disabled, <pkg>dev-db/sqlite</pkg> is used
+	instead.</flag>
+	<flag name="taglib">Use <pkg>media-libs/taglib</pkg> for reading files'
+	metadata rather than id3lib. If this USE flag is disabled
+	<pkg>media-libs/id3lib</pkg> is used instead.</flag>
+    <flag name="thumbnail">Enables video thumbnails generation through
+	<pkg>media-video/ffmpegthumbnailer</pkg></flag>
+  </use>
+</pkgmetadata>

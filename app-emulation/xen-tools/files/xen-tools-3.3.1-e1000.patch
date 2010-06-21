@@ -1,0 +1,386 @@
+diff -ur orig/tools/ioemu/hw/e1000.c xen-3.3.0/tools/ioemu/hw/e1000.c
+--- orig/tools/ioemu/hw/e1000.c	2008-08-22 11:49:08.000000000 +0200
++++ xen-3.3.0/tools/ioemu/hw/e1000.c	2008-10-02 18:41:06.000000000 +0200
+@@ -23,7 +23,9 @@
+  */
+ 
+ 
+-#include "vl.h"
++#include "hw.h"
++#include "pci.h"
++#include "net.h"
+ 
+ #include "e1000_hw.h"
+ 
+@@ -74,7 +76,6 @@
+     PCIDevice dev;
+     VLANClientState *vc;
+     NICInfo *nd;
+-    uint32_t instance;
+     uint32_t mmio_base;
+     int mmio_index;
+ 
+@@ -103,7 +104,7 @@
+         char tse;
+         char ip;
+         char tcp;
+-        char cptse;     //current packet tse bit
++        char cptse;     // current packet tse bit
+     } tx;
+ 
+     struct {
+@@ -136,7 +137,7 @@
+     [PHY_CTRL] = PHY_RW,	[PHY_1000T_CTRL] = PHY_RW,
+     [PHY_LP_ABILITY] = PHY_R,	[PHY_1000T_STATUS] = PHY_R,
+     [PHY_AUTONEG_ADV] = PHY_RW,	[M88E1000_RX_ERR_CNTR] = PHY_R,
+-    [PHY_ID2] = PHY_R,
++    [PHY_ID2] = PHY_R,		[M88E1000_PHY_SPEC_STATUS] = PHY_R
+ };
+ 
+ static void
+@@ -152,7 +153,7 @@
+     if (val)
+         val |= E1000_ICR_INT_ASSERTED;
+     s->mac_reg[ICR] = val;
+-    pci_set_irq(&s->dev, 0, (s->mac_reg[IMS] & s->mac_reg[ICR]) != 0);
++    qemu_set_irq(s->dev.irq[0], (s->mac_reg[IMS] & s->mac_reg[ICR]) != 0);
+ }
+ 
+ static void
+@@ -325,7 +326,7 @@
+         if (tp->tcp) {
+             sofar = frames * tp->mss;
+             cpu_to_be32wu((uint32_t *)(tp->data+css+4),	// seq
+-                be32_to_cpup((uint32_t *)(tp->data+css+4))+sofar);
++                be32_to_cpupu((uint32_t *)(tp->data+css+4))+sofar);
+             if (tp->paylen - sofar > tp->mss)
+                 tp->data[css + 13] &= ~9;		// PSH, FIN
+         } else	// UDP
+@@ -381,7 +382,7 @@
+             tp->tucso = tp->tucss + (tp->tcp ? 16 : 6);
+         }
+         return;
+-    } else if (dtype == (E1000_TXD_CMD_DEXT | E1000_TXD_DTYP_D)){
++    } else if (dtype == (E1000_TXD_CMD_DEXT | E1000_TXD_DTYP_D)) {
+         // data descriptor
+         tp->sum_needed = le32_to_cpu(dp->upper.data) >> 8;
+         tp->cptse = ( txd_lower & E1000_TXD_CMD_TSE ) ? 1 : 0;
+@@ -459,7 +460,7 @@
+         cpu_physical_memory_read(base, (void *)&desc, sizeof(desc));
+ 
+         DBGOUT(TX, "index %d: %p : %x %x\n", s->mac_reg[TDH],
+-               (void *)desc.buffer_addr, desc.lower.data,
++               (void *)(intptr_t)desc.buffer_addr, desc.lower.data,
+                desc.upper.data);
+ 
+         process_tx_desc(s, &desc);
+@@ -531,8 +532,7 @@
+ {
+     E1000State *s = opaque;
+ 
+-    return (!(s->mac_reg[RCTL] & E1000_RCTL_EN) ||
+-            s->mac_reg[RDH] != s->mac_reg[RDT]);
++    return (s->mac_reg[RCTL] & E1000_RCTL_EN);
+ }
+ 
+ static void
+@@ -731,8 +731,11 @@
+     E1000State *s = opaque;
+     unsigned int index = ((addr - s->mmio_base) & 0x1ffff) >> 2;
+ 
++#ifdef TARGET_WORDS_BIGENDIAN
++    val = bswap32(val);
++#endif
+     if (index < NWRITEOPS && macreg_writeops[index])
+-        macreg_writeops[index](s, index, le32_to_cpu(val));
++        macreg_writeops[index](s, index, val);
+     else if (index < NREADOPS && macreg_readops[index])
+         DBGOUT(MMIO, "e1000_mmio_writel RO %x: 0x%04x\n", index<<2, val);
+     else
+@@ -745,7 +748,7 @@
+ {
+     // emulate hw without byte enables: no RMW
+     e1000_mmio_writel(opaque, addr & ~3,
+-                      cpu_to_le32(le16_to_cpu(val & 0xffff) << (8*(addr & 3))));
++                      (val & 0xffff) << (8*(addr & 3)));
+ }
+ 
+ static void
+@@ -753,7 +756,7 @@
+ {
+     // emulate hw without byte enables: no RMW
+     e1000_mmio_writel(opaque, addr & ~3,
+-                      cpu_to_le32((val & 0xff)  << (8*(addr & 3))));
++                      (val & 0xff) << (8*(addr & 3)));
+ }
+ 
+ static uint32_t
+@@ -763,7 +766,13 @@
+     unsigned int index = ((addr - s->mmio_base) & 0x1ffff) >> 2;
+ 
+     if (index < NREADOPS && macreg_readops[index])
+-        return cpu_to_le32(macreg_readops[index](s, index));
++    {
++        uint32_t val = macreg_readops[index](s, index);
++#ifdef TARGET_WORDS_BIGENDIAN
++        val = bswap32(val);
++#endif
++        return val;
++    }
+     DBGOUT(UNKNOWN, "MMIO unknown read addr=0x%08x\n", index<<2);
+     return 0;
+ }
+@@ -771,18 +780,18 @@
+ static uint32_t
+ e1000_mmio_readb(void *opaque, target_phys_addr_t addr)
+ {
+-    return (le32_to_cpu(e1000_mmio_readl(opaque, addr & ~3)) >>
++    return ((e1000_mmio_readl(opaque, addr & ~3)) >>
+             (8 * (addr & 3))) & 0xff;
+ }
+ 
+ static uint32_t
+ e1000_mmio_readw(void *opaque, target_phys_addr_t addr)
+ {
+-    return cpu_to_le16((le32_to_cpu(e1000_mmio_readl(opaque, addr & ~3)) >>
+-                        (8 * (addr & 3))) & 0xffff);
++    return ((e1000_mmio_readl(opaque, addr & ~3)) >>
++            (8 * (addr & 3))) & 0xffff;
+ }
+ 
+-int mac_regtosave[] = {
++static int mac_regtosave[] = {
+     CTRL,	EECD,	EERD,	GPRC,	GPTC,	ICR,	ICS,	IMC,	IMS,
+     LEDCTL,	MANC,	MDIC,	MPC,	PBA,	RCTL,	RDBAH,	RDBAL,	RDH,
+     RDLEN,	RDT,	STATUS,	SWSM,	TCTL,	TDBAH,	TDBAL,	TDH,	TDLEN,
+@@ -790,7 +799,7 @@
+ };
+ enum { MAC_NSAVE = sizeof mac_regtosave/sizeof *mac_regtosave };
+ 
+-struct {
++static struct {
+     int size;
+     int array0;
+ } mac_regarraystosave[] = { {32, RA}, {128, MTA} };
+@@ -803,7 +812,6 @@
+     int i, j;
+ 
+     pci_device_save(&s->dev, f);
+-    qemu_put_be32s(f, &s->instance);
+     qemu_put_be32s(f, &s->mmio_base);
+     qemu_put_be32s(f, &s->rxbuf_size);
+     qemu_put_be32s(f, &s->rxbuf_min_shift);
+@@ -848,7 +856,8 @@
+ 
+     if ((ret = pci_device_load(&s->dev, f)) < 0)
+         return ret;
+-    qemu_get_be32s(f, &s->instance);
++    if (version_id == 1)
++        qemu_get_be32s(f, &i); /* once some unused instance id */
+     qemu_get_be32s(f, &s->mmio_base);
+     qemu_get_be32s(f, &s->rxbuf_size);
+     qemu_get_be32s(f, &s->rxbuf_min_shift);
+@@ -903,6 +912,7 @@
+     [PHY_1000T_CTRL] = 0x0e00,			[M88E1000_PHY_SPEC_CTRL] = 0x360,
+     [M88E1000_EXT_PHY_SPEC_CTRL] = 0x0d60,	[PHY_AUTONEG_ADV] = 0xde1,
+     [PHY_LP_ABILITY] = 0x1e0,			[PHY_1000T_STATUS] = 0x3c00,
++    [M88E1000_PHY_SPEC_STATUS] = 0xac00,
+ };
+ 
+ static uint32_t mac_reg_init[] = {
+@@ -946,9 +956,8 @@
+ {
+     E1000State *d;
+     uint8_t *pci_conf;
+-    static int instance;
+     uint16_t checksum = 0;
+-    char *info_str = "e1000";
++    static const char info_str[] = "e1000";
+     int i;
+ 
+     d = (E1000State *)pci_register_device(bus, "e1000",
+@@ -977,8 +986,6 @@
+     pci_register_io_region((PCIDevice *)d, 1, IOPORT_SIZE,
+                            PCI_ADDRESS_SPACE_IO, ioport_map);
+ 
+-    d->instance = instance++;
+-
+     d->nd = nd;
+     memmove(d->eeprom_data, e1000_eeprom_template,
+         sizeof e1000_eeprom_template);
+@@ -1004,5 +1011,5 @@
+              d->nd->macaddr[0], d->nd->macaddr[1], d->nd->macaddr[2],
+              d->nd->macaddr[3], d->nd->macaddr[4], d->nd->macaddr[5]);
+ 
+-    register_savevm(info_str, d->instance, 1, nic_save, nic_load, d);
++    register_savevm(info_str, -1, 2, nic_save, nic_load, d);
+ }
+diff -ur orig/tools/ioemu-qemu-xen/hw/e1000.c xen-3.3.0/tools/ioemu-qemu-xen/hw/e1000.c
+--- orig/tools/ioemu-qemu-xen/hw/e1000.c	2008-08-22 11:56:41.000000000 +0200
++++ xen-3.3.0/tools/ioemu-qemu-xen/hw/e1000.c	2008-10-02 18:41:06.000000000 +0200
+@@ -76,7 +76,6 @@
+     PCIDevice dev;
+     VLANClientState *vc;
+     NICInfo *nd;
+-    uint32_t instance;
+     uint32_t mmio_base;
+     int mmio_index;
+ 
+@@ -105,6 +104,7 @@
+         char tse;
+         char ip;
+         char tcp;
++        char cptse;     // current packet tse bit
+     } tx;
+ 
+     struct {
+@@ -308,7 +308,7 @@
+     unsigned int frames = s->tx.tso_frames, css, sofar, n;
+     struct e1000_tx *tp = &s->tx;
+ 
+-    if (tp->tse) {
++    if (tp->tse && tp->cptse) {
+         css = tp->ipcss;
+         DBGOUT(TXSUM, "frames %d size %d ipcss %d\n",
+                frames, tp->size, css);
+@@ -382,37 +382,49 @@
+             tp->tucso = tp->tucss + (tp->tcp ? 16 : 6);
+         }
+         return;
+-    } else if (dtype == (E1000_TXD_CMD_DEXT | E1000_TXD_DTYP_D))
++    } else if (dtype == (E1000_TXD_CMD_DEXT | E1000_TXD_DTYP_D)) {
++        // data descriptor
+         tp->sum_needed = le32_to_cpu(dp->upper.data) >> 8;
++        tp->cptse = ( txd_lower & E1000_TXD_CMD_TSE ) ? 1 : 0;
++    } else
++        // legacy descriptor
++        tp->cptse = 0;
+ 
+     addr = le64_to_cpu(dp->buffer_addr);
+-    if (tp->tse) {
++    if (tp->tse && tp->cptse) {
+         hdr = tp->hdr_len;
+         msh = hdr + tp->mss;
++        do {
++            bytes = split_size;
++            if (tp->size + bytes > msh)
++                bytes = msh - tp->size;
++            cpu_physical_memory_read(addr, tp->data + tp->size, bytes);
++            if ((sz = tp->size + bytes) >= hdr && tp->size < hdr)
++                memmove(tp->header, tp->data, hdr);
++            tp->size = sz;
++            addr += bytes;
++            if (sz == msh) {
++                xmit_seg(s);
++                memmove(tp->data, tp->header, hdr);
++                tp->size = hdr;
++            }
++        } while (split_size -= bytes);
++    } else if (!tp->tse && tp->cptse) {
++        // context descriptor TSE is not set, while data descriptor TSE is set
++        DBGOUT(TXERR, "TCP segmentaion Error\n");
++    } else {
++        cpu_physical_memory_read(addr, tp->data + tp->size, split_size);
++        tp->size += split_size;
+     }
+-    do {
+-        bytes = split_size;
+-        if (tp->size + bytes > msh)
+-            bytes = msh - tp->size;
+-        cpu_physical_memory_read(addr, tp->data + tp->size, bytes);
+-        if ((sz = tp->size + bytes) >= hdr && tp->size < hdr)
+-            memmove(tp->header, tp->data, hdr);
+-        tp->size = sz;
+-        addr += bytes;
+-        if (sz == msh) {
+-            xmit_seg(s);
+-            memmove(tp->data, tp->header, hdr);
+-            tp->size = hdr;
+-        }
+-    } while (split_size -= bytes);
+ 
+     if (!(txd_lower & E1000_TXD_CMD_EOP))
+         return;
+-    if (tp->size > hdr)
++    if (!(tp->tse && tp->cptse && tp->size < hdr))
+         xmit_seg(s);
+     tp->tso_frames = 0;
+     tp->sum_needed = 0;
+     tp->size = 0;
++    tp->cptse = 0;
+ }
+ 
+ static uint32_t
+@@ -520,8 +532,7 @@
+ {
+     E1000State *s = opaque;
+ 
+-    return (!(s->mac_reg[RCTL] & E1000_RCTL_EN) ||
+-            s->mac_reg[RDH] != s->mac_reg[RDT]);
++    return (s->mac_reg[RCTL] & E1000_RCTL_EN);
+ }
+ 
+ static void
+@@ -780,7 +791,7 @@
+             (8 * (addr & 3))) & 0xffff;
+ }
+ 
+-int mac_regtosave[] = {
++static int mac_regtosave[] = {
+     CTRL,	EECD,	EERD,	GPRC,	GPTC,	ICR,	ICS,	IMC,	IMS,
+     LEDCTL,	MANC,	MDIC,	MPC,	PBA,	RCTL,	RDBAH,	RDBAL,	RDH,
+     RDLEN,	RDT,	STATUS,	SWSM,	TCTL,	TDBAH,	TDBAL,	TDH,	TDLEN,
+@@ -788,7 +799,7 @@
+ };
+ enum { MAC_NSAVE = sizeof mac_regtosave/sizeof *mac_regtosave };
+ 
+-struct {
++static struct {
+     int size;
+     int array0;
+ } mac_regarraystosave[] = { {32, RA}, {128, MTA} };
+@@ -801,7 +812,6 @@
+     int i, j;
+ 
+     pci_device_save(&s->dev, f);
+-    qemu_put_be32s(f, &s->instance);
+     qemu_put_be32s(f, &s->mmio_base);
+     qemu_put_be32s(f, &s->rxbuf_size);
+     qemu_put_be32s(f, &s->rxbuf_min_shift);
+@@ -846,7 +856,8 @@
+ 
+     if ((ret = pci_device_load(&s->dev, f)) < 0)
+         return ret;
+-    qemu_get_be32s(f, &s->instance);
++    if (version_id == 1)
++        qemu_get_be32s(f, &i); /* once some unused instance id */
+     qemu_get_be32s(f, &s->mmio_base);
+     qemu_get_be32s(f, &s->rxbuf_size);
+     qemu_get_be32s(f, &s->rxbuf_min_shift);
+@@ -945,9 +956,8 @@
+ {
+     E1000State *d;
+     uint8_t *pci_conf;
+-    static int instance;
+     uint16_t checksum = 0;
+-    char *info_str = "e1000";
++    static const char info_str[] = "e1000";
+     int i;
+ 
+     d = (E1000State *)pci_register_device(bus, "e1000",
+@@ -976,8 +986,6 @@
+     pci_register_io_region((PCIDevice *)d, 1, IOPORT_SIZE,
+                            PCI_ADDRESS_SPACE_IO, ioport_map);
+ 
+-    d->instance = instance++;
+-
+     d->nd = nd;
+     memmove(d->eeprom_data, e1000_eeprom_template,
+         sizeof e1000_eeprom_template);
+@@ -1003,5 +1011,5 @@
+              d->nd->macaddr[0], d->nd->macaddr[1], d->nd->macaddr[2],
+              d->nd->macaddr[3], d->nd->macaddr[4], d->nd->macaddr[5]);
+ 
+-    register_savevm(info_str, d->instance, 1, nic_save, nic_load, d);
++    register_savevm(info_str, -1, 2, nic_save, nic_load, d);
+ }

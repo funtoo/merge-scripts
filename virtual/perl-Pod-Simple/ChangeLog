@@ -1,0 +1,94 @@
+# ChangeLog for virtual/perl-Pod-Simple
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/virtual/perl-Pod-Simple/ChangeLog,v 1.20 2010/04/29 06:34:20 tove Exp $
+
+*perl-Pod-Simple-3.14 (29 Apr 2010)
+
+  29 Apr 2010; Torsten Veller <tove@gentoo.org>
+  +perl-Pod-Simple-3.14.ebuild:
+  Version bump
+
+  17 Jan 2010; Torsten Veller <tove@gentoo.org>
+  -perl-Pod-Simple-3.05.ebuild, -perl-Pod-Simple-3.08.ebuild,
+  -perl-Pod-Simple-3.09.ebuild, -perl-Pod-Simple-3.10.ebuild,
+  -perl-Pod-Simple-3.11.ebuild:
+  Cleanup
+
+  07 Jan 2010; Torsten Veller <tove@gentoo.org> perl-Pod-Simple-3.05.ebuild,
+  perl-Pod-Simple-3.07.ebuild, perl-Pod-Simple-3.08.ebuild,
+  perl-Pod-Simple-3.09.ebuild, perl-Pod-Simple-3.10.ebuild,
+  perl-Pod-Simple-3.11.ebuild, perl-Pod-Simple-3.13.ebuild:
+  Set empty HOMEPAGE and LICENSE
+
+  05 Jan 2010; nixnut <nixnut@gentoo.org> perl-Pod-Simple-3.07.ebuild:
+  ppc stable #288026
+
+  18 Dec 2009; Torsten Veller <tove@gentoo.org> perl-Pod-Simple-3.11.ebuild,
+  perl-Pod-Simple-3.13.ebuild:
+  Add missing prefix keywords
+
+*perl-Pod-Simple-3.13 (18 Dec 2009)
+
+  18 Dec 2009; Torsten Veller <tove@gentoo.org>
+  +perl-Pod-Simple-3.13.ebuild:
+  Version bump
+
+  15 Dec 2009; Jonathan Callen <abcd@gentoo.org>
+  perl-Pod-Simple-3.07.ebuild, perl-Pod-Simple-3.08.ebuild,
+  perl-Pod-Simple-3.10.ebuild:
+  QA: Add prefix keywords
+
+  14 Dec 2009; Raúl Porcel <armin76@gentoo.org>
+  perl-Pod-Simple-3.07.ebuild:
+  alpha/ia64/s390/sh/sparc stable wrt #288026
+
+  10 Dec 2009; Brent Baude <ranger@gentoo.org> perl-Pod-Simple-3.07.ebuild:
+  Marking perl-Pod-Simple-3.07 ppc64 stable for bug 288026
+
+*perl-Pod-Simple-3.11 (10 Dec 2009)
+
+  10 Dec 2009; Torsten Veller <tove@gentoo.org>
+  +perl-Pod-Simple-3.11.ebuild:
+  Version bump
+
+  07 Dec 2009; Markus Meier <maekke@gentoo.org> perl-Pod-Simple-3.07.ebuild:
+  arm stable, bug #288026
+
+  07 Dec 2009; Jeroen Roovers <jer@gentoo.org> perl-Pod-Simple-3.07.ebuild:
+  Stable for HPPA (bug #288026).
+
+  04 Dec 2009; Torsten Veller <tove@gentoo.org> perl-Pod-Simple-3.07.ebuild:
+  Stable on amd64 (#288026)
+
+  04 Dec 2009; Christian Faulhammer <fauli@gentoo.org>
+  perl-Pod-Simple-3.07.ebuild:
+  x86 stable, bug 288026
+
+*perl-Pod-Simple-3.10 (13 Nov 2009)
+
+  13 Nov 2009; Robin H. Johnson <robbat2@gentoo.org>
+  +perl-Pod-Simple-3.10.ebuild:
+  Version bump via perl-bump experimental tool.
+
+*perl-Pod-Simple-3.09 (10 Nov 2009)
+
+  10 Nov 2009; Robin H. Johnson <robbat2@gentoo.org>
+  +perl-Pod-Simple-3.09.ebuild:
+  Version bump via perl-bump experimental tool.
+
+  25 Aug 2009; Torsten Veller <tove@gentoo.org> perl-Pod-Simple-3.07.ebuild:
+  Add support for perl-5.10.1
+
+*perl-Pod-Simple-3.08 (18 Jul 2009)
+
+  18 Jul 2009; Torsten Veller <tove@gentoo.org>
+  +perl-Pod-Simple-3.08.ebuild:
+  Version bump
+
+*perl-Pod-Simple-3.07 (01 Nov 2008)
+*perl-Pod-Simple-3.05 (01 Nov 2008)
+
+  01 Nov 2008; Yuval Yaari <yuval@gentoo.org> +metadata.xml,
+  +perl-Pod-Simple-3.05.ebuild, +perl-Pod-Simple-3.07.ebuild:
+  Adding virtuals for dual-lifed modules that come with perl-5.10
+

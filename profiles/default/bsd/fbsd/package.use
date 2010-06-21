@@ -1,0 +1,8 @@
+# Default USE flags for specific packages
+
+# Diego Pettenò <flameeyes@gentoo.org> (06 March 2008)
+# pam_racklib requires sys-libs/pam, disable it by default (it is
+# masked anyway).
+# pam_passwdqc is used by default on FreeBSD, enable it by default
+# even on Gentoo/FreeBSD.
+sys-auth/pambase -cracklib passwdqc

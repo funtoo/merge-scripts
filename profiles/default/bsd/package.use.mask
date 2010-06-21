@@ -1,0 +1,73 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/default/bsd/package.use.mask,v 1.15 2010/05/03 07:01:29 aballier Exp $
+
+app-misc/mc pam
+dev-util/catalyst cdr
+
+# See http://bugzilla.gnome.org/show_bug.cgi?id=370847 for why we disable pam
+gnome-extra/gnome-screensaver pam
+
+# Requires Linux-only packages
+app-accessibility/gok usb
+
+# iproute2 - linux only, pkcs11-helper required keywords
+net-misc/openvpn iproute2 pkcs11
+
+app-admin/sshguard -ipfilter
+media-video/ffmpeg ieee1394
+net-libs/c-client pam
+net-proxy/squid -ipf-transparent -pf-transparent
+sys-apps/baselayout pam
+sys-apps/coreutils acl
+sys-apps/hal dell disk-partition laptop
+sys-apps/help2man nls
+sys-auth/consolekit pam
+
+# NetworkManager is Linux-only, Zephyr requires kerberos
+net-im/pidgin networkmanager zephyr
+
+media-video/totem bluetooth
+
+# Gilles Dartiguelongue <eva@gentoo.org> (29 Oct 2007)
+mail-client/evolution pda
+gnome-base/gnome-applets apm
+
+# Mart Raudsepp <leio@gentoo.org> (02 Apr 2008)
+# media-plugins/gst-plugins-mythtv not keyworded
+media-plugins/gst-plugins-meta mythtv
+
+# Alexis Ballier <aballier@gentoo.org> (18 Jul 2008)
+# Requires a linux only library,  bug #226085
+dev-lang/erlang sctp
+
+# Alexis Ballier <aballier@gentoo.org> (8 Aug 2008)
+# Linux only useflags for vlc
+media-video/vlc dc1394 libsysfs ieee1394
+
+# Alexis Ballier <aballier@gentoo.org> (8 Aug 2008)
+# Depends on torque which is a linux only thing
+sys-cluster/openmpi pbs
+
+# Alexis Ballier <aballier@gentoo.org> (25 Sep 2008)
+# elf -> dev-libs/elfutils is too tight to the gnu libc
+# rpm could be masked but we have rpm 5 keyworded even if it's still masked.
+net-analyzer/net-snmp elf
+
+# Alexis Ballier <aballier@gentoo.org> (4 Oct 2008)
+# clisp doesn't build out of the box but can be fixed, xindy's way of building
+# its clisp module is confused by gmake vs bsdmake, mask it until we can
+# properly keyword xindy.
+app-text/texlive xindy
+
+# Alexis Ballier <aballier@gentoo.org> (28 Nov 2008)
+# Requires bluez-libs which is linux only
+net-libs/libpcap bluetooth
+gnome-base/gvfs bluetooth
+
+# Alexis Ballier <aballier@gentoo.org> (22 Jan 2009)
+# Requires gpm
+www-client/links livecd
+
+# Needs bluez and wicd which are linux only
+kde-base/solid bluetooth wicd

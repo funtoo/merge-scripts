@@ -1,0 +1,172 @@
+# ChangeLog for virtual/perl-Time-Local
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/virtual/perl-Time-Local/ChangeLog,v 1.42 2010/01/17 15:10:42 tove Exp $
+
+  17 Jan 2010; Torsten Veller <tove@gentoo.org>
+  -perl-Time-Local-1.17.ebuild, -perl-Time-Local-1.18.ebuild:
+  Cleanup
+
+  07 Jan 2010; Torsten Veller <tove@gentoo.org> perl-Time-Local-1.17.ebuild,
+  perl-Time-Local-1.18.ebuild, perl-Time-Local-1.19.01.ebuild:
+  Set empty HOMEPAGE and LICENSE
+
+  05 Jan 2010; nixnut <nixnut@gentoo.org> perl-Time-Local-1.19.01.ebuild:
+  ppc stable #288026
+
+  15 Dec 2009; Jonathan Callen <abcd@gentoo.org>
+  perl-Time-Local-1.17.ebuild, perl-Time-Local-1.18.ebuild,
+  perl-Time-Local-1.19.01.ebuild:
+  QA: Add prefix keywords
+
+  14 Dec 2009; Raúl Porcel <armin76@gentoo.org>
+  perl-Time-Local-1.19.01.ebuild:
+  alpha/ia64/m68k/s390/sh/sparc stable wrt #288026
+
+  10 Dec 2009; Brent Baude <ranger@gentoo.org>
+  perl-Time-Local-1.19.01.ebuild:
+  Marking perl-Time-Local-1.19.01 ppc64 stable for bug 288026
+
+  07 Dec 2009; Markus Meier <maekke@gentoo.org>
+  perl-Time-Local-1.19.01.ebuild:
+  arm stable, bug #288026
+
+  07 Dec 2009; Jeroen Roovers <jer@gentoo.org>
+  perl-Time-Local-1.19.01.ebuild:
+  Stable for HPPA (bug #288026).
+
+  04 Dec 2009; Torsten Veller <tove@gentoo.org>
+  perl-Time-Local-1.19.01.ebuild:
+  Stable on amd64 (#288026)
+
+  04 Dec 2009; Christian Faulhammer <fauli@gentoo.org>
+  perl-Time-Local-1.19.01.ebuild:
+  x86 stable, bug 288026
+
+  25 Aug 2009; Torsten Veller <tove@gentoo.org>
+  perl-Time-Local-1.19.01.ebuild:
+  Add support for perl-5.10.1
+
+  07 Jul 2009; Jeroen Roovers <jer@gentoo.org> perl-Time-Local-1.18.ebuild:
+  Stable for HPPA too.
+
+  13 Mar 2009; Torsten Veller <tove@gentoo.org>
+  -perl-Time-Local-1.11.ebuild, -perl-Time-Local-1.12.ebuild,
+  -perl-Time-Local-1.13.ebuild:
+  Cleanup
+
+*perl-Time-Local-1.19.01 (21 Nov 2008)
+
+  21 Nov 2008; Torsten Veller <tove@gentoo.org>
+  +perl-Time-Local-1.19.01.ebuild:
+  Version bump
+
+  15 Jul 2008; Raúl Porcel <armin76@gentoo.org>
+  perl-Time-Local-1.18.ebuild:
+  alpha/ia64/sparc/x86 stable
+
+  09 May 2008; Torsten Veller <tove@gentoo.org> ChangeLog:
+  #219479 - Version bump
+
+  31 Mar 2008; Jeroen Roovers <jer@gentoo.org> perl-Time-Local-1.17.ebuild:
+  Stable for HPPA too.
+
+  15 Oct 2007; Markus Rothe <corsair@gentoo.org>
+  perl-Time-Local-1.17.ebuild:
+  Stable on ppc64
+
+  04 Jul 2007; Raúl Porcel <armin76@gentoo.org>
+  perl-Time-Local-1.17.ebuild:
+  alpha/ia64/x86 stable
+
+  11 May 2007; Joshua Kinard <kumba@gentoo.org> perl-Time-Local-1.17.ebuild:
+  Stable on mips.
+
+  07 May 2007; Tobias Scherbaum <dertobi123@gentoo.org>
+  perl-Time-Local-1.17.ebuild:
+  ppc stable
+
+  17 Apr 2007; Gustavo Zacarias <gustavoz@gentoo.org>
+  perl-Time-Local-1.17.ebuild:
+  Stable on sparc
+
+  15 Apr 2007; Markus Rothe <corsair@gentoo.org>
+  perl-Time-Local-1.13.ebuild:
+  Stable on ppc64
+
+  09 Apr 2007; Michael Cummings <mcummings@gentoo.org>
+  perl-Time-Local-1.17.ebuild:
+  Marking amd64 stable
+
+  04 Mar 2007; Andrej Kacian <ticho@gentoo.org> perl-Time-Local-1.13.ebuild:
+  Stable on x86, bug #169153.
+
+*perl-Time-Local-1.17 (05 Feb 2007)
+
+  05 Feb 2007; Michael Cummings <mcummings@gentoo.org>
+  +perl-Time-Local-1.17.ebuild:
+  Version bump
+
+  06 Jan 2007; Bryan Østergaard <kloeri@gentoo.org>
+  perl-Time-Local-1.13.ebuild:
+  Stable on Alpha.
+
+  24 Dec 2006; Tobias Scherbaum <dertobi123@gentoo.org>
+  perl-Time-Local-1.13.ebuild:
+  Stable on ppc.
+
+  26 Oct 2006; Michael Cummings <mcummings@gentoo.org>
+  perl-Time-Local-1.11.ebuild:
+  updating deps
+
+  23 Oct 2006; Gustavo Zacarias <gustavoz@gentoo.org>
+  perl-Time-Local-1.13.ebuild:
+  Stable on hppa
+
+  20 Oct 2006; Michael Cummings <mcummings@gentoo.org>
+  -perl-Time-Local-1.10.ebuild:
+  Cleaning out old ebuild
+
+  20 Oct 2006; Michael Cummings <mcummings@gentoo.org>
+  perl-Time-Local-1.13.ebuild:
+  Marking amd64 stable
+
+  20 Oct 2006; Michael Cummings <mcummings@gentoo.org>
+  perl-Time-Local-1.13.ebuild:
+  Marking sparc stable
+
+  05 Sep 2006; Joshua Kinard <kumba@gentoo.org> perl-Time-Local-1.12.ebuild:
+  Marked stable on mips.
+
+  27 Aug 2006; Michael Cummings <mcummings@gentoo.org>
+  perl-Time-Local-1.12.ebuild:
+  Marking amd64 stable
+
+*perl-Time-Local-1.13 (27 Aug 2006)
+
+  27 Aug 2006; Yuval Yaari <yuval@gentoo.org> +perl-Time-Local-1.13.ebuild:
+  Bumped Time::Local's virtual (bug #145236)
+
+  23 Apr 2006; Diego Pettenò <flameeyes@gentoo.org>
+  perl-Time-Local-1.12.ebuild:
+  Add ~x86-fbsd keyword.
+
+  26 Feb 2006; Joshua Kinard <kumba@gentoo.org> perl-Time-Local-1.11.ebuild:
+  Marked stable on mips.
+
+  13 Feb 2006; Michael Cummings <mcummings@gentoo.org>
+  perl-Time-Local-1.11.ebuild:
+  Updated RDEPS
+
+  08 Feb 2006; Simon Stelling <blubb@gentoo.org>
+  perl-Time-Local-1.11.ebuild:
+  stable on amd64
+
+*perl-Time-Local-1.12 (07 Feb 2006)
+*perl-Time-Local-1.11 (07 Feb 2006)
+*perl-Time-Local-1.10 (07 Feb 2006)
+
+  07 Feb 2006; Michael Cummings <mcummings@gentoo.org> +metadata.xml,
+  +perl-Time-Local-1.10.ebuild, +perl-Time-Local-1.11.ebuild,
+  +perl-Time-Local-1.12.ebuild:
+  New virtual for perl-core/Time-Local
+
