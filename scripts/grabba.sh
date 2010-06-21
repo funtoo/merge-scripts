@@ -2,7 +2,7 @@
 
 dest=/var/tmp/git/portage-testmerge
 
-for foo in `cat profiles/funtoo-revert | grep -v '^#'`
+for foo in `cat profiles/funtoo-revert profiles/funtoo-misc | grep -v '^#'`
 do
 	( cd $dest; [ -e $foo ] && git rm -rf $foo; )
 done

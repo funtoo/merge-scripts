@@ -1,9 +1,0 @@
-# ChangeLog for x11-apps/xbelld
-# Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
-# $Header: $
-
-*xbelld-0.3.3 (01 Mar 2009)
-
-  01 Mar 2009; Daniel Cordero <theappleman@gmail.com>:
-  New package. Ebuild originally written by Gautam Iyer
-  <gi1242@users.sourceforge.net> for bug #216819.
