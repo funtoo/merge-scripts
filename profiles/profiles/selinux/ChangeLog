@@ -1,0 +1,62 @@
+# ChangeLog for Gentoo/sparc-fbsd profile directory
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/selinux/ChangeLog,v 1.14 2010/01/08 18:00:27 pebenito Exp $
+
+  08 Jan 2010; Chris PeBenito <pebenito@gentoo.org> package.mask:
+  Update SELinux sysvinit masking.
+
+  28 Oct 2009; Chris PeBenito <pebenito@gentoo.org> package.mask:
+  Mask sysvinit for selinux patch update.
+
+  12 Oct 2009; Vlastimil Babka <caster@gentoo.org> package.mask:
+  P.mask >=dev-java/icedtea6-bin-1.6.1 due to gcc-4.3 dep
+
+  07 Oct 2009; Vlastimil Babka <caster@gentoo.org> package.mask:
+  Mask x11-misc/googleearth-5 due to gcc-4.2 dep
+
+  26 Sep 2009; Ryan Hill <dirtyepic@gentoo.org> package.mask:
+  Mask >=dev-libs/elfutils-0.140
+
+  13 Sep 2009; Markus Meier <maekke@gentoo.org>
+  2007.0/amd64/hardened/package.use.mask,
+  +2007.0/x86/hardened/package.use.mask:
+  mask media-gfx/blender[openmp] in 2007.0 profiles
+
+  25 Aug 2009; Bernard Cafarelli <voyageur@gentoo.org> package.mask:
+  Add mask for www-client/chromium-bin, it requires >=gcc-4.2 libstdc++
+
+  10 Aug 2009; Chris PeBenito <pebenito@gentoo.org> make.defaults:
+  Clean up top level make.defaults and add back the missing PORTAGE_T
+  variable.
+
+  10 Aug 2009; Chris PeBenito <pebenito@gentoo.org> package.mask:
+  SELinux code issues in portage 2.2_rc38.
+
+  10 Aug 2009; Zac Medico <zmedico@gentoo.org> v2refpolicy/package.mask:
+  Bug #280963 - Add missing sec-policy category to atoms.
+
+  09 Aug 2009; Chris PeBenito <pebenito@gentoo.org>
+  +v2refpolicy/amd64/desktop/parent, +v2refpolicy/amd64/developer/parent,
+  +v2refpolicy/amd64/hardened/make.defaults,
+  +v2refpolicy/amd64/hardened/package.mask,
+  +v2refpolicy/amd64/hardened/package.use.mask,
+  +v2refpolicy/amd64/hardened/parent, +v2refpolicy/amd64/hardened/use.mask,
+  +v2refpolicy/amd64/parent, +v2refpolicy/amd64/server/parent,
+  +v2refpolicy/package.mask, +v2refpolicy/parent,
+  +v2refpolicy/x86/desktop/parent, +v2refpolicy/x86/developer/parent,
+  +v2refpolicy/x86/hardened/make.defaults,
+  +v2refpolicy/x86/hardened/package.mask, +v2refpolicy/x86/hardened/parent,
+  +v2refpolicy/x86/hardened/use.mask, +v2refpolicy/x86/parent,
+  +v2refpolicy/x86/server/parent:
+  Add v2refpolicy profile for version 2.xxxxxxxx Reference Policy usage.
+
+  08 Aug 2009; Chris PeBenito <pebenito@gentoo.org> 2007.0/make.defaults,
+  -2007.0/packages, make.defaults, packages:
+  Push settings from versioned profile into parent.
+
+  04 Aug 2009; Chris PeBenito <pebenito@gentoo.org> +package.unmask:
+  Add workaround for masking of packages in default/linux profile.
+
+  03 Aug 2009; Chris PeBenito <pebenito@gentoo.org> 2007.0/packages:
+  Drop selinux-base-policy required versioning as its not needed.
+

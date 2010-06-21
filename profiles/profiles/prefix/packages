@@ -1,0 +1,36 @@
+# Copyright 2007 Gentoo Foundation.
+# Distributed under the terms of the GNU General Public License, v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/prefix/packages,v 1.1 2009/06/06 03:54:33 solar Exp $
+
+# Gentoo Base Prefix Profile
+
+# NOTE: THIS IS THE BASE PROFILE FOR *ANY* PREFIX BASED OPERATING SYSTEM.
+# NO MODIFICATIONS MAY BE MADE TO THIS FILE WITHOUT PRIOR DISCUSSION.  IF
+# YOU ARE CREATING A NEW PROFILE, YOU SIMPLY NEED TO INHERIT THIS BASE
+# PROFILE IN YOUR PROFILE DIRECTORY'S "parent" FILE.
+
+# Read the descriptions of ../base/packages for some explanation
+
+# This file removes everything from the base profile which is not
+# necessary/desired in a prefix environment.
+
+-*sys-apps/baselayout
+-*net-misc/iputils
+-*sys-apps/kbd
+-*sys-apps/net-tools
+-*sys-process/procps
+-*sys-process/psmisc
+-*sys-apps/shadow
+-*sys-fs/e2fsprogs
+-*virtual/dev-manager
+-*virtual/modutils
+
+# add back prefix baselayout
+*sys-apps/baselayout-prefix
+
+# we don't want binutils everywhere, only in linux and solaris
+-*sys-devel/binutils
+
+# we don't ever will install these, so no need to depend on them
+-*virtual/libc
+-*virtual/os-headers

@@ -1,0 +1,44 @@
+# Copyright 2004-2009 Gentoo Foundation.
+# Distributed under the terms of the GNU General Public License, v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/releases/freebsd-8.0/package.mask,v 1.2 2010/04/10 15:43:11 ssuominen Exp $
+
+# Make sure we don't get wrong versions
+<sys-freebsd/freebsd-pam-modules-8.0_alpha
+>sys-freebsd/freebsd-pam-modules-8.0.99
+<sys-freebsd/freebsd-rescue-8.0_alpha
+>sys-freebsd/freebsd-rescue-8.0.99
+<sys-freebsd/freebsd-pf-8.0_alpha
+>sys-freebsd/freebsd-pf-8.0.99
+<sys-freebsd/freebsd-mk-defs-8.0_alpha
+>sys-freebsd/freebsd-mk-defs-8.0.99
+<sys-freebsd/freebsd-lib-8.0_alpha
+>sys-freebsd/freebsd-lib-8.0.99
+<sys-freebsd/freebsd-libexec-8.0_alpha
+>sys-freebsd/freebsd-libexec-8.0.99
+<sys-freebsd/freebsd-bin-8.0_alpha
+>sys-freebsd/freebsd-bin-8.0.99
+<sys-freebsd/freebsd-sbin-8.0_alpha
+>sys-freebsd/freebsd-sbin-8.0.99
+<sys-freebsd/freebsd-ubin-8.0_alpha
+>sys-freebsd/freebsd-ubin-8.0.99
+<sys-freebsd/freebsd-usbin-8.0_alpha
+>sys-freebsd/freebsd-usbin-8.0.99
+<sys-freebsd/freebsd-share-8.0_alpha
+>sys-freebsd/freebsd-share-8.0.99
+<sys-freebsd/freebsd-contrib-8.0_alpha
+>sys-freebsd/freebsd-contrib-8.0.99
+<sys-freebsd/freebsd-cddl-8.0_alpha
+>sys-freebsd/freebsd-cddl-8.0.99
+<sys-freebsd/boot0-8.0_alpha
+>sys-freebsd/boot0-8.0.99
+<sys-freebsd/freebsd-sources-8.0_alpha
+>sys-freebsd/freebsd-sources-8.0.99
+
+# Javier Villavicencio <the_paya@gentoo.org> (04 Jan 2009)
+# vapier fixored this one for us.
+<sys-apps/sandbox-1.3.2
+
+# Alexis Ballier <aballier@gentoo.org> (19 Jul 2008)
+# JDK/JRE 1.5 are specific to fbsd 6 and 5
+=virtual/jdk-1.5*
+=virtual/jre-1.5*

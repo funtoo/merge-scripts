@@ -1,0 +1,11 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/prefix/linux/package.use.mask,v 1.2 2009/09/30 10:19:53 haubi Exp $
+
+# Michael Haubenwallner <haubi@gentoo.org> (30 Sep 2009)
+# linux can have an uuid implementation (#230981).
+x11-libs/libSM -uuid
+
+# app-office/openoffice has a built_with_use check on shadow for USE=pam which
+# we have in package.provided so this logic blows up. (Prefix only)
+app-office/openoffice pam

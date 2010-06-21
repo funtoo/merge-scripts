@@ -1,0 +1,11 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/prefix/linux/use.mask,v 1.2 2009/12/29 17:49:49 abcd Exp $
+
+# Re-add linux stuff that is masked in base/
+-elibc_glibc
+-kernel_linux
+#
+
+# Re-add acl, as it does work in prefixed Linux (if the host kernel supports it)
+-acl

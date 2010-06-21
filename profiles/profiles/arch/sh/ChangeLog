@@ -1,0 +1,131 @@
+# ChangeLog for Gentoo/sh profile directory
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/sh/ChangeLog,v 1.49 2010/06/06 13:53:18 armin76 Exp $
+
+  06 Jun 2010; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask tokyocabinet
+
+  17 Apr 2010; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask fits
+
+  13 Feb 2010; Raúl Porcel <armin76@gentoo.org> -package.mask:
+  Unmask texlive-2009
+
+  07 Feb 2010; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask dvd
+
+  30 Jan 2010; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask v4l/v4l2
+
+  25 Jan 2010; Alexis Ballier <aballier@gentoo.org> +package.mask:
+  Move TeX Live 2009 mask here from global package.mask, remove it once
+  keyworded, bug #300526
+
+  17 Dec 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask lensfun
+
+  13 Dec 2009; Rémi Cardona <remi@gentoo.org> use.mask:
+  drop "imstt" from VIDEO_CARDS in all profiles
+
+  11 Dec 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask musepack, authdaemond
+
+  21 Nov 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask bluetooth
+
+  27 Oct 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask autotrace, lqr
+
+  22 Oct 2009; Raúl Porcel <armin76@gentoo.org> -virtuals:
+  Remove virtuals file
+
+  01 Jul 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask seamonkey
+
+  30 Jun 2009; Raúl Porcel <armin76@gentoo.org> package.use.mask:
+  Package.use.mask media-plugins/gst-plugins-meta lame taglib
+
+  30 Jun 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask fluidsynth, libmms, sid 
+
+  12 Jun 2009; Ulrich Mueller <ulm@gentoo.org> use.mask:
+  Remove paludis from use.mask since the flag is gone.
+
+  08 Jun 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask timidity
+
+  07 Jun 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask prolog
+
+  21 May 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask paludis
+
+  17 May 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add webkit/xulrunner to use.mask
+
+  27 Apr 2009; Raúl Porcel <armin76@gentoo.org> -package.mask:
+  Punt package.mask
+
+  23 Apr 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Unmask libssh2
+
+  08 Apr 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add cblas to use.mask
+
+  07 Apr 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add fusion to use.mask
+
+  06 Apr 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add lapack to use.mask
+
+  06 Apr 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add mpi and lasi to use.mask
+
+  05 Apr 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask gnomecd
+
+  13 Mar 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Masking a lot of video_cards which i doubt are available on SH
+
+  12 Mar 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add video_cards_radeonhd and video_cards_ast to use.mask
+
+  11 Mar 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add lyx to use.mask
+
+  10 Mar 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add xindy to use.mask
+
+  20 Feb 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask scanner, no hardware to test
+
+  06 Feb 2009; Raúl Porcel <armin76@gentoo.org> package.use.mask, use.mask:
+  Use.mask xemacs, not keyworded
+
+  19 Jan 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Some reordering, and use.mask tracker, fuse, gphoto2 and laptop
+
+  16 Jan 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask chicken, clisp, R, octave
+
+  15 Jan 2009; Raúl Porcel <armin76@gentoo.org> package.use.mask, use.mask:
+  Move dvb and mythtv p.use.mask to use.mask
+
+  01 Jan 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add gimp to use.mask
+
+  10 Nov 2008; Raúl Porcel <armin76@gentoo.org> package.use.mask:
+  Move stuff from default/linux/sh
+
+  13 May 2008; Christoph Mende <angelos@gentoo.org> package.use.mask:
+  Mask wavpack USE flag for mpd
+
+  11 Apr 2008; Chris Gianelloni <wolf31o2@gentoo.org> use.mask:
+  Sync use.mask with default-linux.
+
+  02 Apr 2008; Mart Raudsepp <leio@gentoo.org> package.use.mask:
+  USE mask dvb and mythtv on gst-plugins-meta - dependencies not keyworded
+
+  02 Apr 2008; Mart Raudsepp <leio@gentoo.org> use.mask:
+  Mask networkmanager USE flag - no version of it keyworded
+

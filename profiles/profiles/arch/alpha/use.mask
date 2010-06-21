@@ -1,0 +1,169 @@
+# Copyright 2004 Gentoo Foundation.
+# Distributed under the terms of the GNU General Public License, v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/alpha/use.mask,v 1.36 2010/05/16 17:02:09 armin76 Exp $
+
+# Unmask the flag which corresponds to ARCH.
+-alpha
+
+# This file masks out USE flags that are simply NOT allowed in the default
+# profile for any architecture.  This works, for example, if a non-default
+# profile (such as the selinux profiles) have a USE flag associated with
+# them.
+
+# No hardware to test by the team
+3dfx
+bluetooth
+chipcard
+dvb
+gnokii
+gps
+hbci
+ipod
+ivtv
+mtp
+mythtv
+nvtv
+lirc
+openct
+pcmcia
+pda
+sms
+upnp
+wifi
+
+# Hardware not available on alpha
+apm
+battery
+cpufreq
+dell
+dmi
+laptop
+pm-utils
+
+# Stuff that doesn't work on alpha, or not tested
+avi
+djbfft
+emboss
+freetts
+gnustep
+hardened
+howl
+mzscheme
+netbeans
+pike
+timidity
+valgrind
+
+# Stuff that doesn't compile on alpha
+clisp
+emf
+mono
+ocamlopt
+
+# Stuff we don't want
+schroedinger
+ots
+
+# Other
+
+# Raúl Porcel <armin76@gentoo.org> (11 Apr 2009)
+# Keep kde depends minimal
+semantic-desktop
+mecab
+tunepimp
+captury
+bittorrent-external
+ktts
+redland
+raptor
+fits
+indi
+wicd
+
+# Ben de Groot <yngwin@gentoo.org> 11 Feb 2009
+# both x11-libs/qt-phonon and media-sound/phonon are unkeyworded
+phonon
+
+# 13 Jun 2007 Jose Luis Rivero <yoswink@gentoo.org>
+# acpid masked and acpi use flag is deprecated now.
+acpi
+
+# 14 May 2007 Raúl Porcel <armin76@gentoo.org>
+# Alpha doesn't have wpa_supplicant keyworded, bug 175714
+networkmanager
+
+
+# alpha doesn't have java support other than compaq-j*, which isn't a
+# current version.  must mask this to keep things sane
+java
+java-internal
+java-external
+
+# Mask vpopmail until net-mail/vpopmail goes out of package.mask
+vpopmail
+
+# Mask pyste until gccxml / elementtree work on alpha
+pyste
+
+# RDEPEND on mono
+beagle
+
+# apache segfaults when using mpm-peruser (bug 105778)
+mpm-peruser
+
+# We don't have any virtual/mpi (bug 111807)
+mpi
+
+# masks required for asterisk
+bri
+pri
+zaptel
+
+# Modular X: mask non-alpha cards
+video_cards_apm
+video_cards_ark
+video_cards_ast
+video_cards_chips
+video_cards_cyrix
+video_cards_i128
+video_cards_i740
+video_cards_intel
+video_cards_neomagic
+video_cards_newport
+video_cards_nsc
+video_cards_radeonhd
+video_cards_sis
+video_cards_trident
+video_cards_tseng
+video_cards_vesa
+
+
+# dspam and dspam-web use this one
+# We've never supported cyrus-imapd because nobody asked for
+cyrus
+
+# disable until tested
+# # bug 148402
+pcsc-lite
+
+# conky dependencies missing keywords related (dragonheart -20061112)
+# media-sound/mpd
+mpd
+
+# USE=d seems to break gcc-4.1.2 (#178896)
+d
+
+# USE=audit masked prior to testing on alpha, arm, hppa, ppc64, s390, sh.
+# Bug #184563, 18 Sep 2007
+# Robin H. Johnson <robbat2@gentoo.org>
+audit
+
+# This works
+-x264
+
+# too complicated/invovled to test and too small user base
+# Tobias Klausmann <klausman@gentoo.org>
+afs
+
+# uses gnat/ada which is too big to support currently
+topal

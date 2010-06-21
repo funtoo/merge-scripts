@@ -1,0 +1,62 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/powerpc/ppc64/package.use.mask,v 1.19 2010/06/13 20:36:06 pacho Exp $
+
+# Pacho Ramos <pacho@gentoo.org> (13 Jun 2010)
+# Needs >=dev-libs/libgdata-0.4.0 keyworded, bugs 323845 and 323847
+media-video/totem iplayer youtube
+
+# Pacho Ramos <pacho@gentoo.org> (13 Jun 2010)
+# Needs app-mobilephone/obex-data-server keyworded, bug 305913
+# Needs sys-apps/gnome-disk-utility keyworded, bug 323803     
+gnome-base/gvfs bluetooth gdu
+
+# Tomáš Chvátal <scarabeus@gentoo.org> (06 June 2010)
+# requires more keywording per bug #323003
+kde-base/kde-meta sdk
+
+# Kacper Kowalik <xarthisius@gentoo.org> (30 May 2010)
+# quesoglc is not keyworded
+x11-misc/rss-glx quesoglc
+
+# uses games-board/ggz-gtk-client
+games-strategy/freeciv ggz
+
+# Mark Loeser <halcy0n@gentoo.org> (02 Mar 2010)
+# Mask webkit useflag since dev-python/mako and dev-python/pywebkitgtk are not
+# keyworded
+media-sound/rhythmbox webkit
+
+# Ben de Groot <yngwin@gentoo.org> (15 Jul 2009)
+# Mask dillo useflag as current version is unkeyworded (bug 253083)
+mail-client/claws-mail dillo
+
+# Brent Baude <ranger@gentoo.org> (30 May 2009)
+# Masking prolog from dev-libs/ppl
+dev-libs/ppl prolog
+
+# Brent Baude <ranger@gentoo.org> (05 May 2009)
+# Masking webkit from  libproxy due to TOC failure on webkit
+# and stupid 64bit toolchain.
+net-libs/libproxy webkit
+
+# Brent Baude <ranger@gentoo.org> (11 June 2008)
+# Masking webkit from gimp do to lame ppc64 toolchain and TOC
+>=media-gfx/gimp-2.6.4 webkit
+
+# Brent Baude <ranger@gentoo.org> (11 June 2008)
+# Masking out passwdqc from pambase since passwdqc
+sys-auth/pambase passwdqc
+
+# Joseph Jezak <josejx@gentoo.org> (8 March 2009)
+# Masking laptop use flag for hal
+sys-apps/hal laptop
+
+# Joseph Jezak <josejx@gentoo.org> (12 February 2010)
+# Mask unstable pidgin deps until we can mark them stable (farsight2)
+net-im/pidgin gstreamer
+
+# Joseph Jezak <josejx@gentoo.org> (23 February 2010)
+# Mask webkit flag due to minimal-toc breakage
+x11-misc/google-gadgets	webkit
+

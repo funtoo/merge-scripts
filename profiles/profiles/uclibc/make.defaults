@@ -1,0 +1,9 @@
+STAGE1_USE="uclibc"
+GRP_STAGE23_USE="ncurses readline zlib uclibc"
+USE="ncurses readline zlib uclibc -fortran -pam -berkdb -ipv6 -pppd"
+CFLAGS="-Os"
+CXXFLAGS="${CFLAGS}"
+PORTAGE_LIBC="uClibc"
+ELIBC=uclibc
+FEATURES="sandbox sfperms strict nodoc noinfo noman autoconfig"
+# Another test

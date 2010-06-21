@@ -1,0 +1,10 @@
+# Copyright 1999-2008 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/prefix/mint/make.defaults,v 1.2 2009/06/30 16:35:02 darkside Exp $
+
+# System-wide defaults for all MiNT profiles
+# This file should rarely need to be changed
+
+# 'Sane' defaults
+ELIBC="mintlib"
+KERNEL="freemint"

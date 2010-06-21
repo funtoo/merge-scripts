@@ -1,0 +1,8 @@
+# Copyright 1999-2010 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/releases/freebsd-8.0/ChangeLog,v 1.1 2010/03/11 10:26:43 aballier Exp $
+
+  11 Mar 2010; Alexis Ballier <aballier@gentoo.org> +package.mask,
+  +packages, +parent:
+  Add freebsd 8.0 profile
+

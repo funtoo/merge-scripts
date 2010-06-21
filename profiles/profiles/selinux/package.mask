@@ -1,0 +1,83 @@
+# $Header: /var/cvsroot/gentoo-x86/profiles/selinux/package.mask,v 1.52 2010/05/05 18:24:42 halcy0n Exp $
+
+# >=sci-libs/acml-3.6 requires gcc-4.2.
+>=sci-libs/acml-3.6
+
+# Diego E. Pettenò <flameeyes@gentoo.org> (25 Apr 2010)
+#  on behalf of QA team <qa@gentoo.org
+#
+# Mask SElinux packages on all the profile and unmask it only for
+# selinux itself; automagic dependencies can break systems otherwise
+#
+# Please keep this mask in sync between profiles/package.mask and
+# selinux/package.mask (with - prefix there).
+-app-admin/setools
+-dev-python/python-selinux
+-dev-python/sepolgen
+-sys-apps/checkpolicy
+-sys-apps/policycoreutils
+-sys-libs/libselinux
+-sys-libs/libsemanage
+-sec-policy/selinux-acpi
+-sec-policy/selinux-apache
+-sec-policy/selinux-arpwatch
+-sec-policy/selinux-asterisk
+-sec-policy/selinux-audio-entropyd
+-sec-policy/selinux-avahi
+-sec-policy/selinux-base-policy
+-sec-policy/selinux-bind
+-sec-policy/selinux-bluez
+-sec-policy/selinux-clamav
+-sec-policy/selinux-clockspeed
+-sec-policy/selinux-courier-imap
+-sec-policy/selinux-cups
+-sec-policy/selinux-cyrus-sasl
+-sec-policy/selinux-daemontools
+-sec-policy/selinux-dante
+-sec-policy/selinux-dbus
+-sec-policy/selinux-desktop
+-sec-policy/selinux-dhcp
+-sec-policy/selinux-distcc
+-sec-policy/selinux-djbdns
+-sec-policy/selinux-dnsmasq
+-sec-policy/selinux-ftpd
+-sec-policy/selinux-games
+-sec-policy/selinux-gnupg
+-sec-policy/selinux-gpm
+-sec-policy/selinux-hal
+-sec-policy/selinux-inetd
+-sec-policy/selinux-ipsec-tools
+-sec-policy/selinux-jabber-server
+-sec-policy/selinux-kerberos
+-sec-policy/selinux-logrotate
+-sec-policy/selinux-lpd
+-sec-policy/selinux-munin
+-sec-policy/selinux-mysql
+-sec-policy/selinux-nfs
+-sec-policy/selinux-ntop
+-sec-policy/selinux-ntp
+-sec-policy/selinux-openldap
+-sec-policy/selinux-openvpn
+-sec-policy/selinux-pcmcia
+-sec-policy/selinux-portmap
+-sec-policy/selinux-postfix
+-sec-policy/selinux-postgresql
+-sec-policy/selinux-ppp
+-sec-policy/selinux-privoxy
+-sec-policy/selinux-procmail
+-sec-policy/selinux-publicfile
+-sec-policy/selinux-pyzor
+-sec-policy/selinux-qmail
+-sec-policy/selinux-razor
+-sec-policy/selinux-samba
+-sec-policy/selinux-screen
+-sec-policy/selinux-snmpd
+-sec-policy/selinux-snort
+-sec-policy/selinux-spamassassin
+-sec-policy/selinux-squid
+-sec-policy/selinux-stunnel
+-sec-policy/selinux-sudo
+-sec-policy/selinux-tcpd
+-sec-policy/selinux-tftpd
+-sec-policy/selinux-ucspi-tcp
+-sec-policy/selinux-wireshark

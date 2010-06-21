@@ -1,0 +1,41 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/prefix/darwin/package.mask,v 1.16 2010/04/23 18:48:23 grobian Exp $
+# $Id: package.mask,v 1.16 2010/04/23 18:48:23 grobian Exp $
+
+# Fabian Groffen <grobian@gentoo.org> (21 Apr 2010)
+# state of mesa is probably not too good on OSX, opengl-apple is
+# preferred
+media-libs/mesa
+
+# Fabian Groffen <grobian@gentoo.org> (03 Feb 2010)
+# ld: duplicate symbol mylist<....> caused by implementation code in
+# mylist.h file
+~dev-vcs/cssc-1.2.0
+
+# Fabian Groffen <grobian@gentoo.org> (27 Oct 2009)
+# Fails compiling due to some missing dwarf symbols and internal
+# segfaults
+~sys-devel/gcc-4.3.4
+~sys-devel/gcc-4.4.1
+~sys-devel/gcc-4.4.2
+~sys-devel/gcc-4.4.3
+
+# Fabian Groffen <grobian@gentoo.org> (30 Jun 2009)
+# platform.h:81: error: conflicting types for ‘setmode’
+# /usr/include/unistd.h:570: error: previous declaration of ‘setmode’ was here
+=app-crypt/ccrypt-1.8
+
+# Fabian Groffen <grobian@gentoo.org> (08 Oct 2008)
+# odcctools have been replaced by binutils-apple, which is more close to
+# Apple's original sources
+sys-devel/odcctools
+
+# Elias Pipping <pipping@gentoo.org> (22 Dec 2007)
+# bug #211712: archive has no table of contents
+sci-libs/blas-atlas
+
+# Elias Pipping <pipping@gentoo.org> (09 Oct 2007)
+# darwin-miscutils are only available on darwin
+-sys-apps/darwin-miscutils
+

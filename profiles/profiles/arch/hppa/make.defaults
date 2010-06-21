@@ -1,0 +1,18 @@
+# Copyright 1999-2005 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/hppa/make.defaults,v 1.4 2009/01/26 18:43:47 vapier Exp $
+
+ARCH="hppa"
+ACCEPT_KEYWORDS="hppa"
+
+CHOST="hppa-unknown-linux-gnu"
+CFLAGS="-O2 -pipe"
+CXXFLAGS="-O1 -pipe"
+
+FEATURES="sandbox sfperms strict"
+
+USE="cups foomaticdb fortran gdbm gpm imlib libwww spell xml2 firefox xulrunner"
+
+# 2006/08/18 - Donnie Berkholz <dberkholz@gentoo.org>
+# Defaults for video drivers
+VIDEO_CARDS="fbdev"

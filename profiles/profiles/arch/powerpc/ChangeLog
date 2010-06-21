@@ -1,0 +1,217 @@
+# ChangeLog for Gentoo/PPC profile directory
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/powerpc/ChangeLog,v 1.67 2010/06/13 20:36:06 pacho Exp $
+
+  13 Jun 2010; Pacho Ramos <pacho@gentoo.org> ppc64/package.use.mask:
+  Mask media-video/totem youtube and iplayer USEs until bug 323845 and
+  323847 are fixed
+
+  13 Jun 2010; Pacho Ramos <pacho@gentoo.org> ppc32/package.use.mask:
+  Mask media-video/totem youtube USE until bug 323845 is fixed
+
+  13 Jun 2010; Pacho Ramos <pacho@gentoo.org> ppc32/package.use.mask,
+  ppc64/package.use.mask:
+  Mask gnome-base/gvfs gdu USE flag until bug 323803 is fixed.
+
+  13 Jun 2010; Pacho Ramos <pacho@gentoo.org> ppc64/package.use.mask:
+  Mask gnome-base/gvfs bluetooth USE flag until bug 305913 is fixed.
+
+  01 Jun 2010; Joseph Jezak <josejx@gentoo.org> package.mask:
+  Remove TeX Live 2009 masking.
+
+  31 May 2010; Joseph Jezak <josejx@gentoo.org> package.use.mask:
+  Removed java and kde masks, issues have been resolved.
+
+  14 May 2010; Justin Lecher <jlec@gentoo.org> package.mask:
+  Mask dev-tcltk/tkimg-1.4.20100510 until libpng-1.4 is unmasked
+
+  11 May 2010; Joseph Jezak <josejx@gentoo.org> package.use.mask:
+  qtmultimedia is keyworded now.
+
+  26 Apr 2010; Bernard Cafarelli <voyageur@gentoo.org> package.use.mask:
+  Mask new udis86 flag for llvm, it is only for x86/amd64
+
+  13 Mar 2010; Samuli Suominen <ssuominen@gentoo.org> package.mask:
+  Mask libpng-1.4 pending on texlive-core-2009 unmasking.
+
+  23 Feb 2010; Alexey Shvetsov <alexxy@gentoo.org> package.use.mask:
+  media-gfx/tachyon needed to be keyworded per bug #306549
+
+  23 Feb 2010; Joseph Jezak <josejx@gentoo.org> package.mask:
+  Unmask KDE4.4 on ~ppc/~ppc64.
+
+  23 Feb 2010; Joseph Jezak <josejx@gentoo.org> package.use.mask:
+  Removed mask on virtuoso, it's keyworded now. Also removed mask on mach64,
+  this card is marked for use on PowerPC machines.
+
+  21 Feb 2010; Samuli Suominen <ssuominen@gentoo.org> package.mask:
+  Mask media-gfx/kuickshow in KDE 4.4.0 mask.
+
+  21 Feb 2010; Samuli Suominen <ssuominen@gentoo.org> package.mask:
+  Mask kde-misc/konq-plugins-4.4.0 in KDE 4.4.0 mask.
+
+  16 Feb 2010; Jeroen Roovers <jer@gentoo.org> package.mask:
+  Remove www-client/opera mask now that ppc support is gone.
+
+  12 Feb 2010; Joseph Jezak <josejx@gentoo.org> package.mask:
+  Masked app-emulation/mol.
+
+  09 Feb 2010; Alexey Shvetsov <alexxy@gentoo.org> package.mask:
+  mask kde sc 4.4.0 since neede deps not keyworded
+
+  08 Feb 2010; Alexey Shvetsov <alexxy@gentoo.org> package.use.mask:
+  mask dev-libs/soprano[virtuoso] since it needs dev-db/virtuoso-* keyworded
+
+  08 Feb 2010; Alexey Shvetsov <alexxy@gentoo.org> package.use.mask:
+  mask app-admin/system-config-printer-common[policykit] since it needs
+  sys-auth/polkit keyworded
+
+  25 Jan 2010; Alexis Ballier <aballier@gentoo.org> package.mask:
+  Move TeX Live 2009 mask here from global package.mask, remove it once
+  keyworded, bug #300526
+
+  23 Jan 2010; Jeroen Roovers <jer@gentoo.org> package.mask:
+  Mask www-client/opera (bug #283430).
+
+  08 Jan 2010; Diego E. Pettenò <flameeyes@gentoo.org> ppc32/use.mask:
+  Unmask JRuby target.
+
+  06 Jan 2010; Joseph Jezak <josejx@gentoo.org> package.use.mask:
+  Removed mask on frei0r-plugins.
+
+  13 Dec 2009; Rémi Cardona <remi@gentoo.org> ppc64/64ul/use.mask:
+  drop "imstt" from VIDEO_CARDS in all profiles
+
+  13 Dec 2009; Rémi Cardona <remi@gentoo.org> ppc64/make.defaults,
+  use.mask:
+  drop "vga" from VIDEO_CARDS in all profiles
+
+  10 Nov 2009; Christian Faulhammer <fauli@gentoo.org> ppc64/use.mask:
+  unmask ps3 USE flag for bug 244018
+
+  08 Nov 2009; Joseph Jezak <josejx@gentoo.org> package.mask:
+  Removed kde-4.3 mask.
+
+  07 Nov 2009; Samuli Suominen <ssuominen@gentoo.org> package.use.mask:
+  Mask sys-block/gparted[kde].
+
+  16 Oct 2009; Samuli Suominen <ssuominen@gentoo.org> use.mask:
+  Mask Intel Integrated Primitive support, USE="ipp".
+
+  12 Oct 2009; Jonathan Callen <abcd@gentoo.org> package.mask:
+  Remove filelight, now fixed
+
+  11 Oct 2009; Jonathan Callen <abcd@gentoo.org> package.mask:
+  Masking packages that dep on KDE-4.3 to prevent more tree breakage
+
+  03 Oct 2009; Mounir Lamouri <volkmar@gentoo.org> package.mask:
+  Removing outadated <sci-physics/root-5 in package.mask.
+
+  05 Sep 2009; Jorge Manuel B. S. Vicetto <jmbsvicetto@gentoo.org>
+  package.mask:
+  Added missing KDE-4.3 deps mask for this arch to fix tree breakage (bug
+  #280312).
+
+  02 Sep 2009; Jorge Manuel B. S. Vicetto <jmbsvicetto@gentoo.org>
+  package.mask:
+  Masking >= KDE-4.3 for this arch to prevent tree breakage following
+  the global unmask of KDE-4.3 (bug #280312).
+
+  16 Aug 2009; Rémi Cardona <remi@gentoo.org> use.mask:
+  drop last traces of i810
+
+  01 Aug 2009; Steve Dibb <beandog@gentoo.org> use.mask:
+  Remove "real" use flag mask, as its already in base
+
+  30 April 2009; Brent Baude <ranger@gentoo.org> ppc32/package.use.mask
+  Removing webkit masking per bug 250934
+  
+  20 Mar 2009; Joseph Jezak <josejx@gentoo.org> package.use.mask:
+  Masked oracle keyword for dev-ruby/ruby-dbi.
+
+  27 Feb 2009; Joseph Jezak <josejx@gentoo.org> package.use.mask:
+  Marked plugins ~ppc, but masking current versions on gst-plugins-meta
+  because of stable keyword.
+
+  18 Feb 2009; <chainsaw@gentoo.org> package.use.mask:
+  Dependency tree in sys-apps/hal is fixed up for USE=laptop on PowerPC.
+  Remove use.mask for bug #259080.
+
+  10 Jan 2009; Joseph Jezak <josejx@gentoo.org> ChangeLog:
+  Reverting pm-utils change until it goes stable.
+
+  09 Jan 2009; Joseph Jezak <josejx@gentoo.org> package.use.mask:
+  Removed mask on sys-apps/hal for bug #253868.
+
+  14 Dec 2008; Peter Alfredsen <loki_val@gentoo.org>
+  +ppc32/package.use.mask:
+  Mask mono-tools[webkit] for bug 250934.
+
+  12 Nov 2008; Joseph Jezak <josejx@gentoo.org> package.use.mask:
+  Added use mask for pearpc - jit
+
+  18 Oct 2008; Mart Raudsepp <leio@gentoo.org> ppc64/package.mask:
+  Unmask >=gnome-icon-theme-2.22 to fix ppc64 32-bit userland deptree
+
+  23 Sep 2008; Markus Rothe <corsair@gentoo.org> use.mask:
+  Add video_cards_ast to use.mask
+
+  24 Aug 2008; Markus Rothe <corsair@gentoo.org> ppc64/use.mask:
+  mask custom-cpuopts and cpudetection on ppc64 for mplayer - bug #234629
+
+  24 Aug 2008; Markus Rothe <corsair@gentoo.org> ppc64/use.mask:
+  mask dxr* use flags on ppc64 for mplayer - bug #234629
+
+  11 Aug 2008; Raúl Porcel <armin76@gentoo.org> ppc64/use.mask:
+  Use.mask madwifi on ppc64 since it doesn't have madwifi keyworded
+
+  26 Jul 2008; Markus Rothe <corsair@gentoo.org> package.use.mask,
+  ppc64/package.use.mask:
+  Move 'app-text/enchant -zemberek' from ppc64 profile to powerpc profile. The
+  packages are ~ppc now, too.
+
+  22 Jul 2008; Markus Rothe <corsair@gentoo.org>
+  arch/powerpc/ppc64/package.use.mask:
+  unmask zemberek use flag for app-text/enchant in ppc64 profiles
+
+  04 Jun 2008; Markus Rothe <corsair@gentoo.org> ppc64/64ul/use.mask:
+  add ocamlopt use flag to use.mask. this didn't made the change from
+  default-linux/ to default/ profiles
+
+  03 Jun 2008; nixnut <nixnut@gentoo.org> package.use.mask:
+  mask laptop sys-apps/hal
+
+  28 May 2008; Markus Rothe <corsair@gentoo.org> package.use.mask:
+  Remove "sys-apps/paludis python" from package.use.mask; bug #198989
+
+  30 Apr 2008; Chris Gianelloni <wolf31o2@gentoo.org>
+  +ppc64/32ul/make.defaults, +ppc64/32ul/parent, +ppc64/32ul/use.mask,
+  +ppc64/64ul/make.defaults, +ppc64/64ul/package.mask, +ppc64/64ul/parent,
+  +ppc64/64ul/use.mask, +ppc64/64ul/virtuals, ppc64/make.defaults:
+  Updated arch/powerpc/ppc64 profile from the snapshot tree. This adds a 32ul
+  and 64ul sub-profile to ppc64, which allows us to clean up everything except
+  for parent and profile.bashrc from default/linux/powerpc/ppc64 profiles.
+  This closes bug #217305.
+
+  23 Apr 2008; Chris Gianelloni <wolf31o2@gentoo.org> ppc64/make.defaults:
+  Adding MULTILIB_ABIS and ABI to arch/powerpc/ppc64 and uncommenting multilib
+  variables.
+
+  11 Apr 2008; Chris Gianelloni <wolf31o2@gentoo.org> package.use.mask:
+  Added hb/hb2 to package.use.mask for sys-fs/evms.
+
+  11 Apr 2008; Chris Gianelloni <wolf31o2@gentoo.org> package.use.mask:
+  Sync package.use.mask with default-linux.
+
+  10 Apr 2008; Donnie Berkholz <dberkholz@gentoo.org>; ppc32/make.defaults,
+  ppc64/make.defaults:
+  Make VIDEO_CARDS defaults a reasonable set instead of every imaginable
+  card.
+
+  10 Apr 2008; Donnie Berkholz <dberkholz@gentoo.org>; use.mask:
+  changing around video_cards_via masking by unmasking only for available
+  arches instead of masking on unavailable.
+
+  02 Apr 2008; Mart Raudsepp <leio@gentoo.org> package.use.mask:
+  USE mask dvb and mythtv on gst-plugins-meta - dependencies not keyworded
+

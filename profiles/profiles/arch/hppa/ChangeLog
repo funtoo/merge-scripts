@@ -1,0 +1,172 @@
+# ChangeLog for Gentoo/hppa profile
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/hppa/ChangeLog,v 1.53 2010/06/17 19:20:44 jer Exp $
+
+  17 Jun 2010; Jeroen Roovers <jer@gentoo.org> use.mask:
+  Mask USE=kde (bug #304363).
+
+  13 Jun 2010; Pacho Ramos <pacho@gentoo.org> package.use.mask:
+  Mask gnome-base/gvfs gdu USE flag until bug 323803 is fixed.
+
+  06 Apr 2010; Jeroen Roovers <jer@gentoo.org> use.mask:
+  Mask nouveau and svga video_cards_ USE flags.
+
+  01 Apr 2010; Jeroen Roovers <jer@gentoo.org> package.mask:
+  Remove mysql mask (bug #303747 comment #15).
+
+  03 Mar 2010; Jonathan Callen <abcd@gentoo.org> package.mask:
+  Mask all of KDE SC 4.4.x, not just 4.4.0
+
+  02 Mar 2010; Jeroen Roovers <jer@gentoo.org> package.mask:
+  Mask =virtual/mysql-5.1 too thanks to Halcy0n again (bug #307251).
+
+  02 Mar 2010; Jeroen Roovers <jer@gentoo.org> package.mask:
+  Mask >=dev-db/mysql-5.0.83 (bug #307251).
+
+  28 Feb 2010; Jeroen Roovers <jer@gentoo.org> use.mask:
+  USE.mask flite (bug #307241).
+
+  10 Feb 2010; Jonathan Callen <abcd@gentoo.org> package.mask:
+  Mask KDE SC 4.4.0 since needed deps not keyworded
+
+  08 Feb 2010; Alexey Shvetsov <alexxy@gentoo.org> package.use.mask:
+  mask dev-libs/soprano[virtuoso] since it needs dev-db/virtuoso-* keyworded
+
+  25 Jan 2010; Alexis Ballier <aballier@gentoo.org> package.mask:
+  Move TeX Live 2009 mask here from global package.mask, remove it once
+  keyworded, bug #300526
+
+  13 Dec 2009; Rémi Cardona <remi@gentoo.org> use.mask:
+  drop "imstt" from VIDEO_CARDS in all profiles
+
+  13 Dec 2009; Rémi Cardona <remi@gentoo.org> use.mask:
+  drop "vga" from VIDEO_CARDS in all profiles
+
+  09 Nov 2009; Jeroen Roovers <jer@gentoo.org> package.mask,
+  package.use.mask:
+  Remove masks now KDE 4.3 keywording is complete.
+
+  08 Nov 2009; Alexey Shvetsov <alexxy@gentoo.org> package.mask:
+  Drop KDE 4.3 mask since KDE 4.3 is keyworded and we dropping kde 4.2
+
+  12 Oct 2009; Jonathan Callen <abcd@gentoo.org> package.mask:
+  Remove filelight, now fixed
+
+  11 Oct 2009; Jonathan Callen <abcd@gentoo.org> package.mask:
+  Masking packages that dep on KDE-4.3 to prevent more tree breakage
+
+  05 Sep 2009; Jorge Manuel B. S. Vicetto <jmbsvicetto@gentoo.org>
+  package.mask:
+  Added missing KDE-4.3 deps mask for this arch to fix tree breakage (bug
+  #280312).
+
+  02 Sep 2009; Jorge Manuel B. S. Vicetto <jmbsvicetto@gentoo.org>
+  package.mask:
+  Masking >= KDE-4.3 for this arch (hppa) to prevent tree breakage following
+  the global unmask of KDE-4.3 (bug #280312).
+
+  01 Sep 2009; Jeroen Roovers <jer@gentoo.org> use.mask:
+  sys-power/pm-utils is currently not supported (bug #280312).
+
+  16 Aug 2009; Rémi Cardona <remi@gentoo.org> use.mask:
+  drop last traces of i810
+
+  16 Aug 2009; Rémi Cardona <remi@gentoo.org> use.mask:
+  drop last traces of i810
+
+  05 Aug 2009; Jeroen Roovers <jer@gentoo.org> package.mask:
+  No need for a p.mask while it is -hppa anyway.
+
+  05 Aug 2009; Jeroen Roovers <jer@gentoo.org> package.mask,
+  -package.unmask:
+  Oops. Move package.unmask entry to package.mask. Also confine the mask to
+  ~sys-devel/gcc-4.4.0. Thanks to ssuominen for noticing.
+
+  04 Aug 2009; Jeroen Roovers <jer@gentoo.org> use.mask:
+  Mask USE=wicd (bug #280312).
+
+  02 Jun 2009; Jeroen Roovers <jer@gentoo.org> +package.unmask:
+  Unmask sys-devel/gcc-4.4 for HPPA (bug #225917).
+
+  31 May 2009; Jeroen Roovers <jer@gentoo.org> package.use.mask:
+  Mask media-gfx/imagemagick[openmp] until we have a stable
+  sys-devel/gcc-4.3[openmp] (bug #225917).
+
+  12 May 2009; Jeroen Roovers <jer@gentoo.org> package.use.mask:
+  Mask dev-libs/ppl USE=prolog (bug #269556).
+
+  06 May 2009; Jeroen Roovers <jer@gentoo.org> package.use.mask:
+  Mask USE=solver for kde-base/kalzium or dev-ml/facile[ocamlopt] would be
+  required (bug #266459).
+
+  06 May 2009; Jeroen Roovers <jer@gentoo.org> package.use.mask:
+  Mask net-libs/libproxy webkit as to not pull in webkit-gtk (bug #268529).
+
+  04 May 2009; Jeroen Roovers <jer@gentoo.org> package.use.mask:
+  Reinstate p.u.m correctly for <sys-devel/gcc-4.3[libffi] (bug #210880).
+
+  03 May 2009; Jeroen Roovers <jer@gentoo.org> package.use.mask:
+  Un-p.u.mask libffi (bug #210880).
+
+  18 Apr 2009; Jeroen Roovers <jer@gentoo.org> package.use.mask:
+  Mask kde-base/kttsd[ktts] because of app-accessibility/freetts using Java
+  (bug #260777).
+
+  15 Apr 2009; Jeroen Roovers <jer@gentoo.org> package.use.mask:
+  Mask media-sound/mpd[fluidsynth] (bug #266106).
+
+  02 Apr 2009; Jeroen Roovers <jer@gentoo.org> package.use.mask, use.mask:
+  Move media-gfx/gimp USE=webkit mask from use.mask to package.use.mask.
+  Incidentally I also correct the date on the entry.
+
+  02 Apr 2009; Jeroen Roovers <jer@gentoo.org> use.mask:
+  Mask USE=webkit generally.
+
+  24 Mar 2009; Jeroen Roovers <jer@gentoo.org> package.use.mask:
+  Remove x11-themes/qtcurve-qt4 kde from package.use.mask now that
+  kde-base/kwin is keyworded (bug #259765).
+
+  12 Mar 2009; Jeroen Roovers <jer@gentoo.org> package.use.mask:
+  Mask USE=sesame2 for dev-libs/soprano to avoid Java (bug #260777).
+
+  02 Jan 2009; Jeroen Roovers <jer@gentoo.org> make.defaults:
+  Prefer xulrunner (bug #234646, comment #57).
+
+  10 Nov 2008; Jeroen Roovers <jer@gentoo.org> use.mask:
+  Unmask IUSE=openal now one version is stable.
+
+  26 Sep 2008; Jeroen Roovers <jer@gentoo.org> use.mask:
+  Mask unsupported video cards.
+
+  16 Sep 2008; Jeroen Roovers <jer@gentoo.org> package.use.mask:
+  dxr2/3 cards have not been tested on HPPA hardware and custom-cpuopts does
+  not apply to HPPA (bug #234629)
+
+  16 Sep 2008; Jeroen Roovers <jer@gentoo.org> package.use.mask:
+  Masking app-text/texlive:xindy because app-text/xindy needs dev-lisp/clisp
+  and clisp does not build (bug #229217).
+
+  10 Sep 2008; Jeroen Roovers <jer@gentoo.org> package.use.mask:
+  app-misc/tracker isn't keyworded and doesn't work.
+
+  09 Sep 2008; Jeroen Roovers <jer@gentoo.org> package.mask:
+  Remove useless GNOME masking.
+
+  03 Sep 2008; Mart Raudsepp <leio@gentoo.org> package.mask:
+  Copy the global GNOME-2.22 mask here, in preparation of removal of the
+  global one. Unmasking for HPPA waiting on keyword bug 218794
+
+  10 Apr 2008; Donnie Berkholz <dberkholz@gentoo.org>; make.defaults:
+  Make VIDEO_CARDS defaults a reasonable set instead of every imaginable
+  card.
+
+  10 Apr 2008; Donnie Berkholz <dberkholz@gentoo.org>; use.mask:
+  changing around video_cards_via masking by unmasking only for available
+  arches instead of masking on unavailable.
+
+  09 Apr 2008; Jeroen Roovers <jer@gentoo.org> package.use.mask:
+  Mask sys-cluster/mpich2 for sci-libs/hdf5.
+
+  02 Apr 2008; Mart Raudsepp <leio@gentoo.org> package.use.mask:
+  USE mask dvb and mythtv on gst-plugins-meta - dependencies not keyworded
+

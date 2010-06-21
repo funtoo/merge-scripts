@@ -1,0 +1,43 @@
+slotmove dev-util/gambas 0 1
+move dev-libs/wefts dev-cpp/libwefts
+move dev-libs/mxmlplus dev-cpp/libmxmlplus
+slotmove =gnome-extra/libgtkhtml-2* 1 2
+slotmove =gnome-extra/gtkhtml-1* 0 1
+move gnome-extra/libgtkhtml gnome-extra/gtkhtml
+move dev-util/screem app-editors/screem
+move dev-libs/ice dev-cpp/ice
+move dev-embedded/channelgen dev-tinyos/channelgen
+move sys-apps/qpage app-admin/qpage
+move sci-mathematics/qtiplot sci-visualization/qtiplot
+move media-gfx/epix sci-visualization/epix
+move media-gfx/fig2sxd sci-visualization/fig2sxd
+move media-gfx/gnuplot sci-visualization/gnuplot
+move media-gfx/grace sci-visualization/grace
+move media-gfx/kpl sci-visualization/kpl
+move media-gfx/labplot sci-visualization/labplot
+move media-gfx/opendx sci-visualization/opendx
+move media-gfx/opendx-samples sci-visualization/opendx-samples
+move media-gfx/qmatplot sci-visualization/qmatplot
+move media-gfx/quickplot sci-visualization/quickplot
+move media-gfx/scigraphica sci-visualization/scigraphica
+move media-gfx/spectromatic sci-visualization/spectromatic
+move media-gfx/xgraph sci-visualization/xgraph
+move sci-misc/gwyddion sci-visualization/gwyddion
+move sci-mathematics/veusz sci-visualization/veusz
+move media-gfx/xd3d sci-visualization/xd3d
+move sci-mathematics/ktechlab sci-electronics/ktechlab
+move net-wireless/acx100 net-wireless/acx
+move sys-apps/hexdump sys-apps/esr-hexdump
+move dev-ruby/switchtower dev-ruby/capistrano
+move games-action/armagetron games-action/armagetronad
+move net-wireless/kwirelessmonitor net-wireless/kwlaninfo
+move games-board/pio games-board/pioneers
+move games-board/ksudoku games-puzzle/ksudoku
+move sys-apps/linux32 sys-apps/setarch
+move sys-devel/mips32 sys-apps/setarch
+move sys-devel/ppc32 sys-apps/setarch
+move sys-devel/sparc32 sys-apps/setarch
+move games-arcade/marbleblastdemo games-arcade/marbleblast-demo
+move games-arcade/marbleblastgolddemo games-arcade/marbleblastgold-demo
+move games-arcade/thinktanksdemo games-arcade/thinktanks-demo
+move games-fps/postal2mpdemo games-fps/postal2mp-demo

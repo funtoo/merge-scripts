@@ -1,0 +1,47 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/prefix/aix/use.mask,v 1.2 2009/08/18 14:48:09 darkside Exp $
+
+# Re-add AIX libc
+-elibc_AIX
+-kernel_AIX
+
+# these will more than likely never work on AIX
+3dfx
+3dnow
+3dnowext
+acpi
+alsa
+apm
+cap
+caps
+directfb
+divx4linux
+djbfft
+emul-linux-x86
+fbcon
+fdftk
+fmod
+ggi
+gpm
+hardened
+icc
+icc-pgo
+mmx
+mmx2
+# the following USE flag requires device-mapper
+on-the-fly-crypt
+oss
+solid
+sse
+sse2
+svga
+sybase
+sybase-ct
+rtc
+uclibc
+voodoo3
+pvm
+v4l
+v4l2
+

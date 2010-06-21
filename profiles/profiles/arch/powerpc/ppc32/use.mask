@@ -1,0 +1,9 @@
+# Unmask the flag which corresponds to ARCH.
+-ppc
+
+# 2010/01/08 - Diego E. Pettenò <flameeyes@gentoo.org>
+# Add support for JRuby targets where jruby is available
+-ruby_targets_jruby
+
+# RealMagic Hollywood+/Creative DXR3 support
+-dxr3

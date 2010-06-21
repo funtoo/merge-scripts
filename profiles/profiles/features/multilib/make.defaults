@@ -1,0 +1,26 @@
+# Copyright 1999-2008 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/features/multilib/make.defaults,v 1.3 2009/03/12 14:30:34 drizzt Exp $
+
+# This is so we build with multilib from the start
+STAGE1_USE="multilib nptl nptlonly unicode"
+
+# FEATURES="multilib-strict" specific settings.
+MULTILIB_STRICT_DIRS="/lib32 /lib /usr/lib32 /usr/lib /usr/kde/*/lib32 /usr/kde/*/lib /usr/qt/*/lib32 /usr/qt/*/lib /usr/X11R6/lib32 /usr/X11R6/lib"
+MULTILIB_STRICT_DENY="64-bit.*shared object"
+MULTILIB_STRICT_EXEMPT="(perl5|gcc|gcc-lib|binutils|eclipse-3|debug|portage)"
+
+# Let baselayout create the lib symlink.
+SYMLINK_LIB="yes"
+
+# 64-bit LIBDIR
+LIBDIR_amd64="lib64"
+LIBDIR_amd64_fbsd="lib64"
+LIBDIR_ppc64="lib64"
+LIBDIR_sparc64="lib64"
+
+# 32-bit LIBDIR
+LIBDIR_ppc="lib32"
+LIBDIR_x86="lib32"
+LIBDIR_x86_fbsd="lib32"
+LIBDIR_sparc32="lib32"

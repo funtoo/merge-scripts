@@ -1,0 +1,12 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/prefix/darwin/macos/10.6/x86/make.defaults,v 1.3 2009/09/17 17:30:52 grobian Exp $
+
+ARCH="x86-macos"
+CHOST="i686-apple-darwin10"
+ACCEPT_KEYWORDS="~x86-macos"
+
+USE="${USE} mmx mmxext sse sse2"
+# normally we set arch to prescott for all MacTel users, as this enables
+# SSE and MMX support in GCC
+CFLAGS="-march=prescott"

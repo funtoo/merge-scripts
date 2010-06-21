@@ -1,0 +1,16 @@
+move xfce-extra/xfce4-icon-theme x11-themes/xfce4-icon-theme
+move xfce-extra/ristretto media-gfx/ristretto
+move xfce-extra/terminal x11-terms/terminal
+move xfce-extra/xfburn app-cdr/xfburn
+move xfce-extra/mousepad app-editors/mousepad
+move xfce-extra/xfwm4-themes x11-themes/xfwm4-themes
+move xfce-base/xfprint net-print/xfprint
+move xfce-base/orage app-office/orage
+move xfce-extra/notification-daemon-xfce x11-misc/notification-daemon-xfce
+move xfce-extra/xfkc x11-misc/xfkc
+move xfce-extra/xfce4-dev-tools dev-util/xfce4-dev-tools
+slotmove media-libs/portaudio 18 0
+move app-emulation/virtualbox app-emulation/virtualbox-ose
+move app-emulation/virtualbox-additions app-emulation/virtualbox-ose-additions
+move games-arcade/sdljump games-arcade/gnujump
+move media-fonts/liberation-fonts-ttf media-fonts/liberation-fonts

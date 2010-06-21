@@ -1,0 +1,61 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/arm/package.use.mask,v 1.25 2010/06/13 17:16:49 pacho Exp $
+
+# Pacho Ramos <pacho@gentoo.org> (13 Jun 2010)
+# Needs app-mobilephone/obex-data-server keyworded, bug 305913
+gnome-base/gvfs bluetooth
+
+# Jeremy Olexa <darkside@gentoo.org> (04 Apr 2010)
+# mask net-misc/mediatomb[lastfm] as lastfmlib isn't keyworded
+net-misc/mediatomb lastfm
+
+# Raúl Porcel <armin76@gentoo.org> (28 Mar 2010)
+# Needs kde-4 stable
+dev-util/subversion kde
+
+# Mark Loeser <halcy0n@gentoo.org> (15 Feb 2010)
+# need >=net-wireless/bluez-4.61 keyworded
+net-misc/ofono bluetooth
+
+# Alexey Shvetsov <alexxy@gentoo.org> (09 Feb 2010)
+# need dev-db/virtuoso-* keyworded
+dev-libs/soprano virtuoso
+
+# Raúl Porcel <armin76@gentoo.org> (20 Jan 2010)
+# Needs mplayer
+kde-base/dolphin thumbnail
+kde-base/konqueror thumbnail
+
+# Raul Porcel <armin76@gentoo.org> (27 Dec 2009)
+# Needs qt-3
+app-portage/cfg-update kde
+
+# Markus Meier <maekke@gentoo.org> (27 Sep 2009)
+# mask media-gfx/imagemagick[autotrace] as autotrace is not keyworded
+media-gfx/imagemagick autotrace
+
+# Jim Ramsay <lack@gentoo.org> (5 Nov 2008)
+# app-admin/gkrellm may pull in net-libs/libntlm, which is not keyworded
+app-admin/gkrellm ntlm
+
+# Gilles Dartiguelongue <eva@gentoo.org> (19 Oct 2007)
+# gdm depends on zenity which is not keyworded
+>=gnome-base/gdm-2.20 remote
+
+# Gilles Dartiguelongue <eva@gentoo.org> (23 Oct 2007)
+# gdm depends on zenity which is not keyworded
+>=media-video/totem-2.20 galago
+
+# Masking this so repoman shuts up about paludis
+sys-apps/paludis ruby-bindings
+
+# missing keyword for sys-cluster/openmpi sys-cluster/mpich2
+dev-libs/boost mpi
+
+# missing keywords
+media-sound/sox ladspa
+media-plugins/gst-plugins-meta lame taglib
+
+# projectm not keyworded, bug #314969
+media-video/vlc projectm

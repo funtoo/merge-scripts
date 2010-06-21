@@ -1,0 +1,94 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/sparc/package.use.mask,v 1.48 2010/06/12 16:12:52 nerdboy Exp $
+
+# Steve Arnold <nerdboy@gentoo.org> (12 Jun 2010)
+# masking for gdal (see bug 315659)
+sci-libs/gdal ecwj2k
+
+# uses games-board/ggz-gtk-client
+games-strategy/freeciv ggz
+
+# Ben de Groot <yngwin@gentoo.org> (18 Jan 2010)
+# newer qt-webkit is not keyworded (bug #235685)
+>=dev-python/PyQt4-4.7.2 webkit
+
+# Raúl Porcel <armin76@gentoo.org> (02 Mar 2010)
+# needs dev-python/mako which depends on
+# dev-python/beaker which sigbuses
+media-sound/rhythmbox webkit
+
+# Alexey Shvetsov <alexxy@gentoo.org> (09 Feb 2010)
+# need dev-db/virtuoso-* keyworded
+dev-libs/soprano virtuoso
+
+# Alexey Shvetsov <alexxy@gentoo.org> (09 Feb 2010)
+# need sys-auth/polkit keyworded
+app-admin/system-config-printer-common  policykit
+
+# Ben de Groot <yngwin@gentoo.org> (16 Jan 2010)
+# qt-multimedia is not keyworded, bug 293671
+dev-python/PyQt4 multimedia
+
+# Ben de Groot <yngwin@gentoo.org> (11 Nov 2009)
+# Requires qt-assistant, which requires qt-webkit, bug 292838
+dev-libs/uriparser doc
+media-libs/libxspf doc
+
+# Tomáš Chvátal <scarabeus@gentoo.org> (27 Oct 2009)
+# Requires stable KDE4
+app-office/openoffice kde
+app-arch/p7zip kde
+dev-util/subversion kde
+
+# Romain Perier <mrpouet@gentoo.org> (18 Oct. 2009)
+# >=networkmanager-0.7.0 is not keyworded.
+gnome-base/gnome-applets networkmanager
+
+# Romain Perier <mrpouet@gentoo.org> (06 Sep 2009)
+# depends on >=kde-base/kdebase-startkde-4.2
+www-plugins/gnash kde
+
+# Raúl Porcel <armin76@gentoo.org> (09 Jun 2009)
+# Needs qt-assistant
+dev-python/PyQt4 assistant
+
+# Ben de Groot <yngwin@gentoo.org> (20 Feb 2009)
+# needs kde4 keyworded
+x11-themes/qtcurve-qt4 kde
+dev-util/subversion kde
+
+# Raúl Porcel <armin76@gentoo.org>
+# Depends on dev-java/fop which requires java...
+sci-geosciences/gpsbabel doc
+
+# Ben de Groot <yngwin@gentoo.org> (30 Dec 2008)
+# mask because mozilla-firefox-3 is -sparc keyworded
+x11-themes/gtk-engines-qtcurve firefox3
+
+# depends on mpich2 which isn't keyworded (bug #217854)
+sci-libs/hdf5 mpi
+
+# wavgain fails to build
+media-sound/rubyripper wav
+
+# Needs chicken
+dev-lang/swig chicken
+
+# Needs pike
+dev-lang/swig pike
+
+# Needs libmodplug
+media-libs/sdl-sound mikmod
+
+# Needs clisp which won't build
+app-text/texlive xindy
+
+# Needs krb4 USE flag for mit-krb5 (Bug #255579), and we believe it to be unstable.
+net-im/pidgin zephyr
+
+# Mask zemberek for enchant because it requires java.
+app-text/enchant zemberek
+
+# Mask srtp for ortp because libsrtp is marked -sparc
+net-libs/ortp srtp

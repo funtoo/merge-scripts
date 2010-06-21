@@ -1,0 +1,15 @@
+# Copyright 1999-2008 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/features/32bit-userland/make.defaults,v 1.2 2008/12/26 11:09:44 bluebird Exp $
+
+# We disable the symlink, since we won't be using it.
+SYMLINK_LIB="no"
+
+# We always need gcc64 for 32bit-userland
+STAGE1_USE="nptl nptlonly unicode gcc64"
+USE="gcc64"
+
+# Since we're creating a 32-bit userland, we want LIBDIR to be lib
+LIBDIR_ppc="lib"
+LIBDIR_x86="lib"
+LIBDIR_sparc32="lib"

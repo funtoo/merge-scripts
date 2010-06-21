@@ -1,0 +1,14 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/uclibc/ppc/package.use.mask,v 1.3 2009/07/31 09:58:03 ssuominen Exp $
+
+# This file requires >=portage-2.1.1
+
+=dev-java/ibm-jdk-bin-1.5* -nsplugin 
+=dev-java/ibm-jre-bin-1.5* -nsplugin
+
+# Joseph Jezak <josejx@gentoo.org> (28 Jun 2007)
+# Masked Parallel LCD devices for bug #180683
+
+# app-misc/lcd4linux
+app-misc/lcd4linux lcd_devices_hd44780

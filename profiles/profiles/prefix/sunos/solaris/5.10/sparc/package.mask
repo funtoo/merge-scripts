@@ -1,0 +1,8 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/prefix/sunos/solaris/5.10/sparc/package.mask,v 1.2 2009/12/28 18:32:41 grobian Exp $
+
+# Fabian Groffen <grobian@gentoo.org> (28 Dec 2009)
+# Fails to compile on Sparc (both 32-bits and 64-bits)
+# http://bugs.gentoo.org/show_bug.cgi?id=293106
+=sys-devel/gcc-4.4.2

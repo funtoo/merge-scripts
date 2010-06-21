@@ -1,0 +1,21 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/s390/package.use.mask,v 1.8 2010/04/10 15:55:00 ssuominen Exp $
+
+# Raúl Porcel <armin76@gentoo.org> (27 Mar 2008)
+# Needs gtk USE-flag
+net-dns/avahi python
+
+# Doug Goldstein <cardoe@gentoo.org> (10 Sep 2007)
+# bug #172097
+# The app in question is sys-auth/consolekit
+x11-apps/xinit hal
+
+# Masking this so repoman shuts up about paludis
+sys-apps/paludis ruby-bindings
+
+# missing keyword for sys-cluster/openmpi sys-cluster/mpich2
+dev-libs/boost mpi
+
+# missing keyword for dev-libs/oniguruma
+sys-libs/slang cjk

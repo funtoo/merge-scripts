@@ -1,0 +1,184 @@
+####################################################################
+# $Id: package.mask,v 1.65 2010/06/19 01:13:16 abcd Exp $
+# When you add an entry to this file, add your name, the date, and an
+# explanation of why something is getting masked.  This file is for
+# Prefix profiles only!
+#
+# NOTE: Please add your entry at the top!
+#
+
+## Example:
+##
+## # Dev E. Loper <developer@gentoo.org> (28 Jun 2012)
+## # Masking  these versions until we can get the
+## # v4l stuff to work properly again
+## =media-video/mplayer-0.90_pre5
+## =media-video/mplayer-0.90_pre5-r1
+#
+# - Best last rites (removal) practices -
+# Include the following info:
+# a) reason for masking
+# b) bug # for the removal (and yes you should have one)
+# c) date of removal (either the date or "in x days")
+# d) the word "removal"
+#
+## Example:
+##
+## Dev E. Loper <developer@gentoo.org> (25 Jan 2012)
+## Masked for removal in 30 days.  Doesn't work
+## with new libfoo. Upstream dead, gtk-1, smells
+## funny. (bug #987654)
+## app-misc/some-package
+
+#--- END OF EXAMPLES ---
+
+
+# Fabian Groffen <grobian@gentoo.org> (14 May 2010)
+# Experimental version to support service scripts, bug #196294
+>=sys-apps/baselayout-prefix-1.12.5-r7
+
+# Fabian Groffen <grobian@gentoo.org> (16 Apr 2010)
+# installs a broken zlib.h on 64-bits systems, bug #310209
+=sys-libs/zlib-1.2.4
+
+# Fabian Groffen <grobian@gentoo.org> (26 Mar 2010)
+# Scheduled for removal.  This version isn't worth the hassle of merging
+# to gx86, and hence will be removed.  If you are in desparate need of
+# Python 2.4 still, come up with a reason that convinces us and the
+# python team!
+=dev-lang/python-2.4*
+
+# Mike Frysinger <vapier@gentoo.org> (07 Mar 2010)
+# Very old packages that people should have upgraded away from
+# long ago.  Courtesy mask ... time to upgrade.
+# Added <sys-fs/e2fsprogs as well (halcy0n)
+# prefix: unmask, it's the only thing that compiles for us
+-sys-libs/com_err
+-sys-libs/ss
+-<sys-libs/e2fsprogs-libs-1.41.8
+-<sys-fs/e2fsprogs-1.41.9
+# Fabian Groffen <grobian@gentoo.org> (26 Jul 2009)
+# util-linux doesn't work on non-Linux and doesn't work in Prefix.  This
+# release of e2fsprogs switches from using internal libuuid and libblkid
+# to those provided by util-linux.  In Prefix (but probably for FreeBSD
+# also) we need to probably create virtuals for these, so we can make an
+# e2fsprogs-uuid ebuild or something to provide these libs with on Prefix.
+>=sys-libs/e2fsprogs-libs-1.41.8
+>=sys-fs/e2fsprogs-1.41.8
+>=sys-apps/util-linux-2.16
+
+# Jeremy Olexa <darkside@gentoo.org> (21 Aug 2009)
+# python-3 will most certainly cause problems if it ever gets unleashed without
+# a look over from a prefix dev. (not me) ;)
+# Additionally mask packages requiring it
+dev-lang/python:3.0
+dev-lang/python:3.1
+=dev-python/beautifulsoup-3.1.0.1-r1
+
+# Jeremy Olexa <darkside@gentoo.org> (30 Jun 2009)
+# The PAM auth system just will not work in Gentoo Prefix, instead the host auth
+# system should be used.
+sys-libs/pam
+sys-auth/pambase
+
+# Michael Haubenwallner <haubi@gentoo.org> (24 Jun 2009)
+# pkgdata does not work yet, let fix in ~main first (#269659)
+>=dev-libs/icu-4.2
+
+# Fabian Groffen <grobian@gentoo.org> (21 Jun 2009)
+# fails to compile the widec version, ebuild changes somehow broke it,
+# need further investigation
+=sys-libs/ncurses-5.7-r1
+
+# Jeremy Olexa <darkside@gentoo.org> (02 Jun 2009)
+# If you have MacFuse or some other implementation of fuse installed, you can
+# probably use this by placing sys-fs/fuse in package.provided, bug 272210
+net-fs/curlftpfs
+
+# Fabian Groffen <grobian@gentoo.org> (08 May 2009)
+# VCS builds
+~media-video/ffmpeg-9999
+
+# Jeremy Olexa <darkside@gentoo.org> (21 Apr 2009)
+# User reported that it works fine but will not install for me due to unknown
+# kernel location, etc. See bug 265276 for an example.
+net-wireless/iw
+dev-libs/libnl
+net-wireless/aircrack-ng
+
+# Fabian Groffen <grobian@gentoo.org> (25 Mar 2009)
+# Fails loading fonts (e.g. loadallfonts) with
+# Error: /rangecheck in /findfont, 8.63 works fine
+>=app-text/ghostscript-gpl-8.64
+
+# Fabian Groffen <grobian@gentoo.org> (22 Jan 2009)
+# b0rkened on Darwin, Solaris and IRIX, bug #256022, bug #255742
+=sys-apps/groff-1.20.1-r1
+
+# Fabian Groffen <grobian@gentoo.org> (27 Dec 2008)
+# asserts:
+# Assertion failed: state.type != 0, file ftsfind.c, line 475, function consider_visiting
+# Jeremy Olexa <darkside@gentoo.org> (06 Jan 2009)
+# Issues on Linux too, elevate mask to global, not solaris specific.
+~sys-apps/findutils-4.5.3
+~sys-apps/findutils-4.5.4
+
+# Jeremy Olexa <darkside@gentoo.org> (02 Dec 2008)
+# Reported to work. However, you will need to package.provide some deps. 
+# See bug 248809 for more details.
+net-fs/openafs
+
+# Fabian Groffen <grobian@gentoo.org> (24 Nov 2008)
+# unmask, zmedico masked 2.2 for the moment for testing, but we only
+# have 2.2+
+->=sys-apps/portage-2.2_pre
+
+# Fabian Groffen <grobian@gentoo.org> (03 Nov 2008)
+# needs cups or lprng which we both don't have
+>=net-print/xfprint-4.4.3
+
+# Jeremy Olexa <darkside@gentoo.org> (16 May 2008)
+# distcc-config --install is rather 'interesting' in prefix and I am not 
+# convinced that it works correctly. Also, you will have to add CHOST=<...> to
+# your make.conf. bug #210268
+sys-devel/distcc
+
+# Markus Duft <mduft@gentoo.org> (17 Apr 2008)
+# Breaks things like gettext and fastjar because it introduces some
+# circular dependencies while running aclocal (bug #218122)
+~sys-devel/autoconf-2.62
+
+# Fabian Groffen <grobian@gentoo.org> (11 Jan 2008)
+# Screws up things, see bug #204998
+<sys-devel/gcc-3.4.0
+
+# Fabian Groffen <grobian@gentoo.org> (05 Jan 2008)
+# missing rule in the build.xml file
+=dev-java/sun-javamail-1.4.1
+
+# Fabian Groffen <grobian@gentoo.org> (02 Jan 2008)
+# rlogin seems not to work, consider using ssh anyway
+net-misc/netkit-rsh
+
+# Fabian Groffen <grobian@gentoo.org> (21 Oct 2007)
+# This package isn't prefix ready, work in progress
+sys-apps/slocate
+
+# Elias Pipping <pipping@gentoo.org> (09 Oct 2007)
+# darwin-miscutils are only available on darwin
+sys-apps/darwin-miscutils
+
+# Elias Pipping <pipping@gentoo.org>
+# work in progress (in prefix)
+app-emacs/jde
+dev-java/kaffe
+
+# Fabian Groffen <grobian@gentoo.org> (04 Apr 2007)
+# Don't use this, it is only provided for experimentation and as tool to
+# recover from broken linker situations.
+sys-devel/native-cctools
+
+# Fabian Groffen <grobian@gentoo.org> (21 Jan 2007)
+# dies with "exhausted memory" errors on Darwin, doesn't understand
+# arguments on Solaris.  Probably more problems...
+=dev-vcs/cvs-1.12.12*

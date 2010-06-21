@@ -1,0 +1,140 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/amd64/package.use.mask,v 1.63 2010/05/12 14:16:57 chithanh Exp $
+
+# When you add an entry to the top of this file, add your name, the date, and
+# an explanation of why something is getting masked. Please be extremely
+# careful not to commit atoms that are not valid, as it can cause large-scale
+# breakage, especially if it ends up in the daily snapshot.
+#
+## Example:
+##
+## # Dev E. Loper <developer@gentoo.org> (28 Jun 2012)
+## # Masking foo USE flag until we can get the
+## # foo stuff to work properly again (bug 12345)
+## =media-video/mplayer-0.90_pre5 foo
+## =media-video/mplayer-0.90_pre5-r1 foo
+#
+
+#--- END OF EXAMPLES ---
+
+# Chí-Thanh Christopher Nguyễn <chithanh@gentoo.org> (13 Apr 2010)
+# xf86-video-nouveau is supported on amd64.
+x11-base/xorg-drivers -video_cards_nouveau
+
+# Tomáš Chvátal <scarabeus@gentoo.org> (4 Apr 2010)$
+# x86 platforms works$
+sys-power/pm-utils -video_cards_intel -video_cards_radeon
+
+# Samuli Suominen <ssuominen@gentoo.org> (02 Feb 2009)
+# esd, bug 301824
+# mp3, bug 283860, bug 299490
+# capi, bug 292938
+# ghoto2, bug 286563
+# scanner, bug 299505
+# hal, bug 299149
+app-emulation/wine capi esd gphoto2 hal mp3 scanner
+
+# Andrey Grozin <grozin@gentoo.org> (24 Dec 2009)
+# openmcl (aka closurecl) is only available on x86 and amd64
+sci-mathematics/maxima -openmcl
+
+# Mounir Lamouri <volkmar@gentoo.org> (07 Nov 2009)
+# Masked in base, unmak for amd64/x86. Bug 267264
+media-gfx/k3d -cuda
+
+# Jean-Noël Rivasseau <elvanor@gentoo.org> (23 Sep 2009)
+# X use flag only for amd64/x86, bug 285951.
+media-gfx/iscan -X
+
+# Samuli Suominen <ssuominen@gentoo.org> (10 May 2009)
+# Broken SSE2 detection for x86_64 wrt #262405
+media-libs/libsoundtouch sse2
+
+# Bernard Cafarelli <voyageur@gentoo.org> (20 Mar 2009)
+# Depends on packages not yet keyworded for amd64, cf bug #22042
+app-backup/backup-manager s3
+
+# Jeremy Olexa <darkside@gentoo.org> (07 Feb 2009)
+# USE=mmx on imlib2 causes issues with other apps. See bug 218382 (comments
+# 11-12)
+media-libs/imlib2 mmx
+
+# Serkan Kaba <serkan@gentoo.org> (5 Feb 2009)
+# finally a 64bit java plugin
+>=dev-java/sun-jre-bin-1.6.0.12 -nsplugin
+
+# Jeremy Olexa <darkside@gentoo.org> (27 Dec 2008)
+# Mask static USE flag because it just doesn't work on amd64. See bug 236591
+>=app-arch/p7zip-4.58 static
+
+# Jeremy Olexa <darkside@gentoo.org> (24 Dec 2008)
+# unmask USE=bindist on amd64 - also unmasking the other flags that were under a
+# bad comment heading. see bug #246144
+media-video/mplayer -cpudetection -custom-cpuopts -bindist -vdpau
+
+# Vlastimil Babka <caster@gentoo.org> (12 Dec 2008)
+# finally a 64bit java plugin
+>=dev-java/sun-jdk-1.6.0.12_beta2 -nsplugin
+
+# Tomas Chvatal <scarabeus@gentoo.org> (31 Jan 2009)
+# masked in base, unmask for x86/amd64
+sci-misc/boinc -cuda
+
+# Serkan Kaba <serkan@gentoo.org> (20 Jul 2008)
+app-text/enchant -zemberek
+
+# assembler-section
+
+# Oct 23th 2006; blubb@gentoo.org
+# the asm is 64bit save, but it doesn't compile anyway
+games-emulation/visualboyadvance mmx
+
+# Oct 23th 2006; blubb@gentoo.org
+# upstream forces sse2 for amd64; mmx flag does nothing
+app-crypt/johntheripper mmx
+
+# Oct 23th 2006; blubb@gentoo.org
+# x86 asm only:
+games-emulation/xmame mmx
+games-emulation/xmess mmx
+media-gfx/inkscape mmx
+media-libs/allegro mmx sse
+media-libs/libfame mmx
+media-libs/sdl-gfx mmx
+media-libs/smpeg mmx
+net-irc/xchat mmx
+net-irc/xchat-gnome mmx
+net-misc/asterisk mmx
+x11-terms/eterm mmx
+media-tv/xawtv mmx
+
+# x86_64 opts are enabled with USE sse. so masking the rest
+media-sound/mpg123 mmx 3dnow 3dnowext
+
+# Feb 17th 2007; drizzt@gentoo.org
+# amd64 does not have an emul libao package
+games-emulation/zsnes ao
+
+# Apr 25th 2007: Alexis Ballier <aballier@gentoo.org>
+# Mask mmx for media-libs/mlt
+# assembler is not 64bits compliant (yet)
+media-libs/mlt mmx
+
+# 8 May 2007: Alistair Bush <ali_bush@gentoo.org>
+# Mask doc flag for fop as nearly impossible to
+# run javadoc target.  see #177585
+>=dev-java/fop-0.93 doc
+
+# missing the necessary linux-headers dep
+>=net-fs/netatalk-2.0.3-r3 xfs
+
+# 8 Aug 2008: Alexis Ballier <aballier@gentoo.org>
+# x86 asm only, it won't be built on amd64 if mmx useflag is enabled but that
+# saves people from needlessly installing nasm
+# Refs bug #93279
+media-sound/lame mmx
+
+# Robert Buchholz <rbu@gentoo.org> (16 Aug 2008)
+# masked in base, unmask for x86/amd64
+dev-python/kaa-base -tls

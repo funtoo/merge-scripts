@@ -1,0 +1,8 @@
+# Unmask the flag which corresponds to ARCH.
+-ppc
+
+# Mask the flag which corresponds to the 64-bit ARCH.
+ppc64
+
+# We mask this since we're not really a multilib profile
+multilib

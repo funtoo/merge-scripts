@@ -1,0 +1,21 @@
+# Copyright 1999-2006 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/desc/elibc.desc,v 1.4 2009/07/17 15:08:52 grobian Exp $
+
+# This file contains descriptions of ELIBC USE_EXPAND flags.
+
+# Keep it sorted.
+
+AIX - ELIBC setting for systems that use the AIX C library
+Darwin - ELIBC setting for systems that use the Darwin C library
+DragonFly - ELIBC setting for systems that use the DragonFly C library
+FreeBSD - ELIBC setting for systems that use the FreeBSD C library
+glibc - ELIBC setting for systems that use the GNU C library
+HPUX - ELIBC setting for systems that use the HP-UX C library
+Interix - ELIBC setting for systems that use the Interix C library
+IRIX - ELIBC setting for systems that use the SGI IRIX C library
+mintlib - ELIBC setting for systems that use the FreeMiNT C library
+NetBSD - ELIBC setting for systems that use the NetBSD C library
+OpenBSD - ELIBC setting for systems that use the OpenBSD C library
+SunOS - ELIBC setting for systems that use the Sun Solaris C library
+uclibc - ELIBC setting for systems that use the uClibc C library

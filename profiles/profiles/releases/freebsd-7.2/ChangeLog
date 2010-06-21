@@ -1,0 +1,11 @@
+# ChangeLog for Gentoo/FreeBSD-7.1 profile directory
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/releases/freebsd-7.2/ChangeLog,v 1.2 2010/03/11 16:28:14 aballier Exp $
+
+  11 Mar 2010; Alexis Ballier <aballier@gentoo.org> package.mask:
+  Mask perl 5.10 on fbsd 7.2 as it requires ssp which is broken
+
+  17 May 2009; Alexis Ballier <aballier@gentoo.org> +make.defaults,
+  +package.mask, +packages, +parent:
+  start adding 7.2 profiles
+

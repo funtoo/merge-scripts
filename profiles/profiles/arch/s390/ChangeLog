@@ -1,0 +1,77 @@
+# ChangeLog for Gentoo/s390 profile directory
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/s390/ChangeLog,v 1.28 2010/05/22 15:20:59 armin76 Exp $
+
+  22 May 2010; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask svg
+
+  13 Mar 2010; Samuli Suominen <ssuominen@gentoo.org> package.mask:
+  Mask libpng-1.4 pending on texlive-core-2009 unmasking.
+
+  25 Jan 2010; Alexis Ballier <aballier@gentoo.org> +package.mask:
+  Move TeX Live 2009 mask here from global package.mask, remove it once
+  keyworded, bug #300526
+
+  11 Dec 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask libproxy
+
+  27 Oct 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask autotrace, lqr
+
+  01 Aug 2009; Sébastien Fabbro <bicatali@gentoo.org> use.mask:
+  Added wxwdigets to use.mask (wxwindows already present)
+
+  17 Jul 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask libnl
+
+  09 Jun 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask jpeg2k
+
+  07 Jun 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask prolog
+
+  10 May 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add hal to use.mask
+
+  01 May 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask mpi, fuse
+
+  29 Apr 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add pango to use.mask
+
+  23 Apr 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Unmask libssh2
+
+  10 Apr 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add kde to use.mask
+
+  08 Apr 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add lasi to use.mask
+
+  27 Mar 2009; Raúl Porcel <armin76@gentoo.org> package.use.mask:
+  P.use.mask net-dns/avahi python, since it needs gtk USE-flag
+
+  11 Mar 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add lyx to use.mask
+
+  10 Mar 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add xindy to use.mask
+
+  16 Jan 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask chicken, clisp, R, octave
+
+  25 Dec 2008; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add raw to use.mask
+
+  07 Dec 2008; Mike Frysinger <vapier@gentoo.org> use.mask:
+  Mask cairo USE flag.
+
+  07 Dec 2008; Mike Frysinger <vapier@gentoo.org> use.mask:
+  Mask bluetooth.
+
+  05 Nov 2008; Mike Frysinger <vapier@gentoo.org> packages:
+  Remove hdparm from system and allow common glibc mask.
+
+  11 Apr 2008; Chris Gianelloni <wolf31o2@gentoo.org> use.mask:
+  Sync use.mask with default-linux.
+

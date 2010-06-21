@@ -1,0 +1,31 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/prefix/make.defaults,v 1.3 2009/07/12 10:08:57 grobian Exp $
+
+# Some USE-flags that only die-hards don't want:
+# readline:  to have some sane command line editing, e.g. in python
+# zlib:      for many things you just want gzip support
+# ncurses:   a nice working console drawing library
+# ssl:       encrypted connections are a nice feature
+USE="readline zlib ncurses ssl"
+
+FEATURES="collision-protect"
+
+# Jeremy Olexa <darkside@gentoo.org> (30 Jun 2009)
+# As of now, there does not exist a reliable working sandbox implementation on
+# any Gentoo Prefix platform. Lately, sandbox has caused *many* issues that
+# the Gentoo Prefix team has no time to fix and/or troubleshoot. see: bug 271424
+# see:
+# http://archives.gentoo.org/gentoo-alt/msg_3c355ca5e70e7975eae293823f1751f2.xml
+# see: bug 274239
+# and other issues, etc etc.
+#
+# If in the future, there does exist a working sandbox implementation then it
+# should be enabled on a per-profile basis only.
+FEATURES="${FEATURES} -sandbox"
+
+
+# this probably already is like this, but we assure that in prefix we
+# have a GNU userland
+USERLAND="GNU"
+

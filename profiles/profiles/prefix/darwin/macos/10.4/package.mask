@@ -1,0 +1,8 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/prefix/darwin/macos/10.4/package.mask,v 1.1 2009/06/06 03:54:47 solar Exp $
+
+# Elias Pipping <pipping@gentoo.org> (19 Dec 2007)
+# apple java6 on macosx is only released on leopard :(
+dev-java/apple-jdk-bin:1.6
+

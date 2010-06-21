@@ -1,0 +1,18 @@
+app-misc/pax-utils
+
+# remove stuff not needed on uclibc
+-*net-misc/iputils
+# man pages disabled (noman)
+-*sys-apps/man
+-*virtual/man
+-*sys-apps/man-pages
+# this will be added by nls
+-*sys-devel/gettext
+# added by readline
+-*sys-libs/readline
+
+# glib-2.x requires working locale/iconv which
+# isn't available atm in uclibc
+<dev-libs/glib-2.5
+
+-*sys-apps/hdparm

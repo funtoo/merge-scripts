@@ -1,0 +1,34 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/powerpc/ppc64/64ul/package.use.mask,v 1.9 2010/01/06 19:03:41 ranger Exp $
+
+
+
+# Brent Baude <ranger@gentoo.org> (06 Jan 2010)
+# masking toolame for mplayer bug 280281
+media-video/mplayer toolame
+
+# Brent Baude <ranger@gentoo.org> (31 Dec 2009)
+# masking for mpich2 stablization
+sys-cluster/mpich2 pvfs2
+
+# Brent Baude <ranger@gentoo.org> (31 Dec 2009)
+# Masking for bug 274847
+app-admin/conky apcupsd
+
+# Brent Baude <ranger@gentoo.org> (2 June 2009)
+# Masking lirc use 
+kde-base/kdeutils-meta lirc
+
+# Brent Baude <ranger@gentoo.org> (6  Feb 2009)
+# Masking solver/ocaml USE from kalzium to fix tree borkage
+kde-base/kalzium solver
+
+# Brent Baude <ranger@gentoo.org> (28 January 2009)
+# Masking zemberek for enchant
+app-text/enchant zemberek
+
+# Brent Baude <ranger@gentoo.org> (September 17 2008)
+# Masking clisp use from swig
+dev-lang/swig clisp
+

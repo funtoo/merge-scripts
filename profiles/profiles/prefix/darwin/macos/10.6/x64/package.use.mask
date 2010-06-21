@@ -1,0 +1,19 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/prefix/darwin/macos/10.6/x64/package.use.mask,v 1.2 2009/10/30 20:40:38 grobian Exp $
+
+# Elias Pipping <pipping@gentoo.org> (21 Nov 2007)
+# generating documentation fails for hugs98 because of too many errors
+dev-lang/hugs98 doc
+
+# Elias Pipping <pipping@gentoo.org> (10 Nov 2007)
+# ruby fails to compile with USE=threads
+dev-lang/ruby threads
+
+# Elias Pipping <pipping@gentoo.org> (13 Sep 2007)
+# mc fails to compile with USE=slang (unicode implies slang)
+app-misc/mc unicode slang
+
+# Elias Pipping <pipping@gentoo.org> (27 Aug 2007)
+# elinks does not compile with USE=perl (tested with 0.11.{2,3})
+www-client/elinks perl

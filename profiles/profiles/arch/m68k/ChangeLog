@@ -1,0 +1,31 @@
+# ChangeLog for Gentoo/ia64 profile
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/m68k/ChangeLog,v 1.10 2010/05/30 18:49:40 armin76 Exp $
+
+  30 May 2010; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask latex
+
+  06 Jan 2010; Ulrich Mueller <ulm@gentoo.org> use.mask:
+  Use.mask bash-completion, bug 299051.
+
+  28 Oct 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask policykit
+
+  27 Oct 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask autotrace, lqr
+
+  06 Jul 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add bluetooth to use.mask
+
+  12 Jun 2009; Ulrich Mueller <ulm@gentoo.org> use.mask:
+  Remove paludis from use.mask since the flag is gone.
+
+  21 May 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask paludis
+
+  10 May 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add hal to use.mask
+
+  29 Mar 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add nss to use.mask
+

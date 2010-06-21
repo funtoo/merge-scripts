@@ -1,0 +1,308 @@
+# ChangeLog for profile directory
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/default/bsd/ChangeLog,v 1.38 2010/06/11 14:10:31 ulm Exp $
+
+  11 Jun 2010; Ulrich Mueller <ulm@gentoo.org> fbsd/amd64/7.2/make.defaults,
+  fbsd/amd64/8.0/make.defaults:
+  Fix invalid variable name in amd64 profiles, as discussed with aballier.
+
+  03 May 2010; Alexis Ballier <aballier@gentoo.org> package.use.mask:
+  mask linux only useflags for kde-base/solid
+
+  25 Apr 2010; Javier Villavicencio <the_paya@gentoo.org> use.mask:
+  Mask db backends unlikely to be tested in the near future.
+
+  23 Apr 2010; Alexis Ballier <aballier@gentoo.org> fbsd/profile.bashrc,
+  profile.bashrc:
+  Do not try to access $S if it does not exist.
+
+  22 Apr 2010; Alexis Ballier <aballier@gentoo.org> fbsd/package.use.mask:
+  unmask ruby[threads], seems to work
+
+  03 Apr 2010; Javier Villavicencio <the_paya@gentoo.org>
+  fbsd/profile.bashrc:
+  Fix working dir on patch_install-sh_bsd().
+
+  01 Apr 2010; Javier Villavicencio <the_paya@gentoo.org>
+  fbsd/profile.bashrc:
+  Point CONFIG_SHELL to /bin/bash, fixes scripts called by configure, ie:
+  test scripts, that expect bash.
+
+  16 Mar 2010; Javier Villavicencio <the_paya@gentoo.org>
+  fbsd/profile.bashrc:
+  Another hack on profile.bashrc to patch well known install-sh versions
+  that are likely to fail during a parallel make install.
+
+  11 Mar 2010; Alexis Ballier <aballier@gentoo.org>
+  +fbsd/amd64/8.0/make.defaults, +fbsd/amd64/8.0/parent,
+  +fbsd/sparc/8.0/make.defaults, +fbsd/sparc/8.0/parent,
+  +fbsd/x86/8.0/make.defaults, +fbsd/x86/8.0/parent:
+  Add 8.0 profiles
+
+  05 Feb 2010; Alexis Ballier <aballier@gentoo.org>
+  -fbsd/amd64/7.1/deprecated, -fbsd/amd64/7.1/make.defaults,
+  -fbsd/amd64/7.1/parent, -fbsd/sparc/7.1/deprecated,
+  -fbsd/sparc/7.1/make.defaults, -fbsd/sparc/7.1/parent,
+  -fbsd/x86/7.1/deprecated, -fbsd/x86/7.1/make.defaults,
+  -fbsd/x86/7.1/parent:
+  remove 7.1 profiles
+
+  25 Jan 2010; William Hubbs <williamh@gentoo.org> fbsd/use.mask:
+  masked espeak use flag
+
+  18 Sep 2009; Alexis Ballier <aballier@gentoo.org> use.mask:
+  mask udev useflag
+
+  21 Jul 2009; Alexis Ballier <aballier@gentoo.org> fbsd/packages.build:
+  add openssl to packages.build because libarchive needs it
+
+  07 Jul 2009; Alexis Ballier <aballier@gentoo.org> package.use.mask:
+  usemask vlc ieee1394], linux only too
+
+  01 Jul 2009; Alexis Ballier <aballier@gentoo.org> use.mask:
+  mask qcam sane backend, its linux only
+
+  17 May 2009; Alexis Ballier <aballier@gentoo.org>
+  +fbsd/amd64/7.2/make.defaults, +fbsd/amd64/7.2/parent,
+  +fbsd/sparc/7.2/make.defaults, +fbsd/sparc/7.2/parent,
+  +fbsd/x86/7.2/make.defaults, +fbsd/x86/7.2/parent:
+  add g/fbsd-7.2 profiles
+
+  16 May 2009; Alexis Ballier <aballier@gentoo.org>
+  +fbsd/sparc/7.1/make.defaults, +fbsd/sparc/7.1/parent, +fbsd/sparc/parent:
+  Add sparc-fbsd 7.1 profiles
+
+  15 May 2009; Alexis Ballier <aballier@gentoo.org> fbsd/package.use.mask:
+  mask libproxy[xulrunner] as it requires xul 1.9
+
+  16 Mar 2009; Alexis Ballier <aballier@gentoo.org> package.use.mask:
+  remove usemasks depending on qt-webkit now that it is keyworded
+
+  03 Mar 2009; Timothy Redaelli <drizzt@gentoo.org> profile.bashrc:
+  Fix bugzilla URL and product.
+
+  31 Jan 2009; Alexis Ballier <aballier@gentoo.org> fbsd/package.use.mask,
+  package.use.mask:
+  mask useflags requiring app-misc/tracker on fbsd
+
+  30 Jan 2009; Alexis Ballier <aballier@gentoo.org> package.use.mask:
+  usemask gvfs[bluetooth] as it requires bluez
+
+  29 Jan 2009; Alexis Ballier <aballier@gentoo.org> package.use.mask:
+  usemask qt-webkit dependant useflags until bug #256836 is fixed
+
+  25 Jan 2009; Alexis Ballier <aballier@gentoo.org> fbsd/package.mask:
+  Remove the now completely broken gnome 2.22 mask on fbsd because some
+  people silently dropped our keywords on the latest not masked versions of
+  some core packages (gnome-desktop, gnome-terminal, etc.)
+
+  25 Jan 2009; Alexis Ballier <aballier@gentoo.org> profile.bashrc:
+  Add a profile.bashrc test for test == construction that does not work on
+  BSD in order to get automatic warnings for things like bug #256305
+
+  24 Jan 2009; Javier Villavicencio <the_paya@gentoo.org>
+  fbsd/profile.bashrc:
+  profile.bashrc fix for the charset.alias bugs: 169678, 195148 and 256129
+
+  24 Jan 2009; Javier Villavicencio <the_paya@gentoo.org>
+  +fbsd/profile.bashrc:
+  Move the fbsd profile.bashrc from releases.
+
+  24 Jan 2009; Javier Villavicencio <the_paya@gentoo.org>
+  fbsd/make.defaults:
+  Remove -sandbox from our FEATURES.
+
+  22 Jan 2009; Javier Villavicencio <the_paya@gentoo.org>
+  fbsd/make.defaults, fbsd/package.mask, package.use.force:
+  Remove a few masks and force zlib and bzip2 on libarchive.
+
+  22 Jan 2009; Alexis Ballier <aballier@gentoo.org> package.use.mask:
+  usemask links[livecd] since it requires gpm
+
+  21 Jan 2009; Alexis Ballier <aballier@gentoo.org> fbsd/package.mask:
+  remove libgtop mask on fbsd as someone didnt like us and removed our
+  keyword on the latest unmasked version
+
+  21 Jan 2009; Alexis Ballier <aballier@gentoo.org> package.use.mask:
+  cleanup a bit redundant usemasks
+
+  21 Jan 2009; Alexis Ballier <aballier@gentoo.org> fbsd/package.use.mask:
+  usemask acl for gnome-vfs too; it has an almost posix acl support but
+  configure doesnt see it unless libacl is present and uses a couple of
+  extensions
+
+  21 Jan 2009; Alexis Ballier <aballier@gentoo.org> fbsd/package.use.mask:
+  mask xattr for glib too as this requires gnu attr
+
+  19 Jan 2009; Alexis Ballier <aballier@gentoo.org> package.use.mask:
+  remove old gnash use mask
+
+  19 Jan 2009; Alexis Ballier <aballier@gentoo.org> use.mask:
+  no need to use.mask win32codecs here, its already masked in base and
+  unmasked on relevant arch profiles.
+
+  19 Jan 2009; Alexis Ballier <aballier@gentoo.org> +fbsd/make.defaults,
+  +fbsd/package.mask, +fbsd/package.use, +fbsd/package.use.mask,
+  +fbsd/packages, +fbsd/packages.build, +fbsd/parent, +fbsd/use.force,
+  +fbsd/use.mask, +fbsd/virtuals, +fbsd/x86/7.1/make.defaults,
+  +fbsd/x86/7.1/parent, +fbsd/x86/parent, +package.mask, +package.use.force,
+  +package.use.mask, +packages, +parent, +profile.bashrc, +use.force,
+  +use.mask, +virtuals:
+  Move default-bsd/ to default/bsd for FreeBSD 7.1, so that we switch to the
+  new profiles layout for g/fbsd too. Profiles come from the g/fbsd overlay.
+
+  13 Dec 2008; Alexis Ballier <aballier@gentoo.org> package.use.mask:
+  mask gstreamer debugs useflags that need valgrind, its not supported on
+  bsd
+
+  13 Dec 2008; Alexis Ballier <aballier@gentoo.org> fbsd/use.mask:
+  usemask cdparanoia, we dont have a custom patched one for fbsd anymore
+
+  09 Dec 2008; Alexis Ballier <aballier@gentoo.org> package.use.mask:
+  libsysfs for vlc is linux only too
+
+  28 Nov 2008; Alexis Ballier <aballier@gentoo.org> package.use.mask:
+  usemask bluetooth useflag for libpcap, based on linux bluez, bug #247076
+
+  05 Nov 2008; Jim Ramsay <lack@gentoo.org> fbsd/package.use.mask:
+  app-admin/gkrellm may pull in net-libs/libntlm, which is not keyworded
+
+  19 Oct 2008; Alexis Ballier <aballier@gentoo.org> fbsd/6.2/x86/use.mask:
+  x86 has ssse3 even on bsd
+
+  18 Oct 2008; Mart Raudsepp <leio@gentoo.org> fbsd/package.mask:
+  Unmask >=gnome-icon-theme-2.22 to fix deptree after 2.20 got keyword
+  wrongly removed
+
+  15 Oct 2008; Alexis Ballier <aballier@gentoo.org> fbsd/6.2/package.mask:
+  mask virtual/jdk and jre 1.6 on 6.2 profiles for future keywording
+
+  15 Oct 2008; Alexis Ballier <aballier@gentoo.org> fbsd/6.2/x86/use.mask,
+  use.mask:
+  move java6 mask to 6.2 x86 profile
+
+  15 Oct 2008; Alexis Ballier <aballier@gentoo.org> fbsd/6.2/package.mask:
+  Mask Diablo JDK/JRE 1.6 on 6.2 profiles as we have FreeBSD 7 ebuilds only
+
+  04 Oct 2008; Alexis Ballier <aballier@gentoo.org> package.use.mask:
+  Mask xindy useflag for texlive on bsd
+
+  25 Sep 2008; Alexis Ballier <aballier@gentoo.org> package.use.mask:
+  mask elf useflag for net-snmp: it is too tight to the gnu libc
+
+  05 Sep 2008; Alexis Ballier <aballier@gentoo.org> package.use.mask:
+  laptop support in hal is linux-specific unfortunately
+
+  04 Sep 2008; Mart Raudsepp <leio@gentoo.org> fbsd/package.mask:
+  Mask GNOME-2.22 on fbsd in preparation of removing the global one
+
+  23 Aug 2008; Alexis Ballier <aballier@gentoo.org> fbsd/use.mask:
+  unmask lua useflag on fbsd, it should be fine now
+
+  08 Aug 2008; Alexis Ballier <aballier@gentoo.org> package.use.mask:
+  mask pbs for openmpi, linux only
+
+  08 Aug 2008; Alexis Ballier <aballier@gentoo.org> package.use.mask:
+  mask dc1394 useflag for vlc, its linux only
+
+  01 Aug 2008; Diego Pettenò <flameeyes@gentoo.org> fbsd/package.use.mask:
+  Mask sha512 USE flag for pambase on FreeBSD.
+
+  31 Jul 2008; Javier Villavicencio <the_paya@gentoo.org>
+  fbsd/package.use.mask:
+  Removed passwdqc + added ssh to pambase use masks.
+
+  28 Jul 2008; Jean-Noël Rivasseau <elvanor@gentoo.org>
+  fbsd/6.2/x86/package.use.mask:
+  masked test for icu4j, no jdk-1.6
+
+  18 Jul 2008; Alexis Ballier <aballier@gentoo.org> package.use.mask:
+  mask sctp for dev-lang/erlang, requires a library too close to the linux
+  kernel
+
+  04 Jul 2008; Petteri Räty <betelgeuse@gentoo.org> use.mask:
+  use.mask java6 as there is no provider for >=virtual/jdk-1.6 on BSD.
+
+  04 Jul 2008; Javier Villavicencio <the_paya@gentoo.org> fbsd/packages:
+  Add pidof-bsd to fbsd packages.
+
+  16 Jun 2008; Alexis Ballier <aballier@gentoo.org> package.mask:
+  no need to mask debianutils anymore
+
+  08 Jun 2008; Javier Villavicencio <the_paya@gentoo.org>
+  fbsd/package.use.mask:
+  Temporary mask passwdqc for 7.0.
+
+  08 Jun 2008; Javier Villavicencio <the_paya@gentoo.org>
+  fbsd/6.2/package.mask:
+  Mask py-freebsd with 7.0 support from 6.2 profile.
+
+  02 Apr 2008; Mart Raudsepp <leio@gentoo.org> package.use.mask:
+  USE mask mythtv on gst-plugins-meta - dependency not keyworded
+
+  02 Apr 2008; Mart Raudsepp <leio@gentoo.org> use.mask:
+  Mask networkmanager USE flag - no version of it keyworded
+
+  12 Mar 2008; Peter Weller <welp@gentoo.org> use.mask:
+  Add m17n-lib to use.mask; requested by ulm
+
+  05 Mar 2008; Diego Pettenò <flameeyes@gentoo.org> +fbsd/package.use:
+  Add default USE flags for FreeBSD for pambase.
+
+  21 Feb 2008; Diego Pettenò <flameeyes@gentoo.org> fbsd/package.use.mask:
+  Mask consolekit and cracklib USE flags for pambase.
+
+  29 Jan 2008; Peter Weller <welp@gentoo.org> package.mask:
+  package.mask >=app-shells/bash-3.2_p25 due to portage blockages
+
+  29 Jan 2008; Peter Weller <welp@gentoo.org> package.mask:
+  package.mask >=app-shells/bash-3.2_p33 due to portage blockages
+
+  25 Jan 2008; Diego Pettenò <flameeyes@gentoo.org> profile.bashrc:
+  Fix typo in the error message.
+
+  23 Jan 2008; Alon Bar-Lev <alonbl@gentoo.org> package.use.mask:
+  Add net-misc/openvpn pkcs11
+
+  21 Nov 2007; Sébastien Fabbro <bicatali@gentoo.org> virtuals:
+  Removed virtual/lapack, now new style
+
+  15 Oct 2007; Roy Marples <uberlord@gentoo.org> package.mask:
+  unmask m4-1.4.10 as it now works for us
+
+  10 Oct 2007; Sébastien Fabbro <bicatali@gentoo.org> virtuals:
+  removed virtual/blas, now new style
+
+  23 Sep 2007; Joe Peterson <lavajoe@gentoo.org> virtuals:
+  Remove virtual/cblas per bug #189738
+
+  19 Sep 2007; Donnie Berkholz <dberkholz@gentoo.org>;
+  fbsd/package.use.mask:
+  No nvidia drivers work on fbsd with xorg-server 1.4 yet.
+
+  08 Aug 2007; Tiziano Müller <dev-zero@gentoo.org> fbsd/6.2/make.defaults:
+  Removed libg++ USE-flag (bug #148416)
+
+  07 Jun 2007; Joe Peterson <lavajoe@gentoo.org> virtuals:
+  For FreeBSD, default to the "reference implementation" versions rather
+  than using the "atlas" versions of LAPACK and BLAS.
+
+  28 May 2007; Diego Pettenò <flameeyes@gentoo.org> package.use.mask, use.mask
+  fbsd/package.use.mask: Unmask the useflags that shouldn't have been masked
+  in the first place.
+
+  26 May 2007; Olivier Crête <tester@gentoo.org> package.use.mask:
+  Mask zephyr flag for pidgin on bsd because mit-krb5 is not keyworded
+
+  25 May 2007; Steve Dibb <beandog@gentoo.org> package.use.mask:
+  p.use.mask ieee1394 on kdebase, since dep isn't keyworded
+
+  25 May 2007; Steve Dibb <beandog@gentoo.org> package.use.mask:
+  p.use.mask sys-apps/hal disk-partition dell since deps are not keyworded
+
+  23 Mar 2007; Steve Dibb <beandog@gentoo.org> package.use.mask:
+  Restrict dvdnav use flag on BSD
+
+  22 Mar 2007; Steve Dibb <beandog@gentoo.org> use.mask:
+  Add mplayer local use flags, add changelog
+

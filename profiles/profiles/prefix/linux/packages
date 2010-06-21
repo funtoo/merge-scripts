@@ -1,0 +1,13 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/prefix/linux/packages,v 1.2 2010/04/21 16:29:06 darkside Exp $
+
+# Add back what the parent removes.
+*sys-devel/binutils
+*sys-process/procps
+*sys-process/psmisc
+
+# Here we remove packages that default/linux/packages pulls in and have no
+# business being in Gentoo Prefix
+-*sys-apps/busybox
+-*sys-apps/util-linux

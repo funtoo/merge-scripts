@@ -1,0 +1,25 @@
+move x11-misc/emerald-themes x11-themes/emerald-themes
+slotmove x11-plugins/gkrellmms 2 0
+move net-misc/yate net-voip/yate
+move media-video/stan app-crypt/stan
+move sys-power/sispm_ctl sys-power/sispmctl
+slotmove dev-libs/boost 1 0
+move dev-util/gideon dev-util/crow-designer
+move app-laptop/acpitool sys-power/acpitool
+move app-emulation/winex-transgaming app-emulation/cedega
+move dev-cpp/ice dev-cpp/Ice
+move games-fps/quake3-truecombat games-fps/enemy-territory-truecombat
+move sys-apps/dbus-core sys-apps/dbus
+move net-misc/NetworkManager net-misc/networkmanager
+move net-www/bugport www-apps/bugport
+move sys-devel/gcc-hppa64 sys-devel/kgcc64
+move dev-php5/pecl-sdo dev-php5/pecl-sca_sdo
+move net-misc/asterisk-chan_capi-cm net-misc/asterisk-chan_capi
+slotmove =dev-java/xerces-2.6* 2 2.6
+move sys-fs/ecryptfs-util sys-fs/ecryptfs-utils
+move dev-java/datavision-bin dev-java/datavision
+move dev-java/jgoodies-looks-bin dev-java/jgoodies-looks
+slotmove dev-libs/g-wrap 1.3 0
+move dev-ruby/rubygfe games-util/rubygfe
+move dev-java/kunststoff-bin dev-java/kunststoff
+slotmove =dev-java/kunststoff-2.0.1* 0 2.0

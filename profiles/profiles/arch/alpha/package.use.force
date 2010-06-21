@@ -1,0 +1,3 @@
+# Feb 14th 2006; kloeri@gentoo.org
+# glibc-2.5 is broken with linuxthreads on ia64.
+~sys-libs/glibc-2.5 nptl nptlonly

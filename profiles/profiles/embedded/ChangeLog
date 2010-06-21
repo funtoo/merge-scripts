@@ -1,0 +1,30 @@
+# ChangeLog for Gentoo base-profile
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/embedded/ChangeLog,v 1.8 2010/01/19 03:28:08 solar Exp $
+
+  19 Jan 2010; <solar@gentoo.org> make.defaults, virtuals:
+  -- - quote the variables in the profile cuz PMS and reality differ. pythons
+  shlex module always handled it properly. PMS is being too picky
+
+  21 Sep 2009; Robin H. Johnson <robbat2@gentoo.org> make.defaults:
+  Adding USE="modules" to all Linux profiles to link with new linux-mod
+  behavior for making modules optional if desired.
+
+  21 Jun 2009; Hans de Graaff <graaff@gentoo.org> virtuals:
+  Remove virtual/xemacs since xemacs no longer provides it.
+
+  06 Jun 2008; Rémi Cardona <remi@gentoo.org> package.mask:
+  pkgmove to gnome-base/gnome-control-center
+
+  14 Feb 2008; Raúl Porcel <armin76@gentoo.org> virtuals:
+  Remove useless virtual/bittorrent
+
+  13 Dec 2007; Duncan Coutts <dcoutts@gentoo.org> virtuals:
+  Remove old-style virtual/ghc as it is no longer used.
+
+  05 Nov 2007; Duncan Coutts <dcoutts@gentoo.org> virtuals:
+  Switch to ghc rather than ghc-bin for virtual as we're p.masking ghc-bin
+
+  10 Oct 2007; Christian Faulhammer <opfer@gentoo.org> virtuals:
+  remove virtual/editor, we have a new-style virtual now
+

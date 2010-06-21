@@ -1,0 +1,102 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/powerpc/package.use.mask,v 1.43 2010/06/12 16:15:24 nerdboy Exp $
+
+# Steve Arnold <nerdboy@gentoo.org> (12 Jun 2010)
+# masking for gdal (see bug 315659)
+sci-libs/gdal ecwj2k
+
+# Tomáš Chvátal <scarabeus@gentoo.org> (06 June 2010)
+# requires more keywording per bug #323003
+kde-base/kde-meta sdk
+
+# Bernard Cafarelli <voyageur@gentoo.org> (26 Apr 2010)
+# This is for x86/amd64 only
+sys-devel/llvm udis86
+
+# Alexey Shvetsov <alexxy@gentoo.org> (23 Feb 2010)
+# media-gfx/tachyon needed to be keyworded per bug #306549
+sci-chemistry/vmd tachyon
+
+# Alexey Shvetsov <alexxy@gentoo.org> (09 Feb 2010)
+# need sys-auth/polkit keyworded                   
+app-admin/system-config-printer-common  policykit  
+
+# Dominik Kapusta <ayoy@gentoo.org> (01 Dec 2009)
+# QA: This entry is moved from INVALID location from default/linux/powerpc.
+# qt-demo-4.6.0, required by examples is  not keyworded on ppc and ppc64 yet
+dev-util/qt-creator examples
+
+# QA: This entry is moved from INVALID location from default/linux/powerpc.
+# Not keyworded
+media-plugins/gst-plugins-meta mythtv
+
+# QA: This entry is moved from INVALID location from default/linux/powerpc.
+# VDPAU is currently not keyworded on PPC since its a nvidia-drivers feature
+# only presently. If other drivers support it in the future, then this can
+# get unmasked
+media-tv/mythtv vdpau
+
+# Brent Baude <ranger@gentoo.org> (14 Jan 2009)
+# # Temporarily masking sql off activerecord
+dev-ruby/activerecord sqlite3
+
+# Brent Baude <ranger@gentoo.org>
+# Masking off video cards and input devices for xorg-1.5.3 stablization
+x11-base/xorg-server input_devices_spaceorb input_devices_mutouch input_devices_hyperpen input_devices_fpit input_devices_dynapro input_devices_calcomp input_devices_summa input_devices_elographics input_devices_citron input_devices_microtouch input_devices_jamstudio input_devices_elo2300 input_devices_penmount input_devices_tek4957 input_devices_dmc input_devices_digitaledge input_devices_palmax input_devices_magellan video_cards_v4l video_cards_cirrus video_cards_voodoo video_cards_sisusb video_cards_s3 video_cards_s3virge
+
+# Joseph Jezak <josejx@gentoo.org> (Mar 20 2009)
+# Mask Ruby -> Oracle bindings
+dev-ruby/ruby-dbi oracle
+
+# Brent Baude <ranger@gentoo.org>
+# masking zephyr USE on pidgin
+net-im/pidgin zephyr
+
+# Brent Baude <ranger@gentoo.org>
+# media-libs/libcanberra-0.11 masking pulseaudio
+=media-libs/libcanberra-0.11 pulseaudio
+
+# Mart Raudsepp <leio@gentoo.org> (02 Apr 2008)
+# media-plugins/gst-plugins-{mythtv,dvb,fluendo-mpegdemux} not keyworded
+# Joseph Jezak <josejx@gentoo.org> (27 Feb 2009)
+# Marked ~ppc, but masking current versions because of stable keyword
+<=media-plugins/gst-plugins-meta-0.10-r2 dvb mythtv
+
+# nixnut <nixnut@gentoo.org> (11 mar 2008)
+# USE=musepack wants musepack-tools which can't be build on ppc
+media-sound/squeezecenter musepack
+
+# Mark Loeser <halcy0n@gentoo.org> (18 Jan 2008)
+# mono doesn't work with Openoffice - bug #202361
+app-office/openoffice mono
+
+=dev-java/ibm-jdk-bin-1.5* -nsplugin
+=dev-java/ibm-jre-bin-1.5* -nsplugin
+=dev-java/ibm-jdk-bin-1.6* -nsplugin
+=dev-java/ibm-jre-bin-1.6* -nsplugin
+
+# Joseph Jezak <josejx@gentoo.org> (28 Jun 2007)
+# Masked Parallel LCD devices for bug #180683
+# app-misc/lcd4linux
+app-misc/lcd4linux lcd_devices_hd44780
+
+# nixnut <nixnut@gentoo.org> (5 feb 2008)
+# Masking hb and hb2 USE flags as no suitable solution for evms exists
+sys-fs/evms hb hb2
+
+# Tobias Scherbaum <dertobi123@gentoo.org> (1 Feb 2008)
+# Mask mono flag for gnome as tomboy is segfaulting.
+gnome-base/gnome mono
+
+# Daniel Gryniewicz <dang@gentoo.org> (25 Jul 2008)
+# Mask webkit from liferea: not keyworded
+net-news/liferea webkit
+
+# Markus Rothe <corsair@gentoo.org> (22 July 2008)
+# bug #232411
+app-text/enchant -zemberek
+
+# Joseph Jezak <josejx@gentoo.org> (12 November 2008)
+# Mask the JIT for pearpc, it's x86 only
+app-emulation/pearpc jit

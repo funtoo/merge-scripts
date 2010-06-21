@@ -1,0 +1,13 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/prefix/sunos/solaris/5.10/x86/package.use.mask,v 1.2 2009/10/03 19:18:10 grobian Exp $
+
+
+# *** This configuration is not supported in the following
+# subdirectories:
+#    target-libada gnattools target-libmudflap target-libssp
+sys-devel/gcc:4.3 mudflap
+
+# Jeremy Olexa <darkside@gentoo.org> (03 Dec 2008)
+# Reported that this use flag does not work on x86-solaris, bug #245659
+media-gfx/inkscape lcms

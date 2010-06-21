@@ -1,0 +1,6 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/sparc-fbsd/package.use.mask,v 1.2 2009/07/31 09:09:33 ssuominen Exp $
+
+dev-lang/swig ocaml pike
+app-editors/vim vim-with-x

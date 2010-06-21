@@ -1,0 +1,6 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/prefix/sunos/solaris/5.9/package.use.force,v 1.1 2009/10/02 15:46:56 haubi Exp $
+
+# still need scandir() from gnulib on solaris2.9
+app-admin/eselect-python gnulib

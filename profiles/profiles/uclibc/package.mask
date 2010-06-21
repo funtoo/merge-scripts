@@ -1,0 +1,13 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/uclibc/package.mask,v 1.19 2009/12/23 06:06:25 solar Exp $
+
+sys-libs/glibc
+
+# breaks gcc and such
+dev-libs/libiconv
+
+# requires funcs we dont yet provide
+>=sys-fs/xfsprogs-2.8.10
+
+>sys-fs/udev-141

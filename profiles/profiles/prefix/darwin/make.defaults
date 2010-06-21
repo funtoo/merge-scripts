@@ -1,0 +1,16 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/prefix/darwin/make.defaults,v 1.2 2009/06/30 16:35:00 darkside Exp $
+
+# System-wide defaults for all Darwin profiles
+# This file should rarely need to be changed
+
+# 'Sane' defaults
+ELIBC="Darwin"
+KERNEL="Darwin"
+
+# strip isn't GNU
+FEATURES="nostrip"
+
+# ALSA + Darwin != working
+USE_EXPAND="-ALSA_CARDS -ALSA_PCM_PLUGINS"

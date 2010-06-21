@@ -1,0 +1,25 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/prefix/darwin/macos/package.use.mask,v 1.7 2010/02/10 19:23:21 grobian Exp $
+
+# Fabian Groffen <grobian@gentoo.org> (30 Oct 2009)
+# X only
+media-video/mplayer xvmc xv dga X xinerama
+
+# Jeremy Olexa <darkside@gentoo.org> (12 Feb 2009)
+# Doesn't work with python support, bug 257572
+gnome-extra/libgsf python
+
+# Fabian Groffen <grobian@gentoo.org> (30 Dec 2008)
+# +     pipping | grobian: please package.use.mask aqua for emacs-cvs for now
+# +     pipping | grobian: hopefully i find the time to fix it at some point
+app-editors/emacs-vcs aqua
+
+# Fabian Groffen <grobian@gentoo.org> (06 Aug 2008)
+# runtime loading is horribly broken (it uses fixed .so.0, but when
+# that's fixed it still doesn't work)
+dev-util/subversion dso
+
+# Elias Pipping <pipping@gentoo.org> (25 Nov 2007)
+# there's no (official) java6 on macosx
+dev-util/checkstyle test

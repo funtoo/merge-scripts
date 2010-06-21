@@ -1,0 +1,212 @@
+# ChangeLog for Gentoo/ARM profile directory
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/arm/ChangeLog,v 1.80 2010/06/13 17:16:49 pacho Exp $
+
+  13 Jun 2010; Pacho Ramos <pacho@gentoo.org> package.use.mask:
+  Mask gnome-base/gvfs bluetooth USE flag until bug 305913 is fixed.
+
+  06 Jun 2010; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask tokyocabinet
+
+  15 May 2010; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask schroedinger
+
+  10 May 2010; Markus Meier <maekke@gentoo.org> package.mask:
+  remove libpng-1.4 mask as texlive-2009 is unmasked
+
+  10 May 2010; Markus Meier <maekke@gentoo.org> package.mask:
+  unmask texlive-2009
+
+  22 Apr 2010; Alexis Ballier <aballier@gentoo.org> package.use.mask:
+  mask vlc[projectm], bug #314969
+
+  18 Apr 2010; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask ocamlopt
+
+  17 Apr 2010; Raúl Porcel <armin76@gentoo.org> package.use.mask, use.mask:
+  Move fits from p.use.mask to use.mask
+
+  05 Apr 2010; Markus Meier <maekke@gentoo.org> package.use.mask:
+  drop dev-python/PyQt4[multimedia] mask as it's keyworded now
+
+  04 Apr 2010; Jeremy Olexa <darkside@gentoo.org> package.use.mask:
+  mask net-misc/mediatomb[lastfm] as lastfmlib isn't keyworded
+
+  02 Apr 2010; Markus Meier <maekke@gentoo.org> package.use.mask:
+  mask media-gfx/ufraw[fits] as it isn't keyworded
+
+  28 Mar 2010; Raúl Porcel <armin76@gentoo.org> package.use.mask:
+  Package.use.mask dev-util/subversion kde
+
+  13 Mar 2010; Samuli Suominen <ssuominen@gentoo.org> package.mask:
+  Mask libpng-1.4 pending on texlive-core-2009 unmasking.
+
+  03 Mar 2010; Jonathan Callen <abcd@gentoo.org> package.mask:
+  Mask all of KDE SC 4.4.x, not just 4.4.0
+
+  15 Feb 2010; Mark Loeser <halcy0n@gentoo.org> package.use.mask:
+  Mask bluetooth for net-misc/ofono since we need >=net-wireless/bluez-4.61
+
+  12 Feb 2010; Samuli Suominen <ssuominen@gentoo.org> package.mask:
+  Mask KDE 4.4.0 also here because of ~arm in kdelibs.
+
+  08 Feb 2010; Alexey Shvetsov <alexxy@gentoo.org> package.use.mask:
+  mask dev-libs/soprano[virtuoso] since it needs dev-db/virtuoso-* keyworded
+
+  07 Feb 2010; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask dvd
+
+  01 Feb 2010; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask bs2b toolame ladspa ggi nut xanim
+
+  27 Jan 2010; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask darcs
+
+  25 Jan 2010; Alexis Ballier <aballier@gentoo.org> +package.mask:
+  Move TeX Live 2009 mask here from global package.mask, remove it once
+  keyworded, bug #300526
+
+  23 Jan 2010; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Unmask kde
+
+  20 Jan 2010; Raúl Porcel <armin76@gentoo.org> package.use.mask:
+  Package.use.mask thumbnail for konqueror and dolphin since it needs
+  mplayer
+
+  20 Jan 2010; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask pm-utils, wicd and unmask webkit
+
+  27 Dec 2009; Raúl Porcel <armin76@gentoo.org> package.use.mask:
+  P.use.mask app-portage/cfg-update kde
+
+  25 Dec 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask debug-utils
+
+  13 Dec 2009; Rémi Cardona <remi@gentoo.org> use.mask:
+  drop "imstt" from VIDEO_CARDS in all profiles
+
+  13 Dec 2009; Rémi Cardona <remi@gentoo.org> make.defaults:
+  drop "vga" from VIDEO_CARDS in all profiles
+
+  05 Nov 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add sctp to use.mask
+
+  17 Oct 2009; Samuli Suominen <ssuominen@gentoo.org> use.mask:
+  Mask USE musepack because media-sound/musepack-tools support is missing.
+
+  27 Sep 2009; Markus Meier <maekke@gentoo.org> package.use.mask:
+  mask media-gfx/imagemagick[autotrace] as autotrace is unkeyworded
+
+  24 Sep 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask ieee1394
+
+  20 Sep 2009; Markus Meier <maekke@gentoo.org> use.mask:
+  remove kate USE-mask
+
+  16 Aug 2009; Rémi Cardona <remi@gentoo.org> use.mask:
+  drop last traces of i810
+
+  22 Jul 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask mtp
+
+  30 Jun 2009; Raúl Porcel <armin76@gentoo.org> package.use.mask:
+  Package.use.mask media-plugins/gst-plugins-meta lame taglib
+
+  30 Jun 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask libmms and sid
+
+  07 Jun 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask prolog
+
+  28 May 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Unmask qt4
+
+  17 May 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add webkit to use.mask, if you tested it and it works, let me know
+
+  23 Apr 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Unmask libssh2
+
+  08 Apr 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add cblas to use.mask
+
+  07 Apr 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add fusion to use.mask
+
+  06 Apr 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add lapack to use.mask
+
+  06 Apr 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add mpi and lasi to use.mask
+
+  05 Apr 2009; Raúl Porcel <armin76@gentoo.org> -package.mask:
+  Remove gnome-2.22 mask
+
+  05 Apr 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask gnomecd
+
+  04 Apr 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask zvbi, kate, v4l, v4l2, dvd, fluidsynth
+
+  30 Mar 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add madwifi to use.mask
+
+  14 Mar 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask xfs, as xfs doesn't work too well on arm
+
+  14 Mar 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask cupsddk
+
+  13 Mar 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Masking a lot of video_cards which i doubt are available on ARM
+
+  12 Mar 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add video_cards_radeonhd and video_cards_ast to use.mask
+
+  11 Mar 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add lyx to use.mask
+
+  10 Mar 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add xindy to use.mask
+
+  20 Feb 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask scanner, no hardware to test
+
+  06 Feb 2009; Raúl Porcel <armin76@gentoo.org> package.use.mask, use.mask:
+  Use.mask xemacs, not keyworded
+
+  19 Jan 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Some reordering, and use.mask tracker, fuse, gphoto2 and laptop
+
+  16 Jan 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Use.mask chicken, clisp, R, octave
+
+  15 Jan 2009; Raúl Porcel <armin76@gentoo.org> package.use.mask, use.mask:
+  Move dvb and mythtv p.use.mask to use.mask
+
+  01 Jan 2009; Raúl Porcel <armin76@gentoo.org> use.mask:
+  Add openexr to use.mask as it fails to work
+
+  05 Nov 2008; Jim Ramsay <lack@gentoo.org> package.use.mask:
+  app-admin/gkrellm may pull in net-libs/libntlm, which is not keyworded
+
+  22 Aug 2008; Mart Raudsepp <leio@gentoo.org> +package.mask:
+  Mask GNOME-2.22 here in preparation of removing the global one
+
+  11 Apr 2008; Chris Gianelloni <wolf31o2@gentoo.org> use.mask:
+  Sync use.mask with default-linux.
+
+  10 Apr 2008; Donnie Berkholz <dberkholz@gentoo.org>; make.defaults:
+  Make VIDEO_CARDS defaults a reasonable set instead of every imaginable
+  card.
+
+  10 Apr 2008; Donnie Berkholz <dberkholz@gentoo.org>; use.mask:
+  changing around video_cards_via masking by unmasking only for available
+  arches instead of masking on unavailable.
+
+  02 Apr 2008; Mart Raudsepp <leio@gentoo.org> package.use.mask:
+  USE mask dvb and mythtv on gst-plugins-meta - dependencies not keyworded
+
+  02 Apr 2008; Mart Raudsepp <leio@gentoo.org> use.mask:
+  Mask networkmanager USE flag - no version of it keyworded
+

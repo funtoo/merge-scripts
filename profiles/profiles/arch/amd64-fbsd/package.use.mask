@@ -1,0 +1,13 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/amd64-fbsd/package.use.mask,v 1.3 2010/04/10 16:12:17 ssuominen Exp $
+
+# Java currently uses generation 1
+dev-libs/cyrus-sasl java
+
+# nvidia-driver uses acpid
+x11-drivers/nvidia-drivers acpi
+
+# Gilles Dartiguelongue <eva@gentoo.org> (19 Oct 2007)
+# afs not keyworded
+>=gnome-base/gdm-2.20 afs

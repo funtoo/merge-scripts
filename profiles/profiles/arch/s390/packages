@@ -1,0 +1,4 @@
+*sys-apps/s390-tools
+->=sys-devel/binutils-2.18-r1
+
+-*sys-apps/hdparm

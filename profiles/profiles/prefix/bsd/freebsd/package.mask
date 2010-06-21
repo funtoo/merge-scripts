@@ -1,0 +1,7 @@
+# Copyright 1999-2010 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/prefix/bsd/freebsd/package.mask,v 1.1 2010/03/20 10:02:53 grobian Exp $
+
+# Fabian Groffen <grobian@gentoo.org> (20 Mar 2010)
+# posix spawn issues, http://bugs.gentoo.org/310335
+=sys-devel/m4-1.4.14

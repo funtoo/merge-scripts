@@ -1,0 +1,16 @@
+# ChangeLog for Gentoo/x86-fbsd profile directory
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/amd64-fbsd/ChangeLog,v 1.5 2010/03/07 17:55:07 ssuominen Exp $
+
+  07 Mar 2010; Samuli Suominen <ssuominen@gentoo.org> use.mask:
+  Unmask x86_* flags sse3, sse4, sse4a, and sse5.
+
+  13 Dec 2009; Rémi Cardona <remi@gentoo.org> make.defaults:
+  drop "vga" from VIDEO_CARDS in all profiles
+
+  16 Aug 2009; Rémi Cardona <remi@gentoo.org> make.defaults:
+  drop last traces of i810
+
+  11 Mar 2009; Timothy Redaelli <drizzt@gentoo.org> +make.defaults,
+  +package.use.mask, +parent, +use.force, +use.mask:
+  Add amd64-fbsd arch profile; it will be used for freebsd 7.1.

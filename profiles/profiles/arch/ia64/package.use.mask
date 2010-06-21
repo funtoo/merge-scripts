@@ -1,0 +1,72 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/ia64/package.use.mask,v 1.26 2010/06/13 20:55:35 pacho Exp $
+
+# Pacho Ramos <pacho@gentoo.org> (13 Jun 2010)
+# Needs gnome-extra/nautilus-sendto, wait for bug 323851
+net-im/empathy nautilus
+
+# Jorge Manuel B. S. Vicetto <jmbsvicetto@gentoo.org> (06 Jun 2010)
+# Requires support for semantic-desktop
+kde-base/kdeplasma-addons rss
+
+# Jorge Manuel B. S. Vicetto <jmbsvicetto@gentoo.org> (06 Jun 2010)
+# Requires support for semantic-desktop
+kde-base/plasma-workspace rss
+
+# Raúl Porcel <armin76@gentoo.org> (25 Jan 2010)
+# Needs kde4 stable
+dev-util/subversion kde
+
+# Alexey Shvetsov <alexxy@gentoo.org> (09 Feb 2010)
+# need dev-db/virtuoso-* keyworded
+dev-libs/soprano virtuoso
+
+# Alexey Shvetsov <alexxy@gentoo.org> (09 Feb 2010)
+# need sys-auth/polkit keyworded                   
+app-admin/system-config-printer-common  policykit  
+
+# Ben de Groot <yngwin@gentoo.org> (16 Jan 2010)
+# qt-multimedia is not keyworded, bug 293671
+dev-python/PyQt4 multimedia
+
+# Patrick Lauer <patrick@gentoo.org> (04 Nov. 2009)
+# split samba isn't keyworded yet
+>=kde-base/kdebase-kioslaves-4.3.3 samba
+
+# Romain Perier <mrpouet@gentoo.org> (18 Oct. 2009)
+# >=networkmanager-0.7.0 is not keyworded.
+gnome-base/gnome-applets networkmanager
+
+# Raúl Porcel <armin76@gentoo.org)
+# Keep deps minimal
+x11-wm/fvwm lock
+
+# Tomas Chvatal <scarabeus@gentoo.org> (27 Apr 2009)
+# Tunepimp is not keyworded.
+kde-base/juk musicbrainz
+
+# Raúl Porcel <armin76@gentoo.org> (11 Apr 2009)
+# Keep kde4 deps minimal
+kde-base/kalzium editor solver
+
+# Raúl Porcel <armin76@gentoo.org> (11 Apr 2009)
+# net-libs/webkit-gtk segfaults but x11-libs/qt-webkit doesn't
+dev-python/PyQt4 -webkit
+x11-libs/qt-assistant -webkit
+
+# Jean-Noel Rivasseau <elvanor@gentoo.org> (28 Jul 2008)
+# icu4j tests need jdk-1.6
+dev-java/icu4j test
+
+# Raúl Porcel <armin76@gentoo.org> (07 Jul 2008)
+# Make clisp deps minimal
+dev-lisp/clisp hyperspec pari svm
+
+# Steve Dibb <beandog@gentoo.org> (01 Nov 2007)
+# needs media-libs/ladspa-sdk keyworded
+media-video/mplayer ladspa
+
+# missing keywords
+media-plugins/gst-plugins-meta lame taglib
+

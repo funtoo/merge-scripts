@@ -1,0 +1,11 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/prefix/aix/package.mask,v 1.7 2010/03/10 17:36:12 haubi Exp $
+
+# Michael Haubenwallner <haubi@gentoo.org> (23 Jul 2008)
+# gdb-*.50 are linux-only releases and don't (need to) work on aix.
+=sys-devel/gdb-6.8.50*
+
+# Fabian Groffen <grobian@gentoo.org> (04 Apr 2007)
+# This is the only linker for AIX
+-sys-devel/native-cctools

@@ -1,0 +1,3 @@
+# some apps depend on this, and in prefix the best we can assume is that
+# we have it
+sys-apps/shadow-0

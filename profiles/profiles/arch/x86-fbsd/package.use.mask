@@ -1,0 +1,33 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/x86-fbsd/package.use.mask,v 1.19 2010/05/12 14:16:58 chithanh Exp $
+
+# Pacho Ramos <pacho@gentoo.org> (22 Mar 2010)
+# xulrunner:1.9 and libgda:3 not keyworded, bug 282291
+dev-python/gnome-python-extras libgda xulrunner
+
+# Romain Perier <mrpouet@gentoo.org> (18 Oct. 2009)
+# >=networkmanager-0.7.0 is not keyworded.
+gnome-base/gnome-applets networkmanager
+
+# Java currently uses generation 1
+dev-libs/cyrus-sasl java
+
+# nvidia-driver uses acpid
+x11-drivers/nvidia-drivers acpi
+
+# Gilles Dartiguelongue <eva@gentoo.org> (19 Oct 2007)
+# afs not keyworded
+>=gnome-base/gdm-2.20 afs
+
+# prolog doesn't build here
+dev-libs/ppl prolog
+
+# gavl and opencv do not build
+media-plugins/frei0r-plugins scale0tilt facedetect
+
+# untested, bug 281573
+media-gfx/imagemagick autotrace
+
+# needs to rework xanim's ebuild to make it bsd-friendly
+media-video/mplayer xanim

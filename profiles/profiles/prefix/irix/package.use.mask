@@ -1,0 +1,11 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/prefix/irix/package.use.mask,v 1.1 2009/06/06 03:54:54 solar Exp $
+
+# Fabian Groffen <grobian@gentoo.org> (27 Dec 2008)
+# bug #209163, Python is broken wrt IPv6 on IRIX
+dev-lang/python ipv6
+
+# Fabian Groffen <grobian@gentoo.org> (06 Aug 2008)
+# Causes extra compilation problems, bug #234253
+dev-util/subversion dso

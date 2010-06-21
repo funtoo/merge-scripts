@@ -1,0 +1,7 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/prefix/darwin/packages,v 1.2 2009/06/21 13:21:08 grobian Exp $
+
+*sys-apps/darwin-miscutils
+*sys-devel/binutils-apple
+*sys-process/pidof-bsd

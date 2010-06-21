@@ -1,0 +1,3 @@
+virtual/bootloader		sys-boot/arcload
+virtual/linux-sources		sys-kernel/mips-sources
+virtual/os-headers		sys-kernel/linux-headers

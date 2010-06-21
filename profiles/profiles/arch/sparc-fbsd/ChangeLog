@@ -1,0 +1,11 @@
+# ChangeLog for Gentoo/sparc-fbsd profile directory
+# Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/sparc-fbsd/ChangeLog,v 1.2 2009/10/19 21:08:44 aballier Exp $
+
+  19 Oct 2009; Alexis Ballier <aballier@gentoo.org> use.mask:
+  mask avahi useflag on sparc fbsd
+
+  16 May 2009; Alexis Ballier <aballier@gentoo.org> +make.defaults,
+  +package.use.mask, +parent, +use.force, +use.mask:
+  add sparc-fbsd arch profiles
+
