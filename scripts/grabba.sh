@@ -24,3 +24,4 @@ cp -a profiles/updates/* $dest/profiles/updates
 rm -rf $dest/profiles/funtoo*
 cp -a profiles/funtoo* $dest/profiles
 rsync -a scripts/ $dest/scripts/
+cp -a sets.conf $dest/
