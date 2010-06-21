@@ -1,0 +1,15 @@
+#!/sbin/runscript
+# Copyright 1999-2009 Funtoo Technologies 
+# Distributed under the terms of the GNU General Public License v2
+
+name="unfsd NFS server"
+command=/usr/sbin/unfsd
+pidfile=/var/run/unfsd.pid
+lockfile=/var/lock/subsys/unfsd
+command_args="-i $pidfile"
+
+depend() {
+	need net portmap
+	after quota
+	use ypbind dns
+}

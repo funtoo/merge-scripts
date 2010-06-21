@@ -1,0 +1,13 @@
+# ChangeLog for net-libs/libvuurmuur
+# Copyright 1999-2008 Gentoo Foundation; Distributed under the GPL v2
+# $Header: $
+
+*libvuurmuur-0.7_beta3 (17 Dec 2008)
+	17 Dec 2008; Anielkis Herrera <aherrerag@uci.cu>
+	+libvuurmuur-0.7_beta3.ebuild:
+	Version bump
+
+*libvuurmuur_conf-0.6 (17 Dec 2008)
+	17 Dec 2008; Anielkis Herrera <aherrerag@uci.cu>
+	+libvuurmuur-0.6.ebuild:
+	Initial import.  Ebuild submitted by Anielkis Herrera <aherrerag@uci.cu>.

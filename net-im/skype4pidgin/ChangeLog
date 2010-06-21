@@ -1,0 +1,9 @@
+# ChangeLog for net-im/skype4pidgin
+# Copyright 2000-2009 Gentoo Foundation; Distributed under the GPL v2
+# $Header: 
+
+*net-im/skype4pidgin-9999 (16 Jan 2009)
+
+  16 Jan 2009; Robert A <r_a@lavabit.com>
+  +net-im/skype4pidgin-9999.ebuild:
+  Initial release

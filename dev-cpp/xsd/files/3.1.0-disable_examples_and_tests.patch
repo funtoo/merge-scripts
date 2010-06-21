@@ -1,0 +1,31 @@
+--- makefile.orig	2008-05-25 11:11:42.000000000 +0200
++++ makefile	2008-05-25 11:13:55.000000000 +0200
+@@ -12,11 +12,7 @@
+ 
+ .PHONY: $(default) $(test) $(install) $(clean)
+ 
+-$(default): $(out_base)/xsd/      \
+-            $(out_base)/tests/    \
+-            $(out_base)/examples/
+-
+-$(test): $(out_base)/tests/.test
++$(default): $(out_base)/xsd/
+ 
+ $(install): $(out_base)/xsd/.install           \
+             $(out_base)/libxsd/.install        \
+@@ -28,14 +24,10 @@
+ 	$(call install-data,$(src_base)/README,$(install_doc_dir)/xsd/README)
+ 
+ 
+-$(clean): $(out_base)/xsd/.clean      \
+-          $(out_base)/tests/.clean    \
+-          $(out_base)/examples/.clean
++$(clean): $(out_base)/xsd/.clean
+ 
+ $(call include,$(bld_root)/install.make)
+ 
+ $(call import,$(src_base)/xsd/makefile)
+ $(call import,$(src_base)/libxsd/makefile)
+-$(call import,$(src_base)/tests/makefile)
+-$(call import,$(src_base)/examples/makefile)
+ $(call import,$(src_base)/documentation/makefile)

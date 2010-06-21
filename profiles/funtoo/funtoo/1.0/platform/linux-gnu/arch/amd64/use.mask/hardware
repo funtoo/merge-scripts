@@ -1,0 +1,23 @@
+# UNMASK
+
+-nvidia
+-input_devices_synaptics
+-input_devices_virtualbox
+-input_devices_vmmouse
+-input_devices_wacom
+-video_cards_nvidia
+-video_cards_fglrx
+-video_cards_via
+-video_cards_virtualbox
+-video_cards_vmware
+-dxr3
+-kqemu
+
+# MASK
+
+alsa_cards_cs5535audio
+video_cards_i740
+video_cards_imstt
+video_cards_newport
+video_cards_nsc
+3dfx

@@ -1,0 +1,13 @@
+# ChangeLog for net-firewall/vuurmuur
+# Copyright 1999-2008 Gentoo Foundation; Distributed under the GPL v2
+# $Header: $
+
+*vuurmuur-0.7_beta3 (17 Dec 2008)
+	17 Dec 2008; Anielkis Herrera <aherrerag@uci.cu>
+	+vuurmuur-0.7_beta3.ebuild:
+	Version bump
+
+*vuurmuur-0.6 (17 Dec 2008)
+	17 Dec 2008; Anielkis Herrera <aherrerag@uci.cu>
+	+vuurmuur-0.6.ebuild, +files/vuurmuurd:
+	Initial import.  Ebuild submitted by Anielkis Herrera <aherrerag@uci.cu>.

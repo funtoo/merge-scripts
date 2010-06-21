@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<herd>funtoo</herd>
+	<maintainer>
+		<email>drobbins@funtoo.org</email>
+		<name>Daniel Robbins</name>
+	</maintainer>
+	<longdescription lang="en">
+	UNFS3 is a user-space implementation of the NFSv3 server specification. It
+	provides a daemon for the MOUNT and NFS protocols, which are used by NFS
+	clients for accessing files on the server. 
+
+	UNFS3 supports all NFSv3 procedures with the exception of the READDIRPLUS
+	procedure. It tries to provide as much information to NFS clients as
+	possible, within the limits possible from user-space.
+
+	See the unfsd(8) manpage for restrictions imposed on NFS operations (section
+	RESTRICTIONS) and for possible races with local file system activity
+	(section BUGS).
+
+	It is not possible to export to netgroups or wildcard hostnames via
+	/etc/exports, all other addressing methods should work. The following
+	options are recognized in the exports file: ro, rw, root_squash, all_squash,
+	no_root_squash, no_all_squash. If other options are present, they are
+	ignored.
+
+	Cluster extensions compatible to the older ClusterNFS project are supported
+	when the source is configured with --enable-cluster.
+	</longdescription>
+	<use>
+		<flag name="cluster">Enable ClusterNFS file naming extensions</flag>
+	</use>
+</pkgmetadata>

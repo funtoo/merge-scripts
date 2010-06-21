@@ -1,0 +1,43 @@
+#!/sbin/runscript
+# Copyright 1999-2008 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License, v2 or later
+# $Header: .../media-video/fuppes/files/fuppes-init $
+
+
+depend() {
+	need net
+	use logger
+}
+
+checkconfig() {
+	local conf="/etc/fuppes/fuppes.conf"
+
+	if [ ! -e "${conf}" ] ; then
+	eerror "/etc/fuppes/fuppes.conf is needed to run fuppes"
+	eerror "There is a sample file in /etc/fuppes/"
+	return 1
+	fi
+}
+
+start() {
+ebegin "Starting Fuppes"
+	start-stop-daemon \
+		--start \
+		--quiet \
+		--exec /usr/bin/fuppesd \
+		--chuid fuppes -- \
+		--config-dir /etc/fuppes \
+		--database-file /var/lib/fuppes/fuppes.db \
+		2>> /var/log/fuppes/fuppes.err \
+		>> /var/log/fuppes/fuppes.log
+	eend $?
+}
+
+stop() {
+	ebegin "Stopping Fuppes"
+	start-stop-daemon \
+		--stop \
+		--quiet \
+		--exec /usr/bin/fuppesd
+	eend $?
+}

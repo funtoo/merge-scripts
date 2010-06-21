@@ -1,0 +1,16 @@
+#!/sbin/runscript
+
+depend() {
+  need mpd
+}
+
+start() {
+  start-stop-daemon --start -c mpd --quiet --exec /usr/bin/davempd.pl /etc/davemp.conf  
+  eend $?
+}
+
+stop() {
+  killall davempd.pl
+  eend $?
+}
+

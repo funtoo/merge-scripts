@@ -1,0 +1,8 @@
+# ChangeLog for media-sound/arename
+# Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
+# $Header: $
+
+  11 Jan 2009; Maximilian Gaß (mxey) <mxey@cloudconnected.org>
+  +arename-2.0.ebuild, +metadata.xml:
+  New ebuild for bug 254561
+

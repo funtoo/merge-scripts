@@ -1,0 +1,10 @@
+# ChangeLog for net-fs/unfs3 
+# Copyright 2009 Funtoo Technologies, LLC; Distributed under the GPL v2
+
+*unfs3-0.9.22
+
+  10 Aug 2009; Daniel Robbins <drobbins@funtoo.org> +unfs3-0.9.22.ebuild:
+  Initial ebuild I whipped up - implements user-space NFS version 3. Very
+  handy inside virtual containers where in-kernel NFS server functionality may
+  not be available.
+

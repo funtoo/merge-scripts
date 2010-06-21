@@ -1,0 +1,39 @@
+#!/sbin/runscript
+# Copyright 1999-2008 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: $
+
+dkimproxy_bin=/usr/bin/${SVCNAME%_*}.${SVCNAME#*_} # dkimproxy.in/dkimproxy.out
+dkimproxy_pidfile=/var/run/${SVCNAME}.pid
+dkimproxy_conf=/etc/${SVCNAME}.conf
+#dkimproxy_opts: can be set in /etc/conf.d/${SVCNAME}
+
+depend() {
+	need net
+	use mta
+}
+
+checkconfig() {
+	if [ ! -f ${dkimproxy_conf} ]; then
+		eerror "Configuration file ${dkimproxy_conf} not found"
+		return 1
+	fi
+}
+
+start() {
+	checkconfig || return 1
+	ebegin "Starting ${SVCNAME}"
+	start-stop-daemon --start --quiet \
+		--exec ${dkimproxy_bin} -- \
+		--daemonize --user=dkim --group=dkim \
+		--conf_file=${dkimproxy_conf} \
+		--pidfile=${dkimproxy_pidfile} \
+		${dkimproxy_opts}
+	eend ${?}
+}
+
+stop() {
+	ebegin "Stopping ${SVCNAME}"
+	start-stop-daemon --stop --quiet --pidfile ${dkimproxy_pidfile}
+	eend ${?}
+}

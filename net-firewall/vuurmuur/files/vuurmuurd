@@ -1,0 +1,105 @@
+#!/sbin/runscript
+# Copyright 1999-2007 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+
+opts="restart permit_all"
+
+depend() {
+    need net
+}
+
+checkconfig() {
+    # check if vuurmuur is configured
+    IFNUM=`/usr/bin/vuurmuur_script --list --interface any | wc -l`
+    if [ "$IFNUM" = "0" ]; then
+        echo "FAILED: please configure Vuurmuur first by defining at least one interface."
+        exit 1
+    fi
+}
+
+load_modules() {
+    # space separated list of modules to load on start, or 'none' if none ;-)
+    MODULES_TO_LOAD="ip_tables iptable_filter iptable_mangle iptable_nat ip_conntrack ipt_state ip_conntrack_ftp ip_nat_ftp ip_queue"
+    #MODULES_TO_LOAD="none"
+
+    echo -n -e "\tLoading modules:\t"
+    if [ "$MODULES_TO_LOAD" == "none" ]; then
+        echo "disabled."
+    else
+        # load the modules
+        for MODULE in `echo $MODULES_TO_LOAD`; do
+            echo -n "$MODULE:"
+            /sbin/modprobe $MODULE
+            echo "OK "
+        done
+        echo ""
+    fi
+}
+
+stop() {
+    ebegin "Stopping firewall: Vuurmuur."
+    PID1=$(pidof vuurmuur | head -n 1)
+    PID2=$(pidof vuurmuur_log | head -n 1)
+    [[ -z $PID1 ]] || kill -n 2 $PID1
+    [[ -z $PID2 ]] || kill -n 2 $PID2
+    eend $?
+}
+permit_all() {
+    ebegin "Permiting all traffic"
+    iptables-restore < /var/lib/iptables/default.iptables
+    eend $?
+}
+
+start() {
+	ebegin "Starting firewall: Vuurmuur:"
+    result=0
+
+    einfo "Loading Vuurmuur"
+    # start vuurmuur
+    if [ ! -f /var/run/vuurmuur.pid ]; then
+        /usr/bin/vuurmuur -l -c /etc/vuurmuur/config.conf
+        RESULT="$?"
+        if [ "$RESULT" = "0" ]; then
+            einfo "Loaded"
+        else
+            result=$(( result+1 ))
+            eerror "FAILED"
+        fi
+    else
+        result=$(( result+1 ))
+        PID=`cat /var/run/vuurmuur.pid | cut -d " " -f 1`
+        eerror "FAILED: vuurmuur already running at pid $PID."
+    fi
+
+    echo -n -e "\tLoading Vuurmuur_log:\t"
+    # start vuurmuur_log
+    if [ ! -f /var/run/vuurmuur_log.pid ]; then
+        /usr/bin/vuurmuur_log
+        RESULT="$?"
+        if [ "$RESULT" = "0" ]; then
+            einfo "OK."
+        else
+            result=$(( result+1 ))
+            eerror "FAILED."
+        fi
+    else
+        result=$(( result+1 ))
+        PID=`cat /var/run/vuurmuur_log.pid | cut -d " " -f 1`
+        eerror "FAILED: vuurmuur_log already running at pid $PID."
+    fi
+    if [[ $result -ne 0 ]]
+    then
+        PID1=$(pidof vuurmuur | head -n 1)
+        PID2=$(pidof vuurmuur_log | head -n 1)
+        [[ -z $PID1 ]] || kill -n 2 $PID1
+        [[ -z $PID2 ]] || kill -n 2 $PID2
+    fi
+    [[ $result -eq 0 ]]
+    eend $?
+}
+
+restart() {
+	stop
+	start
+	eend $?
+}

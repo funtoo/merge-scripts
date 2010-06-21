@@ -1,0 +1,27 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/x86/package.use.mask,v 1.23 2009/12/25 04:26:24 grozin Exp $
+
+# This file requires >=portage-2.1.1
+
+# Andrey Grozin <grozin@gentoo.org> (24 Dec 2009)
+# openmcl (aka closurecl) is only available on x86 and amd64
+sci-mathematics/maxima -openmcl
+
+# Jean-Noël Rivasseau <elvanor@gentoo.org> (23 Sep 2009)
+# X use flag only for amd64/x86, bug 285951.
+media-gfx/iscan -X
+
+# Serkan Kaba <serkan@gentoo.org> (20 Jul 2008)
+app-text/enchant -zemberek
+
+>=dev-java/sun-jdk-1.5 -nsplugin
+>=dev-java/sun-jre-bin-1.5 -nsplugin
+>=dev-java/ibm-jdk-bin-1.5 -nsplugin 
+>=dev-java/ibm-jre-bin-1.5 -nsplugin
+x11-terms/eterm sse2
+
+# Christian Faulhammer <opfer@gentoo.org> (14 Jan 2008)
+# only works on x86
+dev-java/ibm-jdk-bin -alsa
+dev-java/ibm-jre-bin -alsa

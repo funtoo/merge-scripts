@@ -1,0 +1,11 @@
+Index: evad
+===================================================================
+--- evad	(revision 76)
++++ evad	(working copy)
+@@ -20,5 +20,5 @@
+ along with Evad; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ """
+-from Evad import evad
++from evad import evad
+ evad.run()
