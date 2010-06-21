@@ -10,6 +10,7 @@ done
 for foo in `ls -d */*`
 do
 	[ "`dirname $foo`" = "profiles" ] && continue
+	[ "`dirname $foo`" = "licenses" ] && continue
 	if [ ! -d $dest/$foo ]
 	then
 		install -d `dirname $dest/$foo`
@@ -25,3 +26,4 @@ rm -rf $dest/profiles/funtoo*
 cp -a profiles/funtoo* $dest/profiles
 rsync -a scripts/ $dest/scripts/
 cp -a sets.conf $dest/
+cp licenses/* $dest/licenses/
