@@ -1,0 +1,36 @@
+JS install cleanup fixes
+
+- Always install the JS for GitWeb, even if it is not being minified.
+- Also ensure the minified JS is built before instaweb as it is referenced in
+  the sed expression.
+
+Signed-off-by: Robin H. Johnson <robbat2@gentoo.org>
+
+diff -Nuar git-1.6.6.orig/Makefile git-1.6.6/Makefile
+--- git-1.6.6.orig/Makefile	2009-12-24 00:00:22.000000000 +0000
++++ git-1.6.6/Makefile	2009-12-25 23:47:57.089719735 +0000
+@@ -1509,13 +1509,8 @@
+ 	chmod +x $@+ && \
+ 	mv $@+ $@
+ 
+-ifdef JSMIN
+-OTHER_PROGRAMS += gitweb/gitweb.cgi   gitweb/gitweb.min.js
+-gitweb/gitweb.cgi: gitweb/gitweb.perl gitweb/gitweb.min.js
+-else
+-OTHER_PROGRAMS += gitweb/gitweb.cgi
+-gitweb/gitweb.cgi: gitweb/gitweb.perl
+-endif
++OTHER_PROGRAMS += gitweb/gitweb.cgi   gitweb/$(GITWEB_JS)
++gitweb/gitweb.cgi: gitweb/gitweb.perl gitweb/$(GITWEB_JS)
+ 	$(QUIET_GEN)$(RM) $@ $@+ && \
+ 	sed -e '1s|#!.*perl|#!$(PERL_PATH_SQ)|' \
+ 	    -e 's|++GIT_VERSION++|$(GIT_VERSION)|g' \
+@@ -1541,7 +1536,7 @@
+ 	chmod +x $@+ && \
+ 	mv $@+ $@
+ 
+-git-instaweb: git-instaweb.sh gitweb/gitweb.cgi gitweb/gitweb.css gitweb/gitweb.js
++git-instaweb: git-instaweb.sh gitweb/gitweb.cgi gitweb/gitweb.css gitweb/$(GITWEB_JS)
+ 	$(QUIET_GEN)$(RM) $@ $@+ && \
+ 	sed -e '1s|#!.*/sh|#!$(SHELL_PATH_SQ)|' \
+ 	    -e 's/@@GIT_VERSION@@/$(GIT_VERSION)/g' \

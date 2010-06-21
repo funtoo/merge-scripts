@@ -1,0 +1,460 @@
+diff -Naurp gcc-3.4.1.orig/gcc/config/mips/mips.c gcc-3.4.1/gcc/config/mips/mips.c
+--- gcc-3.4.1.orig/gcc/config/mips/mips.c	2004-06-28 09:58:42.000000000 -0400
++++ gcc-3.4.1/gcc/config/mips/mips.c	2004-08-09 22:37:21.983939192 -0400
+@@ -707,6 +707,7 @@ const struct mips_cpu_info mips_cpu_info
+ 
+   /* MIPS IV */
+   { "r8000", PROCESSOR_R8000, 4 },
++  { "r10000", PROCESSOR_R10000, 4 },
+   { "vr5000", PROCESSOR_R5000, 4 },
+   { "vr5400", PROCESSOR_R5400, 4 },
+   { "vr5500", PROCESSOR_R5500, 4 },
+@@ -9401,6 +9402,9 @@ mips_issue_rate (void)
+ {
+   switch (mips_tune)
+     {
++    case PROCESSOR_R10000:
++      return 4;
++
+     case PROCESSOR_R5400:
+     case PROCESSOR_R5500:
+     case PROCESSOR_R7000:
+diff -Naurp gcc-3.4.1.orig/gcc/config/mips/mips.h gcc-3.4.1/gcc/config/mips/mips.h
+--- gcc-3.4.1.orig/gcc/config/mips/mips.h	2004-03-11 16:52:33.000000000 -0500
++++ gcc-3.4.1/gcc/config/mips/mips.h	2004-08-09 01:02:35.042149496 -0400
+@@ -66,6 +66,7 @@ enum processor_type {
+   PROCESSOR_R7000,
+   PROCESSOR_R8000,
+   PROCESSOR_R9000,
++  PROCESSOR_R10000,
+   PROCESSOR_SB1,
+   PROCESSOR_SR71000
+ };
+diff -Naurp gcc-3.4.1.orig/gcc/config/mips/mips.md gcc-3.4.1/gcc/config/mips/mips.md
+--- gcc-3.4.1.orig/gcc/config/mips/mips.md	2004-06-25 03:35:30.000000000 -0400
++++ gcc-3.4.1/gcc/config/mips/mips.md	2004-08-09 04:55:10.158649320 -0400
+@@ -103,6 +103,7 @@
+ ;; arith	integer arithmetic instruction
+ ;; darith	double precision integer arithmetic instructions
+ ;; const	load constant
++;; shift        integer shift
+ ;; imul		integer multiply
+ ;; imadd	integer multiply-add
+ ;; idiv		integer divide
+@@ -120,7 +121,7 @@
+ ;; multi	multiword sequence (or user asm statements)
+ ;; nop		no operation
+ (define_attr "type"
+-  "unknown,branch,jump,call,load,store,prefetch,prefetchx,move,condmove,xfer,hilo,const,arith,darith,imul,imadd,idiv,icmp,fadd,fmul,fmadd,fdiv,fabs,fneg,fcmp,fcvt,fsqrt,frsqrt,multi,nop"
++  "unknown,branch,jump,call,load,store,prefetch,prefetchx,move,condmove,xfer,hilo,const,arith,darith,shift,imul,imadd,idiv,icmp,fadd,fmul,fmadd,fdiv,fabs,fneg,fcmp,fcvt,fsqrt,frsqrt,multi,nop"
+   (cond [(eq_attr "jal" "!unset") (const_string "call")
+ 	 (eq_attr "got" "load") (const_string "load")]
+ 	(const_string "unknown")))
+@@ -214,7 +215,7 @@
+ ;; Attribute describing the processor.  This attribute must match exactly
+ ;; with the processor_type enumeration in mips.h.
+ (define_attr "cpu"
+-  "default,4kc,5kc,20kc,m4k,r3000,r3900,r6000,r4000,r4100,r4111,r4120,r4300,r4600,r4650,r5000,r5400,r5500,r7000,r8000,r9000,sb1,sr71000"
++  "default,4kc,5kc,20kc,m4k,r3000,r3900,r6000,r4000,r4100,r4111,r4120,r4300,r4600,r4650,r5000,r5400,r5500,r7000,r8000,r9000,r10000,sb1,sr71000"
+   (const (symbol_ref "mips_tune")))
+ 
+ ;; The type of hardware hazard associated with this instruction.
+@@ -305,12 +306,12 @@
+ 
+ (define_function_unit "memory" 1 0
+   (and (eq_attr "type" "load")
+-       (eq_attr "cpu" "!r3000,r3900,r4600,r4650,r4100,r4120,r4300,r5000"))
++       (eq_attr "cpu" "!r3000,r3900,r4600,r4650,r4100,r4120,r4300,r5000,r10000"))
+   3 0)
+ 
+ (define_function_unit "memory" 1 0
+   (and (eq_attr "type" "load")
+-       (eq_attr "cpu" "r3000,r3900,r4600,r4650,r4100,r4120,r4300,r5000"))
++       (eq_attr "cpu" "r3000,r3900,r4600,r4650,r4100,r4120,r4300,r5000,r10000"))
+   2 0)
+ 
+ (define_function_unit "memory"   1 0 (eq_attr "type" "store") 1 0)
+@@ -323,7 +324,7 @@
+ 
+ (define_function_unit "imuldiv"  1 0
+   (and (eq_attr "type" "imul,imadd")
+-       (eq_attr "cpu" "!r3000,r3900,r4000,r4600,r4650,r4100,r4120,r4300,r5000"))
++       (eq_attr "cpu" "!r3000,r3900,r4000,r4600,r4650,r4100,r4120,r4300,r5000,r10000"))
+   17 17)
+ 
+ ;; On them mips16, we want to stronly discourage a mult from appearing
+@@ -375,7 +376,7 @@
+ 
+ (define_function_unit "imuldiv"  1 0
+   (and (eq_attr "type" "idiv")
+-       (eq_attr "cpu" "!r3000,r3900,r4000,r4600,r4650,r4100,r4120,r4300,r5000"))
++       (eq_attr "cpu" "!r3000,r3900,r4000,r4600,r4650,r4100,r4120,r4300,r5000,r10000"))
+   38 38)
+ 
+ (define_function_unit "imuldiv"  1 0
+@@ -424,6 +425,40 @@
+        (and (eq_attr "mode" "DI") (eq_attr "cpu" "r5000")))
+   68 68)
+ 
++;; R10000 has 2 integer ALUs
++(define_function_unit "alu" 2 0
++  (and (eq_attr "type" "arith,darith,shift")
++       (eq_attr "cpu" "r10000"))
++  1 0)
++
++;; Only ALU1 can do shifts.  We model shifts as an additional unit
++(define_function_unit "alu1" 1 0
++  (and (eq_attr "type" "shift")
++       (eq_attr "cpu" "r10000"))
++  1 0)
++
++;; only ALU2 does multiplications and divisions
++(define_function_unit "alu2"  1 0
++  (and (eq_attr "type" "imul")
++       (and (eq_attr "mode" "SI") (eq_attr "cpu" "r10000")))
++  6 6)
++
++(define_function_unit "alu2"  1 0
++  (and (eq_attr "type" "imul")
++       (and (eq_attr "mode" "DI") (eq_attr "cpu" "r10000")))
++  10 10)
++
++(define_function_unit "alu2"  1 0
++  (and (eq_attr "type" "idiv")
++       (and (eq_attr "mode" "SI") (eq_attr "cpu" "r10000")))
++  35 35)
++
++(define_function_unit "alu2"  1 0
++  (and (eq_attr "type" "idiv")
++       (and (eq_attr "mode" "DI") (eq_attr "cpu" "r10000")))
++  67 67)
++
++
+ ;; The R4300 does *NOT* have a separate Floating Point Unit, instead
+ ;; the FP hardware is part of the normal ALU circuitry.  This means FP
+ ;; instructions affect the pipe-line, and no functional unit
+@@ -432,11 +467,11 @@
+ ;; instructions to be processed in the "imuldiv" unit.
+ 
+ (define_function_unit "adder" 1 1
+-  (and (eq_attr "type" "fcmp") (eq_attr "cpu" "!r3000,r3900,r6000,r4300,r5000"))
++  (and (eq_attr "type" "fcmp") (eq_attr "cpu" "!r3000,r3900,r6000,r4300,r5000,r10000"))
+   3 0)
+ 
+ (define_function_unit "adder" 1 1
+-  (and (eq_attr "type" "fcmp") (eq_attr "cpu" "r3000,r3900,r6000"))
++  (and (eq_attr "type" "fcmp") (eq_attr "cpu" "r3000,r3900,r6000,r10000"))
+   2 0)
+ 
+ (define_function_unit "adder" 1 1
+@@ -444,7 +479,7 @@
+   1 0)
+ 
+ (define_function_unit "adder" 1 1
+-  (and (eq_attr "type" "fadd") (eq_attr "cpu" "!r3000,r3900,r6000,r4300"))
++  (and (eq_attr "type" "fadd") (eq_attr "cpu" "!r3000,r3900,r6000,r4300,r10000"))
+   4 0)
+ 
+ (define_function_unit "adder" 1 1
+@@ -456,6 +491,10 @@
+   3 0)
+ 
+ (define_function_unit "adder" 1 1
++  (and (eq_attr "type" "fadd,fmadd") (eq_attr "cpu" "r10000"))
++  2 0)
++
++(define_function_unit "adder" 1 1
+   (and (eq_attr "type" "fabs,fneg")
+        (eq_attr "cpu" "!r3000,r3900,r4600,r4650,r4300,r5000"))
+   2 0)
+@@ -467,7 +506,7 @@
+ (define_function_unit "mult" 1 1
+   (and (eq_attr "type" "fmul")
+        (and (eq_attr "mode" "SF")
+-	    (eq_attr "cpu" "!r3000,r3900,r6000,r4600,r4650,r4300,r5000")))
++	    (eq_attr "cpu" "!r3000,r3900,r6000,r4600,r4650,r4300,r5000,r10000")))
+   7 0)
+ 
+ (define_function_unit "mult" 1 1
+@@ -487,7 +526,7 @@
+ 
+ (define_function_unit "mult" 1 1
+   (and (eq_attr "type" "fmul")
+-       (and (eq_attr "mode" "DF") (eq_attr "cpu" "!r3000,r3900,r6000,r4300,r5000")))
++       (and (eq_attr "mode" "DF") (eq_attr "cpu" "!r3000,r3900,r6000,r4300,r5000,r10000")))
+   8 0)
+ 
+ (define_function_unit "mult" 1 1
+@@ -500,10 +539,14 @@
+        (and (eq_attr "mode" "DF") (eq_attr "cpu" "r6000")))
+   6 0)
+ 
++(define_function_unit "mult" 1 1
++  (and (eq_attr "type" "fmul,fmadd") (eq_attr "cpu" "r10000"))
++  2 0)
++
+ (define_function_unit "divide" 1 1
+   (and (eq_attr "type" "fdiv")
+        (and (eq_attr "mode" "SF")
+-	    (eq_attr "cpu" "!r3000,r3900,r6000,r4600,r4650,r4300,r5000")))
++	    (eq_attr "cpu" "!r3000,r3900,r6000,r4600,r4650,r4300,r5000,r10000")))
+   23 0)
+ 
+ (define_function_unit "divide" 1 1
+@@ -529,7 +572,7 @@
+ (define_function_unit "divide" 1 1
+   (and (eq_attr "type" "fdiv")
+        (and (eq_attr "mode" "DF")
+-	    (eq_attr "cpu" "!r3000,r3900,r6000,r4600,r4650,r4300")))
++	    (eq_attr "cpu" "!r3000,r3900,r6000,r4600,r4650,r4300,r10000")))
+   36 0)
+ 
+ (define_function_unit "divide" 1 1
+@@ -547,10 +590,21 @@
+        (and (eq_attr "mode" "DF") (eq_attr "cpu" "r4600,r4650")))
+   61 0)
+ 
++;; divisions keep multiplier busy on R10000
++(define_function_unit "mult" 1 1
++  (and (eq_attr "type" "fdiv") 
++       (and (eq_attr "mode" "SF") (eq_attr "cpu" "r10000")))
++  12 14)
++
++(define_function_unit "mult" 1 1
++  (and (eq_attr "type" "fdiv") 
++       (and (eq_attr "mode" "DF") (eq_attr "cpu" "r10000")))
++  19 21)
++
+ ;;; ??? Is this number right?
+ (define_function_unit "divide" 1 1
+   (and (eq_attr "type" "fsqrt,frsqrt")
+-       (and (eq_attr "mode" "SF") (eq_attr "cpu" "!r4600,r4650,r4300,r5000")))
++       (and (eq_attr "mode" "SF") (eq_attr "cpu" "!r4600,r4650,r4300,r5000,r10000")))
+   54 0)
+ 
+ (define_function_unit "divide" 1 1
+@@ -566,7 +620,7 @@
+ ;;; ??? Is this number right?
+ (define_function_unit "divide" 1 1
+   (and (eq_attr "type" "fsqrt,frsqrt")
+-       (and (eq_attr "mode" "DF") (eq_attr "cpu" "!r4600,r4650,r4300,r5000")))
++       (and (eq_attr "mode" "DF") (eq_attr "cpu" "!r4600,r4650,r4300,r5000,r10000")))
+   112 0)
+ 
+ (define_function_unit "divide" 1 1
+@@ -579,6 +633,17 @@
+        (and (eq_attr "mode" "DF") (eq_attr "cpu" "r5000")))
+   36 0)
+ 
++;; sqrt is executed by multiplier on R10000
++(define_function_unit "mult" 1 1
++  (and (eq_attr "type" "fsqrt")
++       (and (eq_attr "mode" "SF") (eq_attr "cpu" "r10000")))
++  18 20)
++
++(define_function_unit "mult" 1 1
++  (and (eq_attr "type" "fsqrt")
++       (and (eq_attr "mode" "DF") (eq_attr "cpu" "r10000")))
++  33 35)
++
+ ;; R4300 FP instruction classes treated as part of the "imuldiv"
+ ;; functional unit:
+ 
+@@ -3157,7 +3222,7 @@ dsrl\t%3,%3,1\n\
+   "@
+     sll\t%0,%1,0
+     sw\t%1,%0"
+-  [(set_attr "type" "darith,store")
++  [(set_attr "type" "shift,store")
+    (set_attr "mode" "SI")
+    (set_attr "extended_mips16" "yes,*")])
+ 
+@@ -3191,7 +3256,7 @@ dsrl\t%3,%3,1\n\
+                                   (match_operand:DI 2 "small_int" "I"))))]
+   "TARGET_64BIT && !TARGET_MIPS16 && INTVAL (operands[2]) >= 32"
+   "dsra\t%0,%1,%2"
+-  [(set_attr "type" "darith")
++  [(set_attr "type" "shift")
+    (set_attr "mode" "SI")])
+ 
+ (define_insn ""
+@@ -3200,7 +3265,7 @@ dsrl\t%3,%3,1\n\
+                                   (const_int 32))))]
+   "TARGET_64BIT && !TARGET_MIPS16"
+   "dsra\t%0,%1,32"
+-  [(set_attr "type" "darith")
++  [(set_attr "type" "shift")
+    (set_attr "mode" "SI")])
+ 
+ 
+@@ -5241,7 +5306,7 @@ dsrl\t%3,%3,1\n\
+ 
+   return "sll\t%0,%1,%2";
+ }
+-  [(set_attr "type"	"arith")
++  [(set_attr "type"	"shift")
+    (set_attr "mode"	"SI")])
+ 
+ (define_insn "ashlsi3_internal1_extend"
+@@ -5255,7 +5320,7 @@ dsrl\t%3,%3,1\n\
+ 
+   return "sll\t%0,%1,%2";
+ }
+-  [(set_attr "type"    "arith")
++  [(set_attr "type"    "shift")
+    (set_attr "mode"    "DI")])
+ 
+ 
+@@ -5273,7 +5338,7 @@ dsrl\t%3,%3,1\n\
+ 
+   return "sll\t%0,%1,%2";
+ }
+-  [(set_attr "type"	"arith")
++  [(set_attr "type"	"shift")
+    (set_attr "mode"	"SI")
+    (set_attr_alternative "length"
+ 		[(const_int 4)
+@@ -5374,7 +5439,7 @@ sll\t%L0,%L1,%2\n\
+   operands[2] = GEN_INT (INTVAL (operands[2]) & 0x1f);
+   return "sll\t%M0,%L1,%2\;move\t%L0,%.";
+ }
+-  [(set_attr "type"	"darith")
++  [(set_attr "type"	"shift")
+    (set_attr "mode"	"DI")
+    (set_attr "length"	"8")])
+ 
+@@ -5429,7 +5494,7 @@ sll\t%L0,%L1,%2\n\
+ 
+   return "sll\t%M0,%M1,%2\;srl\t%3,%L1,%4\;or\t%M0,%M0,%3\;sll\t%L0,%L1,%2";
+ }
+-  [(set_attr "type"	"darith")
++  [(set_attr "type"	"shift")
+    (set_attr "mode"	"DI")
+    (set_attr "length"	"16")])
+ 
+@@ -5513,7 +5578,7 @@ sll\t%L0,%L1,%2\n\
+ 
+   return "dsll\t%0,%1,%2";
+ }
+-  [(set_attr "type"	"arith")
++  [(set_attr "type"	"shift")
+    (set_attr "mode"	"DI")])
+ 
+ (define_insn ""
+@@ -5530,7 +5595,7 @@ sll\t%L0,%L1,%2\n\
+ 
+   return "dsll\t%0,%1,%2";
+ }
+-  [(set_attr "type"	"arith")
++  [(set_attr "type"	"shift")
+    (set_attr "mode"	"DI")
+    (set_attr_alternative "length"
+ 		[(const_int 4)
+@@ -5591,7 +5656,7 @@ sll\t%L0,%L1,%2\n\
+ 
+   return "sra\t%0,%1,%2";
+ }
+-  [(set_attr "type"	"arith")
++  [(set_attr "type"	"shift")
+    (set_attr "mode"	"SI")])
+ 
+ (define_insn "ashrsi3_internal2"
+@@ -5608,7 +5673,7 @@ sll\t%L0,%L1,%2\n\
+ 
+   return "sra\t%0,%1,%2";
+ }
+-  [(set_attr "type"	"arith")
++  [(set_attr "type"	"shift")
+    (set_attr "mode"	"SI")
+    (set_attr_alternative "length"
+ 		[(const_int 4)
+@@ -5705,7 +5770,7 @@ sra\t%M0,%M1,%2\n\
+   operands[2] = GEN_INT (INTVAL (operands[2]) & 0x1f);
+   return "sra\t%L0,%M1,%2\;sra\t%M0,%M1,31";
+ }
+-  [(set_attr "type"	"darith")
++  [(set_attr "type"	"shift")
+    (set_attr "mode"	"DI")
+    (set_attr "length"	"8")])
+ 
+@@ -5760,7 +5825,7 @@ sra\t%M0,%M1,%2\n\
+ 
+   return "srl\t%L0,%L1,%2\;sll\t%3,%M1,%4\;or\t%L0,%L0,%3\;sra\t%M0,%M1,%2";
+ }
+-  [(set_attr "type"	"darith")
++  [(set_attr "type"	"shift")
+    (set_attr "mode"	"DI")
+    (set_attr "length"	"16")])
+ 
+@@ -5844,7 +5909,7 @@ sra\t%M0,%M1,%2\n\
+ 
+   return "dsra\t%0,%1,%2";
+ }
+-  [(set_attr "type"	"arith")
++  [(set_attr "type"	"shift")
+    (set_attr "mode"	"DI")])
+ 
+ (define_insn ""
+@@ -5858,7 +5923,7 @@ sra\t%M0,%M1,%2\n\
+ 
+   return "dsra\t%0,%2";
+ }
+-  [(set_attr "type"	"arith")
++  [(set_attr "type"	"shift")
+    (set_attr "mode"	"DI")
+    (set_attr_alternative "length"
+ 		[(const_int 4)
+@@ -5918,7 +5983,7 @@ sra\t%M0,%M1,%2\n\
+ 
+   return "srl\t%0,%1,%2";
+ }
+-  [(set_attr "type"	"arith")
++  [(set_attr "type"	"shift")
+    (set_attr "mode"	"SI")])
+ 
+ (define_insn "lshrsi3_internal2"
+@@ -5935,7 +6000,7 @@ sra\t%M0,%M1,%2\n\
+ 
+   return "srl\t%0,%1,%2";
+ }
+-  [(set_attr "type"	"arith")
++  [(set_attr "type"	"shift")
+    (set_attr "mode"	"SI")
+    (set_attr_alternative "length"
+ 		[(const_int 4)
+@@ -6056,7 +6121,7 @@ srl\t%M0,%M1,%2\n\
+   operands[2] = GEN_INT (INTVAL (operands[2]) & 0x1f);
+   return "srl\t%L0,%M1,%2\;move\t%M0,%.";
+ }
+-  [(set_attr "type"	"darith")
++  [(set_attr "type"	"shift")
+    (set_attr "mode"	"DI")
+    (set_attr "length"	"8")])
+ 
+@@ -6111,7 +6176,7 @@ srl\t%M0,%M1,%2\n\
+ 
+   return "srl\t%L0,%L1,%2\;sll\t%3,%M1,%4\;or\t%L0,%L0,%3\;srl\t%M0,%M1,%2";
+ }
+-  [(set_attr "type"	"darith")
++  [(set_attr "type"	"shift")
+    (set_attr "mode"	"DI")
+    (set_attr "length"	"16")])
+ 
+@@ -6195,7 +6260,7 @@ srl\t%M0,%M1,%2\n\
+ 
+   return "dsrl\t%0,%1,%2";
+ }
+-  [(set_attr "type"	"arith")
++  [(set_attr "type"	"shift")
+    (set_attr "mode"	"DI")])
+ 
+ (define_insn ""
+@@ -6209,7 +6274,7 @@ srl\t%M0,%M1,%2\n\
+ 
+   return "dsrl\t%0,%2";
+ }
+-  [(set_attr "type"	"arith")
++  [(set_attr "type"	"shift")
+    (set_attr "mode"	"DI")
+    (set_attr_alternative "length"
+ 		[(const_int 4)

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+<herd>toolchain</herd>
+<use>
+	<flag name='glibc-compat20'>Enable the glibc-compat addon</flag>
+	<flag name='glibc-omitfp'>Configure glibc with --enable-omitfp which lets
+		the build system determine when it is safe to use
+		-fomit-frame-pointer</flag>
+	<flag name='nptlonly'>Disables building the linuxthreads fallback in glibc
+		ebuilds that support building both linuxthread and nptl</flag>
+</use>
+</pkgmetadata>

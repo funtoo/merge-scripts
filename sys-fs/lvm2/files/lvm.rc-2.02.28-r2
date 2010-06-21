@@ -1,0 +1,29 @@
+#!/sbin/runscript
+# Copyright 1999-2007 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/sys-fs/lvm2/files/lvm.rc-2.02.28-r2,v 1.4 2009/01/17 22:53:15 robbat2 Exp $
+
+depend() {
+	if [ -f /etc/init.d/sysfs ]; then
+		# on baselayout-1 this causes
+		# dependency-cycles with checkroot (before *)
+		before checkfs fsck
+		after modules device-mapper
+	fi
+}
+
+start() {
+	if [ ! -f /etc/init.d/sysfs ]; then
+		eerror "The $SVCNAME init-script is written for baselayout-2!"
+		eerror "Please do not use it with baselayout-1!".
+		return 1
+	fi
+
+	start_addon lvm
+}
+
+stop() {
+	stop_addon lvm
+}
+
+# vim:ts=4

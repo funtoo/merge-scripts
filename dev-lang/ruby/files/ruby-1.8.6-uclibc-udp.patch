@@ -1,0 +1,21 @@
+Patch for bug 260760. Fixes UDP sockets on uClibc systems.
+
+diff --exclude '*~' -uNr ruby-1.8.6-p36.orig/configure.in ruby-1.8.6-p36/configure.in
+--- configure.in.orig	2007-05-22 19:19:07.000000000 +0100
++++ configure.in	2007-08-29 09:42:47.000000000 +0100
+@@ -707,6 +707,7 @@
+      __ptr	dnl
+      bufpos	dnl
+      _p	dnl
++     __bufpos	dnl
+ ; do
+     AC_TRY_COMPILE([#include <stdio.h>
+ ],
+@@ -726,6 +727,7 @@
+     [for frend in	dnl
+          _IO_read_end	dnl
+          bufread 	dnl
++         __bufread 	dnl
+     ; do
+         AC_TRY_COMPILE([#include <stdio.h>
+     ],

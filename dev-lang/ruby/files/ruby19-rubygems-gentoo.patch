@@ -1,0 +1,41 @@
+diff -ru a/lib/rubygems/commands/install_command.rb b/lib/rubygems/commands/install_command.rb
+--- a/lib/rubygems/commands/install_command.rb	2008-09-11 01:54:41.000000000 +0200
++++ b/lib/rubygems/commands/install_command.rb	2008-09-28 10:24:27.000000000 +0200
+@@ -76,6 +76,7 @@
+       :wrappers => options[:wrappers],
+       :bin_dir => options[:bin_dir],
+       :development => options[:development],
++      :sandbox_fix => options[:sandbox_fix],
+     }
+ 
+     exit_code = 0
+diff -ru a/lib/rubygems/dependency_installer.rb b/lib/rubygems/dependency_installer.rb
+--- a/lib/rubygems/dependency_installer.rb	2008-08-12 23:50:22.000000000 +0200
++++ b/lib/rubygems/dependency_installer.rb	2008-09-28 10:22:21.000000000 +0200
+@@ -40,9 +40,10 @@
+   # :security_policy:: See Gem::Installer::new and Gem::Security.
+   # :user_install:: See Gem::Installer.new
+   # :wrappers:: See Gem::Installer::new
++  # :sandbox_fix:: Gentoo patch to repair compatibility
+ 
+   def initialize(options = {})
+-    if options[:install_dir] then
++    if options[:install_dir] and not options[:sandbox_fix] then
+       spec_dir = options[:install_dir], 'specifications'
+       @source_index = Gem::SourceIndex.from_gems_in spec_dir
+     else
+diff -ru a/lib/rubygems/install_update_options.rb b/lib/rubygems/install_update_options.rb
+--- a/lib/rubygems/install_update_options.rb	2008-06-24 20:56:30.000000000 +0200
++++ b/lib/rubygems/install_update_options.rb	2008-09-28 10:24:09.000000000 +0200
+@@ -83,6 +83,11 @@
+       options[:include_dependencies] = value
+     end
+ 
++    add_option(:"Install/Update", '--sandbox-fix',
++               'Fix specifications lookup path [Gentoo patch]') do |value, options|
++      options[:sandbox_fix] = true
++    end
++
+     add_option(:"Install/Update",       '--[no-]format-executable',
+                'Make installed executable names match ruby.',
+                'If ruby is ruby18, foo_exec will be',

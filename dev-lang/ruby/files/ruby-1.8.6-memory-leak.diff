@@ -1,0 +1,60 @@
+Index: ptr.c
+===================================================================
+--- ptr.c       (revision 12047)
++++ ptr.c       (working copy)
+@@ -53,6 +53,8 @@
+ void
+ dlptr_free(struct ptr_data *data)
+ {
++  if (!data)
++    return;
+   if (data->ptr) {
+     DEBUG_CODE({
+       printf("dlptr_free(): removing the pointer `0x%x' from the MemorySpace\n",
+@@ -69,4 +71,5 @@
+   if (data->stype) dlfree(data->stype);
+   if (data->ssize) dlfree(data->ssize);
+   if (data->ids) dlfree(data->ids);
++  dlfree(data);
+ }
+
+ void
+Index: sym.c
+===================================================================
+--- sym.c       (revision 12047)
++++ sym.c       (working copy)
+@@ -57,6 +57,8 @@
+ void
+ dlsym_free(struct sym_data *data)
+ {
++  if(!data)
++    return;
+   if( data->name ){
+     DEBUG_CODE({
+       printf("dlsym_free(): free(data->name:%s)\n",data->name);
+@@ -69,4 +71,5 @@
+     });
+     free(data->type);
+   }
++  dlfree(data);
+ }
+
+ VALUE
+Index: handle.c
+===================================================================
+--- handle.c    (revision 12047)
++++ handle.c    (working copy)
+@@ -10,7 +10,10 @@
+ void
+ dlhandle_free(struct dl_handle *dlhandle)
+ {
++  if (!dlhandle)
++    return;
+   if (dlhandle->ptr && dlhandle->open && dlhandle->enable_close) {
+-    dlclose(dlhandle->ptr);
++    dlclose(dlhandle->ptr);
+   }
++  dlfree(dlhandle);
+ }
+
+ VALUE

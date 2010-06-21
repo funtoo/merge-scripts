@@ -1,0 +1,11 @@
+--- lib/rubygems/remote_fetcher.rb.1	2008-06-21 23:21:17.000000000 +0200
++++ lib/rubygems/remote_fetcher.rb	2008-09-23 20:37:24.000000000 +0200
+@@ -195,7 +195,7 @@
+ 
+     return nil if env_proxy.nil? or env_proxy.empty?
+ 
+-    uri = URI.parse env_proxy
++    uri = URI.parse normalize_uri env_proxy
+ 
+     if uri and uri.user.nil? and uri.password.nil? then
+       # Probably we have http_proxy_* variables?

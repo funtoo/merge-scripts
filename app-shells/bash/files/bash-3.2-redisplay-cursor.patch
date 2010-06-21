@@ -1,0 +1,20 @@
+http://bugs.gentoo.org/155369
+
+*** ../bash-3.2.10/lib/readline/display.c	Fri Jan 19 13:34:50 2007
+--- lib/readline/display.c	Sat Mar 10 17:25:44 2007
+***************
+*** 1733,1737 ****
+      {
+        dpos = _rl_col_width (data, 0, new);
+!       if (dpos > prompt_last_invisible)		/* XXX - don't use woff here */
+  	{
+  	  dpos -= woff;
+--- 1765,1772 ----
+      {
+        dpos = _rl_col_width (data, 0, new);
+!       /* Use NEW when comparing against the last invisible character in the
+! 	 prompt string, since they're both buffer indices and DPOS is a
+! 	 desired display position. */
+!       if (new > prompt_last_invisible)		/* XXX - don't use woff here */
+  	{
+  	  dpos -= woff;

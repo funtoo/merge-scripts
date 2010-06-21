@@ -1,0 +1,108 @@
+2003-03-29  Gwenole Beauchesne  <gbeauchesne@mandrakesoft.com>
+
+	Backport from 3.3-branch:
+
+	2003-03-11  Jason Merrill  <jason@redhat.com>
+
+	PR c++/8660
+	* cp/decl2.c (check_classfn): A member template only matches a
+	member template.
+
+2003-03-29  Gwenole Beauchesne  <gbeauchesne@mandrakesoft.com>
+
+	PR c++/10265
+	* testsuite/g++.dg/template/member3.C: New test.
+
+--- gcc-3.2.2/gcc/cp/decl2.c.c++-classfn-member-template	2003-03-20 10:11:54.000000000 +0100
++++ gcc-3.2.2/gcc/cp/decl2.c	2003-04-02 11:14:29.000000000 +0200
+@@ -1288,6 +1288,7 @@ check_classfn (ctype, function)
+   tree method_vec = CLASSTYPE_METHOD_VEC (complete_type (ctype));
+   tree *methods = 0;
+   tree *end = 0;
++  int is_template;
+   
+   if (DECL_USE_TEMPLATE (function)
+       && !(TREE_CODE (function) == TEMPLATE_DECL
+@@ -1305,6 +1306,10 @@ check_classfn (ctype, function)
+        find the method, but we don't complain.  */
+     return NULL_TREE;
+       
++  /* OK, is this a definition of a member template?  */
++  is_template = (TREE_CODE (function) == TEMPLATE_DECL
++                 || (processing_template_decl - template_class_depth (ctype)));
++
+   if (method_vec != 0)
+     {
+       methods = &TREE_VEC_ELT (method_vec, 0);
+@@ -1344,6 +1349,11 @@ check_classfn (ctype, function)
+ 			  && TREE_CODE (TREE_TYPE (function)) == METHOD_TYPE)
+ 			p1 = TREE_CHAIN (p1);
+ 
++		      /* A member template definition only matches a member template
++		         declaration.  */
++		      if (is_template != (TREE_CODE (fndecl) == TEMPLATE_DECL))
++		        continue;
++
+ 		      if (same_type_p (TREE_TYPE (TREE_TYPE (function)),
+ 				       TREE_TYPE (TREE_TYPE (fndecl)))
+ 			  && compparms (p1, p2)
+--- gcc-3.2.2/gcc/testsuite/g++.dg/template/member2.C.c++-classfn-member-template	2003-04-02 11:14:29.000000000 +0200
++++ gcc-3.2.2/gcc/testsuite/g++.dg/template/member2.C	2003-04-02 11:14:29.000000000 +0200
+@@ -0,0 +1,15 @@
++// PR c++/8660
++// Bug: we were treating the definition of the non-template as a definition
++// of the template, which broke.
++
++/* { dg-do compile } */
++
++struct BadgerBuf
++{
++  void ReadPod();
++  template<class B>
++  void ReadPod();
++};
++
++void BadgerBuf::ReadPod ()
++  { ReadPod<int> (); }
+--- gcc-3.2.2/gcc/testsuite/g++.dg/template/member3.C.c++-classfn-member-template	2003-04-02 11:14:29.000000000 +0200
++++ gcc-3.2.2/gcc/testsuite/g++.dg/template/member3.C	2003-04-02 11:14:29.000000000 +0200
+@@ -0,0 +1,28 @@
++// PR c++/10265
++// Bug: we were treating the definition of the non-template as a definition
++// of the template, which broke.
++
++/* { dg-do compile } */
++
++struct A {
++  template<class T> void f();
++  void f();
++};
++
++template<class T> void A::f() { }
++void A::f() { }
++
++struct B {
++  template<class T> void f() { }
++  void f() { }
++};
++
++int main()
++{
++  A a;
++  a.f();
++  a.f<int>();
++  B b;
++  b.f();
++  b.f<int>();
++}
+--- gcc-3.2.2/gcc/testsuite/g++.old-deja/g++.mike/err1.C.c++-classfn-member-template	1998-12-16 22:44:46.000000000 +0100
++++ gcc-3.2.2/gcc/testsuite/g++.old-deja/g++.mike/err1.C	2003-04-02 12:47:12.000000000 +0200
+@@ -2,7 +2,7 @@
+ 
+ struct gorf {
+   int stuff;
+-  void snarf();
++  void snarf();			// ERROR - 
+ };
+ 
+ template <class T> void gorf::snarf() { return; }  // ERROR - 

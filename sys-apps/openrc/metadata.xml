@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+<herd>funtoo</herd>
+<maintainer>
+<email>roy@marples.name</email>
+<name>Roy Marples</name>
+<description>Upstream - please CC him on valid bugs</description>
+</maintainer>
+</pkgmetadata>

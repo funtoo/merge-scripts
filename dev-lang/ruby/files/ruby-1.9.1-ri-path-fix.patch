@@ -1,0 +1,12 @@
+diff -urN ruby-1.9.1-p129/instruby.rb ruby-1.9.1-p129-fixed/instruby.rb
+--- ruby-1.9.1-p129/instruby.rb	2009-02-02 01:07:47.000000000 -0700
++++ ruby-1.9.1-p129-fixed/instruby.rb	2009-07-23 17:46:57.000000000 -0600
+@@ -283,7 +283,7 @@
+   if $rdocdir
+     puts "installing rdoc"
+ 
+-    ridatadir = File.join(CONFIG['datadir'], "ri", CONFIG['ruby_version'], "system")
++    ridatadir = File.join(CONFIG['datadir'], CONFIG['ruby_install_name'].sub('ruby', 'ri'), CONFIG['ruby_version'], "system")
+     makedirs [ridatadir]
+     install_recursive($rdocdir, ridatadir, :mode => $data_mode)
+   end

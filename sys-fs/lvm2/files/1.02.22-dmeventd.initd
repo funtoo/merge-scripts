@@ -1,0 +1,21 @@
+#!/sbin/runscript
+# Copyright 1999-2007 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/sys-fs/lvm2/files/1.02.22-dmeventd.initd,v 1.1 2009/04/09 23:00:10 caleb Exp $
+
+depend() {
+	before device-mapper
+}
+
+start() {
+	ebegin "Starting dmeventd"
+	start-stop-daemon --start --exec /sbin/dmeventd --pidfile /var/run/dmeventd.pid
+	eend $?
+}
+
+stop() {
+	ebegin "Stopping dmeventd"
+	start-stop-daemon --stop --exec /sbin/dmeventd --pidfile /var/run/dmeventd.pid
+	eend $?
+}
+

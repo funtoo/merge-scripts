@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+  <herd>funtoo</herd>
+  <maintainer>
+  	<email>darkside@gentoo.org</email>
+	<name>Jeremy Olexa</name>
+  </maintainer>
+  <use>
+    <flag name="compat">Enable commandline compability with dhcpcd-3.x</flag>
+  </use>
+</pkgmetadata>

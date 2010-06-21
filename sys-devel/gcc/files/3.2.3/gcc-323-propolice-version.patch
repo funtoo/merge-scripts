@@ -1,0 +1,17 @@
+--- gcc/version.c.old	2003-03-26 10:43:47.000000000 -0500
++++ gcc/version.c	2003-03-26 10:44:13.000000000 -0500
+@@ -1,4 +1,4 @@
+ #include "ansidecl.h"
+ #include "version.h"
+ 
+-const char *const version_string = "3.2.3 20030422 (Gentoo Linux 1.4 @PV@)";
++const char *const version_string = "3.2.3 20030422 (Gentoo Linux 1.4 @PV@, propolice)";
+
+--- gcc/f/version.c.old	2003-03-26 10:43:54.000000000 -0500
++++ gcc/f/version.c	2003-03-26 10:44:27.000000000 -0500
+@@ -1,4 +1,4 @@
+ #include "ansidecl.h"
+ #include "f/version.h"
+ 
+-const char *const ffe_version_string = "3.2.3 20030422 (Gentoo Linux 1.4 @PV@)";
++const char *const ffe_version_string = "3.2.3 20030422 (Gentoo Linux 1.4 @PV@), propolice)";

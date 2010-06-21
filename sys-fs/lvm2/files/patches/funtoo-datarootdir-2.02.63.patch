@@ -1,0 +1,12 @@
+diff -urN LVM2.2.02.62/make.tmpl.in LVM2.2.02.62-patches/make.tmpl.in
+--- LVM2.2.02.62/make.tmpl.in	2010-03-04 12:12:34.000000000 +0000
++++ LVM2.2.02.62-patches/make.tmpl.in	2010-04-19 22:44:11.000000000 +0000
+@@ -56,7 +56,7 @@
+ usrlibdir = $(DESTDIR)@usrlibdir@
+ sbindir = $(DESTDIR)@sbindir@
+ usrsbindir = $(DESTDIR)@usrsbindir@
+-datarootdir = $(DESTDIR)@datarootdir@
++datarootdir = @datarootdir@
+ infodir = $(DESTDIR)@infodir@
+ mandir = $(DESTDIR)@mandir@
+ localedir = $(DESTDIR)@LOCALEDIR@

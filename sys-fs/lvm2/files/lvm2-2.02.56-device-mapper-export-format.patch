@@ -1,0 +1,288 @@
+diff -Nuar --exclude '*.orig' --exclude '*.rej' LVM2.2.02.56.orig/libdm/libdevmapper.h LVM2.2.02.56/libdm/libdevmapper.h
+--- LVM2.2.02.56.orig/libdm/libdevmapper.h	2009-11-13 12:43:21.000000000 +0000
++++ LVM2.2.02.56/libdm/libdevmapper.h	2009-11-29 23:56:16.410529643 +0000
+@@ -982,6 +982,7 @@
+ #define DM_REPORT_OUTPUT_FIELD_NAME_PREFIX	0x00000008
+ #define DM_REPORT_OUTPUT_FIELD_UNQUOTED		0x00000010
+ #define DM_REPORT_OUTPUT_COLUMNS_AS_ROWS	0x00000020
++#define DM_REPORT_OUTPUT_EXPORT				0x00000040
+ 
+ struct dm_report *dm_report_init(uint32_t *report_types,
+ 				 const struct dm_report_object_type *types,
+diff -Nuar --exclude '*.orig' --exclude '*.rej' LVM2.2.02.56.orig/libdm/libdm-report.c LVM2.2.02.56/libdm/libdm-report.c
+--- LVM2.2.02.56.orig/libdm/libdm-report.c	2009-02-09 09:45:49.000000000 +0000
++++ LVM2.2.02.56/libdm/libdm-report.c	2009-11-29 23:56:16.410529643 +0000
+@@ -891,6 +891,8 @@
+ 	uint32_t align;
+ 	const char *repstr;
+ 	char buf[4096];
++	const char *fname;
++	char tmp_char;
+ 
+ 	if (rh->flags & DM_REPORT_OUTPUT_FIELD_NAME_PREFIX) {
+ 		if (!(field_id = strdup(rh->fields[field->props->field_num].id))) {
+@@ -921,6 +923,25 @@
+ 			return 0;
+ 		}
+ 	}
++	if (rh->flags & DM_REPORT_OUTPUT_EXPORT) {
++		fname = rh->fields[field->props->field_num].id;
++		if (!dm_pool_grow_object(rh->mem, "DM_", strlen("DM_"))) {
++			log_error("dm_report: Unable to extend output line");
++			return 0;
++		}
++		while (fname && fname[0]) {
++			tmp_char = toupper(fname[0]);
++			if (!dm_pool_grow_object(rh->mem, &tmp_char, 1)) {
++				log_error("dm_report: Unable to extend output line");
++				return 0;
++			}
++			fname++;
++		}
++		if (!dm_pool_grow_object(rh->mem, "=", strlen("="))) {
++			log_error("dm_report: Unable to extend output line");
++			return 0;
++		}
++	}
+ 
+ 	repstr = field->report_string;
+ 	width = field->props->width;
+diff -Nuar --exclude '*.orig' --exclude '*.rej' LVM2.2.02.56.orig/tools/dmsetup.c LVM2.2.02.56/tools/dmsetup.c
+--- LVM2.2.02.56.orig/tools/dmsetup.c	2009-11-13 12:43:22.000000000 +0000
++++ LVM2.2.02.56/tools/dmsetup.c	2009-11-29 23:59:32.047603270 +0000
+@@ -114,6 +114,7 @@
+ enum {
+ 	READ_ONLY = 0,
+ 	COLS_ARG,
++	EXPORT_ARG,
+ 	EXEC_ARG,
+ 	FORCE_ARG,
+ 	GID_ARG,
+@@ -152,7 +153,8 @@
+ 	DR_INFO = 2,
+ 	DR_DEPS = 4,
+ 	DR_TREE = 8,	/* Complete dependency tree required */
+-	DR_NAME = 16
++	DR_NAME = 16,
++	DR_TABLE = 0x20, /* table is required, not just info */
+ } report_type_t;
+ 
+ static int _switches[NUM_SWITCHES];
+@@ -1491,8 +1493,13 @@
+ 			name = argv[1];
+ 	}
+ 
+-	if (!(dmt = dm_task_create(DM_DEVICE_INFO)))
+-		return 0;
++	if (_report_type & DR_TABLE ) {
++		if (!(dmt = dm_task_create(DM_DEVICE_TABLE)))
++			return 0;
++	} else {
++		if (!(dmt = dm_task_create(DM_DEVICE_INFO)))
++			return 0;
++	}
+ 
+ 	if (!_set_task_device(dmt, name, 0))
+ 		goto out;
+@@ -1962,6 +1969,16 @@
+ 	return dm_report_field_uint32(rh, field, &value);
+ }
+ 
++static int _int_disp(struct dm_report *rh,
++		      struct dm_pool *mem __attribute((unused)),
++		      struct dm_report_field *field, const void *data,
++		      void *private __attribute((unused)))
++{
++	const int value = *(const int *)data;
++
++	return dm_report_field_int(rh, field, &value);
++}
++
+ static int _dm_name_disp(struct dm_report *rh,
+ 			 struct dm_pool *mem __attribute((unused)),
+ 			 struct dm_report_field *field, const void *data,
+@@ -2073,6 +2090,66 @@
+ }
+ 
+ 
++static int _dm_info_cleartext_status_disp(struct dm_report *rh,
++					 struct dm_pool *mem __attribute((unused)),
++					 struct dm_report_field *field, const void *data,
++					 void *private __attribute((unused)))
++{
++	const char *buf = "NOTPRESENT";
++	const struct dm_info *info = data;
++
++	if (info->exists) {
++		if (info->suspended)
++			buf = "SUSPENDED";
++		else
++			buf = info->read_only ? " READONLY" : "ACTIVE";
++	}
++		
++	return dm_report_field_string(rh, field, &buf);
++}
++
++static int _dm_info_target_types_disp(struct dm_report *rh,
++					 struct dm_pool *mem __attribute((unused)),
++					 struct dm_report_field *field, const void *data,
++					 void *private __attribute((unused)))
++{
++	char buf[1024];
++	char *dest = buf;
++	int remains = sizeof(buf);
++	int written;
++	const char *s = buf;
++	struct dm_task *dmt = (struct dm_task *) data;
++	void *next = NULL;
++	uint64_t start, length;
++	char *target_type = NULL;
++	char *params;
++
++
++	buf[0] = '\0';
++	
++	next = dm_get_next_target(dmt, next, &start, &length,
++				  &target_type, &params);
++	if (target_type) {
++		written = snprintf(dest, remains, "%s", target_type);
++		dest += written;
++		remains -= written;
++
++		while (remains > 0 && next) {
++			next = dm_get_next_target(dmt, next, &start, &length,
++						  &target_type, &params);
++			if (target_type) {
++				written = snprintf(dest, remains, ",%s", target_type);
++				dest += written;
++				remains -= written;
++			}
++		}
++	}
++
++	buf[sizeof(buf)-1] = '\0';
++	
++	return dm_report_field_string(rh, field, &s);
++}
++
+ static int _dm_info_devno_disp(struct dm_report *rh, struct dm_pool *mem,
+ 			       struct dm_report_field *field, const void *data,
+ 			       void *private)
+@@ -2337,6 +2414,7 @@
+ 	{ DR_DEPS, "Mapped Device Relationship Information", "", _deps_get_obj },
+ 	{ DR_TREE, "Mapped Device Relationship Information", "", _tree_get_obj },
+ 	{ DR_NAME, "Mapped Device Name Components", "", _split_name_get_obj },
++	{ DR_TABLE, "Mapped Device Table", "", _task_get_obj },
+ 	{ 0, "", "", NULL },
+ };
+ 
+@@ -2356,6 +2434,7 @@
+ FIELD_F(TASK, NUM, "RAhead", 6, dm_read_ahead, "read_ahead", "Read ahead in sectors.")
+ 
+ FIELD_F(INFO, STR, "Stat", 4, dm_info_status, "attr", "(L)ive, (I)nactive, (s)uspended, (r)ead-only, read-(w)rite.")
++FIELD_F(INFO, STR, "State", 1, dm_info_cleartext_status, "status", "State as cleartext.")
+ FIELD_F(INFO, STR, "Tables", 6, dm_info_table_loaded, "tables_loaded", "Which of the live and inactive table slots are filled.")
+ FIELD_F(INFO, STR, "Suspended", 9, dm_info_suspended, "suspended", "Whether the device is suspended.")
+ FIELD_F(INFO, STR, "Read-only", 9, dm_info_read_only, "readonly", "Whether the device is read-only or writeable.")
+@@ -2366,6 +2445,11 @@
+ FIELD_O(INFO, dm_info, NUM, "Targ", target_count, 4, int32, "segments", "Number of segments in live table, if present.")
+ FIELD_O(INFO, dm_info, NUM, "Event", event_nr, 6, uint32, "events", "Number of most recent event.")
+ 
++FIELD_O(INFO, dm_info, NUM, "RO", read_only, 2, int, "read_only", "Read only.")
++FIELD_O(INFO, dm_info, NUM, "Ex", exists, 2, int, "exists", "Exists.")
++FIELD_O(INFO, dm_info, NUM, "Susp", suspended, 4, int, "suspended", "Suspended.")
++FIELD_O(INFO, dm_info, NUM, "tab_live", live_table, 8, int, "table_live", "Live table.")
++FIELD_O(INFO, dm_info, NUM, "tab_inact", inactive_table, 9, int, "table_inactive", "Inactive table.")
+ FIELD_O(DEPS, dm_deps, NUM, "#Devs", count, 5, int32, "device_count", "Number of devices used by this one.")
+ FIELD_F(TREE, STR, "DevNames", 8, dm_deps_names, "devs_used", "List of names of mapped devices used by this one.")
+ FIELD_F(DEPS, STR, "DevNos", 6, dm_deps, "devnos_used", "List of device numbers of devices used by this one.")
+@@ -2373,6 +2457,7 @@
+ FIELD_F(TREE, NUM, "#Refs", 5, dm_tree_parents_count, "device_ref_count", "Number of mapped devices referencing this one.")
+ FIELD_F(TREE, STR, "RefNames", 8, dm_tree_parents_names, "names_using_dev", "List of names of mapped devices using this one.")
+ FIELD_F(TREE, STR, "RefDevNos", 9, dm_tree_parents_devs, "devnos_using_dev", "List of device numbers of mapped devices using this one.")
++FIELD_F(TABLE, STR, "Targettypes", 32, dm_info_target_types, "target_types", "Used target types.")
+ 
+ FIELD_O(NAME, dm_split_name, STR, "Subsys", subsystem, 6, dm_subsystem, "subsystem", "Userspace subsystem responsible for this device.")
+ FIELD_O(NAME, dm_split_name, STR, "VG", vg_name, 4, dm_vg_name, "vg_name", "LVM Volume Group name.")
+@@ -2389,14 +2474,16 @@
+ #undef FIELD_F
+ 
+ static const char *default_report_options = "name,major,minor,attr,open,segments,events,uuid";
++static const char *default_export_options = "name,major,minor,status,read_only,exists,suspended,table_live,table_inactive,open,segments,events,uuid,target_types";
+ static const char *splitname_report_options = "vg_name,lv_name,lv_layer";
+ 
+ static int _report_init(struct command *c)
+ {
+-	char *options = (char *) default_report_options;
++	char *default_options = (char *) default_report_options;
++	char *options;
+ 	const char *keys = "";
+ 	const char *separator = " ";
+-	int aligned = 1, headings = 1, buffered = 1, field_prefixes = 0;
++	int aligned = 1, headings = 1, buffered = 1, field_prefixes = 0, export = 0;
+ 	int quoted = 1, columns_as_rows = 0;
+ 	uint32_t flags = 0;
+ 	size_t len = 0;
+@@ -2426,6 +2513,15 @@
+ 		field_prefixes = 1;
+ 	}
+ 
++	if (_switches[EXPORT_ARG]) {
++		default_options = (char *) default_export_options;
++		separator = "\n";
++		aligned = 0;
++		headings = 0;
++		export = 1;
++	}
++
++	options = default_options;
+ 	if (_switches[OPTIONS_ARG] && _string_args[OPTIONS_ARG]) {
+ 		if (*_string_args[OPTIONS_ARG] != '+')
+ 			options = _string_args[OPTIONS_ARG];
+@@ -2477,6 +2573,9 @@
+ 	if (columns_as_rows)
+ 		flags |= DM_REPORT_OUTPUT_COLUMNS_AS_ROWS;
+ 
++	if (export)
++		flags |= DM_REPORT_OUTPUT_EXPORT;
++
+ 	if (!(_report = dm_report_init(&_report_type,
+ 				       _report_types, _report_fields,
+ 				       options, separator, flags, keys, NULL)))
+@@ -2561,7 +2660,9 @@
+ 		"        [-r|--readonly] [--noopencount] [--nolockfs] [--inactive]\n"
+ 		"        [--noudevsync] [-y|--yes] [--readahead [+]<sectors>|auto|none]\n"
+ 		"        [-c|-C|--columns] [-o <fields>] [-O|--sort <sort_fields>]\n"
+-		"        [--nameprefixes] [--noheadings] [--separator <separator>]\n\n");
++		"        [--nameprefixes] [--noheadings] [--separator <separator>]\n"
++		"        [-e|--export]\n"
++		"\n");
+ 	for (i = 0; _commands[i].name; i++)
+ 		fprintf(out, "\t%s %s\n", _commands[i].name, _commands[i].help);
+ 	fprintf(out, "\n<device> may be device name or -u <uuid> or "
+@@ -2911,6 +3012,7 @@
+ 	static struct option long_options[] = {
+ 		{"readonly", 0, &ind, READ_ONLY},
+ 		{"columns", 0, &ind, COLS_ARG},
++		{"export", 0, &ind, EXPORT_ARG},
+ 		{"exec", 1, &ind, EXEC_ARG},
+ 		{"force", 0, &ind, FORCE_ARG},
+ 		{"gid", 1, &ind, GID_ARG},
+@@ -2996,12 +3098,16 @@
+ 
+ 	optarg = 0;
+ 	optind = OPTIND_INIT;
+-	while ((ind = -1, c = GETOPTLONG_FN(*argc, *argv, "cCfG:j:m:M:no:O:ru:U:vy",
++	while ((ind = -1, c = GETOPTLONG_FN(*argc, *argv, "cCefG:j:m:M:no:O:ru:U:vy",
+ 					    long_options, NULL)) != -1) {
+ 		if (c == ':' || c == '?')
+ 			return 0;
+ 		if (c == 'c' || c == 'C' || ind == COLS_ARG)
+ 			_switches[COLS_ARG]++;
++		if (c == 'e' || ind == EXPORT_ARG) {
++			_switches[EXPORT_ARG]++;
++			_switches[COLS_ARG]++;
++		}
+ 		if (c == 'f' || ind == FORCE_ARG)
+ 			_switches[FORCE_ARG]++;
+ 		if (c == 'r' || ind == READ_ONLY)

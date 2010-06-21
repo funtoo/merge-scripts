@@ -1,0 +1,32 @@
+diff -urN man-1.6f/src/man-getopt.c man-1.6f-patched/src/man-getopt.c
+--- man-1.6f/src/man-getopt.c	2007-03-25 22:49:18.000000000 -0600
++++ man-1.6f-patched/src/man-getopt.c	2008-09-06 12:38:32.000000000 -0600
+@@ -272,8 +272,8 @@
+ 	     mysetenv("PAGER", pager);
+ 
+      if (pager == NULL || *pager == '\0')
+-	  if (((pager = getenv ("MANPAGER")) == NULL) || (*pager == '\0'))
+-	       if (((pager = getenv ("PAGER")) == NULL) || (*pager == '\0'))
++/*	  if (((pager = getenv ("MANPAGER")) == NULL) || (*pager == '\0'))
++	       if (((pager = getenv ("PAGER")) == NULL) || (*pager == '\0')) */
+ 		    pager = getval ("PAGER");
+ 
+      if (debug)
+@@ -284,7 +284,7 @@
+ 	 mysetenv("BROWSER", browser);
+ 
+      if (browser == NULL || *browser == '\0')
+-	 if ((browser = getenv ("BROWSER")) == NULL)
++/*	 if ((browser = getenv ("BROWSER")) == NULL) */
+ 	     browser = getval ("BROWSER");
+ 
+      if (debug)
+@@ -295,7 +295,7 @@
+ 	 mysetenv("HTMLPAGER", htmlpager);
+ 
+      if (htmlpager == NULL || *htmlpager == '\0')
+-	 if ((htmlpager = getenv ("HTMLPAGER")) == NULL)
++/*	 if ((htmlpager = getenv ("HTMLPAGER")) == NULL) */
+ 	     htmlpager = getval ("HTMLPAGER");
+ 
+      if (debug)

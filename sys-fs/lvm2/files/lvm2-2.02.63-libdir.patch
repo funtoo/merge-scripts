@@ -1,0 +1,26 @@
+diff -urN LVM2.2.02.63/make.tmpl.in LVM2.2.02.63-patched/make.tmpl.in
+--- LVM2.2.02.63/make.tmpl.in	2010-04-09 15:42:48.000000000 -0600
++++ LVM2.2.02.63-patched/make.tmpl.in	2010-04-19 00:55:14.000000000 -0600
+@@ -300,8 +300,7 @@
+ 
+ install_lib_shared: $(LIB_SHARED)
+ 	$(INSTALL_PROGRAM) -D $< $(libdir)/$(<F).$(LIB_VERSION)
+-	$(INSTALL) -d $(usrlibdir)
+-	$(LN_S) -f $(libdir)/$(<F).$(LIB_VERSION) $(usrlibdir)/$(<F)
++	$(LN_S) -f $(libdir)/$(<F).$(LIB_VERSION) $(<F)
+ 
+ # FIXME: plugins are currently installed with .so suffix only
+ install_lib_shared_plugin: $(LIB_SHARED)
+diff -urN LVM2.2.02.63/tools/Makefile.in LVM2.2.02.63-patched/tools/Makefile.in
+--- LVM2.2.02.63/tools/Makefile.in	2010-04-09 15:42:51.000000000 -0600
++++ LVM2.2.02.63-patched/tools/Makefile.in	2010-04-19 00:57:03.000000000 -0600
+@@ -168,8 +168,7 @@
+ 
+ install_cmdlib_dynamic: liblvm2cmd.$(LIB_SUFFIX)
+ 	$(INSTALL_PROGRAM) -D $< $(libdir)/$(<F).$(LIB_VERSION)
+-	$(INSTALL) -d $(usrlibdir)
+-	$(LN_S) -f $(libdir)/$<.$(LIB_VERSION) $(usrlibdir)/$(<F)
++	$(LN_S) -f $(libdir)/$<.$(LIB_VERSION) $(<F)
+ 
+ install_cmdlib_static: liblvm2cmd-static.a
+ 	$(INSTALL_DATA) -D $< $(usrlibdir)/liblvm2cmd.a

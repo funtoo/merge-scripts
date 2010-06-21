@@ -1,0 +1,17 @@
+http://bugs.gentoo.org/245271
+
+--- a/modprobe.c
++++ b/modprobe.c
+@@ -1289,6 +1289,12 @@
+ 	DIR *dir;
+ 	int ret = 0;
+ 
++	/* Ignore hidden dirs.  This allows people to maintain things with
++	 * SCMs like .svn/ or .git/ or ...
++	 */
++	if (filename[0] == '.')
++		return 1;
++
+ 	/* Reiser4 has file/directory duality: treat it as both. */
+ 	dir = opendir(filename);
+ 	if (dir) {

@@ -1,0 +1,27 @@
+diff -Nuar LVM2.2.02.51.orig/tools/Makefile.in LVM2.2.02.51/tools/Makefile.in
+--- LVM2.2.02.51.orig/tools/Makefile.in	2009-11-29 22:41:54.008495958 +0000
++++ LVM2.2.02.51/tools/Makefile.in	2009-11-29 22:44:40.207625943 +0000
+@@ -98,6 +98,7 @@
+ endif
+ 
+ LVMLIBS += -ldevmapper
++SELINUX_LIBS += @SELINUX_LIBS@
+ 
+ DEFS += -DLVM_SHARED_PATH=\"$(exec_prefix)/sbin/lvm\"
+ 
+@@ -109,13 +110,13 @@
+ 	$(CC) $(CFLAGS) $(LDFLAGS) \
+ 	      -L$(top_srcdir)/libdm \
+ 		  -o $@ dmsetup.o \
+-		  -ldevmapper $(LIB_PTHREAD)
++		  -ldevmapper $(SELINUX_LIBS) $(LIB_PTHREAD)
+ 
+ dmsetup.static: dmsetup.o $(interfacedir)/libdevmapper.a
+ 	$(CC) $(CFLAGS) $(LDFLAGS) -static \
+ 	      -L$(interfacedir) \
+ 		  -o $@ dmsetup.o \
+-		  -ldevmapper $(LIB_PTHREAD)
++		  -ldevmapper $(SELINUX_LIBS) $(LIB_PTHREAD)
+ 
+ all: device-mapper
+ 

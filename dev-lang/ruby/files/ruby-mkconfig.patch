@@ -1,0 +1,14 @@
+Fix for mkconfig to be able to handle empty continued lines.
+Patch from [ruby-core:20420] via bug 234877.
+
+--- mkconfig.rb.orig	2008-06-08 01:37:10.000000000 +0900
++++ mkconfig.rb	2009-02-12 13:39:02.000000000 +0900
+@@ -54,7 +54,7 @@
+       continued_name = name
+       next
+     end
+-  when /^"(.+)"\s*(\\)?$/
++  when /^"(.*)"\s*(\\)?$/
+     if continued_line
+       continued_line <<  $1
+       unless $2

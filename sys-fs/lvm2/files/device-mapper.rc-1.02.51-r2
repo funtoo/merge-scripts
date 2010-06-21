@@ -1,0 +1,27 @@
+#!/sbin/runscript
+# Copyright 1999-2008 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/sys-fs/lvm2/files/device-mapper.rc-1.02.51-r2,v 1.1 2009/10/27 15:34:08 zzam Exp $
+
+depend() {
+	# necessary for services when using baselayout-2
+	# but conflict for baselayout-1
+	if [ -e /etc/init.d/root ] ; then
+		after modules
+		before checkfs fsck
+	fi
+}
+
+start() {
+	if [ ! -e /etc/init.d/root ] ; then
+		eerror "The ${SVCNAME} init script is written for baselayout-2"
+		eerror "Please do not use it with baselayout-1"
+		return 1
+	fi
+
+	local f=/lib/rcscripts/addons/dm-start.sh
+	if [ -r "$f" ]; then
+		( . "$f" )
+	fi
+}
+

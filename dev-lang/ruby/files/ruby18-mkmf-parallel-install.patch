@@ -1,0 +1,14 @@
+ Patch for bug 239101 by Matsuu Takuto, via Redmine issue 1337 (yes, really).
+ Backported for 1.8.* by Alex Legler.
+
+--- lib/mkmf.orig	2009-04-03 13:04:17.000000000 +0200
++++ lib/mkmf.rb	2009-04-03 13:04:30.000000000 +0200
+@@ -1500,7 +1500,7 @@
+     dest = "#{dir}/#{f}"
+     mfile.puts dir, "install-so: #{dest}"
+     unless $extout
+-      mfile.print "#{dest}: #{f}\n"
++      mfile.print "#{dest}: #{dir} #{f}\n"
+       if (sep = config_string('BUILD_FILE_SEPARATOR'))
+         f.gsub!("/", sep)
+         dir.gsub!("/", sep)

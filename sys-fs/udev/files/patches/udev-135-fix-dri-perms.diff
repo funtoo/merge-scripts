@@ -1,0 +1,20 @@
+commit 66d9b44f8302efe383ada6a52d8431655614bf76
+Author: Kay Sievers <kay.sievers@vrfy.org>
+Date:   Thu Jan 15 17:06:14 2009 +0100
+
+    rules: add drm devices to group "video"
+    
+    https://bugs.launchpad.net/bugs/317430
+
+diff --git a/rules/rules.d/50-udev-default.rules b/rules/rules.d/50-udev-default.rules
+index 7730f0d..95d82d7 100644
+--- a/rules/rules.d/50-udev-default.rules
++++ b/rules/rules.d/50-udev-default.rules
+@@ -38,6 +38,7 @@ KERNEL=="card[0-9]*",		NAME="dri/%k"
+ KERNEL=="pmu",			GROUP="video"
+ KERNEL=="nvidia*|nvidiactl*",	GROUP="video"
+ SUBSYSTEM=="graphics",		GROUP="video"
++SUBSYSTEM=="drm",		GROUP="video"
+ 
+ # DVB (video)
+ SUBSYSTEM=="dvb", ENV{DVB_ADAPTER_NUM}=="?*", NAME="dvb/adapter$env{DVB_ADAPTER_NUM}/$env{DVB_DEVICE_TYPE}$env{DVB_DEVICE_NUM}", GROUP="video"
