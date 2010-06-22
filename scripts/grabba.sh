@@ -39,6 +39,10 @@ do
 	then
 		install -d `dirname $dest/$foo` || die "install -d fail"
 		cp -a $foo $dest/$foo || die "cp -a fail"
+		if [ -e "$dest/$foo/Manifest" ] 
+		then
+			(cd $dest/$foo; FEATURES="-mini-manifest" ebuild `ls *.ebuild | tail -n 1` digest;) || die "digest gen failure"
+		fi
 	else
 		echo "ERROR Already exists - $foo"
 		die "dir exists failure"

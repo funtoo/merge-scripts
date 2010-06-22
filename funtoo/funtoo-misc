@@ -46,8 +46,6 @@ dev-python/sqlalchemy
 dev-ruby/simple-rss
 dev-util/libconf
 dev-vcs/git
-eclass/autotools.eclass
-eclass/toolchain.eclass
 mail-client/mutt
 media-gfx/comix
 media-gfx/exact-image
