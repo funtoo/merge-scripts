@@ -20,10 +20,9 @@ do
 	fi
 done
 
-cp -a profiles/updates/* $dest/profiles/updates
-
 rm -rf $dest/profiles
-cp -a profiles $dest/profiles
+cp -a profiles $dest/
+rsync -a profiles.new/ $dest/profiles/
 rsync -a scripts/ $dest/scripts/
 cp -a sets.conf $dest/
 cp licenses/* $dest/licenses/

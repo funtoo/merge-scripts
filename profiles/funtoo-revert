@@ -12,6 +12,7 @@ dev-lang/perl
 dev-lang/ruby
 dev-libs/gobject-introspection
 dev-libs/libxml2
+dev-libs/mpfr
 dev-python/cx-oracle
 dev-python/python-twitter
 dev-python/webpy
