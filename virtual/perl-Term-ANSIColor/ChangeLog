@@ -1,0 +1,112 @@
+# ChangeLog for virtual/perl-Term-ANSIColor
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/virtual/perl-Term-ANSIColor/ChangeLog,v 1.24 2010/06/19 16:59:29 armin76 Exp $
+
+  19 Jun 2010; Raúl Porcel <armin76@gentoo.org>
+  perl-Term-ANSIColor-3.00.ebuild:
+  alpha/arm/ia64/sh/sparc stable wrt #319615
+
+  28 May 2010; Torsten Veller <tove@gentoo.org>
+  perl-Term-ANSIColor-3.00.ebuild:
+  Stable on x86 (#319615)
+
+  26 May 2010; Torsten Veller <tove@gentoo.org>
+  perl-Term-ANSIColor-3.00.ebuild:
+  Stable on amd64 (#319615)
+
+  14 May 2010; Jeroen Roovers <jer@gentoo.org>
+  perl-Term-ANSIColor-3.00.ebuild:
+  Stable for HPPA (bug #319615).
+
+  02 Apr 2010; Raúl Porcel <armin76@gentoo.org>
+  perl-Term-ANSIColor-2.00.ebuild, perl-Term-ANSIColor-2.02.ebuild,
+  perl-Term-ANSIColor-3.00.ebuild:
+  Add ~sh, arm stable
+
+  28 Feb 2010; Raúl Porcel <armin76@gentoo.org>
+  perl-Term-ANSIColor-2.00.ebuild, perl-Term-ANSIColor-2.02.ebuild,
+  perl-Term-ANSIColor-3.00.ebuild:
+  Add ~arm
+
+*perl-Term-ANSIColor-3.00 (25 Jan 2010)
+
+  25 Jan 2010; Torsten Veller <tove@gentoo.org>
+  +perl-Term-ANSIColor-3.00.ebuild:
+  Version bump
+
+  17 Jan 2010; Torsten Veller <tove@gentoo.org>
+  -perl-Term-ANSIColor-1.12.ebuild, -perl-Term-ANSIColor-2.01.ebuild:
+  Cleanup
+
+  07 Jan 2010; Torsten Veller <tove@gentoo.org>
+  perl-Term-ANSIColor-1.12.ebuild, perl-Term-ANSIColor-2.00.ebuild,
+  perl-Term-ANSIColor-2.01.ebuild, perl-Term-ANSIColor-2.02.ebuild:
+  Set empty HOMEPAGE and LICENSE
+
+  05 Jan 2010; nixnut <nixnut@gentoo.org> perl-Term-ANSIColor-2.00.ebuild:
+  ppc stable #288026
+
+  15 Dec 2009; Jonathan Callen <abcd@gentoo.org>
+  perl-Term-ANSIColor-1.12.ebuild, perl-Term-ANSIColor-2.00.ebuild,
+  perl-Term-ANSIColor-2.01.ebuild, perl-Term-ANSIColor-2.02.ebuild:
+  QA: Add prefix keywords
+
+  14 Dec 2009; Raúl Porcel <armin76@gentoo.org>
+  perl-Term-ANSIColor-2.00.ebuild:
+  alpha/ia64/sparc stable wrt #288026
+
+  07 Dec 2009; Jeroen Roovers <jer@gentoo.org>
+  perl-Term-ANSIColor-2.00.ebuild:
+  Stable for HPPA (bug #288026).
+
+  04 Dec 2009; Torsten Veller <tove@gentoo.org>
+  perl-Term-ANSIColor-2.00.ebuild:
+  Stable on amd64 (#288026)
+
+  04 Dec 2009; Christian Faulhammer <fauli@gentoo.org>
+  perl-Term-ANSIColor-2.00.ebuild:
+  x86 stable, bug 288026
+
+  01 Sep 2009; Torsten Veller <tove@gentoo.org>
+  perl-Term-ANSIColor-2.00.ebuild, perl-Term-ANSIColor-2.01.ebuild,
+  perl-Term-ANSIColor-2.02.ebuild:
+  Add ~ppc64 (#272597)
+
+*perl-Term-ANSIColor-2.02 (01 Sep 2009)
+
+  01 Sep 2009; Torsten Veller <tove@gentoo.org>
+  +perl-Term-ANSIColor-2.02.ebuild:
+  Version bump
+
+  25 Aug 2009; Torsten Veller <tove@gentoo.org>
+  perl-Term-ANSIColor-2.00.ebuild:
+  Add support for perl-5.10.1
+
+*perl-Term-ANSIColor-2.01 (05 Jul 2009)
+
+  05 Jul 2009; Torsten Veller <tove@gentoo.org>
+  +perl-Term-ANSIColor-2.01.ebuild:
+  Version bump
+
+*perl-Term-ANSIColor-2.00 (01 Mar 2009)
+
+  01 Mar 2009; Torsten Veller <tove@gentoo.org>
+  +perl-Term-ANSIColor-2.00.ebuild:
+  Version bump
+
+  18 Nov 2008; Torsten Veller <tove@gentoo.org>
+  perl-Term-ANSIColor-1.12.ebuild:
+  Clean up KEYWORDS
+
+  02 Nov 2008; Torsten Veller <tove@gentoo.org>
+  -perl-Term-ANSIColor-1.11.ebuild, perl-Term-ANSIColor-1.12.ebuild:
+  Change dependencies and KEYWORDS for perl-core/Term-ANSIColor-1.12. Remove
+  perl-Term-ANSIColor-1.11.
+
+*perl-Term-ANSIColor-1.12 (01 Nov 2008)
+*perl-Term-ANSIColor-1.11 (01 Nov 2008)
+
+  01 Nov 2008; Yuval Yaari <yuval@gentoo.org> +metadata.xml,
+  +perl-Term-ANSIColor-1.11.ebuild, +perl-Term-ANSIColor-1.12.ebuild:
+  Adding virtuals for dual-lifed modules that come with perl-5.10
+

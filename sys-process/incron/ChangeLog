@@ -1,0 +1,56 @@
+# ChangeLog for sys-process/incron
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/sys-process/incron/ChangeLog,v 1.13 2010/03/04 19:47:36 hollow Exp $
+
+  04 Mar 2010; Benedikt Böhm <hollow@gentoo.org> metadata.xml:
+  remove myself from metadata.xml
+
+  08 Nov 2009; nixnut <nixnut@gentoo.org> incron-0.5.8.ebuild:
+  ppc stable #290950
+
+  02 Nov 2009; Markus Meier <maekke@gentoo.org> incron-0.5.8.ebuild:
+  amd64/x86 stable, bug #290950
+
+*incron-0.5.9 (28 Oct 2009)
+
+  28 Oct 2009; Mike Frysinger <vapier@gentoo.org> +incron-0.5.9.ebuild:
+  Version bump.
+
+  28 Oct 2009; Mike Frysinger <vapier@gentoo.org> incron-0.5.8.ebuild:
+  Install doc files.
+
+  12 Aug 2009; Robin H. Johnson <robbat2@gentoo.org> incron-0.5.7.ebuild,
+  incron-0.5.8.ebuild:
+  Only warn is INOTIFY is not present. This enables use on systems WITHOUT
+  configured kernel sources (centrally managed kernels).
+
+  30 Jul 2009; Samuli Suominen <ssuominen@gentoo.org> incron-0.5.8.ebuild,
+  +files/incron-0.5.8-gcc44.patch:
+  Fix building with GCC 4.4 and GLIBC 2.10+ wrt #277175.
+
+  26 Jul 2009; Thilo Bangert <bangert@gentoo.org> metadata.xml:
+  add <herd> tag
+
+*incron-0.5.8 (24 Mar 2009)
+
+  24 Mar 2009; Benedikt Böhm <hollow@gentoo.org>
+  +files/incron-0.5.8-gentoo.patch, +incron-0.5.8.ebuild:
+  version bump wrt #259920
+
+  09 Jan 2009; Joseph Jezak <josejx@gentoo.org> incron-0.5.7.ebuild:
+  Marked ~ppc for bug #252725.
+
+  01 Jun 2008; Benedikt Böhm <hollow@gentoo.org>
+  +files/incron-0.5.7-gcc43.patch, metadata.xml, incron-0.5.7.ebuild:
+  fix #219673
+
+  19 Dec 2007; Benedikt Böhm <hollow@gentoo.org>
+  files/incron-0.5.7-gentoo.patch:
+  fix patch
+
+*incron-0.5.7 (19 Dec 2007)
+
+  19 Dec 2007; Benedikt Böhm <hollow@gentoo.org>
+  +files/incron-0.5.7-gentoo.patch, +metadata.xml, +incron-0.5.7.ebuild:
+  initial incron ebuild
+

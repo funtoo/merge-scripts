@@ -1,0 +1,12 @@
+# ChangeLog for media-libs/libdlna
+# Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/media-libs/libdlna/ChangeLog,v 1.1 2009/12/23 22:03:53 darkside Exp $
+
+*libdlna-0.2.3 (23 Dec 2009)
+
+  23 Dec 2009; Jeremy Olexa <darkside@gentoo.org> +libdlna-0.2.3.ebuild,
+  +files/libdlna-0.2.3-libavcodec-libavformat-include-paths.patch,
+  +metadata.xml:
+  Initial import. Many thanks to all the contributors on bug 204007. Moved
+  from sunrise overlay
+

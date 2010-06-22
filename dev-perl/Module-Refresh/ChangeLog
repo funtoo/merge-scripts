@@ -1,0 +1,72 @@
+# ChangeLog for dev-perl/Module-Refresh
+# Copyright 1999-2008 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/dev-perl/Module-Refresh/ChangeLog,v 1.16 2008/09/30 14:30:24 tove Exp $
+
+  30 Sep 2008; Torsten Veller <tove@gentoo.org> -Module-Refresh-0.09.ebuild,
+  -Module-Refresh-0.11.ebuild, Module-Refresh-0.13.ebuild:
+  Cleanup
+
+  10 Nov 2007; Samuli Suominen <drac@gentoo.org> Module-Refresh-0.13.ebuild:
+  amd64 stable
+
+  11 Jul 2007; Raúl Porcel <armin76@gentoo.org> Module-Refresh-0.13.ebuild:
+  ia64/x86 stable
+
+*Module-Refresh-0.13 (12 May 2007)
+
+  12 May 2007; Michael Cummings <mcummings@gentoo.org>
+  +Module-Refresh-0.13.ebuild:
+  Version bump
+
+*Module-Refresh-0.11 (28 Apr 2007)
+
+  28 Apr 2007; Michael Cummings <mcummings@gentoo.org>
+  +Module-Refresh-0.11.ebuild:
+  Version bump
+
+  19 Jan 2007; Michael Cummings <mcummings@gentoo.org>
+  -Module-Refresh-0.06.ebuild, Module-Refresh-0.09.ebuild:
+  Version bump, thanks seemant
+
+  17 Aug 2006; Michael Cummings <mcummings@gentoo.org>
+  Module-Refresh-0.09.ebuild:
+  Marking amd64 stable
+
+  05 Aug 2006; Michael Cummings <mcummings@gentoo.org>
+  Module-Refresh-0.06.ebuild, Module-Refresh-0.09.ebuild:
+  Adding perl dep; fixed DEPEND
+
+  23 Jul 2006; Michael Cummings <mcummings@gentoo.org>
+  Module-Refresh-0.09.ebuild:
+  Keywording amd64
+
+  10 Jul 2006; Aron Griffis <agriffis@gentoo.org>
+  Module-Refresh-0.09.ebuild:
+  Mark 0.09 stable on ia64
+
+  01 Apr 2006; <mcummings@gentoo.org> Module-Refresh-0.09.ebuild:
+  Marking stable x86
+
+  30 Mar 2006; Aron Griffis <agriffis@gentoo.org>
+  Module-Refresh-0.09.ebuild:
+  Mark 0.09 ~ia64
+
+  13 Jan 2006; Michael Cummings <mcummings@gentoo.org>
+  Module-Refresh-0.06.ebuild:
+  Marking x86 stable
+
+*Module-Refresh-0.09 (13 Jan 2006)
+
+  13 Jan 2006; Michael Cummings <mcummings@gentoo.org>
+  +Module-Refresh-0.09.ebuild:
+  Version bump
+
+  13 Jun 2005; David Holm <dholm@gentoo.org> Module-Refresh-0.06.ebuild:
+  Added to ~ppc.
+
+*Module-Refresh-0.06 (12 Jun 2005)
+
+  12 Jun 2005; Renat Lumpau <rl03@gentoo.org> +metadata.xml,
+  +Module-Refresh-0.06.ebuild:
+  Initial ebuild. www-apps/rt dependency. Okd by beu.
+

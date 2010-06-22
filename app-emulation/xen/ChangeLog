@@ -1,0 +1,338 @@
+# ChangeLog for app-emulation/xen
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/app-emulation/xen/ChangeLog,v 1.68 2010/05/03 19:47:29 alexxy Exp $
+
+*xen-4.0.0 (12 Apr 2010)
+
+  12 Apr 2010; Alexey Shvetsov <alexxy@gentoo.org> +xen-4.0.0.ebuild:
+  Version bump per bug #313791
+
+  16 Jan 2010; Christian Faulhammer <fauli@gentoo.org> xen-3.4.2-r1.ebuild:
+  stable x86, bug 293714
+
+*xen-3.4.2-r1 (06 Jan 2010)
+
+  06 Jan 2010; Patrick Lauer <patrick@gentoo.org> +xen-3.4.2-r1.ebuild,
+  +files/xen-3.4.2-dump_registers-watchdog-fix.patch:
+  Crashfix for xen console thanks to Andrew Lyon
+
+*xen-3.4.2 (01 Dec 2009)
+
+  01 Dec 2009; Patrick Lauer <patrick@gentoo.org> +xen-3.4.2.ebuild:
+  Bump
+
+  27 Oct 2009; Patrick Lauer <patrick@gentoo.org> -xen-3.3.0.ebuild,
+  -xen-3.3.1.ebuild, -xen-3.3.1-r1.ebuild:
+  Removing old versions for #287936
+
+*xen-3.4.1 (17 Aug 2009)
+
+  17 Aug 2009; Patrick Lauer <patrick@gentoo.org> +xen-3.4.1.ebuild:
+  Bump to 3.4.1. Fixes #280773
+
+  27 Jun 2009; Patrick Lauer <patrick@gentoo.org> xen-3.1.3.ebuild,
+  xen-3.2.1.ebuild, xen-3.3.0.ebuild, xen-3.3.1.ebuild, xen-3.3.1-r1.ebuild,
+  xen-3.4.0.ebuild:
+  Fixing link to gentoo-wiki.com, fixes #275219
+
+*xen-3.4.0 (22 Jun 2009)
+
+  22 Jun 2009; Patrick Lauer <patrick@gentoo.org> +xen-3.4.0.ebuild:
+  Bump to 3.4.0. Closes #271173
+
+*xen-3.3.1-r1 (27 Apr 2009)
+
+  27 Apr 2009; Patrick Lauer <patrick@gentoo.org>
+  +files/xen-3.3.0-unexported-target-fix.patch, +xen-3.3.1-r1.ebuild:
+  Fix sandbox violation,
+  http://bugzilla.xensource.com/bugzilla/show_bug.cgi?id=1405 Closes #259670
+
+*xen-3.3.1 (26 Apr 2009)
+
+  26 Apr 2009; Patrick Lauer <patrick@gentoo.org> +xen-3.3.1.ebuild:
+  Bump to 3.3.1. Fixes other half of #254931
+
+  26 Apr 2009; Patrick Lauer <patrick@gentoo.org>
+  +files/xen-3.3.0-warning-fix.patch, xen-3.3.0:
+  Fix gcc 4.3 compile failure, part of #259670
+
+*xen-3.3.1 (25 Apr 2009)
+
+  25 Apr 2009; Daniel Robbins <drobbins@funtoo.org> +xen-3.3.1.ebuild:
+  New version of Xen from bug #254931 (just a copy from 3.3.0)
+
+  28 Feb 2009; Markus Meier <maekke@gentoo.org> metadata.xml:
+  custom-cflags is a global USE-flag
+
+*xen-3.3.0 (01 Sep 2008)
+
+  01 Sep 2008; Robert Buchholz <rbu@gentoo.org> +files/xen-sed-gcc.patch,
+  metadata.xml, -xen-3.2.0.ebuild, xen-3.2.1.ebuild, +xen-3.3.0.ebuild:
+  Version bump to Xen 3.3 (bug #201792).
+  Bugs fixed:
+   * Fix invalid sed that broke gcc-4.3 (bug #217151)
+
+  28 Jul 2008; Doug Goldstein <cardoe@gentoo.org> metadata.xml:
+  add GLEP 56 USE flag desc from use.local.desc
+
+*xen-3.2.1 (04 May 2008)
+
+  04 May 2008; Robert Buchholz <rbu@gentoo.org> -xen-3.1.2.ebuild,
+  +xen-3.2.1.ebuild:
+  Version bump to the Xen 3.2.1 release (bug #219339), thanks to Troy Bowman
+  for testig.
+
+*xen-3.2.0 (08 Feb 2008)
+
+  08 Feb 2008; Michael Marineau <marineam@gentoo.org> +xen-3.2.0.ebuild:
+  Add version 3.2.0
+
+*xen-3.1.3 (03 Feb 2008)
+
+  03 Feb 2008; Michael Marineau <marineam@gentoo.org> +xen-3.1.3.ebuild:
+  Version bump to 3.1.3
+
+  03 Feb 2008; Michael Marineau <marineam@gentoo.org> xen-3.1.2.ebuild:
+  Filter -O3 from CFLAGS when using custom cflags.
+
+*xen-3.1.2 (17 Nov 2007)
+
+  17 Nov 2007; Michael Marineau <marineam@gentoo.org> -xen-3.0.4_p1.ebuild,
+  -xen-3.1.0.ebuild, -xen-3.1.1.ebuild, +xen-3.1.2.ebuild:
+  Bump to 3.1.2, fixes CVE-2007-5906, Bug #198995. Clean out old versions.
+
+*xen-3.1.1 (15 Oct 2007)
+
+  15 Oct 2007; Michael Marineau <marineam@gentoo.org> +xen-3.1.1.ebuild:
+  Version bump.
+
+  27 Aug 2007; Michael Marineau <marineam@gentoo.org> xen-3.0.4_p1.ebuild,
+  xen-3.1.0.ebuild:
+  Die if both x86 and amd64 are set in USE.
+
+*xen-3.1.0 (24 Aug 2007)
+
+  24 Aug 2007; Michael Marineau <marineam@gentoo.org>
+  -xen-3.0.2.ebuild, +xen-3.1.0.ebuild:
+  Copy Xen 3.1.0 related ebuilds over from the Xen project overlay.
+  Remove Xen 3.0.2.
+
+  10 Jul 2007; Michael Marineau <marineam@gentoo.org> xen-3.0.4_p1.ebuild:
+  Fix building with --as-needed
+
+  09 Jul 2007; Michael Marineau <marineam@gentoo.org> xen-3.0.4_p1.ebuild:
+  It turns out that xen 3.0.4 correctly handles hardened flags, remove useless
+  code from the ebuild.
+
+  25 Jun 2007; Michael Marineau <marineam@gentoo.org> xen-3.0.4_p1.ebuild:
+  Fix typo in -fno-pie flag.
+
+*xen-3.0.4_p1 (02 May 2007)
+
+  02 May 2007; Michael Marineau <marineam@gentoo.org>
+  -files/gentoo-makefile-targets, -files/xend-conf, xen-3.0.2.ebuild,
+  +xen-3.0.4_p1.ebuild:
+  Add xen 3.0.4 from the marineam-xen overlay, cleanup the 3.0.2 ebuild a bit.
+
+  25 Jan 2007; Marius Mauch <genone@gentoo.org> xen-3.0.2.ebuild:
+  Replacing einfo with elog
+
+  06 Oct 2006; <aross@gentoo.org> xen-3.0.2.ebuild:
+  Allow compilation under AMD64 with a 64 bit kernel but 32 bit userland.
+  Thanks to tonich <tonich@artparade.ru> and Sven Wegener
+  <swegener@gentoo.org> in bug #143999
+
+  16 Aug 2006; Andrew Ross <aross@gentoo.org> metadata.xml:
+  Convert from individual maintainers to xen herd.
+
+  11 Aug 2006; Andrew Ross <aross@gentoo.org> metadata.xml:
+  Add myself as a maintainer
+
+  04 Aug 2006; Chris Bainbridge <chrb@gentoo.org> xen-3.0.2.ebuild:
+  Remove in package testing - tests are for xen-tools, not xen hypervisor. Bug
+  #141227, thanks to Andrew Ross
+
+  02 Jun 2006; Roy Marples <uberlord@gentoo.org> xen-3.0.2.ebuild:
+  Send raw LDFLAGS via make to support --as-needed, #135140
+
+  22 May 2006; <chrb@gentoo.org> +files/xen-3.0.2-nopiessp.patch,
+  -xen-3.0.1-r4.ebuild, -xen-3.0.1-r5.ebuild, -xen-3.0.1_p9029.ebuild,
+  xen-3.0.2.ebuild:
+  Add hardened patch, thanks to Solar in bug #130167
+
+  10 Apr 2006; <chrb@gentoo.org> xen-3.0.2.ebuild:
+  fix pae, again, #124355
+
+  10 Apr 2006; <chrb@gentoo.org> xen-3.0.2.ebuild:
+  remove sed fix, #129429
+
+  10 Apr 2006; <chrb@gentoo.org> files/digest-xen-3.0.2, Manifest:
+  new digest
+
+*xen-3.0.2 (09 Apr 2006)
+
+  09 Apr 2006; <chrb@gentoo.org> +xen-3.0.2.ebuild:
+  bump, #129191
+
+*xen-3.0.1_p9029 (24 Mar 2006)
+*xen-3.0.1-r5 (24 Mar 2006)
+
+  24 Mar 2006; Aron Griffis <agriffis@gentoo.org> +xen-3.0.1-r5.ebuild,
+  +xen-3.0.1_p9029.ebuild, -xen-9029-r2.ebuild:
+  Split xen from xen-tools; now this package only installs the hypervisor and
+  include files. Unify the release and snapshot ebuilds for easier
+  maintenance. Switch to a snapshot versioning scheme that keeps
+  release/snapshot versions in order.  Add myself as an additional maintainer in
+  metadata.xml
+
+*xen-9029-r2 (05 Mar 2006)
+*xen-3.0.1-r4 (05 Mar 2006)
+
+  05 Mar 2006; Chris Bainbridge <chrb@gentoo.org> -xen-3.0.1-r3.ebuild, +xen-3.0.1-r4.ebuild,
+  -xen-9029-r1.ebuild, +xen-9029-r2.ebuild:
+  add ekeep for pre-created xen dirs, bug #123862
+
+*xen-9029-r1 (03 Mar 2006)
+*xen-3.0.1-r3 (03 Mar 2006)
+
+  03 Mar 2006; Chris Bainbridge <chrb@gentoo.org> +files/gentoo-makefile-targets,
+  -xen-3.0.1-r2.ebuild, +xen-3.0.1-r3.ebuild, -xen-9029.ebuild,
+  +xen-9029-r1.ebuild:
+  more pae fixes
+
+*xen-9029 (02 Mar 2006)
+*xen-3.0.1-r2 (02 Mar 2006)
+
+  02 Mar 2006; Chris Bainbridge <chrb@gentoo.org> -xen-3.0.1-r1.ebuild, +xen-3.0.1-r2.ebuild,
+  -xen-8885.ebuild, +xen-9029.ebuild:
+  Bump unstable. Add PAE support thanks to Christopher G. Stach II (bug #124355).
+
+*xen-8885 (19 Feb 2006)
+
+  19 Feb 2006; Chris Bainbridge <chrb@gentoo.org> +xen-8885.ebuild:
+  new xen-unstable snapshot
+
+*xen-3.0.1-r1 (05 Feb 2006)
+
+  05 Feb 2006; Chris Bainbridge <chrb@gentoo.org> -xen-3.0.1.ebuild, +xen-3.0.1-r1.ebuild:
+  use the official 3.0.1 tarballs
+
+  04 Feb 2006; Chris Bainbridge <chrb@gentoo.org> xen-3.0.1.ebuild:
+  fix snapshot
+
+*xen-3.0.1 (03 Feb 2006)
+
+  03 Feb 2006; Chris Bainbridge <chrb@gentoo.org> +xen-3.0.1.ebuild:
+  bump
+
+*xen-3.0.0-r2 (23 Dec 2005)
+
+  23 Dec 2005; Chris Bainbridge <chrb@gentoo.org> files/xend-init, files/xendomains-init,
+  -xen-2.0.7.ebuild, -xen-3.0.0-r1.ebuild, +xen-3.0.0-r2.ebuild:
+  Bugs #115970 (/var/xen/dump), #115969 (dhcp), #116332 (hotplug). Removed
+  xen-2 as bugs are not being fixed upstream since the xen-3.0.0 release.
+
+  21 Dec 2005; Alex Howells <astinus@gentoo.org> xen-3.0.0-r1.ebuild:
+  Keyword ~amd64 added, works fine for me!
+
+  08 Dec 2005; Chris Bainbridge <chrb@gentoo.org> xen-3.0.0-r1.ebuild:
+  rename cflags -> custom-cflags (like mplayer, grub..)
+
+*xen-3.0.0-r1 (08 Dec 2005)
+
+  08 Dec 2005; Chris Bainbridge <chrb@gentoo.org> -xen-3.0.0.ebuild, +xen-3.0.0-r1.ebuild:
+  add dirs expected by xend, bug #114856
+
+  07 Dec 2005; Chris Bainbridge <chrb@gentoo.org> xen-3.0.0.ebuild:
+  Fix CFLAGS for hardened bug #114716
+
+*xen-3.0.0 (06 Dec 2005)
+
+  06 Dec 2005; Chris Bainbridge <chrb@gentoo.org> -xen-3.0.0_pre20051027.ebuild,
+  -xen-3.0.0_pre20051122.ebuild, -xen-3.0.0_pre20051128.ebuild,
+  -xen-3.0.0_pre20051128-r1.ebuild, +xen-3.0.0.ebuild:
+  New 3.0.0 release.
+
+*xen-3.0.0_pre20051128-r1 (30 Nov 2005)
+
+  30 Nov 2005; Chris Bainbridge <chrb@gentoo.org> xen-3.0.0_pre20051128.ebuild,
+  +xen-3.0.0_pre20051128-r1.ebuild:
+  support user specified cflags (must be forced to override defaults with
+  'cflags' USE flag
+
+*xen-3.0.0_pre20051128 (28 Nov 2005)
+
+  28 Nov 2005; Chris Bainbridge <chrb@gentoo.org> +xen-3.0.0_pre20051128.ebuild:
+  bump
+
+*xen-3.0.0_pre20051122 (22 Nov 2005)
+
+  22 Nov 2005; Chris Bainbridge <chrb@gentoo.org> +xen-3.0.0_pre20051122.ebuild:
+  version bump
+
+  03 Nov 2005; Chris Bainbridge <chrb@gentoo.org> -xen-3.0.0_pre20051010.ebuild,
+  -xen-3.0.0_pre20051010-r1.ebuild:
+  remove old cvs snapshots
+
+*xen-3.0.0_pre20051027 (27 Oct 2005)
+
+  27 Oct 2005; Chris Bainbridge <chrb@gentoo.org> files/xendomains-init,
+  +xen-3.0.0_pre20051027.ebuild:
+  version bump
+
+*xen-3.0.0_pre20051010-r1 (26 Oct 2005)
+
+  26 Oct 2005; Chris Bainbridge <chrb@gentoo.org>
+  +xen-3.0.0_pre20051010-r1.ebuild:
+  added depend on sys-devel/dev86
+
+*xen-3.0.0_pre20051010 (10 Oct 2005)
+
+  10 Oct 2005; Chris Bainbridge <chrb@gentoo.org>
+  -xen-3.0.0_pre20051007.ebuild, +xen-3.0.0_pre20051010.ebuild:
+  bump
+
+  10 Oct 2005; Chris Bainbridge <chrb@gentoo.org>
+  xen-3.0.0_pre20051007.ebuild:
+  add disabling cflags einfo
+
+  10 Oct 2005; Chris Bainbridge <chrb@gentoo.org>
+  xen-3.0.0_pre20051007.ebuild:
+  re-add hardened flags.
+
+*xen-3.0.0_pre20051007 (08 Oct 2005)
+
+  08 Oct 2005; Chris Bainbridge <chrb@gentoo.org> files/xend-init,
+  files/xendomains-conf, files/xendomains-init,
+  -xen-3.0.0_pre20050929.ebuild, +xen-3.0.0_pre20051007.ebuild:
+  -m Version bump xen-3, now uses udev rules. Add support for screen consoles
+  in xendomains. No longer use broken --halt to bring down domains.
+
+*xen-3.0.0_pre20050929 (29 Sep 2005)
+
+  29 Sep 2005; Chris Bainbridge <chrb@gentoo.org>
+  -xen-3.0.0_pre20050919.ebuild, +xen-3.0.0_pre20050929.ebuild:
+  cvs bump
+
+  22 Sep 2005; Chris Bainbridge <chrb@gentoo.org> xen-2.0.7.ebuild,
+  -xen-3.0.0_pre20050906.ebuild:
+  Add hardened flags #106731 and remove old snapshot
+
+  20 Sep 2005; Chris Bainbridge <chrb@gentoo.org> files/xend-init,
+  files/xendomains-init:
+  Change init scripts to absolute paths.
+
+*xen-3.0.0_pre20050919 (19 Sep 2005)
+
+  19 Sep 2005; Chris Bainbridge <chrb@gentoo.org>
+  +xen-3.0.0_pre20050919.ebuild:
+  Version bump
+
+*xen-3.0.0_pre20050906 (07 Sep 2005)
+*xen-2.0.7 (07 Sep 2005)
+
+  07 Sep 2005; Chris Bainbridge <chrb@gentoo.org> +files/xend-conf,
+  +files/xend-init, +files/xendomains-conf, +files/xendomains-init,
+  +metadata.xml, +xen-2.0.7.ebuild, +xen-3.0.0_pre20050906.ebuild:
+  New package. Thanks to the many who contributed in bug #70161.
+

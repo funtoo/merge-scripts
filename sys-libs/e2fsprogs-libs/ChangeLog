@@ -1,0 +1,176 @@
+# ChangeLog for sys-libs/e2fsprogs-libs
+# Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/sys-libs/e2fsprogs-libs/ChangeLog,v 1.41 2009/11/29 21:31:52 josejx Exp $
+
+  29 Nov 2009; Joseph Jezak <josejx@gentoo.org>
+  e2fsprogs-libs-1.41.9.ebuild:
+  Marked ppc stable for bug #284745.
+
+  28 Nov 2009; Raúl Porcel <armin76@gentoo.org>
+  e2fsprogs-libs-1.41.9.ebuild:
+  ia64/sparc stable wrt #284745
+
+  23 Nov 2009; Markus Meier <maekke@gentoo.org>
+  e2fsprogs-libs-1.41.9.ebuild:
+  arm stable, bug #284745
+
+  09 Nov 2009; Christian Faulhammer <fauli@gentoo.org>
+  e2fsprogs-libs-1.41.9.ebuild:
+  stable x86, bug 284745
+
+  31 Oct 2009; Brent Baude <ranger@gentoo.org> e2fsprogs-libs-1.41.9.ebuild:
+  Marking e2fsprogs-libs-1.41.9 ppc64 for bug 284745
+
+  21 Oct 2009; Jeroen Roovers <jer@gentoo.org> e2fsprogs-libs-1.41.9.ebuild:
+  Stable for HPPA (bug #284745).
+
+  03 Oct 2009; Tobias Klausmann <klausman@gentoo.org>
+  e2fsprogs-libs-1.41.9.ebuild:
+  Stable on alpha, bug #284745
+
+*e2fsprogs-libs-1.41.9 (23 Aug 2009)
+
+  23 Aug 2009; Mike Frysinger <vapier@gentoo.org>
+  +e2fsprogs-libs-1.41.9.ebuild:
+  Version bump #282445 by Marcin Mirosław.
+
+  15 Aug 2009; Alexis Ballier <aballier@gentoo.org>
+  e2fsprogs-libs-1.41.8.ebuild:
+  Rekeyword ~x86-fbsd now that libSM doesn't need libuuid anymore on
+  FreeBSD.
+
+  13 Aug 2009; Samuli Suominen <ssuominen@gentoo.org>
+  e2fsprogs-libs-1.41.8.ebuild:
+  Export VARTEXFONTS=${T}/fonts wrt #281390 to avoid LaTeX sandbox violation.
+
+  22 Jul 2009; Alexis Ballier <aballier@gentoo.org>
+  e2fsprogs-libs-1.41.8.ebuild:
+  Keyword -x86-fbsd due to bug #278667
+
+  20 Jul 2009; Mike Frysinger <vapier@gentoo.org>
+  e2fsprogs-libs-1.41.8.ebuild:
+  Disable libuuid/libblkid checks since we dont need them here.
+
+*e2fsprogs-libs-1.41.8 (16 Jul 2009)
+
+  16 Jul 2009; Mike Frysinger <vapier@gentoo.org>
+  +e2fsprogs-libs-1.41.8.ebuild:
+  Version bump #269378 by Matthias Schwarzott.
+
+*e2fsprogs-libs-1.41.7 (01 Jul 2009)
+
+  01 Jul 2009; Mike Frysinger <vapier@gentoo.org>
+  +e2fsprogs-libs-1.41.7.ebuild:
+  Version bump.
+
+  20 Jun 2009; Mike Frysinger <vapier@gentoo.org>
+  e2fsprogs-libs-1.41.3-r1.ebuild, e2fsprogs-libs-1.41.6.ebuild:
+  Pull in pkg-config #273042 by Zhang, Hongjiu.
+
+*e2fsprogs-libs-1.41.6 (30 May 2009)
+
+  30 May 2009; Mike Frysinger <vapier@gentoo.org>
+  +e2fsprogs-libs-1.41.6.ebuild:
+  Version bump.
+
+*e2fsprogs-libs-1.41.5 (29 May 2009)
+
+  29 May 2009; Mike Frysinger <vapier@gentoo.org>
+  +e2fsprogs-libs-1.41.5.ebuild:
+  Version bump #267402 by Paul Mulders.
+
+  15 Mar 2009; Mike Frysinger <vapier@gentoo.org>
+  e2fsprogs-libs-1.41.4.ebuild:
+  Force recent version of glibc for tls support.
+
+*e2fsprogs-libs-1.41.4 (28 Jan 2009)
+
+  28 Jan 2009; Mike Frysinger <vapier@gentoo.org>
+  +e2fsprogs-libs-1.41.4.ebuild:
+  Version bump.
+
+*e2fsprogs-libs-1.41.3-r1 (30 Dec 2008)
+
+  30 Dec 2008; Panagiotis Christopoulos <pchrist@gentoo.org>
+  +e2fsprogs-libs-1.41.3-r1.ebuild:
+  RevBump, ebuild written in EAPI-2 in order to resolve old blockers
+  automatically, fixes bug #234907 , bug #249663
+
+  29 Dec 2008; Tobias Scherbaum <dertobi123@gentoo.org>
+  e2fsprogs-libs-1.41.3.ebuild:
+  ppc stable, bug #251808
+
+  29 Dec 2008; Brent Baude <ranger@gentoo.org> e2fsprogs-libs-1.41.3.ebuild:
+  Marking e2fsprogs-libs-1.41.3 ppc64 for bug 251808
+
+  29 Dec 2008; Friedrich Oslage <bluebird@gentoo.org>
+  e2fsprogs-libs-1.41.3.ebuild:
+  Stable on sparc, bug #251808
+
+  27 Dec 2008; Jeremy Olexa <darkside@gentoo.org>
+  e2fsprogs-libs-1.41.3.ebuild:
+  amd64 stable, bug 251808
+
+  26 Dec 2008; Raúl Porcel <armin76@gentoo.org>
+  e2fsprogs-libs-1.41.3.ebuild:
+  ia64/x86 stable wrt #251808
+
+  26 Dec 2008; Tobias Klausmann <klausman@gentoo.org>
+  e2fsprogs-libs-1.41.3.ebuild:
+  Stable on alpha, bug #251808
+
+  25 Dec 2008; Guy Martin <gmsoft@gentoo.org> e2fsprogs-libs-1.41.3.ebuild:
+  hppa stable, #251808
+
+  15 Nov 2008; Mike Frysinger <vapier@gentoo.org>
+  e2fsprogs-libs-1.41.2.ebuild, e2fsprogs-libs-1.41.3.ebuild:
+  Do not export STRIP as portage uses that when stripping things ... just
+  pass it along to the build system directly.
+
+  08 Nov 2008; Raúl Porcel <armin76@gentoo.org>
+  e2fsprogs-libs-1.41.2.ebuild:
+  alpha/ia64 stable wrt #244511
+
+  02 Nov 2008; Tobias Scherbaum <dertobi123@gentoo.org>
+  e2fsprogs-libs-1.41.2.ebuild:
+  ppc stable, bug #242696
+
+  28 Oct 2008; Brent Baude <ranger@gentoo.org> e2fsprogs-libs-1.41.2.ebuild:
+  Marking e2fsprogs-libs-1.41.2 ppc64 for bug 242740
+
+  27 Oct 2008; Markus Meier <maekke@gentoo.org>
+  e2fsprogs-libs-1.41.2.ebuild:
+  amd64/x86 stable, bug #244511
+
+  27 Oct 2008; Jeroen Roovers <jer@gentoo.org> e2fsprogs-libs-1.41.2.ebuild:
+  Stable for HPPA (bug #244511).
+
+*e2fsprogs-libs-1.41.3 (18 Oct 2008)
+
+  18 Oct 2008; Mike Frysinger <vapier@gentoo.org>
+  +e2fsprogs-libs-1.41.3.ebuild:
+  Version bump.
+
+*e2fsprogs-libs-1.41.2 (02 Oct 2008)
+
+  02 Oct 2008; Mike Frysinger <vapier@gentoo.org>
+  +e2fsprogs-libs-1.41.2.ebuild:
+  Version bump.
+
+*e2fsprogs-libs-1.41.1 (01 Sep 2008)
+
+  01 Sep 2008; Mike Frysinger <vapier@gentoo.org>
+  +files/e2fsprogs-libs-1.41.1-subs.patch, +e2fsprogs-libs-1.41.1.ebuild:
+  Version bump.
+
+  16 Aug 2008; Mike Frysinger <vapier@gentoo.org>
+  +files/e2fsprogs-libs-1.41.0-null-blkid.patch,
+  e2fsprogs-libs-1.41.0.ebuild:
+  Add fix from upstream for NULL blkids.
+
+*e2fsprogs-libs-1.41.0 (16 Aug 2008)
+
+  16 Aug 2008; Mike Frysinger <vapier@gentoo.org>
+  +files/e2fsprogs-libs-1.41.0-makefile.patch, +metadata.xml,
+  +e2fsprogs-libs-1.41.0.ebuild:
+  Version bump (merge ss/com_err).

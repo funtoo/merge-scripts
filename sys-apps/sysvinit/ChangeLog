@@ -1,0 +1,270 @@
+# ChangeLog for sys-apps/sysvinit
+# Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/sys-apps/sysvinit/ChangeLog,v 1.65 2009/11/11 21:51:27 vapier Exp $
+
+*sysvinit-2.87-r2 (03 Feb 2010)
+
+  03 Feb 2010; Daniel Robbins <drobbins@funtoo.org> +sysvinit-2.87-r2.ebuild:
+  this is the -r3 ebuild from gentoo.
+
+*sysvinit-2.87-r1 (11 Nov 2009)
+
+  11 Nov 2009; Mike Frysinger <vapier@gentoo.org> files/inittab-2.86-r12,
+  +sysvinit-2.87-r1.ebuild:
+  Patch by Roy Marples to not run `rc single` twice when going into single
+  mode #292841.
+
+*sysvinit-2.87 (18 Oct 2009)
+
+  18 Oct 2009; Mike Frysinger <vapier@gentoo.org> +sysvinit-2.87.ebuild:
+  Version bump #289502 by Peter Alfredsen.
+
+*sysvinit-2.86-r11 (20 Nov 2008)
+
+  20 Nov 2008; Daniel Robbins <drobbins@funtoo.org> sysvinit-2.86-r11.ebuild:
+  New sysvinit with new OpenRC 0.3.0 compatibility. /etc/inittab updated so
+  that /sbin/init will call reboot and shutdown directly.
+
+  24 Dec 2007; Brent Baude <ranger@gentoo.org> sysvinit-2.86-r10.ebuild:
+  Marking sysvinit-2.86-r10 ppc64 for bug 202790
+
+  21 Dec 2007; nixnut <nixnut@gentoo.org> sysvinit-2.86-r10.ebuild:
+  Stable on ppc wrt bug 202790
+
+  21 Dec 2007; Raúl Porcel <armin76@gentoo.org> sysvinit-2.86-r10.ebuild:
+  alpha/ia64/x86 stable wrt #202790
+
+  21 Dec 2007; Jeroen Roovers <jer@gentoo.org> sysvinit-2.86-r10.ebuild:
+  Stable for HPPA (bug #202790).
+
+  19 Dec 2007; Doug Klima <cardoe@gentoo.org> sysvinit-2.86-r10.ebuild:
+  amd64 stable wrt bug #202790
+
+  19 Dec 2007; Ferris McCormick <fmccor@gentoo.org>
+  sysvinit-2.86-r10.ebuild:
+  Sparc stable, Bug #202790, all appears to be well.
+
+*sysvinit-2.86-r10 (11 Nov 2007)
+
+  11 Nov 2007; Mike Frysinger <vapier@gentoo.org>
+  +files/sysvinit-2.86-build.patch, +sysvinit-2.86-r10.ebuild:
+  Cleanup build a bit and install mountpoint #198700.
+
+*sysvinit-2.86-r9 (10 Aug 2007)
+
+  10 Aug 2007; Roy Marples <uberlord@gentoo.org>
+  +files/sysvinit-2.86-utmp-smp.patch, +sysvinit-2.86-r9.ebuild:
+  Fixup inittab for kFreeBSD support, #121786.
+  Write utmp sanely on SMP systems, #188262 thanks to Gil Kloepfer.
+
+  11 May 2007; Joshua Kinard <kumba@gentoo.org> sysvinit-2.86-r8.ebuild:
+  Stable on mips.
+
+  30 Apr 2007; Bryan Østergaard <kloeri@gentoo.org>
+  sysvinit-2.86-r8.ebuild:
+  Stable on Alpha + ia64.
+
+  06 Apr 2007; Peter Weller <welp@gentoo.org> sysvinit-2.86-r7.ebuild,
+  sysvinit-2.86-r8.ebuild:
+  -r7 and -r8 stable on amd64 wrt bug 147572
+
+  05 Apr 2007; Chris Gianelloni <wolf31o2@gentoo.org>
+  sysvinit-2.86-r5.ebuild, sysvinit-2.86-r6.ebuild, sysvinit-2.86-r7.ebuild,
+  sysvinit-2.86-r8.ebuild:
+  Fixing the serial console for EFIKA on older revisions, and moved IBM checks
+  to after PPC checks so they are not overridden for ppc64 32ul.
+
+  27 Mar 2007; Stephen Bennett <spb@gentoo.org> sysvinit-2.86-r7.ebuild:
+  mips stable
+
+*sysvinit-2.86-r8 (13 Mar 2007)
+
+  13 Mar 2007; Roy Marples <uberlord@gentoo.org> files/reboot.sh,
+  files/shutdown.sh, +sysvinit-2.86-r8.ebuild:
+  Bump for non bash scripts.
+
+  13 Mar 2007; Raúl Porcel <armin76@gentoo.org> sysvinit-2.86-r7.ebuild:
+  x86 stable
+
+  02 Mar 2007; Brent Baude <ranger@gentoo.org> sysvinit-2.86-r7.ebuild:
+  Adding comment tag to sysvinit-2.86-r7 in front of the ppc serial device so
+  that it's added but commented out to not impact non-efiaka hw. Cleared with
+  Chris G.
+
+  26 Feb 2007; Chris Gianelloni <wolf31o2@gentoo.org>
+  sysvinit-2.86-r5.ebuild, sysvinit-2.86-r6.ebuild, sysvinit-2.86-r7.ebuild:
+  Added EFIKA serial support if USE=ppc.
+
+  14 Feb 2007; Jeroen Roovers <jer@gentoo.org> sysvinit-2.86-r7.ebuild:
+  Stable for HPPA (bug #158637).
+
+  13 Feb 2007; Chris Gianelloni <wolf31o2@gentoo.org>
+  sysvinit-2.86-r6.ebuild:
+  Stable on alpha wrt bug #158637.
+
+  13 Feb 2007; Raúl Porcel <armin76@gentoo.org> sysvinit-2.86-r6.ebuild:
+  x86 stable wrt bug 158637
+
+  13 Feb 2007; Joseph Jezak <josejx@gentoo.org> sysvinit-2.86-r7.ebuild:
+  Marked ppc stable.
+
+  06 Feb 2007; Simon Stelling <blubb@gentoo.org> sysvinit-2.86-r6.ebuild:
+  stable on amd64; bug 159097
+
+  02 Feb 2007; Gustavo Zacarias <gustavoz@gentoo.org>
+  sysvinit-2.86-r7.ebuild:
+  Stable on sparc
+
+  11 Jan 2007; Daniel Ostrow <dostrow@gentoo.org> sysvinit-2.86-r7.ebuild:
+  Stable on ppc64 for stage builds to include inittab again.
+
+*sysvinit-2.86-r7 (21 Dec 2006)
+
+  21 Dec 2006; Roy Marples <uberlord@gentoo.org>
+  +files/sysvinit-2.86-shutdown-single.patch, +sysvinit-2.86-r7.ebuild:
+  shutdown now goes into single user mode by default, #158615.
+
+  12 Dec 2006; Roy Marples <uberlord@gentoo.org> sysvinit-2.86-r6.ebuild:
+  Move sysvinit-2.86-r6 to ~ARCH.
+
+*sysvinit-2.86-r6 (09 Dec 2006)
+
+  09 Dec 2006; Mike Frysinger <vapier@gentoo.org> +files/reboot.sh,
+  +files/shutdown.sh, +sysvinit-2.86-r6.ebuild:
+  Move /etc/init.d/{reboot,shutdown}.sh to this package and disable the POSIX
+  caps patch for now #147572.
+
+  10 Sep 2006; Christel Dahlskjaer <christel@gentoo.org>
+  sysvinit-2.86-r5.ebuild:
+  Alpha stable
+
+  09 Jul 2006; Joshua Kinard <kumba@gentoo.org> sysvinit-2.86-r5.ebuild:
+  Marked stable on mips.
+
+  28 Jun 2006; Luis Medinas <metalgod@gentoo.org> sysvinit-2.86-r5.ebuild:
+  Stable on amd64. Bug #138151.
+
+  27 Jun 2006; Gustavo Zacarias <gustavoz@gentoo.org>
+  sysvinit-2.86-r5.ebuild:
+  Stable on sparc wrt #138151
+
+  27 Jun 2006; Chris Gianelloni <wolf31o2@gentoo.org>
+  sysvinit-2.86-r5.ebuild:
+  Stable on x86 wrt bug #138151.
+
+  27 Jun 2006; Tobias Scherbaum <dertobi123@gentoo.org>
+  sysvinit-2.86-r5.ebuild:
+  ppc stable, #138151
+
+  27 Jun 2006; Markus Rothe <corsair@gentoo.org> sysvinit-2.86-r5.ebuild:
+  Stable on ppc64; bug #138151
+
+*sysvinit-2.86-r5 (22 Feb 2006)
+
+  22 Feb 2006; Mike Frysinger <vapier@gentoo.org> +files/change_console.8,
+  +files/change_console.c, +sysvinit-2.86-r5.ebuild:
+  Add change_console utility from Fedora #123508 by Carl Anderson.
+
+*sysvinit-2.86-r4 (07 Feb 2006)
+
+  07 Feb 2006; Chris PeBenito <pebenito@gentoo.org>
+  +files/2.86-selinux-1.patch, +sysvinit-2.86-r4.ebuild:
+  Bump to update SELinux patch.
+
+*sysvinit-2.86-r3 (20 Nov 2005)
+
+  20 Nov 2005; Mike Frysinger <vapier@gentoo.org>
+  +files/sysvinit-2.86-POSIX-1003.1e.patch,
+  +files/sysvinit-2.86-execl.patch, +files/sysvinit-2.86-utmp-64bit.patch,
+  +sysvinit-2.86-r3.ebuild:
+  Fix some warnings and add support for POSIX capabilites #5818 by Sascha Silbe.
+
+*sysvinit-2.86-r2 (28 Oct 2005)
+
+  28 Oct 2005; Mike Frysinger <vapier@gentoo.org>
+  +files/sysvinit-2.86-off-by-one.patch, +sysvinit-2.86-r2.ebuild:
+  Fix display bug in starting some processes #110420 by Kir Kolyshkin.
+
+  04 Oct 2005; Martin Schlemmer <azarah@gentoo.org> files/inittab:
+  Update inittab to bind agetty at least to tty1 for single mode. Noted by
+  RiverRat.
+
+*sysvinit-2.86-r1 (04 Aug 2005)
+
+  04 Aug 2005; Martin Schlemmer <azarah@gentoo.org> files/inittab,
+  +sysvinit-2.86-r1.ebuild:
+  Update inittab to not spawn agetty for runlevel 1 (single mode), bug #66834.
+
+  10 Jul 2005; Daniel Ostrow <dostrow@gentoo.org> sysvinit-2.86.ebuild:
+  Add ibm use flag check for extra ttys on IBM hardware.
+
+  09 Jun 2005; Mike Frysinger <vapier@gentoo.org> sysvinit-2.86.ebuild:
+  Stabilize for all arches.
+
+  22 May 2005; Mike Frysinger <vapier@gentoo.org> sysvinit-2.86.ebuild:
+  Add support for kexec #80220 by Stefan Schweizer.
+
+  07 Jan 2005; Chris PeBenito <pebenito@gentoo.org> sysvinit-2.86.ebuild:
+  Fix libselinux dep.  The updated SELinux patch needs 1.18.
+
+  03 Jan 2005; Chris PeBenito <pebenito@gentoo.org>
+  files/2.86-selinux.patch, -files/sysvinit-2.86-selinux.patch,
+  sysvinit-2.86.ebuild:
+  Fix up SELinux patch for 2.86.
+
+*sysvinit-2.86 (21 Dec 2004)
+
+  21 Dec 2004; Mike Frysinger <vapier@gentoo.org> +files/2.86-gentoo.patch,
+  +files/2.86-selinux.patch, files/inittab,
+  +files/sysvinit-2.86-selinux.patch, +sysvinit-2.86.ebuild:
+  Version bump #75007.
+
+  24 Aug 2004; Sven Wegener <swegener@gentoo.org> sysvinit-2.85-r1.ebuild:
+  Sync IUSE (build and bootstrap missing)
+
+  23 Jul 2004; Aron Griffis <agriffis@gentoo.org> sysvinit-2.85-r1.ebuild:
+  Bring pkg_postinst over from pre-split baselayout ebuilds
+
+*sysvinit-2.85-r1 (09 Jul 2004)
+
+  09 Jul 2004; Aron Griffis <agriffis@gentoo.org> +sysvinit-2.85-r1.ebuild:
+  Build sulogin in any case, since it's always possible to link against
+  /lib/libcrypt.so even when the static lib is unavailable
+
+  02 Jul 2004; Aron Griffis <agriffis@gentoo.org> sysvinit-2.84.ebuild,
+  sysvinit-2.85.ebuild:
+  Uncomment sed line for USE=build to keep compile from failing during
+  stage-building
+
+*sysvinit-2.85 (02 Jul 2004)
+
+  02 Jul 2004; Chris PeBenito <pebenito@gentoo.org>
+  +files/sysvinit-2.85-selinux.patch, +sysvinit-2.85.ebuild:
+  Bump, along with new SELinux patch, from #55701.
+
+  30 Jun 2004; Chris PeBenito <pebenito@gentoo.org> sysvinit-2.84.ebuild:
+  Inherit eutils and fix SELinux patch versioning.
+
+*sysvinit-2.84 (29 Jun 2004)
+
+  29 Jun 2004; Aron Griffis <agriffis@gentoo.org> +files/inittab,
+  +files/sysvinit-2.84-selinux.patch, +files/sysvinit-2.84-selinux1.patch,
+  +sysvinit-2.84.ebuild:
+  Update to version used in baselayout-1.10.1 in preparation for
+  baselayout/sysvinit split
+
+*sysvinit-2.83-r1 (09 Jul 2002)
+
+  10 Feb 2003; Seemant Kulleen <seemant@gentoo.org> *.ebuild :
+
+  Changed sed expression delimiter from / to :, closing bug #15006 by Blu3
+  <david+gentoo.org@blue-labs.org>
+
+  06 Dec 2002; Rodney Rees <manson@gentoo.org> : changed sparc ~sparc keywords
+ 
+  21 Jul 2002; Mark Guertin <gerk@gentoo.org>:
+  updated keywords (ppc)
+
+  09 Jul 2002; Daniel Ahlberg <aliz@gentoo.org> ChangeLog :
+
+  Added ChangeLog.

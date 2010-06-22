@@ -1,0 +1,43 @@
+# ChangeLog for sys-boot/grub
+# Copyright 1999-2009 Gentoo Foundation, Copyright 2009 Funtoo Technologies; Distributed under the GPL v2
+
+*grub-1.98 (28 May 2010)
+
+  28 May 2010; Daniel Robbins <drobbins@funtoo.org> +grub-1.98.ebuild:
+  New upstream GRUB.
+
+*grub-1.97.2 (29 Jan 2010)
+
+  29 Jan 2010; Daniel Robbins <drobbins@funtoo.org> +grub-1.i97.2.ebuild:
+  New upstream GRUB - funtoo patches removed, and upstream config scripts
+  removed. RDEPEND on sys-apps/coreboot from Funtoo.
+
+*grub-1.97.1-r3 (08 Dec 2009)
+
+  08 Dec 2009; Daniel Robbins <drobbins@funtoo.org> +grub-1.97.1-r3.ebuild:
+  New Funtoo GRUB. /etc/conf.d/grub -> /etc/grub.conf, /etc/grub.d ->
+  /usr/share/grub/templates, extra theme stuff from Jochums Johannes.
+
+*grub-1.97.1-r2 (22 Nov 2009)
+
+  22 Nov 2009; Daniel Robbins <drobbins@funtoo.org> +grub-1.97.1-r2.ebuild:
+  New funtoo-ized GRUB 2 for testing. New user-land grub-mkconfig refactor.
+  New config file format.
+
+*grub-1.97.1-r1 (11 Nov 2009)
+
+  11 Nov 2009; Daniel Robbins <drobbins@funtoo.org> +grub-1.97.1-r1.ebuild:
+  fix x86 support.
+
+*grub-1.97.1 (11 Nov 2009)
+
+  11 Nov 2009; Daniel Robbins <drobbins@funtoo.org> +grub-1.97.1.ebuild: New
+  enhanced GRUB package, with funtoo userland fork included. Ebuild based on
+  upstream from Gentoo, with some key changes: removal of upstream ruby dep,
+  enabling parallel building, removing svn support, removing multislot support.
+  Added "mkfont" USE var to enable/disable "grub-mkfont" support.
+
+*grub-0.97-r9 (02 Jan 2009)
+
+  02 Jan 2009; Robin H. Johnson <robbat2@gentoo.org> +grub-0.97-r9.ebuild:
+  Ext4 funtime for grub-0.97 series. Remember to reinstall it in your MBR.

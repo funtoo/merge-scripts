@@ -1,0 +1,13 @@
+# ChangeLog for net-im/prosody
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/net-im/prosody/ChangeLog,v 1.2 2010/05/27 12:56:31 djc Exp $
+
+  27 May 2010; Dirkjan Ochtman <djc@gentoo.org> prosody-0.6.2.ebuild:
+  Add some die statements as needed.
+
+*prosody-0.6.2 (27 May 2010)
+
+  27 May 2010; Dirkjan Ochtman <djc@gentoo.org> +prosody-0.6.2.ebuild,
+  +files/prosody-0.6.2-cfg.lua.patch, +files/prosody.initd, +metadata.xml:
+  Initial version, contributed by jochen@schalanda.de in bug 290594.
+

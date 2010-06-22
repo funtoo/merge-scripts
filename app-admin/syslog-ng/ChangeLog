@@ -1,0 +1,976 @@
+# ChangeLog for app-admin/syslog-ng
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/app-admin/syslog-ng/ChangeLog,v 1.240 2010/06/11 17:46:20 mr_bones_ Exp $
+
+*syslog-ng-3.0.7 (11 Jun 2010)
+
+  11 Jun 2010; Michael Sterrett <mr_bones_@gentoo.org>
+  +syslog-ng-3.0.7.ebuild:
+  version bump for 3.0 series
+
+  11 Jun 2010; Pawel Hajdan jr <phajdan.jr@gentoo.org>
+  syslog-ng-3.1.1.ebuild:
+  x86 stable wrt bug #320299
+
+  30 May 2010; Raúl Porcel <armin76@gentoo.org> syslog-ng-3.0.6.ebuild:
+  alpha/ia64/s390/sh/sparc stable wrt #320297
+
+  28 May 2010; Markus Meier <maekke@gentoo.org> syslog-ng-3.0.6.ebuild:
+  arm/x86 stable, bug #320297
+
+  25 May 2010; Pacho Ramos <pacho@gentoo.org> syslog-ng-3.1.1.ebuild:
+  stable amd64, bug 320299
+
+  20 May 2010; Peter Volkov <pva@gentoo.org> syslog-ng-3.0.6.ebuild:
+  amd64 stable, bug 320297.
+
+  19 May 2010; Jeroen Roovers <jer@gentoo.org> syslog-ng-3.1.1.ebuild:
+  Stable for HPPA PPC (bug #320299).
+
+  19 May 2010; Jeroen Roovers <jer@gentoo.org> syslog-ng-3.0.6.ebuild:
+  Stable for PPC (bug #320297).
+
+  19 May 2010; Jeroen Roovers <jer@gentoo.org> syslog-ng-3.0.6.ebuild:
+  Stable for HPPA (bug #320297).
+
+*syslog-ng-3.1.1 (13 Apr 2010)
+*syslog-ng-3.0.6 (13 Apr 2010)
+
+  13 Apr 2010; Michael Sterrett <mr_bones_@gentoo.org>
+  -syslog-ng-3.0.5.ebuild, -syslog-ng-3.0.5-r1.ebuild,
+  +syslog-ng-3.0.6.ebuild, -syslog-ng-3.1.0.ebuild, +syslog-ng-3.1.1.ebuild:
+  version bumps for 3.0 and 3.1; clean old
+
+  07 Apr 2010; <zorry@gentoo.org> +files/syslog-ng.conf.gentoo.hardened.3:
+  Missing file syslog-ng.conf.gentoo.hardened.3 #313675
+
+*syslog-ng-3.1.0 (06 Apr 2010)
+
+  06 Apr 2010; Michael Sterrett <mr_bones_@gentoo.org>
+  syslog-ng-3.0.5-r1.ebuild, +syslog-ng-3.1.0.ebuild,
+  +files/syslog-ng.conf.gentoo.3, +files/syslog-ng.conf.gentoo.fbsd.3,
+  +files/syslog-ng.rc6.3:
+  syslog-ng 3.x version bump; updated files/ to be generic for 3.x
+
+  06 Apr 2010; Magnus Granberg <zorry@gentoo.org>
+  +syslog-ng-3.0.5-r1 syslog-ng.conf.gentoo.hardened
+  syslog-ng.logrotate.hardened:
+  Fix bug #284669 #232847 #291259 Thank you all
+
+*syslog-ng-3.0.5-r1 (06 Apr 2010)
+  
+  02 Mar 2010; Michael Sterrett <mr_bones_@gentoo.org>
+  syslog-ng-3.0.4.ebuild, syslog-ng-3.0.5.ebuild:
+  skip trying to install the non-existing reference (bug #299079)
+
+  30 Dec 2009; Michael Sterrett <mr_bones_@gentoo.org>
+  files/syslog-ng.rc6.3.0-r1:
+  give start-stop-daemon the pidfile so multiple syslog-ng processes can be
+  run (bug #295394)
+
+*syslog-ng-3.0.5 (22 Dec 2009)
+
+  22 Dec 2009; Michael Sterrett <mr_bones_@gentoo.org>
+  +syslog-ng-3.0.5.ebuild, +files/syslog-ng.rc6.3.0-r1:
+  version bump; also addresses bug #293126
+
+  02 Dec 2009; Raúl Porcel <armin76@gentoo.org> syslog-ng-3.0.4.ebuild:
+  ia64/s390/sh/sparc stable wrt #289960
+
+  18 Nov 2009; Brent Baude <ranger@gentoo.org> syslog-ng-3.0.4.ebuild:
+  Marking syslog-ng-3.0.4 ppc64 for bug 289960
+
+  16 Nov 2009; Markus Meier <maekke@gentoo.org> syslog-ng-3.0.4.ebuild:
+  arm stable, bug #289960
+
+  08 Nov 2009; Tobias Klausmann <klausman@gentoo.org>
+  syslog-ng-3.0.4.ebuild:
+  Stable on alpha, bug #289960
+
+  06 Nov 2009; Michael Sterrett <mr_bones_@gentoo.org>
+  files/syslog-ng.rc6-r1, files/syslog-ng.rc6.3.0:
+  remove the --quiet option to start-stop-daemon so config errors are
+  obvious (bug #291346)
+
+  30 Oct 2009; Markus Meier <maekke@gentoo.org> syslog-ng-3.0.4.ebuild:
+  amd64/x86 stable, bug #289960
+
+  24 Oct 2009; nixnut <nixnut@gentoo.org> syslog-ng-3.0.4.ebuild:
+  ppc stable #289960
+
+  21 Oct 2009; Jeroen Roovers <jer@gentoo.org> syslog-ng-3.0.4.ebuild:
+  Stable for HPPA (bug #289960).
+
+  06 Sep 2009; Michael Sterrett <mr_bones_@gentoo.org>
+  syslog-ng-3.0.4.ebuild:
+  test suite is fairly broken unless run on upstream's development platform
+  (bug #283717)
+
+
+*syslog-ng-3.0.4 (08 Aug 2009)
+
+  08 Aug 2009; Michael Sterrett <mr_bones_@gentoo.org>
+  +syslog-ng-3.0.4.ebuild:
+  version bump
+
+  01 Jun 2009; Michael Sterrett <mr_bones_@gentoo.org>
+  -files/syslog-ng-2.1.3-nonstatic.patch, -syslog-ng-2.0.9.ebuild,
+  -syslog-ng-2.1.3.ebuild:
+  clean old ebuilds and files
+
+  31 May 2009; Markus Meier <maekke@gentoo.org> syslog-ng-2.1.4.ebuild:
+  amd64 stable, bug #270863
+
+  31 May 2009; Markus Meier <maekke@gentoo.org> syslog-ng-2.0.10.ebuild:
+  amd64 stable, bug #270862
+
+  28 May 2009; Raúl Porcel <armin76@gentoo.org> syslog-ng-2.0.10.ebuild,
+  syslog-ng-2.1.4.ebuild:
+  alpha/arm/ia64/s390/sh/sparc stable wrt #270863 and #270862
+
+  25 May 2009; Jeroen Roovers <jer@gentoo.org> syslog-ng-2.0.10.ebuild:
+  Stable for HPPA (bug #270862).
+
+  25 May 2009; Brent Baude <ranger@gentoo.org> syslog-ng-2.0.10.ebuild,
+  syslog-ng-2.1.4.ebuild:
+  Marking -2.1.4 and -2.0.10 ppc64 for bugs  270863 and 270862 respectively
+
+  25 May 2009; Christian Faulhammer <fauli@gentoo.org>
+  syslog-ng-2.0.10.ebuild:
+  stable x86, bug 270862
+
+  25 May 2009; Christian Faulhammer <fauli@gentoo.org>
+  syslog-ng-2.1.4.ebuild:
+  stable x86, bug 270863
+
+*syslog-ng-3.0.2 (25 May 2009)
+
+  25 May 2009; Michael Sterrett <mr_bones_@gentoo.org>
+  +files/syslog-ng-3.0.2-ipv6.patch, +files/syslog-ng.conf.gentoo.3.0,
+  +files/syslog-ng.conf.gentoo.fbsd.3.0,
+  +files/syslog-ng.conf.gentoo.hardened.3.0, +files/syslog-ng.rc6.3.0,
+  +syslog-ng-3.0.2.ebuild:
+  version bump
+
+  23 May 2009; nixnut <nixnut@gentoo.org> syslog-ng-2.0.10.ebuild,
+  syslog-ng-2.1.4.ebuild:
+  ppc stable #270862
+
+  22 May 2009; Jeroen Roovers <jer@gentoo.org> syslog-ng-2.1.4.ebuild:
+  Stable for HPPA (bug #270863).
+
+*syslog-ng-2.0.10 (17 Apr 2009)
+
+  17 Apr 2009; Michael Sterrett <mr_bones_@gentoo.org>
+  +syslog-ng-2.0.10.ebuild:
+  2.0 version bump for people having issues with 2.1
+
+*syslog-ng-2.1.4 (18 Mar 2009)
+
+  18 Mar 2009; Michael Sterrett <mr_bones_@gentoo.org>
+  +syslog-ng-2.1.4.ebuild:
+  version bump
+
+  24 Feb 2009; Raúl Porcel <armin76@gentoo.org> syslog-ng-2.1.3.ebuild:
+  arm/s390/sh stable
+
+  15 Feb 2009; Brent Baude <ranger@gentoo.org> syslog-ng-2.1.3.ebuild:
+  stable ppc, bug 256132
+
+  07 Feb 2009; Raúl Porcel <armin76@gentoo.org> syslog-ng-2.1.3.ebuild:
+  ia64 stable wrt #256132
+
+  26 Jan 2009; Michael Sterrett <mr_bones_@gentoo.org>
+  syslog-ng-2.1.3.ebuild:
+  run eautoreconf after touching configure.in (bug #256455)
+
+  25 Jan 2009; Tobias Klausmann <klausman@gentoo.org>
+  syslog-ng-2.1.3.ebuild:
+  Stable on alpha, bug #256132
+
+  25 Jan 2009; Markus Meier <maekke@gentoo.org> syslog-ng-2.1.3.ebuild:
+  amd64/x86 stable, bug #256132
+
+  25 Jan 2009; Ferris McCormick <fmccor@gentoo.org> syslog-ng-2.1.3.ebuild:
+  Sparc stable, Bug #256132.
+
+  25 Jan 2009; Brent Baude <ranger@gentoo.org> syslog-ng-2.1.3.ebuild:
+  stable ppc64, bug 256132
+
+  23 Jan 2009; Jeroen Roovers <jer@gentoo.org> syslog-ng-2.1.3.ebuild:
+  Stable for HPPA (bug #256132).
+
+  08 Dec 2008; Michael Sterrett <mr_bones_@gentoo.org>
+  +files/syslog-ng-2.1.3-nonstatic.patch, syslog-ng-2.1.3.ebuild:
+  add patch from mastamind@users.sourceforge.net to avoid always trying to link
+  glib statically (bug #250242)
+
+  02 Dec 2008; Michael Sterrett <mr_bones_@gentoo.org>
+  -syslog-ng-2.0.6.ebuild, -syslog-ng-2.1.1.ebuild:
+  clean out old versions
+
+*syslog-ng-2.1.3 (02 Dec 2008)
+
+  02 Dec 2008; Michael Sterrett <mr_bones_@gentoo.org>
+  +syslog-ng-2.1.3.ebuild:
+  version bump
+
+  15 Oct 2008; Michael Sterrett <mr_bones_@gentoo.org>
+  files/syslog-ng.logrotate:
+  allow /var/log/messages to be missing (patch from  Edoceo via bug #242260)
+
+  13 Oct 2008; Michael Sterrett <mr_bones_@gentoo.org>
+  syslog-ng-2.1.1.ebuild:
+  fix up magic sql support
+
+*syslog-ng-2.1.1 (13 Oct 2008)
+
+  13 Oct 2008; Robin H. Johnson <robbat2@gentoo.org>
+  +syslog-ng-2.1.1.ebuild:
+  Version bump because I want the suppress-repeats functionality for infra.
+
+  17 Jul 2008; Doug Goldstein <cardoe@gentoo.org> metadata.xml:
+  add GLEP 56 USE flag desc from use.local.desc
+
+  25 May 2008; Markus Rothe <corsair@gentoo.org> syslog-ng-2.0.9.ebuild:
+  Stable on ppc64; bug #223241
+
+  24 May 2008; nixnut <nixnut@gentoo.org> syslog-ng-2.0.9.ebuild:
+  Stable on ppc wrt bug 223241
+
+  24 May 2008; Jeroen Roovers <jer@gentoo.org> syslog-ng-2.0.9.ebuild:
+  Stable for HPPA (bug #223241).
+
+  23 May 2008; Raúl Porcel <armin76@gentoo.org> syslog-ng-2.0.9.ebuild:
+  alpha/ia64/sparc stable wrt #223241
+
+  22 May 2008; Markus Meier <maekke@gentoo.org> syslog-ng-2.0.9.ebuild:
+  amd64/x86 stable, bug #223241
+
+*syslog-ng-2.0.9 (26 Mar 2008)
+
+  26 Mar 2008; Michael Sterrett <mr_bones_@gentoo.org>
+  +syslog-ng-2.0.9.ebuild:
+  version bump
+
+*syslog-ng-2.0.8 (31 Jan 2008)
+
+  31 Jan 2008; Michael Sterrett <mr_bones_@gentoo.org>
+  +syslog-ng-2.0.8.ebuild:
+  version bump
+
+  16 Jan 2008; Michael Sterrett <mr_bones_@gentoo.org> -files/syslog-ng.rc6,
+  -syslog-ng-1.6.11-r1.ebuild:
+  clean out 1.x series
+
+  16 Jan 2008; Joshua Kinard <kumba@gentoo.org> syslog-ng-2.0.6.ebuild:
+  Stable on mips.
+
+  10 Jan 2008; Michael Sterrett <mr_bones_@gentoo.org>
+  syslog-ng-2.0.6.ebuild:
+  add dev-util/pkgconfig dep (bug #205013)
+
+  21 Dec 2007; Samuli Suominen <drac@gentoo.org> syslog-ng-2.0.6.ebuild:
+  amd64 stable wrt security #202718
+
+  19 Dec 2007; Raúl Porcel <armin76@gentoo.org> syslog-ng-2.0.6.ebuild:
+  alpha/ia64 stable wrt security #202718
+
+  19 Dec 2007; Brent Baude <ranger@gentoo.org> syslog-ng-2.0.6.ebuild:
+  Marking syslog-ng-2.0.6 ppc & ppc64 stable for 202718 (also marked eventlog
+  for ppc dep)
+
+  18 Dec 2007; Jeroen Roovers <jer@gentoo.org> syslog-ng-2.0.6.ebuild:
+  Stable for HPPA (bug #202718).
+
+  18 Dec 2007; Ferris McCormick <fmccor@gentoo.org> syslog-ng-2.0.6.ebuild:
+  Sparc stable, security Bug #202718, all tests good and it still starts up.
+
+  18 Dec 2007; Michael Sterrett <mr_bones_@gentoo.org>
+  syslog-ng-2.0.6.ebuild:
+  stablize x86 for security bug #202718
+
+*syslog-ng-2.0.6 (29 Nov 2007)
+
+  29 Nov 2007; Michael Sterrett <mr_bones_@gentoo.org>
+  +syslog-ng-2.0.6.ebuild:
+  version bump
+
+  04 Nov 2007; Michael Sterrett <mr_bones_@gentoo.org>
+  files/syslog-ng.rc6-r1:
+  Add a use stunnel for the networked case for bug #198003
+
+  30 Oct 2007; <solar@gentoo.org> files/syslog-ng.conf.gentoo.hardened:
+  - update syslog-ng.conf for hardened
+
+  11 Oct 2007; Tom Gall <tgall@gentoo.org> syslog-ng-2.0.5.ebuild:
+  stable on ppc64
+
+  09 Oct 2007; Jeroen Roovers <jer@gentoo.org> syslog-ng-2.0.5.ebuild:
+  Stable for HPPA (bug #159494).
+
+  02 Oct 2007; Michael Sterrett <mr_bones_@gentoo.org>
+  files/syslog-ng.rc6-r1:
+  add a kludgy workaround for baselayout-1 and baselayout-2 support (bug
+  #188725)
+
+  02 Aug 2007; Michael Sterrett <mr_bones_@gentoo.org>
+  files/syslog-ng.conf.gentoo:
+  use file() for kmsg for correctness (bug #187232)
+
+*syslog-ng-2.0.5 (25 Jul 2007)
+
+  25 Jul 2007; Michael Sterrett <mr_bones_@gentoo.org>
+  +files/syslog-ng.logrotate.hardened, +syslog-ng-2.0.5.ebuild:
+  version bump; all add logrotate file for hardened (bug #186136)
+
+  12 Jun 2007; Michael Sterrett <mr_bones_@gentoo.org>
+  files/syslog-ng.conf.gentoo:
+  set max-connections to 256 per upstream (bug #181661)
+
+  07 Jun 2007; Michael Sterrett <mr_bones_@gentoo.org>
+  -syslog-ng-1.6.9.ebuild, -syslog-ng-2.0.3.ebuild, syslog-ng-2.0.4.ebuild:
+  clean out older ebuilds
+
+  07 Jun 2007; Christian Faulhammer <opfer@gentoo.org> ChangeLog:
+  modified ChangeLog to meet common standards
+
+*syslog-ng-2.0.4 (21 May 2007)
+
+  21 May 2007; Michael Sterrett <mr_bones_@gentoo.org>
+  +syslog-ng-2.0.4.ebuild:
+  version bump
+
+  19 May 2007; Peter Weller <welp@gentoo.org> syslog-ng-2.0.3.ebuild:
+  Keyworded ~x86-fbsd wrt bug 176930
+
+  05 May 2007; Michael Sterrett <mr_bones_@gentoo.org>
+  files/syslog-ng.rc6-r1:
+  revert back to previous version of rc script since that feature is available
+  via the SSD_NICELEVEL env. variable.
+
+  24 Apr 2007; Alexander Færøy <eroyf@gentoo.org>
+  syslog-ng-1.6.11-r1.ebuild:
+  Stable on MIPS.
+
+  24 Apr 2007; Thilo Bangert <bangert@gentoo.org> Manifest:
+  fix manifest (bug #175804)
+
+  24 Apr 2007; Michael Sterrett <mr_bones_@gentoo.org>
+  files/syslog-ng.rc6-r1:
+  add patch from Mike Mattie to support starting syslog-ng with a nice value
+  (bug #175639)
+
+*syslog-ng-2.0.3 (27 Mar 2007)
+
+  27 Mar 2007; Michael Sterrett <mr_bones_@gentoo.org>
+  +files/syslog-ng.conf.gentoo.fbsd, -syslog-ng-2.0.2.ebuild,
+  +syslog-ng-2.0.3.ebuild:
+  masked version bump; clean out older masked version; add fbsd support for bug
+  #156519; add spoof-source support for bug #172320
+
+*syslog-ng-1.6.12-r1 (14 Mar 2007)
+
+  14 Mar 2007; Roy Marples <uberlord@gentoo.org> files/syslog-ng.rc6-r1,
+  +syslog-ng-1.6.12-r1.ebuild:
+  init script now works on non bash shells.
+
+  16 Feb 2007; Michael Sterrett <mr_bones_@gentoo.org>
+  syslog-ng-1.6.11-r1.ebuild, syslog-ng-1.6.12.ebuild:
+  remove ROOT use in src_compile (bug #167240)
+
+*syslog-ng-1.6.12 (07 Feb 2007)
+
+  07 Feb 2007; Michael Sterrett <mr_bones_@gentoo.org>
+  +syslog-ng-1.6.12.ebuild:
+  version bump
+
+  04 Feb 2007; Steve Dibb <beandog@gentoo.org> syslog-ng-1.6.11-r1.ebuild:
+  amd64 stable, bug 164942
+
+  04 Feb 2007; Markus Rothe <corsair@gentoo.org> syslog-ng-1.6.11-r1.ebuild:
+  Stable on ppc64; bug #164942
+
+  02 Feb 2007; Michael Sterrett <mr_bones_@gentoo.org>
+  syslog-ng-1.6.11-r1.ebuild:
+  stable on x86
+
+  23 Jan 2007; Michael Sterrett <mr_bones_@gentoo.org>
+  syslog-ng-1.6.9.ebuild, syslog-ng-1.6.11-r1.ebuild:
+  remove portage dep (bug #163507)
+
+  15 Jan 2007; Roy Marples <uberlord@gentoo.org> Manifest:
+  Fix Manifest
+
+  15 Jan 2007; Roy Marples <uberlord@gentoo.org> files/syslog-ng.rc6-r1:
+  need localmount
+  So we can go from single user to multi user.
+
+*syslog-ng-2.0.1 (30 Dec 2006)
+
+  30 Dec 2006; Michael Sterrett <mr_bones_@gentoo.org>
+  +syslog-ng-2.0.1.ebuild:
+  masked version bump
+
+  24 Dec 2006; Tobias Scherbaum <dertobi123@gentoo.org>
+  syslog-ng-1.6.11-r1.ebuild:
+  Stable on ppc.
+
+  18 Dec 2006; Gustavo Zacarias <gustavoz@gentoo.org>
+  syslog-ng-1.6.11-r1.ebuild:
+  Stable on sparc
+
+  06 Dec 2006; Michael Sterrett <mr_bones_@gentoo.org>
+  -syslog-ng-1.6.11.ebuild, syslog-ng-1.6.11-r1.ebuild:
+  clean up an errant rev bump
+
+  06 Dec 2006; Jeroen Roovers <jer@gentoo.org> syslog-ng-1.6.11-r1.ebuild:
+  Stable for HPPA.
+
+*syslog-ng-2.0.0-r1 (29 Nov 2006)
+*syslog-ng-1.6.11-r1 (29 Nov 2006)
+
+  29 Nov 2006; Petteri Räty <betelgeuse@gentoo.org>
+  +files/syslog-ng.rc6-r1, +syslog-ng-1.6.11-r1.ebuild,
+  -syslog-ng-2.0.0.ebuild, +syslog-ng-2.0.0-r1.ebuild:
+  Fixed bug #156585 where the init.d script could call eend twice with only
+  one ebegin.
+
+*syslog-ng-2.0.0 (02 Nov 2006)
+
+  02 Nov 2006; Michael Sterrett <mr_bones_@gentoo.org>
+  +files/syslog-ng.confd, files/syslog-ng.rc6, +syslog-ng-2.0.0.ebuild:
+  new code base version bump; includes initial conf.d support for bug #101387
+  with modified patch from Miguel Sousa Filipe
+
+  02 Nov 2006; Joel Martin <kanaka@gentoo.org> syslog-ng-1.6.11.ebuild:
+  Add ROOT to with-libol configure switch.
+
+  21 Oct 2006; Aron Griffis <agriffis@gentoo.org> syslog-ng-1.6.11.ebuild:
+  Mark 1.6.11 stable on alpha/ia64
+
+  17 Jul 2006; Michael Sterrett <mr_bones_@gentoo.org>
+  syslog-ng-1.6.9.ebuild, syslog-ng-1.6.11.ebuild:
+  no need for prepallman (bug #140697)
+
+  12 Jul 2006; <solar@gentoo.org> files/syslog-ng.conf.gentoo.hardened:
+  - use correct facility for uucp log filter. bug #140168
+
+*syslog-ng-1.6.11 (08 May 2006)
+
+  08 May 2006; Michael Sterrett <mr_bones_@gentoo.org>
+  +syslog-ng-1.6.11.ebuild:
+  version bump
+
+*syslog-ng-1.6.10 (23 Apr 2006)
+
+  23 Apr 2006; Michael Sterrett <mr_bones_@gentoo.org>
+  +syslog-ng-1.6.10.ebuild:
+  version bump
+
+  20 Feb 2006; Joshua Kinard <kumba@gentoo.org> syslog-ng-1.6.9.ebuild:
+  Marked stable on mips.
+
+  06 Feb 2006; Simon Stelling <blubb@gentoo.org> syslog-ng-1.6.9.ebuild:
+  stable on amd64
+
+  31 Jan 2006; Aron Griffis <agriffis@gentoo.org> syslog-ng-1.6.9.ebuild:
+  Mark 1.6.9 stable on alpha
+
+  27 Jan 2006; Michael Hanselmann <hansmi@gentoo.org>
+  syslog-ng-1.6.9.ebuild:
+  Stable on ppc.
+
+  26 Jan 2006; Jeroen Roovers <jer@gentoo.org> syslog-ng-1.6.9.ebuild:
+  Stable on hppa.
+
+  22 Jan 2006; Markus Rothe <corsair@gentoo.org> syslog-ng-1.6.9.ebuild:
+  Stable on ppc64
+
+  22 Jan 2006; Gustavo Zacarias <gustavoz@gentoo.org>
+  syslog-ng-1.6.9.ebuild:
+  Stable on sparc
+
+  22 Jan 2006; Michael Sterrett <mr_bones_@gentoo.org>
+  syslog-ng-1.6.9.ebuild:
+  stable for x86
+
+  25 Dec 2005; Joshua Kinard <kumba@gentoo.org> syslog-ng-1.6.8-r1.ebuild:
+  Marked stable on mips.
+
+*syslog-ng-1.6.9 (03 Dec 2005)
+
+  03 Dec 2005; Michael Sterrett <mr_bones_@gentoo.org>
+  +syslog-ng-1.6.9.ebuild:
+  version bump
+
+  30 Nov 2005; Michael Sterrett <mr_bones_@gentoo.org>
+  -syslog-ng-1.6.5-r2.ebuild, -syslog-ng-1.6.6.ebuild,
+  -syslog-ng-1.6.7.ebuild:
+  clean old versions
+
+  30 Nov 2005; Bryan Østergaard <kloeri@gentoo.org>
+  syslog-ng-1.6.8-r1.ebuild:
+  Stable on alpha.
+
+  24 Nov 2005; Markus Rothe <corsair@gentoo.org> syslog-ng-1.6.8-r1.ebuild:
+  Stable on ppc64
+
+  11 Nov 2005; Michael Hanselmann <hansmi@gentoo.org>
+  syslog-ng-1.6.8-r1.ebuild:
+  Stable on ppc.
+
+  30 Oct 2005; Bryan Østergaard <kloeri@gentoo.org>
+  syslog-ng-1.6.8-r1.ebuild:
+  Stable on ia64.
+
+  26 Oct 2005; Luis Medinas <metalgod@gentoo.org> syslog-ng-1.6.8-r1.ebuild:
+  Marked Stable on amd64.
+
+  24 Oct 2005; Gustavo Zacarias <gustavoz@gentoo.org>
+  syslog-ng-1.6.8-r1.ebuild:
+  Stable on sparc
+
+  23 Oct 2005; Michael Sterrett <mr_bones_@gentoo.org>
+  syslog-ng-1.6.8-r1.ebuild:
+  stable for x86
+
+  02 Sep 2005; Michael Sterrett <mr_bones_@gentoo.org>
+  syslog-ng-1.6.8-r1.ebuild:
+  fix another bad bit of autotooling related to --with-libol (bug #104538)
+
+*syslog-ng-1.6.8-r1 (02 Sep 2005)
+
+  02 Sep 2005; Michael Sterrett <mr_bones_@gentoo.org>
+  +syslog-ng-1.6.8-r1.ebuild:
+  rev bump to fix missing dep on sys-apps/which (bug #104475)
+
+  01 Sep 2005; Michael Sterrett <mr_bones_@gentoo.org>
+  syslog-ng-1.6.8.ebuild:
+  inherit fixheadtails to fix bug #104475
+
+  23 Aug 2005; Aron Griffis <agriffis@gentoo.org> syslog-ng-1.6.8.ebuild:
+  stable on ia64
+
+  06 Aug 2005; Aaron Walker <ka0ttic@gentoo.org> syslog-ng-1.6.8.ebuild:
+  Stable on mips.
+
+  28 Jul 2005; Simon Stelling <blubb@gentoo.org> syslog-ng-1.6.8.ebuild:
+  stable on amd64
+
+  26 Jul 2005; Bryan Østergaard <kloeri@gentoo.org> syslog-ng-1.6.8.ebuild:
+  Stable on alpha.
+
+  19 Jul 2005; MATSUU Takuto <matsuu@gentoo.org> syslog-ng-1.6.8.ebuild:
+  Stable on sh.
+
+  09 Jul 2005; Markus Rothe <corsair@gentoo.org> syslog-ng-1.6.8.ebuild:
+  Stable on ppc64
+
+  09 Jul 2005; Joseph Jezak <josejx@gentoo.org> syslog-ng-1.6.8.ebuild:
+  Marked stable on ppc.
+
+  08 Jul 2005; Rene Nussbaumer <killerfox@gentoo.org>
+  syslog-ng-1.6.8.ebuild:
+  Stable on hppa.
+
+  08 Jul 2005; Gustavo Zacarias <gustavoz@gentoo.org>
+  syslog-ng-1.6.8.ebuild:
+  Stable on sparc
+
+  07 Jul 2005; Michael Sterrett <mr_bones_@gentoo.org>
+  syslog-ng-1.6.8.ebuild:
+  stable for x86
+
+*syslog-ng-1.6.8 (26 May 2005)
+
+  26 May 2005; Michael Sterrett <mr_bones_@gentoo.org>
+  +syslog-ng-1.6.8.ebuild:
+  version bump
+
+  18 May 2005; Markus Rothe <corsair@gentoo.org> syslog-ng-1.6.7.ebuild:
+  Stable on ppc64
+
+  15 May 2005; Rene Nussbaumer <killerfox@gentoo.org>
+  syslog-ng-1.6.7.ebuild:
+  Stable on hppa
+
+  13 May 2005; Fernando J. Pereda <ferdy@gentoo.org> syslog-ng-1.6.7.ebuild:
+  1.6.7 alpha stable
+
+  12 May 2005; Michael Sterrett <mr_bones_@gentoo.org>
+  files/syslog-ng.conf.debian, files/syslog-ng.conf.gentoo,
+  files/syslog-ng.conf.gentoo.hardened:
+  fix up config files (bug #92330)
+
+  11 May 2005; Marcus D. Hanwell <cryos@gentoo.org> syslog-ng-1.6.7.ebuild:
+  Stable on amd64.
+
+  09 May 2005; Lars Weiler <pylon@gentoo.org> syslog-ng-1.6.7.ebuild:
+  Stable on ppc.
+
+  09 May 2005; Michael Sterrett <mr_bones_@gentoo.org>
+  syslog-ng-1.6.7.ebuild:
+  install the stock config files as well (bug #91995)
+
+  09 May 2005; Jeffrey Forman <jforman@gentoo.org> syslog-ng-1.6.7.ebuild:
+  stable on sparc
+
+  08 May 2005; Aron Griffis <agriffis@gentoo.org> syslog-ng-1.6.7.ebuild:
+  stable on ia64
+
+  08 May 2005; Joshua Kinard <kumba@gentoo.org> syslog-ng-1.6.7.ebuild:
+  Marked stable on mips.
+
+  08 May 2005; Michael Sterrett <mr_bones_@gentoo.org>
+  syslog-ng-1.6.7.ebuild:
+  stable for x86
+
+  16 Apr 2005; Stephen Bennett <spb@gentoo.org>
+  files/syslog-ng.conf.gentoo.hardened:
+  Changed hardened config so as to open /proc/kmsg ro instead of rw.
+
+*syslog-ng-1.6.7 (09 Apr 2005)
+
+  09 Apr 2005; Michael Sterrett <mr_bones_@gentoo.org>
+  +syslog-ng-1.6.7.ebuild:
+  version bump
+
+  05 Apr 2005; Michael Sterrett <mr_bones_@gentoo.org>
+  syslog-ng-1.6.6.ebuild:
+  Add support for hardened-specified config file
+
+  05 Apr 2005; <solar@gentoo.org> +files/syslog-ng.conf.gentoo.hardened:
+  - added example hardened syslog-ng conf used by hardened profiles.
+
+*syslog-ng-1.6.6 (26 Feb 2005)
+
+  26 Feb 2005; Michael Sterrett <mr_bones_@gentoo.org>
+  +syslog-ng-1.6.6.ebuild:
+  version bump
+
+  28 Dec 2004; Ciaran McCreesh <ciaranm@gentoo.org> :
+  Change encoding to UTF-8 for GLEP 31 compliance
+
+*syslog-ng-1.6.5-r2 (14 Dec 2004)
+
+  14 Dec 2004; Aron Griffis <agriffis@gentoo.org> files/syslog-ng.rc6,
+  -syslog-ng-1.6.5-r1.ebuild, +syslog-ng-1.6.5-r2.ebuild:
+  Fix syslog-ng.conf net dependency again #74428
+
+  01 Dec 2004; Michael Sterrett <mr_bones_@gentoo.org>
+  -files/syslog-ng.conf.sample, syslog-ng-1.6.5-r1.ebuild:
+  added syslog.conf from Debian as a sample (from bug #67267)
+
+  01 Dec 2004; Michael Sterrett <mr_bones_@gentoo.org>
+  -syslog-ng-1.6.2.ebuild, -syslog-ng-1.6.4.ebuild:
+  clean older versions (fixes bug #71546)
+
+  18 Nov 2004; Aron Griffis <agriffis@gentoo.org> syslog-ng-1.6.5-r1.ebuild:
+  stable on ia64
+
+  18 Nov 2004; Markus Rothe <corsair@gentoo.org> syslog-ng-1.6.5-r1.ebuild:
+  stable on ppc64; bug #71613
+
+  13 Oct 2004; Travis Tilley <lv@gentoo.org> syslog-ng-1.6.5-r1.ebuild:
+  stable on amd64
+
+  02 Oct 2004; Joshua Kinard <kumba@gentoo.org> syslog-ng-1.6.5-r1.ebuild:
+  Marked stable on mips.
+
+*syslog-ng-1.6.5-r1 (02 Oct 2004)
+
+  02 Oct 2004; Bryan Østergaard <kloeri@gentoo.org> syslog-ng-1.6.5-r1.ebuild:
+  Stable on alpha.
+
+  28 Sep 2004; Aron Griffis <agriffis@gentoo.org> files/syslog-ng.rc6,
+  -syslog-ng-1.6.5.ebuild:
+  Don't use xargs to concatenate lines; it breaks on uneven quoting #65520
+
+  25 Sep 2004; Jason Wever <weeve@gentoo.org> syslog-ng-1.6.5.ebuild:
+  Stable on sparc.
+
+  24 Sep 2004; Michael Sterrett <mr_bones_@gentoo.org> syslog-ng-1.6.5.ebuild:
+  stable on x86
+
+  18 Aug 2004; Aron Griffis <agriffis@gentoo.org> files/syslog-ng.rc6:
+  Add xargs into the init-script to make parsing conf file more robust #60487
+
+*syslog-ng-1.6.5 (16 Aug 2004)
+
+  16 Aug 2004; Michael Sterrett <mr_bones_@gentoo.org>
+  +syslog-ng-1.6.5.ebuild:
+  version bump (bug #60271)
+
+  08 Aug 2004; Luca Barbato <lu_zero@gentoo.org> syslog-ng-1.6.4.ebuild:
+  Marked ppc
+
+  08 Aug 2004; <agriffis@gentoo.org> syslog-ng-1.6.4.ebuild:
+  stable on ia64
+
+  04 Aug 2004; Michael Sterrett <mr_bones_@gentoo.org> files/syslog-ng.rc6:
+  checkconfig before reload to catch mis-config earlier.  Patch from Eldad
+  Zack via bug #58216
+
+  05 Jul 2004; Joshua Kinard <kumba@gentoo.org> syslog-ng-1.6.4.ebuild:
+  Marked stable on mips.
+
+  25 Jun 2004; Tom Gall <tgall@gentoo.org> syslog-ng-1.6.4.ebuild:
+  stable on ppc64, bug #54848
+
+  25 Jun 2004; Guy Martin <gmsoft@gentoo.org> syslog-ng-1.6.4.ebuild:
+  Marked stable on hppa.
+
+  22 Jun 2004; Gustavo Zacarias <gustavoz@gentoo.org> syslog-ng-1.6.4.ebuild:
+  Stable on sparc
+
+  22 Jun 2004; <malc@gentoo.org> syslog-ng-1.6.4.ebuild:
+  Mark stable on amd64
+
+  22 Jun 2004; Michael Sterrett <mr_bones_@gentoo.org> syslog-ng-1.6.4.ebuild:
+  stable for x86
+
+  16 Jun 2004; Bryan Østergaard <kloeri@gentoo.org> syslog-ng-1.6.4.ebuild:
+  Stable on alpha.
+
+  05 Jun 2004; Michael Sterrett <mr_bones_@gentoo.org> syslog-ng-1.6.4.ebuild:
+  inherit flag-o-matic for append-ldflags; add use static support; dep fix for
+  libol; tidy compile
+
+*syslog-ng-1.6.4 (29 May 2004)
+
+  29 May 2004; Michael Sterrett <mr_bones_@gentoo.org> syslog-ng-1.6.4.ebuild:
+  version bump
+
+  29 May 2004; Michael Sterrett <mr_bones_@gentoo.org> syslog-ng-1.6.2.ebuild:
+  tidy
+
+  12 May 2004; Michael McCabe <randy@gentoo.org> syslog-ng-1.6.2.ebuild:
+  Added s390 keywords
+
+  26 Apr 2004; Tom Gall <tgall@gentoo.org> syslog-ng-1.6.2.ebuild:
+  stable on ppc64 (bug 49104)
+
+  17 Mar 2004; Michael Sterrett <mr_bones_@gentoo.org>
+  syslog-ng-1.4.16-r2.ebuild, syslog-ng-1.6.0_rc1-r2.ebuild:
+  clean out older versions
+
+*syslog-ng-1.6.2 (14 Feb 2004)
+
+  14 Feb 2004; Aron Griffis <agriffis@gentoo.org> syslog-ng-1.6.2.ebuild,
+  files/syslog-ng.rc6:
+  Fix bug 38475 by adding conditional dep on network in initscript. Didn't bump
+  the rev since I don't think a lot of people care about this change. Also
+  bumped the version to 1.6.2 for testing.
+
+  05 Jan 2004; Brad House <brad_mssw@gentoo.org>
+  syslog-ng-1.6.0_rc3-r1.ebuild:
+  mark stable on amd64
+
+  30 Dec 2003; Michael Sterrett <mr_bones_@gentoo.org>
+  syslog-ng-1.6.0_rc3-r1.ebuild:
+  The upstream source moved on us (bug 36394)
+
+  11 Nov 2003; Aron Griffis <agriffis@gentoo.org>
+  syslog-ng-1.6.0_rc3-r1.ebuild:
+  Mark stable on ia64
+
+  11 Nov 2003; Aron Griffis <agriffis@gentoo.org>
+  syslog-ng-1.6.0_rc3-r1.ebuild:
+  Add ~ia64
+
+  22 Oct 2003; Michael Sterrett <mr_bones_@gentoo.org> metadata.xml:
+  add metadata.xml
+
+  05 Oct 2003; Brad House <brad_mssw@gentoo.org>
+  syslog-ng-1.6.0_rc3-r1.ebuild:
+  add ~amd64 flag
+
+  03 Oct 2003; Aron Griffis <agriffis@gentoo.org>
+  syslog-ng-1.6.0_rc3-r1.ebuild:
+  Stable on alpha
+
+*syslog-ng-1.6.0_rc3-r1 (17 Sep 2003)
+
+  30 Sep 2003; Joshua Kinard <kumba@gentoo.org> syslog-ng-1.6.0_rc3-r1.ebuild:
+  Changed ~sparc to sparc in KEYWORDS
+
+*syslog-ng-1.6.0_rc1-r2 (17 Sep 2003)
+
+  17 Sep 2003; Seemant Kulleen <seemant@gentoo.org>
+  syslog-ng-1.4.16-r1.ebuild, syslog-ng-1.4.16-r2.ebuild,
+  syslog-ng-1.6.0_rc1-r1.ebuild, syslog-ng-1.6.0_rc1-r2.ebuild,
+  syslog-ng-1.6.0_rc3-r1.ebuild, syslog-ng-1.6.0_rc3.ebuild:
+  version bump to provide virtual/logger
+
+*syslog-ng-1.4.16-r2 (17 Sep 2003)
+
+*syslog-ng-1.4.16-r1 (12 Mar 2003)
+
+  29 Jun 2003; Daniel Ahlberg <aliz@gentoo.org> :
+  Added missing changelog entry.
+
+  31 May 2003; Seemant Kulleen <seemant@gentoo.org>
+  syslog-ng-1.6.0_rc3.ebuild:
+  slight fix for dohtml -- finally closing the bug
+
+*syslog-ng-1.6.0_rc3 (18 May 2003)
+
+  16 Jul 2003; Joshua Kinard <kumba@gentoo.org> syslog-ng-1.6.0_rc3.ebuild:
+  Changed ~mips to mips in KEYWORDS
+
+  02 Jul 2003; Guy Martin <gmsoft@gentoo.org> syslog-ng-1.6.0_rc3.ebuild :
+  Marked stable on hppa.
+
+  18 May 2003; Seemant Kulleen <seemant@gentoo.org>
+  syslog-ng-1.6.0_rc1-r1.ebuild, syslog-ng-1.6.0_rc3.ebuild:
+  html docs fix and version bump thanks to: Andy Dustman
+  <andy-gentoo.54e552@dustman.net> in bug #19156
+
+*syslog-ng-1.6.0_rc1-r1 (10 Mar 2003)
+
+  14 May 2003; Joshua Kinard <kumba@gentoo.org> syslog-ng-1.6.0_rc1-r1.ebuild:
+  Added ~mips to KEYWORDS
+
+  01 May 2003; <msterret@gentoo.org> files/syslog-ng.conf.gentoo:
+  updated files/syslog-ng.conf.gentoo with a user-uncommentable option
+  for logging to address http://bugs.gentoo.org/show_bug.cgi?id=19824.
+
+  14 Apr 2003; Guy Martin <gmsoft@gentoo.org> syslog-ng-1.6.0_rc1-r1.ebuild :
+  Added hppa to KEYWORDS.
+
+  12 Apr 2003; Seemant Kulleen <seemant@gentoo.org> Manifest,
+  syslog-ng-1.6.0_rc1-r1.ebuild:
+  doc fixes for html docs, thanks to: Andy Dustman
+  <andy-gentoo.54e552@dustman.net> in bug #19156
+
+  28 Mar 2003; Pieter Van den Abeele <pvdabeel@gentoo.org> syslog-ng-1.6.0_rc1-r1
+  Moved to stable on ppc
+
+  11 Mar 2003; Aron Griffis <agriffis@gentoo.org> files/syslog-ng.conf.gentoo:
+  Minor update to default configuration; added stats(43200)
+
+  10 Mar 2003; Aron Griffis <agriffis@gentoo.org>
+  syslog-ng-1.6.0_rc1-r1.ebuild, files/syslog-ng.conf.gentoo,
+  files/syslog-ng.logrotate:
+  Bump revision to pick up new default configuration and logrotate snippet, both
+  contributed by Michael Sterrett. This relates to bug #7144. Also mark stable
+  on x86 and alpha since this is the version recommended for production use by
+  the web page.
+
+*syslog-ng-1.6.0_rc1 (05 Mar 2003)
+
+  05 Mar 2003; Aron Griffis <agriffis@gentoo.org> syslog-ng-1.6.0_rc1.ebuild:
+  Update to latest stable release candidate for bug #14335
+
+*syslog-ng-1.5.26-r1 (27 Feb 2003)
+
+  27 Feb 2003; Aron Griffis <agriffis@gentoo.org> syslog-ng-1.5.26-r1.ebuild,
+  files/syslog-ng.rc6:
+  Fix bug 16308 by adding a reload() function to the init script. Bumped the
+  masked revision to pick up the change. Thanks to Michael Sterrett for his
+  work debugging and providing the patch.  Also added ~alpha to KEYWORDS.
+
+*syslog-ng-1.5.26 (09 Feb 2003)
+
+  09 Feb 2003; Bruce A. Locke <blocke@shivan.org> syslog-ng-1.5.26.ebuild:
+  Version Bump
+
+  09 Feb 2003; Bruce A. Locke <blocke@shivan.org> syslog-ng-1.4.16-r1.ebuild,
+  syslog-ng-1.4.17.ebuild:
+  Removed message about syslog2ng script which is only found in 1.5.x
+
+  21 Jan 2003; Aron Griffis <agriffis@gentoo.org> syslog-ng-1.4.16-r1.ebuild:
+  Revision bump to pick up new initscript on the stable package.
+
+  21 Jan 2003; Aron Griffis <agriffis@gentoo.org> syslog-ng-1.5.24-r1.ebuild
+  files/syslog-ng.rc6 :
+  Add a pause after stopping syslog-ng to allow it to stop, particularly in
+  case it's restarting.  This is particularly important when using logrotate.
+  Bumped the revision to get the new initscript installed.  Closes #14310
+
+*syslog-ng-1.5.24 (26 Dec 2002)
+
+  26 Dec 2002 Martin Holzer <mholzer@gentoo.org> syslog-ng-1.5.24.ebuild
+  files/digest-syslog-ng-1.5.24 ChangeLog :
+  Version Pumped. Closes #12714.
+ 
+*syslog-ng-1.4.17 (05 Nov 2002)
+
+  06 Dec 2002; Rodney Rees <manson@gentoo.org> : changed sparc ~sparc keywords
+
+  05 Nov 2002; Daniel Ahlberg <aliz@gentoo.org> :
+  Version bump.
+
+*syslog-ng-1.4.16 (25 Oct 2002)
+
+  04 Nov 2002; Seemant Kulleen <Seemant@gentoo.org> *.ebuild :
+  Added sys-devel/flex to DEPENDS. Closes bug #10185 by lordvan@lordvan.com
+  (Thomas Raschbacher)
+
+  25 Oct 2002; Donny Davies <woodchip@gentoo.org> :
+  Arrgh.  This is the *stable version of syslog-ng, and according to our
+  friends on #9278, the only branch currently with working UDP/TCP support.
+  I've marked the development versions with ~, and this one stable :/
+
+*syslog-ng-1.5.22 (23 Oct 2002)
+
+  23 Oct 2002; Donny Davies <woodchip@gentoo.org> :
+  Bug fix release.  Thanks rkilgore@hotpop.com, wylie@geekasylum.org; #9278.
+
+*syslog-ng-1.5.21 (12 Oct 2002)
+
+  12 Oct 2002; Seemant Kulleen <seemant@gentoo.org> syslog-ng-1.5.21.ebuild :
+  Works on sparcs
+
+  12 Oct 2002; Bruce A. Locke <blocke@shivan.org> syslog-ng-1.5.21.ebuild,
+  files/syslog-ng.conf.sample:
+  Version bump and older versions removed due to security issue.  "kernsrc"
+  line in example configuration file fixed. (Bugs #7951 and #7996)
+
+*syslog-ng-1.5.19 (17 Aug 2002)
+
+  14 Sep 2002; Bruce A. Locke <blocke@shivan.org> syslog-ng-1.5.19.ebuild:
+  Fixed bug introduced with previous fix (#7757)
+
+  17 Aug 2002; Bruce A. Locke <blocke@shivan.org> syslog-ng-1.5.19.ebuild:
+  Updated ebuild contributed by mw@teamzone.de (Markus Wagner) plus
+  -lwrap buglet fix
+  
+*syslog-ng-1.5.17 (21 May 2002)
+
+  14 Aug 2002; Jack Morgan <jmorgan@gentoo.org> syslog-ng-1.4.15.ebuild,
+  syslog-ng-1.5.17.ebuild:
+  Added sparc64 to KEYWORDS.
+
+*syslog-ng-1.5.17 (21 May 2002)
+
+  30 Jul 2002; Calum Selkirk <cselkirk@gentoo.org> syslog-ng-1.5.17.ebuild :
+  Added -ppc to KEYWORDS.
+
+  21 May 2002; Bruce A. Locke <blocke@shivan.org> syslog-ng-1.5.17.ebuild :
+  New development branch version... a pain to compile and is masked out
+
+*syslog-ng-1.4.15 (21 May 2002)
+
+  21 May 2002; Bruce A. Locke <blocke@shivan.org> syslog-ng-1.4.15.ebuild :
+  New Version
+
+*syslog-ng-1.4.12-r9 (3 May 2002)
+
+  3 May 2002; Donny Davies <woodchip@gentoo.org> :
+  Add LICENSE, SLOT, $Headers.
+
+*syslog-ng-1.4.12-r8 (11 Mar 2002)
+
+  11 Mar 2002; M.Schlemmer <azarah@gentoo.org> :
+  Updated rc-script to provide "logger".
+
+*syslog-ng-1.4.12-r7 (1 Feb 2002)
+
+  1 Feb 2002; G.Bevin <gbevin@gentoo.org> ChangeLog :
+  Added initial ChangeLog which should be updated whenever the package is
+  updated in any way. This changelog is targetted to users. This means that the
+  comments should well explained and written in clean English. The details about
+  writing correct changelogs are explained in the skel.ChangeLog file which you
+  can find in the root directory of the portage repository.

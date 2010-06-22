@@ -1,0 +1,45 @@
+# ChangeLog for virtual/perl-Text-Tabs+Wrap
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/virtual/perl-Text-Tabs+Wrap/ChangeLog,v 1.10 2010/01/17 15:02:35 tove Exp $
+
+  17 Jan 2010; Torsten Veller <tove@gentoo.org>
+  -perl-Text-Tabs+Wrap-2006.1117.ebuild:
+  Cleanup
+
+  07 Jan 2010; Torsten Veller <tove@gentoo.org>
+  perl-Text-Tabs+Wrap-2006.1117.ebuild,
+  perl-Text-Tabs+Wrap-2009.0305.ebuild:
+  Set empty HOMEPAGE and LICENSE
+
+  05 Jan 2010; nixnut <nixnut@gentoo.org>
+  perl-Text-Tabs+Wrap-2009.0305.ebuild:
+  ppc stable #288026
+
+  14 Dec 2009; Raúl Porcel <armin76@gentoo.org>
+  perl-Text-Tabs+Wrap-2009.0305.ebuild:
+  alpha/ia64/sparc stable wrt #288026
+
+  10 Dec 2009; Brent Baude <ranger@gentoo.org>
+  perl-Text-Tabs+Wrap-2009.0305.ebuild:
+  Marking perl-Text-Tabs+Wrap-2009.0305 ppc64 stable for bug 288026
+
+  04 Dec 2009; Torsten Veller <tove@gentoo.org>
+  perl-Text-Tabs+Wrap-2009.0305.ebuild:
+  Stable on amd64 (#288026)
+
+  04 Dec 2009; Christian Faulhammer <fauli@gentoo.org>
+  perl-Text-Tabs+Wrap-2009.0305.ebuild:
+  x86 stable, bug 288026
+
+  25 Aug 2009; Torsten Veller <tove@gentoo.org>
+  perl-Text-Tabs+Wrap-2009.0305.ebuild:
+  Add support for perl-5.10.1
+
+*perl-Text-Tabs+Wrap-2009.0305 (07 Mar 2009)
+*perl-Text-Tabs+Wrap-2006.1117 (07 Mar 2009)
+
+  07 Mar 2009; Torsten Veller <tove@gentoo.org> +metadata.xml,
+  +perl-Text-Tabs+Wrap-2006.1117.ebuild,
+  +perl-Text-Tabs+Wrap-2009.0305.ebuild:
+  New virtuals for perl-core/Text-Tabs+Wrap
+

@@ -1,0 +1,8 @@
+# ChangeLog for net-misc/fsp
+# Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
+# $Header: $
+
+*fsp-2.8.1_beta24 (05 Mar 2009)
+
+  05 Mar 2009; Daniel Cordero <theappleman@gmail.com> +fsp-2.8.1_beta24.ebuild :
+  New package.

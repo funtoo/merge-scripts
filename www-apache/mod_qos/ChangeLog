@@ -1,0 +1,10 @@
+# ChangeLog for www-apache/mod_qos
+# Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/www-apache/mod_qos/ChangeLog,v 1.1 2009/09/18 16:14:19 hollow Exp $
+
+*mod_qos-8.18 (18 Sep 2009)
+
+  18 Sep 2009; Benedikt Böhm <hollow@gentoo.org> +files/10_mod_qos.conf,
+  +mod_qos-8.18.ebuild, +metadata.xml:
+  initial ebuild wrt #236049
+

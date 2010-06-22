@@ -1,0 +1,16 @@
+# ChangeLog for x11-misc/qsynergy
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/x11-misc/qsynergy/ChangeLog,v 1.2 2010/06/03 20:02:30 wired Exp $
+
+*qsynergy-0.9.1-r1 (03 Jun 2010)
+
+  03 Jun 2010; Alex Alexander <wired@gentoo.org> -qsynergy-0.9.1.ebuild,
+  +qsynergy-0.9.1-r1.ebuild:
+  install README
+
+*qsynergy-0.9.1 (03 Jun 2010)
+
+  03 Jun 2010; Alex Alexander <wired@gentoo.org> +qsynergy-0.9.1.ebuild,
+  +metadata.xml:
+  new ebuild
+

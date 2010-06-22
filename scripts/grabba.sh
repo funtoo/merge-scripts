@@ -55,14 +55,14 @@ cp eclass/* $dest/eclass/ || die "eclass fail"
 
 # cool cleanups:
 
-( cd $dest; find -iname ChangeLog -exec rm -f {} \; ) || die "ChangeLog zap fail"
-( cd $dest; find -iname Manifest -exec sed -n -i -e "/DIST/p" {} \; ) || die "Mini-manifest fail"
+# ( cd $dest; find -iname ChangeLog -exec rm -f {} \; ) || die "ChangeLog zap fail"
+# ( cd $dest; find -iname Manifest -exec sed -n -i -e "/DIST/p" {} \; ) || die "Mini-manifest fail"
 
-git add * || die "couldn't add"
-git commit -a -m "merged tree" || die "couldn't merge tree"
+( cd $dest; git add * ) || die "couldn't add"
+( cd $dest; git commit -a -m "merged tree" ) || die "couldn't merge tree"
 
 echo "Creating Portage tarball..."
-tar cf /var/tmp/git/curmerge.tar -C $dest --exclude .git .
+tar cf /var/tmp/git/curmerge.tar -C $dest --exclude .git . || die "tarball create error"
 
 ( cd $dest; git checkout $desttree ) || die "couldn't checkout $desttree destree"
 ( cd $dest; rm -rf * ) || die "couldn't prep tree"

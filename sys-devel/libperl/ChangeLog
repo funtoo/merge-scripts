@@ -1,0 +1,615 @@
+# ChangeLog for sys-devel/libperl
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/sys-devel/libperl/ChangeLog,v 1.153 2010/03/31 18:48:44 armin76 Exp $
+
+  31 Mar 2010; Raúl Porcel <armin76@gentoo.org> libperl-5.8.8-r2.ebuild:
+  Drop -O1 on arm/ia64 as it works fine
+
+  14 Mar 2010; Alexis Ballier <aballier@gentoo.org> libperl-5.10.1.ebuild:
+  keyword ~x86-fbsd
+
+  03 Feb 2010; Hanno Boeck <hanno@gentoo.org> libperl-5.8.8-r2.ebuild,
+  libperl-5.10.1.ebuild:
+  Change license, Perl is Artistic or GPL-1 or later. We can't express or
+  later for now, so adding all GPL-1/2/3.
+
+  11 Dec 2009; Brent Baude <ranger@gentoo.org> libperl-5.10.1.ebuild:
+  Marking libperl-5.10.1 ~ppc64 for bug 288028
+
+  09 Dec 2009; Raúl Porcel <armin76@gentoo.org> libperl-5.10.1.ebuild:
+  Add ~sh wrt #288028
+
+  16 Nov 2009; Raúl Porcel <armin76@gentoo.org> libperl-5.10.1.ebuild:
+  Add ~alpha/~ia64/~s390/~sparc wrt #288028
+
+  15 Nov 2009; Raúl Porcel <armin76@gentoo.org> libperl-5.10.1.ebuild:
+  Add ~m68k wrt #288028, thanks to kolla for testing
+
+  04 Nov 2009; Michael Haubenwallner <haubi@gentoo.org>
+  libperl-5.8.8-r2.ebuild, +files/libperl-5.8.8-ccld-cflags.patch:
+  Respect CFLAGS even for linking when done with compiler
+
+  27 Oct 2009; Mounir Lamouri <volkmar@gentoo.org> libperl-5.10.1.ebuild:
+  Keywording for ppc, bug 288028
+
+  21 Oct 2009; Markus Meier <maekke@gentoo.org> libperl-5.10.1.ebuild:
+  add ~amd64/~arm/~x86, bug #288028
+
+  13 Oct 2009; Jeroen Roovers <jer@gentoo.org> libperl-5.10.1.ebuild:
+  Marked ~hppa (bug #288028).
+
+  07 Oct 2009; Torsten Veller <tove@gentoo.org> libperl-5.10.1.ebuild:
+  Different way to remove libperl link. Needed for perserve-libs
+
+*libperl-5.10.1-r11 (28 Sep 2009)
+
+  28 Sep 2009; Torsten Veller <tove@gentoo.org> +libperl-5.10.1-r11.ebuild:
+  Remove orphaned symbolic link
+
+  08 Sep 2009; Daniel Robbins <drobbins@funtoo.org> libperl-5.10.1-r10.ebuild:
+  this ebuild was totally keyworded, moving to unstable and stable.
+
+*libperl-5.10.1-r10 (07 Sep 2009)
+
+  07 Sep 2009; Daniel Robbins <drobbins@funtoo.org> +libperl-5.10.1-r10.ebuild:
+  New libperl from Torsten Veller and the perl-experimental overlay. This new
+  ebuild is essentially a stub - it installs no files.
+
+  29 May 2009; Torsten Veller <tove@gentoo.org> -libperl-5.8.8-r1.ebuild:
+  Remove security vulnerable version for bug #271738
+
+  02 May 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  libperl-5.8.8-r2.ebuild:
+  Respect LDFLAGS (bug #181464).
+
+  25 Mar 2009; Jeff Mitchell <funtoo@jefferai.org> libperl-5.10.0.ebuild:
+  bumping libperl-5.10 to stable for stable funtoo
+
+  02 Aug 2008; Panagiotis Christopoulos <pchrist@gentoo.org> metadata.xml:
+  Update metadata.xml to include USE flag descriptions. Entries taken from
+  profiles/use.local.desc. GLEP 56
+
+  18 Jul 2008; Javier Villavicencio <the_paya@gentoo.org>
+  files/libperl-5.8.8-fbsdhints.patch:
+  Updated fbsdhints patch, bug 225323.
+
+  16 May 2008; Tobias Scherbaum <dertobi123@gentoo.org>
+  libperl-5.8.8-r2.ebuild:
+  ppc stable, bug #219203
+
+  15 May 2008; Raúl Porcel <armin76@gentoo.org> libperl-5.8.8-r2.ebuild:
+  alpha/ia64 stable wrt security #219203
+
+  14 May 2008; Markus Meier <maekke@gentoo.org> libperl-5.8.8-r2.ebuild:
+  amd64 stable, bug #219203
+
+  14 May 2008; Christian Faulhammer <opfer@gentoo.org>
+  libperl-5.8.8-r2.ebuild:
+  stable x86, security bug 219203
+
+  14 May 2008; Markus Rothe <corsair@gentoo.org> libperl-5.8.8-r2.ebuild:
+  Stable on ppc64; bug #219203
+
+  14 May 2008; Jeroen Roovers <jer@gentoo.org> libperl-5.8.8-r2.ebuild:
+  Stable for HPPA (bug #219203).
+
+  14 May 2008; Ferris McCormick <fmccor@gentoo.org> libperl-5.8.8-r2.ebuild:
+  Sparc stable, Security Bug #219203.
+
+*libperl-5.8.8-r2 (09 May 2008)
+
+  09 May 2008; Torsten Veller <tove@gentoo.org>
+  +files/libperl-5.8.8-CVE-2008-1927.patch,
+  +files/libperl-5.8.8-utf8-boundary.patch, +libperl-5.8.8-r2.ebuild:
+  #219203 - Version bump. Added patch from bug #198196. Apply
+  libperl-5.8.8-lib64.patch for ppc64 too like dev-lang/perl-5.8.8.
+
+  06 Aug 2007; <truedfx@gentoo.org>
+  +files/libperl-5.8.8-makedepend-syntax.patch, libperl-5.8.8-r1.ebuild:
+  Fix syntax error in makedepend.SH
+
+  30 Apr 2007; <solar@gentoo.org> ChangeLog:
+  - filter ssp on ia64 due to ICE in compiler. revisit when we have a working
+  hardened gcc-4.x
+
+  17 Feb 2007; Fabian Groffen <grobian@gentoo.org> libperl-5.8.8-r1.ebuild:
+  Dropped ppc-macos keyword, see you in prefix
+
+  05 Jan 2007; Michael Cummings <mcummings@gentoo.org>
+  libperl-5.8.8-r1.ebuild:
+  Removed unnecessary dep on groff; fixes releng problem :)
+
+  19 Nov 2006; Michael Cummings <mcummings@gentoo.org>
+  +files/libperl-5.8.8-gcc42-command-line.patch, libperl-5.8.8-r1.ebuild:
+  Bug 144965, gcc-4.2 bug/patch, patch provided by dirtyepic
+
+  18 Nov 2006; Michael Cummings <mcummings@gentoo.org>
+  -files/libperl-reorder-INC.patch, libperl-5.8.8-r1.ebuild:
+  Bug 150702; also cleaned up unused patches
+
+  23 Oct 2006; Michael Cummings <mcummings@gentoo.org>
+  -libperl-5.8.7.ebuild:
+  Removing old libperl
+
+  17 Oct 2006; Roy Marples <uberlord@gentoo.org> libperl-5.8.8-r1.ebuild:
+  Added ~sparc-fbsd keyword.
+
+  07 Oct 2006; Diego Pettenò <flameeyes@gentoo.org>
+  libperl-5.8.8-r1.ebuild:
+  Add a dependency on freebsd-mk-defs on FreeBSD.
+
+  08 Sep 2006; Michael Cummings <mcummings@gentoo.org>
+  -files/libperl-5.8.2-uclibc.patch, -files/libperl-uclibc.patch,
+  -libperl-5.8.6.ebuild, -libperl-5.8.6-r1.ebuild, libperl-5.8.7.ebuild,
+  -libperl-5.8.8.ebuild, libperl-5.8.8-r1.ebuild:
+  Cleaning out stale files
+
+  15 Aug 2006; Christian Hartmann <ian@gentoo.org> libperl-5.8.8.ebuild,
+  libperl-5.8.8-r1.ebuild:
+  Fix bug #143895
+
+  18 Jun 2006; Bryan Østergaard <kloeri@gentoo.org>
+  libperl-5.8.8-r1.ebuild:
+  Stable on ia64.
+
+  07 Jun 2006; Joshua Kinard <kumba@gentoo.org> libperl-5.8.8-r1.ebuild:
+  Marked stable on mips.
+
+  03 Jun 2006; Guy Martin <gmsoft@gentoo.org>
+  +files/perl-hppa-pa7200-configure.patch, libperl-5.8.8-r1.ebuild:
+  On PA7200, uname -a contains a single quote and we need to filter it
+  otherwise configure fails. See #125535.
+
+  27 May 2006; Bryan Østergaard <kloeri@gentoo.org>
+  libperl-5.8.8-r1.ebuild:
+  Stable on alpha.
+
+  26 May 2006; Chris Gianelloni <wolf31o2@gentoo.org>
+  libperl-5.8.8-r1.ebuild:
+  Stable on amd64 wrt bug #133989.
+
+  25 May 2006; Guy Martin <gmsoft@gentoo.org> libperl-5.8.8-r1.ebuild:
+  Stable on hppa.
+
+  24 May 2006; <nixnut@gentoo.org> libperl-5.8.8-r1.ebuild:
+  Stable on ppc. bug #133989
+
+  23 May 2006; Chris Gianelloni <wolf31o2@gentoo.org>
+  libperl-5.8.8-r1.ebuild:
+  Stable on x86 wrt bug #133989.
+
+  23 May 2006; <mcummings@gentoo.org> ChangeLog, Manifest:
+  Marking stable sparc, bug 133989
+
+  23 May 2006; Markus Rothe <corsair@gentoo.org> libperl-5.8.8-r1.ebuild:
+  Stable on ppc64; bug #133989
+
+  27 Apr 2006; Alec Warner <antarus@gentoo.org> files/digest-libperl-5.8.6,
+  files/digest-libperl-5.8.6-r1, files/digest-libperl-5.8.7,
+  files/digest-libperl-5.8.8, Manifest:
+  Fixing SHA256 digest, pass four
+
+  31 Mar 2006; Diego Pettenò <flameeyes@gentoo.org>
+  libperl-5.8.8-r1.ebuild:
+  Add ~x86-fbsd keyword.
+
+*libperl-5.8.8-r1 (29 Mar 2006)
+
+  29 Mar 2006; <mcumming@gentoo.org> +files/libperl-5.8.8-cplusplus.patch,
+  +libperl-5.8.8-r1.ebuild:
+  Patch 27203 in blead - fixes c++ problems in XS code :)
+
+  21 Feb 2006; Michael Cummings <mcummings@gentoo.org>
+  +files/libperl-5.8.8-dragonfly-clean.patch,
+  +files/libperl-5.8.8-fbsdhints.patch, libperl-5.8.8.ebuild:
+  Patches for freebsd and dragonfly per the perl ebuild - just to be safe
+
+  07 Feb 2006; Aron Griffis <agriffis@gentoo.org> libperl-5.8.8.ebuild:
+  Prefer to avoid eval and use a bash array for myconf instead, it's less
+  error-prone
+
+  07 Feb 2006; Michael Cummings <mcummings@gentoo.org> libperl-5.8.8.ebuild:
+  src update
+
+  07 Feb 2006; <mcumming@gentoo.org> libperl-5.8.8.ebuild:
+  Style fixes to 5.8.8, thanks az
+
+*libperl-5.8.8 (07 Feb 2006)
+
+  07 Feb 2006; Michael Cummings <mcummings@gentoo.org>
+  +files/libperl-5.8.8-lib64.patch, +files/libperl-5.8.8-reorder-INC.patch,
+  -files/libperl-5.8.8_rc1-reorder-INC.patch, -libperl-5.8.8_rc1.ebuild,
+  +libperl-5.8.8.ebuild:
+  libperl 5.8.8, shiny and new.
+
+  24 Jan 2006; Michael Cummings <mcummings@gentoo.org>
+  +files/libperl-5.8.8_rc1-reorder-INC.patch, libperl-5.8.8_rc1.ebuild:
+  Some tweaks to libperl-5.8.8 installation
+
+  22 Jan 2006; Michael Cummings <mcummings@gentoo.org>
+  libperl-5.8.8_rc1.ebuild:
+  Bring libperl-5.8.8 back up to speed with perl ebuild
+
+*libperl-5.8.8_rc1 (22 Jan 2006)
+
+  22 Jan 2006; Michael Cummings <mcummings@gentoo.org>
+  +libperl-5.8.8_rc1.ebuild:
+  RC1 of 5.8.8
+
+  14 Jan 2006; Torsten Veller <tove@gentoo.org> libperl-5.8.7.ebuild:
+  Stable on x86 (#118938)
+
+  25 Dec 2005; Joshua Kinard <kumba@gentoo.org> libperl-5.8.7.ebuild:
+  Marked stable on mips.
+
+  19 Dec 2005; Mike Frysinger <vapier@gentoo.org> libperl-5.8.6.ebuild,
+  libperl-5.8.6-r1.ebuild, libperl-5.8.7.ebuild:
+  Remove usage of preplib.
+
+  06 Dec 2005; Michael Hanselmann <hansmi@gentoo.org> libperl-5.8.7.ebuild:
+  Stable on hppa, ppc.
+
+  05 Dec 2005; <mcumming@gentoo.org> -libperl-5.8.5-r1.ebuild,
+  -libperl-5.8.5.ebuild, libperl-5.8.6-r1.ebuild, libperl-5.8.6.ebuild,
+  libperl-5.8.7.ebuild:
+  Bug 113930, case statement for non-linux. Also cleaned out 5.8.5 versions
+  since we don't have perl ebuilds for them either.
+
+  01 Dec 2005; <dang@gentoo.org> libperl-5.8.7.ebuild:
+  Marked stable on amd64
+
+  29 Nov 2005; Diego Pettenò <flameeyes@gentoo.org> libperl-5.8.7.ebuild:
+  Fix typo (FreeBsd -> FreeBSD).
+
+  14 Nov 2005; Michael Cummings <mcummings@gentoo.org> libperl-5.8.6.ebuild,
+  libperl-5.8.6-r1.ebuild, libperl-5.8.7.ebuild:
+  NetBSD for osname per thunder
+
+  05 Nov 2005; <solar@gentoo.org> libperl-5.8.5-r1.ebuild,
+  libperl-5.8.5.ebuild:
+  - remove global use violations in old ebuilds.
+
+  02 Oct 2005; Bryan Østergaard <kloeri@gentoo.org> libperl-5.8.7.ebuild:
+  Stable on ia64, bug 106678.
+
+  23 Sep 2005; Bryan Østergaard <kloeri@gentoo.org> libperl-5.8.7.ebuild:
+  Stable on alpha, bug 106678.
+
+  21 Sep 2005; Gustavo Zacarias <gustavoz@gentoo.org> libperl-5.8.7.ebuild:
+  Stable on sparc wrt #106678
+
+  20 Sep 2005; Markus Rothe <corsair@gentoo.org> libperl-5.8.7.ebuild:
+  Stable on ppc64 (bug #106678)
+
+  05 Sep 2005; Herbie Hopkins <herbs@gentoo.org> libperl-5.8.7.ebuild:
+  More multilib fixes thanks to Christophe Saout, bug 104509.
+
+  14 Aug 2005; Michael Cummings <mcummings@gentoo.org> libperl-5.8.7.ebuild:
+  The rest of the patch for bug 58931
+
+  14 Aug 2005; Michael Cummings <mcummings@gentoo.org> libperl-5.8.7.ebuild:
+  Bug #58931, more userland darwin
+
+  12 Aug 2005; Michael Cummings <mcummings@gentoo.org> libperl-5.8.7.ebuild:
+  Further bug #58931 - mistake on my part for the LIBPERL= syntax
+
+  12 Aug 2005; Michael Cummings <mcummings@gentoo.org> libperl-5.8.7.ebuild:
+  getlibdir changes for 5.8.7, bug #58931
+
+  08 Aug 2005; <solar.@gentoo.org> libperl-5.8.5-r1.ebuild,
+  libperl-5.8.5.ebuild, libperl-5.8.6-r1.ebuild, libperl-5.8.6.ebuild,
+  libperl-5.8.7.ebuild:
+  - Redisable the groff dep for uclibc (again and again...)
+
+  28 Jul 2005; Michael Cummings <mcummings@gentoo.org>
+  files/libperl-reorder-INC.patch:
+  Update to reorder patch, tested with 5.8.6 and 5.8.7, resolves bug 95770
+
+  28 Jul 2005; Herbie Hopkins <herbs@gentoo.org> libperl-5.8.6-r1.ebuild:
+  Stable on amd64.
+
+  20 Jul 2005; <solar.@gentoo.org> libperl-5.8.6-r1.ebuild,
+  libperl-5.8.7.ebuild:
+  - Redisable the groff dep for uclibc. For whatever unsolved reason under
+  sandbox it breaks when building system. bug 98187
+
+  07 Jul 2005; Markus Rothe <corsair@gentoo.org> libperl-5.8.6-r1.ebuild:
+  Stable on ppc64
+
+  06 Jul 2005; <plasmaroo@gentoo.org> libperl-5.8.6-r1.ebuild:
+  Stable on IA64.
+
+  06 Jul 2005; Chris Gianelloni <wolf31o2@gentoo.org>
+  libperl-5.8.6-r1.ebuild:
+  Stable on arm, m68k, s390, and sh.
+
+  05 Jul 2005; Hardave Riar <hardave@gentoo.org> libperl-5.8.6-r1.ebuild:
+  Stable on mips.
+
+  03 Jul 2005; Michael Hanselmann <hansmi@gentoo.org>
+  libperl-5.8.6-r1.ebuild:
+  Stable on ppc.
+
+  02 Jul 2005; Bryan Østergaard <kloeri@gentoo.org>
+  libperl-5.8.6-r1.ebuild:
+  Stable on alpha.
+
+  02 Jul 2005; Rene Nussbaumer <killerfox@gentoo.org>
+  libperl-5.8.6-r1.ebuild:
+  Stable on hppa.
+
+*libperl-5.8.6-r1 (30 Jun 2005)
+
+  30 Jun 2005; Michael Cummings <mcummings@gentoo.org>
+  +libperl-5.8.6-r1.ebuild, libperl-5.8.6.ebuild:
+  Bad osname= line in the 5.8.6 libperl was screwing up. Glad it was caught
+  early I guess. Should close bug 97479. Was previously fixed in 5.8.7 in
+  testing.
+
+*libperl-5.8.7 (29 Jun 2005)
+
+  29 Jun 2005; Michael Cummings <mcummings@gentoo.org>
+  -files/libperl-5.8.2-create-libperl-soname.patch,
+  -files/libperl-5.8.4-create-libperl-soname.patch,
+  -files/libperl-5.8.4-noksh.patch, -files/libperl-5.8.4-uclibc.patch,
+  -files/libperl-5.8.5-create-libperl-soname.patch,
+  -files/libperl-5.8.5-noksh.patch, -files/libperl-5.8.5-reorder-INC.patch,
+  -files/libperl-5.8.5-uclibc.patch,
+  -files/libperl-5.8.6-create-libperl-soname.patch,
+  -files/libperl-5.8.6-noksh.patch, -files/libperl-5.8.6-uclibc.patch,
+  +files/libperl-create-libperl-soname.patch, +files/libperl-noksh.patch,
+  +files/libperl-reorder-INC.patch, +files/libperl-uclibc.patch,
+  -libperl-5.8.2.ebuild, -libperl-5.8.2-r1.ebuild, -libperl-5.8.4.ebuild,
+  -libperl-5.8.4-r1.ebuild, libperl-5.8.5.ebuild, libperl-5.8.5-r1.ebuild,
+  libperl-5.8.6.ebuild, +libperl-5.8.7.ebuild:
+  Perl 5.8.6 unmasking; perl 5.8.7 being added
+
+  17 Jun 2005; Danny van Dyk <kugelfang@gentoo.org> libperl-5.8.5.ebuild,
+  libperl-5.8.6.ebuild:
+  Specifying LIBPERL variable for make on command line to fix BUG #63699.
+
+  29 May 2005; <solar@gentoo.org> libperl-5.8.2-r1.ebuild,
+  libperl-5.8.4-r1.ebuild, libperl-5.8.5-r1.ebuild, libperl-5.8.5.ebuild,
+  libperl-5.8.6.ebuild:
+  - update sys-devel/libperl to use libc expanded variable elibc_uclibc vs
+  uclibc so USE=-* works
+
+  23 May 2005; Herbie Hopkins <herbs@gentoo.org> libperl-5.8.6.ebuild:
+  More get_libdir-ization, fixes compilation on amd64's no-lib32 profile.
+
+  08 Mar 2005; Jeremy Huddleston <eradicator@gentoo.org>
+  libperl-5.8.6.ebuild:
+  More multilib fixes
+
+  16 Jan 2005; Jeremy Huddleston <eradicator@gentoo.org>
+  libperl-5.8.5-r1.ebuild, libperl-5.8.5.ebuild, libperl-5.8.6.ebuild:
+  multilib fixes for amd64's 2005.0.
+
+  03 Jan 2005; Ciaran McCreesh <ciaranm@gentoo.org> :
+  Change encoding to UTF-8 for GLEP 31 compliance
+
+  13 Dec 2004; Mike Frysinger <vapier@gentoo.org> libperl-5.8.5-r1.ebuild,
+  libperl-5.8.5.ebuild, libperl-5.8.6.ebuild:
+  Use toolchain-funcs to get $CC.
+
+  07 Dec 2004; Hardave Riar <hardave@gentoo.org> libperl-5.8.5.ebuild:
+  Stable on mips, dep for bug #66360
+
+  06 Dec 2004; Gustavo Zacarias <gustavoz@gentoo.org> libperl-5.8.5.ebuild:
+  Stable on sparc wrt #66360
+
+  05 Dec 2004; Bryan Østergaard <kloeri@gentoo.org> libperl-5.8.5.ebuild:
+  Stable on alpha, bug 66360.
+
+  05 Dec 2004; Markus Rothe <corsair@gentoo.org> libperl-5.8.5.ebuild:
+  Stable on ppc64; bug #66360
+
+  04 Dec 2004; Robert Coie <rac@gentoo.org> libperl-5.8.5.ebuild:
+  keyword 5.8.5 x86/amd64/ppc
+
+*libperl-5.8.6 (30 Nov 2004)
+
+  30 Nov 2004; Robert Coie <rac@gentoo.org>
+  -files/libperl-5.8.3-create-libperl-soname.patch,
+  +files/libperl-5.8.6-create-libperl-soname.patch,
+  +files/libperl-5.8.6-noksh.patch, +files/libperl-5.8.6-uclibc.patch,
+  -libperl-5.8.3.ebuild, +libperl-5.8.6.ebuild:
+  New upstream
+
+  27 Sep 2004; Michael Cummings <mcummings@gentoo.org>
+  libperl-5.8.2-r1.ebuild, libperl-5.8.2.ebuild, libperl-5.8.3.ebuild,
+  libperl-5.8.4-r1.ebuild, libperl-5.8.4.ebuild, libperl-5.8.5-r1.ebuild,
+  libperl-5.8.5.ebuild:
+  Added perl debugging support, bug 60775
+
+  22 Sep 2004; Robert Coie <rac@gentoo.org> libperl-5.8.2-r1.ebuild,
+  libperl-5.8.2.ebuild, libperl-5.8.3.ebuild, libperl-5.8.4-r1.ebuild,
+  libperl-5.8.4.ebuild, libperl-5.8.5.ebuild:
+  USE threads -> ithreads cleanup
+
+*libperl-5.8.5-r1 (22 Sep 2004)
+
+  22 Sep 2004; Robert Coie <rac@gentoo.org>
+  +files/libperl-5.8.5-reorder-INC.patch, +libperl-5.8.5-r1.ebuild:
+  Change USE from threads to ithreads, reorder @INC
+
+  09 Sep 2004; Gustavo Zacarias <gustavoz@gentoo.org> libperl-5.8.4-r1.ebuild:
+  Stable on sparc to finally solve #36478
+
+  08 Sep 2004; Robert Coie <rac@gentoo.org> libperl-5.8.4-r1.ebuild:
+  keyword x86 and arm for uclibc folks
+
+  06 Sep 2004; Ciaran McCreesh <ciaranm@gentoo.org> libperl-5.8.2-r1.ebuild,
+  libperl-5.8.2.ebuild, libperl-5.8.3.ebuild, libperl-5.8.4-r1.ebuild,
+  libperl-5.8.4.ebuild, libperl-5.8.5.ebuild:
+  Switch to use epause and ebeep, bug #62950
+
+  21 Aug 2004; Joshua Kinard <kumba@gentoo.org> libperl-5.8.4-r1.ebuild:
+  Marked stable on mips.
+
+  18 Aug 2004; Aron Griffis <agriffis@gentoo.org> libperl-5.8.4-r1.ebuild:
+  stable on alpha
+
+  14 Aug 2004; Michael Cummings <mcummings@gentoo.org>
+  libperl-5.8.2-r1.ebuild, libperl-5.8.2.ebuild, libperl-5.8.3.ebuild,
+  libperl-5.8.4-r1.ebuild, libperl-5.8.4.ebuild, libperl-5.8.5.ebuild:
+  Removed reference to old patch
+
+  13 Aug 2004; Bryan Østergaard <kloeri@gentoo.org> libperl-5.8.4.ebuild:
+  Stable on alpha.
+
+*libperl-5.8.5 (06 Aug 2004)
+
+  06 Aug 2004; Robert Coie <rac@gentoo.org>
+  +files/libperl-5.8.5-create-libperl-soname.patch,
+  +files/libperl-5.8.5-noksh.patch, +files/libperl-5.8.5-uclibc.patch,
+  +libperl-5.8.5.ebuild:
+  5.8.5
+
+  06 Aug 2004; Robert Coie <rac@gentoo.org> libperl-5.8.2-r1.ebuild,
+  libperl-5.8.2.ebuild, libperl-5.8.3.ebuild, libperl-5.8.4-r1.ebuild,
+  libperl-5.8.4.ebuild:
+  restrict maketest, avoid forkbomb in portage 51 with maketest enabled,
+  eliminate some global scope external calls
+
+  29 Jul 2004; Guy Martin <gmsoft@gentoo.org> libperl-5.8.4-r1.ebuild:
+  Stable on hppa.
+
+  23 Jul 2004; Robert Coie <rac@gentoo.org> libperl-5.8.4.ebuild:
+  keywording x86 and sparc
+
+  29 Jun 2004; Aron Griffis <agriffis@gentoo.org> libperl-5.8.2-r1.ebuild,
+  libperl-5.8.2.ebuild, libperl-5.8.3.ebuild, libperl-5.8.4-r1.ebuild,
+  libperl-5.8.4.ebuild:
+  kill sparc64 use flag
+
+*libperl-5.8.4-r1 (16 Jun 2004)
+*libperl-5.8.2-r1 (16 Jun 2004)
+
+  16 Jun 2004; Daniel Black <dragonheart@gentoo.org>
+  +files/libperl-5.8.2-uclibc.patch, +files/libperl-5.8.4-uclibc.patch,
+  +libperl-5.8.2-r1.ebuild, +libperl-5.8.4-r1.ebuild:
+  uclibc fixes thanks to Peter S. Mazinger <ps.m@gmx.net>
+
+  14 Jun 2004; Aron Griffis <agriffis@gentoo.org> libperl-5.8.2.ebuild,
+  libperl-5.8.3.ebuild:
+  Fix use invocation
+
+  09 Jun 2004; Robert Coie <rac@gentoo.org> +files/libperl-5.8.4-noksh.patch,
+  libperl-5.8.4.ebuild:
+  Add noksh.patch, bug 42665
+
+  02 Jun 2004; Travis Tilley <lv@gentoo.org> libperl-5.8.4.ebuild:
+  stable on amd64
+
+*libperl-5.8.4 (10 May 2004)
+
+  10 May 2004; Michael McCabe <randy@gentoo.org> libperl-5.8.4.ebuild:
+  Stable on s390
+
+  03 May 2004; Robert Coie <rac@gentoo.org> libperl-5.8.1.ebuild,
+  files/libperl-5.8.0-create-libperl-soname.patch,
+  files/libperl-5.8.1-create-libperl-soname.patch,
+  files/libperl-5.8.1_rc1-create-libperl-soname.patch,
+  files/libperl-5.8.1_rc2-create-libperl-soname.patch:
+  Add 5.8.4, clean out 5.8.0, 5.8.1, add IUSE for threads to everything
+
+  08 Mar 2004; <rac@gentoo.org> libperl-5.8.2.ebuild:
+  Add threads to IUSE
+
+  21 Feb 2004; Michael Cummings <mcummings@gentoo.org> libperl-5.8.0.ebuild:
+  Finish the cleanup of perl 5.8.0
+
+  19 Feb 2004; Aron Griffis <agriffis@gentoo.org> libperl-5.8.2.ebuild:
+  stable on alpha and ia64
+
+  19 Feb 2004; Joshua Kinard <kumba@gentoo.org> libperl-5.8.2.ebuild:
+  Marking stable on mips
+
+  09 Feb 2004; Bartosch Pixa <darkspecter@gentoo.org> libperl-5.8.2.ebuild:
+  set ppc in keywords
+
+  06 Feb 2004; <gustavoz@gentoo.org> libperl-5.8.2.ebuild:
+  stable on sparc
+
+  03 Feb 2004; <gustavoz@gentoo.org> libperl-5.8.2.ebuild:
+  stable on hppa
+
+  01 Feb 2004; <rac@gentoo.org> libperl-5.8.2.ebuild:
+  mark x86
+
+*libperl-5.8.3 (17 Jan 2004)
+
+  17 Jan 2004; <rac@gentoo.org> libperl-5.8.3.ebuild,
+  files/libperl-5.8.3-create-libperl-soname.patch:
+  New upstream, housecleaning
+
+  26 Nov 2003; Brad House <brad_mssw@gentoo.org> libperl-5.8.2.ebuild:
+  mark stable on amd64
+
+*libperl-5.8.2 (08 Nov 2003)
+
+  08 Nov 2003; <rac@gentoo.org> libperl-5.8.2.ebuild,
+  files/libperl-5.8.2-create-libperl-soname.patch:
+  new upstream version
+
+*libperl-5.8.1 (27 Sep 2003)
+
+  27 Sep 2003; <rac@gentoo.org> libperl-5.8.1.ebuild,
+  files/libperl-5.8.1-create-libperl-soname.patch:
+  New upstream release
+
+*libperl-5.8.1_rc2 (23 Jul 2003)
+
+  17 Sep 2003; Jon Portnoy <avenj@gentoo.org> libperl-5.8.0.ebuild :
+  Added ia64 keywords
+
+  23 Jul 2003; <rac@gentoo.org> libperl-5.8.1_rc2.ebuild:
+  Add 5.8.1-rc2
+
+  11 Jul 2003; <rac@gentoo.org> libperl-5.8.0.ebuild,
+  libperl-5.8.1_rc1.ebuild:
+  Add mips u32align workaround...thanks to Kumba
+
+*libperl-5.8.1_rc1 (10 Jul 2003)
+
+  10 Jul 2003; <rac@gentoo.org> libperl-5.8.1_rc1.ebuild,
+  files/libperl-5.8.1_rc1-create-libperl-soname.patch:
+  Upstream version bump.  Experimental.
+
+  18 May 2003; Tavis Ormandy <taviso@gentoo.org> libperl-5.8.0.ebuild:
+  removing gcc hardcoded compiler, using ${CC:-gcc}
+
+  11 Feb 2003; Guy Martin <gmsoft@gentoo.org> libperl-5.8.0.ebuild :
+  Added hppa to keywords.
+
+  05 Jan 2003; J Robert Ray <jrray@gentoo.org> libperl-5.8.0.ebuild : Synced
+  up with perl-5.8.0-r9.ebuild.
+
+*libperl-5.8.0 (06 Jan 2003)
+
+  28 Mar 2003; Seemant Kulleen <seemant@gentoo.org> libperl-5.8.0.ebuild:
+  unmasked for ppc and hppa
+
+  01 Mar 2003; Brandon Low <lostlogic@gentoo.org> libperl-5.8.0.ebuild:
+  Make->emake still not parallel where needed
+
+  26 Feb 2003; Zach Welch <zwelch@gentoo.org> libperl-5.8.0.ebuild:
+  add arm keyword
+
+  08 Jan 2002; Seemant Kulleen <seemant@gentoo.org> libperl-5.8.0.ebuild :
+
+  Unmasked for sparc
+
+  08 Jan 2003; Michael Cummings <mcummings@gentoo.org> libperl-5.8.0:
+  Unmasking for x86.
+
+  06 Jan 2003; Michael Cummings <mcummings@gentoo.org> libperl-5.8.0:
+  Initial import. Ebuild was provided by azarah. The seperation of
+  the libperl portion of perl into a seperate ebuild is to counter 
+  problems experienced with migrating perl versions and the need to 
+  recompile libperl.so at each run. This should also allow us a smoother
+  upgrade with future perl releases as the libperl.so is no named
+  according to perl versions - that way, old libperl's can co-exist
+  with new ones and the need to recompile packages should be 
+  mitigated.

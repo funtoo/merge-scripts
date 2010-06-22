@@ -1,0 +1,47 @@
+# ChangeLog for virtual/perl-Math-BigInt-FastCalc
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/virtual/perl-Math-BigInt-FastCalc/ChangeLog,v 1.10 2010/01/17 14:01:46 tove Exp $
+
+  17 Jan 2010; Torsten Veller <tove@gentoo.org>
+  -perl-Math-BigInt-FastCalc-0.15.ebuild:
+  Cleanup
+
+  07 Jan 2010; Torsten Veller <tove@gentoo.org>
+  perl-Math-BigInt-FastCalc-0.15.ebuild,
+  perl-Math-BigInt-FastCalc-0.19.ebuild:
+  Set empty HOMEPAGE and LICENSE
+
+  05 Jan 2010; nixnut <nixnut@gentoo.org>
+  perl-Math-BigInt-FastCalc-0.19.ebuild:
+  ppc stable #288026
+
+  07 Dec 2009; Jeroen Roovers <jer@gentoo.org>
+  perl-Math-BigInt-FastCalc-0.19.ebuild:
+  Stable for HPPA (bug #288026).
+
+  04 Dec 2009; Torsten Veller <tove@gentoo.org>
+  perl-Math-BigInt-FastCalc-0.19.ebuild:
+  Stable on amd64 (#288026)
+
+  04 Dec 2009; Christian Faulhammer <fauli@gentoo.org>
+  perl-Math-BigInt-FastCalc-0.19.ebuild:
+  x86 stable, bug 288026
+
+  25 Aug 2009; Torsten Veller <tove@gentoo.org>
+  perl-Math-BigInt-FastCalc-0.19.ebuild:
+  Add support for perl-5.10.1
+
+  13 Mar 2009; Torsten Veller <tove@gentoo.org>
+  -perl-Math-BigInt-FastCalc-0.16.ebuild:
+  Cleanup
+
+*perl-Math-BigInt-FastCalc-0.19 (01 Nov 2008)
+*perl-Math-BigInt-FastCalc-0.16 (01 Nov 2008)
+*perl-Math-BigInt-FastCalc-0.15 (01 Nov 2008)
+
+  01 Nov 2008; Yuval Yaari <yuval@gentoo.org> +metadata.xml,
+  +perl-Math-BigInt-FastCalc-0.15.ebuild,
+  +perl-Math-BigInt-FastCalc-0.16.ebuild,
+  +perl-Math-BigInt-FastCalc-0.19.ebuild:
+  Adding virtuals for dual-lifed modules that come with perl-5.10
+

@@ -1,0 +1,774 @@
+# ChangeLog for sys-apps/module-init-tools
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/sys-apps/module-init-tools/ChangeLog,v 1.157 2010/02/15 02:12:40 vapier Exp $
+
+*module-init-tools-3.11.1-r1 (01 Mar 2010)
+
+  01 Mar 2010; Daniel Robbins <drobbins@funtoo.org>
+  +module-init-tools-3.11.1-r1.ebuild: moving /bin/lsmod back to /sbin/lsmod -
+  because /sbin is the right place.
+
+  15 Feb 2010; Mike Frysinger <vapier@gentoo.org>
+  module-init-tools-3.11.1.ebuild:
+  Handle upgrades of .conf files for people #274942 by Peter Volkov.
+
+  08 Jan 2010; Mike Frysinger <vapier@gentoo.org>
+  module-init-tools-3.11.1.ebuild:
+  Add support for USE=static #299932 by Brad Laue.
+
+*module-init-tools-3.11.1 (23 Nov 2009)
+
+  23 Nov 2009; Robin H. Johnson <robbat2@gentoo.org>
+  +module-init-tools-3.11.1.ebuild:
+  Version bump. Upstream has included pre-generated manpages again.
+
+  24 Oct 2009; Mike Frysinger <vapier@gentoo.org>
+  module-init-tools-3.11.ebuild:
+  Force out-of-tree building to avoid bugs in local implementation #290207
+  by Brian Dolbec.
+
+  16 Oct 2009; Mike Frysinger <vapier@gentoo.org>
+  module-init-tools-3.11.ebuild:
+  Generate & distribute man pages to avoid docbook dependencies #289278 by
+  Marcin MirosÅaw.
+
+*module-init-tools-3.11 (16 Oct 2009)
+
+  16 Oct 2009; Mike Frysinger <vapier@gentoo.org>
+  +module-init-tools-3.11.ebuild:
+  Version bump.
+
+*module-init-tools-3.10 (23 Sep 2009)
+
+  23 Sep 2009; Mike Frysinger <vapier@gentoo.org>
+  +module-init-tools-3.10.ebuild:
+  Version bump #286131 by Lars Wendler.
+
+*module-init-tools-3.9 (27 May 2009)
+
+  27 May 2009; Mike Frysinger <vapier@gentoo.org>
+  +module-init-tools-3.9.ebuild:
+  Version bump.
+
+  25 May 2009; Daniel Robbins <drobbins@funtoo.org>
+  module-init-tools-3.8.ebuild: tone down baselayout dep a bit to work with funtoo.
+
+*module-init-tools-3.8 (24 May 2009)
+
+  24 May 2009; Mike Frysinger <vapier@gentoo.org>
+  +module-init-tools-3.8.ebuild:
+  Version bump #271074 by Lars Wendler.
+
+  17 Mar 2009; RaÃºl Porcel <armin76@gentoo.org>
+  module-init-tools-3.5.ebuild:
+  m68k stable wrt #258213, thanks to kolla for testing
+
+  14 Mar 2009; RaÃºl Porcel <armin76@gentoo.org>
+  module-init-tools-3.5.ebuild:
+  arm/ia64/s390/sh/sparc stable wrt #258213
+
+*module-init-tools-3.6-r1 (16 Feb 2009)
+
+  16 Feb 2009; Mike Frysinger <vapier@gentoo.org>
+  +files/module-init-tools-3.6-skip-sys-check.patch,
+  +module-init-tools-3.6-r1.ebuild:
+  Do not fail when /sys is not yet mounted #258442.
+
+  14 Feb 2009; Brent Baude <ranger@gentoo.org> module-init-tools-3.5.ebuild:
+  stable ppc, bug 258213
+
+  12 Feb 2009; Brent Baude <ranger@gentoo.org> module-init-tools-3.5.ebuild:
+  stable ppc64, bug 258213
+
+  12 Feb 2009; Jeroen Roovers <jer@gentoo.org> module-init-tools-3.5.ebuild:
+  Stable for HPPA (bug #258213).
+
+  09 Feb 2009; Markus Meier <maekke@gentoo.org>
+  module-init-tools-3.5.ebuild:
+  amd64/x86 stable, bug #258213
+
+  09 Feb 2009; Tobias Klausmann <klausman@gentoo.org>
+  module-init-tools-3.5.ebuild:
+  Stable on alpha, bug #258213
+
+  09 Feb 2009; Mike Frysinger <vapier@gentoo.org>
+  module-init-tools-3.6.ebuild:
+  Bundle man pages to avoid docbook stuff #258241 by BedOS_Gui.
+
+*module-init-tools-3.6 (08 Feb 2009)
+
+  08 Feb 2009; Mike Frysinger <vapier@gentoo.org>
+  +files/module-init-tools-3.6-hidden-dirs.patch,
+  +module-init-tools-3.6.ebuild:
+  Version bump and ignore hidden dirs #245271 by Philipp Riegger.
+
+*module-init-tools-3.5 (25 Oct 2008)
+
+  25 Oct 2008; Mike Frysinger <vapier@gentoo.org>
+  +files/update-modules-3.5.sh, +module-init-tools-3.5.ebuild:
+  Version bump #244196 by Lars (Polynomial-C). Also make sure we do not
+  generate /etc/modprobe.conf if we dont need to.
+
+*module-init-tools-3.4-r1 (19 Mar 2008)
+
+  19 Mar 2008; Mike Frysinger <vapier@gentoo.org>
+  +files/update-modules-3.4.sh, +module-init-tools-3.4-r1.ebuild:
+  Rewrite update-modules script. It is now leaner, POSIX-compat, and
+  encourages people to stop using deprecated module config files.
+
+  12 Dec 2007; Jeroen Roovers <jer@gentoo.org> module-init-tools-3.4.ebuild:
+  Stable for HPPA (bug #201444).
+
+  10 Dec 2007; RaÃºl Porcel <armin76@gentoo.org>
+  module-init-tools-3.4.ebuild:
+  alpha/ia64 stable wrt #201444
+
+  10 Dec 2007; Ferris McCormick <fmccor@gentoo.org>
+  module-init-tools-3.4.ebuild:
+  Sparc stable --- Bug #201444
+
+  07 Dec 2007; Tobias Scherbaum <dertobi123@gentoo.org>
+  module-init-tools-3.4.ebuild:
+  ppc stable, bug #201444
+
+  07 Dec 2007; Markus Rothe <corsair@gentoo.org>
+  module-init-tools-3.4.ebuild:
+  Stable on ppc64; bug #201444
+
+  07 Dec 2007; Christian Faulhammer <opfer@gentoo.org>
+  module-init-tools-3.4.ebuild:
+  stable x86, bug 201444
+
+  06 Dec 2007; Steve Dibb <beandog@gentoo.org> module-init-tools-3.4.ebuild:
+  amd64 stable, bug 201444
+
+  09 Oct 2007; Mike Frysinger <vapier@gentoo.org>
+  module-init-tools-3.4.ebuild:
+  Include pregenerated man-pages #195164.
+
+*module-init-tools-3.4 (08 Oct 2007)
+
+  08 Oct 2007; Mike Frysinger <vapier@gentoo.org>
+  +module-init-tools-3.4.ebuild:
+  Version bump.
+
+*module-init-tools-3.2.2-r3 (13 Apr 2007)
+
+  13 Apr 2007; Mike Frysinger <vapier@gentoo.org>
+  +module-init-tools-3.2.2-r3.ebuild:
+  Push out incremental updates to update-modules files.
+
+  07 Apr 2007; Mike Frysinger <vapier@gentoo.org> -files/modules-update,
+  +files/update-modules, +files/update-modules.8,
+  module-init-tools-3.2.2-r2.ebuild:
+  Rename to update-modules and move/update the manpage from baselayout.
+
+  27 Mar 2007; Stephen Bennett <spb@gentoo.org>
+  module-init-tools-3.2.2-r2.ebuild:
+  mips stable
+
+  14 Feb 2007; Jeroen Roovers <jer@gentoo.org>
+  module-init-tools-3.2.2-r2.ebuild:
+  Stable for HPPA (bug #158637).
+
+  14 Feb 2007; Bryan Ãstergaard <kloeri@gentoo.org>
+  module-init-tools-3.2.2-r2.ebuild:
+  Stable on IA64.
+
+  13 Feb 2007; Chris Gianelloni <wolf31o2@gentoo.org>
+  module-init-tools-3.2.2-r2.ebuild:
+  Stable on alpha wrt bug #158637.
+
+  13 Feb 2007; RaÃºl Porcel <armin76@gentoo.org>
+  module-init-tools-3.2.2-r2.ebuild:
+  x86 stable wrt bug 158637
+
+  13 Feb 2007; Joseph Jezak <josejx@gentoo.org>
+  module-init-tools-3.2.2-r2.ebuild:
+  Marked ppc stable.
+
+  06 Feb 2007; Simon Stelling <blubb@gentoo.org>
+  module-init-tools-3.2.2-r2.ebuild:
+  stable on amd64; bug 159097
+
+  03 Feb 2007; Mike Frysinger <vapier@gentoo.org> files/modules-update:
+  Search for System.map with kernel suffixes as suggested by Lloeki #165134.
+
+  02 Feb 2007; Gustavo Zacarias <gustavoz@gentoo.org>
+  module-init-tools-3.2.2-r2.ebuild:
+  Stable on sparc
+
+  06 Jan 2007; Tom Gall <tgall@gentoo.org> module-init-tools-3.2.2-r2:
+  stable on ppc64, part of the baselayout aggressive move.
+
+*module-init-tools-3.2.2-r2 (14 Dec 2006)
+
+  14 Dec 2006; Mike Frysinger <vapier@gentoo.org>
+  +files/module-init-tools-3.2.2-handle-dupliate-aliases.patch,
+  +files/modules-update, +module-init-tools-3.2.2-r2.ebuild:
+  Move modules-update from baselayout to here, fix by Martin VÃ¤th for
+  infinite recursion troubles #149426, and make sure /etc/modprobe.d/ files
+  get added to /etc/modprobe.conf #145962 by Greg Kroah-Hartman.
+
+  06 Nov 2006; Mike Frysinger <vapier@gentoo.org>
+  +files/modutils-2.4.27-build.patch, module-init-tools-3.2.2-r1.ebuild:
+  Generate .depend files with CPPFLAGS rather than CFLAGS #154281.
+
+  04 Sep 2006; Joshua Kinard <kumba@gentoo.org>
+  module-init-tools-3.2.2-r1.ebuild:
+  Marked stable on mips.
+
+  29 Aug 2006; Bryan Ãstergaard <kloeri@gentoo.org>
+  module-init-tools-3.2.2-r1.ebuild:
+  Stable on Alpha, bug 144559.
+
+  29 Aug 2006; Joseph Jezak <josejx@gentoo.org>
+  module-init-tools-3.2.2-r1.ebuild:
+  Marked ppc stable for bug #144559.
+
+  25 Aug 2006; <ticho@gentoo.org> module-init-tools-3.2.2-r1.ebuild:
+  Stable on x86, bug #144559.
+
+  25 Aug 2006; Gustavo Zacarias <gustavoz@gentoo.org>
+  module-init-tools-3.2.2-r1.ebuild:
+  Stable on sparc wrt #144559
+
+  23 Aug 2006; Jeroen Roovers <jer@gentoo.org>
+  module-init-tools-3.2.2-r1.ebuild:
+  Stable for HPPA (bug #144559).
+
+  23 Aug 2006; Jeroen Roovers <jer@gentoo.org>
+  +files/modutils-2.4.27-hppa.patch, module-init-tools-3.2.2-r1.ebuild:
+  Fixed modutils build for hppa1.1, tx to vapier (fixes bug #144788).
+
+  21 Aug 2006; Brent Baude <ranger@gentoo.org>
+  module-init-tools-3.2.2-r1.ebuild:
+  Marking module-init-tools-3.2.2-r1 wrt bug #144559
+
+  21 Aug 2006; Daniel Gryniewicz <dang@gentoo.org>
+  module-init-tools-3.2.2-r1.ebuild:
+  Marked stable on amd64 for bug #144559
+
+*module-init-tools-3.2.2-r1 (04 May 2006)
+
+  04 May 2006; Mike Frysinger <vapier@gentoo.org>
+  +module-init-tools-3.2.2-r1.ebuild:
+  Add back in support for USE=no-old-linux with newer modules-update script
+  #66504.
+
+  27 Apr 2006; Alec Warner <antarus@gentoo.org>
+  files/digest-module-init-tools-3.0-r2,
+  files/digest-module-init-tools-3.1-r1,
+  files/digest-module-init-tools-3.2.1,
+  files/digest-module-init-tools-3.2.2, Manifest:
+  Fixing SHA256 digest, pass four
+
+  21 Apr 2006; Stephen P. Becker <geoman@gentoo.org>
+  files/modutils-2.4.27-gcc.patch:
+  fix obj_mips.c for gcc4
+
+  26 Feb 2006; Mike Frysinger <vapier@gentoo.org>
+  module-init-tools-3.2.2.ebuild:
+  Delete man pages provided by the man-pages package #124127.
+
+  19 Feb 2006; Joshua Kinard <kumba@gentoo.org>
+  module-init-tools-3.2.1.ebuild:
+  Marked stable on mips.
+
+  08 Feb 2006; Aron Griffis <agriffis@gentoo.org>
+  module-init-tools-3.2.1.ebuild:
+  Mark 3.2.1 stable on alpha
+
+  07 Feb 2006; Simon Stelling <blubb@gentoo.org>
+  module-init-tools-3.2.1.ebuild:
+  stable on amd64
+
+  29 Jan 2006; Mike Frysinger <vapier@gentoo.org>
+  -files/3.1-modprobe.d.5.bz2, module-init-tools-3.1-r1.ebuild,
+  module-init-tools-3.2_pre7.ebuild, module-init-tools-3.2_pre7-r1.ebuild,
+  module-init-tools-3.2.1.ebuild, module-init-tools-3.2.2.ebuild:
+  Remove modprobe.d(5) manpage and just symlink it to modprobe.conf(5) #120692
+  by Simon Stelling.
+
+  02 Jan 2006; Michael Hanselmann <hansmi@gentoo.org>
+  module-init-tools-3.2.1.ebuild:
+  Stable on ppc.
+
+  30 Dec 2005; Markus Rothe <corsair@gentoo.org>
+  module-init-tools-3.2.1.ebuild:
+  Stable on ppc64
+
+  29 Dec 2005; Gustavo Zacarias <gustavoz@gentoo.org>
+  module-init-tools-3.2.1.ebuild:
+  Stable on sparc
+
+  29 Dec 2005; Mark Loeser <halcy0n@gentoo.org>
+  module-init-tools-3.2.1.ebuild:
+  Stable on x86; bug #114060
+
+*module-init-tools-3.2.2 (28 Dec 2005)
+
+  28 Dec 2005; Mike Frysinger <vapier@gentoo.org>
+  +module-init-tools-3.2.2.ebuild:
+  Version bump #116986 by Michael Cramer.
+
+*module-init-tools-3.2.1 (03 Dec 2005)
+
+  03 Dec 2005; Mike Frysinger <vapier@gentoo.org>
+  +module-init-tools-3.2.1.ebuild:
+  Version bump #114058 by Henrik Brix Andersen.
+
+  16 Sep 2005; Aron Griffis <agriffis@gentoo.org>
+  module-init-tools-3.1-r1.ebuild:
+  Mark 3.1-r1 stable on alpha
+
+  05 Sep 2005; Markus Rothe <corsair@gentoo.org>
+  module-init-tools-3.1-r1.ebuild:
+  Stable on ppc64
+
+  23 Aug 2005; Aron Griffis <agriffis@gentoo.org>
+  module-init-tools-3.1-r1.ebuild:
+  stable on ia64
+
+  18 Aug 2005; Mike Frysinger <vapier@gentoo.org>
+  +files/modutils-2.4.27-no-nested-function.patch:
+  Fix by the PaX guys to remove executable stack markings.
+
+  26 Jul 2005; Mike Frysinger <vapier@gentoo.org>
+  module-init-tools-3.2_pre7-r1.ebuild:
+  Disable tests since they clear our the results of src_compile().
+
+  17 Jul 2005; MATSUU Takuto <matsuu@gentoo.org>
+  module-init-tools-3.0-r2.ebuild:
+  Stable on sh.
+
+  15 Jul 2005; Martin Schlemmer <azarah@gentoo.org>
+  module-init-tools-3.2_pre7-r1.ebuild:
+  Add manpage back.
+
+*module-init-tools-3.2_pre7-r1 (15 Jul 2005)
+
+  15 Jul 2005; Martin Schlemmer <azarah@gentoo.org>
+  +files/module-init-tools-3.2_pre7-abort-on-modprobe-failure.patch,
+  module-init-tools-3.0-r2.ebuild, module-init-tools-3.1-r1.ebuild,
+  +module-init-tools-3.2_pre7-r1.ebuild:
+  Abort generate-modprobe.conf if modprobe fails, bug #68689.
+
+*module-init-tools-3.2_pre7 (27 Jun 2005)
+
+  27 Jun 2005; Aron Griffis <agriffis@gentoo.org>
+  +module-init-tools-3.2_pre7.ebuild:
+  Bump to 3.2-pre7
+
+  12 May 2005; <solar@gentoo.org> module-init-tools-3.2_pre4.ebuild:
+  - fix typo in patch, only 3.1 exists.. add die statements around file i/o
+  statements to keep this bug from happening again
+
+*module-init-tools-3.2_pre4 (11 May 2005)
+
+  11 May 2005; Martin Schlemmer <azarah@gentoo.org>
+  +module-init-tools-3.2_pre4.ebuild:
+  Add -pre version that support loading of all aliases - maybe that will urge
+  gregkh in getting hotplug-ng in/ready for the tree 8)
+
+*module-init-tools-3.1-r1 (20 Mar 2005)
+
+  20 Mar 2005; <solar@gentoo.org> module-init-tools-3.0-r2.ebuild,
+  +module-init-tools-3.1-r1.ebuild:
+  - Our zlib.so is in /lib vs /usr/lib so it should be safe for us to link with
+  just -lz - By not linking with -Wl,-Bstatic -lz -Wl,-Bsynamic we save a few
+  bytes on the final linked elf executable binary sizes. This also fixes text
+  relocations that were showing up in this package.
+
+  18 Feb 2005; Tony Vroon <chainsaw@gentoo.org>
+  +files/modutils-2.4.27-gcc4.patch, module-init-tools-3.1.ebuild:
+  GCC 4 compatability update; closes bug #80588
+
+  16 Feb 2005; <solar@gentoo.org> module-init-tools-3.1.ebuild:
+  - filtering pic is no longer needed
+
+  12 Jan 2005; Mike Frysinger <vapier@gentoo.org>
+  module-init-tools-3.0-r2.ebuild, module-init-tools-3.1.ebuild:
+  Remove USE=no-old-linux until modules-update can be updated to use 2.6 depmod.
+
+  23 Dec 2004; Mike Frysinger <vapier@gentoo.org>
+  +files/modutils-2.4.27-gcc34.patch, module-init-tools-3.0-r2.ebuild,
+  module-init-tools-3.1.ebuild:
+  Add patch to fix gcc-3.4.x building #74538 by splite.
+
+  07 Dec 2004; Mike Frysinger <vapier@gentoo.org>
+  +files/modutils-2.4.27-PATH_MAX.patch, module-init-tools-3.1.ebuild:
+  PATH_MAX can be found in sys/param.h.
+
+  22 Nov 2004; Mike Frysinger <vapier@gentoo.org>
+  +files/3.1-modprobe.d.5.bz2, module-init-tools-3.1.ebuild:
+  Make sure we dont try to regen manpages.
+
+*module-init-tools-3.1 (22 Nov 2004)
+
+  22 Nov 2004; Robin H. Johnson <robbat2@gentoo.org>
+  +files/module-init-tools-3.1_generate-modprobe-assume-kernel.patch,
+  +module-init-tools-3.1.ebuild:
+  version bump - bug #71958.
+
+  03 Oct 2004; Mike Frysinger <vapier@gentoo.org>
+  module-init-tools-3.0-r2.ebuild:
+  Allow users to compile without old modutils via USE=no-old-linux #43671 by
+  Christophe Saout.
+
+  03 Oct 2004; Mike Frysinger <vapier@gentoo.org>
+  module-init-tools-3.0-r2.ebuild:
+  Fix the ksyms links #35601.
+
+  02 Sep 2004; Mike Frysinger <vapier@gentoo.org>
+  module-init-tools-3.0-r1.ebuild, module-init-tools-3.0-r2.ebuild,
+  module-init-tools-3.0.ebuild:
+  Start blocking modutils.
+
+  04 Jun 2004; Aron Griffis <agriffis@gentoo.org>
+  module-init-tools-3.0-r2.ebuild:
+  Stable everywhere since baselayout-1.9.4 depends on it
+
+  02 Jun 2004; Travis Tilley <lv@gentoo.org> module-init-tools-3.0-r2.ebuild:
+  stable on amd64
+
+  15 May 2004; Joshua Kinard <kumba@gentoo.org> module-init-tools-3.0.ebuild:
+  Marked stable on mips.
+
+*module-init-tools-3.0-r2 (07 May 2004)
+
+  07 May 2004; Aron Griffis <agriffis@gentoo.org>
+  +module-init-tools-3.0-r2.ebuild:
+  Add patch to allow --assume-kernel option to generate-modprobe.conf for bug
+  49926
+
+*module-init-tools-3.0-r1 (03 May 2004)
+
+  03 May 2004; Jon Portnoy <avenj@gentoo.org> module-init-tools-3.0-r1.ebuild :
+  Install static insmod for 2.4 kernels. Fix from Sascha Silbe in bug
+  #45279.
+
+  26 Apr 2004; Aron Griffis <agriffis@gentoo.org>
+  module-init-tools-0.9.15_pre4.ebuild, module-init-tools-3.0.ebuild,
+  module-init-tools-3.0_pre10.ebuild, module-init-tools-3.0_pre5.ebuild,
+  module-init-tools-3.0_pre9.ebuild:
+  Add die following econf for bug 48950
+
+  23 Apr 2004; Guy Martin <gmsoft@gentoo.org> module-init-tools-3.0.ebuild:
+  Added a guess fix for modutils on hppa.
+
+  23 Apr 2004; Ciaran McCreesh <ciaranm@gentoo.org>
+  module-init-tools-3.0.ebuild:
+  Stable on sparc (blame me), x86, amd64, ppc64 (blame johnm)
+
+*module-init-tools-3.0 (29 Mar 2004)
+
+  29 Mar 2004; Jon Portnoy <avenj@gentoo.org>
+  module-init-tools-3.0.ebuild :
+  Version bump. Bug 43087.
+
+  29 Mar 2004; Jon Portnoy <avenj@gentoo.org> 
+  module-init-tools-3.0_pre10.ebuild, 
+  module-init-tools-3.0_pre9.ebuild,
+  module-init-tools-3.0_pre4.ebuild, 
+  module-init-tools-0.9.15_pre4.ebuild :
+  Update ebuilds to use automake 1.6, fixes bug 37743.
+  Marked 3.0_pre10 stable on AMD64.
+
+*module-init-tools-3.0_pre10 (19 Feb 2004)
+
+  19 Feb 2004; Martin Schlemmer <azarah@gentoo.org>
+  module-init-tools-3.0_pre10.ebuild:
+  Update version.
+
+*module-init-tools-3.0_pre9 (02 Feb 2004)
+
+  02 Feb 2004; Martin Schlemmer <azarah@gentoo.org>
+  module-init-tools-3.0_pre9.ebuild,
+  files/module-init-tools-3.0_pre9-properly-handle-alias_off.patch:
+  Update version.  Handle cases where generate-modprobe.conf do not detect an
+  alias set to 'off' due to trailing space.
+
+  01 Feb 2004; Joshua Kinard <kumba@gentoo.org>
+  module-init-tools-0.9.15_pre4.ebuild:
+  Bump to mips stable (needed for upcoming stageballs)
+
+*module-init-tools-3.0_pre8 (30 Jan 2004)
+                                                                                                                             
+  30 Jan 2004; Martin Schlemmer <azarah@gentoo.org>
+  module-init-tools-3.0_pre8.ebuild:
+  Update version, fixing bug #39397.
+
+*module-init-tools-3.0_pre7 (26 Jan 2004)
+  
+  26 Jan 2004; Leandro Dorileo <dorileo@gentoo.org>
+  module-init-tools-3.0_pre7.ebuild:
+  Update version.
+
+*module-init-tools-3.0_pre6 (25 Jan 2004)
+
+  25 Jan 2004; Martin Schlemmer <azarah@gentoo.org>
+  module-init-tools-3.0_pre6.ebuild:
+  Update version.
+
+  15 Jan 2004; <agriffis@gentoo.org> module-init-tools-0.9.15_pre4.ebuild:
+  stable on ia64
+
+  07 Jan 2004; Jon Portnoy <avenj@gentoo.org> 
+  module-init-tools-0.9.15_pre4.ebuild :
+  Some emergency keywording.
+
+*module-init-tools-3.0_pre5 (07 Jan 2004)
+
+  07 Jan 2004; Martin Schlemmer <azarah@gentoo.org>
+  module-init-tools-3.0_pre5.ebuild:
+  Update version.  Fix copyright of all ebuilds.
+
+  17 Dec 2003; Guy Martin <gmsoft@gentoo.org>
+  module-init-tools-0.9.15_pre4.ebuild:
+  Marked stable on hppa.
+
+  14 Dec 2003; Brad House <brad_mssw@gentoo.org>
+  module-init-tools-0.9.15_pre4.ebuild:
+  mark stable on amd64
+
+*module-init-tools-0.9.15_pre4 (09 Dec 2003)
+
+  09 Dec 2003; <plasmaroo@gentoo.org> module-init-tools-0.9.15_pre4.ebuild:
+  Version bumped to -pre4, closes bug #35396.
+
+  26 Nov 2003; Brad House <brad_mssw@gentoo.org>
+  module-init-tools-0.9.15_pre3.ebuild:
+  Marked stable on 'amd64'.
+
+*module-init-tools-0.9.15_pre3 (02 Nov 2003)
+
+  02 Nov 2003; Martin Schlemmer <azarah@gentoo.org>
+  module-init-tools-0.9.15_pre3.ebuild:
+  Update version.  Update modutils to 2.4.26.  Enable zlib for module-init-tools.
+
+*module-init-tools-0.9.15_pre2 (18 Oct 2003)
+
+  20 Oct 2003; Joshua Kinard <kumba@gentoo.org>
+  module-init-tools-0.9.15_pre2.ebuild:
+  Added gnuconfig support for 'mips64'.
+
+  18 Oct 2003; Martin Schlemmer <azarah@gentoo.org>
+  module-init-tools-0.9.15_pre2.ebuild:
+  Update version.
+
+  10 Oct 2003; Alexander Gabert <pappy@gentoo.org> :
+  filter-flags -fPIC will introduce -yet_exec for hardened-gcc
+
+  09 Oct 2003; Alexander Gabert <pappy@gentoo.org>
+  module-init-tools-0.9.12-r1.ebuild, module-init-tools-0.9.13_pre2.ebuild:
+  added hardened-gcc hppa behaviour
+
+  17 Sep 2003; Jon Portnoy <avenj@gentoo.org>
+  module-init-tools-0.9.15_pre1.ebuild :
+  ia64 keywords.
+
+*module-init-tools-0.9.15_pre1 (17 Sep 2003)
+
+  23 Sep 2003; Martin Schlemmer <azarah@gentoo.org>
+  module-init-tools-0.9.12-r1.ebuild, module-init-tools-0.9.13_pre2.ebuild,
+  module-init-tools-0.9.14.ebuild, module-init-tools-0.9.15_pre1.ebuild:
+  Update SRC_URI to hangle older tarballs moved to old/, bug #29315.
+
+  17 Sep 2003; Martin Schlemmer <azarah@gentoo.org>
+  module-init-tools-0.9.15_pre1.ebuild,
+  files/module-init-tools-0.9.15-legacy-modext-support.patch:
+  New version.  Add support for legacy modules (.o). bug #28831.
+
+*module-init-tools-0.9.14 (15 Sep 2003)
+
+  15 Sep 2003; Martin Schlemmer <azarah@gentoo.org>
+  module-init-tools-0.9.14.ebuild,
+  files/module-init-tools-0.9.14-be-quiet-for-devfsd.patch:
+  New version.  Update patch to quiet output when called from devfsd
+
+  06 Sep 2003; Alexander Gabert <pappy@gentoo.org>
+  module-init-tools-0.9.12-r1.ebuild, module-init-tools-0.9.13_pre2.ebuild:
+  added hardened-gcc exclude flags
+
+  10 Aug 2003; Martin Schlemmer <azarah@gentoo.org>
+  module-init-tools-0.9.12-r1.ebuild:
+  Bump to stable on x86.
+
+*module-init-tools-0.9.13_pre2 (10 Aug 2003)
+
+  10 Aug 2003; Martin Schlemmer <azarah@gentoo.org>
+  module-init-tools-0.9.13_pre2.ebuild,
+  files/module-init-tools-0.9.13-quiet-on-devfsd-probe-aliases.patch,
+  files/module-init-tools-0.9.7-export-gpl.patch:
+  New version. Add export-gpl.patch from MDK. Cleanup the
+  be-quiet-for-devfsd.patch and rename to quiet-on-devfsd-probe-aliases.patch.
+
+*module-init-tools-0.9.12-r1 (12 Jul 2003)
+
+  03 Aug 2003; Joshua Kinard <kumba@gentoo.org> module-init-tools-0.9.12-r1.ebuild:
+  Changed ~mips to mips in KEYWORDS
+
+  12 Jul 2003; Martin Schlemmer <azarah@gentoo.org>
+  module-init-tools-0.9.12-r1.ebuild,
+  files/module-init-tools-0.9.12-includes-should-override.patch:
+  Module options/aliases already accuired, should be replaced by
+  newer if they are aquired from a file 'included' after the original
+  options/aliases ...
+
+*module-init-tools-0.9.12 (02 Jun 2003)
+
+  02 Jun 2003; Martin Schlemmer <azarah@gentoo.org> Manifest,
+  module-init-tools-0.9.12.ebuild:
+  New version.
+
+  25 May 2003; Martin Holzer <mholzer@gentoo.org>
+  module-init-tools-0.9.10-r3.ebuild, module-init-tools-0.9.10-r4.ebuild,
+  module-init-tools-0.9.10-r5.ebuild, module-init-tools-0.9.11-r1.ebuild,
+  module-init-tools-0.9.11-r2.ebuild, module-init-tools-0.9.11-r3.ebuild,
+  module-init-tools-0.9.11.ebuild, module-init-tools-0.9.11a.ebuild,
+  module-init-tools-0.9.9.ebuild:
+  now uses mirror://kernel
+
+*module-init-tools-0.9.11a (26 Apr 2003)
+
+  26 Apr 2003; Martin Schlemmer <azarah@gentoo.org> module-init-tools-0.9.11a.ebuild :
+  Version update.
+
+*module-init-tools-0.9.11-r3 (21 Apr 2003)
+
+  21 Apr 2003; Daniel Robbins <drobbins@gentoo.org>: removed pkg_setup "check
+  for kernel" vestige, closing bug #19183.
+  
+  21 Apr 2003; Daniel Robbins <drobbins@gentoo.org> two fixes: first, include a
+  modinfo.old for 2.4 modinfo compatibility. Second, add a /bin/lsmod.old
+  symlink to allow a normal user to list loaded modules rather than return a
+  "lsmod.old" not found error. These symlinks can be confusing, but it appears
+  to be working well now.
+
+*module-init-tools-0.9.11-r2 (30 Mar 2003)
+
+  30 Mar 2003; Martin Schlemmer <azarah@gentoo.org> module-init-tools-0.9.11-r2.ebuild :
+  The moving of /sbin/lsmod to /bin, causes some breakage, so install a compat
+  symlink.
+
+*module-init-tools-0.9.11-r1 (30 Mar 2003)
+
+  30 Mar 2003; Brandon Low <lostlogic@gentoo.org> module-init-tools-0.9.11-r1.ebuild :
+  Update modutils to 2.4.25
+
+*module-init-tools-0.9.11 (30 Mar 2003)
+
+  30 Mar 2003; Martin Schlemmer <azarah@gentoo.org> module-init-tools-0.9.11.ebuild :
+  Update version.  Really get the ${P}-be-quiet-for-devfsd.patch to be
+  effective.  Move manpages for insmod, modprobe, etc to <name>.old.8 so that
+  they are still available.
+
+*module-init-tools-0.9.10-r5 (24 Mar 2003)
+
+  24 Mar 2003; Daniel Robbins <drobbins@gentoo.org>: new rev to include a 
+  PROVIDE="virtual/module-tools" and an unmasking for x86. Bumped modutils
+  to 2.4.24.
+
+  15 March 2003; Martin Schlemmer <azarah@gentoo.org> module-init-tools-0.9.10-be-quiet-for-devfsd.patch :
+  Tweak slightly to be more effective on recursive calls.
+
+*module-init-tools-0.9.10-r4 (15 March 2003)
+
+  15 March 2003; Martin Schlemmer <azarah@gentoo.org> module-init-tools-0.9.10-r4 :
+  - Fix modprobe to handle calls from devfsd more like modprobe from modutils ...
+    it basically do not output and do not fail for invalid modules if:
+    1) It was called with '-C /etc/modprobe.devfs'
+    2) The module starts with '/dev'
+  - Redo the /sbin/modprobe.conf stuff to not build both modutils-2.4.22 and
+	2.4.21.
+
+*module-init-tools-0.9.10-r3 (10 March 2003)
+
+  10 March 2003; Martin Schlemmer <azarah@gentoo.org> module-init-tools-0.9.10-r3 :
+  Fix recursive calls to modprobe not honoring -s, -q, -v and -C.  Use older
+  modprobe that we install as modprobe.conf when calling generate-modprobe.conf,
+  as the newer modprobe (2.4.22 and later) generate /etc/modprobe.conf with
+  invalid modules ...  Fix modprobe to _only_ log to syslog if -s was given.
+
+*module-init-tools-0.9.10-r2 (09 March 2003)
+
+  09 March 2003; Martin Schlemmer <azarah@gentoo.org> module-init-tools-0.9.10-r2 :
+  Fix -s when modprobe calls itself recursive.  Do the same for -v and -C.  Also
+  let commandline override env variables.
+
+*module-init-tools-0.9.10-r1 (02 March 2003)
+
+  06 March 2003; Martin Schlemmer <azarah@gentoo.org> module-init-tools-0.9.10-r1 :
+  Add pkg_setup() to check for a valid kernel, bug #15568.
+
+  02 March 2003; Martin Schlemmer <azarah@gentoo.org> module-init-tools-0.9.10-r1 :
+  Fix '-q' to be really quiet.  Patch generate-modprobe.conf to create sub
+  install commands with 'modprobe -q'.
+
+*module-init-tools-0.9.10 (27 Feb 2003)
+
+  27 Feb 2003; Brandon Low <lostlogic@gentoo.org> module-init-tools-0.9.10 :
+  Bump, and drop a patch that is now merged mainline
+
+*module-init-tools-0.9.9 (01 Feb 2003)
+
+  18 Feb Feb 2003; Martin Schlemmer <azarah@gentoo.org> module-init-tools-0.9.9 :
+  Hack modprobe to look at /etc/modprobe.devfs rather than /etc/modules.devfs
+  ... this is to support a later modules-update that should generate this and
+  fix the lot of errors/warnings during devfs/hotplug startup.
+
+  09 Feb 2003; Brandon Low <lostlogic@gentoo.org> module-init-tools-0.9.9 :
+  Make not die if the user doesn't have a modules.conf file already...
+
+  01 Feb 2003; Martin Schlemmer <azarah@gentoo.org> module-init-tools-0.9.9 :
+  New version.
+
+*module-init-tools-0.9.9_pre1 (17 Jan 2003)
+
+  17 Jan 2003; Brandon Low <lostlogic@gentoo.org> module-init-tools-0.9.9_pre1.ebuild;
+  Filter -fPIC from flags.  It breaks.
+
+  17 Jan 2003; Brandon Low <lostlogic@gentoo.org> module-init-tools-0.9.9_pre1.ebuild;
+  Update to latest version needed for >=development-sources-2.5.59.
+
+*module-init-tools-0.9.7 (28 Dec 2002)
+
+  28 Dec 2002; Martin Schlemmer <azarah@gentoo.org> module-init-tools-0.9.7 :
+
+  Fix generate-modprobe.conf not adding the last ';' to commands in braces,
+  causing modprobe to fail do to its calling 'sh -c ...' failing ...
+
+  28 Dec 2002; Martin Schlemmer <azarah@gentoo.org> module-init-tools-0.9.7 :
+  New version.  Also generate-modprobe.conf not accepting 2 parameters, it
+  replaced the modules.conf2modprobe.conf tool.
+
+*module-init-tools-0.9.5 (19 Dec 2002)
+
+  19 Dec 2002; Brandon Low <lostlogic@gentoo.org> module-init-tools-0.9.5 :
+  Bump.
+
+*module-init-tools-0.9.4 (19 Dec 2002)
+
+  19 Dec 2002; Brandon Low <lostlogic@gentoo.org> module-init-tools-0.9.4 :
+  Changes as submitted by Tony Murray <murrant@bvu.edu>:
+  added modules.conf2modprobe.conf tool
+  made warning after emerge visible
+  added IUSE
+  fixed spacing
+
+*module-init-tools-0.9.3 (11 Dec 2002)
+
+  11 Dec 2002; Brandon Low <lostlogic@gentoo.org> module-init-tools-0.9.3 :
+  Updated to version 0.9.3
+  Removed extra keyword.
+  Update thanks again to Tony Murray <murrant@bvu.edu>.
+
+*module-init-tools-0.9.1 (10 Dec 2002)
+
+  10 Dec 2002; Brandon Low <lostlogic@gentoo.org> module-init-tools-0.9.1 :
+  New unstable package for managing modules in 2.5 series kernels.  A
+  bit complicated as it does overwrite the modutils system package,
+  we'll need to take another look at this before 2.6 comes out.
+
+  This ebuild is thanks to Tony Murray <murrant@bvu.edu> for this :)

@@ -1,0 +1,1299 @@
+# ChangeLog for www-servers/lighttpd
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/www-servers/lighttpd/ChangeLog,v 1.232 2010/05/13 16:18:03 josejx Exp $
+
+  13 May 2010; Joseph Jezak <josejx@gentoo.org> lighttpd-1.4.26-r1.ebuild:
+  Marked ppc/ppc64 stable for bug #308405.
+
+  16 Apr 2010; Raúl Porcel <armin76@gentoo.org> lighttpd-1.4.26-r1.ebuild:
+  alpha/arm/ia64/sh stable wrt #308405
+
+  15 Apr 2010; Tiago Cunha <tcunha@gentoo.org> lighttpd-1.4.26-r1.ebuild:
+  stable sparc, bug 308405
+
+  11 Apr 2010; Tobias Heinlein <keytoaster@gentoo.org>
+  lighttpd-1.4.26-r1.ebuild:
+  amd64 stable, bug #308405
+
+  07 Apr 2010; Pawel Hajdan jr <phajdan.jr@gentoo.org>
+  lighttpd-1.4.26-r1.ebuild:
+  x86 stable wrt bug #308405
+
+  06 Apr 2010; Jeroen Roovers <jer@gentoo.org> lighttpd-1.4.26-r1.ebuild:
+  Stable for HPPA (bug #308405).
+
+  14 Mar 2010; Thilo Bangert <bangert@gentoo.org>
+  files/conf/mime-types.conf:
+  add svg mimetypes (bug #298437)
+
+*lighttpd-1.4.26-r1 (14 Mar 2010)
+
+  14 Mar 2010; Thilo Bangert <bangert@gentoo.org>
+  +files/1.4.26-fix-ssl-return-check-r2716.patch,
+  +lighttpd-1.4.26-r1.ebuild:
+  add patch which fixes ssl support for newer versions of openssl (bug
+  #308405)
+
+*lighttpd-1.4.26 (09 Feb 2010)
+
+  09 Feb 2010; Christian Hoffmann <hoffie@gentoo.org>
+  +lighttpd-1.4.26.ebuild:
+  version bump per bug 304065
+
+  04 Feb 2010; Jeroen Roovers <jer@gentoo.org> lighttpd-1.4.25-r1.ebuild:
+  Stable for PPC (bug #303213).
+
+  03 Feb 2010; Jeroen Roovers <jer@gentoo.org> lighttpd-1.4.25-r1.ebuild:
+  Stable for HPPA (bug #303213).
+
+  03 Feb 2010; Raúl Porcel <armin76@gentoo.org> lighttpd-1.4.25-r1.ebuild:
+  alpha/arm/ia64/sh/sparc stable wrt #303213
+
+  03 Feb 2010; Christian Faulhammer <fauli@gentoo.org>
+  lighttpd-1.4.25-r1.ebuild:
+  stable x86, security bug 303213
+
+  02 Feb 2010; Brent Baude <ranger@gentoo.org> lighttpd-1.4.25-r1.ebuild:
+  Marking lighttpd-1.4.25-r1 ppc64 for bug 303213
+
+*lighttpd-1.4.25-r1 (01 Feb 2010)
+
+  01 Feb 2010; Christian Hoffmann <hoffie@gentoo.org>
+  +lighttpd-1.4.25-r1.ebuild, +files/1.4.25-fix-CVE-2010-0295.patch:
+  revision bump with fix for CVE-2010-0295, straight to stable on amd64
+
+  01 Feb 2010; Markus Meier <maekke@gentoo.org> lighttpd-1.4.23.ebuild:
+  arm stable, bug #286134
+
+  24 Jan 2010; Brent Baude <ranger@gentoo.org> lighttpd-1.4.25.ebuild:
+  stable ppc, bug 301563
+
+  21 Jan 2010; Christian Faulhammer <fauli@gentoo.org>
+  lighttpd-1.4.25.ebuild:
+  stable x86, bug 301563
+
+  20 Jan 2010; <hwoarang@gentoo.org> lighttpd-1.4.25.ebuild:
+  Stable on amd64 wrt bug #301563
+
+  20 Jan 2010; Brent Baude <ranger@gentoo.org> lighttpd-1.4.25.ebuild:
+  Marking lighttpd-1.4.25 ppc64 for bug 301563
+
+*lighttpd-1.4.25 (25 Nov 2009)
+
+  25 Nov 2009; Thilo Bangert <bangert@gentoo.org>
+  +files/1.4.25-fix-unknown-AM_SILENT_RULES.patch,
+  -files/1.4.20/03_all_lighttpd-1.4.11-errorlog-pipe.diff,
+  -files/1.4.22-r1/03_all_lighttpd-1.4.11-errorlog-pipe.diff,
+  -lighttpd-1.4.20.ebuild, -lighttpd-1.4.22-r1.ebuild,
+  -lighttpd-1.4.24.ebuild,
+  -files/lighttpd-1.4.24-mod_magnet-fix-pairs.patch,
+  -files/lighttpd-1.4.24-mod_rewrite-without-pcre.patch,
+  +lighttpd-1.4.25.ebuild:
+  version bump - remove old versions
+
+  05 Nov 2009; Thomas Sachau (Tommy[D]) <tommy@gentoo.org>
+  lighttpd-1.4.24.ebuild,
+  +files/lighttpd-1.4.24-mod_rewrite-without-pcre.patch:
+  Dont build mod_rewrite with disabled pcre USE flag, fixes bug 291183
+
+*lighttpd-1.4.24 (29 Oct 2009)
+
+  29 Oct 2009; Thilo Bangert <bangert@gentoo.org> +lighttpd-1.4.24.ebuild,
+  +files/lighttpd-1.4.24-mod_magnet-fix-pairs.patch:
+  version bump
+
+  21 Oct 2009; Jeroen Roovers <jer@gentoo.org> lighttpd-1.4.23.ebuild:
+  Stable for HPPA (bug #286134).
+
+  10 Oct 2009; Raúl Porcel <armin76@gentoo.org> lighttpd-1.4.23.ebuild:
+  ia64/sparc stable wrt #286134
+
+  03 Oct 2009; Tobias Klausmann <klausman@gentoo.org>
+  lighttpd-1.4.23.ebuild:
+  Stable on alpha, bug #286134
+
+  27 Sep 2009; nixnut <nixnut@gentoo.org> lighttpd-1.4.23.ebuild:
+  ppc stable #286134
+
+  27 Sep 2009; Markus Meier <maekke@gentoo.org> lighttpd-1.4.23.ebuild:
+  amd64/x86 stable, bug #286134
+
+  27 Sep 2009; Thilo Bangert <bangert@gentoo.org> lighttpd-1.4.23.ebuild:
+  fix tests when running as user - bug #286134
+
+  26 Sep 2009; Brent Baude <ranger@gentoo.org> lighttpd-1.4.23.ebuild:
+  Marking lighttpd-1.4.23 ppc64 for bug 286134
+
+  23 Sep 2009; Jeremy Olexa <darkside@gentoo.org> lighttpd-1.4.23.ebuild:
+  add pkgconfig build dep, bug 282666
+
+*lighttpd-1.4.23 (07 Jul 2009)
+
+  07 Jul 2009; Thilo Bangert <bangert@gentoo.org> lighttpd-1.4.22-r1.ebuild,
+  +lighttpd-1.4.23.ebuild:
+  version bump - fix build with USE=doc (bug #270143)
+
+  03 Jul 2009; Thilo Bangert <bangert@gentoo.org>
+  -files/1.4.19-r2/03_all_lighttpd-1.4.11-errorlog-pipe.diff,
+  -files/1.4.19-r2/04_all_lighttpd-1.4.13-deprecated-ldap-api.diff,
+  -lighttpd-1.4.19-r2.ebuild,
+  -files/1.4.19-r2/07_all_lighttpd-1.4.19-closing_foreign_ssl_connections-do
+  s-taketwo.diff,
+  -files/1.4.19-r2/05_all_lighttpd-1.4.19-force_lowercase_filenames_in_mod_u
+  serdir.diff:
+  remove insecure version (bug #271759)
+
+*lighttpd-1.4.22-r1 (14 May 2009)
+
+  14 May 2009; Thilo Bangert <bangert@gentoo.org>
+  +files/1.4.22-r1/03_all_lighttpd-1.4.11-errorlog-pipe.diff,
+  +lighttpd-1.4.22-r1.ebuild:
+  version bump - bug #260174 - spawn-fcgi now lives in 
+  www-servers/spawn-fcgi - EAPI=2
+
+  12 May 2009; Thilo Bangert <bangert@gentoo.org> files/conf/lighttpd.conf:
+  make user screwup less likely - bug #259007
+
+  10 Apr 2009; Daniel Robbins <drobbins@funtoo.org> +lighttpd-1.4.22.ebuild:
+  New ebuild from Thilo Bangert (bug 260174)
+
+  03 Apr 2009; Thilo Bangert <bangert@gentoo.org>
+  files/conf/mod_fastcgi.conf, files/lighttpd.initd:
+  prepare for 1.4.22 - copy mod_fastcgi.conf-1.4.13-r2 to mod_fastcgi.conf
+  and lighttpd.initd-1.4.13-r2 to lighttpd.initd
+
+  03 Apr 2009; Thilo Bangert <bangert@gentoo.org>
+  -files/1.4.16/03_all_lighttpd-1.4.11-errorlog-pipe.diff,
+  -files/1.4.18/03_all_lighttpd-1.4.11-errorlog-pipe.diff,
+  -files/1.4.18-r1/03_all_lighttpd-1.4.11-errorlog-pipe.diff,
+  -files/1.4.18-r2/03_all_lighttpd-1.4.11-errorlog-pipe.diff,
+  -files/1.4.18-r3/03_all_lighttpd-1.4.11-errorlog-pipe.diff,
+  -files/1.4.19/03_all_lighttpd-1.4.11-errorlog-pipe.diff,
+  -files/1.4.19-r1/03_all_lighttpd-1.4.11-errorlog-pipe.diff,
+  -files/1.4.16/04_all_lighttpd-1.4.13-deprecated-ldap-api.diff,
+  -files/1.4.18-r2/05_all_lighttpd-fix-DoS.diff,
+  -files/1.4.18-r3/05_all_lighttpd-fix-DoS.diff,
+  -files/1.4.18/04_all_lighttpd-1.4.13-deprecated-ldap-api.diff,
+  -files/1.4.18-r1/04_all_lighttpd-1.4.13-deprecated-ldap-api.diff,
+  -files/1.4.18-r3/04_all_lighttpd-1.4.13-deprecated-ldap-api.diff,
+  -files/1.4.19/04_all_lighttpd-1.4.13-deprecated-ldap-api.diff,
+  -files/1.4.19-r1/04_all_lighttpd-1.4.13-deprecated-ldap-api.diff,
+  -files/1.4.18-r2/06_all_lighttpd-1.4.18-mod_cgi_source_disclosure-changese
+  t-211956.diff,
+  -files/1.4.18-r3/06_all_lighttpd-1.4.18-mod_cgi_source_disclosure-changese
+  t-211956.diff,
+  -files/1.4.18-r3/07_all_lighttpd-1.4.18-mod_userdir-information_disclosure
+  .diff, -files/1.4.18-r1/05_all_lighttpd-fix-DoS.diff,
+  -files/1.4.18-r2/04_all_lighttpd-1.4.13-deprecated-ldap-api.diff,
+  -files/1.4.19-r1/06_all_lighttpd-1.4.19-closing_foreign_ssl_connections-do
+  s.diff,
+  -files/1.4.19/05_all_lighttpd-1.4.19-force_lowercase_filenames_in_mod_user
+  dir.diff,
+  -files/1.4.19-r1/05_all_lighttpd-1.4.19-force_lowercase_filenames_in_mod_u
+  serdir.diff, -lighttpd-1.4.19-r1.ebuild:
+  remove obsolete ebuilds/files
+
+  03 Apr 2009; Thilo Bangert <bangert@gentoo.org>
+  files/conf/mime-types.conf:
+  add dmg mime-type to config - bug #251062
+
+  01 Apr 2009; Thilo Bangert <bangert@gentoo.org>
+  files/lighttpd.initd-1.4.13-r3:
+  add dns and netmount to use - bug #235303
+
+  03 Feb 2009; Petteri Räty <betelgeuse@gentoo.org> lighttpd-1.4.20.ebuild:
+  Block lighttpd until spawn-fcgi collision is fixed. See bug #224781.
+
+  06 Oct 2008; Christian Hoffmann <hoffie@gentoo.org> metadata.xml:
+  adding myself to metadata (should've done that earlier probably; got
+  permission to take over by welp some weeks ago)
+
+  01 Oct 2008; Tobias Scherbaum <dertobi123@gentoo.org>
+  lighttpd-1.4.20.ebuild:
+  ppc stable, bug #238180
+
+  01 Oct 2008; Markus Rothe <corsair@gentoo.org> lighttpd-1.4.20.ebuild:
+  Stable on ppc64; bug #238180
+
+  01 Oct 2008; Raúl Porcel <armin76@gentoo.org> lighttpd-1.4.20.ebuild:
+  alpha/ia64/x86 stable wrt #238180
+
+  30 Sep 2008; Jeroen Roovers <jer@gentoo.org> lighttpd-1.4.20.ebuild:
+  Stable for HPPA (bug #238180).
+
+  30 Sep 2008; Ferris McCormick <fmccor@gentoo.org> lighttpd-1.4.20.ebuild:
+  Sparc stable --- Security Bug #238180 --- all tests good.
+
+  30 Sep 2008; Christian Hoffmann <hoffie@gentoo.org>
+  lighttpd-1.4.20.ebuild:
+  stable on amd64 wrt security bug 238180
+
+*lighttpd-1.4.20 (30 Sep 2008)
+
+  30 Sep 2008; Christian Hoffmann <hoffie@gentoo.org>
+  +files/1.4.20/03_all_lighttpd-1.4.11-errorlog-pipe.diff,
+  -lighttpd-1.4.16.ebuild, -lighttpd-1.4.18.ebuild,
+  -lighttpd-1.4.18-r1.ebuild, -lighttpd-1.4.18-r2.ebuild,
+  -lighttpd-1.4.18-r3.ebuild, -lighttpd-1.4.19.ebuild,
+  +lighttpd-1.4.20.ebuild:
+  version bump to 1.4.20, including fixes for the security issues outlined
+  in bug 238180; removing old
+
+  22 Aug 2008; Doug Goldstein <cardoe@gentoo.org> metadata.xml:
+  add GLEP 56 USE flag desc from use.local.desc
+
+  03 Apr 2008; Tobias Scherbaum <dertobi123@gentoo.org>
+  lighttpd-1.4.19-r2.ebuild:
+  ppc stable, bug #214892
+
+  02 Apr 2008; Markus Meier <maekke@gentoo.org> ChangeLog:
+  amd64/x86 stable, security bug #214892
+
+  02 Apr 2008; Markus Rothe <corsair@gentoo.org> lighttpd-1.4.19-r2.ebuild:
+  Stable on ppc64; bug #214892
+
+  01 Apr 2008; Raúl Porcel <armin76@gentoo.org> lighttpd-1.4.19-r2.ebuild:
+  alpha/ia64/sparc stable wrt security #214892
+
+  01 Apr 2008; Jeroen Roovers <jer@gentoo.org> lighttpd-1.4.19-r2.ebuild:
+  Stable for HPPA (bug #214892).
+
+*lighttpd-1.4.19-r2 (31 Mar 2008)
+
+  31 Mar 2008; Thilo Bangert <bangert@gentoo.org>
+  +files/1.4.19-r2/03_all_lighttpd-1.4.11-errorlog-pipe.diff,
+  +files/1.4.19-r2/04_all_lighttpd-1.4.13-deprecated-ldap-api.diff,
+  +files/1.4.19-r2/07_all_lighttpd-1.4.19-closing_foreign_ssl_connections-do
+  s-taketwo.diff,
+  +files/1.4.19-r2/05_all_lighttpd-1.4.19-force_lowercase_filenames_in_mod_u
+  serdir.diff, +lighttpd-1.4.19-r2.ebuild:
+  new patch for ssl issue in bug 214892
+
+  26 Mar 2008; Markus Meier <maekke@gentoo.org> lighttpd-1.4.19-r1.ebuild:
+  revert stable for amd64/x86, bug #214892 (comment 4)
+
+  26 Mar 2008; Markus Meier <maekke@gentoo.org> lighttpd-1.4.19-r1.ebuild:
+  amd64/x86 stable, security bug #214892
+
+*lighttpd-1.4.19-r1 (26 Mar 2008)
+
+  26 Mar 2008; Thilo Bangert <bangert@gentoo.org>
+  +files/1.4.19-r1/03_all_lighttpd-1.4.11-errorlog-pipe.diff,
+  +files/1.4.19-r1/04_all_lighttpd-1.4.13-deprecated-ldap-api.diff,
+  +files/1.4.19-r1/06_all_lighttpd-1.4.19-closing_foreign_ssl_connections-do
+  s.diff,
+  +files/1.4.19-r1/05_all_lighttpd-1.4.19-force_lowercase_filenames_in_mod_u
+  serdir.diff, +lighttpd-1.4.19-r1.ebuild:
+  bump - fixes security bug# 214892
+
+  26 Mar 2008; Raúl Porcel <armin76@gentoo.org> lighttpd-1.4.19.ebuild:
+  alpha/ia64/sparc stable wrt security #213164
+
+  26 Mar 2008; Markus Rothe <corsair@gentoo.org> lighttpd-1.4.19.ebuild:
+  Stable on ppc64; bug #213164
+
+*lighttpd-1.4.19 (25 Mar 2008)
+
+  25 Mar 2008; Thilo Bangert <bangert@gentoo.org>
+  +files/1.4.19/03_all_lighttpd-1.4.11-errorlog-pipe.diff,
+  +files/1.4.19/04_all_lighttpd-1.4.13-deprecated-ldap-api.diff,
+  +files/1.4.19/05_all_lighttpd-1.4.19-force_lowercase_filenames_in_mod_user
+  dir.diff, +lighttpd-1.4.19.ebuild:
+  version bump - fixess bug #206333, bug #213114 and security bug #213164
+
+  21 Mar 2008; Tobias Scherbaum <dertobi123@gentoo.org>
+  lighttpd-1.4.18-r3.ebuild:
+  ppc stable, bug #212930
+
+  11 Mar 2008; Steve Dibb <beandog@gentoo.org> lighttpd-1.4.18-r3.ebuild:
+  amd64 stable, bug 212930
+
+  11 Mar 2008; Raúl Porcel <armin76@gentoo.org> lighttpd-1.4.18-r3.ebuild:
+  alpha/ia64/sparc stable wrt #212930
+
+  11 Mar 2008; Christian Faulhammer <opfer@gentoo.org>
+  lighttpd-1.4.18-r3.ebuild:
+  stable x86, security bug 212930
+
+  11 Mar 2008; Markus Rothe <corsair@gentoo.org> lighttpd-1.4.18-r3.ebuild:
+  Stable on ppc64; bug #212930
+
+  11 Mar 2008; Jeroen Roovers <jer@gentoo.org> lighttpd-1.4.18-r3.ebuild:
+  Stable for HPPA (bug #212930).
+
+*lighttpd-1.4.18-r3 (10 Mar 2008)
+
+  10 Mar 2008; Thilo Bangert <bangert@gentoo.org>
+  +files/1.4.18-r3/03_all_lighttpd-1.4.11-errorlog-pipe.diff,
+  +files/1.4.18-r3/04_all_lighttpd-1.4.13-deprecated-ldap-api.diff,
+  +files/1.4.18-r3/06_all_lighttpd-1.4.18-mod_cgi_source_disclosure-changese
+  t-211956.diff, +files/1.4.18-r3/05_all_lighttpd-fix-DoS.diff,
+  +files/1.4.18-r3/07_all_lighttpd-1.4.18-mod_userdir-information_disclosure
+  .diff, +lighttpd-1.4.18-r3.ebuild:
+  bump for security bug #212930
+
+  04 Mar 2008; Tobias Scherbaum <dertobi123@gentoo.org>
+  lighttpd-1.4.18-r2.ebuild:
+  ppc stable, bug #211956
+
+  03 Mar 2008; <pva@gentoo.org> lighttpd-1.4.18-r2.ebuild:
+  amd64 stable, security bug #211956.
+
+  03 Mar 2008; Raúl Porcel <armin76@gentoo.org> lighttpd-1.4.18-r2.ebuild:
+  alpha/ia64/sparc/x86 stable wrt security #211956
+
+  03 Mar 2008; Jeroen Roovers <jer@gentoo.org> lighttpd-1.4.18-r2.ebuild:
+  Stable for HPPA (bug #211956).
+
+  02 Mar 2008; Markus Rothe <corsair@gentoo.org> lighttpd-1.4.18-r2.ebuild:
+  Stable on ppc64; bug #211956
+
+*lighttpd-1.4.18-r2 (01 Mar 2008)
+
+  01 Mar 2008; Thilo Bangert <bangert@gentoo.org>
+  +files/1.4.18-r2/03_all_lighttpd-1.4.11-errorlog-pipe.diff,
+  +files/1.4.18-r2/04_all_lighttpd-1.4.13-deprecated-ldap-api.diff,
+  +files/1.4.18-r2/06_all_lighttpd-1.4.18-mod_cgi_source_disclosure-changese
+  t-211956.diff, +files/1.4.18-r2/05_all_lighttpd-fix-DoS.diff,
+  +lighttpd-1.4.18-r2.ebuild:
+  version bump - fix source disclosure - bug #211956
+
+  26 Feb 2008; <welp@gentoo.org> lighttpd-1.4.18-r1.ebuild:
+  Stable on amd64; bug 211230
+
+  26 Feb 2008; Tobias Scherbaum <dertobi123@gentoo.org>
+  lighttpd-1.4.18-r1.ebuild:
+  ppc stable, bug #211230
+
+  26 Feb 2008; Raúl Porcel <armin76@gentoo.org> lighttpd-1.4.18-r1.ebuild:
+  alpha/ia64/sparc stable wrt #211230
+
+  26 Feb 2008; Markus Rothe <corsair@gentoo.org> lighttpd-1.4.18-r1.ebuild:
+  Stable on ppc64; bug #211230
+
+  26 Feb 2008; Jeroen Roovers <jer@gentoo.org> lighttpd-1.4.18-r1.ebuild:
+  Stable for HPPA (bug #211230).
+
+  26 Feb 2008; <cla@gentoo.org> lighttpd-1.4.18-r1.ebuild:
+  Stable on x86 (bug #211230)
+
+*lighttpd-1.4.18-r1 (24 Feb 2008)
+
+  24 Feb 2008; <welp@gentoo.org>
+  +files/1.4.18-r1/03_all_lighttpd-1.4.11-errorlog-pipe.diff,
+  +files/1.4.18-r1/04_all_lighttpd-1.4.13-deprecated-ldap-api.diff,
+  +files/1.4.18-r1/05_all_lighttpd-fix-DoS.diff, +lighttpd-1.4.18-r1.ebuild:
+  Patch and revbump for security; bug 211230
+
+  12 Feb 2008; Thilo Bangert <bangert@gentoo.org>
+  -files/lighttpd-1.3.10.initd, -files/lighttpd-1.3.11-gentoo.diff,
+  -files/lighttpd-1.3.13-ldap-binddn.diff,
+  -files/lighttpd-1.3.13-no-mysql-means-no-mysql.diff,
+  -files/lighttpd-1.3.13-php.diff, -lighttpd-1.3.16.ebuild:
+  remove insecure version - bug #189786
+
+  26 Jan 2008; Thilo Bangert <bangert@gentoo.org> lighttpd-1.4.16.ebuild,
+  lighttpd-1.4.18.ebuild:
+  fix quoting
+
+  12 Oct 2007; Thilo Bangert <bangert@gentoo.org>
+  -files/1.4.13/03_all_lighttpd-1.4.11-errorlog-pipe.diff,
+  -files/1.4.15/03_all_lighttpd-1.4.11-errorlog-pipe.diff,
+  -files/1.4.15-r1/03_all_lighttpd-1.4.11-errorlog-pipe.diff,
+  -files/lighttpd.initd-1.4.13-r1, -files/lighttpd.initd-1.4.13-r2,
+  -files/1.4.13/01_all_lighttpd-1.4.13-99cpu-fix.diff,
+  -files/1.4.11/01_all_r1046.mod_compress.c-fixes.diff,
+  -files/1.4.13/04_all_lighttpd-1.4.13-deprecated-ldap-api.diff,
+  -files/1.4.15/04_all_lighttpd-1.4.13-deprecated-ldap-api.diff,
+  -files/1.4.15-r1/04_all_lighttpd-1.4.13-deprecated-ldap-api.diff,
+  -files/1.4.13/02_all_lighttpd-1.4.13-fcgi-auth-type.diff,
+  -files/1.4.11/02_all_r1057_fix_If-Modified-Since-ETag.diff,
+  -files/1.4.15-r1/07_all_lighttpd-1.4.15-duplicated_headers_with_folding_cr
+  ash.diff, -files/1.4.11/03_all_r1095_fix_stalling_SSL_POST_requests.diff,
+  -files/1.4.15-r1/08_all_lighttpd-1.4.15-mod_acces_bypass.diff,
+  -files/1.4.11/21_all_mod_scgi_segfault.diff,
+  -files/1.4.15-r1/09_all_lighttpd-1.4.15-mod_fastcgi_local_dos.diff,
+  -files/1.4.11/22_all_bug606_fix_SSI_echo.diff,
+  -files/1.4.15-r1/10_all_lighttpd-1.4.15-mod_scgi_crash.diff,
+  -files/1.4.11/23_all_mod_ssi_gcc-4.1.1_compile_fix.diff,
+  -lighttpd-1.4.11.ebuild, -lighttpd-1.4.13.ebuild,
+  -lighttpd-1.4.13-r1.ebuild, -lighttpd-1.4.13-r2.ebuild,
+  -lighttpd-1.4.13-r3.ebuild, -lighttpd-1.4.15.ebuild,
+  -lighttpd-1.4.15-r1.ebuild:
+  security cleanup - bug #191912 and others
+
+  13 Sep 2007; Jeroen Roovers <jer@gentoo.org> lighttpd-1.4.18.ebuild:
+  Stable for SPARC (bug #191912).
+
+  13 Sep 2007; Markus Rothe <corsair@gentoo.org> lighttpd-1.4.18.ebuild:
+  Stable on ppc64; bug #191912
+
+  10 Sep 2007; Tobias Scherbaum <dertobi123@gentoo.org>
+  lighttpd-1.4.18.ebuild:
+  ppc stable, bug #191912
+
+  10 Sep 2007; Jeroen Roovers <jer@gentoo.org> lighttpd-1.4.18.ebuild:
+  Stable for HPPA (bug #191912).
+
+  10 Sep 2007; Raúl Porcel <armin76@gentoo.org> lighttpd-1.4.18.ebuild:
+  alpha/ia64 stable wrt security #191912
+
+*lighttpd-1.4.18 (09 Sep 2007)
+
+  09 Sep 2007; Peter Weller <welp@gentoo.org>
+  +files/1.4.18/03_all_lighttpd-1.4.11-errorlog-pipe.diff,
+  +files/1.4.18/04_all_lighttpd-1.4.13-deprecated-ldap-api.diff,
+  +lighttpd-1.4.18.ebuild:
+  Security bump wrt bug 191912 - straight to stable on amd64 and x86 by
+  request of angelos and jokey, respectively
+
+  26 Aug 2007; Thilo Bangert <bangert@gentoo.org> files/lighttpd.confd:
+  fix note about export SHELL, which is only used by include_shell config option
+
+  22 Aug 2007; Thilo Bangert <bangert@gentoo.org> lighttpd-1.4.16.ebuild:
+  use latest init.d script - fixes bug #189698.
+
+  15 Aug 2007; Jeroen Roovers <jer@gentoo.org> lighttpd-1.4.16.ebuild:
+  Stable for HPPA (bug #185442).
+
+  14 Aug 2007; Tobias Scherbaum <dertobi123@gentoo.org>
+  lighttpd-1.4.16.ebuild:
+  ppc stable, bug #185442
+
+  12 Aug 2007; Steve Dibb <beandog@gentoo.org> lighttpd-1.4.16.ebuild:
+  amd64 stable, security bug 185442
+
+  10 Aug 2007; Markus Rothe <corsair@gentoo.org> lighttpd-1.4.16.ebuild:
+  Stable on ppc64; bug #185442
+
+  10 Aug 2007; Raúl Porcel <armin76@gentoo.org> lighttpd-1.4.16.ebuild:
+  alpha/ia64 stable wrt #185442
+
+  10 Aug 2007; Christian Faulhammer <opfer@gentoo.org>
+  lighttpd-1.4.16.ebuild:
+  stable x86, security bug 185442
+
+  09 Aug 2007; Gustavo Zacarias <gustavoz@gentoo.org>
+  lighttpd-1.4.16.ebuild:
+  Stable on sparc wrt security #185442
+
+*lighttpd-1.4.16 (05 Aug 2007)
+
+  05 Aug 2007; Thilo Bangert <bangert@gentoo.org>
+  +files/1.4.16/03_all_lighttpd-1.4.11-errorlog-pipe.diff,
+  +files/1.4.16/04_all_lighttpd-1.4.13-deprecated-ldap-api.diff,
+  +lighttpd-1.4.16.ebuild:
+  version bump
+
+  31 Jul 2007; Christoph Mende <angelos@gentoo.org>
+  lighttpd-1.4.15-r1.ebuild:
+  Stable on amd64 wrt security bug #185442
+
+  27 Jul 2007; Tobias Scherbaum <dertobi123@gentoo.org>
+  lighttpd-1.4.15-r1.ebuild:
+  ppc stable, bug #185442
+
+  25 Jul 2007; Raúl Porcel <armin76@gentoo.org> lighttpd-1.4.15-r1.ebuild:
+  alpha/ia64 stable wrt security #185442
+
+  25 Jul 2007; Christian Faulhammer <opfer@gentoo.org>
+  lighttpd-1.4.15-r1.ebuild:
+  stable x86, security bug 185442
+
+  20 Jul 2007; Gustavo Zacarias <gustavoz@gentoo.org>
+  lighttpd-1.4.15-r1.ebuild:
+  Stable on sparc wrt security #185442
+
+  20 Jul 2007; Jeroen Roovers <jer@gentoo.org> lighttpd-1.4.15-r1.ebuild:
+  Stable for HPPA (bug #185442).
+
+  20 Jul 2007; Markus Rothe <corsair@gentoo.org> lighttpd-1.4.15-r1.ebuild:
+  Stable on ppc64; bug #185442
+
+  20 Jul 2007; Gustavo Zacarias <gustavoz@gentoo.org>
+  lighttpd-1.4.15-r1.ebuild:
+  And use PVR too
+
+  20 Jul 2007; Gustavo Zacarias <gustavoz@gentoo.org>
+  +files/1.4.15-r1/03_all_lighttpd-1.4.11-errorlog-pipe.diff,
+  +files/1.4.15-r1/04_all_lighttpd-1.4.13-deprecated-ldap-api.diff,
+  -files/1.4.15/07_all_lighttpd-1.4.15-duplicated_headers_with_folding_crash
+  .diff,
+  +files/1.4.15-r1/07_all_lighttpd-1.4.15-duplicated_headers_with_folding_cr
+  ash.diff, -files/1.4.15/08_all_lighttpd-1.4.15-mod_acces_bypass.diff,
+  +files/1.4.15-r1/08_all_lighttpd-1.4.15-mod_acces_bypass.diff,
+  -files/1.4.15/09_all_lighttpd-1.4.15-mod_fastcgi_local_dos.diff,
+  +files/1.4.15-r1/09_all_lighttpd-1.4.15-mod_fastcgi_local_dos.diff,
+  -files/1.4.15/10_all_lighttpd-1.4.15-mod_scgi_crash.diff,
+  +files/1.4.15-r1/10_all_lighttpd-1.4.15-mod_scgi_crash.diff,
+  lighttpd-1.4.15-r1.ebuild:
+  Doh, my bad, make 1.4.15-r1 patches sepparate
+
+*lighttpd-1.4.15-r1 (20 Jul 2007)
+
+  20 Jul 2007; Gustavo Zacarias <gustavoz@gentoo.org>
+  +files/1.4.15/07_all_lighttpd-1.4.15-duplicated_headers_with_folding_crash
+  .diff, +files/1.4.15/08_all_lighttpd-1.4.15-mod_acces_bypass.diff,
+  +files/1.4.15/09_all_lighttpd-1.4.15-mod_fastcgi_local_dos.diff,
+  +files/1.4.15/10_all_lighttpd-1.4.15-mod_scgi_crash.diff,
+  +lighttpd-1.4.15-r1.ebuild:
+  Revbump with security fixes #185442
+
+  15 Jul 2007; Christian Heim <phreak@gentoo.org> metadata.xml:
+  Assigning to www-servers, as beu is being retired (#66608).
+
+  25 Apr 2007; Alexander Færøy <eroyf@gentoo.org> lighttpd-1.4.15.ebuild:
+  Marked ~mips.
+
+  18 Apr 2007; Chris Gianelloni <wolf31o2@gentoo.org>
+  lighttpd-1.4.15.ebuild:
+  Stable on ppc wrt bug #174043.
+
+  17 Apr 2007; Jose Luis Rivero <yoswink@gentoo.org> lighttpd-1.4.15.ebuild:
+  Stable on alpha wrt security #174043
+
+  16 Apr 2007; Gustavo Zacarias <gustavoz@gentoo.org>
+  lighttpd-1.4.15.ebuild:
+  Stable on sparc wrt security #174043
+
+  15 Apr 2007; Raúl Porcel <armin76@gentoo.org> lighttpd-1.4.15.ebuild:
+  ia64 stable wrt security bug 174043
+
+  15 Apr 2007; Andrej Kacian <ticho@gentoo.org> lighttpd-1.4.15.ebuild:
+  Stable on x86, security bug #174043.
+
+  15 Apr 2007; Peter Weller <welp@gentoo.org> lighttpd-1.4.15.ebuild:
+  Stable on amd64 wrt bug 174043
+
+  15 Apr 2007; Markus Rothe <corsair@gentoo.org> lighttpd-1.4.15.ebuild:
+  Stable on ppc64; bug #174043
+
+  15 Apr 2007; Thilo Bangert <bangert@gentoo.org> lighttpd-1.4.15.ebuild:
+  use .13-r2 init script to fix backgrouding issues
+
+  14 Apr 2007; Jeroen Roovers <jer@gentoo.org> lighttpd-1.4.15.ebuild:
+  Stable for HPPA (bug #174043).
+
+*lighttpd-1.4.15 (14 Apr 2007)
+
+  14 Apr 2007; Thilo Bangert <bangert@gentoo.org>
+  +files/1.4.15/03_all_lighttpd-1.4.11-errorlog-pipe.diff,
+  +files/1.4.15/04_all_lighttpd-1.4.13-deprecated-ldap-api.diff,
+  +lighttpd-1.4.15.ebuild:
+  security version bump - bug #174043
+
+*lighttpd-1.4.13-r3 (10 Apr 2007)
+
+  10 Apr 2007; Robin H. Johnson <robbat2@gentoo.org>
+  +files/lighttpd.initd-1.4.13-r3,
+  +files/1.4.13/04_all_lighttpd-1.4.13-deprecated-ldap-api.diff,
+  lighttpd-1.4.13-r1.ebuild, lighttpd-1.4.13-r2.ebuild,
+  +lighttpd-1.4.13-r3.ebuild:
+  Bug #174015 - clean up pidfile usage in init script. (No Bug #) - fix LDAP
+  usage, patch from {dev-zero,cardoe}@gentoo.org.
+
+  04 Apr 2007; Fernando J. Pereda <ferdy@gentoo.org>
+  lighttpd-1.4.13-r2.ebuild:
+  Re-add ~alpha keyword as per bug #155518
+
+  02 Apr 2007; Roy Marples <uberlord@gentoo.org> files/spawn-fcgi.initd:
+  Remove bashisms from spawn-fcgi
+
+  01 Apr 2007; Robin H. Johnson <robbat2@gentoo.org>
+  +files/conf/mod_fastcgi.conf-1.4.13-r2, lighttpd-1.4.13-r2.ebuild:
+  Bug #170951, use UNIX sockets for fastcgi processes instead of TCP sockets,
+  to fix the cases where the fastcgi processes are not respawned on graceful.
+
+*lighttpd-1.4.13-r2 (01 Apr 2007)
+
+  01 Apr 2007; Robin H. Johnson <robbat2@gentoo.org>
+  +files/lighttpd.initd-1.4.13-r2, +lighttpd-1.4.13-r2.ebuild:
+  Bug #168865, improved init.d script for s-s-d handling and other bits.
+
+  26 Mar 2007; Christian Faulhammer <opfer@gentoo.org>
+  lighttpd-1.4.13-r1.ebuild:
+  stable x86, bug 168582
+
+  25 Mar 2007; Raúl Porcel <armin76@gentoo.org> lighttpd-1.4.13-r1.ebuild:
+  Add ~ia64
+
+  25 Mar 2007; Tobias Scherbaum <dertobi123@gentoo.org>
+  lighttpd-1.4.13-r1.ebuild:
+  Stable on ppc wrt bug #168582.
+
+  17 Mar 2007; Steve Dibb <beandog@gentoo.org> lighttpd-1.4.13-r1.ebuild:
+  amd64 stable, bug 168582
+
+  15 Mar 2007; Jeroen Roovers <jer@gentoo.org> lighttpd-1.4.13-r1.ebuild:
+  Stable for HPPA (bug #168582).
+
+  15 Mar 2007; Markus Rothe <corsair@gentoo.org> lighttpd-1.4.13-r1.ebuild:
+  Stable on ppc64; bug #168582
+
+  13 Mar 2007; Gustavo Zacarias <gustavoz@gentoo.org>
+  lighttpd-1.4.13-r1.ebuild:
+  Stable on sparc wrt #168582
+
+  07 Feb 2007; Robin H. Johnson <robbat2@gentoo.org> lighttpd-1.4.13.ebuild,
+  lighttpd-1.4.13-r1.ebuild:
+  Remove ~alpha, ~arm, ~ia64, ~mips pending resolution of bug #155518.
+
+  19 Jan 2007; Alexander H. Færøy <eroyf@gentoo.org>
+  lighttpd-1.4.11.ebuild:
+  Stable on IA64.
+
+  09 Jan 2007; Robin H. Johnson <robbat2@gentoo.org>
+  +files/1.4.13/03_all_lighttpd-1.4.11-errorlog-pipe.diff,
+  files/lighttpd.initd-1.4.13-r1,
+  +files/1.4.13/01_all_lighttpd-1.4.13-99cpu-fix.diff,
+  -files/1.4.13/01_lighttpd-1.4.13-99cpu-fix.diff,
+  -files/1.4.13/03_lighttpd-1.4.13-errorlog-pipe.diff,
+  +files/1.4.13/02_all_lighttpd-1.4.13-fcgi-auth-type.diff,
+  -files/1.4.13/02_lighttpd-1.4.13-fcgi-auth-type.diff,
+  lighttpd-1.4.13-r1.ebuild:
+  The patches were not applied like there were supposed to be! Also improve
+  initd to avoid the extra exec.
+
+*lighttpd-1.4.13-r1 (09 Jan 2007)
+
+  09 Jan 2007; Robin H. Johnson <robbat2@gentoo.org>
+  +files/lighttpd.initd-1.4.13-r1,
+  +files/1.4.13/03_lighttpd-1.4.13-errorlog-pipe.diff,
+  +lighttpd-1.4.13-r1.ebuild:
+  Fix bugs 157813, 158423, 160903, 160939.
+
+  09 Jan 2007; Robin H. Johnson <robbat2@gentoo.org> lighttpd-1.4.13.ebuild:
+  Compile fix: for USE=minimal, we need to remove mod_magnet as well.
+
+*lighttpd-1.4.13 (07 Jan 2007)
+
+  07 Jan 2007; Robin H. Johnson <robbat2@gentoo.org>
+  +files/1.4.13/01_lighttpd-1.4.13-99cpu-fix.diff,
+  +files/1.4.13/02_lighttpd-1.4.13-fcgi-auth-type.diff,
+  +lighttpd-1.4.13.ebuild:
+  New 1.4.13 version, pmasked for testing.
+
+  05 Jan 2007; Elfyn McBratney <beu@gentoo.org> lighttpd-1.4.11.ebuild:
+  Set WANT_AUTO{CONF,MAKE} variables; fixes bug #160133.
+
+  08 Dec 2006; Elfyn McBratney <beu@gentoo.org> lighttpd-1.4.11.ebuild:
+  Kill DEPEND on sys-apps/sed.
+
+  23 Nov 2006; Francesco Riosa <vivo@gentoo.org> lighttpd-1.4.11.ebuild:
+  re-keyword "ppc" stable as Tobias did
+
+  23 Nov 2006; Francesco Riosa <vivo@gentoo.org> lighttpd-1.3.16.ebuild,
+  lighttpd-1.4.11.ebuild:
+  dev-db/mysql => virtual/mysql
+
+  23 Nov 2006; Tobias Scherbaum <dertobi123@gentoo.org>
+  lighttpd-1.4.11.ebuild:
+  ppc stable, bug #155981
+
+  05 Nov 2006; Thilo Bangert <bangert@gentoo.org> files/lighttpd.initd:
+  make lighttpd detach properly (added --background)
+  see bug #152709
+
+  26 Oct 2006; Roy Marples <uberlord@gentoo.org> lighttpd-1.4.11.ebuild:
+  Added ~sparc-fbsd keyword.
+
+  21 Oct 2006; Thomas Cort <tcort@gentoo.org> lighttpd-1.4.11.ebuild:
+  Stable on alpha.
+
+  07 Oct 2006; Thilo Bangert <bangert@gentoo.org> files/lighttpd.confd,
+  files/lighttpd.initd:
+  put init script configuration variables in conf.d
+  fixes bug #150376 - thanks Gabi Shaar
+
+  29 Sep 2006; Thilo Bangert <bangert@gentoo.org> +files/lighttpd.confd,
+  lighttpd-1.4.11.ebuild:
+  add SHELL to startup script - fixes #140349
+
+  05 Sep 2006; Thomas Cort <tcort@gentoo.org> lighttpd-1.4.11.ebuild:
+  Added ~alpha keyword wrt Bug #123436.
+
+  25 Jul 2006; Thilo Bangert <bangert@gentoo.org> lighttpd-1.4.11.ebuild:
+  dont install COPYING INSTALL
+
+  23 Jun 2006; Gustavo Zacarias <gustavoz@gentoo.org>
+  lighttpd-1.4.11.ebuild:
+  Stable on sparc
+
+  07 Jun 2006; Thomas Cort <tcort@gentoo.org> lighttpd-1.4.11.ebuild:
+  Stable on amd64 wrt security Bug #123022.
+
+  07 Jun 2006; Mark Loeser <halcy0n@gentoo.org> lighttpd-1.4.11.ebuild:
+  Stable on x86; bug #123022
+
+  06 Jun 2006; Thilo Bangert <bangert@gentoo.org>
+  +files/1.4.11/23_all_mod_ssi_gcc-4.1.1_compile_fix.diff,
+  lighttpd-1.4.11.ebuild:
+  fix compile on gcc-4.1.1 (bug #135317)
+  add warning about the need to re-merge when switching
+  from app-admin/fam to app-admin/gamin and vice versa
+
+  03 Jun 2006; Thilo Bangert <bangert@gentoo.org>
+  -files/1.4.10/05_all_r996_fallback_to_madvise.diff,
+  -files/lighttpd-1.3.13-pam-name.diff,
+  -files/1.4.10/06_all_r997_fastcgi_fixes.diff,
+  -files/lighttpd-1.3.13-valid-user.diff,
+  -files/1.4.10/07_all_r998_sendfile_fixes.diff,
+  -files/1.4.10/01_all_r990_mod_cgi_dont_reset_physical_path.diff,
+  -files/1.4.10/08_all_r999_mod_cgi_terminate.diff,
+  -files/1.4.10/03_all_r992_posix_fadvise_2.4.x.diff,
+  -files/1.4.10/09_all_r1000_sendfile_compile_fix.diff,
+  -files/lighttpd-1.3.13-zope-deserves-lovins-too.diff,
+  -files/1.4.10/10_all_r1001_mod_auth_errormsg_fix.diff,
+  -files/1.4.10/11_all_r1002_var_and_env_docs.diff,
+  -files/1.4.10/02_all_r991_posix_fadvise.diff,
+  -files/1.4.10/04_all_r994_remove_xopen_and_bsd_source_defines.diff,
+  -files/1.4.10/12_all_r1003_mod_fastcgi_doc_fix.diff,
+  -files/1.4.10/13_all_r1006_mod_cgi_close_unused_pipe_fds.diff,
+  -files/1.4.10/14_all_r1007_mod_alias_lowercase_support.diff,
+  -lighttpd-1.3.13-r3.ebuild, -lighttpd-1.4.7.ebuild,
+  -lighttpd-1.4.8.ebuild, -lighttpd-1.4.10-r1.ebuild,
+  -lighttpd-1.4.10-r2.ebuild:
+  punt old / vulnerable / experimental versions
+
+*lighttpd-1.4.11-r1 (01 Jun 2006)
+
+  01 Jun 2006; Thilo Bangert <bangert@gentoo.org>
+  +files/1.4.11/01_all_r1046.mod_compress.c-fixes.diff,
+  -files/1.4.11/01_r1046.diff_mod_compress.c-fixes.diff,
+  +files/1.4.11/02_all_r1057_fix_If-Modified-Since-ETag.diff,
+  -files/1.4.11/02_r1057_fix_If-Modified-Since-ETag.diff,
+  +files/1.4.11/03_all_r1095_fix_stalling_SSL_POST_requests.diff,
+  -files/1.4.11/03_r1095_fix_stalling_SSL_POST_requests.diff,
+  -files/1.4.11/04_r1116_fix_env_conf_segfault.diff,
+  +files/1.4.11/21_all_mod_scgi_segfault.diff,
+  -files/1.4.11/21_mod_scgi_segfault.diff,
+  +files/1.4.11/22_all_bug606_fix_SSI_echo.diff,
+  -files/1.4.11/22_bug606_fix_SSI_echo.diff, files/lighttpd.initd,
+  +lighttpd-1.4.11-r1.ebuild:
+  fix naming of patches - remove 04_diff
+  change startup script to 'need famd' in cases where app-admin/fam 
+  provides virtual/fam
+
+  01 Jun 2006; Steev Klimaszewski <steev@gentoo.org>
+  lighttpd-1.4.10-r2.ebuild, lighttpd-1.4.11.ebuild:
+  Change the fam useflag to strictly depend on app-admin/gamin since that is
+  the preferred app for fam these days, not to mention that famd needs to die.
+  This should fix bug 123022 to stablize lighttpd 1.4.10-r2. Changed the
+  dependency in both 1.4.10-r2 and 1.4.11.
+
+  30 May 2006; Markus Rothe <corsair@gentoo.org> lighttpd-1.4.11.ebuild:
+  Stable on ppc64; bug #123022
+
+  30 May 2006; Thilo Bangert <bangert@gentoo.org> files/lighttpd.initd,
+  files/lighttpd.logrotate:
+  add reload() to init script - use it in the logrotate script
+  bug 125241 - thanks david somers
+
+*lighttpd-1.4.11 (30 May 2006)
+
+  30 May 2006; Thilo Bangert <bangert@gentoo.org>
+  +files/1.4.11/01_r1046.diff_mod_compress.c-fixes.diff,
+  +files/1.4.11/02_r1057_fix_If-Modified-Since-ETag.diff,
+  +files/1.4.11/03_r1095_fix_stalling_SSL_POST_requests.diff,
+  +files/1.4.11/04_r1116_fix_env_conf_segfault.diff,
+  +files/1.4.11/21_mod_scgi_segfault.diff,
+  +files/1.4.11/22_bug606_fix_SSI_echo.diff, +lighttpd-1.4.11.ebuild:
+  version bump
+
+  24 May 2006; Brent Baude <ranger@gentoo.org> lighttpd-1.4.8.ebuild:
+  Stabilizing lighttpd-1.4.8 for ppc64 to satisfy cacti dependancy
+
+  05 May 2006; Diego Pettenò <flameeyes@gentoo.org>
+  lighttpd-1.4.10-r2.ebuild:
+  Readd ~x86-fbsd keyword and move enewuser/enewgroup calls in pkg_setup.
+
+  04 May 2006; J. Alberto Suárez López <bass@gentoo.orgrg>
+  +lighttpd-1.4.10-r2.ebuild:
+  Fixed permissions problem. #123022
+
+*lighttpd-1.4.10-r2 (04 May 2006)
+
+  04 May 2006; J. Alberto Suárez López <bass@gentoo.orgrg>
+  +lighttpd-1.4.10-r2.ebuild:
+  Fixed permissions problem. #123022
+
+  27 Apr 2006; Alec Warner <antarus@gentoo.org> Manifest:
+  Fixing SHA256 digest, pass four
+
+  27 Apr 2006; Luca Longinotti <chtekk@gentoo.org>
+  lighttpd-1.3.13-r3.ebuild:
+  Fix bug #130980, as QA wants this fixed quickly.
+
+  15 Apr 2006; Diego Pettenò <flameeyes@gentoo.org>
+  lighttpd-1.4.10-r1.ebuild:
+  Add ~x86-fbsd keyword.
+
+  30 Mar 2006; Aron Griffis <agriffis@gentoo.org> lighttpd-1.4.10-r1.ebuild:
+  Mark 1.4.10-r1 ~ia64
+
+  20 Mar 2006; Luca Longinotti <chtekk@gentoo.org> lighttpd-1.3.16.ebuild:
+  Fix bug #121653 on stable releases.
+
+  02 Mar 2006; Aaron Walker <ka0ttic@gentoo.org> lighttpd-1.4.10-r1.ebuild:
+  Add sed to fix typo in mod_cml docs for bug 124590.
+
+  27 Feb 2006; Aaron Walker <ka0ttic@gentoo.org>
+  files/1.4.10/14_all_r1007_mod_alias_lowercase_support.diff,
+  lighttpd-1.4.10-r1.ebuild:
+  Add missing eautoreconf call since the latest patchset modifies autotools
+  stuff; also fix upstream typo in
+  14_all_r1007_mod_alias_lowercase_support.diff.
+
+*lighttpd-1.4.10-r1 (26 Feb 2006)
+
+  26 Feb 2006; Aaron Walker <ka0ttic@gentoo.org>
+  +files/1.4.10/01_all_r990_mod_cgi_dont_reset_physical_path.diff,
+  +files/1.4.10/03_all_r992_posix_fadvise_2.4.x.diff,
+  +files/1.4.10/07_all_r998_sendfile_fixes.diff,
+  +files/1.4.10/02_all_r991_posix_fadvise.diff,
+  +files/1.4.10/04_all_r994_remove_xopen_and_bsd_source_defines.diff,
+  +files/1.4.10/05_all_r996_fallback_to_madvise.diff,
+  +files/1.4.10/06_all_r997_fastcgi_fixes.diff,
+  +files/1.4.10/08_all_r999_mod_cgi_terminate.diff,
+  +files/1.4.10/09_all_r1000_sendfile_compile_fix.diff,
+  +files/1.4.10/10_all_r1001_mod_auth_errormsg_fix.diff,
+  +files/1.4.10/11_all_r1002_var_and_env_docs.diff,
+  +files/1.4.10/12_all_r1003_mod_fastcgi_doc_fix.diff,
+  +files/1.4.10/13_all_r1006_mod_cgi_close_unused_pipe_fds.diff,
+  +files/1.4.10/14_all_r1007_mod_alias_lowercase_support.diff,
+  -lighttpd-1.4.10.ebuild, +lighttpd-1.4.10-r1.ebuild:
+  Revision bump; added a sleu of upstream patches to fix various issues.
+
+  13 Feb 2006; Michael Cummings <mcummings@gentoo.org>
+  lighttpd-1.4.7.ebuild, lighttpd-1.4.8.ebuild, lighttpd-1.4.10.ebuild:
+  Virtuals for some perl-core deps
+
+*lighttpd-1.4.10 (10 Feb 2006)
+
+  10 Feb 2006; Aaron Walker <ka0ttic@gentoo.org> +lighttpd-1.4.10.ebuild:
+  Version bump.
+
+  17 Dec 2005; Markus Rothe <corsair@gentoo.org> lighttpd-1.4.8.ebuild:
+  Added ~ppc64
+
+  15 Dec 2005; Aaron Walker <ka0ttic@gentoo.org> -lighttpd-1.4.6.ebuild:
+  Err forgot to actually rm 1.4.6.
+
+*lighttpd-1.4.8 (15 Dec 2005)
+
+  15 Dec 2005; Aaron Walker <ka0ttic@gentoo.org> +lighttpd-1.4.8.ebuild:
+  Version bump; tidy 1.4.6.
+
+  24 Nov 2005; Simon Stelling <blubb@gentoo.org> lighttpd-1.3.16.ebuild:
+  stable on amd64
+
+*lighttpd-1.4.7 (03 Nov 2005)
+
+  03 Nov 2005; Aaron Walker <ka0ttic@gentoo.org> +lighttpd-1.4.7.ebuild:
+  Version bump.
+
+  12 Oct 2005; Aaron Walker <ka0ttic@gentoo.org> files/lighttpd.initd:
+  'use slapd' in init script so that slapd gets started before lighttpd if
+  it's being used.
+
+*lighttpd-1.4.6 (10 Oct 2005)
+
+  10 Oct 2005; Aaron Walker <ka0ttic@gentoo.org> -lighttpd-1.4.3.ebuild,
+  -lighttpd-1.4.5.ebuild, +lighttpd-1.4.6.ebuild:
+  Version bump; tidy previous 1.4.x ebuilds.
+
+*lighttpd-1.4.5 (03 Oct 2005)
+
+  03 Oct 2005; Aaron Walker <ka0ttic@gentoo.org>
+  -files/1.4.4/01_all_r716-fix-remoteip-cache-keepalive.diff,
+  -files/1.4.4/03_all_r722-fix-no-global-mysql-segv.diff,
+  -files/1.4.4/07_all_r726-sce-set-if-HANDLER_GO_ON.diff,
+  -files/1.4.4/04_all_r723-fix-mod_ssi-inf-loop.diff,
+  -files/1.4.4/08_all_r727-fix-another-error-msg-segv.diff,
+  -files/1.4.4/02_all_r721-add-case-302.diff,
+  -files/1.4.4/05_all_r724-fix-error-msg-segv.diff,
+  -files/1.4.4/06_all_r725-fix-NULL-dereference.diff,
+  -files/1.4.4/09_all_r728-handle-written-correctly.diff,
+  -files/1.4.4/10_all_r729-display-content_ndx.diff,
+  -files/1.4.4/11_all_r732-dont-starve-waiting-conns.diff,
+  -files/1.4.4/13_all_r745-fix-64bit-crc32.diff,
+  -files/1.4.4/12_all_r736-fix-max-request-size.diff,
+  -lighttpd-1.4.4-r2.ebuild, +lighttpd-1.4.5.ebuild:
+  Version bump; removed 1.4.4-r2 and its plethora of patches.
+
+*lighttpd-1.4.4-r2 (29 Sep 2005)
+
+  29 Sep 2005; Aaron Walker <ka0ttic@gentoo.org>
+  +files/1.4.4/07_all_r726-sce-set-if-HANDLER_GO_ON.diff,
+  +files/1.4.4/09_all_r728-handle-written-correctly.diff,
+  +files/1.4.4/11_all_r732-dont-starve-waiting-conns.diff,
+  +files/1.4.4/13_all_r745-fix-64bit-crc32.diff,
+  +files/1.4.4/08_all_r727-fix-another-error-msg-segv.diff,
+  +files/1.4.4/10_all_r729-display-content_ndx.diff,
+  +files/1.4.4/12_all_r736-fix-max-request-size.diff,
+  -lighttpd-1.4.4-r1.ebuild, +lighttpd-1.4.4-r2.ebuild:
+  Revision bump; more upstream fixes.
+
+  22 Sep 2005; Aaron Walker <ka0ttic@gentoo.org>
+  -files/1.4.3/01_all_r716-fix-remoteip-cache-keepalive.diff,
+  -files/1.4.3/03_all_r722-fix-no-global-mysql-segv.diff,
+  -files/1.4.3/05_all_r724-fix-error-msg-segv.diff,
+  +files/1.4.4/01_all_r716-fix-remoteip-cache-keepalive.diff,
+  -files/1.4.3/02_all_r721-add-case-302.diff,
+  -files/1.4.3/04_all_r723-fix-mod_ssi-inf-loop.diff,
+  -files/1.4.3/06_all_r725-fix-NULL-dereference.diff,
+  +files/1.4.4/03_all_r722-fix-no-global-mysql-segv.diff,
+  +files/1.4.4/05_all_r724-fix-error-msg-segv.diff,
+  +files/1.4.4/02_all_r721-add-case-302.diff,
+  +files/1.4.4/04_all_r723-fix-mod_ssi-inf-loop.diff,
+  +files/1.4.4/06_all_r725-fix-NULL-dereference.diff:
+  Naming the patch directory correctly would help.
+
+*lighttpd-1.4.4-r1 (21 Sep 2005)
+
+  21 Sep 2005; Aaron Walker <ka0ttic@gentoo.org>
+  +files/1.4.3/01_all_r716-fix-remoteip-cache-keepalive.diff,
+  +files/1.4.3/03_all_r722-fix-no-global-mysql-segv.diff,
+  +files/1.4.3/04_all_r723-fix-mod_ssi-inf-loop.diff,
+  +files/1.4.3/02_all_r721-add-case-302.diff,
+  +files/1.4.3/05_all_r724-fix-error-msg-segv.diff,
+  +files/1.4.3/06_all_r725-fix-NULL-dereference.diff,
+  -lighttpd-1.4.4.ebuild, +lighttpd-1.4.4-r1.ebuild:
+  Revision bump; add patches from upstream to fix various bugs.
+
+  21 Sep 2005; Gustavo Zacarias <gustavoz@gentoo.org> lighttpd-1.4.3.ebuild:
+  Keyworded ~sparc, makes ciaranm and geoman happy
+
+*lighttpd-1.4.4 (17 Sep 2005)
+
+  17 Sep 2005; Aaron Walker <ka0ttic@gentoo.org> +lighttpd-1.4.4.ebuild:
+  Version bump.
+
+  14 Sep 2005; Aaron Walker <ka0ttic@gentoo.org> lighttpd-1.4.3.ebuild:
+  Update php depend for bug 102863.
+
+  01 Sep 2005; Aaron Walker <ka0ttic@gentoo.org> files/lighttpd.initd:
+  Add '--signal 2' to start-stop-daemon options in init script to take
+  advantage of 1.4.3's new graceful shutdown on SIGINT.
+
+*lighttpd-1.4.3 (01 Sep 2005)
+
+  01 Sep 2005; Aaron Walker <ka0ttic@gentoo.org>
+  -files/1.4.1/01_all_any-fam.diff,
+  -files/1.4.1/04_all_mod_cgi-create-env-once.diff,
+  -files/1.4.1/02_all_optional_pcre.diff,
+  -files/1.4.1/05_all_fix_array_merging.diff,
+  -files/1.4.1/03_all_mod_cgi-wait.diff,
+  -files/1.4.1/06_all_check-for-waiting-write.diff,
+  -files/1.4.1/07_all_fix-dst_addr_buf-leak.diff,
+  -files/1.4.1/08_all_doc-updates.diff,
+  -files/1.4.1/09_all_lfs-range-requests.diff,
+  -files/1.4.1/10_all_stat_cache_init_after_setuid.diff,
+  files/conf/lighttpd.conf, files/lighttpd.initd, lighttpd-1.3.16.ebuild,
+  -lighttpd-1.4.1-r1.ebuild, -lighttpd-1.4.2.ebuild, +lighttpd-1.4.3.ebuild:
+  Version bump; fixed some init script bugs. 1.3.16 stable on x86,mips. Tidy
+  old ebuilds/patches.
+
+  31 Aug 2005; Luca Barbato <lu_zero@gentoo.org> lighttpd-1.4.2.ebuild:
+  memcache support on ppc tested
+
+  29 Aug 2005; Aaron Walker <ka0ttic@gentoo.org> lighttpd-1.4.2.ebuild:
+  Add sedfu to fix an errant /tmp path I forgot to patch in tests/lighttpd.conf.
+
+*lighttpd-1.4.2 (29 Aug 2005)
+
+  29 Aug 2005; Aaron Walker <ka0ttic@gentoo.org> +lighttpd-1.4.2.ebuild:
+  Version bump; new USE flags: bzip2, fastcgi, minimal, memcache, and rrdtool.
+  Upstream accepted my patches to fix the tests (writing to /tmp and using a
+  hardcoded module dir in /usr) so tests now work and RESTRICT=test has been
+  removed (bug #97661).
+
+*lighttpd-1.4.1-r1 (27 Aug 2005)
+
+  27 Aug 2005; Aaron Walker <ka0ttic@gentoo.org>
+  +files/1.4.1/01_all_any-fam.diff, +files/1.4.1/03_all_mod_cgi-wait.diff,
+  +files/1.4.1/07_all_fix-dst_addr_buf-leak.diff,
+  +files/1.4.1/02_all_optional_pcre.diff,
+  +files/1.4.1/04_all_mod_cgi-create-env-once.diff,
+  +files/1.4.1/05_all_fix_array_merging.diff,
+  +files/1.4.1/06_all_check-for-waiting-write.diff,
+  +files/1.4.1/08_all_doc-updates.diff,
+  +files/1.4.1/09_all_lfs-range-requests.diff,
+  +files/1.4.1/10_all_stat_cache_init_after_setuid.diff,
+  files/conf/lighttpd.conf, files/conf/mime-types.conf,
+  +files/conf/mod_cgi.conf, files/conf/mod_fastcgi.conf,
+  -lighttpd-1.4.1.ebuild, +lighttpd-1.4.1-r1.ebuild:
+  Revision bump; added a sleu of upstream patches to fix various bugs. Added a
+  patch to make pcre support optional (although it's highly recommended). FAM
+  support now falls back to fam if gamin is unavailable, so we're now able to
+  use virtual/fam (fixes bug #103643). Also fixes several problems with the
+  custom gentoo configuration.
+
+  23 Aug 2005; Aaron Walker <ka0ttic@gentoo.org> lighttpd-1.4.1.ebuild:
+  Don't use check-kernel.eclass.
+
+*lighttpd-1.4.1 (22 Aug 2005)
+
+  22 Aug 2005; Aaron Walker <ka0ttic@gentoo.org>
+  -files/lighttpd-1.3.10-gentoo.diff, -files/lighttpd-1.3.10-php.diff,
+  -files/lighttpd-1.3.10-upstream.diff,
+  -files/lighttpd-1.4.0-stat-cache.diff, +files/conf/lighttpd.conf,
+  +files/conf/mime-types.conf, +files/conf/mod_fastcgi.conf,
+  +files/lighttpd.initd, +files/lighttpd.logrotate, metadata.xml,
+  -lighttpd-1.3.10-r1.ebuild, -lighttpd-1.3.15.ebuild,
+  -lighttpd-1.4.0.ebuild, +lighttpd-1.4.1.ebuild:
+  Version bump; many ebuild changes this release. Added support for USE flags:
+  doc,fam,gdbm,lua,webdav; Added logrotate script/rewrote init.d script. Also,
+  new custom gentoo configuration now located in /etc/lighttpd. Tidy old
+  ebuilds/patches.
+
+  20 Aug 2005; Aaron Walker <ka0ttic@gentoo.org> lighttpd-1.3.10-r1.ebuild,
+  lighttpd-1.3.13-r3.ebuild, lighttpd-1.3.15.ebuild, lighttpd-1.3.16.ebuild,
+  lighttpd-1.4.0.ebuild:
+  Add missing depend on sys-apps/attr.
+
+  20 Aug 2005; Aaron Walker <ka0ttic@gentoo.org>
+  +files/lighttpd-1.4.0-stat-cache.diff, lighttpd-1.3.13-r3.ebuild,
+  lighttpd-1.3.15.ebuild, lighttpd-1.3.16.ebuild, lighttpd-1.4.0.ebuild:
+  Revert previous -i flag removal as it's still necessary on certain systems
+  bug #103108; added patch for undefined reference in 1.4.0 when USE=xattr,
+  thanks to J <j-spam@starline.ee> in bug #103074.
+
+*lighttpd-1.4.0 (19 Aug 2005)
+
+  19 Aug 2005; Aaron Walker <ka0ttic@gentoo.org> +lighttpd-1.4.0.ebuild,
+  -lighttpd-1.4.0.20050819.1044.ebuild:
+  1.4.0 final.
+
+*lighttpd-1.4.0.20050819.1044 (19 Aug 2005)
+
+  19 Aug 2005; Aaron Walker <ka0ttic@gentoo.org>
+  -files/lighttpd-1.4.0.20050817.1210-fix-config-segv.diff,
+  -files/lighttpd-1.4.0.20050817.1210-fix-mod_userdir.diff,
+  -lighttpd-1.4.0.20050817.1210-r1.ebuild,
+  +lighttpd-1.4.0.20050819.1044.ebuild:
+  Another pre-release.
+
+*lighttpd-1.4.0.20050817.1210-r1 (18 Aug 2005)
+
+  18 Aug 2005; Aaron Walker <ka0ttic@gentoo.org>
+  +files/lighttpd-1.4.0.20050817.1210-fix-mod_userdir.diff,
+  -lighttpd-1.4.0.20050817.1210.ebuild,
+  +lighttpd-1.4.0.20050817.1210-r1.ebuild:
+  Revision bump; added patch from upstream to fix mod_userdir.
+
+  18 Aug 2005; Aaron Walker <ka0ttic@gentoo.org> lighttpd-1.3.13-r3.ebuild,
+  lighttpd-1.3.15.ebuild, lighttpd-1.3.16.ebuild,
+  lighttpd-1.4.0.20050817.1210.ebuild:
+  Don't use -i flag to autoreconf, bug 101299.
+
+*lighttpd-1.4.0.20050817.1210 (17 Aug 2005)
+
+  17 Aug 2005; Aaron Walker <ka0ttic@gentoo.org>
+  +files/lighttpd-1.4.0.20050817.1210-fix-config-segv.diff,
+  +lighttpd-1.4.0.20050817.1210.ebuild:
+  Added 1.4.0 pre-release for folks to test/play with.
+
+  16 Aug 2005; Aaron Walker <ka0ttic@gentoo.org>
+  -files/lighttpd-1.3.16-zope-deserves-lovins-too.diff,
+  lighttpd-1.3.10-r1.ebuild, lighttpd-1.3.13-r3.ebuild,
+  lighttpd-1.3.15.ebuild, lighttpd-1.3.16.ebuild:
+  Removed zope patch for 1.3.16 since it should be fixed (in a different way)
+  in that version. Also updated all ebuilds to use -1 instead of /bin/false
+  when calling enewuser.
+
+  12 Aug 2005; Aaron Walker <ka0ttic@gentoo.org> lighttpd-1.3.15.ebuild,
+  lighttpd-1.3.16.ebuild:
+  Add ipv6 to IUSE so that USE=-ipv6 works for uclibc, bug #102193.
+
+  11 Aug 2005; Aaron Walker <ka0ttic@gentoo.org> lighttpd-1.3.15.ebuild,
+  lighttpd-1.3.16.ebuild:
+  Added ~mips.
+
+*lighttpd-1.3.16 (02 Aug 2005)
+
+  02 Aug 2005; Aaron Walker <ka0ttic@gentoo.org>
+  +files/lighttpd-1.3.16-zope-deserves-lovins-too.diff,
+  -lighttpd-1.3.13-r1.ebuild, lighttpd-1.3.13-r3.ebuild,
+  -lighttpd-1.3.14-r1.ebuild, +lighttpd-1.3.16.ebuild:
+  Version bump; 1.3.13-r3 stable on x86; tidy old ebuilds.
+
+*lighttpd-1.3.15 (17 Jul 2005)
+
+  17 Jul 2005; Aaron Walker <ka0ttic@gentoo.org> lighttpd-1.3.10-r1.ebuild,
+  lighttpd-1.3.13-r1.ebuild, lighttpd-1.3.13-r3.ebuild,
+  lighttpd-1.3.14-r1.ebuild, +lighttpd-1.3.15.ebuild:
+  Version bump.
+
+*lighttpd-1.3.14-r1 (12 Jul 2005)
+
+  12 Jul 2005; Aaron Walker <ka0ttic@gentoo.org>
+  -files/lighttpd-1.3.11-php.diff, +files/lighttpd-1.3.13-php.diff,
+  lighttpd-1.3.13-r1.ebuild, lighttpd-1.3.13-r3.ebuild,
+  -lighttpd-1.3.14.ebuild, +lighttpd-1.3.14-r1.ebuild:
+  Revision bump. Fix php patch so that the correct bin-path is specified, bug
+  98665.
+
+  02 Jul 2005; Aaron Walker <ka0ttic@gentoo.org> lighttpd-1.3.10-r1.ebuild,
+  lighttpd-1.3.13-r1.ebuild, lighttpd-1.3.13-r3.ebuild,
+  lighttpd-1.3.14.ebuild:
+  Added RESTRICT=test until the tests are fixed.
+
+*lighttpd-1.3.14 (17 Jun 2005)
+
+  17 Jun 2005; Aaron Walker <ka0ttic@gentoo.org> +lighttpd-1.3.14.ebuild:
+  Version bump.
+
+*lighttpd-1.3.13-r3 (06 Jun 2005)
+
+  06 Jun 2005; Aaron Walker <ka0ttic@gentoo.org>
+  +files/lighttpd-1.3.13-ldap-binddn.diff,
+  +files/lighttpd-1.3.13-valid-user.diff, -lighttpd-1.3.13-r2.ebuild,
+  +lighttpd-1.3.13-r3.ebuild:
+  Revision bump; added two more patches from tigger^. See
+  http://trac.lighttpd.net/trac/ticket/4 and
+  http://trac.lighttpd.net/trac/ticket/149 respectively.
+
+  06 Jun 2005; Aaron Walker <ka0ttic@gentoo.org>
+  files/lighttpd-1.3.10.initd:
+  Updated to 'use ldap'.
+
+*lighttpd-1.3.13-r2 (05 Jun 2005)
+
+  05 Jun 2005; Aaron Walker <ka0ttic@gentoo.org>
+  -files/lighttpd-1.3.11-upstream.diff,
+  +files/lighttpd-1.3.13-pam-name.diff, -lighttpd-1.3.11.ebuild,
+  -lighttpd-1.3.13.ebuild, +lighttpd-1.3.13-r2.ebuild:
+  Revision bump; added pam name patch from tigger^.
+
+*lighttpd-1.3.13-r1 (13 May 2005)
+
+  13 May 2005; Aaron Walker <ka0ttic@gentoo.org>
+  +files/lighttpd-1.3.13-no-mysql-means-no-mysql.diff,
+  +files/lighttpd-1.3.13-zope-deserves-lovins-too.diff,
+  +lighttpd-1.3.13-r1.ebuild:
+  Revision bump; added patch by tigger^ to make lighttpd+zope happy. added
+  patch by me to not install mod_mysql_vhost if USE=-mysql.
+
+  22 Mar 2005; <blubb@gentoo.org> lighttpd-1.3.10-r1.ebuild:
+  added ~amd64
+
+*lighttpd-1.3.13 (07 Mar 2005)
+
+  07 Mar 2005; Aaron Walker <ka0ttic@gentoo.org> +lighttpd-1.3.13.ebuild:
+  Version bump.
+
+*lighttpd-1.3.11 (23 Feb 2005)
+
+  23 Feb 2005; Aaron Walker <ka0ttic@gentoo.org>
+  -files/lighttpd-1.1.8-gentoo.diff, -files/lighttpd-1.2.2-php.diff,
+  -files/lighttpd-1.2.2.initd, +files/lighttpd-1.3.11-gentoo.diff,
+  +files/lighttpd-1.3.11-php.diff, +files/lighttpd-1.3.11-upstream.diff,
+  +lighttpd-1.3.11.ebuild:
+  Version bump for bug 82792; removed old patches that I forgot to remove last
+  time.
+
+  16 Feb 2005; Aaron Walker <ka0ttic@gentoo.org> lighttpd-1.3.10-r1.ebuild,
+  -lighttpd-1.3.5.ebuild:
+  Fix deps and removed all the unnecessary confutils stuff. Removed
+  mod-cache,mod-chat, and mod-localizer from IUSE since they're no longer
+  provided. Fixes bug 82010. Also removed vulnerable 1.3.5.
+
+*lighttpd-1.3.10-r1 (14 Feb 2005)
+
+  14 Feb 2005; Aaron Walker <ka0ttic@gentoo.org>
+  files/lighttpd-1.1.8-gentoo.diff, +files/lighttpd-1.3.10-gentoo.diff,
+  files/lighttpd-1.3.10-php.diff, +files/lighttpd-1.3.10-upstream.diff,
+  -files/lighttpd.initd, -lighttpd-1.1.8-r1.ebuild, -lighttpd-1.1.8.ebuild,
+  -lighttpd-1.2.2.ebuild, +lighttpd-1.3.10-r1.ebuild,
+  -lighttpd-1.3.10.ebuild:
+  Revision bump; fixed manual page patching which should occur in the -gentoo
+  patch, not the -php patch. Also added some post-1.3.10 upstream fixes and
+  fixed LICENSE.
+
+*lighttpd-1.3.10 (14 Feb 2005)
+
+  14 Feb 2005; Aaron Walker <ka0ttic@gentoo.org>
+  +files/lighttpd-1.3.10-php.diff, +files/lighttpd-1.3.10.initd,
+  +files/spawn-fcgi.confd, +files/spawn-fcgi.initd, +lighttpd-1.3.10.ebuild:
+  Version bump for bugs 76575 and 81776.
+
+  07 Jan 2005; Sven Wegener <swegener@gentoo.org> lighttpd-1.3.5.ebuild:
+  Added missing -1 to enewuser. Closes bug #76989.
+
+  04 Jan 2005; Sven Wegener <swegener@gentoo.org> lighttpd-1.3.5.ebuild:
+  Several small fixes. Correctly install init script. Use enewuser.
+
+*lighttpd-1.3.5 (02 Nov 2004)
+
+  02 Nov 2004; Stuart Herbert <stuart@gentoo.org> +lighttpd-1.3.5.ebuild:
+  Version bump; stable on x86
+
+  28 Sep 2004; Sven Wegener <swegener@gentoo.org>
+  files/lighttpd-1.2.2.initd, files/lighttpd.initd:
+  Gentoo Technologies, Inc. -> Gentoo Foundation
+
+  08 Sep 2004; Renat Lumpau <rl03@gentoo.org> metadata.xml:
+  Fixed herd name
+
+  05 Sep 2004; Sven Wegener <swegener@gentoo.org> :
+  Fixed ChangeLog header.
+
+  03 Sep 2004; Pieter Van den Abeele <pvdabeel@gentoo.org>
+  lighttpd-1.2.2.ebuild:
+  Masked lighttpd-1.2.2.ebuild testing for ppc
+
+*lighttpd-1.1.8 (08 Aug 2004)
+
+  08 Aug 2004; Stuart Herbert <stuart@gentoo.org> +metadata.xml,
+  +files/lighttpd-1.1.8-gentoo.diff, +files/lighttpd-1.2.2-php.diff,
+  +files/lighttpd-1.2.2.initd, +files/lighttpd.initd,
+  +lighttpd-1.1.8-r1.ebuild, +lighttpd-1.1.8.ebuild, +lighttpd-1.2.2.ebuild:
+  Moved from net-www/lighttpd to www-servers/lighttpd.
+
+  08 Aug 2004; Tom Martin <slarti@gentoo.org> lighttpd-1.1.8-r1.ebuild,
+  lighttpd-1.1.8.ebuild:
+  Typo in DESCRIPTION: intented -> intended. Bug 59717.
+
+  01 Jul 2004; Jeremy Huddleston <eradicator@gentoo.org>
+  lighttpd-1.1.8-r1.ebuild, lighttpd-1.1.8.ebuild, lighttpd-1.2.2.ebuild:
+  virtual/glibc -> virtual/libc
+
+*lighttpd-1.2.2 (27 Jun 2004)
+
+  27 Jun 2004; Stuart Herbert <stuart@gentoo.org>
+  +files/lighttpd-1.2.2-php.diff, +files/lighttpd-1.2.2.initd,
+  +lighttpd-1.2.2.ebuild:
+  Version bump; php support now available; thanks to Boris Wachtmeister
+  <sirro@nurfuerspam.de>; see bug #55049
+
+  25 Jun 2004; Aron Griffis <agriffis@gentoo.org> lighttpd-1.1.8-r1.ebuild,
+  lighttpd-1.1.8.ebuild:
+  QA - fix use invocation
+
+*lighttpd-1.1.8-r1 (29 Apr 2004)
+
+  29 Apr 2004; Stuart Herbert <stuart@gentoo.org> lighttpd-1.1.8-r1.ebuild,
+  files/lighttpd.initd:
+  Fix for shutdown problems; see bug #46833
+
+  27 Apr 2004; Aron Griffis <agriffis@gentoo.org> lighttpd-1.1.8.ebuild:
+  Add inherit eutils
+
+  25 Apr 2004; David Holm <dholm@gentoo.org> lighttpd-1.1.8.ebuild:
+  Added to ~ppc.
+
+  24 Apr 2004; Stuart Herbert <stuart@gentoo.org> lighttpd-1.1.8.ebuild:
+  Replaced einstall (which doesn't work properly) with good ol' make install
+
+  23 Apr 2004; Stuart Herbert <stuart@gentoo.org> lighttpd-1.1.8.ebuild,
+  metadata.xml, files/lighttpd-1.1.8-gentoo.diff:
+  Fixes to get the server running; thanks to Boris Wachtmeister
+  <sirro@nurfuerspam.de> once again
+
+*lighttpd-1.1.8 (23 Apr 2004)
+
+  23 Apr 2004; Stuart Herbert <stuart@gentoo.org> lighttpd-1.1.8.ebuild,
+  files/lighttpd-1.1.8-gentoo.diff, files/lighttpd.initd:
+  Initial import; thanks to Boris <sirro@nurfuerspam.de>; see bug #46833
+

@@ -1,0 +1,125 @@
+# ChangeLog for virtual/perl-Digest-MD5
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/virtual/perl-Digest-MD5/ChangeLog,v 1.30 2010/01/17 13:05:36 tove Exp $
+
+  17 Jan 2010; Torsten Veller <tove@gentoo.org>
+  -perl-Digest-MD5-2.36.ebuild, -perl-Digest-MD5-2.38.ebuild,
+  perl-Digest-MD5-2.39.ebuild:
+  Add missing ppc (#288026). Cleanup
+
+  07 Jan 2010; Torsten Veller <tove@gentoo.org> perl-Digest-MD5-2.36.ebuild,
+  perl-Digest-MD5-2.38.ebuild, perl-Digest-MD5-2.39.ebuild:
+  Empty HOMEPAGE and LICENSE
+
+  15 Dec 2009; Jonathan Callen <abcd@gentoo.org>
+  perl-Digest-MD5-2.36.ebuild, perl-Digest-MD5-2.38.ebuild,
+  perl-Digest-MD5-2.39.ebuild:
+  QA: Add prefix keywords
+
+  14 Dec 2009; Raúl Porcel <armin76@gentoo.org>
+  perl-Digest-MD5-2.39.ebuild:
+  alpha/ia64/m68k/s390/sh/sparc stable wrt #288026
+
+  10 Dec 2009; Brent Baude <ranger@gentoo.org> ChangeLog:
+  Marking perl-Digest-MD5-2.39 ppc64 stable for bug 288026
+
+  07 Dec 2009; Markus Meier <maekke@gentoo.org> perl-Digest-MD5-2.39.ebuild:
+  arm stable, bug #288026
+
+  07 Dec 2009; Jeroen Roovers <jer@gentoo.org> perl-Digest-MD5-2.39.ebuild:
+  Stable for HPPA (bug #288026).
+
+  04 Dec 2009; Torsten Veller <tove@gentoo.org> perl-Digest-MD5-2.39.ebuild:
+  Stable on amd64 (#288026)
+
+  04 Dec 2009; Christian Faulhammer <fauli@gentoo.org>
+  perl-Digest-MD5-2.39.ebuild:
+  x86 stable, bug 288026
+
+  25 Aug 2009; Torsten Veller <tove@gentoo.org> perl-Digest-MD5-2.39.ebuild:
+  Add support for perl-5.10.1
+
+*perl-Digest-MD5-2.39 (10 Jun 2009)
+
+  10 Jun 2009; Torsten Veller <tove@gentoo.org>
+  +perl-Digest-MD5-2.39.ebuild:
+  Version bump
+
+  19 Mar 2009; Raúl Porcel <armin76@gentoo.org>
+  perl-Digest-MD5-2.38.ebuild:
+  ~m68k love, thanks to kolla for testing
+
+  14 Dec 2008; Alexis Ballier <aballier@gentoo.org>
+  perl-Digest-MD5-2.38.ebuild:
+  keyword ~sparc-fbsd
+
+  28 Nov 2008; Alexis Ballier <aballier@gentoo.org>
+  perl-Digest-MD5-2.38.ebuild:
+  keyword ~x86-fbsd, bug #247887
+
+*perl-Digest-MD5-2.38 (21 Nov 2008)
+
+  21 Nov 2008; Torsten Veller <tove@gentoo.org>
+  +perl-Digest-MD5-2.38.ebuild:
+  Version bump
+
+  07 Jun 2008; Alexis Ballier <aballier@gentoo.org>
+  perl-Digest-MD5-2.36.ebuild:
+  keyword ~sparc-fbsd
+
+  25 Oct 2006; Michael Cummings <mcummings@gentoo.org>
+  -perl-Digest-MD5-2.33.ebuild:
+  Correcting dep
+
+  25 Oct 2006; Michael Cummings <mcummings@gentoo.org>
+  perl-Digest-MD5-2.33.ebuild:
+  Correcting dep
+
+  04 Sep 2006; Joshua Kinard <kumba@gentoo.org> perl-Digest-MD5-2.36.ebuild:
+  Marked stable on mips.
+
+  18 Jul 2006; Bryan Østergaard <kloeri@gentoo.org>
+  perl-Digest-MD5-2.36.ebuild:
+  Stable on alpha.
+
+  18 Jun 2006; Bryan Østergaard <kloeri@gentoo.org>
+  perl-Digest-MD5-2.36.ebuild:
+  Stable on ia64.
+
+  26 May 2006; Chris Gianelloni <wolf31o2@gentoo.org>
+  perl-Digest-MD5-2.36.ebuild:
+  Stable on amd64 wrt bug #133989
+
+  25 May 2006; Guy Martin <gmsoft@gentoo.org> perl-Digest-MD5-2.36.ebuild:
+  Stable on hppa.
+
+  24 May 2006; Michael Hanselmann <hansmi@gentoo.org>
+  perl-Digest-MD5-2.36.ebuild:
+  Stable on ppc.
+
+  23 May 2006; Chris Gianelloni <wolf31o2@gentoo.org>
+  perl-Digest-MD5-2.36.ebuild:
+  Stable on x86 wrt bug #133989.
+
+  23 May 2006; <mcummings@gentoo.org> perl-Digest-MD5-2.36.ebuild:
+  Marking stable sparc, bug 133989
+
+  23 May 2006; Markus Rothe <corsair@gentoo.org>
+  perl-Digest-MD5-2.36.ebuild:
+  Stable on ppc64; bug #133989
+
+  24 Apr 2006; Diego Pettenò <flameeyes@gentoo.org>
+  perl-Digest-MD5-2.36.ebuild:
+  Add ~x86-fbsd keyword.
+
+  13 Feb 2006; Michael Cummings <mcummings@gentoo.org>
+  perl-Digest-MD5-2.33.ebuild, perl-Digest-MD5-2.36.ebuild:
+  Updated RDEPENDS
+
+*perl-Digest-MD5-2.36 (06 Feb 2006)
+*perl-Digest-MD5-2.33 (06 Feb 2006)
+
+  06 Feb 2006; Michael Cummings <mcummings@gentoo.org> +metadata.xml,
+  +perl-Digest-MD5-2.33.ebuild, +perl-Digest-MD5-2.36.ebuild:
+  New virtual for perl-core/Digest-MD5
+

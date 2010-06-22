@@ -1,0 +1,93 @@
+# ChangeLog for app-admin/eselect-ruby
+# Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/app-admin/eselect-ruby/ChangeLog,v 1.18 2009/10/12 23:09:22 jer Exp $
+
+*eselect-ruby-20100308
+
+  08 Mar 2010; Daniel Robbins <drobbins@funtoo.org>
+  +eselect-ruby-20100308.ebuild: Newer upstream version with Funtoo tweaks for
+  "ruby1.9"+ - this is the 20091225 version from Gentoo.
+
+  12 Oct 2009; Jeroen Roovers <jer@gentoo.org> eselect-ruby-20090909.ebuild:
+  Stable for HPPA (bug #288699).
+
+  11 Sep 2009; Daniel Robbins <drobbins@funtoo.org>
+  eselect-ruby-20090909.ebuild: merged in Funtoo changes to support
+  /usr/bin/ruby1.9 (vs /usr/bin/ruby19 in Gentoo)
+
+*eselect-ruby-20090909 (09 Sep 2009)
+
+  09 Sep 2009; Alex Legler <a3li@gentoo.org> -eselect-ruby-20081211.ebuild,
+  +eselect-ruby-20090909.ebuild:
+  Version bump, fixing #284027 and #277858. Removing old version.
+
+*eselect-ruby-20090723 (23 Jul 2009)
+
+  23 Jul 2009; Daniel Robbins <drobbins@funtoo.org>
+  +eselect-ruby-20090723.ebuild: adding support for new "ruby1.9", etc.
+  suffixes (previously "xy", now moving to "x.y")
+
+  15 May 2009; Alexis Ballier <aballier@gentoo.org>
+  eselect-ruby-20081227.ebuild:
+  keyword ~sparc-fbsd
+
+  09 May 2009; Jeroen Roovers <jer@gentoo.org> eselect-ruby-20081227.ebuild:
+  Stable for HPPA (bug #268515).
+
+  08 May 2009; Alex Legler <a3li@gentoo.org> eselect-ruby-20081227.ebuild:
+  amd64 stable, bug #268515.
+
+  08 May 2009; Raúl Porcel <armin76@gentoo.org>
+  eselect-ruby-20081227.ebuild:
+  arm/ia64/s390/sh/sparc stable wrt #268515
+
+  07 May 2009; Christian Faulhammer <fauli@gentoo.org>
+  eselect-ruby-20081227.ebuild:
+  stable x86, security bug 268515
+
+  07 May 2009; Brent Baude <ranger@gentoo.org> eselect-ruby-20081227.ebuild:
+  Marking eselect-ruby-20081227 ppc64 and ppc for bug 268515
+
+  07 May 2009; Tobias Klausmann <klausman@gentoo.org>
+  eselect-ruby-20081227.ebuild:
+  Stable on alpha, bug #268515
+
+  20 Mar 2009; Joseph Jezak <josejx@gentoo.org>
+  eselect-ruby-20081211.ebuild, eselect-ruby-20081227.ebuild:
+  Marked ~ppc for bug #252315.
+
+  03 Mar 2009; Peter Volkov <pva@gentoo.org> eselect-ruby-20081227.ebuild:
+  ~mips keyworded, bug #252315.
+
+  20 Jan 2009; Alexis Ballier <aballier@gentoo.org>
+  eselect-ruby-20081227.ebuild:
+  keyword ~x86-fbsd, bug #252315
+
+  14 Jan 2009; Jeroen Roovers <jer@gentoo.org> eselect-ruby-20081227.ebuild:
+  Marked ~hppa (bug #252315).
+
+  29 Dec 2008; Brent Baude <ranger@gentoo.org> eselect-ruby-20081227.ebuild:
+  Marking eselect-ruby-20081227 ~ppc64 for bug 252315
+
+*eselect-ruby-20081227 (27 Dec 2008)
+
+  27 Dec 2008; Hans de Graaff <graaff@gentoo.org>
+  +eselect-ruby-20081227.ebuild:
+  Version bump: patch from #252596 applied to facilitate prefix better. Thanks
+  to Fabian Groffen for the patch and Alex Legler for the eselect-ruby update.
+
+  26 Dec 2008; Raúl Porcel <armin76@gentoo.org>
+  eselect-ruby-20081211.ebuild:
+  Add ~alpha/~arm/~ia64/~s390/~sh wrt #251159
+
+  24 Dec 2008; Friedrich Oslage <bluebird@gentoo.org>
+  eselect-ruby-20081211.ebuild:
+  Add ~sparc keyword, bug #252315
+
+*eselect-ruby-20081211 (23 Dec 2008)
+
+  23 Dec 2008; Hans de Graaff <graaff@gentoo.org> +metadata.xml,
+  +eselect-ruby-20081211.ebuild:
+  Initial import from the ruby overlay. All credits go to Alex Legler for
+  writing and testing the eselect module.
+
