@@ -2,6 +2,7 @@
 
 dest=/var/tmp/git/portage-gentoo
 src=`pwd`
+desttree="funtoo.org-desttree"
 
 die() {
 	echo $*
@@ -52,7 +53,18 @@ rsync -a scripts/ $dest/scripts/ || die "rsync scripts fail"
 cp licenses/* $dest/licenses/ || die "licenses fail"
 cp eclass/* $dest/eclass/ || die "eclass fail"
 
+# cool cleanups:
+
+( cd $dest; find -iname ChangeLog -exec rm -f {} \; ) || die "ChangeLog zap fail"
+( cd $dest; find -iname Manifest -exec sed -n -i -e "/DIST/p" {} \; ) || die "Mini-manifest fail"
+
 git add . || die "couldn't add"
 git commit -a -m "merged tree" || die "couldn't merge tree"
 
 tar cvf /var/tmp/git/curmerge.tar -C $dest --exclude .git .
+
+( cd $dest; git checkout -b $desttree ) || die "couldn't checkout $desttree destree"
+( cd $dest; rm -rf * ) || die "couldn't prep tree"
+( cd $dest; tar xpf /var/tmp/git/curmerge.tar ) || die "couldn't unpack tarball"
+( cd $dest; git add . ) || die "couldn't do git add ."
+( cd $dest; git commit -a -m "glorious updates" ) || die "couldn't do glorious updating"
