@@ -1,8 +1,9 @@
 #!/bin/bash
 
 dest=/var/tmp/git/portage-gentoo
+final=/var/tmp/git/portage-prod
 src=`pwd`
-desttree="funtoo.org-desttree"
+desttree="funtoo.org"
 
 die() {
 	echo $*
@@ -64,9 +65,11 @@ cp eclass/* $dest/eclass/ || die "eclass fail"
 echo "Creating Portage tarball..."
 tar cf /var/tmp/git/curmerge.tar -C $dest --exclude .git . || die "tarball create error"
 
-( cd $dest; git checkout $desttree ) || die "couldn't checkout $desttree destree"
-( cd $dest; rm -rf * ) || die "couldn't prep tree"
+
+( cd $final; git checkout $desttree ) || die "couldn't checkout $desttree destree"
+( cd $final; rm -rf * ) || die "couldn't prep tree"
 echo "Extracting Portage tarball..."
-( cd $dest; tar xpf /var/tmp/git/curmerge.tar ) || die "couldn't unpack tarball"
-( cd $dest; git add . ) || die "couldn't do git add ."
-( cd $dest; git commit -a -m "glorious updates" ) || die "couldn't do glorious updating"
+( cd $final; tar xpf /var/tmp/git/curmerge.tar ) || die "couldn't unpack tarball"
+egencache --update --portdir=$final --jobs=14
+( cd $final; git add . ) || die "couldn't do git add ."
+( cd $final; git commit -a -m "glorious updates" ) || die "couldn't do glorious updating"
