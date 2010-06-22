@@ -30,6 +30,6 @@
     <flag name="ppcsha1">Make use of a bundled routine that is optimized for the PPC arch.</flag>
     <flag name="webdav">Adds support for push'ing to HTTP repositories via DAV.</flag>
     <flag name="gtk">Include the gitview contrib tool.</flag>
-    <flag name="subversion">Include git-svn for <pkg>dev-util/subversion</pkg> support.</flag>
+    <flag name="subversion">Include git-svn for <pkg>dev-vcs/subversion</pkg> support.</flag>
   </use>
 </pkgmetadata>

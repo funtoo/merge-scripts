@@ -500,7 +500,7 @@
   Even better fixup for bug #238129.
 
   24 Nov 2008; Robin H. Johnson <robbat2@gentoo.org> git-1.6.0.4-r1.ebuild:
-  Bug #238586, issue a warning for dev-util/subversion[dso].
+  Bug #238586, issue a warning for dev-vcs/subversion[dso].
 
   24 Nov 2008; Robin H. Johnson <robbat2@gentoo.org> git-1.5.4.5.ebuild,
   git-1.5.5.3.ebuild, git-1.5.5.3-r1.ebuild, git-1.5.5.4.ebuild,
@@ -1325,7 +1325,7 @@
   Typo fixed: donsider -> consider
 
   14 Aug 2006; Fernando J. Pereda <ferdy@gentoo.org> git-1.4.2.ebuild:
-  Only run git-svn tests if we have dev-util/subversion
+  Only run git-svn tests if we have dev-vcs/subversion
 
   14 Aug 2006; <dougg@gentoo.org> git-1.1.6.ebuild, git-1.4.0-r1.ebuild,
   git-1.4.1.1.ebuild, git-1.4.2.ebuild:
@@ -1815,7 +1815,7 @@
   27 Aug 2005; Carlos Silva <r3pek@gentoo.org> -git-0.99.4.ebuild,
   -git-0.99.5.ebuild, +git-0.99.5-r1.ebuild:
   Removed version 0.99.4. Revbumped version 0.99.5 to add a missing dep
-  (dev-util/cvsps). Closes bug #103962
+  (dev-vcs/cvsps). Closes bug #103962
 
   26 Aug 2005; Fernando J. Pereda <ferdy@gentoo.org> git-0.99.5.ebuild:
   marked ~alpha wrt bug #101907
