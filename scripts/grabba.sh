@@ -1,31 +1,48 @@
 #!/bin/bash
 
 dest=/var/tmp/git/portage-testmerge
+src=`pwd`
 
-for foo in `cat profiles.new/funtoo-revert profiles.new/funtoo-misc | grep -v '^#'`
+die() {
+	echo $*
+	exit 1
+}
+
+[ ! -d $dest ] && die "dest dir $dest does not exist"
+[ -e funtoo/funtoo-revert ] || die "funtoo-revert missing"
+[ -e funtoo/funtoo-misc ] || die "funtoo-misc missing"
+
+for foo in `cat funtoo/funtoo-revert funtoo/funtoo-misc | grep -v '^#'`
 do
-	( cd $dest; [ -e $foo ] && git rm -rf $foo; )
+	( cd $dest; [ -e $foo ] && rm -rf $foo; ) || die "rm -rf fail"
 done
 
-for foo in `ls -d */*`
+# "*-*" will eliminate licenses, eclass, funtoo directories:
+
+for foo in `ls -d *-*/*`
 do
-	[ "`dirname $foo`" = "profiles" ] && continue
-	[ "`dirname $foo`" = "profiles.new" ] && continue
-	[ "`dirname $foo`" = "licenses" ] && continue
+	dirn="`dirname $foo`"
 	if [ ! -d $dest/$foo ]
 	then
-		install -d `dirname $dest/$foo`
-		cp -a $foo $dest/$foo
+		install -d `dirname $dest/$foo` || die "install -d fail"
+		cp -a $foo $dest/$foo || die "cp -a fail"
 	else
 		echo "ERROR Already exists - $foo"
+		die "dir exists failure"
 	fi
 done
 
-# we want to keep gentoo package.mask and GLSAs.
+# Patches:
+for pat in `cat funtoo/patches/series`
+do
+	( cd $dest; cat "$src/funtoo/patches/$pat" | patch -p0; ) || die "patch $pat failed"
+done
 
-rm -rf $dest/profiles
-cp -a profiles $dest/
-rsync -a profiles.new/ $dest/profiles/
-rsync -a scripts/ $dest/scripts/
-cp -a sets.conf $dest/
-cp licenses/* $dest/licenses/
+# Misc files:
+
+cp -a sets.conf $dest/ || die "sets.conf fail"
+cp -a sets $dest/ || die "sets fail"
+rsync -a scripts/ $dest/scripts/ || die "rsync scripts fail"
+cp licenses/* $dest/licenses/ || die "licenses fail"
+cp eclass/* $dest/eclass/ || die "eclass fail"
+
