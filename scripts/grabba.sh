@@ -10,8 +10,8 @@ die() {
 
 [ ! -d $dest ] && die "dest dir $dest does not exist"
 
-( cd $dest; git branch -D testmerge; )
 ( cd $dest; git checkout gentoo.org; ) || die "couldn't checkout gentoo.org"
+( cd $dest; git branch -D testmerge; )
 ( cd $dest; git checkout -b testmerge; ) || die "couldn't create testmerge"
 
 [ -e funtoo/funtoo-revert ] || die "funtoo-revert missing"
@@ -55,4 +55,4 @@ cp eclass/* $dest/eclass/ || die "eclass fail"
 git add . || die "couldn't add"
 git commit -a -m "merged tree" || die "couldn't merge tree"
 
-tar cvf /var/tmp/git/curmerge.tar -C $dest --exclude .git
+tar cvf /var/tmp/git/curmerge.tar -C $dest --exclude .git .
