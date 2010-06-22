@@ -22,8 +22,8 @@ done
 
 cp -a profiles/updates/* $dest/profiles/updates
 
-rm -rf $dest/profiles/funtoo*
-cp -a profiles/funtoo* $dest/profiles
+rm -rf $dest/profiles
+cp -a profiles $dest/profiles
 rsync -a scripts/ $dest/scripts/
 cp -a sets.conf $dest/
 cp licenses/* $dest/licenses/

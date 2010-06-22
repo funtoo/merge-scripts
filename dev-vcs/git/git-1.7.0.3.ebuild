@@ -50,7 +50,7 @@ RDEPEND="${CDEPEND}
 			dev-perl/Net-SMTP-SSL
 			dev-perl/Authen-SASL
 			cgi? ( virtual/perl-CGI )
-			cvs? ( >=dev-util/cvsps-2.1 dev-perl/DBI dev-perl/DBD-SQLite )
+			cvs? ( >=dev-vcs/cvsps-2.1 dev-perl/DBI dev-perl/DBD-SQLite )
 			subversion? ( dev-util/subversion[-dso,perl] dev-perl/libwww-perl dev-perl/TermReadKey )
 			)
 	gtk?
