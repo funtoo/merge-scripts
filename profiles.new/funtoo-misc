@@ -48,8 +48,6 @@ dev-util/libconf
 dev-vcs/git
 eclass/autotools.eclass
 eclass/gmpc-plugin.eclass
-eclass/mpd-docs.eclass
-eclass/mpd-www.eclass
 eclass/toolchain.eclass
 games-action/teeworlds
 games-kids/gmult
@@ -83,12 +81,8 @@ media-sound/gimmix
 media-sound/glurp
 media-sound/gmpc
 media-sound/mpc
-media-sound/mpd
-media-sound/mpdas
-media-sound/mpdscribble
 media-sound/musepack-tools
 media-sound/ncmpc
-media-sound/pympd
 media-sound/quimup
 media-sound/scmpc
 media-sound/sonata
