@@ -49,8 +49,6 @@ dev-vcs/git
 eclass/autotools.eclass
 eclass/gmpc-plugin.eclass
 eclass/toolchain.eclass
-games-action/teeworlds
-games-kids/gmult
 mail-client/mutt
 media-gfx/comix
 media-gfx/exact-image
