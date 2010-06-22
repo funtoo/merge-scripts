@@ -57,11 +57,7 @@ media-libs/flac
 media-libs/libdlna
 media-libs/libifp
 media-sound/banshee
-media-sound/gimmix
-media-sound/glurp
 media-sound/musepack-tools
-media-sound/quimup
-media-sound/sonata
 media-tv/xbmc
 media-video/elltube
 media-video/ffmpeg
