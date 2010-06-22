@@ -61,10 +61,12 @@ cp eclass/* $dest/eclass/ || die "eclass fail"
 git add . || die "couldn't add"
 git commit -a -m "merged tree" || die "couldn't merge tree"
 
-tar cvf /var/tmp/git/curmerge.tar -C $dest --exclude .git .
+echo "Creating Portage tarball..."
+tar cf /var/tmp/git/curmerge.tar -C $dest --exclude .git .
 
-( cd $dest; git checkout -b $desttree ) || die "couldn't checkout $desttree destree"
+( cd $dest; git checkout $desttree ) || die "couldn't checkout $desttree destree"
 ( cd $dest; rm -rf * ) || die "couldn't prep tree"
+echo "Extracting Portage tarball..."
 ( cd $dest; tar xpf /var/tmp/git/curmerge.tar ) || die "couldn't unpack tarball"
 ( cd $dest; git add . ) || die "couldn't do git add ."
 ( cd $dest; git commit -a -m "glorious updates" ) || die "couldn't do glorious updating"
