@@ -1,6 +1,0 @@
-# Saleem Abdulrasool <compnerd@gentoo.org> (23 Nov 2007)
-# Unmask when we get HAL 0.5.10 straightened out
-media-sound/pulseaudio policykit
-
-# requires gcc-4.4
-app-emulation/wine win64

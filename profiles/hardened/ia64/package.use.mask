@@ -1,7 +1,0 @@
-# This file requires >=portage-2.1.1
-
-# bug #147908 - unmask these on x86 profiles
->=dev-java/sun-jdk-1.5 -nsplugin
->=dev-java/sun-jre-bin-1.5 -nsplugin
->=dev-java/ibm-jdk-bin-1.5 -nsplugin 
->=dev-java/ibm-jre-bin-1.5 -nsplugin

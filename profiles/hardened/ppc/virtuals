@@ -1,5 +1,0 @@
-# Copyright 2005 Gentoo Foundation.
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/hardened/ppc/virtuals,v 1.5 2007/01/10 11:13:40 phreak Exp $
-
-virtual/bootloader      sys-boot/yaboot

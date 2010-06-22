@@ -1,6 +1,0 @@
-# Copyright 1999-2010 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/prefix/mint/package.use.mask,v 1.2 2010/06/13 12:58:14 grobian Exp $
-
-# MiNT is static only, these flags hence won't work
-dev-db/sqlite extensions threadsafe

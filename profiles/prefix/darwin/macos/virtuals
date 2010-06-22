@@ -1,7 +1,0 @@
-# Copyright 1999-2009 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/prefix/darwin/macos/virtuals,v 1.1 2009/06/06 03:54:46 solar Exp $
-
-# Use this virtuals file to either override the Darwin base profile's defined
-# virtuals, or add virtuals that are specific to the Mac OS X profiles
-

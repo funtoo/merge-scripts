@@ -1,7 +1,0 @@
-# Copyright 1999-2009 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/default/linux/powerpc/ppc64/2008.0/desktop/make.defaults,v 1.1 2009/08/06 17:57:16 ssuominen Exp $
-
-# Samuli Suominen <ssuominen@gentoo.org> (06 Aug 2009)
-# Deprecated since 10.0 profiles.
-USE="esd qt3"

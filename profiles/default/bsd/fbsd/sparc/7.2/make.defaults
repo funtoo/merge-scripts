@@ -1,6 +1,0 @@
-# Copyright 2004-2009 Gentoo Foundation.
-# Distributed under the terms of the GNU General Public License, v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/default/bsd/fbsd/sparc/7.2/make.defaults,v 1.1 2009/05/17 10:58:15 aballier Exp $
-# System-wide defaults for the sparc G/FBSD 7.2 Portage system
-
-CHOST="sparc64-gentoo-freebsd7.2"

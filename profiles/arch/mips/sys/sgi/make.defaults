@@ -1,5 +1,0 @@
-# Copyright 1999-2009 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/arch/mips/sys/sgi/make.defaults,v 1.1 2010/01/09 09:43:14 redhatter Exp $
-
-PROFILE_ARCH="sgi"

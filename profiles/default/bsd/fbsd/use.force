@@ -1,5 +1,0 @@
-java5
-
-# Force freebsd-specific variables
-elibc_FreeBSD
-kernel_FreeBSD

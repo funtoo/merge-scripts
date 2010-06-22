@@ -1,6 +1,0 @@
-# Copyright 1999-2008 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/targets/vserver/virtuals,v 1.2 2008/04/06 15:40:56 wolf31o2 Exp $
-
-# see bug #105616 why this is in here
-virtual/dev-manager	sys-apps/baselayout-vserver

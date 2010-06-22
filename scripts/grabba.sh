@@ -21,6 +21,8 @@ do
 	fi
 done
 
+# we want to keep gentoo package.mask and GLSAs.
+
 rm -rf $dest/profiles
 cp -a profiles $dest/
 rsync -a profiles.new/ $dest/profiles/

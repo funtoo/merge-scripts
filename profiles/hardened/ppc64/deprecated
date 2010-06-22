@@ -1,7 +1,0 @@
-hardened/linux/powerpc/ppc64/10.0/64bit-userland
-# Check 'eselect profile list'.
-# Find the number that corresponds with the hardened/linux/powerpc/ppc64/10.0/64bit-userland profile.
-# Use 'eselect profile set <number>' to set a new /etc/make.profile symlink.
-#
-# Reference: http://www.gentoo.org/doc/en/gentoo-upgrading.xml
-# See: "General instructions" in Section 3. "Profile updating instructions"

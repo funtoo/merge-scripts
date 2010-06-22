@@ -1,7 +1,0 @@
-# Copyright 2005 Gentoo Foundation.
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/hardened/ppc64/packages,v 1.2 2005/11/05 03:44:22 dostrow Exp $
-
-*>=sys-devel/binutils-2.15
-*>=sys-devel/gcc-3.4.0-r6
-*>=sys-libs/glibc-2.3.3_pre20040529

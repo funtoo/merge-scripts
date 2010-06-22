@@ -1,5 +1,0 @@
-# Copyright 1999-2005 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/uclibc/x86/2.4/virtuals,v 1.1 2005/08/01 14:12:39 vapier Exp $
-
-virtual/dev-manager			sys-fs/devfsd

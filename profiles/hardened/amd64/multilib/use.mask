@@ -1,9 +1,0 @@
-# Copyright 2005 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/hardened/amd64/multilib/use.mask,v 1.2 2007/08/24 23:18:52 marineam Exp $
-
--multilib
-
-# 2007/08/24 Michael Marineau <marineam@gentoo.org>
-# Xen HVM support, masked on no-multilib but ok here
--hvm

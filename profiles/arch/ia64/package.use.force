@@ -1,8 +1,0 @@
-# Oct 21 2007; armin76@gentoo.org
-# It segfaults without debug use-flags
-# Remove when http://bugs.php.net/bug.php?id=42893 is fixed
-dev-lang/php debug
-
-# Feb 13th 2006; kloeri@gentoo.org
-# glibc-2.5 is broken with linuxthreads on ia64.
-=sys-libs/glibc-2.5 nptl nptlonly

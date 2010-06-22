@@ -1,7 +1,0 @@
-# Copyright 1999-2009 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/prefix/irix/package.use.force,v 1.1 2009/10/09 15:11:30 grobian Exp $
-
-# Fabian Groffen <grobian@gentoo.org> (09 Oct 2009)
-# CXX bindings don't compile due to incompatible threading code, bug #286097
-sys-libs/db nocxx

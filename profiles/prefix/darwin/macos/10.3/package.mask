@@ -1,7 +1,0 @@
-# Copyright 1999-2009 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/prefix/darwin/macos/10.3/package.mask,v 1.1 2009/06/06 03:54:46 solar Exp $
-
-# Fabian Groffen <grobian@gentoo.org> (31 Jan 2007)
-# system headers seem to completely unsuitable/broken for these releases
->=sys-devel/odcctools-20070412

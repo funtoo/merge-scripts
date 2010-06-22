@@ -1,6 +1,0 @@
-# This file requires >=portage-2.1.1
-
-# 26 Mar 2009: Gordon Malm <gengor@gentoo.org>
-# Build gcc with mudflap ability if supported gcc version
-sys-devel/gcc mudflap
-

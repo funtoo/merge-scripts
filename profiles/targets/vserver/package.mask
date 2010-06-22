@@ -1,7 +1,0 @@
-# Copyright 1999-2009 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/targets/vserver/package.mask,v 1.2 2009/07/31 11:15:24 ssuominen Exp $
-
-# Benedikt Boehm <hollow@gentoo.org>
-# Mask baselayout in vservers. Use baselayout-vserver instead!
-sys-apps/baselayout

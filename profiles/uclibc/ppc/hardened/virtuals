@@ -1,5 +1,0 @@
-# Copyright 2005 Gentoo Foundation.
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/uclibc/ppc/hardened/virtuals,v 1.1 2005/05/12 22:30:45 solar Exp $
-
-virtual/linux-sources	sys-kernel/hardened-sources

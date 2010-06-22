@@ -1,8 +1,0 @@
-# Copyright 1999-2010 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/prefix/sunos/solaris/5.11/x64/package.mask,v 1.4 2010/04/18 15:48:56 grobian Exp $
-
-# Fabian Groffen <grobian@gentoo.org> (24 May 2009)
-# causes SIGABORTS: (experienced with media-libs/mesa-7.4.2)
-# *** libc thread failure: lfree() called with a misaligned pointer
-=sys-devel/m4-1.4.13

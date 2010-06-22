@@ -1,5 +1,0 @@
-# Copyright 1999-2007 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License, v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/hardened/ia64/virtuals,v 1.1 2007/04/29 07:08:56 solar Exp $
-
-virtual/bootloader		sys-boot/elilo

@@ -1,9 +1,0 @@
-# Copyright 1999-2010 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/targets/desktop/kde/package.use,v 1.2 2010/03/30 11:30:34 ssuominen Exp $
-
-# Samuli Suominen <ssuominen@gentoo.org> (16 Dec 2009)
-# Required by kde-base/kde-meta because USE kde is enabled in make.defaults here.
-# See, http://bugs.gentoo.org/show_bug.cgi?id=291996
-dev-python/PyQt4 sql webkit
-x11-libs/qt-sql mysql

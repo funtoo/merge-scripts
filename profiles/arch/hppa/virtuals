@@ -1,5 +1,0 @@
-# Copyright 1999-2005 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/arch/hppa/virtuals,v 1.2 2009/05/28 15:24:50 ssuominen Exp $
-
-virtual/bootloader		sys-boot/palo

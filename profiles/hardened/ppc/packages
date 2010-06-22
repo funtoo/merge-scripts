@@ -1,6 +1,0 @@
-# Copyright 2005 Gentoo Foundation.
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/hardened/ppc/packages,v 1.1 2005/01/06 21:32:00 solar Exp $
-
-*sys-fs/hfsutils
-*sys-fs/hfsplusutils

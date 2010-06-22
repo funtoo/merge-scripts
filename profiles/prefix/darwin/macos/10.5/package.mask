@@ -1,7 +1,0 @@
-# Copyright 1999-2009 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/prefix/darwin/macos/10.5/package.mask,v 1.1 2009/06/06 03:54:49 solar Exp $
-
-# Elias Pipping <pipping@gentoo.org> (20 Sep 2008)
-# emacs 21.x does not support darwin9
-app-editors/emacs:21

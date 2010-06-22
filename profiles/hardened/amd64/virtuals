@@ -1,5 +1,0 @@
-# Copyright 1999-2005 Gentoo Foundation.
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/hardened/amd64/virtuals,v 1.13 2007/12/26 21:35:44 phreak Exp $
-
-virtual/bootloader		sys-boot/grub-static

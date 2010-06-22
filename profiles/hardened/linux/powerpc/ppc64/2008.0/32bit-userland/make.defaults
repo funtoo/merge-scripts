@@ -1,8 +1,0 @@
-# Copyright 1999-2008 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/hardened/linux/powerpc/ppc64/2008.0/32bit-userland/make.defaults,v 1.1 2008/04/01 17:41:23 wolf31o2 Exp $
-
-# All extra USE/etc should be specified in sub-profiles.
-# DO NOT POLLUTE USE ON THIS PROFILE.
-
-ACCEPT_KEYWORDS="-* ${ARCH}"

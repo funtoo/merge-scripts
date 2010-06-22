@@ -1,0 +1,21 @@
+Slight funtoo modifications to virtuals
+
+From: Daniel Robbins <drobbins@funtoo.org>
+
+
+---
+ profiles/base/virtuals |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/profiles/base/virtuals b/profiles/base/virtuals
+index fabb560..2dd1246 100644
+--- a/profiles/base/virtuals
++++ b/profiles/base/virtuals
+@@ -11,6 +11,7 @@
+ virtual/alsa				sys-kernel/gentoo-sources
+ virtual/antivirus			app-antivirus/clamav
+ virtual/aspell-dict			app-dicts/aspell-en
++virtual/baselayout			sys-apps/openrc
+ virtual/blackbox			x11-wm/blackbox
+ virtual/commonlisp			dev-lisp/sbcl
+ virtual/cron				sys-process/vixie-cron

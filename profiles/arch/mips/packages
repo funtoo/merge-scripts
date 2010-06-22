@@ -1,5 +1,0 @@
-# Copyright 2006 Gentoo Foundation.
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/arch/mips/packages,v 1.1 2008/04/01 17:39:57 wolf31o2 Exp $
-
-*virtual/bootloader

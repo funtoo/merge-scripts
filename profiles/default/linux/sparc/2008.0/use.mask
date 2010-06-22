@@ -1,6 +1,0 @@
-# Copyright 1999-2008 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/default/linux/sparc/2008.0/use.mask,v 1.1 2008/12/26 13:00:38 bluebird Exp $
-
-# this is not a multilib profile
-multilib

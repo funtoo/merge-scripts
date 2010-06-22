@@ -1,0 +1,12 @@
+# This series applies on GIT commit 8dcf8b7ec2eeb0d6252f7525907b9bb68041b3ab
+01-2008.0-profiles
+02-virtuals
+03-use
+04-packages
+05-startup-notification
+06-thirdpartymirrors
+07-updates
+08-repo_name
+09-funtoo-profile-1.0
+10-funtoo-stable
+11-package.mask

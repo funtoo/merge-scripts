@@ -1,9 +1,0 @@
-# Copyright 1999-2009 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/arch/mips/sys/sgi/ip28/make.defaults,v 1.1 2010/01/09 09:43:15 redhatter Exp $
-
-# 2006/08/18 - Donnie Berkholz <dberkholz@gentoo.org>
-# Defaults for video drivers
-VIDEO_CARDS="impact"
-
-PROFILE_ARCH="ip28"

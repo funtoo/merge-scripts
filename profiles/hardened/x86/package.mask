@@ -1,9 +1,0 @@
-# Copyright 1999-2009 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/hardened/x86/package.mask,v 1.54 2009/09/11 17:48:07 gengor Exp $
-
-<sys-kernel/linux-headers-2.5
-
-# Christian Faulhammer <opfer@gentoo.org> (05 Dec 2006)
-# this version is badly broken on x86, see bug #153280
-~app-arch/rpm-4.4.7

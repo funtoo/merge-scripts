@@ -1,6 +1,0 @@
-# Copyright 1999-2009 Gentoo Foundation.
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/default/linux/m68k/10.0/packages,v 1.1 2009/08/06 06:47:26 ssuominen Exp $
-
-# revert mask from releases/2008.0/packages
-->=sys-libs/glibc-2.4-r4

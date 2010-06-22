@@ -1,4 +1,0 @@
-# This file requires >=portage-2.1.2 (see bug #61732)
-
-# cyrus-sasl doesn't work w/ USE=berkdb (#192753)
-dev-libs/cyrus-sasl gdbm

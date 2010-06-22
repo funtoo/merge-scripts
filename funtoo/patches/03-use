@@ -1,0 +1,45 @@
+Funtoo USE changes to make.defaults and other files.
+
+From: Daniel Robbins <drobbins@funtoo.org>
+
+
+---
+ profiles/default/linux/make.defaults |   18 +++++++++++++++++-
+ 1 files changed, 17 insertions(+), 1 deletions(-)
+
+diff --git a/profiles/default/linux/make.defaults b/profiles/default/linux/make.defaults
+index 6a717f1..07e354e 100644
+--- a/profiles/default/linux/make.defaults
++++ b/profiles/default/linux/make.defaults
+@@ -13,6 +13,20 @@
+ # Default starting set of USE flags for all default/linux profiles.
+ USE="berkdb crypt ipv6 ncurses nls pam perl python readline ssl tcpd zlib"
+ 
++#Graphics and other formats often used in both server (cmdline) and desktop (X) applications:
++USE="${USE} gif png jpeg tiff truetype xml"
++
++#Codec/AV options that are useful on cmdline and desktop systems:
++USE="${USE} encode win32codecs vorbis mp3 mpeg alsa mad mp3 mpeg ogg alac flac lame wavpack"
++# Daniel Robbins removed gstreamer and mikmod (per request from Daniel Cordero and not needed for DLNA servers)
++
++#Hardware options useful on servers and desktops
++USE="${USE} cdr dvd dvdr dvdread"
++
++# Since GRP_STAGE23_USE doesn't exist anymore, I am disabling gpm in order to
++# disable a stage3 circular issue with ncurses->gpm->ncurses.
++USE="${USE} -gpm"
++
+ # make sure toolchain has sane defaults <tooclhain@gentoo.org>
+ USE="${USE} fortran mudflap openmp"
+ 
+@@ -50,7 +64,9 @@ VIDEO_CARDS="dummy fbdev v4l"
+ # after discussion on the gentoo-dev ML. As we bang out a clear
+ # direction with how LDFLAGS will be set by default, this entry
+ # may move.
+-LDFLAGS="-Wl,-O1"
++# 2009/03/13 - Daniel Robbins <drobbins@funtoo.org>
++# Updated for Funtoo to enforce --sort-common and especially --as-needed by default
++LDFLAGS="-Wl,-O1 -Wl,--sort-common -Wl,--as-needed"
+ 
+ # 2009/09/21 Robin H. Johnson <robbat2@gentoo.org>
+ # http://archives.gentoo.org/gentoo-dev/msg_dc705dc2c1a45e18a85aa62e8fb17009.xml

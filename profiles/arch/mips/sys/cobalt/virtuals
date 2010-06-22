@@ -1,5 +1,0 @@
-# Copyright 2006-2008 Gentoo Foundation.
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/arch/mips/sys/cobalt/virtuals,v 1.1 2010/01/09 09:43:11 redhatter Exp $
-
-virtual/bootloader		sys-boot/colo

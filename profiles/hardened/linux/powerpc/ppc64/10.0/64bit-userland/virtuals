@@ -1,5 +1,0 @@
-# Copyright 2004-2008 Gentoo Foundation.
-# Distributed under the terms of the GNU General Public License, v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/hardened/linux/powerpc/ppc64/10.0/64bit-userland/virtuals,v 1.1 2009/08/06 08:07:11 ssuominen Exp $
-
-virtual/bootloader     sys-boot/yaboot-static

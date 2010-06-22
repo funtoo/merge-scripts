@@ -1,5 +1,0 @@
-# Chris PeBenito <pebenito@gentoo.org>
-# must use a SELinux profile
-selinux
-
-emul-linux-x86

@@ -1,5 +1,0 @@
-# Copyright 1999-2009 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/hardened/ia64/package.mask,v 1.2 2009/07/31 11:11:07 ssuominen Exp $
-
-<sys-kernel/linux-headers-2.5

@@ -1,8 +1,0 @@
-# Copyright 1999-2008 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/default/linux/sparc/10.0/packages,v 1.1 2009/08/06 06:51:40 ssuominen Exp $
-
-# 2008.0 sparc profile
-
-# 64 bit kernel compiler
-*>=sys-devel/kgcc64-4.1.2

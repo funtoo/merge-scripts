@@ -1,8 +1,0 @@
-# Copyright 1999-2008 Gentoo Foundation.
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/hardened/linux/x86/2008.0/make.defaults,v 1.2 2008/04/21 20:11:14 phreak Exp $
-
-# STAGE1_USE does not stack
-STAGE1_USE="hardened nptl nptlonly pic"
-
-USE="-unicode"
