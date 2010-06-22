@@ -58,7 +58,7 @@ cp eclass/* $dest/eclass/ || die "eclass fail"
 ( cd $dest; find -iname ChangeLog -exec rm -f {} \; ) || die "ChangeLog zap fail"
 ( cd $dest; find -iname Manifest -exec sed -n -i -e "/DIST/p" {} \; ) || die "Mini-manifest fail"
 
-git add . || die "couldn't add"
+git add * || die "couldn't add"
 git commit -a -m "merged tree" || die "couldn't merge tree"
 
 echo "Creating Portage tarball..."
