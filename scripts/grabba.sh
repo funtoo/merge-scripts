@@ -2,7 +2,7 @@
 
 dest=/var/tmp/git/portage-testmerge
 
-for foo in `cat profiles/funtoo-revert profiles/funtoo-misc | grep -v '^#'`
+for foo in `cat profiles.new/funtoo-revert profiles.new/funtoo-misc | grep -v '^#'`
 do
 	( cd $dest; [ -e $foo ] && git rm -rf $foo; )
 done
@@ -10,6 +10,7 @@ done
 for foo in `ls -d */*`
 do
 	[ "`dirname $foo`" = "profiles" ] && continue
+	[ "`dirname $foo`" = "profiles.new" ] && continue
 	[ "`dirname $foo`" = "licenses" ] && continue
 	if [ ! -d $dest/$foo ]
 	then
