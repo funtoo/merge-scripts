@@ -4,5 +4,200 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
- 0 files changed, 0 insertions(+), 0 deletions(-)
+ profiles/package.mask/funtoo            |   83 +++++++++++++++++++++++++++++++
+ profiles/package.mask/funtoo-cautionary |   34 +++++++++++++
+ profiles/package.mask/sunrise           |   39 +++++++++++++++
+ profiles/package.unmask/funtoo          |    7 +++
+ 4 files changed, 163 insertions(+), 0 deletions(-)
+ create mode 100644 profiles/package.mask/funtoo
+ create mode 100644 profiles/package.mask/funtoo-cautionary
+ create mode 100644 profiles/package.mask/sunrise
+ create mode 100644 profiles/package.unmask/funtoo
 
+diff --git a/profiles/package.mask/funtoo b/profiles/package.mask/funtoo
+new file mode 100644
+index 0000000..a80b6f0
+--- /dev/null
++++ b/profiles/package.mask/funtoo
+@@ -0,0 +1,83 @@
++# PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
++
++# Daniel Robbins <drobbins@funtoo.org> (21 Jun 2010) mpfr-3.0.0+ should be
++# totally masked until fix found for lib version bump.
++
++>=dev-libs/mpfr-3.0.0
++
++# Jeff Mitchell <funtoo@jefferai.org> (21 Jun 2010)
++# Spanky committed fix without revbumping -- fix this for users
++=dev-libs/mpfr-2.4.1_p5
++=dev-libs/mpfr-3.0.0
++
++# Daniel Robbins <drobbins@funtoo.org> (03 Jun 2010)
++# Masked for testing
++=sys-apps/openrc-0.6.1
++
++# Daniel Robbins <drobbins@funtoo.org> (22 Apr 2010)
++# This package is broken irt libxml2-2.7.7 (bug 316377)
++=sys-libs/zlib-1.2.5
++
++# Piotr Karbowski <jabberuser@gmail.com> (20 April 2010)
++# Hardmask live version.
++=media-sound/mpd-9999
++
++# Jeff Mitchell <funtoo@jefferai.org> (12 Mar 2010)
++# New version wants udev >= 136
++>=media-libs/libgphoto2-2.4.8
++
++# Jeff Mitchell <funtoo@jefferai.org> (22 Feb 2010)
++# MySQL 5.1.43+ breaks a bunch of things, including Amarok, grass, and Akonadi
++# See Gentoo bugs 306315, 306377, 306155
++>=dev-db/mysql-5.1.43
++
++# Daniel Robbins <drobbins@funtoo.org> (28 Jan 2010)
++# man-1.6f-r4 breaks metro builds - looks like nice patches but needed more upstream testing
++=sys-apps/man-1.6f-r4
++
++# Daniel Robbins <drobbins@funtoo.org> (09 Jan 2010)
++# coreutils-8.3 has a build failure for glibc-2.7 thru 2.9. Fixed in 8.4+ 
++=sys-apps/coreutils-8.3*
++
++# Daniel Robbins <drobbins@funtoo.org> (28 Dec 2009)
++# Requested by slashbeast (Piotr Karbowski) in #funtoo due to /etc/cron.hourly
++# running up to 4 times per hour:
++=sys-process/cronbase-0.3.3*
++
++# Daniel Robbins <drobbins@funtoo.org> (2 Dec 2009)
++# Requested by Krushia in #funtoo due to it breaking kde4
++>=sys-apps/hal-0.5.14
++
++# Daniel Robbins <drobbins@funtoo.org> (2 Dec 2009)
++# Masking as per http://blog.flameeyes.eu/2009/12/01/gentoo-service-announcement-keep-clear-of-gnu-patch-2-6
++>=sys-devel/patch-2.6
++
++# Daniel Robbins <drobbins@funtoo.org> (29 Sep 2009)
++# readline-6.0_p4 does not build in metro stage builds. It
++# cannot find its own headers and relies on a prior 
++# readline to be installed
++
++=sys-libs/readline-6.0_p4
++
++# See Gentoo bug 277382:
++
++>=sys-apps/busybox-1.14
++
++# Andrew Kirch <trelane@trelane.net> (10 June 2009)
++# Paludis does not support the profiles/package.mask hierarchy.
++# See Funtoo FAQ: http://www.funtoo.org/en/funtoo/faq/
++sys-apps/paludis
++
++# Pkgcore also does not support this at present
++<=sys-apps/pkgcore-0.4.8
++
++# Daniel Robbins <drobbins@funtoo.org> (12 Mar 2009)
++# If you want to use mysql-community, unmask it and mask dev-db/mysql.
++# Having both unmasked causes "emerge dev-db/mysql" to fail, which is
++# not optimal.
++dev-db/mysql-community
++
++# Caleb Cushing <xenoterracide@gmail.com> (27 Dec 2008)
++# latest ghc, breaks other packages, fixes (bug #252176)
++>=dev-lang/ghc-6.10
++
+diff --git a/profiles/package.mask/funtoo-cautionary b/profiles/package.mask/funtoo-cautionary
+new file mode 100644
+index 0000000..8f453a3
+--- /dev/null
++++ b/profiles/package.mask/funtoo-cautionary
+@@ -0,0 +1,34 @@
++# Daniel Robbins <drobbins@funtoo.org> (20 Apr 2010)
++# udev-146-r2 works with latest RHEL-based openvz-sources, but
++# udev-151+ does not. 146 can move to unstable now.
++>=sys-fs/udev-147
++
++# Piotr Karbowski <jabberuser@gmail.com> (15 April 2010)
++# Mask new xorg-server due depends on newer udev.
++>=x11-base/xorg-server-1.8.0
++# +24-04-2010: Mask synaptics which depends on xorg-server-1.8.0.
++=x11-drivers/xf86-input-synaptics-1.2.2-r2
++
++# Daniel Robbins <drobbins@funtoo.org> (6 Aug 2009)
++# Mask new versions for caution, and these should all
++# be tested and upgraded together. This helps ensure that
++# any new glibc upgrade will be built against any upgraded
++# linux-headers.
++
++# For toolchain upgrade ll-2010.2:
++>sys-libs/glibc-2.10.1-r1
++>sys-kernel/linux-headers-2.6.32
++>sys-devel/gcc-4.4.3
++>sys-devel/binutils-2.20.1
++
++# Daniel Robbins <drobbins@funtoo.org> (02 Aug 2009)
++# let's watch upstream bugs for a bit:
++>=dev-lang/python-3
++
++# Daniel Robbins <drobbins@funtooo.org> (22 Jul 2009)
++# I only recommend the 2.6.18 stable openvz-sources
++>=sys-kernel/openvz-sources-2.6.19
++
++# Dantrell B. <dantrell@mirthil.org> (24 Feb 2009)
++# Masked for caution.
++>=dev-lang/php-5.3.0_beta1
+diff --git a/profiles/package.mask/sunrise b/profiles/package.mask/sunrise
+new file mode 100644
+index 0000000..e0a0f2a
+--- /dev/null
++++ b/profiles/package.mask/sunrise
+@@ -0,0 +1,39 @@
++# Michele Beltrame <mb@italpro.net> (7 Dec 2008)
++# Masked for testing.
++
++=dev-perl/Catalyst-Runtime-5.8000_pre4
++
++# Tiago Cunha (tcunha) <me@tiagocunha.org> (06 Aug 2008)
++# Mask GIT ebuild
++=gnome-extra/guake-9999
++
++# Jack Miller (TheMoken) <jack@codezen.org> (05 Jul 2008)
++# Mask live ebuild
++~net-news/canto-9999
++
++# Chi-Thanh Christopher Nguyen (chithead) <chithanh@cs.tu-berlin.de> (19 Jun 2008)
++# Mask live ebuild
++=media-tv/em28xx-new-9999
++
++# Thomas Anderson (gentoofan23) <gentoofan23@gmail.com> (15 Jun 2008)
++# Mask live ebuild
++=app-misc/navit-9999
++
++# Geoff Clements (ContextSwitch) <geoff@electron.me.uk> (10 Jun 2008)
++# >=dev-db/dabo-0.8.4 now contains daboide
++# daboide will be deleted with next release of dabo
++=dev-db/daboide-0.7.1
++
++# Felix Bechstein <f@ub0r.de> (28 Oct 2007)
++# svn version should be masked
++=net-misc/ypd-9999
++
++# Felix Bechstein <f@ub0r.de> (22 Oct 2007)
++# svn version should be masked
++=media-sound/mtag-9999
++
++# Patrick Zimmermann <patrick@zakweb.de> (28 Jun 2006)
++# Has dependencies that are masked
++games-fps/unreal-tournament-operationnapali
++
++
+diff --git a/profiles/package.unmask/funtoo b/profiles/package.unmask/funtoo
+new file mode 100644
+index 0000000..a0b1ee2
+--- /dev/null
++++ b/profiles/package.unmask/funtoo
+@@ -0,0 +1,7 @@
++>=sys-apps/portage-2.2_pre
++# Jeff Mitchell <funtoo@jefferai.org> (21 Sep 2009)
++# Override upstream mask as we're working with their Perl team
++~dev-lang/perl-5.10.1
++~sys-devel/libperl-5.10.1
++=app-admin/perl-cleaner-2*
++dev-libs/gobject-introspection

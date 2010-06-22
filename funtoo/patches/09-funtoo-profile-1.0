@@ -4,5 +4,1591 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
- 0 files changed, 0 insertions(+), 0 deletions(-)
+ profiles/funtoo/1.0/README                         |    1 
+ profiles/funtoo/1.0/TODO                           |    3 
+ profiles/funtoo/1.0/flavors/core/make.defaults     |    2 
+ .../flavors/core/package.keywords/funtoo-stable    |    1 
+ profiles/funtoo/1.0/flavors/core/package.mask      |    1 
+ profiles/funtoo/1.0/flavors/core/packages          |    1 
+ profiles/funtoo/1.0/make.defaults                  |   38 +++
+ profiles/funtoo/1.0/package.use/toolchain          |    1 
+ profiles/funtoo/1.0/packages                       |   79 +++++++
+ profiles/funtoo/1.0/parent                         |    1 
+ profiles/funtoo/1.0/platform/README                |    5 
+ .../platform/linux-gnu/arch/amd64/make.defaults    |   59 +++++
+ .../linux-gnu/arch/amd64/package.use.force         |   11 +
+ .../arch/amd64/package.use.mask/cpu-features       |   60 +++++
+ .../linux-gnu/arch/amd64/package.use.mask/gentoo   |  154 +++++++++++++
+ .../1.0/platform/linux-gnu/arch/amd64/parent       |    1 
+ .../1.0/platform/linux-gnu/arch/amd64/use.force    |    2 
+ .../platform/linux-gnu/arch/amd64/use.mask/core    |    5 
+ .../linux-gnu/arch/amd64/use.mask/cpu-features     |    7 +
+ .../linux-gnu/arch/amd64/use.mask/hardware         |   23 ++
+ .../1.0/platform/linux-gnu/arch/x86/make.defaults  |   21 ++
+ .../linux-gnu/arch/x86/package.mask/gentoo         |    7 +
+ .../arch/x86/package.use.mask/cpu-features         |   21 ++
+ .../linux-gnu/arch/x86/package.use.mask/gentoo     |   27 ++
+ .../funtoo/1.0/platform/linux-gnu/arch/x86/parent  |    1 
+ .../1.0/platform/linux-gnu/arch/x86/use.force      |    2 
+ .../platform/linux-gnu/arch/x86/use.mask/gentoo    |  108 +++++++++
+ .../1.0/platform/linux-gnu/arch/x86/virtuals       |    9 +
+ .../funtoo/1.0/platform/linux-gnu/make.defaults    |   19 ++
+ .../linux-gnu/package.keywords/funtoo-stable       |   30 +++
+ .../1.0/platform/linux-gnu/package.unmask/funtoo   |    5 
+ .../1.0/platform/linux-gnu/package.use/cherokee    |    1 
+ profiles/funtoo/1.0/platform/linux-gnu/parent      |    1 
+ profiles/funtoo/1.0/platform/linux-gnu/use.force   |    9 +
+ profiles/funtoo/1.0/platform/linux-gnu/virtuals    |    8 +
+ profiles/funtoo/1.0/profile.bashrc                 |   18 ++
+ profiles/funtoo/1.0/use.mask/gentoo                |  225 +++++++++++++++++++
+ profiles/funtoo/1.0/virtuals                       |   57 +++++
+ profiles/funtoo/base/README                        |    2 
+ profiles/funtoo/base/package.use.mask/gentoo       |  237 ++++++++++++++++++++
+ 40 files changed, 1263 insertions(+), 0 deletions(-)
+ create mode 100644 profiles/funtoo/1.0/README
+ create mode 100644 profiles/funtoo/1.0/TODO
+ create mode 100644 profiles/funtoo/1.0/flavors/core/make.defaults
+ create mode 120000 profiles/funtoo/1.0/flavors/core/package.keywords/funtoo-stable
+ create mode 120000 profiles/funtoo/1.0/flavors/core/package.mask
+ create mode 120000 profiles/funtoo/1.0/flavors/core/packages
+ create mode 100644 profiles/funtoo/1.0/make.defaults
+ create mode 100644 profiles/funtoo/1.0/package.use/toolchain
+ create mode 100644 profiles/funtoo/1.0/packages
+ create mode 100644 profiles/funtoo/1.0/parent
+ create mode 100644 profiles/funtoo/1.0/platform/README
+ create mode 100644 profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/make.defaults
+ create mode 100644 profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/package.use.force
+ create mode 100644 profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/package.use.mask/cpu-features
+ create mode 100644 profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/package.use.mask/gentoo
+ create mode 100644 profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/parent
+ create mode 100644 profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/use.force
+ create mode 100644 profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/use.mask/core
+ create mode 100644 profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/use.mask/cpu-features
+ create mode 100644 profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/use.mask/hardware
+ create mode 100644 profiles/funtoo/1.0/platform/linux-gnu/arch/x86/make.defaults
+ create mode 100644 profiles/funtoo/1.0/platform/linux-gnu/arch/x86/package.mask/gentoo
+ create mode 100644 profiles/funtoo/1.0/platform/linux-gnu/arch/x86/package.use.mask/cpu-features
+ create mode 100644 profiles/funtoo/1.0/platform/linux-gnu/arch/x86/package.use.mask/gentoo
+ create mode 100644 profiles/funtoo/1.0/platform/linux-gnu/arch/x86/parent
+ create mode 100644 profiles/funtoo/1.0/platform/linux-gnu/arch/x86/use.force
+ create mode 100644 profiles/funtoo/1.0/platform/linux-gnu/arch/x86/use.mask/gentoo
+ create mode 100644 profiles/funtoo/1.0/platform/linux-gnu/arch/x86/virtuals
+ create mode 100644 profiles/funtoo/1.0/platform/linux-gnu/make.defaults
+ create mode 100644 profiles/funtoo/1.0/platform/linux-gnu/package.keywords/funtoo-stable
+ create mode 100644 profiles/funtoo/1.0/platform/linux-gnu/package.unmask/funtoo
+ create mode 100644 profiles/funtoo/1.0/platform/linux-gnu/package.use/cherokee
+ create mode 100644 profiles/funtoo/1.0/platform/linux-gnu/parent
+ create mode 100644 profiles/funtoo/1.0/platform/linux-gnu/use.force
+ create mode 100644 profiles/funtoo/1.0/platform/linux-gnu/virtuals
+ create mode 100644 profiles/funtoo/1.0/profile.bashrc
+ create mode 100644 profiles/funtoo/1.0/use.mask/gentoo
+ create mode 100644 profiles/funtoo/1.0/virtuals
+ create mode 100644 profiles/funtoo/base/README
+ create mode 100644 profiles/funtoo/base/package.use.mask/gentoo
 
+diff --git a/profiles/funtoo/1.0/README b/profiles/funtoo/1.0/README
+new file mode 100644
+index 0000000..47287b2
+--- /dev/null
++++ b/profiles/funtoo/1.0/README
+@@ -0,0 +1 @@
++Funtoo 1.0 Release-specific stuff
+diff --git a/profiles/funtoo/1.0/TODO b/profiles/funtoo/1.0/TODO
+new file mode 100644
+index 0000000..3667e15
+--- /dev/null
++++ b/profiles/funtoo/1.0/TODO
+@@ -0,0 +1,3 @@
++# TODO for funtoo-1.0 profile.
++
++(Better) support for USE_EXPAND.
+diff --git a/profiles/funtoo/1.0/flavors/core/make.defaults b/profiles/funtoo/1.0/flavors/core/make.defaults
+new file mode 100644
+index 0000000..e45e5d0
+--- /dev/null
++++ b/profiles/funtoo/1.0/flavors/core/make.defaults
+@@ -0,0 +1,2 @@
++USE="gif jpeg png tiff"
++USE="$USE alsa"
+diff --git a/profiles/funtoo/1.0/flavors/core/package.keywords/funtoo-stable b/profiles/funtoo/1.0/flavors/core/package.keywords/funtoo-stable
+new file mode 120000
+index 0000000..90d2918
+--- /dev/null
++++ b/profiles/funtoo/1.0/flavors/core/package.keywords/funtoo-stable
+@@ -0,0 +1 @@
++../../../../../default/linux/package.keywords/funtoo-stable
+\ No newline at end of file
+diff --git a/profiles/funtoo/1.0/flavors/core/package.mask b/profiles/funtoo/1.0/flavors/core/package.mask
+new file mode 120000
+index 0000000..2cc931e
+--- /dev/null
++++ b/profiles/funtoo/1.0/flavors/core/package.mask
+@@ -0,0 +1 @@
++../../../../package.mask
+\ No newline at end of file
+diff --git a/profiles/funtoo/1.0/flavors/core/packages b/profiles/funtoo/1.0/flavors/core/packages
+new file mode 120000
+index 0000000..7c24acf
+--- /dev/null
++++ b/profiles/funtoo/1.0/flavors/core/packages
+@@ -0,0 +1 @@
++../../../../default/linux/packages
+\ No newline at end of file
+diff --git a/profiles/funtoo/1.0/make.defaults b/profiles/funtoo/1.0/make.defaults
+new file mode 100644
+index 0000000..e39c3b2
+--- /dev/null
++++ b/profiles/funtoo/1.0/make.defaults
+@@ -0,0 +1,38 @@
++# Copyright 1999-2009 Gentoo Foundation
++# Distributed under the terms of the GNU General Public License v2
++# $Header: /var/cvsroot/gentoo-x86/profiles/base/make.defaults,v 1.46 2009/09/21 09:39:09 robbat2 Exp $
++#
++# System-wide defaults for the Portage system
++# See portage(5) manpage
++
++# Env vars to expand into USE vars.  Modifying this requires prior
++# discussion on gentoo-dev@gentoo.org.
++USE_EXPAND="APACHE2_MODULES APACHE2_MPMS FOO2ZJS_DEVICES MISDN_CARDS FRITZCAPI_CARDS FCDSL_CARDS VIDEO_CARDS DVB_CARDS LIRC_DEVICES INPUT_DEVICES LINGUAS USERLAND KERNEL ELIBC CROSSCOMPILE_OPTS ALSA_CARDS ALSA_PCM_PLUGINS LCD_DEVICES CAMERAS NETBEANS_MODULES QEMU_SOFTMMU_TARGETS QEMU_USER_TARGETS SANE_BACKENDS"
++
++# USE_EXPAND variables whose contents are not shown in package manager
++# output. Changes need discussion on gentoo-dev.
++USE_EXPAND_HIDDEN="USERLAND KERNEL ELIBC CROSSCOMPILE_OPTS"
++
++CONFIG_PROTECT="/etc"
++CONFIG_PROTECT_MASK="/etc/env.d /etc/gconf"
++
++# Variables that are set exclusively by the profile
++# and not by user configuration files.
++PROFILE_ONLY_VARIABLES="ARCH ELIBC KERNEL USERLAND"
++
++# Diego Pettenò <flameeyes@gentoo.org> (21 Dec 2006)
++# Build everything for the average user
++ALSA_PCM_PLUGINS="adpcm alaw asym copy dmix dshare dsnoop empty extplug file hooks iec958 ioplug ladspa lfloat linear meter mmap_emul mulaw multi null plug rate route share shm softvol"
++
++# Benedikt Böhm <hollow@gentoo.org> (27 Nov 2007)
++# Sane defaults for built-in apache modules
++APACHE2_MODULES="actions alias auth_basic authn_alias authn_anon authn_dbm authn_default authn_file authz_dbm authz_default authz_groupfile authz_host authz_owner authz_user autoindex cache dav dav_fs dav_lock deflate dir disk_cache env expires ext_filter file_cache filter headers include info log_config logio mem_cache mime mime_magic negotiation rewrite setenvif speling status unique_id userdir usertrack vhost_alias"
++
++# Robert Buchholz <rbu@gentoo.org> (17 Jan 2006)
++# Some common lcd devices
++LCD_DEVICES="bayrad cfontz cfontz633 glk hd44780 lb216 lcdm001 mtxorb ncurses text"
++
++# Miroslav Šulc <fordfrog@gentoo.org> (19 Nov 2008)
++# Netbeans modules/clusters
++NETBEANS="apisupport cnd groovy gsf harness ide identity j2ee java mobility nb php profiler soa visualweb webcommon websvccommon xml"
++
+diff --git a/profiles/funtoo/1.0/package.use/toolchain b/profiles/funtoo/1.0/package.use/toolchain
+new file mode 100644
+index 0000000..ef3aa26
+--- /dev/null
++++ b/profiles/funtoo/1.0/package.use/toolchain
+@@ -0,0 +1 @@
++=sys-devel/gcc-4.4.3* default
+diff --git a/profiles/funtoo/1.0/packages b/profiles/funtoo/1.0/packages
+new file mode 100644
+index 0000000..794faa1
+--- /dev/null
++++ b/profiles/funtoo/1.0/packages
+@@ -0,0 +1,79 @@
++# Copyright 2004 Gentoo Foundation.
++# Distributed under the terms of the GNU General Public License, v2
++# $Header: /var/cvsroot/gentoo-x86/profiles/base/packages,v 1.45 2009/09/29 09:04:29 flameeyes Exp $
++
++# Gentoo Base Profile
++
++# NOTE: THIS IS THE BASE PROFILE FOR *ANY* GENTOO BASED OPERATING SYSTEM.
++# NO MODIFICATIONS MAY BE MADE TO THIS FILE WITHOUT PRIOR DISCUSSION.  IF
++# YOU ARE CREATING A NEW PROFILE, YOU SIMPLY NEED TO INHERIT THIS BASE
++# PROFILE IN YOUR PROFILE DIRECTORY'S "parent" FILE.
++
++
++# OK, you're staring at this file and you have no idea what these stars are
++# for.  Here's the scoop.  An initial "*" marks a package that is part of
++# the official BASE system profile.  If there is a "*" then `emerge system`
++# will use the line in its calculations of what should be installed for the
++# base profile.  Lines without a "*" prefix will be ignored for profile
++# system calculations.
++
++# Please note that this file is rarely used as a package inclusion mask
++# file, because it affects EVERY SINGLE gentoo profile.   As can be seen,
++# we've limited the inclusion mask to a version of portage which supports
++# cascaded profiles, but apart from that, there should be no version
++# specific information in here. This file serves as a high level description
++# of the minimum set of packages needed for any Gentoo based system.
++
++*sys-apps/baselayout
++*app-arch/bzip2
++*app-arch/cpio
++*app-arch/tar
++*app-shells/bash
++*dev-lang/perl
++*dev-lang/python
++*net-misc/iputils
++*net-misc/rsync
++*net-misc/wget
++*sys-apps/coreutils
++#*sys-apps/debianutils
++*sys-apps/diffutils
++*sys-apps/file
++*sys-apps/findutils
++*sys-apps/gawk
++*sys-apps/grep
++*sys-apps/kbd
++*sys-apps/net-tools
++#*>=sys-apps/portage-2.0.51.22
++*sys-process/procps
++*sys-process/psmisc
++*sys-apps/sed
++*sys-apps/shadow
++*sys-apps/texinfo
++*sys-apps/which
++*sys-devel/autoconf
++*sys-devel/automake
++*sys-devel/binutils
++*sys-devel/bison
++*sys-devel/flex
++*sys-devel/gcc
++*sys-devel/gnuconfig
++*sys-devel/libtool
++*sys-devel/m4
++*sys-devel/make
++*sys-devel/patch
++*sys-fs/e2fsprogs
++*sys-libs/ncurses
++*sys-libs/readline
++*sys-libs/zlib
++*virtual/dev-manager
++*virtual/editor
++*virtual/gzip
++*virtual/libc
++*virtual/man
++*virtual/modutils
++*virtual/os-headers
++*virtual/pager
++*virtual/portage
++*virtual/ssh
++*virtual/init
++*virtual/baselayout
+diff --git a/profiles/funtoo/1.0/parent b/profiles/funtoo/1.0/parent
+new file mode 100644
+index 0000000..eb001c6
+--- /dev/null
++++ b/profiles/funtoo/1.0/parent
+@@ -0,0 +1 @@
++../base
+diff --git a/profiles/funtoo/1.0/platform/README b/profiles/funtoo/1.0/platform/README
+new file mode 100644
+index 0000000..ad423db
+--- /dev/null
++++ b/profiles/funtoo/1.0/platform/README
+@@ -0,0 +1,5 @@
++A platform is specified as "<kernel>-<userland>". Current platforms are:
++
++linux-gnu	This is standard GNU/Linux
++xnu-apple	This is Apple MacOS X (XNU kernel, Apple (BSD-derived) userland)
++
+diff --git a/profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/make.defaults b/profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/make.defaults
+new file mode 100644
+index 0000000..4ffa893
+--- /dev/null
++++ b/profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/make.defaults
+@@ -0,0 +1,59 @@
++USE="multilib"									#architecture features
++USE="$USE mmx sse sse2"								#processor features
++
++ARCH="amd64"
++ACCEPT_KEYWORDS="${ARCH}"
++
++CHOST="x86_64-pc-linux-gnu"
++CFLAGS="-O2 -pipe"
++CXXFLAGS="${CFLAGS}"
++
++# 2006/06/07 - Danny van Dyk <kugelfang@gentoo.org>
++# Multilib settings for all amd64 subprofiles.
++MULTILIB_ABIS="amd64 x86"
++DEFAULT_ABI="amd64"
++# Do not remove this one, or all kinds of hell breaks loose.
++ABI="amd64"
++
++# 64bit specific settings.
++CHOST_amd64="x86_64-pc-linux-gnu"
++CDEFINE_amd64="__x86_64__"
++
++# 32bit specific settings.
++CFLAGS_x86="-m32"
++LDFLAGS_x86="-m elf_i386"
++ASFLAGS_x86="--32"
++CHOST_x86="i686-pc-linux-gnu"
++CDEFINE_x86="__i386__"
++
++# This is so we build with multilib from the start
++STAGE1_USE="multilib nptl nptlonly unicode"
++
++# FEATURES="multilib-strict" specific settings.
++MULTILIB_STRICT_DIRS="/lib32 /lib /usr/lib32 /usr/lib /usr/kde/*/lib32 /usr/kde/*/lib /usr/qt/*/lib32 /usr/qt/*/lib /usr/X11R6/lib32 /usr/X11R6/lib"
++MULTILIB_STRICT_DENY="64-bit.*shared object"
++MULTILIB_STRICT_EXEMPT="(perl5|gcc|gcc-lib|binutils|eclipse-3|debug|portage)"
++
++# Let baselayout create the lib symlink.
++SYMLINK_LIB="yes"
++
++# 64-bit LIBDIR
++LIBDIR_amd64="lib64"
++LIBDIR_amd64_fbsd="lib64"
++LIBDIR_ppc64="lib64"
++LIBDIR_sparc64="lib64"
++
++# 32-bit LIBDIR
++LIBDIR_ppc="lib32"
++LIBDIR_x86="lib32"
++LIBDIR_x86_fbsd="lib32"
++LIBDIR_sparc32="lib32"
++
++# 2006/08/18 - Donnie Berkholz <dberkholz@gentoo.org>
++# Defaults for video drivers
++VIDEO_CARDS="fbdev glint intel mach64 mga neomagic nv r128 radeon savage sis tdfx trident vesa via vmware voodoo"
++
++# 2006/12/22 - Danny van Dyk <kugelfang@gentoo.org>
++# Default for ALSA_CARDS USE_EXPAND variable.
++ALSA_CARDS="ali5451 als4000 atiixp atiixp-modem bt87x ca0106 cmipci emu10k1x ens1370 ens1371 es1938 es1968 fm801 hda-intel intel8x0 intel8x0m maestro3 trident usb-audio via82xx via82xx-modem ymfpci"
++
+diff --git a/profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/package.use.force b/profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/package.use.force
+new file mode 100644
+index 0000000..456ca66
+--- /dev/null
++++ b/profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/package.use.force
+@@ -0,0 +1,11 @@
++# Oct 23th 2006; blubb@gentoo.org
++# upstream forces sse2 on regardless of what the use flag is
++dev-libs/openssl sse2
++media-libs/libsoundtouch sse
++
++# Gustavo Felisberto <humpback@gentoo.org> 19-06-2007
++net-im/skype qt-static
++
++# Santiago M. Mola <coldwind@gentoo.org> (17 Sep 2008)
++# x86emu is the only backend available for amd64 (bug #224987)
++sys-apps/v86d x86emu
+diff --git a/profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/package.use.mask/cpu-features b/profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/package.use.mask/cpu-features
+new file mode 100644
+index 0000000..7f7ae9c
+--- /dev/null
++++ b/profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/package.use.mask/cpu-features
+@@ -0,0 +1,60 @@
++# Samuli Suominen <ssuominen@gentoo.org> (10 May 2009)
++# Broken SSE2 detection for x86_64 wrt #262405
++media-libs/libsoundtouch sse2
++
++# Jeremy Olexa <darkside@gentoo.org> (24 Dec 2008)
++# unmask USE=bindist on amd64 - also unmasking the other flags that were under a
++# bad comment heading. see bug #246144
++media-video/mplayer -cpudetection -custom-cpuopts -bindist -vdpau
++
++# Tomas Chvatal <scarabeus@gentoo.org> (31 Jan 2009)
++# masked in base, unmaks for x86/amd64
++sci-misc/boinc -cuda
++
++# Oct 23th 2006; blubb@gentoo.org
++# the asm is 64bit save, but it doesn't compile anyway
++games-emulation/visualboyadvance mmx
++
++# Oct 23th 2006; blubb@gentoo.org
++# upstream forces sse2 for amd64; mmx flag does nothing
++app-crypt/johntheripper mmx
++
++# Oct 23th 2006; blubb@gentoo.org
++# x86 asm only:
++games-emulation/xmame mmx
++games-emulation/xmess mmx
++media-gfx/inkscape mmx
++media-libs/allegro mmx sse
++media-libs/libfame mmx
++media-libs/libmovtar mmx
++media-libs/sdl-gfx mmx
++media-libs/smpeg mmx
++media-video/mjpegtools mmx
++net-irc/xchat mmx
++net-irc/xchat-gnome mmx
++net-misc/asterisk mmx
++x11-terms/eterm mmx
++media-tv/xawtv mmx
++
++
++# x86_64 opts are enabled with USE sse. so masking the rest
++media-sound/mpg123 mmx 3dnow 3dnowext
++
++# Oct 24th 2006; blubb@gentoo.org
++# bug 152646
++x11-themes/polymer mmx sse2
++
++
++# Apr 25th 2007: Alexis Ballier <aballier@gentoo.org>
++# Mask mmx for media-libs/mlt
++# assembler is not 64bits compliant (yet)
++media-libs/mlt mmx
++
++# 8 Aug 2008: Alexis Ballier <aballier@gentoo.org>
++# x86 asm only, it won't be built on amd64 if mmx useflag is enabled but that
++# saves people from needlessly installing nasm
++# Refs bug #93279
++media-sound/lame mmx
++
++
++
+diff --git a/profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/package.use.mask/gentoo b/profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/package.use.mask/gentoo
+new file mode 100644
+index 0000000..7b59ba4
+--- /dev/null
++++ b/profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/package.use.mask/gentoo
+@@ -0,0 +1,154 @@
++# Copyright 1999-2009 Gentoo Foundation
++# Distributed under the terms of the GNU General Public License v2
++# $Header: /var/cvsroot/gentoo-x86/profiles/arch/amd64/package.use.mask,v 1.45 2009/10/01 15:26:34 ssuominen Exp $
++
++# When you add an entry to the top of this file, add your name, the date, and
++# an explanation of why something is getting masked. Please be extremely
++# careful not to commit atoms that are not valid, as it can cause large-scale
++# breakage, especially if it ends up in the daily snapshot.
++#
++## Example:
++##
++## # Dev E. Loper <developer@gentoo.org> (28 Jun 2012)
++## # Masking foo USE flag until we can get the
++## # foo stuff to work properly again (bug 12345)
++## =media-video/mplayer-0.90_pre5 foo
++## =media-video/mplayer-0.90_pre5-r1 foo
++#
++
++#--- END OF EXAMPLES ---
++
++# Samuli Suominen <ssuominen@gentoo.org> (01 Oct 2009)
++# No support in emul-linux-x86-sdl, bug 286625
++app-emulation/wine openal
++
++# Samuli Suominen <ssuominen@gentoo.org> (30 Sep 2009)
++# No support in emul-linux-x86-baselibs, bug 283089
++app-emulation/wine jpeg
++
++# Jean-Noël Rivasseau <elvanor@gentoo.org> (23 Sep 2009)
++# X use flag only for amd64/x86, bug 285951.
++media-gfx/iscan -X
++
++# Jeremy Olexa <darkside@gentoo.org> (06 Sep 2009)
++# Mask wine[mp3] because it fails to build. bug 283860
++# Mask wine[gsm] because it fails to build. bug 283875
++app-emulation/wine gsm mp3
++
++# Dawid Węgliński <cla@gentoo.org>                                       
++# Mask amarok2 useflag for net-im/kadu
++# See bug #238487 for references
++net-im/kadu amarok2
++
++# Samuli Suominen <ssuominen@gentoo.org> (10 May 2009)
++# Broken SSE2 detection for x86_64 wrt #262405
++media-libs/libsoundtouch sse2
++
++# Bernard Cafarelli <voyageur@gentoo.org> (20 Mar 2009)
++# Depends on packages not yet keyworded for amd64, cf bug #22042
++app-backup/backup-manager s3
++
++# Jeremy Olexa <darkside@gentoo.org> (07 Feb 2009)
++# USE=mmx on imlib2 causes issues with other apps. See bug 218382 (comments
++# 11-12)
++media-libs/imlib2 mmx
++
++# Serkan Kaba <serkan@gentoo.org> (5 Feb 2009)
++# finally a 64bit java plugin
++>=dev-java/sun-jre-bin-1.6.0.12 -nsplugin
++
++# Jeremy Olexa <darkside@gentoo.org> (27 Dec 2008)
++# Mask static USE flag because it just doesn't work on amd64. See bug 236591
++>=app-arch/p7zip-4.58 static
++
++# Jeremy Olexa <darkside@gentoo.org> (24 Dec 2008)
++# unmask USE=bindist on amd64 - also unmasking the other flags that were under a
++# bad comment heading. see bug #246144
++media-video/mplayer -cpudetection -custom-cpuopts -bindist -vdpau
++
++# Vlastimil Babka <caster@gentoo.org> (12 Dec 2008)
++# finally a 64bit java plugin
++>=dev-java/sun-jdk-1.6.0.12_beta2 -nsplugin
++
++# Tomas Chvatal <scarabeus@gentoo.org> (31 Jan 2009)
++# masked in base, unmaks for x86/amd64
++sci-misc/boinc -cuda
++
++# Serkan Kaba <serkan@gentoo.org> (20 Jul 2008)
++app-text/enchant -zemberek
++
++# assembler-section
++
++# Oct 23th 2006; blubb@gentoo.org
++# the asm is 64bit save, but it doesn't compile anyway
++games-emulation/visualboyadvance mmx
++
++# Oct 23th 2006; blubb@gentoo.org
++# upstream forces sse2 for amd64; mmx flag does nothing
++app-crypt/johntheripper mmx
++
++# Oct 23th 2006; blubb@gentoo.org
++# x86 asm only:
++games-emulation/xmame mmx
++games-emulation/xmess mmx
++media-gfx/inkscape mmx
++media-libs/allegro mmx sse
++media-libs/libfame mmx
++media-libs/libmovtar mmx
++media-libs/sdl-gfx mmx
++media-libs/smpeg mmx
++media-video/mjpegtools mmx
++net-irc/xchat mmx
++net-irc/xchat-gnome mmx
++net-misc/asterisk mmx
++x11-terms/eterm mmx
++media-tv/xawtv mmx
++
++# x86_64 opts are enabled with USE sse. so masking the rest
++media-sound/mpg123 mmx 3dnow 3dnowext
++
++# Oct 24th 2006; blubb@gentoo.org
++# bug 152646
++x11-themes/polymer mmx sse2
++
++# Feb 17th 2007; drizzt@gentoo.org
++# amd64 does not have an emul libao package
++games-emulation/zsnes ao
++
++# Apr 25th 2007: Alexis Ballier <aballier@gentoo.org>
++# Mask mmx for media-libs/mlt
++# assembler is not 64bits compliant (yet)
++media-libs/mlt mmx
++
++# 8 May 2007: Alistair Bush <ali_bush@gentoo.org>
++# Mask doc flag for fop as nearly impossible to
++# run javadoc target.  see #177585
++>=dev-java/fop-0.93 doc
++
++# 31 Dec 2007: Peter Weller <welp@gentoo.org>
++# Mask dbus, hal, nas and scanner USE flags;
++# Bug 203680
++# 28 Oct 2008: Diego Pettenò <flameeyes@gentoo.org>
++# Mask GnuTLS (not available as 32-bit library)
++app-emulation/wine dbus hal ldap nas scanner gnutls gphoto2
++
++# missing the necessary linux-headers dep
++>=net-fs/netatalk-2.0.3-r3 xfs
++
++# 28 Jan 2008: Wulf Krueger <philantrop@gentoo.org>
++# Mask bluetooth for the KDE 3.5.8 stabilisation.
++app-pda/pilot-link bluetooth
++
++# 10 Jul 2008: Thomas Anderson <gentoofan23@gentoo.org>
++# Unmask ia32 flag for amd64 arches.
++www-client/opera -ia32
++
++# 8 Aug 2008: Alexis Ballier <aballier@gentoo.org>
++# x86 asm only, it won't be built on amd64 if mmx useflag is enabled but that
++# saves people from needlessly installing nasm
++# Refs bug #93279
++media-sound/lame mmx
++
++# Robert Buchholz <rbu@gentoo.org> (16 Aug 2008)
++# masked in base, unmask for x86/amd64
++dev-python/kaa-base -tls
+diff --git a/profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/parent b/profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/parent
+new file mode 100644
+index 0000000..aab0408
+--- /dev/null
++++ b/profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/parent
+@@ -0,0 +1 @@
++../..
+diff --git a/profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/use.force b/profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/use.force
+new file mode 100644
+index 0000000..e5a5660
+--- /dev/null
++++ b/profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/use.force
+@@ -0,0 +1,2 @@
++# Force enable multilib USE flag
++multilib
+diff --git a/profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/use.mask/core b/profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/use.mask/core
+new file mode 100644
+index 0000000..bfb3011
+--- /dev/null
++++ b/profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/use.mask/core
+@@ -0,0 +1,5 @@
++-multilib
++-amd64
++-ssse3
++-emul-linux-x86
++-lilo
+diff --git a/profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/use.mask/cpu-features b/profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/use.mask/cpu-features
+new file mode 100644
+index 0000000..4b90774
+--- /dev/null
++++ b/profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/use.mask/cpu-features
+@@ -0,0 +1,7 @@
++-3dnowext
++-3dnow
++-ssse3
++-sse2
++-sse
++-mmxext
++-mmx
+diff --git a/profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/use.mask/hardware b/profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/use.mask/hardware
+new file mode 100644
+index 0000000..ee7189c
+--- /dev/null
++++ b/profiles/funtoo/1.0/platform/linux-gnu/arch/amd64/use.mask/hardware
+@@ -0,0 +1,23 @@
++# UNMASK
++
++-nvidia
++-input_devices_synaptics
++-input_devices_virtualbox
++-input_devices_vmmouse
++-input_devices_wacom
++-video_cards_nvidia
++-video_cards_fglrx
++-video_cards_via
++-video_cards_virtualbox
++-video_cards_vmware
++-dxr3
++-kqemu
++
++# MASK
++
++alsa_cards_cs5535audio
++video_cards_i740
++video_cards_imstt
++video_cards_newport
++video_cards_nsc
++3dfx
+diff --git a/profiles/funtoo/1.0/platform/linux-gnu/arch/x86/make.defaults b/profiles/funtoo/1.0/platform/linux-gnu/arch/x86/make.defaults
+new file mode 100644
+index 0000000..7699395
+--- /dev/null
++++ b/profiles/funtoo/1.0/platform/linux-gnu/arch/x86/make.defaults
+@@ -0,0 +1,21 @@
++# Copyright 1999-2005 Gentoo Foundation
++# Distributed under the terms of the GNU General Public License v2
++# $Header: /var/cvsroot/gentoo-x86/profiles/arch/x86/make.defaults,v 1.5 2009/12/13 21:45:29 remi Exp $
++
++# All extra USE/etc should be specified in sub-profiles.
++# DO NOT POLLUTE USE ON THIS PROFILE.
++
++ARCH="x86"
++ACCEPT_KEYWORDS="x86"
++
++CHOST="i686-pc-linux-gnu"
++CFLAGS="-O2 -march=i686 -pipe"
++CXXFLAGS="${CFLAGS}"
++
++# 2006/08/18 - Donnie Berkholz <dberkholz@gentoo.org>
++# Defaults for video drivers
++VIDEO_CARDS="fbdev glint intel mach64 mga neomagic nv r128 radeon savage sis tdfx trident vesa via vmware voodoo"
++
++# 2006/12/21 - Andrej Kacian <ticho@gentoo.org>
++# Defaults for audio drivers
++ALSA_CARDS="ali5451 als4000 atiixp atiixp-modem bt87x ca0106 cmipci emu10k1 emu10k1x ens1370 ens1371 es1938 es1968 fm801 hda-intel intel8x0 intel8x0m maestro3 trident usb-audio via82xx via82xx-modem ymfpci"
+diff --git a/profiles/funtoo/1.0/platform/linux-gnu/arch/x86/package.mask/gentoo b/profiles/funtoo/1.0/platform/linux-gnu/arch/x86/package.mask/gentoo
+new file mode 100644
+index 0000000..78f60fe
+--- /dev/null
++++ b/profiles/funtoo/1.0/platform/linux-gnu/arch/x86/package.mask/gentoo
+@@ -0,0 +1,7 @@
++# Copyright 1999-2009 Gentoo Foundation
++# Distributed under the terms of the GNU General Public License v2
++# $Header: /var/cvsroot/gentoo-x86/profiles/arch/x86/package.mask,v 1.16 2009/09/05 22:14:54 jmbsvicetto Exp $
++
++# Christian Faulhammer <opfer@gentoo.org> (05 Dec 2006)
++# this version is badly broken on x86, see bug #153280
++~app-arch/rpm-4.4.7
+diff --git a/profiles/funtoo/1.0/platform/linux-gnu/arch/x86/package.use.mask/cpu-features b/profiles/funtoo/1.0/platform/linux-gnu/arch/x86/package.use.mask/cpu-features
+new file mode 100644
+index 0000000..e363d2c
+--- /dev/null
++++ b/profiles/funtoo/1.0/platform/linux-gnu/arch/x86/package.use.mask/cpu-features
+@@ -0,0 +1,21 @@
++# Mounir Lamouri <volkmar@gentoo.org> (07 Nov 2009)
++# Masked in base, unmask for amd64/x86. Bug 267264
++media-gfx/k3d -cuda
++
++# Tomáš Chvátal <scarabeus@gentoo.org> (10 Sep 2009)
++# quakeforge has video_cards_voodoo enabled only for x86
++games-fps/quakeforge -video_cards_tdfx
++
++# Raúl Porcel <armin76@gentoo.org> (02 Dec 2008)
++media-libs/realcodecs win32codecs
++
++# Tomas Chvatal <scarabeus@gentoo.org> (24 Nov 2008)
++# masked in base, unmask for x86/amd64
++sci-misc/boinc -cuda
++
++# Robert Buchholz <rbu@gentoo.org> (16 Aug 2008)
++# masked in base, unmask for x86/amd64
++dev-python/kaa-base -tls
++
++# Steve Dibb <beandog@gentoo.org> (29 Sept 2008)
++media-video/mplayer -cpudetection -custom-cpuopts -win32codecs -bindist -vdpau
+diff --git a/profiles/funtoo/1.0/platform/linux-gnu/arch/x86/package.use.mask/gentoo b/profiles/funtoo/1.0/platform/linux-gnu/arch/x86/package.use.mask/gentoo
+new file mode 100644
+index 0000000..f895bb4
+--- /dev/null
++++ b/profiles/funtoo/1.0/platform/linux-gnu/arch/x86/package.use.mask/gentoo
+@@ -0,0 +1,27 @@
++# Copyright 1999-2009 Gentoo Foundation
++# Distributed under the terms of the GNU General Public License v2
++# $Header: /var/cvsroot/gentoo-x86/profiles/arch/x86/package.use.mask,v 1.23 2009/12/25 04:26:24 grozin Exp $
++
++# This file requires >=portage-2.1.1
++
++# Andrey Grozin <grozin@gentoo.org> (24 Dec 2009)
++# openmcl (aka closurecl) is only available on x86 and amd64
++sci-mathematics/maxima -openmcl
++
++# Jean-Noël Rivasseau <elvanor@gentoo.org> (23 Sep 2009)
++# X use flag only for amd64/x86, bug 285951.
++media-gfx/iscan -X
++
++# Serkan Kaba <serkan@gentoo.org> (20 Jul 2008)
++app-text/enchant -zemberek
++
++>=dev-java/sun-jdk-1.5 -nsplugin
++>=dev-java/sun-jre-bin-1.5 -nsplugin
++>=dev-java/ibm-jdk-bin-1.5 -nsplugin 
++>=dev-java/ibm-jre-bin-1.5 -nsplugin
++x11-terms/eterm sse2
++
++# Christian Faulhammer <opfer@gentoo.org> (14 Jan 2008)
++# only works on x86
++dev-java/ibm-jdk-bin -alsa
++dev-java/ibm-jre-bin -alsa
+diff --git a/profiles/funtoo/1.0/platform/linux-gnu/arch/x86/parent b/profiles/funtoo/1.0/platform/linux-gnu/arch/x86/parent
+new file mode 100644
+index 0000000..aab0408
+--- /dev/null
++++ b/profiles/funtoo/1.0/platform/linux-gnu/arch/x86/parent
+@@ -0,0 +1 @@
++../..
+diff --git a/profiles/funtoo/1.0/platform/linux-gnu/arch/x86/use.force b/profiles/funtoo/1.0/platform/linux-gnu/arch/x86/use.force
+new file mode 100644
+index 0000000..049e7af
+--- /dev/null
++++ b/profiles/funtoo/1.0/platform/linux-gnu/arch/x86/use.force
+@@ -0,0 +1,2 @@
++# Force the flag which corresponds to ARCH.
++x86
+diff --git a/profiles/funtoo/1.0/platform/linux-gnu/arch/x86/use.mask/gentoo b/profiles/funtoo/1.0/platform/linux-gnu/arch/x86/use.mask/gentoo
+new file mode 100644
+index 0000000..6e86854
+--- /dev/null
++++ b/profiles/funtoo/1.0/platform/linux-gnu/arch/x86/use.mask/gentoo
+@@ -0,0 +1,108 @@
++# Copyright 2004 Gentoo Foundation.
++# Distributed under the terms of the GNU General Public License, v2
++# $Header: /var/cvsroot/gentoo-x86/profiles/arch/x86/use.mask,v 1.13 2010/01/08 10:45:32 flameeyes Exp $
++
++# Unmask the flag which corresponds to ARCH.
++-x86
++
++# This file masks out USE flags that are simply NOT allowed in the default
++# x86 profile.  This works, for example, if another architecture's
++# profile have a USE flag associated with (such as altivec, mmx, etc).
++
++# 2010/01/08 - Diego E. Pettenò <flameeyes@gentoo.org>
++# Add support for JRuby targets where jruby is available
++-ruby_targets_jruby
++
++# pbbuttonsd and macbook for KDE and pbuttonsd it
++#-pbbuttonsd
++-macbook
++
++# Unmask x86 instruction sets
++-3dnow
++-3dnowext
++-lilo
++-mmx
++-mmxext
++-sse
++-sse2
++-ssse3
++-svga
++-kqemu
++-nvram
++
++# Unmask nvidia XvMC support
++-nvidia
++
++# Unmask dev-db/oracle-instantclient-basic support
++-oci8-instant-client
++
++# Unmask osp, used by asterisk; bug 115798
++-osp
++
++# Unmask yellownet, used by aqbanking (bug 149970)
++-yellownet
++
++# Modular X: unmask for architectures on which they are available
++-input_devices_synaptics
++-input_devices_virtualbox
++-input_devices_vmmouse
++-input_devices_wacom
++-video_cards_nvidia
++-video_cards_fglrx
++-video_cards_vmware
++-video_cards_geode
++-video_cards_via
++-video_cards_virtualbox
++-video_cards_xgi
++
++# Modular X: mask for architectures on which they aren't available
++video_cards_newport
++
++#codec support
++-win32codecs
++-x264
++
++# lvm2 cluster
++-clvm
++-gulm
++
++# psyco works on x86
++-psyco
++
++# Diego Pettenò <flameeyes@gentoo.org> (4 Jan 2007)
++# Unmask the flags for PHP that are available only on x86
++-fdftk
++-sybase-ct
++-ingres
++-birdstep
++-adabas
++-filepro
++-pfpro
++-informix
++-empress
++-empress-bcs
++-sybase
++-frontbase
++-dbmaker
++-esoob
++-solid
++# Shared with amd64
++-oci8
++-oracle7
++-firebird
++-db2
++
++# Robert Buchholz <rbu@gentoo.org> (03 Jun 2007)
++# Unmask as it works on x86
++-lcd_devices_svga
++-lcd_devices_luise
++
++# George Shapovalov <george@gentoo.org> (8 Apr 2007)
++# supported on x86
++-ada
++
++# tcc is x86 only
++-tcc
++
++# RealMagic Hollywood+/Creative DXR3 support
++-dxr3
+diff --git a/profiles/funtoo/1.0/platform/linux-gnu/arch/x86/virtuals b/profiles/funtoo/1.0/platform/linux-gnu/arch/x86/virtuals
+new file mode 100644
+index 0000000..455c9cb
+--- /dev/null
++++ b/profiles/funtoo/1.0/platform/linux-gnu/arch/x86/virtuals
+@@ -0,0 +1,9 @@
++# Copyright 2004 Gentoo Foundation.
++# Distributed under the terms of the GNU General Public License v2
++# $Header: /var/cvsroot/gentoo-x86/profiles/arch/x86/virtuals,v 1.1 2008/04/01 17:40:04 wolf31o2 Exp $
++
++# This file is used to either override or extend the parent profile's
++# virtuals mappings.   In this case, this is for ARCHITECTURE SPECIFIC
++# mappings
++
++virtual/bootloader		sys-boot/grub
+diff --git a/profiles/funtoo/1.0/platform/linux-gnu/make.defaults b/profiles/funtoo/1.0/platform/linux-gnu/make.defaults
+new file mode 100644
+index 0000000..0ba3505
+--- /dev/null
++++ b/profiles/funtoo/1.0/platform/linux-gnu/make.defaults
+@@ -0,0 +1,19 @@
++ELIBC="glibc"
++KERNEL="linux"
++USERLAND="GNU"
++
++USE="kernel_linux userland_GNU elibc_glibc unicode nptl modules"				#core kernel and userland
++USE="$USE pam acl ssl crypt cracklib" 								#core security
++USE="$USE nls iconv xml pcre" 									#core subsystems
++USE="$USE ipv6 pppd tcpd"									#core network
++USE="$USE zlib bzip2"										#core compression
++USE="$USE berkdb gdbm"										#core databases
++USE="$USE xorg readline ncurses"								#core gui/interactivity frameworks 
++USE="$USE perl python fortran mudflap openmp"							#core languages
++USE="$USE gif png jpeg tiff truetype xml"							#core graphics
++USE="$USE encode win32codecs vorbis mp3 mpeg alsa mad mp3 mpeg ogg alac flac lame wavpack" 	#core media features (used by server encoders)
++USE="$USE dri cdr dvd dvdr dvdread gpm"								#core hardware support
++
++INPUT_DEVICES="keyboard mouse evdev"
++VIDEO_CARDS="dummy fbdev v4l"
++LDFLAGS="-Wl,-O1 -Wl,--sort-common -Wl,--as-needed"
+diff --git a/profiles/funtoo/1.0/platform/linux-gnu/package.keywords/funtoo-stable b/profiles/funtoo/1.0/platform/linux-gnu/package.keywords/funtoo-stable
+new file mode 100644
+index 0000000..cf003ee
+--- /dev/null
++++ b/profiles/funtoo/1.0/platform/linux-gnu/package.keywords/funtoo-stable
+@@ -0,0 +1,30 @@
++=net-misc/dhcpcd-5.0.6*
++~app-admin/eselect-postgresql-0.3 amd64 x86
++=app-admin/eselect-python-20090824* amd64 x86
++~app-admin/eselect-vi-1.1.6 amd64 x86
++~app-forensics/tct-1.18 amd64 x86
++<dev-db/postgresql-base-8.4 amd64 x86
++<dev-db/postgresql-docs-8.4 amd64 x86
++<dev-db/postgresql-server-8.4 amd64 x86
++<virtual/postgresql-base-8.4 amd64 x86
++<virtual/postgresql-server-8.4 amd64 x86
++~dev-perl/Mail-DKIM-0.33 amd64 x86
++~mail-client/roundcube-0.21 amd64 x86
++~sys-apps/coreutils-7.1 amd64 x86
++=sys-apps/portage-2.2* amd64 x86
++~sys-apps/sandbox-2.2 amd64 x86
++~sys-devel/binutils-2.19.1 amd64 x86
++~sys-devel/gcc-4.3.3 amd64 x86
++~sys-devel/gnuconfig-20090203 amd64 x86
++~sys-devel/libtool-2.2.6a amd64 x86
++~sys-fs/cryptsetup-1.0.6 amd64 x86
++~sys-fs/device-mapper-1.02.28 amd64 x86
++~sys-libs/ncurses-5.7 amd64 x86
++~sys-libs/readline-6.1 amd64 x86
++<=sys-libs/glibc-2.9_p20081201-r2 amd64 x86
++~net-misc/dhcpcd-5.1.0 amd64 x86
++=app-admin/perl-cleaner-2* amd64 x86
++=app-admin/eselect-1.2.3 amd64 x86
++~net-misc/keychain-2.7.0 amd64 x86
++~dev-vcs/git-1.7.0.2 amd64 x86
++
+diff --git a/profiles/funtoo/1.0/platform/linux-gnu/package.unmask/funtoo b/profiles/funtoo/1.0/platform/linux-gnu/package.unmask/funtoo
+new file mode 100644
+index 0000000..2cf9756
+--- /dev/null
++++ b/profiles/funtoo/1.0/platform/linux-gnu/package.unmask/funtoo
+@@ -0,0 +1,5 @@
++# Jeff Mitchell <funtoo@jefferai.org> (21 Sep 2009)
++# Override upstream mask as we're working with their Perl team
++~dev-lang/perl-5.10.1
++~sys-devel/libperl-5.10.1
++=app-admin/perl-cleaner-2*
+diff --git a/profiles/funtoo/1.0/platform/linux-gnu/package.use/cherokee b/profiles/funtoo/1.0/platform/linux-gnu/package.use/cherokee
+new file mode 100644
+index 0000000..8bedbdd
+--- /dev/null
++++ b/profiles/funtoo/1.0/platform/linux-gnu/package.use/cherokee
+@@ -0,0 +1 @@
++www-servers/cherokee threads admin fastcgi
+diff --git a/profiles/funtoo/1.0/platform/linux-gnu/parent b/profiles/funtoo/1.0/platform/linux-gnu/parent
+new file mode 100644
+index 0000000..aab0408
+--- /dev/null
++++ b/profiles/funtoo/1.0/platform/linux-gnu/parent
+@@ -0,0 +1 @@
++../..
+diff --git a/profiles/funtoo/1.0/platform/linux-gnu/use.force b/profiles/funtoo/1.0/platform/linux-gnu/use.force
+new file mode 100644
+index 0000000..df19ac4
+--- /dev/null
++++ b/profiles/funtoo/1.0/platform/linux-gnu/use.force
+@@ -0,0 +1,9 @@
++# Copyright 1999-2009 Gentoo Foundation
++# Distributed under the terms of the GNU General Public License v2
++# $Header: /var/cvsroot/gentoo-x86/profiles/base/use.force,v 1.3 2009/07/31 16:42:56 ssuominen Exp $
++
++# Force the GNU/Linux ELIBC, KERNEL, and USERLAND
++# flags that apply to the majority of profiles.
++elibc_glibc
++kernel_linux
++userland_GNU
+diff --git a/profiles/funtoo/1.0/platform/linux-gnu/virtuals b/profiles/funtoo/1.0/platform/linux-gnu/virtuals
+new file mode 100644
+index 0000000..057e596
+--- /dev/null
++++ b/profiles/funtoo/1.0/platform/linux-gnu/virtuals
+@@ -0,0 +1,8 @@
++# Copyright 1999-2008 Gentoo Foundation
++# Distributed under the terms of the GNU General Public License v2
++# $Header: /var/cvsroot/gentoo-x86/profiles/default/linux/virtuals,v 1.1 2008/04/01 17:40:05 wolf31o2 Exp $
++
++# Use this virtuals file to either overload the base profile's defined
++# virtuals, or add virtuals that are specific to this family of profiles
++
++virtual/os-headers			sys-kernel/linux-headers
+diff --git a/profiles/funtoo/1.0/profile.bashrc b/profiles/funtoo/1.0/profile.bashrc
+new file mode 100644
+index 0000000..9b2e70a
+--- /dev/null
++++ b/profiles/funtoo/1.0/profile.bashrc
+@@ -0,0 +1,18 @@
++# Copyright 2006-2009 Gentoo Foundation
++# Distributed under the terms of the GNU General Public License v2
++# $Header: /var/cvsroot/gentoo-x86/profiles/base/profile.bashrc,v 1.4 2009/10/16 17:37:56 arfrever Exp $
++
++if [[ ${EBUILD_PHASE} == "setup" ]]; then
++	export PYTHONDONTWRITEBYTECODE="1"
++fi
++
++for conf in ${PN} ${PN}-${PV} ${PN}-${PV}-${PR}; do
++	[[ -r ${PORTAGE_CONFIGROOT}/etc/portage/env/${CATEGORY}/${conf} ]] \
++		&& . ${PORTAGE_CONFIGROOT}/etc/portage/env/${CATEGORY}/${conf}
++done
++
++if ! declare -F elog >/dev/null ; then
++	elog() {
++		einfo "$@"
++	}
++fi
+diff --git a/profiles/funtoo/1.0/use.mask/gentoo b/profiles/funtoo/1.0/use.mask/gentoo
+new file mode 100644
+index 0000000..430a913
+--- /dev/null
++++ b/profiles/funtoo/1.0/use.mask/gentoo
+@@ -0,0 +1,225 @@
++# Copyright 1999-2009 Gentoo Foundation
++# Distributed under the terms of the GNU General Public License v2
++# $Header: /var/cvsroot/gentoo-x86/profiles/base/use.mask,v 1.81 2009/09/10 12:03:43 scarabeus Exp $
++
++# profile specific USE flags
++# Don't put hardened in here.
++selinux
++uclibc
++multilib
++
++# amd64/x86 arch specific USE flags
++kqemu
++3dnow
++3dnowext
++lilo
++mmx
++mmxext
++sse
++sse2
++ssse3
++svga
++win32codecs
++real
++nvram
++
++# ppc arch specific USE flags
++altivec
++pbbuttonsd
++ppcsha1
++
++# mips arch specific USE flags
++n32
++n64
++fixed-point
++
++# ppc64 arch specific USE flags
++ibm
++
++# sparc arch specific USE flags
++vis
++ultra1
++
++# nVidia XvMC requires nvidia-drivers/nvidia-legacy-drivers
++nvidia
++
++# dev-db/oracle-instantclient-basic is only available on x86
++oci8-instant-client
++
++# net-libs/osptoolkit is only available on x86 (used by asterisk, bug 115798)
++osp
++
++# yellownet is only avaible as a binary blob (bug 149970)
++yellownet
++
++# not keyworded on non-x86 systems
++video_cards_geode
++video_cards_vermilion
++video_cards_xgi
++video_cards_voodoo
++
++# not needed on non-sparc systems
++video_cards_sunbw2
++video_cards_suncg14
++video_cards_suncg3
++video_cards_suncg6
++video_cards_sunffb
++video_cards_sunleo
++video_cards_suntcx
++
++# not needed on non-mips system
++video_cards_newport
++video_cards_impact
++
++# not needed on non-x86, non-amd64 systems
++input_devices_virtualbox
++input_devices_vmmouse
++video_cards_nvidia
++video_cards_fglrx
++video_cards_via
++video_cards_vmware
++video_cards_virtualbox
++
++# not needed on non-x86, non-amd64, non-ppc systems
++input_devices_synaptics
++input_devices_wacom
++
++# psyco only works on x86
++psyco
++
++# Mask ELIBC, KERNEL, and USERLAND flags that apply to specific profiles.
++userland_BSD
++
++elibc_AIX
++elibc_Darwin
++elibc_DragonFly
++elibc_FreeBSD
++elibc_HPUX
++elibc_Interix
++elibc_IRIX
++elibc_mintlib
++elibc_NetBSD
++elibc_OpenBSD
++elibc_SunOS
++elibc_uclibc
++
++kernel_AIX
++kernel_Darwin
++kernel_FreeBSD
++kernel_freemint
++kernel_HPUX
++kernel_Interix
++kernel_IRIX
++kernel_NetBSD
++kernel_OpenBSD
++kernel_SunOS
++
++# Diego Pettenò <flameeyes@gentoo.org> (6 Dec 2006)
++# Mask specific Apple drivers
++alsa_cards_aoa
++alsa_cards_aoa-fabric-layout
++alsa_cards_aoa-onyx
++alsa_cards_aoa-soundbus
++alsa_cards_aoa-soundbus-i2s
++alsa_cards_aoa-tas
++alsa_cards_aoa-toonie
++alsa_cards_powermac
++# Mask specific Sun drivers
++alsa_cards_sun-amd7930
++alsa_cards_sun-cs4231
++alsa_cards_sun-dbri
++# Mask specific ARM drivers
++alsa_cards_pxa2xx-i2sound
++alsa_cards_pxa2xx-soc
++alsa_cards_pxa2xx-soc-corgi
++alsa_cards_pxa2xx-soc-poodle
++alsa_cards_pxa2xx-soc-spitz
++alsa_cards_pxa2xx-soc-tosa
++alsa_cards_sa11xx-uda1341ts
++alsa_cards_armaaci
++alsa_cards_at91-soc
++alsa_cards_at91-soc-eti-b1-wm8731
++# Mask specific HPPA drivers
++alsa_cards_harmony
++# Mask specific MIPS drivers
++alsa_cards_au1x00
++
++# Diego Pettenò <flameeyes@gentoo.org> (29 Dec 2006)
++# Adobe FDF toolkit is x86 only.
++fdftk
++
++# Diego Pettenò <flameeyes@gentoo.org> (30 Dec 2006)
++# These are specific of Mac OS X
++aqua
++coreaudio
++
++# Diego Pettenò <flameeyes@gentoo.org> (4 Jan 2007)
++# Mask the flags for PHP that are available only on x86
++sybase-ct
++ingres
++birdstep
++adabas
++filepro
++pfpro
++informix
++empress
++empress-bcs
++sybase
++frontbase
++dbmaker
++esoob
++solid
++# Shared with amd64
++oci8
++oracle7
++firebird
++db2
++
++# Robert Buchholz <rbu@gentoo.org> (03 Jun 2007)
++# Only works on x86 or amd64
++lcd_devices_svga
++lcd_devices_luise
++
++# Joseph Jezak <josejx@gentoo.org> (11 Mar 2007)
++# Only for x86 and amd64 (in pbbuttonsd)
++macbook
++
++# George Shapovalov <george@gentoo.org> (8 Apr 2007)
++# Ada is supported only on x86, amd64 and ppc at present
++ada
++
++# lvm2 clustered use flags (moved from default-linux)
++clvm
++gulm
++cman
++
++# tcc is x86 only
++tcc
++
++# Diego Pettenò <flameeyes@gentoo.org> (15 Nov 2007)
++# pam_console was masked for removal for security issue.
++# mask the flag too.
++pam_console
++
++# Jeremy Olexa <darkside@gentoo.org>
++# The prefix USE flag should never be used on non prefix profiles
++prefix
++
++# Alexey Shvetsov <alexxy@gentoo.org>
++# Mask kdeprefix since its broken by now
++kdeprefix
++
++# Diego E. Pettenò <flameeyes@gentoo.org> (6 Jul 2009)
++#  on behalf of QA Team
++# Removal of cman is scheduled for 2009-10-06
++cman
++
++# Markus Duft <mduft@gentoo.org> (7 Jul 2009)
++# This use flag only applies to _one_ version of interix (all
++# versions share the same keyword, that's why i need a USE flag).
++# Since this is meaningless for all others, it's globally masked.
++i6fork
++
++# Samuli Suominen <ssuominen@gentoo.org> (01 Aug 2009)
++# RealMagic Hollywood+/Creative DXR3 support
++dxr3
+diff --git a/profiles/funtoo/1.0/virtuals b/profiles/funtoo/1.0/virtuals
+new file mode 100644
+index 0000000..ff5bc5f
+--- /dev/null
++++ b/profiles/funtoo/1.0/virtuals
+@@ -0,0 +1,57 @@
++# Copyright 1999-2005 Gentoo Foundation
++# Distributed under the terms of the GNU General Public License, v2
++# $Header: /var/cvsroot/gentoo-x86/profiles/base/virtuals,v 1.120 2009/08/12 19:26:00 ssuominen Exp $
++
++# This file describes the packages that by default satisfy a certain virtual
++# That this file exists in the base profile implies that these packages will
++# work on any architecture that needs that virtual
++
++# KEEP THIS FILE SORTED ALPHABETICALLY OR RISK WRATH
++
++virtual/alsa				sys-kernel/gentoo-sources
++virtual/antivirus			app-antivirus/clamav
++virtual/aspell-dict			app-dicts/aspell-en
++virtual/baselayout			sys-apps/openrc
++virtual/blackbox			x11-wm/blackbox
++virtual/bootloader			sys-boot/grub
++virtual/commonlisp			dev-lisp/sbcl
++virtual/cron				sys-process/vixie-cron
++virtual/dev-manager			sys-fs/udev
++virtual/dhcpc				net-misc/dhcpcd
++virtual/fam				app-admin/gamin
++virtual/gsasl				net-libs/libgsasl
++virtual/gzip				app-arch/gzip
++virtual/httpd-php			dev-lang/php
++virtual/imap-c-client			net-libs/c-client
++virtual/imapd				net-mail/courier-imap
++virtual/inetd				sys-apps/xinetd
++virtual/j2ee				dev-java/sun-j2ee
++virtual/jabber-server			net-im/jabberd
++virtual/krb5				app-crypt/mit-krb5
++virtual/libc				sys-libs/glibc
++virtual/libpcap				net-libs/libpcap
++virtual/linux-sources			sys-kernel/gentoo-sources
++virtual/logger				app-admin/metalog
++virtual/lpr				net-print/cups
++virtual/m3				dev-lang/cm3-bin
++virtual/mailx				mail-client/mailx
++virtual/man				sys-apps/man
++virtual/mda				mail-filter/procmail
++virtual/modutils			sys-apps/module-init-tools
++virtual/mta				mail-mta/ssmtp
++virtual/ooo				app-office/openoffice-bin
++# Only have this for >=pam-0.78, as we want to make use of the 'include'
++# directive to phase out pam_stack.
++virtual/pam				>=sys-libs/pam-0.78
++virtual/pbs				sys-cluster/torque
++virtual/php				dev-lang/php
++virtual/portage				sys-apps/portage
++virtual/python				dev-lang/python
++virtual/quicktime			media-libs/libquicktime
++virtual/ruby				dev-lang/ruby
++virtual/skkserv				app-i18n/skkserv
++virtual/squeak-image			dev-lang/squeak-basicimage
++virtual/ssh				net-misc/openssh
++virtual/tftp				net-ftp/tftp-hpa
++virtual/utempter			sys-libs/libutempter
++virtual/w3m				www-client/w3m
+diff --git a/profiles/funtoo/base/README b/profiles/funtoo/base/README
+new file mode 100644
+index 0000000..91e8379
+--- /dev/null
++++ b/profiles/funtoo/base/README
+@@ -0,0 +1,2 @@
++The "base" profile is for ongoing, global changes that affect
++all architectures and versions, such as global masking.
+diff --git a/profiles/funtoo/base/package.use.mask/gentoo b/profiles/funtoo/base/package.use.mask/gentoo
+new file mode 100644
+index 0000000..85df454
+--- /dev/null
++++ b/profiles/funtoo/base/package.use.mask/gentoo
+@@ -0,0 +1,237 @@
++# Copyright 1999-2009 Gentoo Foundation
++# Distributed under the terms of the GNU General Public License v2
++# $Header: /var/cvsroot/gentoo-x86/profiles/base/package.use.mask,v 1.101 2009/11/01 23:05:57 eva Exp $
++
++# This file requires >=portage-2.1.1
++# New entries go on top.
++
++# Zac Medico <zmedico@gentoo.org> (24 Jan 2010)
++# Mask python3 for stable portage until python-3.x is marked stable.
++=sys-apps/portage-2.1.7* python3
++
++# Markos Chandras <hwoarang@gentoo.org> (20 Jan 2010)
++# Masking qml use flag since qt-declarative-4.6.0 doesn't build
++# with Qt-4.6.1. This mask entry must remain until qt-declarative-4.6.1
++# package is released
++=dev-util/qt-creator-1.3.1 qml
++
++# Diego E. Pettenò <flameeyes@gmail.com> (18 Jan 2010)
++# Don't use system-wide mode unless you *really* know what you're doing.
++# Keep it masked here so that I don't need to manage two versions every time.
++media-sound/pulseaudio system-wide
++
++# Jeremy Olexa <darkside@gentoo.org> (10 Jan 2010)
++# Upsteam doesn't support ioctl backend and neither does Gentoo. ioctl USE flag
++# will eventually be removed unless the backend is re-written by upstream. bug
++# 299674
++>net-misc/wicd-1.6.2.2 ioctl
++
++# Andrey Grozin <grozin@gentoo.org> (7 Jan 2010)
++# gcl is, unfortunately, masked
++# I have problems with cmucl, masked for investigation
++sci-mathematics/fricas gcl cmucl
++
++# Tomáš Chvátal <scarabeus@gentoo.org> (6 Jan 2010)
++# Still not really functional, upstream requires not building it.
++<media-libs/mesa-7.9 gallium
++
++# Alexey Shvetsov <alexxy@gentoo.org> (3 Dec 2009)
++# Mask very experimental mpi use flag dfor gamess
++sci-chemistry/gamess mpi
++
++# Samuli Suominen <ssuominen@gentoo.org> (10 Jan 2009)
++# Not ready for stable anytime soon.
++<kde-base/kdeadmin-meta-4.4.0 cups
++<kde-base/kdeutils-meta-4.4.0 cups
++<kde-base/plasma-workspace-4.4.0 google-gadgets
++
++# Alexey Shvetsov <alexxy@gentoo.org> (25 Nov 2009)
++# mask infiniband use flag for some packages since infiniband software
++# still not in portage. All needed libs available via science overlay
++sys-cluster/glusterfs infiniband
++sys-block/tgt infiniband
++
++# Mounir Lamouri <volkmar@gentoo.org> (07 Nov 2009)
++# Mask cuda for k3d. Works only on amd64/x86. Bug 267264
++media-gfx/k3d cuda
++
++
++# Gilles Dartiguelongue <eva@gentoo.org> (01 Nov 2009)
++# Broken on so many setups it is just insane.
++# 0.7 is API/ABI incompatible but is the way to go.
++# Masking to lower maintainance headache, bug #291501.
++gnome-base/nautilus tracker
++media-video/totem tracker
++
++# Tomáš Chvátal <scarabeus@gentoo.org> (27 Oct 2009)
++# Broken on so many setups it is just insane.
++# Unmask if you really know what you are doing.
++sys-apps/groff linguas_ja
++
++# Samuli Suominen <ssuominen@gentoo.org) (14 Oct 2009)
++# Conflict with dev-libs/libffi in ld.so.conf.
++sys-devel/gcc libffi
++
++# Samuli Suominen <ssuominen@gentoo.org> (10 Oct 2009)
++# Not ready for stable. Remove this mask when KDE 4.3.2 is stable.
++<kde-base/kdeadmin-meta-4.3.2 cups
++<kde-base/kdeutils-meta-4.3.2 cups
++<kde-base/plasma-workspace-4.3.2 google-gadgets
++
++# Samuli Suominen <ssuominen@gentoo.org> (10 Oct 2009)
++# Fix deptree because kopete-facebook is missing KEYWORDS
++kde-base/kopete facebook
++
++# Samuli Suominen <ssuominen@gentoo.org> (09 Oct 2009)
++# log4cxx has known memory leaking issues wrt bug #287697,
++# unmask when log4cxx is fixed and stable.
++app-misc/strigi log
++
++# Jean-Noël Rivasseau <elvanor@gentoo.org> (23 Sep 2009)
++# X use flag only for amd64/x86, bug 285951.
++media-gfx/iscan X
++
++# Alex Legler <a3li@gentoo.org> (16 Sep 2009)
++# Maintainer of the kolab patch is not available (wrobel).
++# Bump is needed for security bug 285052.
++>=www-apps/horde-webmail-1.2.4 kolab
++
++# Tomáš Chvátal <scarabeus@gentoo.org> (10 Sep 2009)
++# quakeforge has video_cards_tdfx enabled only for x86
++games-fps/quakeforge video_cards_tdfx
++
++# Marijn Schouten <hkBst@gentoo.org> (03 Aug 2009)
++# gcl is an old piece of crap that has a lot of problems
++sci-mathematics/maxima gcl
++
++# Jeremy Olexa <darkside@gentoo.org> (31 Jul 2009)
++# Mask the gnome USE flag globally for app-office/abiword-plugins-2.4.6 because
++# it depends on a GLSA affected atom. bug 271708
++=app-office/abiword-plugins-2.4.6 gnome
++
++# Petteri Räty <betelgeuse@gentoo.org> (14 Jul 2009)
++# Open source Java plugin development happens in IcedTea
++# these days.
++dev-java/gnu-classpath nsplugin
++
++# Tristan Heaven <nyhm@gentoo.org> (12 Jun 2009)
++# media-libs/freeimage is masked for bug #269516
++dev-games/cegui freeimage
++dev-games/ogre freeimage
++
++# Mounir Lamouri <volkmar@gentoo.org> (21 Apr 2009)
++# masking jingle because it's using an old ortp version
++# which is blocking stabilization of new ones, bug 206047
++=kde-base/kdenetwork-3* jingle
++=kde-base/kopete-3* jingle
++
++# Peter Alfredsen <loki_val@gentoo.org> (20 Jan 2008)
++# Pango is a Work-In-Progress for libgdiplus
++# Bug 255623
++dev-dotnet/libgdiplus pango
++
++# Caleb Cushing <xenoterracide@gmail.com> 27 Dec 2008
++# mask binary for ghc, files not available on mirrors
++>=dev-lang/ghc-6.10 binary
++
++# Tomas Chvatal <scarabeus@gentoo.org> (24 Nov 2008)
++# mask bindist for boinc, which is only for x86 and amd64
++sci-misc/boinc bindist
++
++# Tomas Chvatal <scarabeus@gentoo.org> (31 Jan 2009)
++# mask cuda for boinc. Works only on amd64 and x86
++sci-misc/boinc cuda
++
++# Robert Buchholz <rbu@gentoo.org> (16 Aug 2008)
++# TLS needs dev-libs/cryptlib, which is x86 only
++dev-python/kaa-base tls
++
++# Serkan Kaba <serkan@gentoo.org> (20 Jul 2008)
++# Java is not supported in most of the arches enchant is keyworded
++app-text/enchant zemberek
++
++# Thomas Anderson <gentoofan23@gentoo.org> (04 Jul 2008)
++# Mask ia32 USE flag on all architectures but amd64
++# as we're the only people who can make use of it.
++www-client/opera ia32
++
++# Peter Alfredsen <loki_val@gentoo.org> (25 Jun 2008)
++# Php module fails to build due to newer autotools.
++>=media-libs/ming-0.4.0_beta5 php
++
++# Ben de Groot <yngwin@gentoo.org> (22 Jun 2008)
++# does not work with ffmpeg new headers yet
++<www-plugins/gnash-0.8.3 ffmpeg
++
++# Markus Ullmann <jokey@gentoo.org> (21 Mar 2008)
++# still work in progress
++=net-irc/kvirc-3.4.0 qt4
++
++# Michael Sterrett <mr_bones_@gentoo.org> (09 Mar 2008)
++# tcl version necessary has been masked so mask this for now.
++~app-editors/nvi-1.81.6 tcl
++
++# Christian Faulhammer <opfer@gentoo.org> (03 Mar 2008) 
++# This feature is experimental and should be used by people willing to
++# test it
++app-portage/gatt libpaludis
++
++# Wulf Krueger <philantrop@gentoo.org> (28 Jan 2008)
++# Mask bluetooth for the KDE 3.5.8 stabilisation.
++app-pda/pilot-link bluetooth
++
++# Christian Hoffmann <hoffie@gentoo.org> (27 Dec 2007)
++# Missing dev-php5/php-java-bridge
++dev-lang/php java-external
++
++# Donnie Berkholz <dberkholz@gentoo.org> (12 Nov 2007)
++# freedesktop.org bug #7459 committed fix breaks 3D apps
++# but "fix" is only relevant on USE=nptl
++=media-libs/mesa-7.0* nptl
++
++# Robert Buchholz <rbu@gentoo.org> (29 Aug 2007)
++# PPTP Plugin doesn't work on amd64
++kde-misc/knetworkmanager pptp
++
++dev-java/sun-jdk nsplugin
++dev-java/sun-jre-bin nsplugin
++dev-java/ibm-jdk-bin nsplugin 
++dev-java/ibm-jre-bin nsplugin
++
++# Petteri Räty <betelgeuse@gentoo.org> (27 Apr 2007)
++# package.use.masked for security bug #161835
++# Not removed from ebuilds because this is the only 64 bit plugin
++# on amd64.
++dev-java/blackdown-jdk nsplugin
++dev-java/blackdown-jre nsplugin
++
++# These are for BSD only
++net-proxy/squid ipf-transparent pf-transparent
++app-admin/sshguard ipfilter
++
++# Linking against libnfsidmap requires libs in /usr #149472
++sys-apps/acl nfs
++
++# Christian Faulhammer <opfer@gentoo.org> (14 Jan 2008)
++# only works on x86, where this will be unmasked
++dev-java/ibm-jdk-bin alsa
++dev-java/ibm-jre-bin alsa
++
++# Raúl Porcel <armin76@gentoo.org> (09 Nov 2008)
++# CPU opts: This needs amd64, x86 and ppc on some of them
++# dvdnav: hard masked dependency
++# vdpau: availble on x86, amd64 only
++media-video/mplayer cpudetection custom-cpuopts bindist vdpau
++
++# Steve Dibb <beandog@gentoo.org> (26 Feb 2009)
++# Unmask internal real player codec support on newer mplayer
++>=media-video/mplayer-1.0_rc2_p20090226 -real
++
++# Alexis Ballier <aballier@gentoo.org> (07 Jul 2009)
++# The pda interface doesnt build, bug #277037
++>=media-video/vlc-1.0.0 pda
++
++# Samuli Suominen <ssuominen@gentoo.org> (31 Jul 2009)
++# Security issues wrt #190835
++games-fps/doom-data doomsday
++games-fps/freedoom doomsday

@@ -2,8 +2,6 @@
 # upstream changes. So when we merge from upstream, we want to revert these
 # directories back to the funtoo.org version:
 
-profiles/profiles.desc
-
 app-admin/eselect-ruby
 app-shells/bash
 dev-db/oracle-instantclient-sqlplus

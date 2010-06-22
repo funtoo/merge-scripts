@@ -14,7 +14,7 @@ die() {
 
 for foo in `cat funtoo/funtoo-revert funtoo/funtoo-misc | grep -v '^#'`
 do
-	( cd $dest; [ -e $foo ] && rm -rf $foo; ) || die "rm -rf fail"
+	( cd $dest; [ -e $foo ] && rm -rf $foo; )
 done
 
 # "*-*" will eliminate licenses, eclass, funtoo directories:
@@ -33,9 +33,9 @@ do
 done
 
 # Patches:
-for pat in `cat funtoo/patches/series`
+for pat in `cat funtoo/patches/series | grep -v '^#'`
 do
-	( cd $dest; cat "$src/funtoo/patches/$pat" | patch -p0; ) || die "patch $pat failed"
+	( cd $dest; cat "$src/funtoo/patches/$pat" | patch -p1; ) || die "patch $pat failed"
 done
 
 # Misc files:
