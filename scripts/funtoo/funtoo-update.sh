@@ -22,8 +22,6 @@
 # to the funtoo tree. This commit can then be reviewed, and manually
 # pushed up to github.com so other users can grab it via emerge --sync.
 
-# I have no clue why I named this script grabba.sh.
-
 dest=/var/tmp/git/portage-gentoo
 final=/var/tmp/git/portage-prod
 src=`pwd`
@@ -96,4 +94,4 @@ echo "Extracting Portage tarball..."
 ( cd $final; tar xpf /var/tmp/git/curmerge.tar ) || die "couldn't unpack tarball"
 egencache --update --portdir=$final --jobs=14
 ( cd $final; git add . ) || die "couldn't do git add ."
-( cd $final; git commit -a -m "glorious updates" ) || die "couldn't do glorious updating"
+( cd $final; git commit -a -m "glorious funtoo updates" ) || die "couldn't do glorious updating"
