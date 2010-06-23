@@ -4,16 +4,16 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
- .../default/linux/package.keywords/funtoo-stable   |   33 ++++++++++++++++++++
- 1 files changed, 33 insertions(+), 0 deletions(-)
+ .../default/linux/package.keywords/funtoo-stable   |   29 ++++++++++++++++++++
+ 1 files changed, 29 insertions(+), 0 deletions(-)
  create mode 100644 profiles/default/linux/package.keywords/funtoo-stable
 
 diff --git a/profiles/default/linux/package.keywords/funtoo-stable b/profiles/default/linux/package.keywords/funtoo-stable
 new file mode 100644
-index 0000000..d35044d
+index 0000000..7826aea
 --- /dev/null
 +++ b/profiles/default/linux/package.keywords/funtoo-stable
-@@ -0,0 +1,33 @@
+@@ -0,0 +1,29 @@
 +=net-misc/dhcpcd-5.0.6*
 +~app-admin/eselect-postgresql-0.3 amd64 x86
 +=app-admin/eselect-python-20090824* amd64 x86
@@ -43,7 +43,3 @@ index 0000000..d35044d
 +=app-admin/eselect-1.2.3 amd64 x86
 +~net-misc/keychain-2.7.0 amd64 x86
 +=dev-vcs/git-1.7* amd64 x86
-+
-+# Remove stable keywords until >=udev-143 hit stable.
-+>=media-sound/pulseaudio-0.9.18 -amd64 -x86
-+>=media-sound/pavucontrol-0.9.10 -amd64 -x86 ~amd64 ~x86
