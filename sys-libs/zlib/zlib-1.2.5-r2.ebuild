@@ -29,6 +29,8 @@ src_unpack() {
 	epatch "${FILESDIR}"/${P}-lfs-decls.patch
 	# bug #316841
 	epatch "${FILESDIR}"/${P}-fbsd_chosts.patch
+	# This is a parallel build fix from Gentoo Bug #319661:
+	sed -i -e '/^LDFLAGS=/d' configure || die
 }
 
 src_compile() {
