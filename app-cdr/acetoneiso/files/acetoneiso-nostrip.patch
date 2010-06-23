@@ -1,8 +1,0 @@
-diff -Naurp -Naurp acetoneiso_2.0.3RC1.old/acetoneiso/acetoneiso.pro acetoneiso_2.0.3RC1/acetoneiso/acetoneiso.pro
---- acetoneiso_2.0.3RC1.old/acetoneiso/acetoneiso.pro	2008-09-24 14:36:28.000000000 +0200
-+++ acetoneiso_2.0.3RC1/acetoneiso/acetoneiso.pro	2009-02-21 19:51:53.667886857 +0100
-@@ -1,3 +1,4 @@
-+QMAKE_STRIP = ""
- CONFIG += qt
- TEMPLATE = app
- TARGET = 
