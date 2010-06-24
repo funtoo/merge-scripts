@@ -1,8 +1,0 @@
-# ChangeLog for media-video/coherence 
-# Copyright 2000-2010 Gentoo Foundation; Distributed under the GPL v2
-
-*coherence-0.6.6 (22 Dec 2009)
-
-  22 Dec 2009; Daniel Robbins <drobbins@funtoo.org> +coherence-0.6.6.ebuild:
-  new upstream release and ebuild mostly based on bug 246166 - thanks to all
-  contributors.
