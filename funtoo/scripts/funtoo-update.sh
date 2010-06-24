@@ -33,7 +33,8 @@ die() {
 }
 
 [ ! -d $dest ] && die "dest dir $dest does not exist"
-
+( cd $dest; rm -rf *; ) || die "couldn't clean up"
+( cd $dest; git reset --hard; ) || die "couldn't complete cleanup"
 ( cd $dest; git checkout gentoo.org; ) || die "couldn't checkout gentoo.org"
 ( cd $dest; git pull; ) || die "couldn't pull in gentoo changes"
 ( cd $dest; git branch -D testmerge; )
