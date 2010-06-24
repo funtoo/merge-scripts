@@ -56,7 +56,7 @@ done
 
 # "*-*" will eliminate licenses, eclass, funtoo directories:
 
-for foo in `ls -d *-*/* virtual/*`
+for foo in `ls -d *-*/*`
 do
 	dirn="`dirname $foo`"
 	if [ ! -d $dest/$foo ]
@@ -73,7 +73,6 @@ done
 
 cp -a sets.conf $dest/ || die "sets.conf fail"
 cp -a sets $dest/ || die "sets fail"
-rsync -a scripts/ $dest/scripts/ || die "rsync scripts fail"
 cp licenses/* $dest/licenses/ || die "licenses fail"
 cp eclass/* $dest/eclass/ || die "eclass fail"
 
