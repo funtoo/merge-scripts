@@ -4,11 +4,11 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
- profiles/package.mask/funtoo            |   83 +++++++++++++++++++++++++++++++
- profiles/package.mask/funtoo-cautionary |   34 +++++++++++++
- profiles/package.mask/sunrise           |   39 +++++++++++++++
+ profiles/package.mask/funtoo            |   73 +++++++++++++++++++++++++++++++
+ profiles/package.mask/funtoo-cautionary |   34 ++++++++++++++
+ profiles/package.mask/sunrise           |   39 +++++++++++++++++
  profiles/package.unmask/funtoo          |    7 +++
- 4 files changed, 163 insertions(+), 0 deletions(-)
+ 4 files changed, 153 insertions(+), 0 deletions(-)
  create mode 100644 profiles/package.mask/funtoo
  create mode 100644 profiles/package.mask/funtoo-cautionary
  create mode 100644 profiles/package.mask/sunrise
@@ -16,21 +16,11 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 diff --git a/profiles/package.mask/funtoo b/profiles/package.mask/funtoo
 new file mode 100644
-index 0000000..a80b6f0
+index 0000000..8fa3507
 --- /dev/null
 +++ b/profiles/package.mask/funtoo
-@@ -0,0 +1,83 @@
+@@ -0,0 +1,73 @@
 +# PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
-+
-+# Daniel Robbins <drobbins@funtoo.org> (21 Jun 2010) mpfr-3.0.0+ should be
-+# totally masked until fix found for lib version bump.
-+
-+>=dev-libs/mpfr-3.0.0
-+
-+# Jeff Mitchell <funtoo@jefferai.org> (21 Jun 2010)
-+# Spanky committed fix without revbumping -- fix this for users
-+=dev-libs/mpfr-2.4.1_p5
-+=dev-libs/mpfr-3.0.0
 +
 +# Daniel Robbins <drobbins@funtoo.org> (03 Jun 2010)
 +# Masked for testing

@@ -34,7 +34,7 @@ RDEPEND=">=sys-libs/zlib-1.1.4
 	>=sys-devel/gcc-config-1.4
 	virtual/libiconv
 	>=dev-libs/gmp-4.2.1
-	>=dev-libs/mpfr-2.3
+	>=dev-libs/mpfr-3
 	!build? (
 		gcj? (
 			gtk? (
