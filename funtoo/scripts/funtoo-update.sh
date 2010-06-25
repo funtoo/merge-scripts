@@ -33,50 +33,58 @@ die() {
 }
 
 [ ! -d $dest ] && die "dest dir $dest does not exist"
-( cd $dest; rm -rf *; ) || die "couldn't clean up"
-( cd $dest; git reset --hard; ) || die "couldn't complete cleanup"
+#( cd $dest; rm -rf *; ) || die "couldn't clean up"
+#( cd $dest; git reset --hard; ) || die "couldn't complete cleanup"
 ( cd $dest; git checkout gentoo.org; ) || die "couldn't checkout gentoo.org"
 ( cd $dest; git pull; ) || die "couldn't pull in gentoo changes"
-( cd $dest; git branch -D testmerge; )
-( cd $dest; git checkout -b testmerge; ) || die "couldn't create testmerge"
+#( cd $dest; git branch -D testmerge; )
+#( cd $dest; git checkout -b testmerge; ) || die "couldn't create testmerge"
+rsync -av --delete --exclude /.git --exclude /metadata/cache/** $dest/ $final/ || die "rsync death"
 
 # Patches:
 for pat in `cat funtoo/patches/series | grep -v '^#'`
 do
-	( cd $dest; git apply "$src/funtoo/patches/$pat" ) || die "patch $pat failed"
+	( cd $final; git apply "$src/funtoo/patches/$pat" ) || die "patch $pat failed"
 done
 
 # "*-*" will eliminate licenses, eclass, funtoo directories:
 
 for foo in `ls -d *-*/*`
 do
-	[ -d $dest/$foo ] && echo "Replacing upstream ${foo}..." && ( cd $dest; [ -e $foo ] && rm -rf $foo; )
-	install -d `dirname $dest/$foo` || die "install -d fail"
-	cp -a $foo $dest/$foo || die "cp -a fail"
+	[ -d $final/$foo ] && echo "Replacing upstream ${foo}..." && ( cd $final; [ -e $foo ] && rm -rf $foo; )
+	install -d `dirname $final/$foo` || die "install -d fail"
+	cp -a $foo $final/$foo || die "cp -a fail"
 done
 
 # Misc files:
 
-cp -a sets.conf $dest/ || die "sets.conf fail"
-cp -a sets $dest/ || die "sets fail"
-cp licenses/* $dest/licenses/ || die "licenses fail"
-cp eclass/* $dest/eclass/ || die "eclass fail"
+cp -a sets.conf $final/ || die "sets.conf fail"
+cp -a sets $final/ || die "sets fail"
+cp licenses/* $final/licenses/ || die "licenses fail"
+cp eclass/* $final/eclass/ || die "eclass fail"
 
 # cool cleanups:
 
 # ( cd $dest; find -iname ChangeLog -exec rm -f {} \; ) || die "ChangeLog zap fail"
 # ( cd $dest; find -iname Manifest -exec sed -n -i -e "/DIST/p" {} \; ) || die "Mini-manifest fail"
 
-( cd $dest; git add * ) || die "couldn't add"
-( cd $dest; git commit -a -m "merged tree" ) || die "couldn't merge tree"
+#( cd $dest; git add * ) || die "couldn't add"
+#( cd $dest; git commit -a -m "merged tree" ) || die "couldn't merge tree"
 
-echo "Creating Portage tarball..."
-tar cf /var/tmp/git/curmerge.tar -C $dest --exclude .git . || die "tarball create error"
+#echo "Creating Portage tarball..."
+#tar cf /var/tmp/git/curmerge.tar -C $dest --exclude .git . || die "tarball create error"
 
-( cd $final; git checkout $desttree ) || die "couldn't checkout $desttree destree"
-( cd $final; rm -rf * ) || die "couldn't prep tree"
-echo "Extracting Portage tarball..."
-( cd $final; tar xpf /var/tmp/git/curmerge.tar ) || die "couldn't unpack tarball"
+#( cd $final; git checkout $desttree ) || die "couldn't checkout $desttree destree"
+#( cd $final; rm -rf * ) || die "couldn't prep tree"
+#echo "Extracting Portage tarball..."
+#( cd $final; tar xpf /var/tmp/git/curmerge.tar ) || die "couldn't unpack tarball"
 egencache --update --portdir=$final --jobs=14
-( cd $final; git add . ) || die "couldn't do git add ."
-( cd $final; git commit -a -m "glorious funtoo updates" ) || die "couldn't do glorious updating"
+#( cd $final; git add . ) || die "couldn't do git add ."
+a=$( cd $final; git status --porcelain )
+if [ "$a" != "" ]
+then
+	#changes
+	( cd $final; git commit -a -m "glorious funtoo updates" ) || die "couldn't do glorious updating"
+else
+	echo "No changes detected in repo. Commit skipped."
+fi

@@ -4,10 +4,7 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
- profiles/default/linux/make.defaults |   18 +++++++++++++++++-
- profiles/default/linux/package.use   |    2 ++
- 2 files changed, 19 insertions(+), 1 deletions(-)
- create mode 100644 profiles/default/linux/package.use
+ 0 files changed, 0 insertions(+), 0 deletions(-)
 
 diff --git a/profiles/default/linux/make.defaults b/profiles/default/linux/make.defaults
 index 6a717f1..07e354e 100644
