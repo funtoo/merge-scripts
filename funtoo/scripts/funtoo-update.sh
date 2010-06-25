@@ -24,6 +24,8 @@
 
 dest=/var/tmp/git/portage-gentoo
 final=/var/tmp/git/portage-prod
+mini=/var/tmp/git/portage-mini-2010
+
 src=`pwd`
 desttree="funtoo.org"
 
@@ -33,12 +35,8 @@ die() {
 }
 
 [ ! -d $dest ] && die "dest dir $dest does not exist"
-#( cd $dest; rm -rf *; ) || die "couldn't clean up"
-#( cd $dest; git reset --hard; ) || die "couldn't complete cleanup"
 ( cd $dest; git checkout gentoo.org; ) || die "couldn't checkout gentoo.org"
 ( cd $dest; git pull; ) || die "couldn't pull in gentoo changes"
-#( cd $dest; git branch -D testmerge; )
-#( cd $dest; git checkout -b testmerge; ) || die "couldn't create testmerge"
 rsync -av --delete --exclude /.git --exclude /metadata/cache/** $dest/ $final/ || die "rsync death"
 
 # Patches:
@@ -63,28 +61,34 @@ cp -a sets $final/ || die "sets fail"
 cp licenses/* $final/licenses/ || die "licenses fail"
 cp eclass/* $final/eclass/ || die "eclass fail"
 
-# cool cleanups:
-
-# ( cd $dest; find -iname ChangeLog -exec rm -f {} \; ) || die "ChangeLog zap fail"
-# ( cd $dest; find -iname Manifest -exec sed -n -i -e "/DIST/p" {} \; ) || die "Mini-manifest fail"
-
-#( cd $dest; git add * ) || die "couldn't add"
-#( cd $dest; git commit -a -m "merged tree" ) || die "couldn't merge tree"
-
-#echo "Creating Portage tarball..."
-#tar cf /var/tmp/git/curmerge.tar -C $dest --exclude .git . || die "tarball create error"
-
-#( cd $final; git checkout $desttree ) || die "couldn't checkout $desttree destree"
-#( cd $final; rm -rf * ) || die "couldn't prep tree"
-#echo "Extracting Portage tarball..."
-#( cd $final; tar xpf /var/tmp/git/curmerge.tar ) || die "couldn't unpack tarball"
 egencache --update --portdir=$final --jobs=14
-#( cd $final; git add . ) || die "couldn't do git add ."
+( cd $final; git add . ) || die "couldn't do git add ."
 a=$( cd $final; git status --porcelain )
 if [ "$a" != "" ]
 then
 	#changes
 	( cd $final; git commit -a -m "glorious funtoo updates" ) || die "couldn't do glorious updating"
+	( cd $final; git push origin funtoo.org )
 else
 	echo "No changes detected in repo. Commit skipped."
 fi
+
+rsync -av --delete --exclude /.git --exclude ChangeLog $final/ $mini/ || die "mini rsync failure"
+
+# cool cleanups:
+
+( cd $mini; find -iname ChangeLog -exec rm -f {} \; ) || die "ChangeLog zap fail"
+( cd $mini; find -iname Manifest -exec sed -n -i -e "/DIST/p" {} \; ) || die "Mini-manifest fail"
+
+( cd $mini; git add . ) || die "couldn't do git add ."
+a=$( cd $mini; git status --porcelain )
+if [ "$a" != "" ]
+then
+	#changes
+	( cd $mini; git commit -a -m "glorious funtoo updates" ) || die "couldn't do glorious updating"
+	( cd $mini; git push origin funtoo.org )
+else
+	echo "No changes detected in repo. Commit skipped."
+fi
+
+
