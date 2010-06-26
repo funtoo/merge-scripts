@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<herd>no-herd</herd>
+	<upstream>
+		<bugs-to>mailto:dev-portage@gentoo.org</bugs-to>
+		<changelog>http://sources.gentoo.org/viewcvs.py/*checkout*/portage/main/trunk/RELEASE-NOTES</changelog>
+	</upstream>
+	<maintainer><email>dev-portage@gentoo.org</email></maintainer>
+	<maintainer><email>zmedico@gentoo.org</email></maintainer>
+	<use>
+		<flag name="epydoc">Build html API documentation with epydoc.</flag>
+		<flag name="python3">Use python3 as Python interpreter.</flag>
+	</use>
+</pkgmetadata>

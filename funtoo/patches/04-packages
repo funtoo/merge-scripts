@@ -4,7 +4,9 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
- 0 files changed, 0 insertions(+), 0 deletions(-)
+ profiles/base/packages          |    6 ++++--
+ profiles/default/linux/packages |    4 ++++
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
 diff --git a/profiles/base/packages b/profiles/base/packages
 index 17a90f3..794faa1 100644

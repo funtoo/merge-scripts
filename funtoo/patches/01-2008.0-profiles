@@ -4,7 +4,194 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 profiles a listed in profiles.desc.
 ---
- 0 files changed, 0 insertions(+), 0 deletions(-)
+ profiles/default/linux/alpha/2008.0/deprecated     |    1 
+ .../default/linux/alpha/2008.0/desktop/deprecated  |    1 
+ .../linux/alpha/2008.0/developer/deprecated        |    1 
+ .../default/linux/alpha/2008.0/server/deprecated   |    1 
+ profiles/default/linux/amd64/2008.0/deprecated     |    7 -
+ .../default/linux/amd64/2008.0/desktop/deprecated  |    7 -
+ .../linux/amd64/2008.0/developer/deprecated        |    7 -
+ .../linux/amd64/2008.0/no-multilib/deprecated      |    7 -
+ .../default/linux/amd64/2008.0/server/deprecated   |    7 -
+ profiles/default/linux/arm/2008.0/deprecated       |    1 
+ .../default/linux/arm/2008.0/desktop/deprecated    |    1 
+ .../default/linux/arm/2008.0/developer/deprecated  |    1 
+ .../default/linux/arm/2008.0/server/deprecated     |    1 
+ profiles/default/linux/hppa/2008.0/deprecated      |    1 
+ .../default/linux/hppa/2008.0/desktop/deprecated   |    1 
+ .../default/linux/hppa/2008.0/developer/deprecated |    1 
+ .../default/linux/hppa/2008.0/server/deprecated    |    1 
+ profiles/default/linux/ia64/2008.0/deprecated      |    1 
+ .../default/linux/ia64/2008.0/desktop/deprecated   |    1 
+ .../default/linux/ia64/2008.0/developer/deprecated |    1 
+ .../default/linux/ia64/2008.0/server/deprecated    |    1 
+ profiles/default/linux/m68k/2008.0/deprecated      |    1 
+ .../default/linux/m68k/2008.0/desktop/deprecated   |    1 
+ .../default/linux/m68k/2008.0/developer/deprecated |    1 
+ .../default/linux/m68k/2008.0/server/deprecated    |    1 
+ .../default/linux/mips/2008.0/cobalt/deprecated    |    1 
+ .../linux/mips/2008.0/cobalt/desktop/deprecated    |    1 
+ .../linux/mips/2008.0/cobalt/developer/deprecated  |    1 
+ .../linux/mips/2008.0/cobalt/server/deprecated     |    1 
+ profiles/default/linux/mips/2008.0/deprecated      |    1 
+ .../default/linux/mips/2008.0/desktop/deprecated   |    1 
+ .../default/linux/mips/2008.0/developer/deprecated |    1 
+ .../default/linux/mips/2008.0/server/deprecated    |    1 
+ .../default/linux/powerpc/ppc32/2008.0/deprecated  |    1 
+ .../linux/powerpc/ppc32/2008.0/desktop/deprecated  |    1 
+ .../powerpc/ppc32/2008.0/developer/deprecated      |    1 
+ .../linux/powerpc/ppc32/2008.0/server/deprecated   |    1 
+ .../powerpc/ppc64/2008.0/32bit-userland/deprecated |    1 
+ .../ppc64/2008.0/32bit-userland/desktop/deprecated |    1 
+ .../2008.0/32bit-userland/developer/deprecated     |    1 
+ .../ppc64/2008.0/32bit-userland/server/deprecated  |    1 
+ .../powerpc/ppc64/2008.0/64bit-userland/deprecated |    1 
+ .../ppc64/2008.0/64bit-userland/desktop/deprecated |    1 
+ .../2008.0/64bit-userland/developer/deprecated     |    1 
+ .../ppc64/2008.0/64bit-userland/server/deprecated  |    1 
+ .../default/linux/powerpc/ppc64/2008.0/deprecated  |    1 
+ .../linux/powerpc/ppc64/2008.0/desktop/deprecated  |    1 
+ .../powerpc/ppc64/2008.0/developer/deprecated      |    1 
+ .../linux/powerpc/ppc64/2008.0/server/deprecated   |    1 
+ profiles/default/linux/s390/2008.0/deprecated      |    1 
+ .../default/linux/s390/2008.0/server/deprecated    |    1 
+ profiles/default/linux/sh/2008.0/deprecated        |    1 
+ .../default/linux/sh/2008.0/desktop/deprecated     |    1 
+ .../default/linux/sh/2008.0/developer/deprecated   |    1 
+ profiles/default/linux/sh/2008.0/server/deprecated |    1 
+ profiles/default/linux/sparc/2008.0/deprecated     |    1 
+ .../default/linux/sparc/2008.0/desktop/deprecated  |    1 
+ .../linux/sparc/2008.0/developer/deprecated        |    1 
+ .../default/linux/sparc/2008.0/server/deprecated   |    1 
+ profiles/default/linux/x86/2008.0/deprecated       |    7 -
+ .../default/linux/x86/2008.0/desktop/deprecated    |    7 -
+ .../default/linux/x86/2008.0/developer/deprecated  |    7 -
+ .../default/linux/x86/2008.0/server/deprecated     |    7 -
+ profiles/hardened/linux/amd64/2008.0/deprecated    |    7 -
+ .../hardened/linux/amd64/2008.0/desktop/deprecated |    7 -
+ .../linux/amd64/2008.0/developer/deprecated        |    7 -
+ .../linux/amd64/2008.0/no-multilib/deprecated      |    7 -
+ .../hardened/linux/amd64/2008.0/server/deprecated  |    7 -
+ profiles/hardened/linux/ia64/2008.0/deprecated     |    7 -
+ .../hardened/linux/ia64/2008.0/desktop/deprecated  |    7 -
+ .../linux/ia64/2008.0/developer/deprecated         |    7 -
+ .../hardened/linux/ia64/2008.0/server/deprecated   |    7 -
+ .../hardened/linux/powerpc/ppc32/2008.0/deprecated |    7 -
+ .../linux/powerpc/ppc32/2008.0/desktop/deprecated  |    7 -
+ .../powerpc/ppc32/2008.0/developer/deprecated      |    7 -
+ .../linux/powerpc/ppc32/2008.0/server/deprecated   |    7 -
+ .../powerpc/ppc64/2008.0/32bit-userland/deprecated |    7 -
+ .../ppc64/2008.0/32bit-userland/desktop/deprecated |    7 -
+ .../2008.0/32bit-userland/developer/deprecated     |    7 -
+ .../ppc64/2008.0/32bit-userland/server/deprecated  |    7 -
+ .../powerpc/ppc64/2008.0/64bit-userland/deprecated |    7 -
+ .../ppc64/2008.0/64bit-userland/desktop/deprecated |    7 -
+ .../2008.0/64bit-userland/developer/deprecated     |    7 -
+ .../ppc64/2008.0/64bit-userland/server/deprecated  |    7 -
+ .../hardened/linux/powerpc/ppc64/2008.0/deprecated |    8 -
+ .../linux/powerpc/ppc64/2008.0/desktop/deprecated  |    8 -
+ .../powerpc/ppc64/2008.0/developer/deprecated      |    8 -
+ .../linux/powerpc/ppc64/2008.0/server/deprecated   |    8 -
+ profiles/hardened/linux/x86/2008.0/deprecated      |    7 -
+ .../hardened/linux/x86/2008.0/desktop/deprecated   |    7 -
+ .../hardened/linux/x86/2008.0/developer/deprecated |    7 -
+ .../hardened/linux/x86/2008.0/no-nptl/deprecated   |    8 -
+ .../hardened/linux/x86/2008.0/server/deprecated    |    7 -
+ profiles/profiles.desc                             |  263 +-------------------
+ 94 files changed, 8 insertions(+), 587 deletions(-)
+ delete mode 100644 profiles/default/linux/alpha/2008.0/deprecated
+ delete mode 100644 profiles/default/linux/alpha/2008.0/desktop/deprecated
+ delete mode 100644 profiles/default/linux/alpha/2008.0/developer/deprecated
+ delete mode 100644 profiles/default/linux/alpha/2008.0/server/deprecated
+ delete mode 100644 profiles/default/linux/amd64/2008.0/deprecated
+ delete mode 100644 profiles/default/linux/amd64/2008.0/desktop/deprecated
+ delete mode 100644 profiles/default/linux/amd64/2008.0/developer/deprecated
+ delete mode 100644 profiles/default/linux/amd64/2008.0/no-multilib/deprecated
+ delete mode 100644 profiles/default/linux/amd64/2008.0/server/deprecated
+ delete mode 100644 profiles/default/linux/arm/2008.0/deprecated
+ delete mode 100644 profiles/default/linux/arm/2008.0/desktop/deprecated
+ delete mode 100644 profiles/default/linux/arm/2008.0/developer/deprecated
+ delete mode 100644 profiles/default/linux/arm/2008.0/server/deprecated
+ delete mode 100644 profiles/default/linux/hppa/2008.0/deprecated
+ delete mode 100644 profiles/default/linux/hppa/2008.0/desktop/deprecated
+ delete mode 100644 profiles/default/linux/hppa/2008.0/developer/deprecated
+ delete mode 100644 profiles/default/linux/hppa/2008.0/server/deprecated
+ delete mode 100644 profiles/default/linux/ia64/2008.0/deprecated
+ delete mode 100644 profiles/default/linux/ia64/2008.0/desktop/deprecated
+ delete mode 100644 profiles/default/linux/ia64/2008.0/developer/deprecated
+ delete mode 100644 profiles/default/linux/ia64/2008.0/server/deprecated
+ delete mode 100644 profiles/default/linux/m68k/2008.0/deprecated
+ delete mode 100644 profiles/default/linux/m68k/2008.0/desktop/deprecated
+ delete mode 100644 profiles/default/linux/m68k/2008.0/developer/deprecated
+ delete mode 100644 profiles/default/linux/m68k/2008.0/server/deprecated
+ delete mode 100644 profiles/default/linux/mips/2008.0/cobalt/deprecated
+ delete mode 100644 profiles/default/linux/mips/2008.0/cobalt/desktop/deprecated
+ delete mode 100644 profiles/default/linux/mips/2008.0/cobalt/developer/deprecated
+ delete mode 100644 profiles/default/linux/mips/2008.0/cobalt/server/deprecated
+ delete mode 100644 profiles/default/linux/mips/2008.0/deprecated
+ delete mode 100644 profiles/default/linux/mips/2008.0/desktop/deprecated
+ delete mode 100644 profiles/default/linux/mips/2008.0/developer/deprecated
+ delete mode 100644 profiles/default/linux/mips/2008.0/server/deprecated
+ delete mode 100644 profiles/default/linux/powerpc/ppc32/2008.0/deprecated
+ delete mode 100644 profiles/default/linux/powerpc/ppc32/2008.0/desktop/deprecated
+ delete mode 100644 profiles/default/linux/powerpc/ppc32/2008.0/developer/deprecated
+ delete mode 100644 profiles/default/linux/powerpc/ppc32/2008.0/server/deprecated
+ delete mode 100644 profiles/default/linux/powerpc/ppc64/2008.0/32bit-userland/deprecated
+ delete mode 100644 profiles/default/linux/powerpc/ppc64/2008.0/32bit-userland/desktop/deprecated
+ delete mode 100644 profiles/default/linux/powerpc/ppc64/2008.0/32bit-userland/developer/deprecated
+ delete mode 100644 profiles/default/linux/powerpc/ppc64/2008.0/32bit-userland/server/deprecated
+ delete mode 100644 profiles/default/linux/powerpc/ppc64/2008.0/64bit-userland/deprecated
+ delete mode 100644 profiles/default/linux/powerpc/ppc64/2008.0/64bit-userland/desktop/deprecated
+ delete mode 100644 profiles/default/linux/powerpc/ppc64/2008.0/64bit-userland/developer/deprecated
+ delete mode 100644 profiles/default/linux/powerpc/ppc64/2008.0/64bit-userland/server/deprecated
+ delete mode 100644 profiles/default/linux/powerpc/ppc64/2008.0/deprecated
+ delete mode 100644 profiles/default/linux/powerpc/ppc64/2008.0/desktop/deprecated
+ delete mode 100644 profiles/default/linux/powerpc/ppc64/2008.0/developer/deprecated
+ delete mode 100644 profiles/default/linux/powerpc/ppc64/2008.0/server/deprecated
+ delete mode 100644 profiles/default/linux/s390/2008.0/deprecated
+ delete mode 100644 profiles/default/linux/s390/2008.0/server/deprecated
+ delete mode 100644 profiles/default/linux/sh/2008.0/deprecated
+ delete mode 100644 profiles/default/linux/sh/2008.0/desktop/deprecated
+ delete mode 100644 profiles/default/linux/sh/2008.0/developer/deprecated
+ delete mode 100644 profiles/default/linux/sh/2008.0/server/deprecated
+ delete mode 100644 profiles/default/linux/sparc/2008.0/deprecated
+ delete mode 100644 profiles/default/linux/sparc/2008.0/desktop/deprecated
+ delete mode 100644 profiles/default/linux/sparc/2008.0/developer/deprecated
+ delete mode 100644 profiles/default/linux/sparc/2008.0/server/deprecated
+ delete mode 100644 profiles/default/linux/x86/2008.0/deprecated
+ delete mode 100644 profiles/default/linux/x86/2008.0/desktop/deprecated
+ delete mode 100644 profiles/default/linux/x86/2008.0/developer/deprecated
+ delete mode 100644 profiles/default/linux/x86/2008.0/server/deprecated
+ delete mode 100644 profiles/hardened/linux/amd64/2008.0/deprecated
+ delete mode 100644 profiles/hardened/linux/amd64/2008.0/desktop/deprecated
+ delete mode 100644 profiles/hardened/linux/amd64/2008.0/developer/deprecated
+ delete mode 100644 profiles/hardened/linux/amd64/2008.0/no-multilib/deprecated
+ delete mode 100644 profiles/hardened/linux/amd64/2008.0/server/deprecated
+ delete mode 100644 profiles/hardened/linux/ia64/2008.0/deprecated
+ delete mode 100644 profiles/hardened/linux/ia64/2008.0/desktop/deprecated
+ delete mode 100644 profiles/hardened/linux/ia64/2008.0/developer/deprecated
+ delete mode 100644 profiles/hardened/linux/ia64/2008.0/server/deprecated
+ delete mode 100644 profiles/hardened/linux/powerpc/ppc32/2008.0/deprecated
+ delete mode 100644 profiles/hardened/linux/powerpc/ppc32/2008.0/desktop/deprecated
+ delete mode 100644 profiles/hardened/linux/powerpc/ppc32/2008.0/developer/deprecated
+ delete mode 100644 profiles/hardened/linux/powerpc/ppc32/2008.0/server/deprecated
+ delete mode 100644 profiles/hardened/linux/powerpc/ppc64/2008.0/32bit-userland/deprecated
+ delete mode 100644 profiles/hardened/linux/powerpc/ppc64/2008.0/32bit-userland/desktop/deprecated
+ delete mode 100644 profiles/hardened/linux/powerpc/ppc64/2008.0/32bit-userland/developer/deprecated
+ delete mode 100644 profiles/hardened/linux/powerpc/ppc64/2008.0/32bit-userland/server/deprecated
+ delete mode 100644 profiles/hardened/linux/powerpc/ppc64/2008.0/64bit-userland/deprecated
+ delete mode 100644 profiles/hardened/linux/powerpc/ppc64/2008.0/64bit-userland/desktop/deprecated
+ delete mode 100644 profiles/hardened/linux/powerpc/ppc64/2008.0/64bit-userland/developer/deprecated
+ delete mode 100644 profiles/hardened/linux/powerpc/ppc64/2008.0/64bit-userland/server/deprecated
+ delete mode 100644 profiles/hardened/linux/powerpc/ppc64/2008.0/deprecated
+ delete mode 100644 profiles/hardened/linux/powerpc/ppc64/2008.0/desktop/deprecated
+ delete mode 100644 profiles/hardened/linux/powerpc/ppc64/2008.0/developer/deprecated
+ delete mode 100644 profiles/hardened/linux/powerpc/ppc64/2008.0/server/deprecated
+ delete mode 100644 profiles/hardened/linux/x86/2008.0/deprecated
+ delete mode 100644 profiles/hardened/linux/x86/2008.0/desktop/deprecated
+ delete mode 100644 profiles/hardened/linux/x86/2008.0/developer/deprecated
+ delete mode 100644 profiles/hardened/linux/x86/2008.0/no-nptl/deprecated
+ delete mode 100644 profiles/hardened/linux/x86/2008.0/server/deprecated
 
 diff --git a/profiles/default/linux/alpha/2008.0/deprecated b/profiles/default/linux/alpha/2008.0/deprecated
 deleted file mode 100644
