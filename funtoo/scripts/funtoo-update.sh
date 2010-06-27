@@ -73,6 +73,7 @@ else
 	echo "No changes detected in repo. Commit skipped."
 fi
 
+( cd $mini; git checkout funtoo.org; ) || die "couldn't checkout funtoo.org mini branch"
 rsync -av --delete --exclude /.git --exclude ChangeLog $final/ $mini/ || die "mini rsync failure"
 
 # cool cleanups:
