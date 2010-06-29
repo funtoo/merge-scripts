@@ -2,6 +2,9 @@
 # Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/sys-libs/glibc/ChangeLog,v 1.679 2010/02/15 06:18:04 armin76 Exp $
 
+  29 Jun 2010; Daniel Robbins <drobbins@funtoo.org> removed "gd" USE and
+  gd support from ebuilds.
+
   18 Apr 2010; Daniel Robbins <drobbins@funtoo.org> glibc-2.10.1-r1.ebuild:
   Funtoo changes for toolchain upgrade - depend on linux-headers-2.6.32*,
   gcc-4.4.3*, and force use of gcc-4.4.3 in src_unpack().
