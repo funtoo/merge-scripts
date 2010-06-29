@@ -59,15 +59,15 @@ index 7826aea..e316163 100644
 +<virtual/postgresql-server-8.4 amd64 x86
 diff --git a/profiles/package.mask/funtoo b/profiles/package.mask/funtoo
 new file mode 100644
-index 0000000..c6d45e2
+index 0000000..1b66bed
 --- /dev/null
 +++ b/profiles/package.mask/funtoo
 @@ -0,0 +1,73 @@
 +# PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 +
-+# Daniel Robbins <drobbins@funtoo.org> (26 Jun 2010)
-+# Masked for testing - mini-manifest and optimized git pull support
-+=sys-apps/portage-2.2_rc67-r1
++# Daniel Robbins <drobbins@funtoo.org> (29 Jun 2010)
++# Masked for testing.
++>sys-fs/lvm2-2.02.65
 +
 +# Daniel Robbins <drobbins@funtoo.org> (03 Jun 2010)
 +# Masked for testing
