@@ -2,6 +2,11 @@
 # Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/sys-apps/coreutils/ChangeLog,v 1.283 2010/01/08 03:35:07 vapier Exp $
 
+*coreutils-8.5 (30 Jun 2010)
+
+  30 Jun 2010; Daniel Robbins <drobbins@funtoo.org> +coreutils-8.5.ebuild:
+  New coreutils imported from Gentoo.
+
 *coreutils-8.4 (13 Jan 2010)
 
   13 Jan 2010; Daniel Robbins <drobbins@funtoo.org> +coreutils-8.4.ebuild:
