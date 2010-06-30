@@ -71,24 +71,6 @@ src_install() {
 
 	dodoc README VERSION WHATS_NEW doc/*.{conf,c,txt}
 
-	# fix some broken symlinks - and keep all .so stuff in /lib:
-
-	rm -f $D/usr$(get_libdir)/liblvm2app.so
-	rm -f $D/usr$(get_libdir)/liblvm2cmd.so
-	rm -f $D/usr$(get_libdir)/libdevmapper.so
-	rm -f $D/usr$(get_libdir)/libdevmapper-event.so
-	rm -f $D/usr$(get_libdir)/libdevmapper-event-lvm2.so
-	ln -s liblvm2app.so.2.1 $D/$(get_libdir)/liblvm2app.so || die
-	ln -s liblvm2cmd.so.2.02 $D/$(get_libdir)/liblvm2cmd.so || die
-	ln -s libdevmapper.so.1.02 $D/$(get_libdir)/libdevmapper.so || die
-	ln -s libdevmapper-event.so.1.02 $D/$(get_libdir)/libdevmapper-event.so || die
-	ln -s libdevmapper-event-lvm2.so.2.02 $D/$(get_libdir)/libdevmapper-event-lvm2.so || die
-
-	# static libs are in /usr/lib, shared libs are in /lib, so I grudgingly use
-	# gen_usr_ldscript in this case:
-
-	gen_usr_ldscript liblvm2{app,cmd}.so libdevmapper.so libdevmapper-event.so libdevmapper-event-lvm2.so || die
-
 	# For now, we are deprecating dmtab until a man page can be provided for it.
 
 	# the following add-ons are used by the initscripts:
