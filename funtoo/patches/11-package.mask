@@ -4,7 +4,6 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
-
  .../default/linux/package.keywords/funtoo-stable   |   19 +++---
  profiles/package.mask/funtoo                       |   69 ++++++++++++++++++++
  profiles/package.mask/funtoo-cautionary            |   34 ++++++++++
@@ -15,7 +14,6 @@ From: Daniel Robbins <drobbins@funtoo.org>
  create mode 100644 profiles/package.mask/funtoo-cautionary
  create mode 100644 profiles/package.mask/sunrise
  create mode 100644 profiles/package.unmask/funtoo
-
 
 diff --git a/profiles/default/linux/package.keywords/funtoo-stable b/profiles/default/linux/package.keywords/funtoo-stable
 index 7826aea..e316163 100644
@@ -61,7 +59,7 @@ index 7826aea..e316163 100644
 +<virtual/postgresql-server-8.4 amd64 x86
 diff --git a/profiles/package.mask/funtoo b/profiles/package.mask/funtoo
 new file mode 100644
-index 0000000..663e013
+index 0000000..051fbb0
 --- /dev/null
 +++ b/profiles/package.mask/funtoo
 @@ -0,0 +1,69 @@
@@ -69,7 +67,7 @@ index 0000000..663e013
 +
 +# Daniel Robbins <drobbins@funtoo.org> (29 Jun 2010)
 +# Masked for testing.
-+>sys-fs/lvm2-2.02.65
++>sys-fs/lvm2-2.02.65-r1
 +
 +# Daniel Robbins <drobbins@funtoo.org> (03 Jun 2010)
 +# Masked for testing

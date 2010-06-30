@@ -4,11 +4,9 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
-
  .../default/linux/package.keywords/funtoo-stable   |   29 ++++++++++++++++++++
  1 files changed, 29 insertions(+), 0 deletions(-)
  create mode 100644 profiles/default/linux/package.keywords/funtoo-stable
-
 
 diff --git a/profiles/default/linux/package.keywords/funtoo-stable b/profiles/default/linux/package.keywords/funtoo-stable
 new file mode 100644
