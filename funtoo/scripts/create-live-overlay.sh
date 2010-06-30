@@ -10,9 +10,9 @@
 # ebuilds that exists in both the funtoo and gentoo trees will be *removed*
 # from the Gentoo tree.
 
-dest=/var/tmp/git/portage-gentoo-overlay
+dest=${portage_gentoo:-/var/tmp/git/portage-gentoo-overlay}
 
-src=`pwd`
+src=$(readlink -f $(dirname $0)/../../)
 
 die() {
 	echo $*
@@ -31,13 +31,13 @@ die() {
 ( cd $dest; stg import --replace -s $src/funtoo/patches/series ) || die "couldn't import patch series"
 ( cd $dest; stg new removed-ebuilds ) || die "couldn't create new stg patch"
 
-for foo in `ls -d *-*/*`
+( cd $src && for foo in `ls -d *-*/*`
 do
 	[ -d $dest/$foo ] && echo "Replacing upstream ${foo}..." && ( cd $dest; [ -e $foo ] && rm -rf $foo; )
 	install -d `dirname $dest/$foo` || die "install -d fail"
 	cp -a $foo $dest/$foo || die "cp -a fail"
 	( cd $dest; git add $foo ) || die "couldn't add new goodies"
-done
+done )
 
 ( cd $dest; stg refresh ) || die "couldn't refresh funtoo updates"
 #( cd $dest; git add sets.conf sets licenses/* eclass/* ) || die "couldn't git add"
