@@ -10,7 +10,7 @@ SRC_URI="mirror://kernel/linux/utils/kernel/module-init-tools/${P}.tar.bz2"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~m68k ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86"
+KEYWORDS="alpha amd64 arm hppa ia64 m68k mips ppc ppc64 s390 sh sparc x86"
 IUSE="static"
 
 DEPEND="sys-libs/zlib
@@ -21,7 +21,6 @@ PROVIDE="virtual/modutils"
 src_unpack() {
 	unpack ${A}
 	cd "${S}"
-	epatch "${FILESDIR}"/${PN}-3.2.2-handle-dupliate-aliases.patch #149426
 	touch *.5 *.8 # dont regen manpages
 }
 
@@ -47,7 +46,11 @@ src_install() {
 
 	into /
 	newsbin "${FILESDIR}"/update-modules-3.5.sh update-modules || die
-	doman "${FILESDIR}"/update-modules.8
+	doman "${FILESDIR}"/update-modules.8 || die
+
+	# lsmod should be in /sbin, despite what upstream thinks. lsmod(8) is the
+	# man page; it is a system tool like ifconfig or ip.
+	mv ${D}/bin/lsmod ${D}/sbin/
 }
 
 pkg_postinst() {
