@@ -4,6 +4,7 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 profiles a listed in profiles.desc.
 ---
+
  profiles/default/linux/alpha/2008.0/deprecated     |    1 
  .../default/linux/alpha/2008.0/desktop/deprecated  |    1 
  .../linux/alpha/2008.0/developer/deprecated        |    1 
@@ -192,6 +193,7 @@ profiles a listed in profiles.desc.
  delete mode 100644 profiles/hardened/linux/x86/2008.0/developer/deprecated
  delete mode 100644 profiles/hardened/linux/x86/2008.0/no-nptl/deprecated
  delete mode 100644 profiles/hardened/linux/x86/2008.0/server/deprecated
+
 
 diff --git a/profiles/default/linux/alpha/2008.0/deprecated b/profiles/default/linux/alpha/2008.0/deprecated
 deleted file mode 100644

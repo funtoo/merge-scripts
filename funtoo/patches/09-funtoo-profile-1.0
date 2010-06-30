@@ -4,6 +4,7 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
+
  profiles/funtoo/1.0/README                         |    1 
  profiles/funtoo/1.0/TODO                           |    3 
  profiles/funtoo/1.0/flavors/core/make.defaults     |    2 
@@ -85,6 +86,7 @@ From: Daniel Robbins <drobbins@funtoo.org>
  create mode 100644 profiles/funtoo/1.0/virtuals
  create mode 100644 profiles/funtoo/base/README
  create mode 100644 profiles/funtoo/base/package.use.mask/gentoo
+
 
 diff --git a/profiles/funtoo/1.0/README b/profiles/funtoo/1.0/README
 new file mode 100644

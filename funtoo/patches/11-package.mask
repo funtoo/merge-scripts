@@ -4,16 +4,18 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
- .../default/linux/package.keywords/funtoo-stable   |   19 +++--
- profiles/package.mask/funtoo                       |   73 ++++++++++++++++++++
- profiles/package.mask/funtoo-cautionary            |   34 +++++++++
+
+ .../default/linux/package.keywords/funtoo-stable   |   19 +++---
+ profiles/package.mask/funtoo                       |   69 ++++++++++++++++++++
+ profiles/package.mask/funtoo-cautionary            |   34 ++++++++++
  profiles/package.mask/sunrise                      |   39 +++++++++++
  profiles/package.unmask/funtoo                     |    7 ++
- 5 files changed, 163 insertions(+), 9 deletions(-)
+ 5 files changed, 159 insertions(+), 9 deletions(-)
  create mode 100644 profiles/package.mask/funtoo
  create mode 100644 profiles/package.mask/funtoo-cautionary
  create mode 100644 profiles/package.mask/sunrise
  create mode 100644 profiles/package.unmask/funtoo
+
 
 diff --git a/profiles/default/linux/package.keywords/funtoo-stable b/profiles/default/linux/package.keywords/funtoo-stable
 index 7826aea..e316163 100644
@@ -59,10 +61,10 @@ index 7826aea..e316163 100644
 +<virtual/postgresql-server-8.4 amd64 x86
 diff --git a/profiles/package.mask/funtoo b/profiles/package.mask/funtoo
 new file mode 100644
-index 0000000..1b66bed
+index 0000000..663e013
 --- /dev/null
 +++ b/profiles/package.mask/funtoo
-@@ -0,0 +1,73 @@
+@@ -0,0 +1,69 @@
 +# PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 +
 +# Daniel Robbins <drobbins@funtoo.org> (29 Jun 2010)
@@ -80,10 +82,6 @@ index 0000000..1b66bed
 +# Piotr Karbowski <jabberuser@gmail.com> (20 April 2010)
 +# Hardmask live version.
 +=media-sound/mpd-9999
-+
-+# Jeff Mitchell <funtoo@jefferai.org> (12 Mar 2010)
-+# New version wants udev >= 136
-+>=media-libs/libgphoto2-2.4.8
 +
 +# Jeff Mitchell <funtoo@jefferai.org> (22 Feb 2010)
 +# MySQL 5.1.43+ breaks a bunch of things, including Amarok, grass, and Akonadi
