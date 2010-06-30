@@ -50,7 +50,14 @@ for cat in os.listdir("."):
 		gbest = portage.versions.best(gebuilds)
 		if fbest == gbest:
 			continue
-		xbest = portage.versions.best([fbest,gbest])
-		if xbest == fbest:
-			continue
-		print xbest
+		
+		# a little trickery to ignore rev differences:
+
+		fps = list(portage.versions.catpkgsplit(fbest))[1:]
+		gps = list(portage.versions.catpkgsplit(gbest))[1:]
+		gps[-1] = "r0"
+		fps[-1] = "r0"
+		mycmp = portage.versions.pkgcmp(fps, gps)
+		if mycmp == -1:
+			print gbest
+
