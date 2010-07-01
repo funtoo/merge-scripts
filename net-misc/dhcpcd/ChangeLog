@@ -2,6 +2,11 @@
 # Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/net-misc/dhcpcd/ChangeLog,v 1.260 2009/09/25 13:12:57 darkside Exp $
 
+*dhcpcd-5.2.5 (01 Jul 2010)
+
+  01 Jul 2010; Daniel Robbins <drobbins@funtoo.org> +dhcpcd-5.2.5.ebuild:
+  New release, imported changes from Gentoo, kept our initscript.
+
 *dhcpcd-5.1.2-r1 (17 Oct 2009)
 
   17 Oct 2009; Daniel Robbins <drobbins@funtoo.org> +dhcpcd-5.1.2-r1.ebuild:

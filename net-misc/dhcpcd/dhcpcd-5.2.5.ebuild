@@ -1,25 +1,20 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-misc/dhcpcd/dhcpcd-4.0.15.ebuild,v 1.1 2009/09/25 13:12:57 darkside Exp $
+# $Header: /var/cvsroot/gentoo-x86/net-misc/dhcpcd/dhcpcd-5.1.1.ebuild,v 1.1 2009/09/24 03:53:27 darkside Exp $
 
 EAPI=1
 
-inherit toolchain-funcs eutils
-
-MY_P="${P/_alpha/-alpha}"
-MY_P="${MY_P/_beta/-beta}"
-MY_P="${MY_P/_rc/-rc}"
-S="${WORKDIR}/${MY_P}"
+inherit eutils
 
 DESCRIPTION="A fully featured, yet light weight RFC2131 compliant DHCP client"
-HOMEPAGE="http://roy.marples.name/projects/dhcpcd"
-SRC_URI="http://roy.marples.name/downloads/${PN}/${MY_P}.tar.bz2"
+HOMEPAGE="http://roy.marples.name/projects/dhcpcd/"
+SRC_URI="http://roy.marples.name/downloads/${PN}/${P}.tar.bz2"
 LICENSE="BSD-2"
 
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~sparc-fbsd ~x86-fbsd"
 
 SLOT="0"
-IUSE="+compat +zeroconf"
+IUSE="+zeroconf elibc_glibc"
 
 DEPEND=""
 PROVIDE="virtual/dhcpc"
@@ -36,31 +31,20 @@ src_unpack() {
 			echo "noipv4ll"
 		} >> dhcpcd.conf
 	fi
-
-	if use compat; then
-		elog "dhcpcd-3 command line support enabled"
-		{
-			echo
-			echo "/* User indicated command line compatability */"
-			echo "#define CMDLINE_COMPAT"
-		} >> config.h
-	fi
-}
-
-pkg_setup() {
-	MAKE_ARGS="DBDIR=/var/lib/dhcpcd LIBEXECDIR=/lib/dhcpcd"
 }
 
 src_compile() {
-	[ -z "${MAKE_ARGS}" ] && die "MAKE_ARGS is empty"
-	emake CC="$(tc-getCC)" ${MAKE_ARGS} || die
+	local hooks="--with-hook=ntp.conf"
+	use elibc_glibc && hooks="${hooks} --with-hook=yp.conf"
+	econf --prefix= --libexecdir=/lib/dhcpcd --dbdir=/var/lib/dhcpcd \
+		--localstatedir=/var ${hooks}
+	emake || die
 }
 
 src_install() {
-	local hooks="50-ntp.conf"
-	use elibc_glibc && hooks="${hooks} 50-yp.conf"
-	use compat && hooks="${hooks} 50-dhcpcd-compat"
-	emake ${MAKE_ARGS} HOOKSCRIPTS="${hooks}" DESTDIR="${D}" install || die
+	emake DESTDIR="${D}" install || die
+	dodoc README || die
+	newinitd "${FILESDIR}"/${PN}.initd-nonet-5.1.2-r1 ${PN} || die "newinitd failure"
 }
 
 pkg_postinst() {
@@ -84,12 +68,10 @@ pkg_postinst() {
 		elog "This behaviour can be controlled with the -L flag."
 		elog "See the dhcpcd man page for more details."
 	fi
-	if ! use compat; then
-		elog
-		elog "dhcpcd no longer sends a default ClientID for ethernet interfaces."
-		elog "This is so we can re-use the address the kernel DHCP client found."
-		elog "To retain the old behaviour of sending a default ClientID based on the"
-		elog "hardware address for interface, simply add the keyword clientid"
-		elog "to dhcpcd.conf or use commandline parameter -I ''"
-	fi
+	elog
+	elog "Please note that this version of dhcpcd's initscript does not provide"
+	elog "'net'. This means that if you would like dhcpcd to start at boot, you"
+	elog "need to add it to the proper runlevel by typing something like:"
+	elog
+	elog "rc-update add dhcpcd default"
 }
