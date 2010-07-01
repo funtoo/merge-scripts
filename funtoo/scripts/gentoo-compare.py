@@ -9,12 +9,19 @@
 
 import portage.versions
 import os,sys
+import commands
+
+def keywords(portdir, ebuild):
+	return commands.getoutput("funtoo/scripts/keywords.sh %s %s" % ( portdir, ebuild ) )
 
 if len(sys.argv) != 2:
 	print "Please specify portage tree to compare against as first argument."
 	sys.exit(1)
 
 gportdir=sys.argv[1]
+
+print "Package comparison - ebuilds not in (~)amd64 and (~)x86 are not considered."
+print
 
 for cat in os.listdir("."):
 	if cat == ".git":
@@ -46,8 +53,34 @@ for cat in os.listdir("."):
 				continue
 			if file[-7:] == ".ebuild":
 				gebuilds.append("%s/%s" % (cat, file[:-7]))
-		fbest = portage.versions.best(ebuilds)
-		gbest = portage.versions.best(gebuilds)
+		
+		abort = False
+		while True:
+			fbest = portage.versions.best(ebuilds)
+			if fbest == "":
+				abort = True
+				break
+			fkeywords = keywords(".", "%s/%s/%s.ebuild" % (cat, pkg, fbest.split("/")[1] )).split()
+			if "~amd64" in fkeywords or "~x86" in fkeywords or "x86" in fkeywords or "amd64" in fkeywords:
+				break
+			ebuilds.remove(fbest)
+			
+		if abort:
+			continue
+
+		while True:
+			gbest = portage.versions.best(gebuilds)
+			if gbest == "":
+				abort = True
+				break
+			gkeywords = keywords(gportdir, "%s/%s/%s.ebuild" % (cat, pkg, gbest.split("/")[1] )).split()
+			if "~amd64" in gkeywords or "~x86" in gkeywords or "x86" in gkeywords or "amd64" in gkeywords:
+				break
+			gebuilds.remove(gbest)
+	
+		if abort:
+			continue
+
 		if fbest == gbest:
 			continue
 		
@@ -59,5 +92,4 @@ for cat in os.listdir("."):
 		fps[-1] = "r0"
 		mycmp = portage.versions.pkgcmp(fps, gps)
 		if mycmp == -1:
-			print gbest
-
+			print "%s (vs. %s in funtoo)" % ( gbest, fbest )
