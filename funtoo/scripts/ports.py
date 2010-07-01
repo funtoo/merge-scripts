@@ -42,11 +42,19 @@ class PortageRepository(object):
 		out=[]	
 		if not os.path.exists(path):
 			return out
-		a=open(path,"r")
-		for line in a.readlines():
-			if len(line) and line[0] != "#":
-				out.append(line[:-1])
-		a.close()
+		if os.path.isdir(path):
+			print "ISDIR"
+			scan = os.listdir(path)
+			scan = map(lambda(x): "%s/%s" % ( path, x ), scan )
+			print scan
+		else:
+			scan = [ path ]
+		for path in scan:
+			a=open(path,"r")
+			for line in a.readlines():
+				if len(line) and line[0] != "#":
+					out.append(line[:-1])
+			a.close()
 		return out
 	
 	def grabebuilds(self,path,cat,pkg):
@@ -86,18 +94,27 @@ class PortageRepository(object):
 			self.overlay = True
 		else:
 			self.overlay = False
-	
+
+	@property
+	def info_pkgs(self,recurse=True):
+		return self.__grabset__("profiles/info_pkgs",recurse)
+
+	@property
+	def info_vars(self,recurse=True):
+		return self.__grabset__("profiles/info_vars",recurse)
+
 	@property
 	def categories(self,recurse=True):
-
 		# This property will return a set containing all valid
 		# categories. By default, overlays are scanned as well.
+		return self.__grabset__("profiles/categories",recurse)
 
-		cats = set(self.grabfile(self.base_path+"/profiles/categories"))
+	def __grabset__(self,path,recurse=True):
+		out = set(self.grabfile(self.base_path+"/"+path))
 		if recurse:
 			for overlay in self.children:
-				cats = cats | overlay.categories
-		return cats
+				out = out | overlay.__grabset__(path)
+		return out
 
 	def packages(self,cat,pkg,recurse=True):
 
@@ -139,3 +156,6 @@ print a.packages("sys-apps","portage",recurse=False)
 print a.getOwner("sys-apps/portage/portage-2.2_rc67-r1.ebuild")
 print a.getOwner("eclass/eutils.eclass")
 print a.getOwner("eclass/autotools.eclass")
+print a.info_pkgs
+print a.info_vars
+print a.grabfile(a.base_path+"/profiles/package.mask")
