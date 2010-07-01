@@ -45,6 +45,11 @@ src_unpack() {
 	then
 		EPATCH_SOURCE="${WORKDIR}/${PATCHSET}" EPATCH_SUFFIX="patch" EPATCH_FORCE="yes" epatch
 	fi
+
+	# change rules back to group uucp instead of dialout for now - eventually
+	# fix baselayout -
+
+	sed -e 's/GROUP="dialout"/GROUP="uucp"/' -i rules/{rules.d,arch}/*.rules || die "failed to change group dialout to uucp"
 }
 
 src_compile() {
