@@ -1,6 +1,7 @@
 #!/usr/bin/python2
 
 import os
+import portage.versions
 
 class PortageRepository(object):
 
@@ -48,10 +49,19 @@ class PortageRepository(object):
 				ebs = ebs | overlay.packages(cat,pkg)
 		return ebs
 
+	def getOwner(self,file):
+		for overlay in self.children:
+			a = overlay.getOwner(file)
+			if a != None:
+				return a
+		if os.path.exists(self.base_path+"/"+file):
+			return self
+
 a=PortageRepository("/usr/portage-gentoo")
 b=PortageRepository("/root/git/funtoo-overlay",overlay=True)
 a.children=[b]
 print a.categories
 print a.packages("sys-apps","portage")
 print a.packages("sys-apps","portage",recurse=False)
+print a.getOwner("sys-apps/portage/portage-2.2_rc67-r1.ebuild")
 
