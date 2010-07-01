@@ -1,9 +1,6 @@
 #!/bin/bash
 inherit() {
-	for x in $*
-	do
-		. eclass/$x.eclass
-	done
+	echo
 }
 
 has() {
@@ -23,13 +20,9 @@ die() {
 }
 
 EXPORT_FUNCTIONS() {
-	if [ -z "$ECLASS" ]; then
-		die "EXPORT_FUNCTIONS without a defined ECLASS"
-	fi
-	#eval $__export_funcs_var+=\" $*\"
+	echo
 }
 
 
-a=$( cd $1; . $2; echo $KEYWORDS )
+a=$( cd $1; . $2  >/dev/null 2>&1; echo $KEYWORDS )
 echo $a
-

@@ -11,8 +11,13 @@ import portage.versions
 import os,sys
 import commands
 
-def keywords(portdir, ebuild):
-	return commands.getoutput("funtoo/scripts/keywords.sh %s %s" % ( portdir, ebuild ) )
+def getKeywords(portdir, ebuild):
+	a = commands.getstatusoutput("funtoo/scripts/keywords.sh %s %s" % ( portdir, ebuild ) )
+	if a[0] == 0:
+		return (0, set(a[1].split()))
+	else:
+		return a
+	
 
 if len(sys.argv) != 2:
 	print "Please specify portage tree to compare against as first argument."
@@ -20,76 +25,102 @@ if len(sys.argv) != 2:
 
 gportdir=sys.argv[1]
 
-print "Package comparison - ebuilds not in (~)amd64 and (~)x86 are not considered."
-print
+def filterOnKeywords(portdir, ebuilds, keywords):
 
-for cat in os.listdir("."):
-	if cat == ".git":
-		continue
-	if not os.path.exists(gportdir+"/"+cat):
-		continue
-	if not os.path.isdir(gportdir+"/"+cat):
-		continue
-	for pkg in os.listdir(cat):
-		if not os.path.exists("%s/%s/%s" % (gportdir, cat, pkg)):
-			continue
-		if not os.path.isdir("%s/%s" % (cat, pkg)):
-			continue
-		files = os.listdir("%s/%s" % (cat, pkg))
-		ebuilds = []
-		for file in files:
-			if file[-12:] == "-9999.ebuild":
-				continue
-			if file[-7:] == ".ebuild":
-				ebuilds.append("%s/%s" % (cat, file[:-7]))
-		if ebuilds == []:
-			print "dir %s/%s empty" % (cat, pkg)
-			continue
-		files = os.listdir("%s/%s/%s" % (gportdir, cat, pkg))
-		gebuilds = []
-		for file in files:
-			if file[-12:] == "-9999.ebuild":
-				# don't count -9999 ebuilds
-				continue
-			if file[-7:] == ".ebuild":
-				gebuilds.append("%s/%s" % (cat, file[:-7]))
-		
-		abort = False
-		while True:
-			fbest = portage.versions.best(ebuilds)
-			if fbest == "":
-				abort = True
-				break
-			fkeywords = keywords(".", "%s/%s/%s.ebuild" % (cat, pkg, fbest.split("/")[1] )).split()
-			if "~amd64" in fkeywords or "~x86" in fkeywords or "x86" in fkeywords or "amd64" in fkeywords:
-				break
-			ebuilds.remove(fbest)
-			
-		if abort:
-			continue
+	""" 
+	This function accepts a path to a portage tree, a list of ebuilds, and a list of
+	keywords. It will iteratively find the "best" version in the ebuild list (the most
+	recent), and then manually extract this ebuild's KEYWORDS using the getKeywords()
+	function. If at least one of the keywords in "keywords" cannot be found in the
+	ebuild's KEYWORDS, then the ebuild is removed from the return list.
 
-		while True:
-			gbest = portage.versions.best(gebuilds)
-			if gbest == "":
-				abort = True
-				break
-			gkeywords = keywords(gportdir, "%s/%s/%s.ebuild" % (cat, pkg, gbest.split("/")[1] )).split()
-			if "~amd64" in gkeywords or "~x86" in gkeywords or "x86" in gkeywords or "amd64" in gkeywords:
-				break
-			gebuilds.remove(gbest)
+	Think of this function as "skimming the masked cream off the top" of a particular
+	set of ebuilds. This way our list has been filtered somewhat and we don't have
+	gcc-6.0 in our list just because someone added it masked to the tree. It makes
+	comparisons fairer.
+	"""
+
+	filtered = ebuilds[:] 
+	if len(ebuilds) == 0:
+		return []
+	cps = portage.versions.catpkgsplit(filtered[0])
+	cat = cps[0]
+	pkg = cps[1]
+	keywords = set(keywords)
+	while True:
+		fbest = portage.versions.best(filtered)
+		if fbest == "":
+			break
+		retval, fkeywords = getKeywords(portdir, "%s/%s/%s.ebuild" % (cat, pkg, fbest.split("/")[1] ))
+		if len(keywords & fkeywords) == 0:
+			filtered.remove(fbest)
+		else:
+			break
+	return filtered	
+
+def get_cpv_in_portdir(portdir,cat,pkg):
+	if not os.path.exists("%s/%s/%s" % (portdir, cat, pkg)):
+		return []
+	if not os.path.isdir("%s/%s/%s" % (portdir, cat, pkg)):
+		return []
+	files = os.listdir("%s/%s/%s" % (portdir, cat, pkg))
+	ebuilds = []
+	for file in files:
+		if file[-12:] == "-9999.ebuild":
+			continue
+		if file[-7:] == ".ebuild":
+			ebuilds.append("%s/%s" % (cat, file[:-7]))
+	return ebuilds
 	
-		if abort:
-			continue
+def version_compare(portdir,gportdir,keywords):
+	print
+	print "Package comparison for %s" % keywords
+	print "============================================"
+	print "(note that package.{un}mask(s) are ignored - looking at ebuilds only)"
+	print
 
-		if fbest == gbest:
+	for cat in os.listdir(portdir):
+		if cat == ".git":
 			continue
+		if not os.path.exists(gportdir+"/"+cat):
+			continue
+		if not os.path.isdir(gportdir+"/"+cat):
+			continue
+		for pkg in os.listdir(cat):
+			ebuilds = get_cpv_in_portdir(".",cat,pkg)
+			gebuilds = get_cpv_in_portdir(gportdir,cat,pkg)
+			ebuilds = filterOnKeywords(".", ebuilds, keywords)
+
+			if len(ebuilds) == 0:
+				continue
+	
+			fbest = portage.versions.best(ebuilds)
+	
+			gebuilds = filterOnKeywords(gportdir, gebuilds, keywords)
+
+			if len(gebuilds) == 0:
+				continue
+
+			gbest = portage.versions.best(gebuilds)
+	
+			if fbest == gbest:
+				continue
 		
-		# a little trickery to ignore rev differences:
+			# a little trickery to ignore rev differences:
+	
+			fps = list(portage.versions.catpkgsplit(fbest))[1:]
+			gps = list(portage.versions.catpkgsplit(gbest))[1:]
+			gps[-1] = "r0"
+			fps[-1] = "r0"
+			mycmp = portage.versions.pkgcmp(fps, gps)
+			if mycmp == -1:
+				print "%s (vs. %s in funtoo)" % ( gbest, fbest )
 
-		fps = list(portage.versions.catpkgsplit(fbest))[1:]
-		gps = list(portage.versions.catpkgsplit(gbest))[1:]
-		gps[-1] = "r0"
-		fps[-1] = "r0"
-		mycmp = portage.versions.pkgcmp(fps, gps)
-		if mycmp == -1:
-			print "%s (vs. %s in funtoo)" % ( gbest, fbest )
+for keyw in [ "amd64", "~amd64", "x86", "~x86" ]:
+	if keyw[0] == "~":
+		# for unstable, add stable arch keyword too
+		keyw = [ keyw, keyw[1:] ]
+	else:
+		keyw = [ keyw ]
+	version_compare(".",gportdir,keyw)
+
