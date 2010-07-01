@@ -3,9 +3,42 @@
 import os
 import portage.versions
 
+# PortageRepository provides an easy-to-use and elegant means of accessing an
+# on-disk Gentoo/Funtoo Portage repository. It is designed to allow for some
+# abstraction of the underlying repository, *as long as* the underlying
+# abstraction understands filesystem paths and follows a conventional Portage
+# layout. So, you could create a PortageRepository subclass that accessed a
+# remote Portage repository, or accessed the contents of .git metadata to view
+# the repository, since both of these subclasses could understand paths and can
+# store a conventional Portage repository layout.
+
+# This class has minimal dependencies, utilizing only "portage.versions" from
+# the official Portage sources for version splitting, etc. This allows this
+# code to be easily used by utility programs.
+
+# If you need to store a Portage repository in a relational database, or query
+# a database using JSON or SOAP, and by just specifying category and package
+# names, then this class isn't ideal, and you should probably create a new
+# class for this purpose. I could have made this class handle every crazy
+# scenario but the best bang for the buck in terms of elegance and
+# maintainability was to "bake in" the notion of a consistent, traditional
+# Portage filesystem layout. In particular, the getOwner() method uses this
+# convention to figure out which overlay is the owner of a particular file.
+# It keeps things simple.
+
 class PortageRepository(object):
 
+	def __repr__(self):
+		return "PortageRepository(%s)" % self.base_path
+
 	def grabfile(self,path):
+
+		# grabfile() is a simple helper method that grabs the contents
+		# of a typical portage configuration file, minus any lines
+		# beginning with "#", and returns each line as an item in a
+		# list. Newlines are stripped. This helper function looks at
+		# the repository base_path, not any children (overlays).
+
 		out=[]	
 		if not os.path.exists(path):
 			return out
@@ -17,6 +50,13 @@ class PortageRepository(object):
 		return out
 	
 	def grabebuilds(self,path,cat,pkg):
+
+		# grabebuilds() is another simple helper method that will
+		# return a list of cpvs (ie. "foo/bar-1.0") in a list that
+		# represent the ebuilds that exist on disk in this particular
+		# repository. This helper function looks at the repository
+		# base_path, not any children (overlays).
+
 		out=[]
 		fullpath = "%s/%s/%s" % ( path, cat, pkg )
 		if not os.path.exists(fullpath):
@@ -27,6 +67,19 @@ class PortageRepository(object):
 		return out
 
 	def __init__(self,base_path, **args):
+
+		# initialize variables. Also note that self.children contains a
+		# list of child overlays, which in turn can have their own
+		# child overlays. Overlays at the beginning of the
+		# self.overlays list have precedence.
+		#
+		# Rather than provide overlay access methods, you just set these
+		# manually, like this:
+		#
+		# a = PortageRepository("/usr/portage")
+		# b = PortageRepository("/var/tmp/git/funtoo-overlay",overlay=True)
+		# a.children = [b]
+
 		self.base_path = base_path
 		self.children = []
 		if "overlay" in args and args["overlay"] == True:
@@ -36,6 +89,10 @@ class PortageRepository(object):
 	
 	@property
 	def categories(self,recurse=True):
+
+		# This property will return a set containing all valid
+		# categories. By default, overlays are scanned as well.
+
 		cats = set(self.grabfile(self.base_path+"/profiles/categories"))
 		if recurse:
 			for overlay in self.children:
@@ -43,19 +100,35 @@ class PortageRepository(object):
 		return cats
 
 	def packages(self,cat,pkg,recurse=True):
+
+		# This property will return a set containing all ebuilds
+		# (in cpv format) of a particular category and package
+		# name that exist in the repository. By default, overlays
+		# are scanned as well.
+
 		ebs = set(self.grabebuilds(self.base_path,cat,pkg))
 		if recurse:
 			for overlay in self.children:
 				ebs = ebs | overlay.packages(cat,pkg)
 		return ebs
 
-	def getOwner(self,file):
-		for overlay in self.children:
-			a = overlay.getOwner(file)
-			if a != None:
-				return a
+	def getOwner(self,file,recurse=True):
+
+		# getOwner() can be used to figure out which repository
+		# owns a particular file. You specify the file, and
+		# you'll get a reference to the repository object that
+		# owns the file. By default, children (overlays) are
+		# scanned as well.
+
+		if recurse:
+			for overlay in self.children:
+				a = overlay.getOwner(file)
+				if a != None:
+					return a
 		if os.path.exists(self.base_path+"/"+file):
 			return self
+		else:
+			return None
 
 a=PortageRepository("/usr/portage-gentoo")
 b=PortageRepository("/root/git/funtoo-overlay",overlay=True)
@@ -64,4 +137,5 @@ print a.categories
 print a.packages("sys-apps","portage")
 print a.packages("sys-apps","portage",recurse=False)
 print a.getOwner("sys-apps/portage/portage-2.2_rc67-r1.ebuild")
-
+print a.getOwner("eclass/eutils.eclass")
+print a.getOwner("eclass/autotools.eclass")
