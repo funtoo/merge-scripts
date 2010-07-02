@@ -23,8 +23,6 @@ MYDIR="$FILESDIR/2.02.65"
 S="${WORKDIR}/${PN/lvm/LVM}.${PV}"
 
 src_prepare() {
-	# udev-dm-rules patch for bug #321569:
-	cat $MYDIR/patches/lvm2-2.02.64-udev-dm-rules.patch | patch -p1 || die "patch failed"
 	#cat $MYDIR/patches/lvm2-2.02.65-libdir.patch | patch -p1 || die "patch failed"
 	eautoreconf
 }
