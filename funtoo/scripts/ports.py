@@ -1,31 +1,16 @@
 #!/usr/bin/python2
 
+# Copyright 2010 Funtoo Technologies and Daniel Robbins
+
 import os
 import subprocess
 import portage.versions
 
-# PortageRepository provides an easy-to-use and elegant means of accessing an
-# on-disk Gentoo/Funtoo Portage repository. It is designed to allow for some
-# abstraction of the underlying repository, *as long as* the underlying
-# abstraction understands filesystem paths and follows a conventional Portage
-# layout. So, you could create a PortageRepository subclass that accessed a
-# remote Portage repository, or accessed the contents of .git metadata to view
-# the repository, since both of these subclasses could understand paths and can
-# store a conventional Portage repository layout.
-
-# This class has minimal dependencies, utilizing only "portage.versions" from
-# the official Portage sources for version splitting, etc. This allows this
-# code to be easily used by utility programs.
-
-# If you need to store a Portage repository in a relational database, or query
-# a database using JSON or SOAP, and by just specifying category and package
-# names, then this class isn't ideal, and you should probably create a new
-# class for this purpose. I could have made this class handle every crazy
-# scenario but the best bang for the buck in terms of elegance and
-# maintainability was to "bake in" the notion of a consistent, traditional
-# Portage filesystem layout. In particular, the getOwner() method uses this
-# convention to figure out which overlay is the owner of a particular file.
-# It keeps things simple.
+# This module implements a simplified mechanism to access the contents of a
+# Portage tree. In addition, the PortageRepository class (see below) has
+# an elegant design that should support alternate Portage repository layouts
+# as well as alternate backend storage formats. An effort has been made to
+# keep things simple and extendable.
 
 class CatPkg(object):
 
@@ -37,6 +22,7 @@ class CatPkg(object):
 		return "CatPkg(%s)" % self.catpkg
 
 	def __init__(self,catpkg):
+		# catpkg = something like "sys-apps/portage"
 		self.catpkg = catpkg
 
 	@property
@@ -128,6 +114,23 @@ class Atom(object):
 
 class PortageRepository(object):
 
+	# PortageRepository provides an easy-to-use and elegant means of accessing an
+	# on-disk Gentoo/Funtoo Portage repository. It is designed to allow for some
+	# abstraction of the underlying repository structure.
+
+	# PortageRepository should be suitable for creating subclasses accessed a
+	# remote Portage repository, or accessed the contents of .git metadata to view
+	# the repository, or even a Portage repository with a non-standard filesystem
+	# layout.
+
+	# This class has minimal dependencies, utilizing only "portage.versions" from
+	# the official Portage sources for version splitting, etc. This allows this
+	# code to be easily used by utility programs.
+
+	# Subclasses can override PortageRepository's init_paths() method to implement
+	# alternate layouts, or override accessor functions to implement alternate
+	# storage mechanisms.
+
 	def __repr__(self):
 		return "PortageRepository(%s)" % self.base_path
 
@@ -186,6 +189,7 @@ class PortageRepository(object):
 			"ebuild_atom" : "%(cat)s/$(p)s/$(pf)s.ebuild",
 			"ebuild_dir" : "%(cat)s/%(p)s",
 			"eclass_atom" : "eclass/%s.eclass",
+			"eclass_dir" : "eclass",
 			"categories" : "profiles/categories",
 			"info_pkgs" : "profiles/info_pkgs",
 			"info_vars" : "profiles/info_vars"
@@ -322,21 +326,11 @@ class PortageRepository(object):
 				path, owner = overlay.getPathAndOwnerOfEClass(eclass)
 				if path != None:
 					return path, owner
-			path = self.eclassToPath(eclass)
+			path = self.paths["eclass_atom"] % eclass
 			if os.path.exists(path):
 				return path, self
 			else:
 				return None, None
-
-	@property 
-	def eclass_path(self):
-		return self.eclassToPath()
-
-	def eclassToPath(self,eclass=None):
-		if eclass == None:
-			return self.base_path+"/eclass"
-		else:
-			return "%s/eclass/%s.eclass" % ( self.base_path, eclass )
 
 	def do(self,action,atom):
 		path, owner = self.getPathAndOwnerOfAtom(atom)
@@ -346,7 +340,7 @@ class PortageRepository(object):
 			"PORTAGE_TMPDIR" : "/var/tmp/portage",
 			"EBUILD" : path,
 			"EBUILD_PHASE" : action,
-			"ECLASSDIR" : self.eclass_path,
+			"ECLASSDIR" : "%s/%s" % ( self.base_path, self.path["eclass_dir"] ),
 			"PORTDIR" : self.base_path,
 			"PORTDIR_OVERLAY" : " ".join(self.overlays),
 			"PORTAGE_GID" : "250",
