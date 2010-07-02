@@ -5,6 +5,7 @@
 import os
 import subprocess
 import portage.versions
+from grp import getgrnam
 
 # This module implements a simplified mechanism to access the contents of a
 # Portage tree. In addition, the PortageRepository class (see below) has
@@ -186,7 +187,7 @@ class PortageRepository(object):
 		# having to mess with __init__()
 
 		self.path = {
-			"ebuild_atom" : "%(cat)s/$(p)s/$(pf)s.ebuild",
+			"ebuild_atom" : "%(cat)s/%(p)s/%(pf)s.ebuild",
 			"ebuild_dir" : "%(cat)s/%(p)s",
 			"eclass_atom" : "eclass/%s.eclass",
 			"eclass_dir" : "eclass",
@@ -305,7 +306,9 @@ class PortageRepository(object):
 				if path != None:
 					return path, owner 
 			#path = self.atomToPath(atom)
-			path = self.base_path + "/" + self.path["ebuild_atom"] % atom
+			path = self.path["ebuild_atom"] % atom
+			path = self.base_path + "/" + path
+			print "DEBUG",path
 			if os.path.exists(path):
 				return path, self
 			else:
@@ -332,33 +335,33 @@ class PortageRepository(object):
 			else:
 				return None, None
 
-	def do(self,action,atom):
+	def do(self,action,atom,env={}):
+		print "DEBUG"
 		path, owner = self.getPathAndOwnerOfAtom(atom)
 		if path == None:
 			return None
-		env = {
+		master_env = {
 			"PORTAGE_TMPDIR" : "/var/tmp/portage",
 			"EBUILD" : path,
 			"EBUILD_PHASE" : action,
 			"ECLASSDIR" : "%s/%s" % ( self.base_path, self.path["eclass_dir"] ),
 			"PORTDIR" : self.base_path,
 			"PORTDIR_OVERLAY" : " ".join(self.overlays),
-			"PORTAGE_GID" : "250",
+			"PORTAGE_GID" : repr(getgrnam("portage")[2]),
 			"CATEGORY" : atom.cat,
 			"PF" : atom.pf,
 			"P" : atom.p,
-			"PV" : atom.pv,
-			"dbkey" : "/var/tmp/foob/boob",
-			"dbkey_format" : "extend-1"
-		}
-		retval = subprocess.call(["/usr/lib/portage/bin/ebuild.sh",action],env=env)
+			"PV" : atom.pv
+		} 
+		master_env.update(env)	
+		retval = subprocess.call(["/usr/lib/portage/bin/ebuild.sh",action],env=master_env)
 
 a=PortageRepository("/usr/portage-gentoo")
 b=PortageRepository("/root/git/funtoo-overlay",overlay=True)
 a.children=[b]
-print a.categories
-print a.info_pkgs
-print a.info_vars
-a.do("depend",Atom("sys-boot/grub-1.98-r1"))
-print a.packages(CatPkg("sys-apps/portage"))
+#print a.categories
+#print a.info_pkgs
+#print a.info_vars
+a.do("depend",Atom("sys-boot/grub-1.98-r1"),env={"dbkey":"/var/tmp/foob/boob","dbkey_format":"extend-1"})
+#print a.packages(CatPkg("sys-apps/portage"))
 
