@@ -27,6 +27,105 @@ import portage.versions
 # convention to figure out which overlay is the owner of a particular file.
 # It keeps things simple.
 
+class CatPkg(object):
+
+	# CatPkg is an object that is used to specify a particular group of
+	# ebuilds that is identified by a category and package name, such
+	# as "sys-apps/portage".
+
+	def __repr__(self):
+		return "CatPkg(%s)" % self.catpkg
+
+	def __init__(self,catpkg):
+		self.catpkg = catpkg
+
+	@property
+	def cat(self):
+		#i.e. "sys-apps"
+		return self.catpkg.split("/")[0]
+	
+	@property
+	def pkg(self):
+		#i.e. "portage"
+		return self.catpkg.split("/")[1]
+
+	@property
+	def p(self):
+		#i.e. "portage"
+		return self.pkg
+
+	def __getitem__(self,key):
+		
+		# This method allows properties to be grabbed using atom["cat"]
+		# as well as standard atom.cat. This comes in handy when expanding
+		# strings: 
+		#
+		# path = "%(cat)s/%(p)s" % atom
+
+		if hasattr(self,key):
+			return getattr(self,key)
+
+
+class Atom(object):
+
+	# The Atom object provides a standard class for describing a package
+	# atom, in the abstract. Helper methods/properties are provided to
+	# access the atom's various attributes, such as package name, category,
+	# package version, revision, etc. The package atom is not tied to a
+	# particular Portage repository, and does not have an on-disk path. If
+	# you want an on-disk path for an Atom, you'd create a new Atom and
+	# pass it to the PortageRepository object and it will tell you.
+
+	def __repr__(self):
+		return "Atom(%s)" % self.atom
+
+	def __init__(self,atom):
+		self.atom = atom
+		self._cpvs = None
+
+	def __getitem__(self,key):
+		
+		# This method allows properties to be grabbed using atom["cat"]
+		# as well as standard atom.cat. This comes in handy when expanding
+		# strings: 
+		#
+		# path = "%(cat)s/%(p)s" % atom
+
+		if hasattr(self,key):
+			return getattr(self,key)
+
+	@property
+	def cpvs(self):
+		# cpvs = "catpkgsplit string" and is used by other properties
+		if self._cpvs == None:
+			self._cpvs = portage.versions.catpkgsplit(self.atom)
+		return self._cpvs
+	
+	@property
+	def cat(self):
+		#i.e. "sys-apps"
+		return self.atom.split("/")[0]
+	
+	@property
+	def pf(self):
+		#i.e. "portage-2.2_rc67-r1"
+		return self.atom.split("/")[1]
+	
+	@property
+	def p(self):
+		#i.e. "portage"
+		return self.cpvs[1]
+
+	@property
+	def pv(self):
+		#i.e. "2.2_rc67"
+		return self.cpvs[2]
+	
+	@property
+	def pr(self):
+		#i.e. "r1"
+		return self.cpvs[3]
+
 class PortageRepository(object):
 
 	def __repr__(self):
@@ -39,15 +138,15 @@ class PortageRepository(object):
 		# beginning with "#", and returns each line as an item in a
 		# list. Newlines are stripped. This helper function looks at
 		# the repository base_path, not any children (overlays).
+		# If a directory is specified, the contents of the directory
+		# are concatenated and returned.
 
 		out=[]	
 		if not os.path.exists(path):
 			return out
 		if os.path.isdir(path):
-			print "ISDIR"
 			scan = os.listdir(path)
 			scan = map(lambda(x): "%s/%s" % ( path, x ), scan )
-			print scan
 		else:
 			scan = [ path ]
 		for path in scan:
@@ -58,7 +157,7 @@ class PortageRepository(object):
 			a.close()
 		return out
 	
-	def grabebuilds(self,path,cat,pkg):
+	def grabebuilds(self,path,catpkg):
 
 		# grabebuilds() is another simple helper method that will
 		# return a list of cpvs (ie. "foo/bar-1.0") in a list that
@@ -67,13 +166,36 @@ class PortageRepository(object):
 		# base_path, not any children (overlays).
 
 		out=[]
-		fullpath = "%s/%s/%s" % ( path, cat, pkg )
+		fullpath = self.base_path + "/" + self.path["ebuild_dir"] % catpkg
 		if not os.path.exists(fullpath):
 			return out
 		for file in os.listdir(fullpath):
-			if file[-7:] == ".ebuild":
-				out.append("%s/%s" % ( cat, file[:-7] ))
+			if self.isebuild(file):
+				out.append(Atom("%s/%s" % ( catpkg.cat, self.ebuild2p(file) )))
 		return out
+
+	def init_paths(self):
+
+		# The Portage repository structure is abstracted somewhat using
+		# the settings defined in the init_paths() function. This function
+		# is automatically called by __init__() so you can simply override
+		# this method for any variant PortageRepository layouts without
+		# having to mess with __init__()
+
+		self.path = {
+			"ebuild_atom" : "%(cat)s/$(p)s/$(pf)s.ebuild",
+			"ebuild_dir" : "%(cat)s/%(p)s",
+			"eclass_atom" : "eclass/%s.eclass",
+			"categories" : "profiles/categories",
+			"info_pkgs" : "profiles/info_pkgs",
+			"info_vars" : "profiles/info_vars"
+		}
+
+		# The following helper functions attempt to abstract the on-disk
+		# name of the ebuild:
+
+		self.isebuild = lambda(x): x[-7:] == ".ebuild"
+		self.ebuild2p = lambda(x): x[:-7]
 
 	def __init__(self,base_path, **args):
 
@@ -95,80 +217,145 @@ class PortageRepository(object):
 			self.overlay = True
 		else:
 			self.overlay = False
+		self.init_paths()
+
 
 	@property
 	def overlays(self):
+
+		# returns a list of all overlay paths, in priority
+		# order. " ".join(foo.overlays) is suitable for passing
+		# as a shell PORTDIR_OVERLAY value.
+
 		out=[]
 		for child in self.children:
 			out.append(child.base_path)
-		return " ".join(out)
+		return out
 
 	@property
 	def info_pkgs(self,recurse=True):
-		return self.__grabset__("profiles/info_pkgs",recurse)
+
+		# Returns "info_pkgs" from repository, which is a set
+		# of ebuild atoms that "emerge --info" should display
+		# versions of (used for user bug reports)
+
+		return self.__grabset__(self.path["info_pkgs"],recurse)
 
 	@property
 	def info_vars(self,recurse=True):
-		return self.__grabset__("profiles/info_vars",recurse)
+		
+		# Returns "info_vars" from repository, which is a set
+		# of variables that "emerge --info" should display.
+		# (Used for user bug reports.)
+		
+		return self.__grabset__(self.path["info_vars"],recurse)
 
 	@property
 	def categories(self,recurse=True):
+		
 		# This property will return a set containing all valid
 		# categories. By default, overlays are scanned as well.
-		return self.__grabset__("profiles/categories",recurse)
+		
+		return self.__grabset__(self.path["categories"],recurse)
 
 	def __grabset__(self,path,recurse=True):
+		
+		# This is a helper function for various methods above
+		# that need to grab data from a file in the repo and
+		# return the data. This helper function *will* recurse
+		# through child overlays and append the child data
+		# -- useful for categories, info_pkgs, and info_vars,
+		# but probably not what you want for package.mask :)
+
 		out = set(self.grabfile(self.base_path+"/"+path))
 		if recurse:
 			for overlay in self.children:
 				out = out | overlay.__grabset__(path)
 		return out
 
-	def packages(self,cat,pkg,recurse=True):
+	def packages(self,catpkg,recurse=True):
 
 		# This property will return a set containing all ebuilds
 		# (in cpv format) of a particular category and package
 		# name that exist in the repository. By default, overlays
 		# are scanned as well.
 
-		ebs = set(self.grabebuilds(self.base_path,cat,pkg))
+		ebs = set(self.grabebuilds(self.base_path,catpkg))
 		if recurse:
 			for overlay in self.children:
-				ebs = ebs | overlay.packages(cat,pkg)
+				ebs = ebs | overlay.packages(catpkg)
 		return ebs
 
-	def getOwner(self,file,recurse=True):
+	def getPathAndOwnerOfAtom(self,atom,recurse=True):
 
-		# getOwner() can be used to figure out which repository
-		# owns a particular file. You specify the file, and
-		# you'll get a reference to the repository object that
-		# owns the file. By default, children (overlays) are
-		# scanned as well.
+		# This is a handy method that, when given an ebuild Atom, will
+		# return the path to the atom on disk, as well as the object
+		# reference to the PortageRepository that owns the atom. This
+		# method will look in the current repository, as well as any
+		# child repositories if recurse=True, which is the default
+		# setting. First argument is an Atom() object.
 
 		if recurse:
 			for overlay in self.children:
-				a = overlay.getOwner(file)
-				if a != None:
-					return a
-		if os.path.exists(self.base_path+"/"+file):
-			return self
-		else:
-			return None
+				path, owner = overlay.getPathAndOwnerOfAtom(atom)
+				if path != None:
+					return path, owner 
+			#path = self.atomToPath(atom)
+			path = self.base_path + "/" + self.path["ebuild_atom"] % atom
+			if os.path.exists(path):
+				return path, self
+			else:
+				return None, None
 
-	def do(self,action,ebuild):
+	def getPathAndOwnerOfEClass(self,eclass,recurse=True):
+
+		# This is a handy method that, when given an eclass, will
+		# return the path to the atom on disk, as well as the object
+		# reference to the PortageRepository that owns the eclass. This
+		# method will look in the current repository, as well as any
+		# child repositories if recurse=True, which is the default
+		# setting. First argument is a simple string specifying the
+		# name of the eclass; i.e. "eutils".
+
+		if recurse:
+			for overlay in self.children:
+				path, owner = overlay.getPathAndOwnerOfEClass(eclass)
+				if path != None:
+					return path, owner
+			path = self.eclassToPath(eclass)
+			if os.path.exists(path):
+				return path, self
+			else:
+				return None, None
+
+	@property 
+	def eclass_path(self):
+		return self.eclassToPath()
+
+	def eclassToPath(self,eclass=None):
+		if eclass == None:
+			return self.base_path+"/eclass"
+		else:
+			return "%s/eclass/%s.eclass" % ( self.base_path, eclass )
+
+	def do(self,action,atom):
+		path, owner = self.getPathAndOwnerOfAtom(atom)
+		if path == None:
+			return None
 		env = {
 			"PORTAGE_TMPDIR" : "/var/tmp/portage",
-			"EBUILD" : ebuild,
+			"EBUILD" : path,
 			"EBUILD_PHASE" : action,
-			"ECLASSDIR" : self.base_path+"/eclass",
+			"ECLASSDIR" : self.eclass_path,
 			"PORTDIR" : self.base_path,
-			"PORTDIR_OVERLAY" : self.overlays,
+			"PORTDIR_OVERLAY" : " ".join(self.overlays),
 			"PORTAGE_GID" : "250",
-			"CATEGORY" : "sys-boot",
-			"PF" : "grub-1.98-r1",
-			"P" : "grub",
-			"PV" : "1.98",
-			"dbkey" : "/var/tmp/foob/boob"
+			"CATEGORY" : atom.cat,
+			"PF" : atom.pf,
+			"P" : atom.p,
+			"PV" : atom.pv,
+			"dbkey" : "/var/tmp/foob/boob",
+			"dbkey_format" : "extend-1"
 		}
 		retval = subprocess.call(["/usr/lib/portage/bin/ebuild.sh",action],env=env)
 
@@ -176,13 +363,8 @@ a=PortageRepository("/usr/portage-gentoo")
 b=PortageRepository("/root/git/funtoo-overlay",overlay=True)
 a.children=[b]
 print a.categories
-print a.packages("sys-apps","portage")
-print a.packages("sys-apps","portage",recurse=False)
-print a.getOwner("sys-apps/portage/portage-2.2_rc67-r1.ebuild")
-print a.getOwner("eclass/eutils.eclass")
-print a.getOwner("eclass/autotools.eclass")
 print a.info_pkgs
 print a.info_vars
-print a.grabfile(a.base_path+"/profiles/package.mask")
-c=EbuildWrapper()
-c.do("depend","/root/git/funtoo-overlay/sys-boot/grub/grub-1.98-r1.ebuild")
+a.do("depend",Atom("sys-boot/grub-1.98-r1"))
+print a.packages(CatPkg("sys-apps/portage"))
+
