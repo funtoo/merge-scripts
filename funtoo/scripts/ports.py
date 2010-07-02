@@ -1,6 +1,7 @@
 #!/usr/bin/python2
 
 import os
+import subprocess
 import portage.versions
 
 # PortageRepository provides an easy-to-use and elegant means of accessing an
@@ -96,6 +97,13 @@ class PortageRepository(object):
 			self.overlay = False
 
 	@property
+	def overlays(self):
+		out=[]
+		for child in self.children:
+			out.append(child.base_path)
+		return " ".join(out)
+
+	@property
 	def info_pkgs(self,recurse=True):
 		return self.__grabset__("profiles/info_pkgs",recurse)
 
@@ -147,6 +155,23 @@ class PortageRepository(object):
 		else:
 			return None
 
+	def do(self,action,ebuild):
+		env = {
+			"PORTAGE_TMPDIR" : "/var/tmp/portage",
+			"EBUILD" : ebuild,
+			"EBUILD_PHASE" : action,
+			"ECLASSDIR" : self.base_path+"/eclass",
+			"PORTDIR" : self.base_path,
+			"PORTDIR_OVERLAY" : self.overlays,
+			"PORTAGE_GID" : "250",
+			"CATEGORY" : "sys-boot",
+			"PF" : "grub-1.98-r1",
+			"P" : "grub",
+			"PV" : "1.98",
+			"dbkey" : "/var/tmp/foob/boob"
+		}
+		retval = subprocess.call(["/usr/lib/portage/bin/ebuild.sh",action],env=env)
+
 a=PortageRepository("/usr/portage-gentoo")
 b=PortageRepository("/root/git/funtoo-overlay",overlay=True)
 a.children=[b]
@@ -159,3 +184,5 @@ print a.getOwner("eclass/autotools.eclass")
 print a.info_pkgs
 print a.info_vars
 print a.grabfile(a.base_path+"/profiles/package.mask")
+c=EbuildWrapper()
+c.do("depend","/root/git/funtoo-overlay/sys-boot/grub/grub-1.98-r1.ebuild")
