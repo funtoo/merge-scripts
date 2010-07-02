@@ -308,7 +308,6 @@ class PortageRepository(object):
 			#path = self.atomToPath(atom)
 			path = self.path["ebuild_atom"] % atom
 			path = self.base_path + "/" + path
-			print "DEBUG",path
 			if os.path.exists(path):
 				return path, self
 			else:
@@ -336,7 +335,6 @@ class PortageRepository(object):
 				return None, None
 
 	def do(self,action,atom,env={}):
-		print "DEBUG"
 		path, owner = self.getPathAndOwnerOfAtom(atom)
 		if path == None:
 			return None
@@ -354,7 +352,14 @@ class PortageRepository(object):
 			"PV" : atom.pv
 		} 
 		master_env.update(env)	
-		retval = subprocess.call(["/usr/lib/portage/bin/ebuild.sh",action],env=master_env)
+		pr, pw = os.pipe()
+		a = os.dup(pw)
+		os.dup2(a,9)
+		p = subprocess.call(["/usr/lib/portage/bin/ebuild.sh",action],env=master_env,close_fds=False)
+		a = os.read(pr, 1e5)
+		print a.split("\n")
+		os.close(pr)
+		os.close(pw)
 
 a=PortageRepository("/usr/portage-gentoo")
 b=PortageRepository("/root/git/funtoo-overlay",overlay=True)
@@ -362,6 +367,7 @@ a.children=[b]
 #print a.categories
 #print a.info_pkgs
 #print a.info_vars
-a.do("depend",Atom("sys-boot/grub-1.98-r1"),env={"dbkey":"/var/tmp/foob/boob","dbkey_format":"extend-1"})
+a.do("depend",Atom("sys-boot/grub-1.98-r1"),env={"dbkey_format":"extend-1"})
+a.do("depend",Atom("sys-apps/portage-2.2_rc67-r1"),env={"dbkey_format":"extend-1"})
 #print a.packages(CatPkg("sys-apps/portage"))
 
