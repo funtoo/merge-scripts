@@ -39,6 +39,7 @@ die() {
 ( cd $dest; git pull; ) || die "couldn't pull in gentoo changes"
 rsync -av --delete --exclude /.git --exclude /metadata/cache/** $dest/ $final/ || die "rsync death"
 
+#( cd $final; rm -rf *; git reset --hard ) || die "couldn't reset $final to pristine state"
 # Patches:
 for pat in `cat funtoo/patches/series | grep -v '^#'`
 do

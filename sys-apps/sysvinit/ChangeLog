@@ -2,6 +2,11 @@
 # Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/sys-apps/sysvinit/ChangeLog,v 1.65 2009/11/11 21:51:27 vapier Exp $
 
+*sysvinit-2.88 (04 Jul 2010)
+
+  04 Jul 2010; Daniel Robbins <drobbins@funtoo.org> +sysvinit-2.88.ebuild:
+  pulling in 2.88 from Gentoo for unstable.
+
 *sysvinit-2.87-r2 (03 Feb 2010)
 
   03 Feb 2010; Daniel Robbins <drobbins@funtoo.org> +sysvinit-2.87-r2.ebuild:
