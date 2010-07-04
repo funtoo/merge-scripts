@@ -5,6 +5,7 @@
 import os
 import subprocess
 import portage.versions
+import commands
 from grp import getgrnam
 
 # This module implements a simplified mechanism to access the contents of a
@@ -113,6 +114,35 @@ class Atom(object):
 		#i.e. "r1"
 		return self.cpvs[3]
 
+class FileAccessInterface(object):
+
+	def __init__(self,base_path):
+		self.base_path = base_path
+	
+	def open(self,file, mode):
+		return open("%s/%s" % ( self.base_path, file ), mode)
+
+	def listdir(self,path):
+		return os.listdir(os.path.normpath("%s/%s" % ( self.base_path, path ) ))
+
+	def exists(self,path):
+		return os.path.exists("%s/%s" % ( self.base_path, path ))
+
+	def isdir(self,path):
+		return os.path.isdir("%s/%s" % ( self.base_path, path ))
+
+	def diskpath(self,path):
+		return os.path.normpath("%s/%s" % ( self.base_path, path ))
+
+class GitAccessInterface(FileAccessInterface):
+
+	def __init__(self,base_path):
+		self.base_path = base_path
+		self.tree = {}
+
+	def populate(self):
+		print commands.getoutput("cd %s; git ls-tree --name-only HEAD" % self.base_path)
+
 class PortageRepository(object):
 
 	# PortageRepository provides an easy-to-use and elegant means of accessing an
@@ -146,15 +176,15 @@ class PortageRepository(object):
 		# are concatenated and returned.
 
 		out=[]	
-		if not os.path.exists(path):
+		if not self.access.exists(path):
 			return out
-		if os.path.isdir(path):
-			scan = os.listdir(path)
+		if self.access.isdir(path):
+			scan = self.access.listdir(path)
 			scan = map(lambda(x): "%s/%s" % ( path, x ), scan )
 		else:
 			scan = [ path ]
 		for path in scan:
-			a=open(path,"r")
+			a=self.access.open(path,"r")
 			for line in a.readlines():
 				if len(line) and line[0] != "#":
 					out.append(line[:-1])
@@ -170,10 +200,10 @@ class PortageRepository(object):
 		# base_path, not any children (overlays).
 
 		out=[]
-		fullpath = self.base_path + "/" + self.path["ebuild_dir"] % catpkg
-		if not os.path.exists(fullpath):
+		fullpath = self.path["ebuild_dir"] % catpkg
+		if not self.access.exists(fullpath):
 			return out
-		for file in os.listdir(fullpath):
+		for file in self.access.listdir(fullpath):
 			if self.isebuild(file):
 				out.append(Atom("%s/%s" % ( catpkg.cat, self.ebuild2p(file) )))
 		return out
@@ -185,6 +215,8 @@ class PortageRepository(object):
 		# is automatically called by __init__() so you can simply override
 		# this method for any variant PortageRepository layouts without
 		# having to mess with __init__()
+
+		self.access = FileAccessInterface(self.base_path)
 
 		self.path = {
 			"ebuild_atom" : "%(cat)s/%(p)s/%(pf)s.ebuild",
@@ -223,7 +255,6 @@ class PortageRepository(object):
 		else:
 			self.overlay = False
 		self.init_paths()
-
 
 	@property
 	def overlays(self):
@@ -272,23 +303,26 @@ class PortageRepository(object):
 		# -- useful for categories, info_pkgs, and info_vars,
 		# but probably not what you want for package.mask :)
 
-		out = set(self.grabfile(self.base_path+"/"+path))
+		out = set(self.grabfile(path))
 		if recurse:
 			for overlay in self.children:
 				out = out | overlay.__grabset__(path)
 		return out
 
-	def packages(self,catpkg,recurse=True):
+	def packages(self,catpkglist,recurse=True):
 
 		# This property will return a set containing all ebuilds
 		# (in cpv format) of a particular category and package
 		# name that exist in the repository. By default, overlays
 		# are scanned as well.
+		ebs = set()
 
-		ebs = set(self.grabebuilds(self.base_path,catpkg))
+		for catpkg in catpkglist:
+			ebs = ebs | set(self.grabebuilds(self.base_path,catpkg))
 		if recurse:
 			for overlay in self.children:
-				ebs = ebs | overlay.packages(catpkg)
+				ebs = ebs | overlay.packages(catpkglist,recurse)
+
 		return ebs
 
 	def getPathAndOwnerOfAtom(self,atom,recurse=True):
@@ -305,10 +339,8 @@ class PortageRepository(object):
 				path, owner = overlay.getPathAndOwnerOfAtom(atom)
 				if path != None:
 					return path, owner 
-			#path = self.atomToPath(atom)
 			path = self.path["ebuild_atom"] % atom
-			path = self.base_path + "/" + path
-			if os.path.exists(path):
+			if self.access.exists(path):
 				return path, self
 			else:
 				return None, None
@@ -329,7 +361,7 @@ class PortageRepository(object):
 				if path != None:
 					return path, owner
 			path = self.paths["eclass_atom"] % eclass
-			if os.path.exists(path):
+			if self.access.exists(path):
 				return path, self
 			else:
 				return None, None
@@ -340,10 +372,10 @@ class PortageRepository(object):
 			return None
 		master_env = {
 			"PORTAGE_TMPDIR" : "/var/tmp/portage",
-			"EBUILD" : path,
+			"EBUILD" : owner.access.diskpath(path),
 			"EBUILD_PHASE" : action,
-			"ECLASSDIR" : "%s/%s" % ( self.base_path, self.path["eclass_dir"] ),
-			"PORTDIR" : self.base_path,
+			"ECLASSDIR" : self.access.diskpath(self.path["eclass_dir"]),
+			"PORTDIR" : self.access.base_path,
 			"PORTDIR_OVERLAY" : " ".join(self.overlays),
 			"PORTAGE_GID" : repr(getgrnam("portage")[2]),
 			"CATEGORY" : atom.cat,
@@ -356,7 +388,7 @@ class PortageRepository(object):
 		a = os.dup(pw)
 		os.dup2(a,9)
 		p = subprocess.call(["/usr/lib/portage/bin/ebuild.sh",action],env=master_env,close_fds=False)
-		a = os.read(pr, 1e5)
+		a = os.read(pr, 100000)
 		print a.split("\n")
 		os.close(pr)
 		os.close(pw)
@@ -364,10 +396,11 @@ class PortageRepository(object):
 a=PortageRepository("/usr/portage-gentoo")
 b=PortageRepository("/root/git/funtoo-overlay",overlay=True)
 a.children=[b]
-#print a.categories
-#print a.info_pkgs
-#print a.info_vars
+print a.categories
+print a.info_pkgs
+print a.info_vars
 a.do("depend",Atom("sys-boot/grub-1.98-r1"),env={"dbkey_format":"extend-1"})
-a.do("depend",Atom("sys-apps/portage-2.2_rc67-r1"),env={"dbkey_format":"extend-1"})
-#print a.packages(CatPkg("sys-apps/portage"))
-
+#a.do("depend",Atom("sys-apps/portage-2.2_rc67-r1"),env={"dbkey_format":"extend-1"})
+print a.packages([CatPkg("sys-apps/portage"),CatPkg("sys-kernel/openvz-sources")])
+c = GitAccessInterface("/usr/portage-gentoo")
+c.populate()

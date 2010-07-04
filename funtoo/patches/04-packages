@@ -4,11 +4,8 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
-
- profiles/base/packages          |    6 ++++--
  profiles/default/linux/packages |    4 ++++
- 2 files changed, 8 insertions(+), 2 deletions(-)
-
+ 1 files changed, 4 insertions(+), 0 deletions(-)
 
 diff --git a/profiles/base/packages b/profiles/base/packages
 index 17a90f3..794faa1 100644
