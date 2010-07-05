@@ -53,8 +53,39 @@ class CatPkg(object):
 		if hasattr(self,key):
 			return getattr(self,key)
 
-
 class Atom(object):
+
+	# In this rewritten Portage code, an "Atom" has a different meaning
+	# than has been adopted in the 2010-era classic Portage codebase. Our
+	# Atom is different from a dependency, and literally means "a specific
+	# reference to an individual package". This package could be a specific
+	# ebuild in a Portage tree, or a specific record in /var/db/pkg
+	# indicating that the package is installed. An "Atom" uniquely
+	# references one package without ambiguity. 
+	
+	# LOGICAL TEST OF AN ATOM: Two identical atoms cannot co-exist in a
+	# single repository. 
+
+	# LOGICAL TEST OF WHAT IS CONSIDERED ATOM DATA: Any data that can be
+	# used to specify a uniquely-existing package in a repository, that is
+	# capable of co-existing with other similar atoms, should be considered
+	# atom data. Otherwise, the data should not be considered atom data.
+	# Example: slots *are* part of an Atom for repositories of installed or
+	# built packages, because foo/bar-1.0:slot=3 and foo/bar-1.0:slot=4 can
+	# co-exist in these repositories.
+
+	# So note that a package *slot* is considered part of the Atom for
+	# packages that have already been installed or built. However, slot is
+	# *not* part of the Atom for packages in a Portage tree, as the slot
+	# can be undefined at this point. For installed packages, the slot can
+	# be specified as follows:
+
+	# sys-apps/portage-2.2_rc67:slot=3
+	
+	# However, USE variables are not considered Atom data for any type of
+	# repository because "foo/bar-1.0[gleep]" and "foo/bar-1.0[boing]"
+	# cannot co-exist independently in a Portage tree *or* installed
+	# package repository.
 
 	# The Atom object provides a standard class for describing a package
 	# atom, in the abstract. Helper methods/properties are provided to
@@ -64,11 +95,30 @@ class Atom(object):
 	# you want an on-disk path for an Atom, you'd create a new Atom and
 	# pass it to the PortageRepository object and it will tell you.
 
+	# As touched on above, there is a text representation of an Atom that
+	# is standardized, which is:
+
+	# <cat>/<p>{:key1=val1{:key2=val2...}}
+
+	# <cat> = category name
+	# <p> = full package name and version (including optional revision)
+	# :key=val = optional additional data in key=value format. values can
+	# consist of any printable character except a colon. Additional key
+	# values can be specified by appending another colon to the line,
+	# such as:
+
+	# sys-foo/bar-1.0:slot=1:python=2.6:keywords=foo,bar,oni
+
+	# (Although you wouldn't want to specify keywords in an Atom as it
+	# wouldn't pass the LOGICAL TESTS above.)
+	
 	def __repr__(self):
 		return "Atom(%s)" % self.atom
 
 	def __init__(self,atom):
 		self.atom = atom
+		self._keysplit = None
+		self._keys = None
 		self._cpvs = None
 
 	def __getitem__(self,key):
@@ -83,10 +133,25 @@ class Atom(object):
 			return getattr(self,key)
 
 	@property
+	def keys(self):
+		
+		# Additional atomdata key/value pairs in dictionary format. These
+		# are created on initialization and you should not modify the
+		# keys property directly.
+
+		if self._keys == None:
+			self._keys = {}
+			for meta in self._keysplit[1:]:
+				key, val = meta.split("=",1)
+				self._keys[key] = val
+		return self._keys
+
+	@property
 	def cpvs(self):
 		# cpvs = "catpkgsplit string" and is used by other properties
 		if self._cpvs == None:
-			self._cpvs = portage.versions.catpkgsplit(self.atom)
+			self._keysplit = self.atom.split(":")
+			self._cpvs = portage.versions.catpkgsplit(self._keysplit[0])
 		return self._cpvs
 	
 	@property
@@ -113,6 +178,12 @@ class Atom(object):
 	def pr(self):
 		#i.e. "r1"
 		return self.cpvs[3]
+
+	def __eq__(self,other):
+		# We can only test for atom equality, but cannot otherwise compare them.
+		# Atoms are equal when they reference the same unique cat/pkg and have
+		# the same key data.
+		return self.cpvs == other.cpvs and self.keys == other.keys
 
 class FileAccessInterface(object):
 
@@ -404,3 +475,9 @@ a.do("depend",Atom("sys-boot/grub-1.98-r1"),env={"dbkey_format":"extend-1"})
 print a.packages([CatPkg("sys-apps/portage"),CatPkg("sys-kernel/openvz-sources")])
 c = GitAccessInterface("/usr/portage-gentoo")
 c.populate()
+a=Atom("sys-apps/portage-1")
+b=Atom("sys-apps/portage-1")
+print a == b
+b=Atom("sys-apps/portage-1:slot=3")
+print a == b
+
