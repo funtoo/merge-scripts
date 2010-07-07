@@ -2,6 +2,13 @@
 # Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/net-misc/openntpd/ChangeLog,v 1.43 2009/10/14 13:39:14 bangert Exp $
 
+*openntpd-3.9_p1-r4 (07 Jul 2010)
+
+  07 Jul 2010; Daniel Robbins <drobbins@funtoo.org> +openntpd-3.9_p1-r4.ebuild:
+  new version with adjtimex patch from Gentoo bug #297360. Thanks Johan Hattne.
+  Also applying fix for non-IPV6 systems, Gentoo bug #296612. Thanks Tommy
+  Pettersson and bug reporters in Debian bug #500676.
+
 *openntpd-3.9_p1-r3 (14 Nov 2009)
 
   14 Nov 2009; Daniel Robbins <drobbins@funtoo.org> +openntpd-3.9_p1-r3.ebuild:
