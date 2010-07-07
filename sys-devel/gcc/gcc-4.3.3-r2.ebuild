@@ -33,7 +33,7 @@ KEYWORDS="~alpha ~amd64 ~arm -hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86
 RDEPEND=">=sys-libs/zlib-1.1.4
 	>=sys-devel/gcc-config-1.4
 	virtual/libiconv
-	>=dev-libs/gmp-4.2.1
+	>=dev-libs/gmp-5
 	>=dev-libs/mpfr-3
 	!build? (
 		gcj? (
