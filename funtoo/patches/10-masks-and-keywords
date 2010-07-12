@@ -4,17 +4,9 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
- .../default/linux/package.keywords/funtoo-stable   |   23 ++++++
- profiles/package.mask/funtoo                       |   73 ++++++++++++++++++++
- profiles/package.mask/funtoo-cautionary            |   34 +++++++++
- profiles/package.mask/sunrise                      |   39 +++++++++++
- profiles/package.unmask/funtoo                     |    7 ++
- 5 files changed, 176 insertions(+), 0 deletions(-)
+ .../default/linux/package.keywords/funtoo-stable   |   23 ++++++++++++++++++++
+ 1 files changed, 23 insertions(+), 0 deletions(-)
  create mode 100644 profiles/default/linux/package.keywords/funtoo-stable
- create mode 100644 profiles/package.mask/funtoo
- create mode 100644 profiles/package.mask/funtoo-cautionary
- create mode 100644 profiles/package.mask/sunrise
- create mode 100644 profiles/package.unmask/funtoo
 
 diff --git a/profiles/default/linux/package.keywords/funtoo-stable b/profiles/default/linux/package.keywords/funtoo-stable
 new file mode 100644

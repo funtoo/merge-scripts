@@ -4,8 +4,7 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
- profiles/targets/desktop/make.defaults |    3 +++
- 1 files changed, 3 insertions(+), 0 deletions(-)
+ 0 files changed, 0 insertions(+), 0 deletions(-)
 
 diff --git a/profiles/targets/desktop/make.defaults b/profiles/targets/desktop/make.defaults
 index 00cbd20..4e1b59c 100644
