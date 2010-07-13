@@ -4,7 +4,8 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
- 0 files changed, 0 insertions(+), 0 deletions(-)
+ profiles/base/virtuals |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
 diff --git a/profiles/base/virtuals b/profiles/base/virtuals
 index 03b8d6d..e15bf56 100644
