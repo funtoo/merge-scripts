@@ -4,12 +4,12 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
- .../default/linux/package.keywords/funtoo-stable   |   23 +++++++
- profiles/package.mask/funtoo                       |   69 ++++++++++++++++++++
- profiles/package.mask/funtoo-cautionary            |   34 ++++++++++
+ .../default/linux/package.keywords/funtoo-stable   |   23 ++++++
+ profiles/package.mask/funtoo                       |   73 ++++++++++++++++++++
+ profiles/package.mask/funtoo-cautionary            |   34 +++++++++
  profiles/package.mask/sunrise                      |   39 +++++++++++
  profiles/package.unmask/funtoo                     |    7 ++
- 5 files changed, 172 insertions(+), 0 deletions(-)
+ 5 files changed, 176 insertions(+), 0 deletions(-)
  create mode 100644 profiles/default/linux/package.keywords/funtoo-stable
  create mode 100644 profiles/package.mask/funtoo
  create mode 100644 profiles/package.mask/funtoo-cautionary
@@ -47,11 +47,15 @@ index 0000000..683b574
 +<virtual/postgresql-server-8.4 amd64 x86
 diff --git a/profiles/package.mask/funtoo b/profiles/package.mask/funtoo
 new file mode 100644
-index 0000000..3917e8b
+index 0000000..7c6facb
 --- /dev/null
 +++ b/profiles/package.mask/funtoo
-@@ -0,0 +1,69 @@
+@@ -0,0 +1,73 @@
 +# PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
++
++# Daniel Robbins <drobbins@funtoo.org> (09 Jul 2010)
++# glib-2.24.1-r1 will not build and has other issues
++>=dev-libs/glib-2.24.1-r1
 +
 +# Daniel Robbins <drobbins@funtoo.org> (07 Jul 2010)
 +# allow users to upgrade

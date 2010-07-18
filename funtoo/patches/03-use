@@ -1,16 +1,16 @@
-Funtoo USE changes to make.defaults and other files.
+use vars and such
 
 From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
- profiles/default/linux/make.defaults |   18 +++++++++++++++++-
+ profiles/default/linux/make.defaults |   16 +++++++++++++++-
  profiles/default/linux/package.use   |    2 ++
- 2 files changed, 19 insertions(+), 1 deletions(-)
+ 2 files changed, 17 insertions(+), 1 deletions(-)
  create mode 100644 profiles/default/linux/package.use
 
 diff --git a/profiles/default/linux/make.defaults b/profiles/default/linux/make.defaults
-index 6a717f1..07e354e 100644
+index 66f7203..8616e91 100644
 --- a/profiles/default/linux/make.defaults
 +++ b/profiles/default/linux/make.defaults
 @@ -13,6 +13,20 @@
@@ -34,13 +34,11 @@ index 6a717f1..07e354e 100644
  # make sure toolchain has sane defaults <tooclhain@gentoo.org>
  USE="${USE} fortran mudflap openmp"
  
-@@ -50,7 +64,9 @@ VIDEO_CARDS="dummy fbdev v4l"
- # after discussion on the gentoo-dev ML. As we bang out a clear
- # direction with how LDFLAGS will be set by default, this entry
- # may move.
+@@ -53,7 +67,7 @@ VIDEO_CARDS="dummy fbdev v4l"
+ # 2010/07/12 - Samuli Suominen <ssuominen@gentoo.org>
+ # Note that adding LDFLAGS="-Wl,-O1 ${LDFLAGS}" breaks dev-util/boost-build
+ # because of whitespace.
 -LDFLAGS="-Wl,-O1"
-+# 2009/03/13 - Daniel Robbins <drobbins@funtoo.org>
-+# Updated for Funtoo to enforce --sort-common and especially --as-needed by default
 +LDFLAGS="-Wl,-O1 -Wl,--sort-common -Wl,--as-needed"
  
  # 2009/09/21 Robin H. Johnson <robbat2@gentoo.org>

@@ -97,8 +97,8 @@ profiles a listed in profiles.desc.
  .../hardened/linux/x86/2008.0/developer/deprecated |    7 -
  .../hardened/linux/x86/2008.0/no-nptl/deprecated   |    8 -
  .../hardened/linux/x86/2008.0/server/deprecated    |    7 -
- profiles/profiles.desc                             |  263 +-------------------
- 94 files changed, 8 insertions(+), 587 deletions(-)
+ profiles/profiles.desc                             |  265 +-------------------
+ 94 files changed, 8 insertions(+), 589 deletions(-)
  delete mode 100644 profiles/default/linux/alpha/2008.0/deprecated
  delete mode 100644 profiles/default/linux/alpha/2008.0/desktop/deprecated
  delete mode 100644 profiles/default/linux/alpha/2008.0/developer/deprecated
@@ -1084,10 +1084,10 @@ index 6920ba0..0000000
 -# Reference: http://www.gentoo.org/doc/en/gentoo-upgrading.xml
 -# See: "General instructions" in Section 3. "Profile updating instructions"
 diff --git a/profiles/profiles.desc b/profiles/profiles.desc
-index cd59736..4874711 100644
+index 7d2a222..4874711 100644
 --- a/profiles/profiles.desc
 +++ b/profiles/profiles.desc
-@@ -6,263 +6,16 @@
+@@ -6,265 +6,16 @@
  #layout:
  #arch		profile_directory				status
  
@@ -1326,11 +1326,13 @@ index cd59736..4874711 100644
 -x86-interix		prefix/windows/interix/3.5/x86			exp
 -x86-interix		prefix/windows/interix/5.2/x86			exp
 -x86-interix		prefix/windows/interix/6.0/x86			exp
+-x86-interix		prefix/windows/interix/6.1/x86			exp
 -
 -# Windows Profiles
 -x86-winnt		prefix/windows/winnt/3.5/x86 			exp
 -x86-winnt		prefix/windows/winnt/5.2/x86			exp
 -x86-winnt		prefix/windows/winnt/6.0/x86			exp
+-x86-winnt		prefix/windows/winnt/6.1/x86			exp
 -
 -# HP-UX Profiles
 -ia64-hpux		prefix/hpux/B.11.23/ia64			exp
