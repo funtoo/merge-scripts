@@ -6,7 +6,7 @@ eval `keychain --noask --eval id_dsa`  || exit 1
 src=rsync://rsync.gentoo.org/gentoo-portage/
 
 # This is the target directory for our updates...
-dst=/usr/portage-gentoo/
+dst=/var/git/portage-gentoo/
 
 cd $dst
 

@@ -22,9 +22,9 @@
 # to the funtoo tree. This commit can then be reviewed, and manually
 # pushed up to github.com so other users can grab it via emerge --sync.
 
-dest=/var/tmp/git/portage-gentoo
-final=/var/tmp/git/portage-prod
-mini=/var/tmp/git/portage-mini-2010
+dest=/var/git/portage-gentoo
+final=/var/git/portage-prod
+mini=/var/git/portage-mini-2010
 
 src=`pwd`
 desttree="funtoo.org"
