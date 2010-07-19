@@ -1,5 +1,7 @@
 #!/bin/bash
 
+eval `keychain --noask --eval id_dsa`  || exit 1
+
 # This script uses the contents of the funtoo-overlay to generate 
 # a merged funtoo+gentoo unified tree, which is then used to update the
 # funtoo.org git tree with the latest changes from both funtoo and gentoo.
