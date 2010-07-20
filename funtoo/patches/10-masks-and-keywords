@@ -4,12 +4,12 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
- .../default/linux/package.keywords/funtoo-stable   |   23 ++++++
- profiles/package.mask/funtoo                       |   78 ++++++++++++++++++++
- profiles/package.mask/funtoo-cautionary            |   34 +++++++++
- profiles/package.mask/sunrise                      |   39 ++++++++++
+ .../default/linux/package.keywords/funtoo-stable   |   22 +++++++
+ profiles/package.mask/funtoo                       |   59 ++++++++++++++++++++
+ profiles/package.mask/funtoo-cautionary            |   34 ++++++++++++
+ profiles/package.mask/sunrise                      |   39 +++++++++++++
  profiles/package.unmask/funtoo                     |    7 ++
- 5 files changed, 181 insertions(+), 0 deletions(-)
+ 5 files changed, 161 insertions(+), 0 deletions(-)
  create mode 100644 profiles/default/linux/package.keywords/funtoo-stable
  create mode 100644 profiles/package.mask/funtoo
  create mode 100644 profiles/package.mask/funtoo-cautionary
@@ -18,10 +18,10 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 diff --git a/profiles/default/linux/package.keywords/funtoo-stable b/profiles/default/linux/package.keywords/funtoo-stable
 new file mode 100644
-index 0000000..683b574
+index 0000000..eb6d74a
 --- /dev/null
 +++ b/profiles/default/linux/package.keywords/funtoo-stable
-@@ -0,0 +1,23 @@
+@@ -0,0 +1,22 @@
 +~app-admin/eselect-postgresql-0.3 amd64 x86
 +~app-admin/eselect-vi-1.1.6 amd64 x86
 +=app-admin/perl-cleaner-2* amd64 x86
@@ -40,27 +40,22 @@ index 0000000..683b574
 +~sys-fs/cryptsetup-1.0.6 amd64 x86
 +~sys-fs/device-mapper-1.02.28 amd64 x86
 +=sys-fs/lvm2-2.02.68 amd64 x86
-+<=sys-libs/glibc-2.9_p20081201-r2 amd64 x86
 +~sys-libs/ncurses-5.7 amd64 x86
 +~sys-libs/readline-6.1 amd64 x86
 +<virtual/postgresql-base-8.4 amd64 x86
 +<virtual/postgresql-server-8.4 amd64 x86
 diff --git a/profiles/package.mask/funtoo b/profiles/package.mask/funtoo
 new file mode 100644
-index 0000000..e4f0efb
+index 0000000..79d5a79
 --- /dev/null
 +++ b/profiles/package.mask/funtoo
-@@ -0,0 +1,78 @@
+@@ -0,0 +1,59 @@
 +# PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 +
 +# Daniel Robbins <drobbins@funtoo.org> (19 Jul 2010)
 +# Masking new perl for testing (this pkg was accidentally
 +# unmasked in unstable overnight).
 +>=dev-lang/perl-5.12
-+
-+# Daniel Robbins <drobbins@funtoo.org> (09 Jul 2010)
-+# glib-2.24.1-r1 will not build and has other issues
-+>=dev-libs/glib-2.24.1-r1
 +
 +# Daniel Robbins <drobbins@funtoo.org> (07 Jul 2010)
 +# allow users to upgrade
@@ -74,10 +69,6 @@ index 0000000..e4f0efb
 +# This package is broken irt libxml2-2.7.7 (bug 316377)
 +=sys-libs/zlib-1.2.5
 +
-+# Piotr Karbowski <jabberuser@gmail.com> (20 April 2010)
-+# Hardmask live version.
-+=media-sound/mpd-9999
-+
 +# Jeff Mitchell <funtoo@jefferai.org> (22 Feb 2010)
 +# MySQL 5.1.43+ breaks a bunch of things, including Amarok, grass, and Akonadi
 +# See Gentoo bugs 306315, 306377, 306155
@@ -86,10 +77,6 @@ index 0000000..e4f0efb
 +# Daniel Robbins <drobbins@funtoo.org> (28 Jan 2010)
 +# man-1.6f-r4 breaks metro builds - looks like nice patches but needed more upstream testing
 +=sys-apps/man-1.6f-r4
-+
-+# Daniel Robbins <drobbins@funtoo.org> (09 Jan 2010)
-+# coreutils-8.3 has a build failure for glibc-2.7 thru 2.9. Fixed in 8.4+ 
-+=sys-apps/coreutils-8.3*
 +
 +# Daniel Robbins <drobbins@funtoo.org> (28 Dec 2009)
 +# Requested by slashbeast (Piotr Karbowski) in #funtoo due to /etc/cron.hourly
@@ -103,13 +90,6 @@ index 0000000..e4f0efb
 +# Daniel Robbins <drobbins@funtoo.org> (2 Dec 2009)
 +# Masking as per http://blog.flameeyes.eu/2009/12/01/gentoo-service-announcement-keep-clear-of-gnu-patch-2-6
 +>=sys-devel/patch-2.6
-+
-+# Daniel Robbins <drobbins@funtoo.org> (29 Sep 2009)
-+# readline-6.0_p4 does not build in metro stage builds. It
-+# cannot find its own headers and relies on a prior 
-+# readline to be installed
-+
-+=sys-libs/readline-6.0_p4
 +
 +# Andrew Kirch <trelane@trelane.net> (10 June 2009)
 +# Paludis does not support the profiles/package.mask hierarchy.
