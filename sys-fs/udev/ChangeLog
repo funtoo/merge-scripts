@@ -1,6 +1,11 @@
 # ChangeLog for sys-fs/udev
 # Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
 
+*udev-160
+
+  20 Jul 2010; Daniel Robbins <drobbins@funtoo.org> +udev-160.ebuild:
+  New udev ebuild masked for testing.
+
 *udev-158
 
   30 Jun 2010; Daniel Robbins <drobbins@funtoo.org> +udev-158.ebuild:
