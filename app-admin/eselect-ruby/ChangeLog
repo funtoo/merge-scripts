@@ -2,6 +2,12 @@
 # Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/app-admin/eselect-ruby/ChangeLog,v 1.18 2009/10/12 23:09:22 jer Exp $
 
+*eselect-ruby-20100603
+
+  20 Jul 2010; Daniel Robbins <drobbins@funtoo.org>
+  +eselect-ruby-20100603.ebuild: upstream version with lil tweak for funtoo's
+  /usr/bin/ruby1.9 (vs. ruby19 in gentoo).
+
 *eselect-ruby-20100308
 
   08 Mar 2010; Daniel Robbins <drobbins@funtoo.org>
