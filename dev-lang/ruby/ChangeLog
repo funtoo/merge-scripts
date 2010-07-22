@@ -2,9 +2,14 @@
 # Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/dev-lang/ruby/ChangeLog,v 1.424 2009/10/12 23:10:05 jer Exp $
 
+*ruby-1.8.7_p299
+
+  22 Jul 2010; Daniel Robbins <drobbins@funtoo.org> +ruby-1.8.7_p299.ebuild:
+  new ruby ebuild from upstream that is compatible with openssl-1.0.
+
 *ruby-1.8.7_p249
 
-  08 Mary 2010; Daniel Robbins <drobbins@funtoo.org> +ruby-1.8.7_p249.ebuild:
+  08 May 2010; Daniel Robbins <drobbins@funtoo.org> +ruby-1.8.7_p249.ebuild:
   Latest 1.8.7 from Gentoo.
 
   12 Oct 2009; Jeroen Roovers <jer@gentoo.org> ruby-1.8.7_p174-r1.ebuild:
