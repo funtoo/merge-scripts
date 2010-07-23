@@ -2,6 +2,11 @@
 # Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/dev-lang/ruby/ChangeLog,v 1.424 2009/10/12 23:10:05 jer Exp $
 
+*ruby-1.9.2_rc2
+
+  23 Jul 2010; Daniel Robbins <drobbins@funtoo.org> +ruby-1.9.2_rc2.ebuild:
+  New ruby from Gentoo, masked for those who want to use it.
+
 *ruby-1.8.7_p299
 
   22 Jul 2010; Daniel Robbins <drobbins@funtoo.org> +ruby-1.8.7_p299.ebuild:

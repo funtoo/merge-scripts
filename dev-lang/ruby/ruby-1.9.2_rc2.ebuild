@@ -1,65 +1,69 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-lang/ruby/ruby-1.8.6_p383.ebuild,v 1.1 2009/08/20 09:09:50 a3li Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-lang/ruby/ruby-1.9.2_rc2.ebuild,v 1.3 2010/07/21 12:18:43 flameeyes Exp $
 
-EAPI=1
+EAPI=2
+
+PATCHSET=2
+
 inherit autotools eutils flag-o-matic multilib versionator
 
 MY_P="${PN}-$(replace_version_separator 3 '-')"
 S=${WORKDIR}/${MY_P}
 
 SLOT=$(get_version_component_range 1-2)
-MY_SUFFIX=$(delete_version_separator 1 ${SLOT})
+MY_SUFFIX=$SLOT
+#MY_SUFFIX=$(delete_version_separator 1 ${SLOT})
+# 1.8 and 1.9 series disagree on this
+RUBYVERSION=$(get_version_component_range 1-3)
+
+if [[ -n ${PATCHSET} ]]; then
+	if [[ ${PVR} == ${PV} ]]; then
+		PATCHSET="${PV}-r0.${PATCHSET}"
+	else
+		PATCHSET="${PVR}.${PATCHSET}"
+	fi
+else
+	PATCHSET="${PVR}"
+fi
 
 DESCRIPTION="An object-oriented scripting language"
 HOMEPAGE="http://www.ruby-lang.org/"
-SRC_URI="mirror://ruby/${SLOT}/${MY_P}.tar.bz2
-http://dev.a3li.info/gentoo/distfiles/${PN}-patches-${PV}.tar.bz2"
+SRC_URI="mirror://ruby/${MY_P}.tar.bz2
+		 http://dev.gentoo.org/~flameeyes/ruby-team/${PN}-patches-${PATCHSET}.tar.bz2"
 
 LICENSE="|| ( Ruby GPL-2 )"
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd"
-IUSE="+berkdb debug doc emacs examples +gdbm ipv6 rubytests socks5 ssl threads tk xemacs"
+KEYWORDS="~amd64 ~hppa ~x86 ~x86-fbsd"
+IUSE="berkdb debug doc examples gdbm ipv6 rubytests socks5 ssl tk xemacs ncurses +readline libedit"
 
 RDEPEND="
 	berkdb? ( sys-libs/db )
 	gdbm? ( sys-libs/gdbm )
 	ssl? ( dev-libs/openssl )
 	socks5? ( >=net-proxy/dante-1.1.13 )
-	tk? ( dev-lang/tk )
-	app-admin/eselect-ruby
+	tk? ( dev-lang/tk[threads] )
+	ncurses? ( sys-libs/ncurses )
+	libedit? ( dev-libs/libedit )
+	!libedit? ( readline? ( sys-libs/readline ) )
+	dev-libs/libffi
+	sys-libs/zlib
+	>=app-admin/eselect-ruby-20100402
 	!=dev-lang/ruby-cvs-${SLOT}*
 	!<dev-ruby/rdoc-2
 	!dev-ruby/rexml"
 DEPEND="${RDEPEND}"
-PDEPEND="emacs? ( app-emacs/ruby-mode )
-	xemacs? ( app-xemacs/ruby-modes )"
+PDEPEND="xemacs? ( app-xemacs/ruby-modes )"
 
 PROVIDE="virtual/ruby"
 
-pkg_setup() {
-	use tk || return
-
-	# Note for EAPI-2 lovers: We'd like to show that custom message.
-	# *If* you can make USE dependencies show that, too, feel free to migrate.
-	if (use threads && ! built_with_use dev-lang/tk threads) \
-		|| (! use threads && built_with_use dev-lang/tk threads) ; then
-		eerror
-		eerror "You have Tk support enabled."
-		eerror
-		eerror "Ruby and Tk need the same 'threads' USE flag settings."
-		eerror "Either change the USE flag on dev-lang/ruby or on dev-lang/tk"
-		eerror "and recompile tk."
-
-		die "threads USE flag mismatch"
-	fi
-}
-
-src_unpack() {
-	unpack ${A}
-	cd "${S}"
-
+src_prepare() {
 	EPATCH_FORCE="yes" EPATCH_SUFFIX="patch" \
-	epatch "${WORKDIR}/patches-${PV}"
+		epatch "${WORKDIR}/patches"
+
+	einfo "Removing rake and rubygems..."
+	# Strip rake and rubygems
+	rm -rf bin/rake lib/rake.rb lib/rake || die "rm rake failed"
+	rm -rf bin/gem || die "rm gem failed"
 
 	# Fix a hardcoded lib path in configure script
 	sed -i -e "s:\(RUBY_LIB_PREFIX=\"\${prefix}/\)lib:\1$(get_libdir):" \
@@ -68,7 +72,9 @@ src_unpack() {
 	eautoreconf
 }
 
-src_compile() {
+src_configure() {
+	local myconf=
+
 	# -fomit-frame-pointer makes ruby segfault, see bug #150413.
 	filter-flags -fomit-frame-pointer
 	# In many places aliasing rules are broken; play it safe
@@ -88,21 +94,39 @@ src_compile() {
 		append-flags "-DGC_MALLOC_LIMIT=${RUBY_GC_MALLOC_LIMIT}"
 	fi
 
-	econf --program-suffix=$MY_SUFFIX --enable-shared \
+	# ipv6 hack, bug 168939. Needs --enable-ipv6.
+	use ipv6 || myconf="${myconf} --with-lookup-order-hack=INET"
+
+	if use libedit; then
+		einfo "Using libedit to provide readline extension"
+		myconf="${myconf} --enable-libedit --with-readline"
+	elif use readline; then
+		einfo "Using readline to provide readline extension"
+		myconf="${myconf} --with-readline"
+	else
+		myconf="${myconf} --without-readline"
+	fi
+
+	econf \
+		--program-suffix=${MY_SUFFIX} \
+		--with-soname=ruby${MY_SUFFIX} \
+		--enable-shared \
+		--enable-pthread \
 		$(use_enable socks5 socks) \
 		$(use_enable doc install-doc) \
-		$(use_enable threads pthread) \
-		$(use_enable ipv6) \
+		--enable-ipv6 \
 		$(use_enable debug) \
 		$(use_with berkdb dbm) \
 		$(use_with gdbm) \
 		$(use_with ssl openssl) \
 		$(use_with tk) \
+		$(use_with ncurses curses) \
 		${myconf} \
-		--with-sitedir=/usr/$(get_libdir)/ruby/site_ruby \
 		--enable-option-checking=no \
 		|| die "econf failed"
+}
 
+src_compile() {
 	emake EXTLDFLAGS="${LDFLAGS}" || die "emake failed"
 }
 
@@ -118,7 +142,7 @@ src_test() {
 		elog "than root, and you must place them into a writeable directory."
 		elog "Then call: "
 		elog
-		elog "ruby -C /location/of/tests runner.rb"
+		elog "ruby${MY_SUFFIX} -C /location/of/tests runner.rb"
 	else
 		elog "Enable the rubytests USE flag to install the make check tests"
 	fi
@@ -128,8 +152,10 @@ src_install() {
 	# Ruby is involved in the install process, we don't want interference here.
 	unset RUBYOPT
 
-	LD_LIBRARY_PATH="${D}/usr/$(get_libdir)"
-	RUBYLIB="${S}:${D}/usr/$(get_libdir)/ruby/${SLOT}"
+	local MINIRUBY=$(echo -e 'include Makefile\ngetminiruby:\n\t@echo $(MINIRUBY)'|make -f - getminiruby)
+
+	LD_LIBRARY_PATH="${D}/usr/$(get_libdir)${LD_LIBRARY_PATH+:}${LD_LIBRARY_PATH}"
+	RUBYLIB="${S}:${D}/usr/$(get_libdir)/ruby19/${RUBYVERSION}"
 	for d in $(find "${S}/ext" -type d) ; do
 		RUBYLIB="${RUBYLIB}:$d"
 	done
@@ -137,7 +163,6 @@ src_install() {
 
 	emake DESTDIR="${D}" install || die "make install failed"
 
-	MINIRUBY=$(echo -e 'include Makefile\ngetminiruby:\n\t@echo $(MINIRUBY)'|make -f - getminiruby)
 	keepdir $(${MINIRUBY} -rrbconfig -e "print Config::CONFIG['sitelibdir']")
 	keepdir $(${MINIRUBY} -rrbconfig -e "print Config::CONFIG['sitearchdir']")
 
@@ -146,18 +171,22 @@ src_install() {
 	fi
 
 	if use examples; then
-		dodir /usr/share/doc/${PF}
-		cp -pPR sample "${D}/usr/share/doc/${PF}"
+		insinto /usr/share/doc/${PF}
+		doins -r sample
 	fi
 
-	dosym libruby$MY_SUFFIX$(get_libname ${PV%_*}) /usr/$(get_libdir)/libruby$(get_libname ${PV%.*})
-	dosym libruby$MY_SUFFIX$(get_libname ${PV%_*}) /usr/$(get_libdir)/libruby$(get_libname ${PV%_*})
+	dosym "libruby${MY_SUFFIX}$(get_libname ${PV%_*})" \
+		"/usr/$(get_libdir)/libruby$(get_libname ${PV%.*})"
+	dosym "libruby${MY_SUFFIX}$(get_libname ${PV%_*})" \
+		"/usr/$(get_libdir)/libruby$(get_libname ${PV%_*})"
 
-	dodoc ChangeLog NEWS README* ToDo
+	dodoc ChangeLog NEWS doc/NEWS-1.8.7 README* ToDo || die
 
 	if use rubytests; then
-		dodir /usr/share/${PN}-${SLOT}
-		cp -pPR test "${D}/usr/share/${PN}-${SLOT}"
+		pushd test
+		insinto /usr/share/${PN}-${SLOT}
+		doins -r .
+		popd
 	fi
 }
 
@@ -173,7 +202,5 @@ pkg_postinst() {
 }
 
 pkg_postrm() {
-	if [[ ! -n $(readlink "${ROOT}"usr/bin/ruby) ]] ; then
-		eselect ruby set ruby${MY_SUFFIX}
-	fi
+	eselect ruby cleanup
 }
