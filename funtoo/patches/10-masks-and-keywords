@@ -4,12 +4,12 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
- .../default/linux/package.keywords/funtoo-stable   |   22 +++++++
- profiles/package.mask/funtoo                       |   64 ++++++++++++++++++++
- profiles/package.mask/funtoo-cautionary            |   34 +++++++++++
- profiles/package.mask/sunrise                      |   39 ++++++++++++
+ .../default/linux/package.keywords/funtoo-stable   |   22 ++++++
+ profiles/package.mask/funtoo                       |   68 ++++++++++++++++++++
+ profiles/package.mask/funtoo-cautionary            |   34 ++++++++++
+ profiles/package.mask/sunrise                      |   39 +++++++++++
  profiles/package.unmask/funtoo                     |    7 ++
- 5 files changed, 166 insertions(+), 0 deletions(-)
+ 5 files changed, 170 insertions(+), 0 deletions(-)
  create mode 100644 profiles/default/linux/package.keywords/funtoo-stable
  create mode 100644 profiles/package.mask/funtoo
  create mode 100644 profiles/package.mask/funtoo-cautionary
@@ -46,11 +46,15 @@ index 0000000..eb6d74a
 +<virtual/postgresql-server-8.4 amd64 x86
 diff --git a/profiles/package.mask/funtoo b/profiles/package.mask/funtoo
 new file mode 100644
-index 0000000..7746c3d
+index 0000000..6f16099
 --- /dev/null
 +++ b/profiles/package.mask/funtoo
-@@ -0,0 +1,64 @@
+@@ -0,0 +1,68 @@
 +# PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
++
++# Daniel Robbins <drobbins@funtoo.org> (23 Jul 2010)
++# masked for testing
++>=sys-fs/lvm2-2.02.70
 +
 +# Daniel Robbins <drobbins@funtoo.org> (23 Jul 2010)
 +# let's stick with a known-good version of ruby by
