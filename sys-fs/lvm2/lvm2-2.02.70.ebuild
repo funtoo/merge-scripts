@@ -18,7 +18,7 @@ IUSE="+rc_enable"
 
 RDEPEND=">=sys-fs/udev-135-r11"
 DEPEND="${RDEPEND} dev-util/pkgconfig"
-MYDIR="$FILESDIR/2.02.65"
+MYDIR="$FILESDIR/2.02.70"
 
 S="${WORKDIR}/${PN/lvm/LVM}.${PV}"
 
