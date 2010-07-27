@@ -51,9 +51,9 @@ index 695c587..2b0c633 100644
  # http://archives.gentoo.org/gentoo-dev/msg_dc705dc2c1a45e18a85aa62e8fb17009.xml
 diff --git a/profiles/default/linux/package.use b/profiles/default/linux/package.use
 new file mode 100644
-index 0000000..4e289ea
+index 0000000..c5f5be9
 --- /dev/null
 +++ b/profiles/default/linux/package.use
 @@ -0,0 +1,2 @@
 +www-servers/cherokee threads admin fastcgi
-+sys-devel/gcc-4.4.3 default
++=sys-devel/gcc-4.4.3* default
