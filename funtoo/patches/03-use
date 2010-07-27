@@ -1,22 +1,21 @@
-use vars and such
+foo
 
 From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
- profiles/default/linux/make.defaults |   16 +++++++++++++++-
- profiles/default/linux/package.use   |    2 ++
- 2 files changed, 17 insertions(+), 1 deletions(-)
- create mode 100644 profiles/default/linux/package.use
+ profiles/default/linux/make.defaults |   18 ++++++++++++++++--
+ 1 files changed, 16 insertions(+), 2 deletions(-)
 
 diff --git a/profiles/default/linux/make.defaults b/profiles/default/linux/make.defaults
-index 66f7203..8616e91 100644
+index 695c587..2b0c633 100644
 --- a/profiles/default/linux/make.defaults
 +++ b/profiles/default/linux/make.defaults
-@@ -13,6 +13,20 @@
+@@ -12,11 +12,25 @@
+ 
  # Default starting set of USE flags for all default/linux profiles.
  USE="berkdb crypt ipv6 ncurses nls pam perl python readline ssl tcpd zlib"
- 
++ 
 +#Graphics and other formats often used in both server (cmdline) and desktop (X) applications:
 +USE="${USE} gif png jpeg tiff truetype xml"
 +
@@ -30,24 +29,21 @@ index 66f7203..8616e91 100644
 +# Since GRP_STAGE23_USE doesn't exist anymore, I am disabling gpm in order to
 +# disable a stage3 circular issue with ncurses->gpm->ncurses.
 +USE="${USE} -gpm"
-+
+ 
  # make sure toolchain has sane defaults <tooclhain@gentoo.org>
  USE="${USE} fortran mudflap openmp"
+ 
+-# 2006/03/07 - Donnie Berkholz <dberkholz@gentoo.org>
++# 2007/03/07 - Donnie Berkholz <dberkholz@gentoo.org>
+ # Modular X: Support direct rendering by default
+ USE="${USE} dri"
  
 @@ -53,7 +67,7 @@ VIDEO_CARDS="dummy fbdev v4l"
  # 2010/07/12 - Samuli Suominen <ssuominen@gentoo.org>
  # Note that adding LDFLAGS="-Wl,-O1 ${LDFLAGS}" breaks dev-util/boost-build
  # because of whitespace.
--LDFLAGS="-Wl,-O1"
+-LDFLAGS="-Wl,-O1 -Wl,--as-needed"
 +LDFLAGS="-Wl,-O1 -Wl,--sort-common -Wl,--as-needed"
  
  # 2009/09/21 Robin H. Johnson <robbat2@gentoo.org>
  # http://archives.gentoo.org/gentoo-dev/msg_dc705dc2c1a45e18a85aa62e8fb17009.xml
-diff --git a/profiles/default/linux/package.use b/profiles/default/linux/package.use
-new file mode 100644
-index 0000000..080623f
---- /dev/null
-+++ b/profiles/default/linux/package.use
-@@ -0,0 +1,2 @@
-+www-servers/cherokee threads admin fastcgi
-+=sys-devel/gcc-4.4.3 default
