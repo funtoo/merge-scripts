@@ -15,7 +15,7 @@ SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86"
 
 IUSE="+rc_enable"
-
+PROVIDE="sys-fs/device-mapper"
 RDEPEND=">=sys-fs/udev-135-r11"
 DEPEND="${RDEPEND} dev-util/pkgconfig"
 MYDIR="$FILESDIR/2.02.70"
