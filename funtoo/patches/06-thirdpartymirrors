@@ -8,7 +8,7 @@ From: Daniel Robbins <drobbins@funtoo.org>
  1 files changed, 1 insertions(+), 1 deletions(-)
 
 diff --git a/profiles/thirdpartymirrors b/profiles/thirdpartymirrors
-index aee4cf5..5939ab6 100644
+index e5e6c38..1adc3c2 100644
 --- a/profiles/thirdpartymirrors
 +++ b/profiles/thirdpartymirrors
 @@ -13,7 +13,7 @@ fedora-dev	http://mirror.aarnet.edu.au/pub/fedora/linux http://mirror.internode.

@@ -1,4 +1,4 @@
-# This series applies on GIT commit 0b932c7e2362baafc44ff31782207188faad357e
+# This series applies on GIT commit 30108b9a63814871b8f12afe7f63126249e49a30
 01-2008.0-profiles
 02-virtuals
 03-use
@@ -9,3 +9,4 @@
 08-repo_name
 09-funtoo-profile-1.0
 10-masks-and-keywords
+11-ruby-ng
