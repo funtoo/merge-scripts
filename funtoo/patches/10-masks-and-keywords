@@ -46,11 +46,15 @@ index 0000000..eb6d74a
 +<virtual/postgresql-server-8.4 amd64 x86
 diff --git a/profiles/package.mask/funtoo b/profiles/package.mask/funtoo
 new file mode 100644
-index 0000000..7746c3d
+index 0000000..8a2aac1
 --- /dev/null
 +++ b/profiles/package.mask/funtoo
 @@ -0,0 +1,64 @@
 +# PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
++
++# Daniel Robbins <drobbins@funtoo.org> (10 Aug 2010)
++# Masked for testing
++>=sys-apps/openrc-0.6.1
 +
 +# Daniel Robbins <drobbins@funtoo.org> (23 Jul 2010)
 +# let's stick with a known-good version of ruby by
@@ -65,10 +69,6 @@ index 0000000..7746c3d
 +# Daniel Robbins <drobbins@funtoo.org> (07 Jul 2010)
 +# allow users to upgrade
 +=dev-lang/python-2.7*
-+
-+# Daniel Robbins <drobbins@funtoo.org> (03 Jun 2010)
-+# Masked for testing
-+=sys-apps/openrc-0.6.1
 +
 +# Daniel Robbins <drobbins@funtoo.org> (22 Apr 2010)
 +# This package is broken irt libxml2-2.7.7 (bug 316377)

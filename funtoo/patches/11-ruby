@@ -4,8 +4,9 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
+ eclass/ruby-ng.eclass  |    3 +++
  profiles/base/use.mask |    2 --
- 1 files changed, 0 insertions(+), 2 deletions(-)
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/eclass/ruby-ng.eclass b/eclass/ruby-ng.eclass
 index f1f324e..4b27580 100644
