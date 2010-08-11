@@ -4,10 +4,55 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
- eclass/ruby-ng.eclass  |    3 +++
- profiles/base/use.mask |    2 --
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ eclass/ruby-fakegem.eclass |   12 ++++++++----
+ eclass/ruby-ng.eclass      |    3 +++
+ profiles/base/use.mask     |    2 --
+ 3 files changed, 11 insertions(+), 6 deletions(-)
 
+diff --git a/eclass/ruby-fakegem.eclass b/eclass/ruby-fakegem.eclass
+index e6cfa8b..7a40238 100644
+--- a/eclass/ruby-fakegem.eclass
++++ b/eclass/ruby-fakegem.eclass
+@@ -6,7 +6,7 @@
+ # @MAINTAINER:
+ # Ruby herd <ruby@gentoo.org>
+ #
+-# Author: Diego E. Pettenò <flameeyes@gentoo.org>
++# Author: Diego E. PettenÃ² <flameeyes@gentoo.org>
+ #
+ # Author: Alex Legler <a3li@gentoo.org>
+ #
+@@ -46,7 +46,7 @@ inherit ruby-ng
+ 
+ # @ECLASS-VARIABLE: RUBY_FAKEGEM_EXTRADOC
+ # @DESCRIPTION:
+-# Extra documentation to install (readme, changelogs, …).
++# Extra documentation to install (readme, changelogs, â¦).
+ # RUBY_FAKEGEM_EXTRADOC=""
+ 
+ # @ECLASS-VARIABLE: RUBY_FAKEGEM_BINWRAP
+@@ -182,7 +182,7 @@ ruby_fakegem_binwrapper() {
+ 
+ 		# Try to find out whether the package is going to install for
+ 		# one or multiple implementations; if we're installing for a
+-		# *single* implementation, no need to use “/usr/bin/env ruby”
++		# *single* implementation, no need to use â/usr/bin/env rubyâ
+ 		# in the shebang, and we can actually avoid errors when
+ 		# calling the script by default (see for instance the
+ 		# JRuby-specific commands).
+@@ -192,7 +192,11 @@ ruby_fakegem_binwrapper() {
+ 			use ruby_targets_${implementation} || continue
+ 			if [ -z $rubycmd ]; then
+ 				# if no other implementation was set before, set it.
+-				rubycmd="/usr/bin/${implementation}"
++				if [[ "${implementation}" == "ruby19" ]]; then
++					rubycmd="/usr/bin/ruby1.9"
++				else
++					rubycmd="/usr/bin/${implementation}"
++				fi
+ 			else
+ 				# if another implementation already arrived, then make
+ 				# it generic and break out of the loop. This ensures
 diff --git a/eclass/ruby-ng.eclass b/eclass/ruby-ng.eclass
 index f1f324e..4b27580 100644
 --- a/eclass/ruby-ng.eclass
