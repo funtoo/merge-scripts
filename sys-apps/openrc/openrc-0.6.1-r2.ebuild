@@ -90,11 +90,11 @@ src_install() {
 
 	# Install funtoo networking parts:
 
-	cd ${WORKDIR}/corenetwork-${NETV}/init.d || die
-	dodoc doc/index.rst || die
+	cd ${WORKDIR}/corenetwork-${NETV} || die
+	dodoc docs/index.rst || die
 	exeinto /etc/init.d || die
-	doexe netif.tmpl netif.lo || die
-	cp -a ${WORKDIR}/corenetwork-${NETV}/netif.d ${D}/etc || die
+	doexe init.d/{netif.tmpl,netif.lo} || die
+	cp -a netif.d ${D}/etc || die
 	chown -R root:root ${D}/etc/netif.d || die
 	chmod -R 0644 ${D}/etc/netif.d || die
 	ln -s /etc/init.d/netif.lo ${D}/usr/share/openrc/runlevels/boot/netif.lo || die
