@@ -4,7 +4,7 @@
 
 inherit eutils flag-o-matic multilib toolchain-funcs
 
-NETV=1.0.3
+NETV=1.0.4
 SRC_URI="http://roy.marples.name/downloads/openrc/openrc-0.6.1.tar.bz2 http://www.funtoo.org/archive/corenetwork/corenetwork-${NETV}.tar.bz2"
 DESCRIPTION="OpenRC manages the services, startup and shutdown of a host"
 HOMEPAGE="http://roy.marples.name/openrc"
@@ -13,7 +13,7 @@ RESTRICT="nomirror"
 
 LICENSE="BSD-2"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~x86 ~amd64"
 IUSE="debug ncurses pam unicode kernel_linux kernel_FreeBSD"
 
 RDEPEND="kernel_linux? ( >=sys-apps/sysvinit-2.86-r11 )
@@ -21,7 +21,7 @@ RDEPEND="kernel_linux? ( >=sys-apps/sysvinit-2.86-r11 )
 	elibc_glibc? ( >=sys-libs/glibc-2.5 )
 	ncurses? ( sys-libs/ncurses )
 	pam? ( virtual/pam )
-	>=sys-apps/baselayout-2.0.0
+	>=sys-apps/baselayout-2.1
 	>=sys-fs/udev-135"
 DEPEND="ncurses? ( sys-libs/ncurses ) eclibc_glibc? ( >=sys-libs/glibc-2.5 ) pam? ( virtual/pam ) virtual/os-headers"
 
@@ -79,22 +79,11 @@ src_install() {
 
 	# Cater to the norm
 	(use x86 || use amd64) && sed -i -e '/^.*windowkeys=/s:^.*"NO":windowkeys="YES":' "${D}"/etc/conf.d/keymaps
-
-	# Use funtoo boot/sysinit settings:
-	rm -rf ${D}/usr/share/openrc/runlevels/{boot,sysinit}/*
-	for i in devfs dmesg fsck modules netif.lo sysfs hostname swap procfs root termencoding urandom mtab hwclock keymaps sysctl bootmisc
-	do
-		ln -s /etc/init.d/$i ${D}/usr/share/openrc/runlevels/sysinit/$i
-	done
-
-	for i in localmount 
-	do
-		ln -s /etc/init.d/$i ${D}/usr/share/openrc/runlevels/boot/$i
-	done
-
+	
 	# Remove upstream networking parts:
 	
 	for pat in ${D}/etc/init.d/{network,staticroute} \
+	${D}/usr/share/openrc/runlevels/boot/{network,staticroute} \
 	${D}/etc/conf.d/{network,staticroute}; do
 		rm -f "$pat" || die "Couldn't remove upstream $pat from source."
 	done
@@ -108,7 +97,7 @@ src_install() {
 	cp -a netif.d ${D}/etc || die
 	chown -R root:root ${D}/etc/netif.d || die
 	chmod -R 0644 ${D}/etc/netif.d || die
-	ln -s /etc/init.d/netif.lo ${D}/usr/share/openrc/runlevels/boot/netif.lo || die
+	ln -s /etc/init.d/netif.lo ${D}/usr/share/openrc/runlevels/sysinit/netif.lo || die
 }
 
 add_init() {
@@ -133,6 +122,7 @@ pkg_postinst() {
 
 	# Remove old baselayout links
 	rm -f "${ROOT}"/etc/runlevels/boot/{check{fs,root},rmnologin}
+	rm -f "${ROOT}"/etc/runlevels/boot/netif.lo
 
 	# CREATE RUNLEVEL DIRECTORIES	
 	# ===========================

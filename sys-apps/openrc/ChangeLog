@@ -2,6 +2,12 @@
 # Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/sys-apps/openrc/ChangeLog,v 1.80 2009/10/14 11:04:35 vapier Exp $
 
+*openrc-0.6.1-r3 (18 Aug 2010)
+
+  18 Aug 2010; Daniel Robbins <drobbins@funtoo.org> +openrc-0.6.1-r3.ebuild:
+  new ebuild intended for unmasking. Auto-VLAN support should now work.
+  netif.lo moved to sysinit runlevel.
+
 *openrc-0.6.1-r2 (14 Aug 2010)
 
   14 Aug 2010; Daniel Robbins <drobbins@funtoo.org> openrc-0.6.1-r2.ebuild:
