@@ -1,6 +1,12 @@
 # ChangeLog for sys-apps/baselayout
 # Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
-# $Header: /var/cvsroot/gentoo-x86/sys-apps/baselayout/ChangeLog,v 1.473 2009/10/11 04:44:07 vapier Exp $
+# Copyright 2009-2010 Funtoo Technologies.
+
+*baselayout-2.1.8 (17 Aug 2010)
+
+  17 Aug 2010; Daniel Robbins <drobbins@funtoo.org> +baselayout-2.1.8.ebuild:
+  modprobe.d conf suffixes were accidentally dropped from ebuild - 
+  this fixes that issue.
 
 *baselayout-2.1.7 (16 Aug 2010)
 
