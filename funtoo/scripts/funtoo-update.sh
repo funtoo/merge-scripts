@@ -59,8 +59,6 @@ done
 
 # Misc files:
 
-cp -a sets.conf $final/ || die "sets.conf fail"
-cp -a sets $final/ || die "sets fail"
 cp licenses/* $final/licenses/ || die "licenses fail"
 cp eclass/* $final/eclass/ || die "eclass fail"
 
