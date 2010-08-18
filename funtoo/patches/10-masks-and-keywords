@@ -4,12 +4,12 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
- .../default/linux/package.keywords/funtoo-stable   |   22 +++++++
- profiles/package.mask/funtoo                       |   64 ++++++++++++++++++++
- profiles/package.mask/funtoo-cautionary            |   34 +++++++++++
- profiles/package.mask/sunrise                      |   39 ++++++++++++
- profiles/package.unmask/funtoo                     |    7 ++
- 5 files changed, 166 insertions(+), 0 deletions(-)
+ .../default/linux/package.keywords/funtoo-stable   |   22 ++++++++
+ profiles/package.mask/funtoo                       |   55 ++++++++++++++++++++
+ profiles/package.mask/funtoo-cautionary            |   34 ++++++++++++
+ profiles/package.mask/sunrise                      |   39 ++++++++++++++
+ profiles/package.unmask/funtoo                     |    7 +++
+ 5 files changed, 157 insertions(+), 0 deletions(-)
  create mode 100644 profiles/default/linux/package.keywords/funtoo-stable
  create mode 100644 profiles/package.mask/funtoo
  create mode 100644 profiles/package.mask/funtoo-cautionary
@@ -46,10 +46,10 @@ index 0000000..eb6d74a
 +<virtual/postgresql-server-8.4 amd64 x86
 diff --git a/profiles/package.mask/funtoo b/profiles/package.mask/funtoo
 new file mode 100644
-index 0000000..8a2aac1
+index 0000000..8518e7b
 --- /dev/null
 +++ b/profiles/package.mask/funtoo
-@@ -0,0 +1,64 @@
+@@ -0,0 +1,55 @@
 +# PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 +
 +# Daniel Robbins <drobbins@funtoo.org> (10 Aug 2010)
@@ -61,10 +61,6 @@ index 0000000..8a2aac1
 +# default:
 +>dev-lang/ruby-1.8.7_p299
 +
-+# Daniel Robbins <drobbins@funtoo.org> (19 Jul 2010)
-+# Masking new perl for testing (this pkg was accidentally
-+# unmasked in unstable overnight).
-+>=dev-lang/perl-5.12
 +
 +# Daniel Robbins <drobbins@funtoo.org> (07 Jul 2010)
 +# allow users to upgrade
@@ -73,11 +69,6 @@ index 0000000..8a2aac1
 +# Daniel Robbins <drobbins@funtoo.org> (22 Apr 2010)
 +# This package is broken irt libxml2-2.7.7 (bug 316377)
 +=sys-libs/zlib-1.2.5
-+
-+# Jeff Mitchell <funtoo@jefferai.org> (22 Feb 2010)
-+# MySQL 5.1.43+ breaks a bunch of things, including Amarok, grass, and Akonadi
-+# See Gentoo bugs 306315, 306377, 306155
-+>=dev-db/mysql-5.1.43
 +
 +# Daniel Robbins <drobbins@funtoo.org> (28 Jan 2010)
 +# man-1.6f-r4 breaks metro builds - looks like nice patches but needed more upstream testing
