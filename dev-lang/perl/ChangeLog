@@ -2,23 +2,17 @@
 # Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/dev-lang/perl/ChangeLog,v 1.289 2009/10/21 19:41:14 maekke Exp $
 
-  21 Oct 2009; Markus Meier <maekke@gentoo.org> perl-5.10.1.ebuild:
-  add ~amd64/~arm/~x86, bug #288028
+*perl-5.12.1-r1
 
-  13 Oct 2009; Jeroen Roovers <jer@gentoo.org> perl-5.10.1.ebuild:
-  Marked ~hppa (bug #288028).
+  22 Aug 2010; Daniel Robbins <drobbins@funtoo.org> +perl-5.12.1-r1.ebuild:
+  New "gold" version of the updated Funtoo perl ebuild, with updated 
+  Gentoo patchsets, and removal of the "build" USE variable which was causing
+  stage2 build failures.
 
-  29 Sep 2009; Torsten Veller <tove@gentoo.org> perl-5.10.1.ebuild:
-  Rename and link the scripts from podlators too: pod2man and pod2text (#286962)
+*perl-5.12.1
 
-  28 Sep 2009; Torsten Veller <tove@gentoo.org> perl-5.10.1.ebuild:
-  Bump perl patchset. Fixes bugs #286840, #286841
-
-  28 Sep 2009; Torsten Veller <tove@gentoo.org> perl-5.8.8-r5.ebuild,
-  perl-5.8.8-r6.ebuild, perl-5.10.1.ebuild:
-  Bump perl-5.10.1 patchset.
-  Fix asm/page.h failure. Thanks to Alon Bar-Lev and Diego Pettenò.
-  (#259923, #286656, #249827, #265268)
+  18 Aug 2010; Daniel Robbins <drobbins@funtoo.org> perl-5.12.1.ebuild:
+  New updated perl ebuild, moved to unstable for testing.
 
 *perl-5.10.1-r12 (28 Sep 2009)
 
