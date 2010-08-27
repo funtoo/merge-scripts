@@ -8,7 +8,7 @@ From: Daniel Robbins <drobbins@funtoo.org>
  1 files changed, 1 insertions(+), 0 deletions(-)
 
 diff --git a/profiles/base/virtuals b/profiles/base/virtuals
-index 33437e1..a902d40 100644
+index 03b8d6d..e15bf56 100644
 --- a/profiles/base/virtuals
 +++ b/profiles/base/virtuals
 @@ -11,6 +11,7 @@
