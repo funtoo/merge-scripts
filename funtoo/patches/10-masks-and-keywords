@@ -47,7 +47,7 @@ index 0000000..bb9e317
 +<virtual/postgresql-server-8.4 amd64 x86
 diff --git a/profiles/package.mask/funtoo b/profiles/package.mask/funtoo
 new file mode 100644
-index 0000000..729332e
+index 0000000..09d8d42
 --- /dev/null
 +++ b/profiles/package.mask/funtoo
 @@ -0,0 +1,63 @@
@@ -55,7 +55,7 @@ index 0000000..729332e
 +
 +# Daniel Robbins <drobbins@funtoo.org> (29 Aug 2010)
 +
-+>=dev-lang/python-3*
++>=dev-lang/python-3
 +
 +# Group python-3-specific ebuilds here - they should
 +# all be masked for now to avoid situations where
