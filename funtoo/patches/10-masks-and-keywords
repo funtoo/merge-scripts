@@ -4,12 +4,12 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
- .../default/linux/package.keywords/funtoo-stable   |   23 +++++++++
- profiles/package.mask/funtoo                       |   50 ++++++++++++++++++++
- profiles/package.mask/funtoo-cautionary            |   34 ++++++++++++++
- profiles/package.mask/sunrise                      |   39 ++++++++++++++++
+ .../default/linux/package.keywords/funtoo-stable   |   23 +++++++
+ profiles/package.mask/funtoo                       |   63 ++++++++++++++++++++
+ profiles/package.mask/funtoo-cautionary            |   34 +++++++++++
+ profiles/package.mask/sunrise                      |   39 ++++++++++++
  profiles/package.unmask/funtoo                     |    6 ++
- 5 files changed, 152 insertions(+), 0 deletions(-)
+ 5 files changed, 165 insertions(+), 0 deletions(-)
  create mode 100644 profiles/default/linux/package.keywords/funtoo-stable
  create mode 100644 profiles/package.mask/funtoo
  create mode 100644 profiles/package.mask/funtoo-cautionary
@@ -47,11 +47,24 @@ index 0000000..bb9e317
 +<virtual/postgresql-server-8.4 amd64 x86
 diff --git a/profiles/package.mask/funtoo b/profiles/package.mask/funtoo
 new file mode 100644
-index 0000000..29e64a5
+index 0000000..729332e
 --- /dev/null
 +++ b/profiles/package.mask/funtoo
-@@ -0,0 +1,50 @@
+@@ -0,0 +1,63 @@
 +# PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
++
++# Daniel Robbins <drobbins@funtoo.org> (29 Aug 2010)
++
++>=dev-lang/python-3*
++
++# Group python-3-specific ebuilds here - they should
++# all be masked for now to avoid situations where
++# deps cannot be satisfied due to python-3 not being
++# available. We want the python-2 version of the
++# ebuild to be the most recent for stable and 
++# unstable to avoid this problem:
++
++>=dev-python/beautifulsoup-3.1
 +
 +# Daniel Robbins <drobbins@funtoo.org> (23 Jul 2010)
 +# let's stick with a known-good version of ruby by
