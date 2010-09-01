@@ -1,5 +1,10 @@
 # Copyright 2008-2009 Funtoo Technologies, LLC; Distributed under the GPL v2
 
+*gdisk-0.6.10 (01 Sep 2010)
+
+  01 Sep 2010; Daniel Robbins <drobbins@funtoo.org> +gdisk-0.6.10.ebuild:
+  New upstream release.
+
 *gdisk-0.6.8 (30 Jun 2010)
 
   30 Jun 2010; Daniel Robbins <drobbins@funtoo.org> +gdisk-0.6.8.ebuild:
