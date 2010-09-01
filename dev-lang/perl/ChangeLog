@@ -2,6 +2,10 @@
 # Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/dev-lang/perl/ChangeLog,v 1.289 2009/10/21 19:41:14 maekke Exp $
 
+  01 Sep 2010; Daniel Robbins <drobbins@funtoo.org> perl-5.12.1-r1.ebuild:
+  add "build" back to IUSE even though we don't use it, for Gentoo
+  compatibility for things with "dev-lang/perl[-build]" in their deps.
+
 *perl-5.12.1-r1
 
   22 Aug 2010; Daniel Robbins <drobbins@funtoo.org> +perl-5.12.1-r1.ebuild:
