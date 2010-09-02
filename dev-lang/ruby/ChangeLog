@@ -2,12 +2,6 @@
 # Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/dev-lang/ruby/ChangeLog,v 1.424 2009/10/12 23:10:05 jer Exp $
 
-*ruby-1.9.2
-
-  01 Sep 2010; Daniel Robbins <drobbins@funtoo.org> +ruby-1.9.2.ebuild:
-  new ruby from upstream Gentoo; minor Funtoo version tweak. Also added
-  fix from http://bhuga.net/2010/08/gem-problems-when-upgrading-ruby-192-macports
-
 *ruby-1.9.2_rc2
 
   23 Jul 2010; Daniel Robbins <drobbins@funtoo.org> +ruby-1.9.2_rc2.ebuild:
