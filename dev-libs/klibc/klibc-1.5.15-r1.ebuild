@@ -45,7 +45,7 @@ DEPEND="dev-lang/perl"
 RDEPEND="${DEPEND}"
 
 # EAPI-incompatible workaround for bug #253916:
-FEATURES="$FEATURES -distcc"
+FEATURES="${FEATURES/distcc/}"
 
 KS="${WORKDIR}/linux-${OKV}"
 
