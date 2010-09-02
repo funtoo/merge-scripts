@@ -5,11 +5,11 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 ---
  .../default/linux/package.keywords/funtoo-stable   |   23 +++++++
- profiles/package.mask/funtoo                       |   63 ++++++++++++++++++++
- profiles/package.mask/funtoo-cautionary            |   34 +++++++++++
+ profiles/package.mask/funtoo                       |   67 ++++++++++++++++++++
+ profiles/package.mask/funtoo-cautionary            |   34 ++++++++++
  profiles/package.mask/sunrise                      |   39 ++++++++++++
  profiles/package.unmask/funtoo                     |    6 ++
- 5 files changed, 165 insertions(+), 0 deletions(-)
+ 5 files changed, 169 insertions(+), 0 deletions(-)
  create mode 100644 profiles/default/linux/package.keywords/funtoo-stable
  create mode 100644 profiles/package.mask/funtoo
  create mode 100644 profiles/package.mask/funtoo-cautionary
@@ -47,11 +47,20 @@ index 0000000..bb9e317
 +<virtual/postgresql-server-8.4 amd64 x86
 diff --git a/profiles/package.mask/funtoo b/profiles/package.mask/funtoo
 new file mode 100644
-index 0000000..09d8d42
+index 0000000..cf2740e
 --- /dev/null
 +++ b/profiles/package.mask/funtoo
-@@ -0,0 +1,63 @@
+@@ -0,0 +1,67 @@
 +# PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
++
++# Daniel Robbins <drobbins@funtoo.org> (01 Sep 2010)
++# let's stick with a known-good version of ruby by
++# default, and protect against ruby-1.9.2 things that
++# seem broken:
++>dev-lang/ruby-1.8.7_p299
++>=dev-lang/ruby-1.9.2
++>=dev-ruby/rdoc-2.5.11
++>=dev-ruby/rubygems-1.3.7-r4
 +
 +# Daniel Robbins <drobbins@funtoo.org> (29 Aug 2010)
 +
@@ -65,11 +74,6 @@ index 0000000..09d8d42
 +# unstable to avoid this problem:
 +
 +>=dev-python/beautifulsoup-3.1
-+
-+# Daniel Robbins <drobbins@funtoo.org> (23 Jul 2010)
-+# let's stick with a known-good version of ruby by
-+# default:
-+>dev-lang/ruby-1.8.7_p299
 +
 +# Daniel Robbins <drobbins@funtoo.org> (07 Jul 2010)
 +# allow users to upgrade
