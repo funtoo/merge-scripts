@@ -208,6 +208,9 @@ src_install() {
 }
 
 pkg_postinst() {
+	# see http://bhuga.net/2010/08/gem-problems-when-upgrading-ruby-192-macports 
+ 	rm -rf "${ROOT}"/usr/$(get_libdir)/ruby/site_ruby/1.9.1/rubygems*
+
 	if [[ ! -n $(readlink "${ROOT}"usr/bin/ruby) ]] ; then
 		eselect ruby set ruby${MY_SUFFIX}
 	fi

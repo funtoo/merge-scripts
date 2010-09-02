@@ -5,7 +5,8 @@
 *ruby-1.9.2
 
   01 Sep 2010; Daniel Robbins <drobbins@funtoo.org> +ruby-1.9.2.ebuild:
-  new ruby from upstream Gentoo; minor Funtoo version tweak.
+  new ruby from upstream Gentoo; minor Funtoo version tweak. Also added
+  fix from http://bhuga.net/2010/08/gem-problems-when-upgrading-ruby-192-macports
 
 *ruby-1.9.2_rc2
 
