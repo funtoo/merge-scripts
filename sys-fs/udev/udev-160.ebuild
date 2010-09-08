@@ -40,19 +40,19 @@ pkg_setup() {
 	local kv="${fkv%-*}"
 	local k2="${kv%.*}"
 	local kmin="${kv##*.}"
-	if [ "$k2" == "2.6" ] && [ "$kmin" -lt 27 ] && [ ! -e /chroot ]
+	if [ "$k2" == "2.6" ] && [ "$kmin" -lt 27 ] && [ "${FEATURES/safetydance/}" = "${FEATURES}" ]
 	then
 		eerror
 		eerror "Current kernel version: $kv"
 		eerror
 		ewarn "You are installing a version of udev that is incompatible with your"
 		ewarn "currently-running kernel. This version of udev requires a kernel"
-		ewarn "version of 2.6.27 or greater. If you will be using an older kernel"
-		ewarn "then please mask this version of udev and use udev-146 or earlier."
+		ewarn "version of 2.6.27 or greater. Please use an earlier version of udev"
+		ewarn "with your running kernel by masking this version of udev."
 		ewarn
-		ewarn "If you know what you are doing and want to override this message,"
-		ewarn "type 'touch /chroot'. If /chroot is detected, then this version"
-		ewarn "check will be skipped and merging will proceed."
+		ewarn "If you know what you are doing and want to override this safety check,"
+		ewarn "add 'safetydance' to FEATURES in /etc/make.conf. If this setting is"
+		ewarn "detected, this safety check will be skipped."
 		die
 	fi
 	return 0
