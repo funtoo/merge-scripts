@@ -35,6 +35,27 @@ PROVIDE="virtual/dev-manager"
 
 pkg_setup() {
 	udev_libexec_dir="/$(get_libdir)/udev"
+	[ "$ROOT" != "/" ] && return 0
+	local fkv="$(uname -r)"
+	local kv="${fkv%-*}"
+	local k2="${kv%.*}"
+	local kmin="${kv##*.}"
+	if [ "$k2" == "2.6" ] && [ "$kmin" -lt 27 ] && [ ! -e /chroot ]
+	then
+		eerror
+		eerror "Current kernel version: $kv"
+		eerror
+		ewarn "You are installing a version of udev that is incompatible with your"
+		ewarn "currently-running kernel. This version of udev requires a kernel"
+		ewarn "version of 2.6.27 or greater. If you will be using an older kernel"
+		ewarn "then please mask this version of udev and use udev-146 or earlier."
+		ewarn
+		ewarn "If you know what you are doing and want to override this message,"
+		ewarn "type 'touch /chroot'. If /chroot is detected, then this version"
+		ewarn "check will be skipped and merging will proceed."
+		die
+	fi
+	return 0
 }
 
 src_unpack() {
