@@ -128,14 +128,14 @@ index 0000000..6ac48ce
 +
 diff --git a/profiles/package.mask/funtoo-cautionary b/profiles/package.mask/funtoo-cautionary
 new file mode 100644
-index 0000000..8f453a3
+index 0000000..85ef8cd
 --- /dev/null
 +++ b/profiles/package.mask/funtoo-cautionary
 @@ -0,0 +1,34 @@
 +# Daniel Robbins <drobbins@funtoo.org> (20 Apr 2010)
-+# udev-146-r2 works with latest RHEL-based openvz-sources, but
-+# udev-151+ does not. 146 can move to unstable now.
-+>=sys-fs/udev-147
++
++#udev-160 is now in unstable...
++>=sys-fs/udev-161
 +
 +# Piotr Karbowski <jabberuser@gmail.com> (15 April 2010)
 +# Mask new xorg-server due depends on newer udev.
