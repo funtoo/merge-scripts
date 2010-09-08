@@ -44,15 +44,25 @@ pkg_setup() {
 	then
 		eerror
 		eerror "Current kernel version: $kv"
+		eerror "Minimum kernel version: 2.6.27"
 		eerror
 		ewarn "You are installing a version of udev that is incompatible with your"
 		ewarn "currently-running kernel. This version of udev requires a kernel"
 		ewarn "version of 2.6.27 or greater. Please use an earlier version of udev"
-		ewarn "with your running kernel by masking this version of udev."
+		ewarn "with your running kernel by masking this version of udev, by adding"
+		ewarn "the following line to /etc/portage/package.mask:"
+		ewarn
+		ewarn ">=sys-fs/udev-160"
+		ewarn
+		ewarn "Alternatively, you may choose to upgrade to a more modern kernel and"
+		ewarn "install this version of udev *after* the system has been rebooted."
 		ewarn
 		ewarn "If you know what you are doing and want to override this safety check,"
-		ewarn "add 'safetydance' to FEATURES in /etc/make.conf. If this setting is"
-		ewarn "detected, this safety check will be skipped."
+		ewarn "add 'safetydance' to FEATURES as follows:"
+		ewarn
+		ewarn "FEATURES=\"safetydance\" emerge <emerge arguments here>"
+		ewarn
+		ewarn "This will cause this runtime safety check to be skipped."
 		die
 	fi
 	return 0
