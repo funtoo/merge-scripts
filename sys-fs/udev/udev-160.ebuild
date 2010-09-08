@@ -54,8 +54,10 @@ pkg_setup() {
 		ewarn
 		ewarn ">=sys-fs/udev-160"
 		ewarn
-		ewarn "Alternatively, you may choose to upgrade to a more modern kernel and"
-		ewarn "install this version of udev *after* the system has been rebooted."
+		ewarn "Alternatively, you may choose to upgrade to a compatible kernel, update"
+		ewarn "your boot loader and reboot your system so that the new kernel is"
+		ewarn "active. Then this version of udev will be compatible with your kernel"
+		ewarn "and the udev merge will then proceed without warning."
 		ewarn
 		ewarn "If you know what you are doing and want to override this safety check,"
 		ewarn "add 'safetydance' to FEATURES as follows:"
