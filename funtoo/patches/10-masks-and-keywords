@@ -47,7 +47,7 @@ index 0000000..bb9e317
 +<virtual/postgresql-server-8.4 amd64 x86
 diff --git a/profiles/package.mask/funtoo b/profiles/package.mask/funtoo
 new file mode 100644
-index 0000000..ef7d110
+index 0000000..9d3d29d
 --- /dev/null
 +++ b/profiles/package.mask/funtoo
 @@ -0,0 +1,79 @@
@@ -55,7 +55,7 @@ index 0000000..ef7d110
 +
 +# Daniel Robbins <drobbins@funtoo.org> (09 Sep 2010)
 +# Masked for testing:
-+=sys-apps/portage-2.2_rc78*
++=sys-apps/portage-2.2_rc78
 +
 +# Daniel Robbins <drobbins@funtoo.org> (02 Sep 2010)
 +# this version depends on glibc-2.11 and above, which
