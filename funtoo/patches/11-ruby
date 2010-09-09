@@ -4,10 +4,7 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
- eclass/ruby-fakegem.eclass |    6 +++++-
- eclass/ruby-ng.eclass      |    3 +++
- profiles/base/use.mask     |    2 --
- 3 files changed, 8 insertions(+), 3 deletions(-)
+ 0 files changed, 0 insertions(+), 0 deletions(-)
 
 diff --git a/eclass/ruby-fakegem.eclass b/eclass/ruby-fakegem.eclass
 index 72e64f4..b07bb0d 100644
