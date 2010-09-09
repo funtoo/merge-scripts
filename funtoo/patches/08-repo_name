@@ -4,7 +4,8 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
- 0 files changed, 0 insertions(+), 0 deletions(-)
+ profiles/repo_name |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
 diff --git a/profiles/repo_name b/profiles/repo_name
 index 23574f3..3d08156 100644

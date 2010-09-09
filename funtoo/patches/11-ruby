@@ -4,7 +4,8 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
- 0 files changed, 0 insertions(+), 0 deletions(-)
+ profiles/base/use.mask |    2 --
+ 1 files changed, 0 insertions(+), 2 deletions(-)
 
 diff --git a/eclass/ruby-fakegem.eclass b/eclass/ruby-fakegem.eclass
 index 72e64f4..b07bb0d 100644

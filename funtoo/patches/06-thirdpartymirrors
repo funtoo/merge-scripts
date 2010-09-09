@@ -4,7 +4,8 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
- 0 files changed, 0 insertions(+), 0 deletions(-)
+ profiles/thirdpartymirrors |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
 diff --git a/profiles/thirdpartymirrors b/profiles/thirdpartymirrors
 index e5e6c38..1adc3c2 100644

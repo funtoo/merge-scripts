@@ -10,7 +10,7 @@ inherit eutils multilib python
 DESCRIPTION="Portage is the package management and distribution system for Gentoo"
 HOMEPAGE="http://www.gentoo.org/proj/en/portage/index.xml"
 LICENSE="GPL-2"
-KEYWORDS=""
+KEYWORDS="~x86 ~amd64"
 PROVIDE="virtual/portage"
 SLOT="0"
 IUSE="build doc epydoc linguas_pl python3 selinux"

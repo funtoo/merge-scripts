@@ -69,7 +69,7 @@ if [ "$a" != "" ]
 then
 	#changes
 	( cd $final; git commit -a -m "glorious funtoo updates" ) || die "couldn't do glorious updating"
-	( cd $final; git push origin funtoo.org )
+	[ "$1" == "nopush" ] || ( cd $final; git push origin funtoo.org )
 else
 	echo "No changes detected in repo. Commit skipped."
 fi
@@ -88,7 +88,7 @@ if [ "$a" != "" ]
 then
 	#changes
 	( cd $mini; git commit -a -m "glorious funtoo updates" ) || die "couldn't do glorious updating"
-	( cd $mini; git push origin funtoo.org )
+	[ "$1" == "nopush" ] || ( cd $mini; git push origin funtoo.org )
 else
 	echo "No changes detected in repo. Commit skipped."
 fi
