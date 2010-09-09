@@ -40,7 +40,8 @@ pkg_setup() {
 	local kv="${fkv%-*}"
 	local k2="${kv%.*}"
 	local kmin="${kv##*.}"
-	if [ "$k2" == "2.6" ] && [ "$kmin" -lt 27 ] && [ "${FEATURES/safetydance/}" = "${FEATURES}" ]
+	echo $USE
+	if ! use bindist && [ "$k2" == "2.6" ] && [ "$kmin" -lt 27 ] && [ "${FEATURES/safetydance/}" = "${FEATURES}" ]
 	then
 		eerror
 		eerror "Current kernel version: $kv"
