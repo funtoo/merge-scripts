@@ -131,20 +131,20 @@ index 0000000..e24ab81
 +
 diff --git a/profiles/package.mask/funtoo-cautionary b/profiles/package.mask/funtoo-cautionary
 new file mode 100644
-index 0000000..85ef8cd
+index 0000000..893584c
 --- /dev/null
 +++ b/profiles/package.mask/funtoo-cautionary
 @@ -0,0 +1,34 @@
++# Piotr Karbowski <jabberuser@gmail.com> (14 September 2010)
++# It failing with recent kernels (>=2.6.34) with intel and ati cards (KMS issue?)
++# http://bugs.gentoo.org/show_bug.cgi?id=318743
++# https://bbs.archlinux.org/viewtopic.php?id=100843&p=1
++>=x11-base/xorg-server-1.8.0
++
 +# Daniel Robbins <drobbins@funtoo.org> (20 Apr 2010)
 +
 +#udev-160 is now in unstable...
 +>=sys-fs/udev-161
-+
-+# Piotr Karbowski <jabberuser@gmail.com> (15 April 2010)
-+# Mask new xorg-server due depends on newer udev.
-+>=x11-base/xorg-server-1.8.0
-+# +24-04-2010: Mask synaptics which depends on xorg-server-1.8.0.
-+=x11-drivers/xf86-input-synaptics-1.2.2-r2
 +
 +# Daniel Robbins <drobbins@funtoo.org> (6 Aug 2009)
 +# Mask new versions for caution, and these should all
@@ -170,10 +170,10 @@ index 0000000..85ef8cd
 +# Masked for caution.
 +>=dev-lang/php-5.3.0_beta1
 diff --git a/profiles/package.mask/gentoo b/profiles/package.mask/gentoo
-index 68cd9e6..582fefa 100644
+index ad88aaf..d266a7d 100644
 --- a/profiles/package.mask/gentoo
 +++ b/profiles/package.mask/gentoo
-@@ -1212,12 +1212,6 @@ net-misc/amazonmp3-libcompat
+@@ -1161,12 +1161,6 @@ app-portage/udept
  # Please, upgrade to openrc. removal after openrc goes stable, bug #254519
  sys-apps/baselayout-vserver
  

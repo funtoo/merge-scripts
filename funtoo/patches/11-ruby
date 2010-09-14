@@ -4,8 +4,10 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
- profiles/base/use.mask |    2 --
- 1 files changed, 0 insertions(+), 2 deletions(-)
+ eclass/ruby-fakegem.eclass |    6 +++++-
+ eclass/ruby-ng.eclass      |    3 +++
+ profiles/base/use.mask     |    2 --
+ 3 files changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/eclass/ruby-fakegem.eclass b/eclass/ruby-fakegem.eclass
 index 72e64f4..b07bb0d 100644
@@ -25,7 +27,7 @@ index 72e64f4..b07bb0d 100644
  				# if another implementation already arrived, then make
  				# it generic and break out of the loop. This ensures
 diff --git a/eclass/ruby-ng.eclass b/eclass/ruby-ng.eclass
-index 459fb5c..9abadeb 100644
+index 08fc12f..fa7c375 100644
 --- a/eclass/ruby-ng.eclass
 +++ b/eclass/ruby-ng.eclass
 @@ -145,6 +145,9 @@ ruby_implementation_command() {
