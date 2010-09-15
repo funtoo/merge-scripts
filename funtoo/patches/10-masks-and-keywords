@@ -6,10 +6,10 @@ From: Daniel Robbins <drobbins@funtoo.org>
 ---
  .../default/linux/package.keywords/funtoo-stable   |   23 ++++++
  profiles/package.mask/funtoo                       |   79 ++++++++++++++++++++
- profiles/package.mask/funtoo-cautionary            |   36 +++++++++
+ profiles/package.mask/funtoo-cautionary            |   32 ++++++++
  profiles/package.mask/gentoo                       |    6 --
  profiles/package.mask/sunrise                      |   39 ++++++++++
- 5 files changed, 177 insertions(+), 6 deletions(-)
+ 5 files changed, 173 insertions(+), 6 deletions(-)
  create mode 100644 profiles/default/linux/package.keywords/funtoo-stable
  create mode 100644 profiles/package.mask/funtoo
  create mode 100644 profiles/package.mask/funtoo-cautionary
@@ -131,10 +131,10 @@ index 0000000..e24ab81
 +
 diff --git a/profiles/package.mask/funtoo-cautionary b/profiles/package.mask/funtoo-cautionary
 new file mode 100644
-index 0000000..9029cab
+index 0000000..5a5daf4
 --- /dev/null
 +++ b/profiles/package.mask/funtoo-cautionary
-@@ -0,0 +1,36 @@
+@@ -0,0 +1,32 @@
 +# Piotr Karbowski <jabberuser@gmail.com> (14 September 2010)
 +# It failing with recent kernels (>=2.6.34) with intel and ati cards (KMS issue?)
 +# http://bugs.gentoo.org/show_bug.cgi?id=318743
@@ -167,15 +167,11 @@ index 0000000..9029cab
 +# Daniel Robbins <drobbins@funtooo.org> (22 Jul 2009)
 +# I only recommend the 2.6.18 stable openvz-sources
 +>=sys-kernel/openvz-sources-2.6.19
-+
-+# Dantrell B. <dantrell@mirthil.org> (24 Feb 2009)
-+# Masked for caution.
-+>=dev-lang/php-5.3.0_beta1
 diff --git a/profiles/package.mask/gentoo b/profiles/package.mask/gentoo
-index 303e230..1e2ad6d 100644
+index b4ec77a..76c408b 100644
 --- a/profiles/package.mask/gentoo
 +++ b/profiles/package.mask/gentoo
-@@ -1086,12 +1086,6 @@ app-portage/udept
+@@ -1087,12 +1087,6 @@ app-portage/udept
  # Please, upgrade to openrc. removal after openrc goes stable, bug #254519
  sys-apps/baselayout-vserver
  
