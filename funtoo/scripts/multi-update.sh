@@ -1,5 +1,7 @@
 #!/bin/bash
 
+eval `keychain --noask --eval id_dsa`  || exit 1
+
 die() {
 	echo $*
 	exit 1
