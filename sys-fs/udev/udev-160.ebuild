@@ -17,7 +17,7 @@ fi
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~x86 ~amd64"
+KEYWORDS="x86 amd64"
 IUSE="selinux extras"
 
 COMMON_DEPEND="selinux? ( sys-libs/libselinux )
