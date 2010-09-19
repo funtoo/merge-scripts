@@ -27,7 +27,7 @@ index 72e64f4..b07bb0d 100644
  				# if another implementation already arrived, then make
  				# it generic and break out of the loop. This ensures
 diff --git a/eclass/ruby-ng.eclass b/eclass/ruby-ng.eclass
-index 459fb5c..9abadeb 100644
+index 08fc12f..fa7c375 100644
 --- a/eclass/ruby-ng.eclass
 +++ b/eclass/ruby-ng.eclass
 @@ -145,6 +145,9 @@ ruby_implementation_command() {
