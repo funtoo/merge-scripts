@@ -10,7 +10,7 @@ From: Daniel Robbins <drobbins@funtoo.org>
  create mode 100644 profiles/default/linux/package.use
 
 diff --git a/profiles/default/linux/make.defaults b/profiles/default/linux/make.defaults
-index be55c7b..a5cbad2 100644
+index 695c587..2b0c633 100644
 --- a/profiles/default/linux/make.defaults
 +++ b/profiles/default/linux/make.defaults
 @@ -12,11 +12,25 @@
