@@ -1,0 +1,11 @@
+--- genkernel-3.4.10.906.orig/defaults/initrd.scripts
++++ genkernel-3.4.10.906/defaults/initrd.scripts
+@@ -794,6 +794,8 @@ sdelay() {
+ 	if [ -n "${SDELAY}" ]
+ 	then
+ 		sleep ${SDELAY}
++	elif grep cdroot /proc/cmdline > /dev/null 2>&1; then
++		sleep 3
+ 	else
+ 		sleep 1
+ 	fi

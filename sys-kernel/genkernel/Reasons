@@ -1,0 +1,14 @@
+sys-kernel/genkernel
+
+Ebuild originally added Dec. 12, 2006
+Added by Fabio Erculiani <lxnay@sabayonlinux.org>
+
+The purpose of this ebuild is to have better unionFS support
+as well as auFS support in the initramfs, it is mainly used
+by our liveCD.
+
+======
+16.06.08 - Wael Nasreddine <wael.nasreddine@sabayonlinux.org>
+           - Version bump to 3.4.10
+           - Add unionFS support back, it has been removed in gentoo's mainline.
+           - Merge my own patch, verbose before asking for LUKS password.

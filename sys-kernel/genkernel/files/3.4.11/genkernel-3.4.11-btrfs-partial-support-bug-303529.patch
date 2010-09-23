@@ -1,0 +1,12 @@
+--- genkernel-3.4.10.906.orig/defaults/linuxrc
++++ genkernel-3.4.10.906/defaults/linuxrc
+@@ -229,6 +229,9 @@
+ # Start device manager
+ start_dev_mgr
+ 
++# start BTRFS volume detection
++[ -x /sbin/btrfsctl ] && /sbin/btrfsctl -a
++
+ # Setup md device nodes if they dont exist
+ setup_md_device
+ 

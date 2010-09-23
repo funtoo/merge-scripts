@@ -1,0 +1,126 @@
+diff -Nurp genkernel-3.4.10.906.orig/defaults/initrd.scripts genkernel-3.4.10.906/defaults/initrd.scripts
+--- genkernel-3.4.10.906.orig/defaults/initrd.scripts	2009-08-11 18:42:31.669397498 +0200
++++ genkernel-3.4.10.906/defaults/initrd.scripts	2009-08-11 19:16:22.161397604 +0200
+@@ -195,6 +195,13 @@ mount_sysfs() {
+ 	[ "$ret" -eq '0' ] || bad_msg "Failed to mount /sys!"
+ }
+ 
++aufs_setup_dir() {
++	mount -t aufs -o "br:$OVERLAY=rw:$2=ro" -- aufs $1
++	if [ "$?" -eq '0' ]; then
++		good_msg "Addition of $2 to $OVERLAY merged into $1"
++	fi
++}
++
+ findnfsmount() {
+ 	if [ "${IP}" != '' ] || busybox udhcpc -n -T 15 -q
+ 	then
+@@ -378,9 +385,10 @@ setup_hotplug() {
+ 
+ check_slowusb() {
+ 	[ "${DO_slowusb}" ] || \
+-	for dir in /sys/bus/usb/drivers/usb-storage/*
++	for x in /sys/bus/usb/drivers/usb-storage/*
+ 	do
+-		[ -d "${dir}" ] && FORCE_slowusb="1"
++		[ -d "${x}" ]  && [ "${x}" != "/sys/bus/usb/drivers/usb-storage/module" ] \
++			&& FORCE_slowusb="1"
+ 	done
+ }
+ 
+@@ -388,9 +396,7 @@ start_dev_mgr() {
+ 	if [ "${KV_2_6_OR_GREATER}" ]
+ 	then
+ 		cd /sys
+-		[ "${DO_slowusb}" ] && sdelay
+ 		check_slowusb
+-		[ "${FORCE_slowusb}" ] && sdelay
+ 		good_msg 'Activating mdev'
+ 		runmdev
+ 		[ "${DO_slowusb}" ] || \
+@@ -928,6 +934,34 @@ getdvhoff() {
+ 	echo $(( $(hexdump -n 4 -s $((316 + 12 * $2)) -e '"%i"' $1) * 512))
+ }
+ 
++setup_aufs() {
++
++	# Directory used for rw changes in union mount filesystem
++	UNION=/aufs
++	OVERLAY=/overlay
++
++	mkdir -p "${UNION}"
++	mkdir -p "${OVERLAY}"
++	mount -t tmpfs none "${OVERLAY}"
++	good_msg "Loading aufs module (if module)"
++	modprobe aufs > /dev/null 2>&1
++
++	aufs_setup_dir "${UNION}" "${NEW_ROOT}/${FS_LOCATION}"
++
++	# setup internal mounts
++	mkdir -p "${UNION}/mnt/livecd"
++	if [ ! -e "${UNION}/mnt/cdrom" ]; then
++		mkdir "${UNION}/mnt/cdrom" -p
++	fi
++	mount --bind "${NEW_ROOT}/${FS_LOCATION}" "${UNION}/mnt/livecd"
++	mount --bind "${NEW_ROOT}/mnt/cdrom" "${UNION}/mnt/cdrom"
++
++	# Make sure fstab notes livecd is mounted ro.  Makes system skip remount which fails on aufs $
++	sed -e 's|\(.*\s/\s*tmpfs\s*\)defaults\(.*\)|\1defaults,ro\2|' "/${UNION}/etc/fstab" > "/${UNION}/etc/fstab.new"
++	mv "/${UNION}/etc/fstab.new" "/${UNION}/etc/fstab"
++
++}
++
+ setup_unionfs() {
+ 	local rw_dir=$1
+ 	local ro_dir=$2
+diff -Nurp genkernel-3.4.10.906.orig/defaults/linuxrc genkernel-3.4.10.906/defaults/linuxrc
+--- genkernel-3.4.10.906.orig/defaults/linuxrc	2009-02-04 14:30:48.000000000 +0100
++++ genkernel-3.4.10.906/defaults/linuxrc	2009-08-11 19:19:48.949397441 +0200
+@@ -191,6 +191,9 @@ do
+ 				USE_UNIONFS_NORMAL=1
+ 			fi
+ 			;;
++		aufs)
++			USE_AUFS_NORMAL=1
++		;;
+ 		nounionfs)
+ 			USE_UNIONFS_NORMAL=0
+ 			;;
+@@ -587,7 +588,13 @@ then
+ 	fi
+ 
+ 
+-	if [ "${USE_UNIONFS_NORMAL}" = '1' ]
++	if [ "${USE_AUFS_NORMAL}" -eq '1' ]
++	then
++		good_msg 'Setting up aufs mounts'
++		setup_aufs
++		CHROOT="${UNION}"
++
++	elif [ "${USE_UNIONFS_NORMAL}" = '1' ]
+ 	then
+ 		setup_unionfs ${NEW_ROOT} ${NEW_ROOT}/${FS_LOCATION}
+ 		CHROOT=/union
+@@ -636,10 +643,6 @@ then
+ 		fi
+ 	done
+ 
+-	if [ "${DO_slowusb}" ] || [ "${FORCE_slowusb}" ]
+-	then
+-		sleep 10
+-	fi
+ 	mkdir initramfs proc tmp sys 2>/dev/null
+ 	chmod 1777 tmp
+ 
+@@ -668,6 +671,11 @@ else
+ 		setup_unionfs /union_changes ${NEW_ROOT}
+ 		mkdir -p ${UNION}/tmp/.initrd
+ 	fi
++	if [ "${USE_AUFS_NORMAL}" -eq '1' ]
++	then
++		setup_aufs
++		mkdir -p ${UNION}/tmp/.initrd
++	fi
+ fi
+ 
+ # Execute script on the cdrom just before boot to update things if necessary
