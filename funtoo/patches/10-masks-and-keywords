@@ -181,10 +181,10 @@ index 0000000..4f10f04
 +# I only recommend the 2.6.18 stable openvz-sources
 +>=sys-kernel/openvz-sources-2.6.19
 diff --git a/profiles/package.mask/gentoo b/profiles/package.mask/gentoo
-index 68cd9e6..582fefa 100644
+index 60b824b..985887f 100644
 --- a/profiles/package.mask/gentoo
 +++ b/profiles/package.mask/gentoo
-@@ -1212,12 +1212,6 @@ net-misc/amazonmp3-libcompat
+@@ -1301,12 +1301,6 @@ app-portage/udept
  # Please, upgrade to openrc. removal after openrc goes stable, bug #254519
  sys-apps/baselayout-vserver
  

@@ -1,12 +1,10 @@
-# This series applies on GIT commit 981200eb5b235c155bfd75834b847e0e2cc47992
-01-2008.0-profiles
+# This series applies on GIT commit 56f6295ec250148998e5f82ddd27be339b2555a7
 02-virtuals
 03-use
 04-packages
 05-startup-notification
 06-thirdpartymirrors
 07-updates
-08-repo_name
 09-funtoo-profile-1.0
 10-masks-and-keywords
 11-ruby
