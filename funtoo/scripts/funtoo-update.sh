@@ -49,6 +49,13 @@ do
 done
 rsync -av "$src"/funtoo/profiles/ $final/profiles/ || die "rsync of whole profile files failed"
 
+
+# remove any lingering "deprecated" files.
+for f in $(cat $final/profiles/profiles.desc | grep -v "#" | awk '{ print $2 }')
+do
+	rm -f $final/profiles/$f/deprecated
+done
+
 # "*-*" will eliminate licenses, eclass, funtoo directories:
 
 for foo in `ls -d *-*/*`
