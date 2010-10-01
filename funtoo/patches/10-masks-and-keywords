@@ -5,11 +5,11 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 ---
  .../default/linux/package.keywords/funtoo-stable   |   24 ++++++
- profiles/package.mask/funtoo                       |   79 ++++++++++++++++++++
- profiles/package.mask/funtoo-cautionary            |   44 +++++++++++
+ profiles/package.mask/funtoo                       |   75 ++++++++++++++++++++
+ profiles/package.mask/funtoo-cautionary            |   44 ++++++++++++
  profiles/package.mask/gentoo                       |    6 --
  profiles/package.mask/sunrise                      |   39 ++++++++++
- 5 files changed, 186 insertions(+), 6 deletions(-)
+ 5 files changed, 182 insertions(+), 6 deletions(-)
  create mode 100644 profiles/default/linux/package.keywords/funtoo-stable
  create mode 100644 profiles/package.mask/funtoo
  create mode 100644 profiles/package.mask/funtoo-cautionary
@@ -47,10 +47,10 @@ index 0000000..ee8eb64
 +<virtual/postgresql-server-8.4 amd64 x86
 diff --git a/profiles/package.mask/funtoo b/profiles/package.mask/funtoo
 new file mode 100644
-index 0000000..e24ab81
+index 0000000..7387527
 --- /dev/null
 +++ b/profiles/package.mask/funtoo
-@@ -0,0 +1,79 @@
+@@ -0,0 +1,75 @@
 +# PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 +
 +# Daniel Robbins <drobbins@funtoo.org> (09 Sep 2010)
@@ -103,10 +103,6 @@ index 0000000..e24ab81
 +# Requested by slashbeast (Piotr Karbowski) in #funtoo due to /etc/cron.hourly
 +# running up to 4 times per hour:
 +=sys-process/cronbase-0.3.3*
-+
-+# Daniel Robbins <drobbins@funtoo.org> (2 Dec 2009)
-+# Requested by Krushia in #funtoo due to it breaking kde4
-+>=sys-apps/hal-0.5.14
 +
 +# Daniel Robbins <drobbins@funtoo.org> (2 Dec 2009)
 +# Masking as per http://blog.flameeyes.eu/2009/12/01/gentoo-service-announcement-keep-clear-of-gnu-patch-2-6
