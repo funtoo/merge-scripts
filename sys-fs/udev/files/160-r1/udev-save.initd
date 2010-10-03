@@ -6,7 +6,7 @@ description="Save device nodes to a persistent tarball"
 
 depend()
 {
-	keyword novserver
+	keyword -openvz -vserver
 	before mount-ro killprocs
 }
 

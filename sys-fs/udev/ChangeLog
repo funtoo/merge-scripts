@@ -1,6 +1,12 @@
 # ChangeLog for sys-fs/udev
 # Copyright 1999-2010 Funtoo Technologies; Distributed under the GPL v2
 
+*udev-146-r4 (03 Oct 2010)
+*udev-160-r1 (03 Oct 2010)
+
+  03 Oct 2010; Daniel Robbins <drobbins@funtoo.org>: +udev-160-r1.ebuild,
+  +udev-146-r4.ebuild: disable all initscripts on openvz systems.
+
   09 Sep 2010; Daniel Robbins <drobbins@funtoo.org>: Added checks to
   udev-160 for "bindist" in USE to disable runtime checks for kernel
   version that is killing metro builds. This will require an updated
