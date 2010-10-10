@@ -4,12 +4,12 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
- .../default/linux/package.keywords/funtoo-stable   |   24 ++++++
- profiles/package.mask/funtoo                       |   75 ++++++++++++++++++++
- profiles/package.mask/funtoo-cautionary            |   44 ++++++++++++
+ .../default/linux/package.keywords/funtoo-stable   |   24 ++++++++
+ profiles/package.mask/funtoo                       |   62 ++++++++++++++++++++
+ profiles/package.mask/funtoo-cautionary            |   44 ++++++++++++++
  profiles/package.mask/gentoo                       |    6 --
- profiles/package.mask/sunrise                      |   39 ++++++++++
- 5 files changed, 182 insertions(+), 6 deletions(-)
+ profiles/package.mask/sunrise                      |   39 +++++++++++++
+ 5 files changed, 169 insertions(+), 6 deletions(-)
  create mode 100644 profiles/default/linux/package.keywords/funtoo-stable
  create mode 100644 profiles/package.mask/funtoo
  create mode 100644 profiles/package.mask/funtoo-cautionary
@@ -47,10 +47,10 @@ index 0000000..ee8eb64
 +<virtual/postgresql-server-8.4 amd64 x86
 diff --git a/profiles/package.mask/funtoo b/profiles/package.mask/funtoo
 new file mode 100644
-index 0000000..7387527
+index 0000000..f1664bf
 --- /dev/null
 +++ b/profiles/package.mask/funtoo
-@@ -0,0 +1,75 @@
+@@ -0,0 +1,62 @@
 +# PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 +
 +# Daniel Robbins <drobbins@funtoo.org> (09 Sep 2010)
@@ -91,10 +91,6 @@ index 0000000..7387527
 +# allow users to upgrade
 +=dev-lang/python-2.7*
 +
-+# Daniel Robbins <drobbins@funtoo.org> (22 Apr 2010)
-+# This package is broken irt libxml2-2.7.7 (bug 316377)
-+=sys-libs/zlib-1.2.5
-+
 +# Daniel Robbins <drobbins@funtoo.org> (28 Jan 2010)
 +# man-1.6f-r4 breaks metro builds - looks like nice patches but needed more upstream testing
 +=sys-apps/man-1.6f-r4
@@ -103,10 +99,6 @@ index 0000000..7387527
 +# Requested by slashbeast (Piotr Karbowski) in #funtoo due to /etc/cron.hourly
 +# running up to 4 times per hour:
 +=sys-process/cronbase-0.3.3*
-+
-+# Daniel Robbins <drobbins@funtoo.org> (2 Dec 2009)
-+# Masking as per http://blog.flameeyes.eu/2009/12/01/gentoo-service-announcement-keep-clear-of-gnu-patch-2-6
-+>=sys-devel/patch-2.6
 +
 +# Andrew Kirch <trelane@trelane.net> (10 June 2009)
 +# Paludis does not support the profiles/package.mask hierarchy.
@@ -121,11 +113,6 @@ index 0000000..7387527
 +# Having both unmasked causes "emerge dev-db/mysql" to fail, which is
 +# not optimal.
 +dev-db/mysql-community
-+
-+# Caleb Cushing <xenoterracide@gmail.com> (27 Dec 2008)
-+# latest ghc, breaks other packages, fixes (bug #252176)
-+>=dev-lang/ghc-6.10
-+
 diff --git a/profiles/package.mask/funtoo-cautionary b/profiles/package.mask/funtoo-cautionary
 new file mode 100644
 index 0000000..4f10f04
