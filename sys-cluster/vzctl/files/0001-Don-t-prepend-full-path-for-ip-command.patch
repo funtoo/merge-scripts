@@ -1,0 +1,27 @@
+From 910a076f426d40772fcf6e0560136511f9571b41 Mon Sep 17 00:00:00 2001
+From: Peter Volkov <pva@gentoo.org>
+Date: Mon, 30 Aug 2010 16:19:17 +0400
+Subject: [PATCH 1/2] Don't prepend full path for ip command
+
+Some distributions have ip in /sbin some in /bin. Actually it's good
+idea to drop path completely and let users to set $PATH correctly.
+---
+ scripts/vps-functions.in |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/scripts/vps-functions.in b/scripts/vps-functions.in
+index 0bcc65b..4a83a23 100755
+--- a/scripts/vps-functions.in
++++ b/scripts/vps-functions.in
+@@ -38,7 +38,7 @@ VE_STATE_DIR="/var/lib/vzctl/veip/"
+ CONF_DIR="@PKGCONFDIR@/conf/"
+ 
+ ARPSEND_CMD="arpsend -c 1 -w 1"
+-IP_CMD=/sbin/ip
++IP_CMD="ip"
+ 
+ # Prints error message and exits
+ # Parameters:
+-- 
+1.7.2.2
+

@@ -1,0 +1,71 @@
+diff -uNr vzctl-3.0.24.2/scripts/vps-create.in vzctl-3.0.24.2-bz2-xz/scripts/vps-create.in
+--- vzctl-3.0.24.2/scripts/vps-create.in	2010-09-06 16:25:28.000000000 +0200
++++ vzctl-3.0.24.2-bz2-xz/scripts/vps-create.in	2010-10-10 12:24:48.000000000 +0200
+@@ -41,13 +41,27 @@
+ 	TMP="$(df -P "$VE_PRVT")" ||
+ 		vzerror "Failed to calculate available disk space on $VE_PRVT" ${VZ_FS_NEW_VE_PRVT}
+ 	AVAIL="$(echo "$TMP" | awk 'END{print $4}')"
++
++	OPT=
++
++	case $HEADER in
++		' 1f 8b')
++			OPT=-z
++			;;
++		' 42 5a')
++			OPT=-j
++			;;
++		' fd 37')
++			OPT=-J
++			;;
++	esac
++
+ 	if [ "$HEADER" = ' 1f 8b' ]; then
+ 		NEEDED="$(gzip -l "$PRIVATE_TEMPLATE" | awk 'END{print int($2/1024)}')"
+-		OPT=-z
+ 	else
+-		NEEDED="$(find "$PRIVATE_TEMPLATE" -maxdepth 0 -path "$PRIVATE_TEMPLATE" -printf %k)"
+-		OPT=
++		NEEDED=$(find "$PRIVATE_TEMPLATE" -maxdepth 0 -path "$PRIVATE_TEMPLATE" -printf %k)
+ 	fi
++
+ 	[ "$AVAIL" -ge "$NEEDED" ] ||
+ 		vzerror "Insufficient disk space in $VE_PRVT; available: $AVAIL, needed: $NEEDED" ${VZ_FS_NO_DISK_SPACE}
+ 	tar -C "$VE_PRVT" ${TAR_OPT} ${OPT} -xf "$PRIVATE_TEMPLATE" ||
+diff -uNr vzctl-3.0.24.2/src/lib/create.c vzctl-3.0.24.2-bz2-xz/src/lib/create.c
+--- vzctl-3.0.24.2/src/lib/create.c	2010-09-06 16:25:28.000000000 +0200
++++ vzctl-3.0.24.2-bz2-xz/src/lib/create.c	2010-10-10 12:06:48.000000000 +0200
+@@ -78,12 +78,29 @@
+ 	int quota = 0;
+ 
+ 	snprintf(tarball, sizeof(tarball), "%s/%s.tar", fs->tmpl, tar_nm);
+-	if (!stat_file(tarball))
+-		snprintf(tarball, sizeof(tarball), "%s/%s.tar.gz", fs->tmpl, tar_nm);
++
+ 	if (!stat_file(tarball)) {
+-		logger(-1, 0, "Cached OS template %s not found", tarball);
+-		return VZ_PKGSET_NOT_FOUND;
++		char *extensions[3] = { "gz", "bz2", "xz" };
++		int  ext = 0;
++		int  template_found = 0;
++
++		for (; ext < 3; ext++) {
++			snprintf(tarball, sizeof(tarball), "%s/%s.tar.%s", fs->tmpl, tar_nm, extensions[ext]);
++
++			/* Ok. We got it, lets continue */
++			if (stat_file(tarball)) {
++				template_found = 1;
++				break;
++			}
++		}
++
++		if (!template_found) {
++			/* This is reached if no valid container extension was found */
++			logger(-1, 0, "Cached OS template %s not found", tarball);
++			return VZ_PKGSET_NOT_FOUND;
++		}
+ 	}
++
+ 	/* Lock CT area */
+ 	if (make_dir(fs->private, 0))
+ 		return VZ_FS_NEW_VE_PRVT;
