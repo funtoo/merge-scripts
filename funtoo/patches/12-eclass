@@ -8,10 +8,10 @@ From: Daniel Robbins <drobbins@funtoo.org>
  1 files changed, 11 insertions(+), 0 deletions(-)
 
 diff --git a/eclass/mysql.eclass b/eclass/mysql.eclass
-index ec49453..9058df2 100644
+index 7c785dd..3d36233 100644
 --- a/eclass/mysql.eclass
 +++ b/eclass/mysql.eclass
-@@ -476,6 +476,17 @@ configure_common() {
+@@ -473,6 +473,17 @@ configure_common() {
  	if use embedded ; then
  		myconf="${myconf} --with-embedded-privilege-control"
  		myconf="${myconf} --with-embedded-server"
