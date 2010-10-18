@@ -120,7 +120,7 @@ index 0000000..679b853
 +dev-db/mysql-community
 diff --git a/profiles/package.mask/funtoo-cautionary b/profiles/package.mask/funtoo-cautionary
 new file mode 100644
-index 0000000..c0fde08
+index 0000000..468f3d2
 --- /dev/null
 +++ b/profiles/package.mask/funtoo-cautionary
 @@ -0,0 +1,46 @@
@@ -161,7 +161,7 @@ index 0000000..c0fde08
 +>sys-devel/gcc-4.4.3
 +>sys-devel/binutils-2.20.1
 +# glibc-2.10 isn't compatible wiht make-3.82+
-+>=dev-util/make-3.82
++>=sys-devel/make-3.82
 +
 +# Daniel Robbins <drobbins@funtoo.org> (02 Aug 2009)
 +# let's watch upstream bugs for a bit:
