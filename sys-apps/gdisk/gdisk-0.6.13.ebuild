@@ -10,7 +10,7 @@ SRC_URI="mirror://sourceforge/gptfdisk/${P/_p/-}.tgz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~x86 ~amd64"
+KEYWORDS="x86 amd64"
 
 S="${WORKDIR}/${P/_p2/}"
 
