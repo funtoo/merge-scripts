@@ -1,0 +1,61 @@
+Don't override the system defined values on FreeBSD >=8.
+See Gentoo bugs #310335 and #312697.
+(Shortened) patch from upstream gnulib.
+
+--- bison-2.4.2/lib/spawn.in.h
++++ bison/lib/spawn.in.h
+@@ -110,26 +112,38 @@
+ 
+ 
+ /* Flags to be set in the `posix_spawnattr_t'.  */
+-#if @REPLACE_POSIX_SPAWN@
++#if @HAVE_POSIX_SPAWN@
++/* Use the values from the system, but provide the missing ones.  */
++# ifndef POSIX_SPAWN_SETSCHEDPARAM
++#  define POSIX_SPAWN_SETSCHEDPARAM 0
++# endif
++# ifndef POSIX_SPAWN_SETSCHEDULER
++#  define POSIX_SPAWN_SETSCHEDULER 0
++# endif
++#else
++# if @REPLACE_POSIX_SPAWN@
+ /* Use the values from the system, for better compatibility.  */
+ /* But this implementation does not support AIX extensions.  */
+-# undef POSIX_SPAWN_FORK_HANDLERS
+-#else
+-# define POSIX_SPAWN_RESETIDS           0x01
+-# define POSIX_SPAWN_SETPGROUP          0x02
+-# define POSIX_SPAWN_SETSIGDEF          0x04
+-# define POSIX_SPAWN_SETSIGMASK         0x08
+-# define POSIX_SPAWN_SETSCHEDPARAM      0x10
+-# define POSIX_SPAWN_SETSCHEDULER       0x20
++#  undef POSIX_SPAWN_FORK_HANDLERS
++# else
++#  define POSIX_SPAWN_RESETIDS           0x01
++#  define POSIX_SPAWN_SETPGROUP          0x02
++#  define POSIX_SPAWN_SETSIGDEF          0x04
++#  define POSIX_SPAWN_SETSIGMASK         0x08
++#  define POSIX_SPAWN_SETSCHEDPARAM      0x10
++#  define POSIX_SPAWN_SETSCHEDULER       0x20
++# endif
+ #endif
+ /* A GNU extension.  Use the next free bit position.  */
+ #define POSIX_SPAWN_USEVFORK \
+-  ((POSIX_SPAWN_RESETIDS | (POSIX_SPAWN_RESETIDS - 1)                   \
+-    | POSIX_SPAWN_SETPGROUP | (POSIX_SPAWN_SETPGROUP - 1)               \
+-    | POSIX_SPAWN_SETSIGDEF | (POSIX_SPAWN_SETSIGDEF - 1)               \
+-    | POSIX_SPAWN_SETSIGMASK | (POSIX_SPAWN_SETSIGMASK - 1)             \
+-    | POSIX_SPAWN_SETSCHEDPARAM | (POSIX_SPAWN_SETSCHEDPARAM - 1)       \
+-    | POSIX_SPAWN_SETSCHEDULER | (POSIX_SPAWN_SETSCHEDULER - 1))        \
++  ((POSIX_SPAWN_RESETIDS | (POSIX_SPAWN_RESETIDS - 1)                     \
++    | POSIX_SPAWN_SETPGROUP | (POSIX_SPAWN_SETPGROUP - 1)                 \
++    | POSIX_SPAWN_SETSIGDEF | (POSIX_SPAWN_SETSIGDEF - 1)                 \
++    | POSIX_SPAWN_SETSIGMASK | (POSIX_SPAWN_SETSIGMASK - 1)               \
++    | POSIX_SPAWN_SETSCHEDPARAM                                           \
++    | (POSIX_SPAWN_SETSCHEDPARAM > 0 ? POSIX_SPAWN_SETSCHEDPARAM - 1 : 0) \
++    | POSIX_SPAWN_SETSCHEDULER                                            \
++    | (POSIX_SPAWN_SETSCHEDULER > 0 ? POSIX_SPAWN_SETSCHEDULER - 1 : 0))  \
+    + 1)
+ typedef int verify_POSIX_SPAWN_USEVFORK_no_overlap
+             [2 * (((POSIX_SPAWN_RESETIDS | POSIX_SPAWN_SETPGROUP
+
