@@ -2,6 +2,13 @@
 # Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
 # Copyright 2009-2010 Funtoo Technologies.
 
+*baselayout-2.1.8-r2 (21 Oct 2010)
+
+  21 Oct 2010; Daniel Robbins <drobbins@funtoo.org>
+  +baselayout-2.1.8-r2.ebuild: updated with dir perms fix (so it doesn't
+  reset the perms of /dev/shm and other dirs that may exist) and remove
+  the last .bash_logout thing - we'll tackle this from the bash ebuild side.
+
 *baselayout-2.1.8-r1 (20 Oct 2010)
 
   20 Oct 2010; Daniel Robbins <drobbins@funtoo.org>
