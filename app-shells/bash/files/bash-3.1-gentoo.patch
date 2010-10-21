@@ -1,0 +1,68 @@
+Collection of fixes from mandrake
+
+--- bash-3.1/doc/builtins.1
++++ bash-3.1/doc/builtins.1
+@@ -8,8 +8,5 @@
+ let, local, logout, popd, printf, pushd, pwd, read, readonly, return, set,
+ shift, shopt, source, suspend, test, times, trap, type, typeset,
+ ulimit, umask, unalias, unset, wait \- bash built-in commands, see \fBbash\fR(1)
+-.SH BASH BUILTIN COMMANDS
+-.nr zZ 1
+-.so bash.1
+ .SH SEE ALSO
+ bash(1), sh(1)
+--- bash-3.1/lib/readline/complete.c
++++ bash-3.1/lib/readline/complete.c
+@@ -1544,9 +1544,7 @@
+   if (rl_filename_completion_desired)
+     {
+       filename = tilde_expand (text);
+-      s = (nontrivial_match && rl_completion_mark_symlink_dirs == 0)
+-		? LSTAT (filename, &finfo)
+-		: stat (filename, &finfo);
++      s = stat (filename, &finfo);
+       if (s == 0 && S_ISDIR (finfo.st_mode))
+ 	{
+ 	  if (_rl_complete_mark_directories /* && rl_completion_suppress_append == 0 */)
+--- bash-3.1/Makefile.in
++++ bash-3.1/Makefile.in
+@@ -658,7 +658,7 @@
+ 
+ config.h:	stamp-h 
+ 
+-stamp-h:	config.status $(srcdir)/config.h.in $(srcdir)/config-top.h $(srcdir)/config-bot.h
++stamp-h:	version.h config.status $(srcdir)/config.h.in $(srcdir)/config-top.h $(srcdir)/config-bot.h
+ 	CONFIG_FILES= CONFIG_HEADERS=config.h $(SHELL) ./config.status
+ 
+ config.status:	$(srcdir)/configure
+@@ -666,7 +666,7 @@
+ 
+ # comment out for distribution
+ $(srcdir)/configure:	$(srcdir)/configure.in $(srcdir)/aclocal.m4 $(srcdir)/config.h.in
+-	cd $(srcdir) && autoconf
++	cd $(srcdir)
+ 
+ # for chet
+ reconfig: force
+--- bash-3.1/parse.y
++++ bash-3.1/parse.y
+@@ -389,7 +389,9 @@
+ 			}
+ 	;
+ 
+-word_list:	WORD
++word_list:
++			{ $$ = (WORD_LIST *)NULL; }
++	|	WORD
+ 			{ $$ = make_word_list ($1, (WORD_LIST *)NULL); }
+ 	|	word_list WORD
+ 			{ $$ = make_word_list ($2, $1); }
+@@ -1186,7 +1186,7 @@
+ 
+ #if defined (READLINE)
+ char *current_readline_prompt = (char *)NULL;
+-char *current_readline_line = (char *)NULL;
++unsigned char *current_readline_line = (unsigned char *)NULL;
+ int current_readline_line_index = 0;
+ 
+ static int
