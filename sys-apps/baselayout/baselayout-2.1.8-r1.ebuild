@@ -3,17 +3,17 @@
 
 inherit multilib
 
+BV="2.1.8"
 DESCRIPTION="Filesystem baselayout, initscripts and /sbin/realdev command"
 HOMEPAGE="http://www.funtoo.org/"
-SRC_URI="http://www.funtoo.org/archive/baselayout/baselayout-2.1.1.tar.bz2 http://www.funtoo.org/archive/realdev/realdev-1.0.tar.bz2"
-S=$WORKDIR/baselayout-2.1.1
+SRC_URI="http://www.funtoo.org/archive/baselayout/baselayout-${BV}.tar.bz2 http://www.funtoo.org/archive/realdev/realdev-1.0.tar.bz2"
+S=$WORKDIR/baselayout-${BV}
 S2=$WORKDIR/realdev-1.0
 
 LICENSE="GPL-2 BSD-2"
 SLOT="0"
 KEYWORDS="alpha amd64 arm hppa ia64 m68k mips ppc ppc64 s390 sh sparc sparc-fbsd x86 x86-fbsd"
 IUSE="build"
-
 PDEPEND="sys-apps/openrc"
 
 pkg_preinst() {
@@ -105,7 +105,6 @@ modfix() {
 			mv $ROOT/etc/modprobe.d/$mod $ROOT/etc/modprobe.d/${mod}.conf || die "mv failed"
 		fi
 	done
-
 }
 
 src_install() {
@@ -196,6 +195,8 @@ src_install() {
 
 	diropts -m0700
 	keepdir /root
+	insinto /root
+	newins ${FILESDIR}/bash_logout .bash_logout
 	
 	dodoc ChangeLog
 
