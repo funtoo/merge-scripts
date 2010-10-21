@@ -5,11 +5,11 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 ---
  .../default/linux/package.keywords/funtoo-stable   |   24 +++++++
- profiles/package.mask/funtoo                       |   67 ++++++++++++++++++++
- profiles/package.mask/funtoo-cautionary            |   46 ++++++++++++++
+ profiles/package.mask/funtoo                       |   71 ++++++++++++++++++++
+ profiles/package.mask/funtoo-cautionary            |   46 +++++++++++++
  profiles/package.mask/gentoo                       |    6 --
- profiles/package.mask/sunrise                      |   39 ++++++++++++
- 5 files changed, 176 insertions(+), 6 deletions(-)
+ profiles/package.mask/sunrise                      |   39 +++++++++++
+ 5 files changed, 180 insertions(+), 6 deletions(-)
  create mode 100644 profiles/default/linux/package.keywords/funtoo-stable
  create mode 100644 profiles/package.mask/funtoo
  create mode 100644 profiles/package.mask/funtoo-cautionary
@@ -47,11 +47,15 @@ index 0000000..ee8eb64
 +<virtual/postgresql-server-8.4 amd64 x86
 diff --git a/profiles/package.mask/funtoo b/profiles/package.mask/funtoo
 new file mode 100644
-index 0000000..679b853
+index 0000000..3585e0d
 --- /dev/null
 +++ b/profiles/package.mask/funtoo
-@@ -0,0 +1,67 @@
+@@ -0,0 +1,71 @@
 +# PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
++
++# Daniel Robbins <drobbins@funtoo.org> (21 Oct 2010)
++# Masked for testing:
++>=dev-lang/perl-5.12.2
 +
 +# Piotr Karbowski <jabberuser@gmail.com> (11 Oct 2010)
 +# Mask for new python until funtoo's portage will support it.
