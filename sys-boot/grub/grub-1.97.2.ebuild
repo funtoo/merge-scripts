@@ -1,6 +1,7 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
+EAPI=3
 inherit autotools mount-boot flag-o-matic toolchain-funcs
 
 BINFONT="grub-unifont-1.0"
