@@ -1,0 +1,17 @@
+gentoo -> funtoo repo alias for portage-2.2_rc99 and later.
+
+From: Daniel Robbins <drobbins@funtoo.org>
+
+
+---
+ metadata/layout.conf |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+ create mode 100644 metadata/layout.conf
+
+diff --git a/metadata/layout.conf b/metadata/layout.conf
+new file mode 100644
+index 0000000..96d49bd
+--- /dev/null
++++ b/metadata/layout.conf
+@@ -0,0 +1 @@
++aliases = gentoo
