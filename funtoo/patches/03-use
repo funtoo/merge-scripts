@@ -1,23 +1,22 @@
-foo
 
-From: Daniel Robbins <drobbins@funtoo.org>
+
+From: Piotr Karbowski <jabberuser@gmail.com>
 
 
 ---
- profiles/default/linux/make.defaults |   18 ++++++++++++++++--
+ profiles/default/linux/make.defaults |   16 +++++++++++++++-
  profiles/default/linux/package.use   |    2 ++
- 2 files changed, 18 insertions(+), 2 deletions(-)
+ 2 files changed, 17 insertions(+), 1 deletions(-)
  create mode 100644 profiles/default/linux/package.use
 
 diff --git a/profiles/default/linux/make.defaults b/profiles/default/linux/make.defaults
-index be55c7b..a5cbad2 100644
+index 3306b4d..9daeb62 100644
 --- a/profiles/default/linux/make.defaults
 +++ b/profiles/default/linux/make.defaults
-@@ -12,11 +12,25 @@
- 
+@@ -14,6 +14,20 @@
  # Default starting set of USE flags for all default/linux profiles.
  USE="berkdb crypt ipv6 ncurses nls pam perl python readline ssl tcpd zlib"
-+ 
+ 
 +#Graphics and other formats often used in both server (cmdline) and desktop (X) applications:
 +USE="${USE} gif png jpeg tiff truetype xml"
 +
@@ -31,16 +30,11 @@ index be55c7b..a5cbad2 100644
 +# Since GRP_STAGE23_USE doesn't exist anymore, I am disabling gpm in order to
 +# disable a stage3 circular issue with ncurses->gpm->ncurses.
 +USE="${USE} -gpm"
- 
++
  # make sure toolchain has sane defaults <tooclhain@gentoo.org>
  USE="${USE} fortran mudflap openmp"
  
--# 2006/03/07 - Donnie Berkholz <dberkholz@gentoo.org>
-+# 2007/03/07 - Donnie Berkholz <dberkholz@gentoo.org>
- # Modular X: Support direct rendering by default
- USE="${USE} dri"
- 
-@@ -53,7 +67,7 @@ VIDEO_CARDS="dummy fbdev v4l"
+@@ -56,7 +70,7 @@ VIDEO_CARDS="dummy fbdev v4l"
  # 2010/07/12 - Samuli Suominen <ssuominen@gentoo.org>
  # Note that adding LDFLAGS="-Wl,-O1 ${LDFLAGS}" breaks dev-util/boost-build
  # because of whitespace.
