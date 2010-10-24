@@ -80,12 +80,9 @@ fi
 
 # General: We need a new-enough binutils for as-needed
 # arch: we need to make sure our binutils/gcc supports TLS
-DEPEND=">=sys-devel/gcc-3.4.4
-	arm? ( >=sys-devel/binutils-2.16.90 >=sys-devel/gcc-4.1.0 )
-	x86? ( >=sys-devel/gcc-4.3 )
-	amd64? ( >=sys-devel/binutils-2.19 >=sys-devel/gcc-4.3 )
-	ppc? ( >=sys-devel/gcc-4.1.0 )
-	ppc64? ( >=sys-devel/gcc-4.1.0 )
+DEPEND="=sys-devel/gcc-4.4*
+	arm? ( >=sys-devel/binutils-2.16.90 )
+	amd64? ( >=sys-devel/binutils-2.19 )
 	>=sys-devel/binutils-2.15.94
 	${LT_VER:+nptl? (} >=sys-kernel/linux-headers-${NPTL_KERN_VER} ${LT_VER:+)}
 	>=sys-devel/gcc-config-1.3.12
