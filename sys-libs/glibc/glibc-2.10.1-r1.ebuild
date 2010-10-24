@@ -219,9 +219,9 @@ eblit-src_unpack-post() {
 			|| die "Failed to ensure nscd builds with ssp-all"
 	fi
 
-	local gcc_force="4.4.3"
+	local gcc_force="4.4"
 	# Funtoo forces glibc to be compiled using a particular gcc:
-	if [[ "$($CC -dumpversion)" -ne "$gcc_force" ]]; then 
+	if [[ "$(gcc -dumpversion | cut -b1-3)" != "$gcc_force" ]]; then 
 		gcc-config "$gcc_force" || die "Unable to force gcc to version $gcc_force; please do this manually."
 	fi
 }
