@@ -1,13 +1,13 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2007 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-libs/glibc/files/eblits/src_test.eblit,v 1.4 2010/08/10 08:08:05 vapier Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-libs/glibc/files/eblits/src_test-2.11.2.eblit,v 1.1 2010/08/10 08:08:05 vapier Exp $
 
 toolchain-glibc_src_test() {
 	cd "${WORKDIR}"/build-${ABI}-${CTARGET}-$1 || die "cd build-${ABI}-${CTARGET}-$1"
 	unset LD_ASSUME_KERNEL
-	emake -j1 check && return 0
+	make check && return 0
 	einfo "make check failed - re-running with --keep-going to get the rest of the results"
-	emake -j1 -k check
+	make -k check
 	ewarn "make check failed for ${ABI}-${CTARGET}-$1"
 	return 1
 }

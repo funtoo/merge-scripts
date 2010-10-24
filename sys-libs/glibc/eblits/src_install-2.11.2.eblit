@@ -1,6 +1,6 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2007 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-libs/glibc/files/eblits/src_install.eblit,v 1.10 2010/08/10 08:08:05 vapier Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-libs/glibc/files/eblits/src_install-2.11.2.eblit,v 1.1 2010/08/10 08:08:05 vapier Exp $
 
 toolchain-glibc_src_install() {
 	local GBUILDDIR
@@ -19,7 +19,9 @@ toolchain-glibc_src_install() {
 		cd "${WORKDIR}"/build-${ABI}-${CTARGET}-nptl
 		einfo "Installing GLIBC ${ABI} with NPTL ..."
 	fi
-	emake install_root="${install_root}" install || die
+	make PARALLELMFLAGS="${MAKEOPTS}" \
+		install_root="${install_root}" \
+		install || die
 
 	if is_crosscompile ; then
 		# punt all the junk not needed by a cross-compiler
@@ -148,8 +150,9 @@ toolchain-glibc_src_install() {
 	if ! has noinfo ${FEATURES} && [[ -n ${INFOPAGE_VER} ]] ; then
 		einfo "Installing info pages..."
 
-		emake \
+		make \
 			-C "${GBUILDDIR}" \
+			PARALLELMFLAGS="${MAKEOPTS}" \
 			install_root="${install_root}" \
 			info -i || die
 	fi
@@ -185,7 +188,7 @@ toolchain-glibc_src_install() {
 toolchain-glibc_headers_install() {
 	local GBUILDDIR=${WORKDIR}/build-${ABI}-${CTARGET}-headers
 	cd "${GBUILDDIR}"
-	emake install_root="${D}/usr/${CTARGET}" install-headers || die "install-headers failed"
+	make install_root="${D}/usr/${CTARGET}" install-headers || die "install-headers failed"
 	# Copy over headers that are not part of install-headers ... these
 	# are pretty much taken verbatim from crosstool, see it for more details
 	insinto $(alt_headers)/bits

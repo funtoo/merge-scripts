@@ -1,8 +1,12 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2007 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-libs/glibc/files/eblits/src_install.eblit,v 1.10 2010/08/10 08:08:05 vapier Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-libs/glibc/files/eblits/src_install-2.6.eblit,v 1.2 2008/06/29 16:39:23 vapier Exp $
 
 toolchain-glibc_src_install() {
+	# These should not be set, else the
+	# zoneinfo do not always get installed ...
+	unset LANGUAGE LANG LC_ALL
+
 	local GBUILDDIR
 	if want_linuxthreads ; then
 		GBUILDDIR=${WORKDIR}/build-${ABI}-${CTARGET}-linuxthreads
@@ -15,11 +19,16 @@ toolchain-glibc_src_install() {
 	if want_linuxthreads ; then
 		cd "${WORKDIR}"/build-${ABI}-${CTARGET}-linuxthreads
 		einfo "Installing GLIBC ${ABI} with linuxthreads ..."
+		make PARALLELMFLAGS="${MAKEOPTS}" \
+			install_root="${install_root}" \
+			install || die
 	else # nptlonly
 		cd "${WORKDIR}"/build-${ABI}-${CTARGET}-nptl
 		einfo "Installing GLIBC ${ABI} with NPTL ..."
+		make PARALLELMFLAGS="${MAKEOPTS}" \
+			install_root="${install_root}" \
+			install || die
 	fi
-	emake install_root="${install_root}" install || die
 
 	if is_crosscompile ; then
 		# punt all the junk not needed by a cross-compiler
@@ -76,12 +85,8 @@ toolchain-glibc_src_install() {
 	# Some things want this, notably ash.
 	dosym libbsd-compat.a $(alt_usrlibdir)/libbsd.a
 
-	# Handle includes for different ABIs if glibc itself doesn't do it
-	# XXX: curr glibc should finally handle all of them correctly
-	#case $(tc-arch) in
-	#	amd64|mips|ppc|s390) ;;
-	#	*) prep_ml_includes $(alt_headers) ;;
-	#esac
+	# Handle includes for different ABIs
+	prep_ml_includes $(alt_headers)
 
 	# When cross-compiling for a non-multilib setup, make sure we have
 	# lib and a proper symlink setup
@@ -148,8 +153,9 @@ toolchain-glibc_src_install() {
 	if ! has noinfo ${FEATURES} && [[ -n ${INFOPAGE_VER} ]] ; then
 		einfo "Installing info pages..."
 
-		emake \
+		make \
 			-C "${GBUILDDIR}" \
+			PARALLELMFLAGS="${MAKEOPTS}" \
 			install_root="${install_root}" \
 			info -i || die
 	fi
@@ -170,11 +176,6 @@ toolchain-glibc_src_install() {
 	doins "${WORKDIR}"/extra/etc/*.conf || die
 	doinitd "${WORKDIR}"/extra/etc/nscd || die
 
-	sed -i -e "s:@PIDFILE@:$(strings "${D}"/usr/sbin/nscd | grep nscd.pid):" "${D}"/etc/init.d/nscd
-
-	echo 'LDPATH="include ld.so.conf.d/*.conf"' > "${T}"/00glibc
-	doenvd "${T}"/00glibc || die
-
 	dodoc BUGS ChangeLog* CONFORMANCE FAQ NEWS NOTES PROJECTS README*
 
 	# Prevent overwriting of the /etc/localtime symlink.  We'll handle the
@@ -185,7 +186,7 @@ toolchain-glibc_src_install() {
 toolchain-glibc_headers_install() {
 	local GBUILDDIR=${WORKDIR}/build-${ABI}-${CTARGET}-headers
 	cd "${GBUILDDIR}"
-	emake install_root="${D}/usr/${CTARGET}" install-headers || die "install-headers failed"
+	make install_root="${D}/usr/${CTARGET}" install-headers || die "install-headers failed"
 	# Copy over headers that are not part of install-headers ... these
 	# are pretty much taken verbatim from crosstool, see it for more details
 	insinto $(alt_headers)/bits

@@ -2,6 +2,12 @@
 # Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/sys-libs/glibc/ChangeLog,v 1.679 2010/02/15 06:18:04 armin76 Exp $
 
+*glibc-2.11.2-r1
+
+  24 Oct 2010; Daniel Robbins <drobbins@funtoo.org> +glibc-2.11.2-r1.ebuild:
+  new from upstream; also updated eblits from upstream Gentoo but kept our
+  "gd" elimination intact.
+
   29 Jun 2010; Daniel Robbins <drobbins@funtoo.org> removed "gd" USE and
   gd support from ebuilds.
 

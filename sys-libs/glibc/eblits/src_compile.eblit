@@ -78,7 +78,7 @@ glibc_do_configure() {
 		--build=${CBUILD_OPT:-${CBUILD}}
 		--host=${CTARGET_OPT:-${CTARGET}}
 		$(use_enable profile)
-		--without-gd
+		$(use_with gd)
 		--with-headers=$(alt_build_headers)
 		--prefix=/usr
 		--libdir=/usr/$(get_libdir)
