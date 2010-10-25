@@ -124,7 +124,7 @@ index 0000000..3585e0d
 +dev-db/mysql-community
 diff --git a/profiles/package.mask/funtoo-cautionary b/profiles/package.mask/funtoo-cautionary
 new file mode 100644
-index 0000000..468f3d2
+index 0000000..8c4de53
 --- /dev/null
 +++ b/profiles/package.mask/funtoo-cautionary
 @@ -0,0 +1,46 @@
@@ -160,7 +160,7 @@ index 0000000..468f3d2
 +# linux-headers.
 +
 +# For toolchain upgrade ll-2010.2:
-+>sys-libs/glibc-2.10.1-r1
++>sys-libs/glibc-2.10.1-r2
 +>sys-kernel/linux-headers-2.6.32
 +>sys-devel/gcc-4.4.3
 +>sys-devel/binutils-2.20.1
@@ -175,10 +175,10 @@ index 0000000..468f3d2
 +# I only recommend the 2.6.18 stable openvz-sources
 +>=sys-kernel/openvz-sources-2.6.19
 diff --git a/profiles/package.mask/gentoo b/profiles/package.mask/gentoo
-index cb81101..d45d76f 100644
+index 60b824b..985887f 100644
 --- a/profiles/package.mask/gentoo
 +++ b/profiles/package.mask/gentoo
-@@ -1375,12 +1375,6 @@ app-portage/udept
+@@ -1301,12 +1301,6 @@ app-portage/udept
  # Please, upgrade to openrc. removal after openrc goes stable, bug #254519
  sys-apps/baselayout-vserver
  
