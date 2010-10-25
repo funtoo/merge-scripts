@@ -132,8 +132,6 @@ toolchain-glibc_src_install() {
 	cd "${WORKDIR}"/extra/locale
 	dosbin locale-gen || die
 	doman *.[0-8]
-	insinto /etc
-	doins locale.gen || die
 
 	# Make sure all the ABI's can find the locales and so we only
 	# have to generate one set
