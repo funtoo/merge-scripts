@@ -175,10 +175,10 @@ index 0000000..8c4de53
 +# I only recommend the 2.6.18 stable openvz-sources
 +>=sys-kernel/openvz-sources-2.6.19
 diff --git a/profiles/package.mask/gentoo b/profiles/package.mask/gentoo
-index 60b824b..985887f 100644
+index 31baf19..81e5f6a 100644
 --- a/profiles/package.mask/gentoo
 +++ b/profiles/package.mask/gentoo
-@@ -1301,12 +1301,6 @@ app-portage/udept
+@@ -1537,12 +1537,6 @@ app-portage/udept
  # Please, upgrade to openrc. removal after openrc goes stable, bug #254519
  sys-apps/baselayout-vserver
  

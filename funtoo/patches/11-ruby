@@ -41,7 +41,7 @@ index 08fc12f..fa7c375 100644
  
  	echo $(type -p ${_ruby_name} 2>/dev/null)
 diff --git a/profiles/base/use.mask b/profiles/base/use.mask
-index b9d21a3..f76a84a 100644
+index e2d17f3..29ed7e0 100644
 --- a/profiles/base/use.mask
 +++ b/profiles/base/use.mask
 @@ -246,9 +246,7 @@ dxr3
