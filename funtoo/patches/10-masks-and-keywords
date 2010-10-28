@@ -4,12 +4,12 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
- .../default/linux/package.keywords/funtoo-stable   |   24 +++++++
- profiles/package.mask/funtoo                       |   71 ++++++++++++++++++++
- profiles/package.mask/funtoo-cautionary            |   46 +++++++++++++
+ .../default/linux/package.keywords/funtoo-stable   |   24 ++++++
+ profiles/package.mask/funtoo                       |   75 ++++++++++++++++++++
+ profiles/package.mask/funtoo-cautionary            |   46 ++++++++++++
  profiles/package.mask/gentoo                       |    6 --
- profiles/package.mask/sunrise                      |   39 +++++++++++
- 5 files changed, 180 insertions(+), 6 deletions(-)
+ profiles/package.mask/sunrise                      |   39 ++++++++++
+ 5 files changed, 184 insertions(+), 6 deletions(-)
  create mode 100644 profiles/default/linux/package.keywords/funtoo-stable
  create mode 100644 profiles/package.mask/funtoo
  create mode 100644 profiles/package.mask/funtoo-cautionary
@@ -47,11 +47,15 @@ index 0000000..ee8eb64
 +<virtual/postgresql-server-8.4 amd64 x86
 diff --git a/profiles/package.mask/funtoo b/profiles/package.mask/funtoo
 new file mode 100644
-index 0000000..3585e0d
+index 0000000..0a34e03
 --- /dev/null
 +++ b/profiles/package.mask/funtoo
-@@ -0,0 +1,71 @@
+@@ -0,0 +1,75 @@
 +# PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
++
++# Piotr Karbowski <jabberuser@gmail.com> (28 Oct 2010)
++# Masked for testing, known to be broken.
++=sys-boot/boot-update-1.4.10
 +
 +# Daniel Robbins <drobbins@funtoo.org> (21 Oct 2010)
 +# Masked for testing:
@@ -175,10 +179,10 @@ index 0000000..8c4de53
 +# I only recommend the 2.6.18 stable openvz-sources
 +>=sys-kernel/openvz-sources-2.6.19
 diff --git a/profiles/package.mask/gentoo b/profiles/package.mask/gentoo
-index 31baf19..81e5f6a 100644
+index 81107e2..47b49eb 100644
 --- a/profiles/package.mask/gentoo
 +++ b/profiles/package.mask/gentoo
-@@ -1537,12 +1537,6 @@ app-portage/udept
+@@ -1526,12 +1526,6 @@ app-portage/udept
  # Please, upgrade to openrc. removal after openrc goes stable, bug #254519
  sys-apps/baselayout-vserver
  

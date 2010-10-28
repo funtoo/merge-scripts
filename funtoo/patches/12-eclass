@@ -8,7 +8,7 @@ From: Daniel Robbins <drobbins@funtoo.org>
  1 files changed, 11 insertions(+), 0 deletions(-)
 
 diff --git a/eclass/mysql.eclass b/eclass/mysql.eclass
-index ec49453..9058df2 100644
+index 24039cf..2644d36 100644
 --- a/eclass/mysql.eclass
 +++ b/eclass/mysql.eclass
 @@ -476,6 +476,17 @@ configure_common() {
