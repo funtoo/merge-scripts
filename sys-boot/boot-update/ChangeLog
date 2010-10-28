@@ -1,5 +1,10 @@
-# ChangeLog for sys-apps/coreboot
+# ChangeLog for sys-boot/boot-update
 # Copyright 2010 Funtoo Technologies, LLC; Distributed under the GPL v2
+
+*boot-update-1.4.10 (27 Oct 2010)
+
+  27 Oct 2010; Daniel Robbins <drobbins@funtoo.org> +boot-update-1.4.10.ebuild:
+  New release with fixes and goodies.
 
   23 May 2010; Daniel Robbins <drobbins@funtoo.org> +boot-update-1.4.5.ebuild:
   renaming to sys-boot/boot-update.
