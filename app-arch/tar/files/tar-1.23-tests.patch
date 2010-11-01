@@ -1,0 +1,27 @@
+http://bugs.gentoo.org/326785
+
+From 67b4f3519d838c6f16f5b6b63c0b9b8669fb3dd9 Mon Sep 17 00:00:00 2001
+From: Sergey Poznyakoff <gray@gnu.org.ua>
+Date: Fri, 12 Mar 2010 09:48:46 +0200
+Subject: [PATCH] Bugfixes.
+
+* tests/remfiles01.at: Skip if run with root privileges.
+---
+ tests/remfiles01.at |    1 +
+ 2 files changed, 2 insertions(+), 1 deletions(-)
+
+diff --git a/tests/remfiles01.at b/tests/remfiles01.at
+index 940fd95..73752b4 100644
+--- a/tests/remfiles01.at
++++ b/tests/remfiles01.at
+@@ -30,6 +30,7 @@ AT_KEYWORDS([create remove-files remfiles01 gzip])
+ 
+ unset TAR_OPTIONS
+ AT_CHECK([
++AT_UNPRIVILEGED_PREREQ
+ AT_GZIP_PREREQ
+ AT_SORT_PREREQ
+ 
+-- 
+1.7.1.1
+

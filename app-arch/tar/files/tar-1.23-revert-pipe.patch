@@ -1,0 +1,125 @@
+http://bugs.gentoo.org/252680
+http://bugs.gentoo.org/309001
+http://lists.gnu.org/archive/html/bug-tar/2008-12/msg00028.html
+
+revert this change:
+
+2008-11-25  Sergey Poznyakoff  <gray@gnu.org.ua>
+
+	Do not try to drain the input pipe before closing the
+	archive. 
+	
+	* src/buffer.c (close_archive): Remove call to
+	sys_drain_input_pipe. Pass hit_eof as the second
+	argument to sys_wait_for_child.
+	* src/common.h (sys_drain_input_pipe): Remove
+	(sys_wait_for_child): Declare second argument.
+	* src/system.c (sys_drain_input_pipe): Remove.
+	(sys_wait_for_child): Take two arguments. The second one helps to
+	decide whether to tolerate child termination on SIGPIPE.
+
+diff --git a/src/buffer.c b/src/buffer.c
+index 5f5457a..02a3e4c 100644
+--- a/src/buffer.c
++++ b/src/buffer.c
+@@ -848,6 +848,8 @@ close_archive (void)
+         flush_archive ();
+     }
+ 
++  sys_drain_input_pipe ();
++
+   compute_duration ();
+   if (verify_option)
+     verify_volume ();
+@@ -855,7 +857,7 @@ close_archive (void)
+   if (rmtclose (archive) != 0)
+     close_error (*archive_name_cursor);
+ 
+-  sys_wait_for_child (child_pid, hit_eof);
++  sys_wait_for_child (child_pid);
+ 
+   tar_stat_destroy (&current_stat_info);
+   if (save_name)
+diff --git a/src/common.h b/src/common.h
+index 9897b46..cc3483e 100644
+--- a/src/common.h
++++ b/src/common.h
+@@ -699,7 +699,8 @@ char *xheader_format_name (struct tar_stat_info *st, const char *fmt,
+ 
+ void sys_detect_dev_null_output (void);
+ void sys_save_archive_dev_ino (void);
+-void sys_wait_for_child (pid_t, bool);
++void sys_drain_input_pipe (void);
++void sys_wait_for_child (pid_t);
+ void sys_spawn_shell (void);
+ bool sys_compare_uid (struct stat *a, struct stat *b);
+ bool sys_compare_gid (struct stat *a, struct stat *b);
+diff --git a/src/system.c b/src/system.c
+index c90a40d..e57e6da 100644
+--- a/src/system.c
++++ b/src/system.c
+@@ -1,7 +1,6 @@
+ /* System-dependent calls for tar.
+ 
+-   Copyright (C) 2003, 2004, 2005, 2006, 2007,
+-   2008 Free Software Foundation, Inc.
++   Copyright (C) 2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+ 
+    This program is free software; you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by the
+@@ -52,7 +51,12 @@ sys_detect_dev_null_output (void)
+ }
+ 
+ void
+-sys_wait_for_child (pid_t child_pid, bool eof)
++sys_drain_input_pipe (void)
++{
++}
++
++void
++sys_wait_for_child (pid_t child_pid)
+ {
+ }
+ 
+@@ -156,8 +160,26 @@ sys_detect_dev_null_output (void)
+ 			 && archive_stat.st_ino == dev_null_stat.st_ino));
+ }
+ 
++/* Manage to fully drain a pipe we might be reading, so to not break it on
++   the producer after the EOF block.  FIXME: one of these days, GNU tar
++   might become clever enough to just stop working, once there is no more
++   work to do, we might have to revise this area in such time.  */
++
++void
++sys_drain_input_pipe (void)
++{
++  size_t r;
++
++  if (access_mode == ACCESS_READ
++      && ! _isrmt (archive)
++      && (S_ISFIFO (archive_stat.st_mode) || S_ISSOCK (archive_stat.st_mode)))
++    while ((r = rmtread (archive, record_start->buffer, record_size)) != 0
++	   && r != SAFE_READ_ERROR)
++      continue;
++}
++
+ void
+-sys_wait_for_child (pid_t child_pid, bool eof)
++sys_wait_for_child (pid_t child_pid)
+ {
+   if (child_pid)
+     {
+@@ -171,11 +193,8 @@ sys_wait_for_child (pid_t child_pid, bool eof)
+ 	  }
+ 
+       if (WIFSIGNALED (wait_status))
+-	{
+-	  int sig = WTERMSIG (wait_status);
+-	  if (!(!eof && sig == SIGPIPE))
+-	    FATAL_ERROR ((0, 0, _("Child died with signal %d"), sig));
+-	}
++	FATAL_ERROR ((0, 0, _("Child died with signal %d"),
++		WTERMSIG (wait_status)));
+       else if (WEXITSTATUS (wait_status) != 0)
+ 	ERROR ((0, 0, _("Child returned status %d"),
+ 		WEXITSTATUS (wait_status)));

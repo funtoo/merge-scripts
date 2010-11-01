@@ -1,0 +1,177 @@
+http://bugs.gentoo.org/327641
+
+From b60e56fdb6fd8d82a1f92a4fa7781d9a3184dce1 Mon Sep 17 00:00:00 2001
+From: Sergey Poznyakoff <gray@gnu.org.ua>
+Date: Sat, 27 Mar 2010 22:02:28 +0200
+Subject: [PATCH] Fix dead loop on extracting existing symlinks with the -k option.
+
+* src/extract.c (create_placeholder_file)
+(extract_link, extract_symlink)
+(extract_node, extract_fifo): Handle all possible
+return values from maybe_recoverable. This complements
+8f390db92fc. Reported by Ico Doornekamp <bug-tar@zevv.nl>.
+---
+ src/extract.c |  101 +++++++++++++++++++++++++++++++++++++-------------------
+ 2 files changed, 70 insertions(+), 35 deletions(-)
+
+diff --git a/src/extract.c b/src/extract.c
+index 32a883f..531654a 100644
+--- a/src/extract.c
++++ b/src/extract.c
+@@ -888,12 +888,22 @@ create_placeholder_file (char *file_name, bool is_symlink, int *interdir_made)
+   struct stat st;
+ 
+   while ((fd = open (file_name, O_WRONLY | O_CREAT | O_EXCL, 0)) < 0)
+-    if (! maybe_recoverable (file_name, interdir_made))
+-      break;
++    {
++      switch (maybe_recoverable (file_name, interdir_made))
++	{
++	case RECOVER_OK:
++	  continue;
++	  
++	case RECOVER_SKIP:
++	  return 0;
++	  
++	case RECOVER_NO:
++	  open_error (file_name);
++	  return -1;
++	}
++      }
+ 
+-  if (fd < 0)
+-    open_error (file_name);
+-  else if (fstat (fd, &st) != 0)
++  if (fstat (fd, &st) != 0)
+     {
+       stat_error (file_name);
+       close (fd);
+@@ -956,7 +966,8 @@ extract_link (char *file_name, int typeflag)
+ {
+   int interdir_made = 0;
+   char const *link_name;
+-
++  int rc;
++  
+   link_name = current_stat_info.link_name;
+   
+   if (! absolute_names_option && contains_dot_dot (link_name))
+@@ -996,8 +1007,10 @@ extract_link (char *file_name, int typeflag)
+ 
+       errno = e;
+     }
+-  while (maybe_recoverable (file_name, &interdir_made));
++  while ((rc = maybe_recoverable (file_name, &interdir_made)) == RECOVER_OK);
+ 
++  if (rc == RECOVER_SKIP)
++    return 0;
+   if (!(incremental_option && errno == EEXIST))
+     {
+       link_error (link_name, file_name);
+@@ -1010,7 +1023,6 @@ static int
+ extract_symlink (char *file_name, int typeflag)
+ {
+ #ifdef HAVE_SYMLINK
+-  int status;
+   int interdir_made = 0;
+ 
+   if (! absolute_names_option
+@@ -1018,15 +1030,22 @@ extract_symlink (char *file_name, int typeflag)
+ 	  || contains_dot_dot (current_stat_info.link_name)))
+     return create_placeholder_file (file_name, true, &interdir_made);
+ 
+-  while ((status = symlink (current_stat_info.link_name, file_name)))
+-    if (!maybe_recoverable (file_name, &interdir_made))
+-      break;
+-
+-  if (status == 0)
+-    set_stat (file_name, &current_stat_info, NULL, 0, 0, SYMTYPE);
+-  else
+-    symlink_error (current_stat_info.link_name, file_name);
+-  return status;
++  while (symlink (current_stat_info.link_name, file_name))
++    switch (maybe_recoverable (file_name, &interdir_made))
++      {
++      case RECOVER_OK:
++	continue;
++	
++      case RECOVER_SKIP:
++	return 0;
++	
++      case RECOVER_NO:
++	symlink_error (current_stat_info.link_name, file_name);
++	return -1;
++      }
++  
++  set_stat (file_name, &current_stat_info, NULL, 0, 0, SYMTYPE);
++  return 0;
+ 
+ #else
+   static int warned_once;
+@@ -1052,16 +1071,23 @@ extract_node (char *file_name, int typeflag)
+   mode_t invert_permissions =
+     0 < same_owner_option ? mode & (S_IRWXG | S_IRWXO) : 0;
+ 
+-  do
+-    status = mknod (file_name, mode ^ invert_permissions,
+-		    current_stat_info.stat.st_rdev);
+-  while (status && maybe_recoverable (file_name, &interdir_made));
++  while (mknod (file_name, mode ^ invert_permissions,
++		current_stat_info.stat.st_rdev))
++    switch (maybe_recoverable (file_name, &interdir_made))
++      {
++      case RECOVER_OK:
++	continue;
++	
++      case RECOVER_SKIP:
++	return 0;
++	
++      case RECOVER_NO:
++	mknod_error (file_name);
++	return -1;
++      }
+ 
+-  if (status != 0)
+-    mknod_error (file_name);
+-  else
+-    set_stat (file_name, &current_stat_info, NULL, invert_permissions,
+-	      ARCHIVED_PERMSTATUS, typeflag);
++  set_stat (file_name, &current_stat_info, NULL, invert_permissions,
++	    ARCHIVED_PERMSTATUS, typeflag);
+   return status;
+ }
+ #endif
+@@ -1077,15 +1103,22 @@ extract_fifo (char *file_name, int typeflag)
+     0 < same_owner_option ? mode & (S_IRWXG | S_IRWXO) : 0;
+ 
+   while ((status = mkfifo (file_name, mode)) != 0)
+-    if (!maybe_recoverable (file_name, &interdir_made))
+-      break;
++    switch (maybe_recoverable (file_name, &interdir_made))
++      {
++      case RECOVER_OK:
++	continue;
++	
++      case RECOVER_SKIP:
++	return 0;
++	
++      case RECOVER_NO:
++	mkfifo_error (file_name);
++	return -1;
++      }
+ 
+-  if (status == 0)
+-    set_stat (file_name, &current_stat_info, NULL, invert_permissions,
+-	      ARCHIVED_PERMSTATUS, typeflag);
+-  else
+-    mkfifo_error (file_name);
+-  return status;
++  set_stat (file_name, &current_stat_info, NULL, invert_permissions,
++	    ARCHIVED_PERMSTATUS, typeflag);
++  return 0;
+ }
+ #endif
+ 
+-- 
+1.7.1.1
+
