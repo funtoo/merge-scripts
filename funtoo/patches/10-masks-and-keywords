@@ -7,9 +7,8 @@ From: Daniel Robbins <drobbins@funtoo.org>
  .../default/linux/package.keywords/funtoo-stable   |   24 ++++++
  profiles/package.mask/funtoo                       |   75 ++++++++++++++++++++
  profiles/package.mask/funtoo-cautionary            |   46 ++++++++++++
- profiles/package.mask/gentoo                       |    6 --
  profiles/package.mask/sunrise                      |   39 ++++++++++
- 5 files changed, 184 insertions(+), 6 deletions(-)
+ 4 files changed, 184 insertions(+), 0 deletions(-)
  create mode 100644 profiles/default/linux/package.keywords/funtoo-stable
  create mode 100644 profiles/package.mask/funtoo
  create mode 100644 profiles/package.mask/funtoo-cautionary
@@ -178,23 +177,6 @@ index 0000000..8c4de53
 +# Daniel Robbins <drobbins@funtooo.org> (22 Jul 2009)
 +# I only recommend the 2.6.18 stable openvz-sources
 +>=sys-kernel/openvz-sources-2.6.19
-diff --git a/profiles/package.mask/gentoo b/profiles/package.mask/gentoo
-index 81107e2..47b49eb 100644
---- a/profiles/package.mask/gentoo
-+++ b/profiles/package.mask/gentoo
-@@ -1526,12 +1526,6 @@ app-portage/udept
- # Please, upgrade to openrc. removal after openrc goes stable, bug #254519
- sys-apps/baselayout-vserver
- 
--# Zac Medico <zmedico@gentoo.org> (05 Jan 2009)
--# Portage 2.2 is masked due to known bugs in the
--# package sets and preserve-libs features. See
--# bug #253802 for details.
-->=sys-apps/portage-2.2_pre
--
- # Diego E. Pettenò <flameeyes@gentoo.org> (03 Jan 2009)
- # These packages are not supposed to be merged directly, instead
- # please use sys-devel/crossdev to install them.
 diff --git a/profiles/package.mask/sunrise b/profiles/package.mask/sunrise
 new file mode 100644
 index 0000000..e0a0f2a
