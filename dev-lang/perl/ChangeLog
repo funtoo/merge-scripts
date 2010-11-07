@@ -2,6 +2,11 @@
 # Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/dev-lang/perl/ChangeLog,v 1.289 2009/10/21 19:41:14 maekke Exp $
 
+*perl-5.12.2-r1 (07 Nov 2010)
+
+  07 Nov 2010; Daniel Robbins <drobbins@funtoo.org> +perl-5.12.2-r1.ebuild:
+  New perl from upstream Gentoo (mostly) - from Gentoo's 5.12.2-r2.
+
 *perl-5.12.2
 
   21 Oct 2010; Daniel Robbins <drobbins@funtoo.org> perl-5.12.2.ebuild:
