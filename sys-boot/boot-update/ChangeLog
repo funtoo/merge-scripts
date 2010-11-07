@@ -1,6 +1,11 @@
 # ChangeLog for sys-boot/boot-update
 # Copyright 2010 Funtoo Technologies, LLC; Distributed under the GPL v2
 
+*boot-update-1.4.11 (07 Nov 2010)
+
+  07 Nov 2010; Daniel Robbins <drobbins@funtoo.org> +boot-update-1.4.11.ebuild:
+  New release with fixes and goodies.
+
 *boot-update-1.4.10 (27 Oct 2010)
 
   27 Oct 2010; Daniel Robbins <drobbins@funtoo.org> +boot-update-1.4.10.ebuild:
