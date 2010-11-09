@@ -2,6 +2,11 @@
 # Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/sys-apps/openrc/ChangeLog,v 1.80 2009/10/14 11:04:35 vapier Exp $
 
+*openrc-0.6.4-r1 (09 Nov 2010)
+
+  09 Nov 2010; Daniel Robbins <drobbins@funtoo.org> openrc-0.6.4-r1.ebuild:
+  New release with some bridging fixes.
+
 *openrc-0.6.4 (27 Oct 2010)
 
   27 Oct 2010; Daniel Robbins <drobbins@funtoo.org> openrc-0.6.4.ebuild:
