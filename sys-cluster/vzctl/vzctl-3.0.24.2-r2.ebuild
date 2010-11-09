@@ -1,14 +1,14 @@
 # Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-cluster/vzctl/vzctl-3.0.24.1-r1.ebuild,v 1.1 2010/08/30 11:55:45 pva Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-cluster/vzctl/vzctl-3.0.24.2.ebuild,v 1.1 2010/09/10 07:46:45 pva Exp $
 
 EAPI="2"
 
-inherit bash-completion eutils
+inherit bash-completion autotools eutils
 
-DESCRIPTION="OpenVZ ConTainers control utility"
+DESCRIPTION="OpenVZ Containers control utility"
 HOMEPAGE="http://openvz.org/"
-SRC_URI="http://download.openvz.org/utils/${PN}/${PV}/src/${P}.tar.bz2"
+SRC_URI="http://www.funtoo.org/archive/vzctl/${P}-funtoo-2.tar.bz2"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -27,7 +27,7 @@ DEPEND="${RDEPEND}"
 src_prepare() {
 	# Set default OSTEMPLATE on gentoo
 	sed -e 's:=redhat-:=gentoo-:' -i etc/dists/default || die
-	epatch "${FILESDIR}/${P}-vzpostup.patch"
+	eautoreconf
 }
 
 src_configure() {
@@ -73,11 +73,11 @@ pkg_postinst() {
 		ewarn
 	fi
 
-	ewarn "To avoid loosing network to CTs on iface down/up, please, add the"
-	ewarn "following code to /etc/conf.d/net:"
-	ewarn " postup() {"
-	ewarn "     /usr/sbin/vzifup-post \${IFACE}"
-	ewarn " }"
+	#ewarn "To avoid loosing network to CTs on iface down/up, please, add the"
+	#ewarn "following code to /etc/conf.d/net:"
+	#ewarn " postup() {"
+	#ewarn "     /usr/sbin/vzifup-post \${IFACE}"
+	#ewarn " }"
 
 	elog "NOTE: Starting with vzctl-3.0.22 the mechanism for choosing the"
 	elog "interfaces to send ARP requests to has been improved (see description"
