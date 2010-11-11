@@ -1,0 +1,16 @@
+Index: modules/pam_tally2/pam_tally2.c
+===================================================================
+RCS file: /cvsroot/pam/Linux-PAM/modules/pam_tally2/pam_tally2.c,v
+retrieving revision 1.4
+diff -u -B -r1.4 pam_tally2.c
+--- modules/pam_tally2/pam_tally2.c	27 Feb 2009 14:29:40 -0000	1.4
++++ modules/pam_tally2/pam_tally2.c	26 Jul 2010 15:37:14 -0000
+@@ -373,7 +373,7 @@
+ 
+     lstat_ret = lstat(filename, &fileinfo);
+     if (lstat_ret) {
+-      *tfile=open(filename, O_APPEND|O_CREAT, 0700);
++      *tfile=open(filename, O_APPEND|O_CREAT, S_IRUSR|S_IWUSR);
+       /* Create file, or append-open in pathological case. */
+       if (*tfile == -1) {
+ #ifndef MAIN
