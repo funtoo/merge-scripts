@@ -1,6 +1,6 @@
 # Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-libs/pam/pam-1.1.3.ebuild,v 1.8 2010/11/07 17:42:02 constanze Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-libs/pam/pam-1.1.3.ebuild,v 1.9 2010/11/11 18:53:41 flameeyes Exp $
 
 EAPI="3"
 
@@ -167,7 +167,9 @@ pkg_postinst() {
 	ewarn "restart the software manually after the update."
 	ewarn ""
 	ewarn "You can get a list of such software running a command like"
-	ewarn "  lsof / | egrep 'DEL.*libpam\\.so'"
+	ewarn "  lsof / | egrep -i 'del.*libpam\\.so'"
+	ewarn ""
+	ewarn "Alternatively, simply reboot your system."
 	if [ -x "${ROOT}"/var/log/tallylog ] ; then
 		elog ""
 		elog "Because of a bug present up to version 1.1.1-r2, you have"
