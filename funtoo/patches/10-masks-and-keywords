@@ -4,11 +4,11 @@ From: Daniel Robbins <drobbins@funtoo.org>
 
 
 ---
- .../default/linux/package.keywords/funtoo-stable   |   24 ++++++
- profiles/package.mask/funtoo                       |   75 ++++++++++++++++++++
- profiles/package.mask/funtoo-cautionary            |   46 ++++++++++++
- profiles/package.mask/sunrise                      |   39 ++++++++++
- 4 files changed, 184 insertions(+), 0 deletions(-)
+ .../default/linux/package.keywords/funtoo-stable   |   24 +++++++
+ profiles/package.mask/funtoo                       |   69 ++++++++++++++++++++
+ profiles/package.mask/funtoo-cautionary            |   34 ++++++++++
+ profiles/package.mask/sunrise                      |   39 +++++++++++
+ 4 files changed, 166 insertions(+), 0 deletions(-)
  create mode 100644 profiles/default/linux/package.keywords/funtoo-stable
  create mode 100644 profiles/package.mask/funtoo
  create mode 100644 profiles/package.mask/funtoo-cautionary
@@ -46,10 +46,10 @@ index 0000000..ee8eb64
 +<virtual/postgresql-server-8.4 amd64 x86
 diff --git a/profiles/package.mask/funtoo b/profiles/package.mask/funtoo
 new file mode 100644
-index 0000000..0a34e03
+index 0000000..61e1134
 --- /dev/null
 +++ b/profiles/package.mask/funtoo
-@@ -0,0 +1,75 @@
+@@ -0,0 +1,69 @@
 +# PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 +
 +# Piotr Karbowski <jabberuser@gmail.com> (28 Oct 2010)
@@ -68,12 +68,6 @@ index 0000000..0a34e03
 +# Daniel Robbins <drobbins@funtoo.org> (09 Sep 2010)
 +# Masked for testing:
 +>=sys-apps/portage-2.2_rc78
-+
-+# Daniel Robbins <drobbins@funtoo.org> (02 Sep 2010)
-+# this version depends on glibc-2.11 and above, which
-+# is masked in Funtoo:
-+
-+>=dev-java/icedtea6-bin-1.8.1-r1
 +
 +# Daniel Robbins <drobbins@funtoo.org> (01 Sep 2010)
 +# let's stick with a known-good version of ruby by
@@ -127,10 +121,10 @@ index 0000000..0a34e03
 +dev-db/mysql-community
 diff --git a/profiles/package.mask/funtoo-cautionary b/profiles/package.mask/funtoo-cautionary
 new file mode 100644
-index 0000000..b8a51d6
+index 0000000..83cdf3c
 --- /dev/null
 +++ b/profiles/package.mask/funtoo-cautionary
-@@ -0,0 +1,46 @@
+@@ -0,0 +1,34 @@
 +# Daniel Robbins <drobbins@funtoo.org> (6 Aug 2009)
 +# Mask new versions for caution, and these should all
 +# be tested and upgraded together. This helps ensure that
@@ -144,18 +138,6 @@ index 0000000..b8a51d6
 +>sys-devel/binutils-2.20.1
 +# glibc-2.10 isn't compatible with make-3.82+
 +>=sys-devel/make-3.82
-+
-+# Piotr Karbowski <jabberuser@gmail.com> (19 September 2010)
-+# Mask for newer emul-linux-x86 packages which was build with glibc 2.11.
-+>app-emulation/emul-linux-x86-baselibs-20100611
-+>app-emulation/emul-linux-x86-gtklibs-20100611
-+>app-emulation/emul-linux-x86-medialibs-20100611
-+>app-emulation/emul-linux-x86-opengl-20100611
-+>app-emulation/emul-linux-x86-soundlibs-20100611
-+>app-emulation/emul-linux-x86-xlibs-20100611
-+>app-emulation/emul-linux-x86-compat-20100611
-+>app-emulation/emul-linux-x86-qtlibs-20100611
-+>app-emulation/emul-linux-x86-sdl-20100611
 +
 +# Piotr Karbowski <jabberuser@gmail.com> (14 September 2010)
 +# It failing with recent kernels (>=2.6.34) with intel and ati cards (KMS issue?)
