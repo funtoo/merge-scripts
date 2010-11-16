@@ -127,10 +127,24 @@ index 0000000..0a34e03
 +dev-db/mysql-community
 diff --git a/profiles/package.mask/funtoo-cautionary b/profiles/package.mask/funtoo-cautionary
 new file mode 100644
-index 0000000..8c4de53
+index 0000000..2f94b1f
 --- /dev/null
 +++ b/profiles/package.mask/funtoo-cautionary
 @@ -0,0 +1,46 @@
++# Daniel Robbins <drobbins@funtoo.org> (6 Aug 2009)
++# Mask new versions for caution, and these should all
++# be tested and upgraded together. This helps ensure that
++# any new glibc upgrade will be built against any upgraded
++# linux-headers.
++
++# For toolchain upgrade ll-2010.2:
++>=sys-libs/glibc-2.11.2-r2
++>sys-kernel/linux-headers-2.6.32
++>sys-devel/gcc-4.4.5
++>sys-devel/binutils-2.20.1
++# glibc-2.10 isn't compatible wiht make-3.82+
++>=sys-devel/make-3.82
++
 +# Piotr Karbowski <jabberuser@gmail.com> (19 September 2010)
 +# Mask for newer emul-linux-x86 packages which was build with glibc 2.11.
 +>app-emulation/emul-linux-x86-baselibs-20100611
@@ -155,20 +169,6 @@ index 0000000..8c4de53
 +
 +#udev-160 is now in unstable...
 +>=sys-fs/udev-161
-+
-+# Daniel Robbins <drobbins@funtoo.org> (6 Aug 2009)
-+# Mask new versions for caution, and these should all
-+# be tested and upgraded together. This helps ensure that
-+# any new glibc upgrade will be built against any upgraded
-+# linux-headers.
-+
-+# For toolchain upgrade ll-2010.2:
-+>sys-libs/glibc-2.10.1-r2
-+>sys-kernel/linux-headers-2.6.32
-+>sys-devel/gcc-4.4.3
-+>sys-devel/binutils-2.20.1
-+# glibc-2.10 isn't compatible wiht make-3.82+
-+>=sys-devel/make-3.82
 +
 +# Daniel Robbins <drobbins@funtoo.org> (02 Aug 2009)
 +# let's watch upstream bugs for a bit:
