@@ -1,6 +1,11 @@
 # ChangeLog for sys-boot/boot-update
 # Copyright 2010 Funtoo Technologies, LLC; Distributed under the GPL v2
 
+*boot-update 1.4.12 (16 Nov 2010)
+
+  16 Nov 2010; Daniel Robbins <drobbins@funtoo.org>
+  +boot-update-1.4.12.ebuild: New release with fix for Pusztito on forums.
+
 *boot-update-1.4.11 (07 Nov 2010)
 
   07 Nov 2010; Daniel Robbins <drobbins@funtoo.org> +boot-update-1.4.11.ebuild:

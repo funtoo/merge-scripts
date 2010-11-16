@@ -33,6 +33,10 @@ src_install() {
 	dodoc etc/boot.conf.example
 }
 
+src_compile() {
+	return
+}
+
 pkg_postinst() {
 	if [ ! -e ${ROOT}/etc/boot.conf ] && [ -e ${ROOT}/usr/share/doc/${PF}/boot.conf.example.bz2 ]
 	then
