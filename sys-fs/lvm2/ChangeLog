@@ -2,6 +2,11 @@
 # Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/sys-fs/lvm2/ChangeLog,v 1.201 2010/02/02 18:15:22 jer Exp $
 
+*lvm2-2.02.75 (17 Nov 2010)
+
+  17 Nov 2010; Daniel Robbins <drobbins@funtoo.org> +lvm2-2.02.75.ebuild:
+  should fix some linking errors and such.
+
 *lvm2-2.02.70 (23 Jul 2010)
 
   23 Jul 2010; Daniel Robbins <drobbins@funtoo.org> +lvm2-2.02.70.ebuild:
