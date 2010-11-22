@@ -2,6 +2,12 @@
 # Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/app-misc/screen/ChangeLog,v 1.147 2010/06/15 11:47:35 jlec Exp $
 
+* screen-4.0.3-r3 (22 Nov 2010)
+
+  22 Nov 2010; Piotr Karbowski <jabberuser@gmail.com> +screen-4.0.3-r3.ebuild,
+  +screen-4.0.3-enlarge_maximum_width_of_TERM_variable.patch:
+  Fix for 'Unable to start when $TERM is longer than 20 characters'.
+
 *screen-4.0.3-r2 (10 Sep 2010)
 
   10 Sep 2010; Daniel Robbins <drobbins@funtoo.og> +screen-4.0.3-r2.ebuild:
