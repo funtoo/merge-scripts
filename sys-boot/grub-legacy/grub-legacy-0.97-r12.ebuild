@@ -29,7 +29,7 @@ DEPEND="ncurses? (
 		>=sys-libs/ncurses-5.2-r5
 		amd64? ( app-emulation/emul-linux-x86-baselibs )
 	)"
-RDEPEND="$DEPEND >=sys-boot/boot-update-1.4.1"
+RDEPEND="$DEPEND"
 PROVIDE="virtual/bootloader"
 
 src_unpack() {
