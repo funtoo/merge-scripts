@@ -2,6 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/sys-kernel/openvz-sources/openvz-sources-2.6.18.028.066.7.ebuild,v 1.1 2009/11/26 19:12:49 pva Exp $
 
+EAPI=3
 ETYPE="sources"
 
 CKV=2.6.18
@@ -21,7 +22,8 @@ inherit kernel-2
 detect_version
 
 DEPEND="<=sys-fs/udev-147"
-KEYWORDS="amd64 x86"
+#KEYWORDS="amd64 x86"
+KEYWORDS=""
 IUSE=""
 DESCRIPTION="Full Linux kernel sources - RHEL5 kernel with OpenVZ patchset"
 HOMEPAGE="http://www.openvz.org"
@@ -64,7 +66,7 @@ prior to building kernel."
 
 src_install() {
 	kernel-2_src_install
-	cp $DISTDIR/kernel-${CKV}-i686-ent.config.ovz ${D}/usr/src/linux-${KV_FULL}/arch/x86/configs/defconfig 
+	cp $DISTDIR/kernel-${CKV}-i686-ent.config.ovz ${D}/usr/src/linux-${KV_FULL}/arch/i386/configs/defconfig 
 	cp $DISTDIR/kernel-${CKV}-x86_64.config.ovz ${D}/usr/src/linux-${KV_FULL}/arch/x86_64/configs/defconfig 
 	[ "$ARCH" = "amd64" ] && cp $DISTDIR/kernel-${CKV}-x86_64.config.ovz ${D}/usr/src/linux-${KV_FULL}/.config
 	[ "$ARCH" = "x86" ] && cp $DISTDIR/kernel-${CKV}-i686-ent.config.ovz ${D}/usr/src/linux-${KV_FULL}/.config
