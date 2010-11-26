@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/sys-kernel/openvz-sources/openvz-sources-2.6.18.028.066.7.ebuild,v 1.1 2009/11/26 19:12:49 pva Exp $
 
-EAPI=3
+EAPI=2
 ETYPE="sources"
 
 CKV=2.6.18
@@ -22,15 +22,14 @@ inherit kernel-2
 detect_version
 
 DEPEND="<=sys-fs/udev-147"
-#KEYWORDS="amd64 x86"
-KEYWORDS=""
+KEYWORDS="amd64 x86"
 IUSE=""
 DESCRIPTION="Full Linux kernel sources - RHEL5 kernel with OpenVZ patchset"
 HOMEPAGE="http://www.openvz.org"
 MAINPATCH="patch-194.26.1.el5.${OVZ_KV}-combined.gz"
 SRC_URI="${KERNEL_URI}
-	http://download.openvz.org/kernel/branches/rhel5-${CKV}/${OVZ_KV}/configs/kernel-${CKV}-i686-ent.config.ovz
-	http://download.openvz.org/kernel/branches/rhel5-${CKV}/${OVZ_KV}/configs/kernel-${CKV}-x86_64.config.ovz
+	http://download.openvz.org/kernel/branches/rhel5-${CKV}/${OVZ_KV}/configs/kernel-${CKV}-i686-ent.config.ovz -> config-${CKV}-${OVZ_KV}.i686
+	http://download.openvz.org/kernel/branches/rhel5-${CKV}/${OVZ_KV}/configs/kernel-${CKV}-x86_64.config.ovz -> config-${CKV}-${OVZ_KV}.x86_64
 	http://download.openvz.org/kernel/branches/rhel5-${CKV}/${OVZ_KV}/patches/$MAINPATCH"
 
 UNIPATCH_STRICTORDER=1
@@ -52,7 +51,7 @@ configurations can result in build failures.
 For best results, always start with a .config provided by the OpenVZ 
 team from:
 
-http://wiki.openvz.org/Download/kernel/rhel6/${OVZ_KERNEL}.
+http://wiki.openvz.org/Download/kernel/rhel5/${OVZ_KERNEL}.
 
 On amd64 and x86 arches, one of these configurations has automatically been
 enabled in the kernel source tree that was just installed for you.
@@ -66,11 +65,12 @@ prior to building kernel."
 
 src_install() {
 	kernel-2_src_install
-	cp $DISTDIR/kernel-${CKV}-i686-ent.config.ovz ${D}/usr/src/linux-${KV_FULL}/arch/i386/configs/defconfig 
-	cp $DISTDIR/kernel-${CKV}-x86_64.config.ovz ${D}/usr/src/linux-${KV_FULL}/arch/x86_64/configs/defconfig 
-	[ "$ARCH" = "amd64" ] && cp $DISTDIR/kernel-${CKV}-x86_64.config.ovz ${D}/usr/src/linux-${KV_FULL}/.config
-	[ "$ARCH" = "x86" ] && cp $DISTDIR/kernel-${CKV}-i686-ent.config.ovz ${D}/usr/src/linux-${KV_FULL}/.config
+	cp $DISTDIR/config-${CKV}-${OVZ_KV}.i686 ${D}/usr/src/linux-${KV_FULL}/arch/i386/defconfig 
+	cp $DISTDIR/config-${CKV}-${OVZ_KV}.x86_64 ${D}/usr/src/linux-${KV_FULL}/arch/x86_64/defconfig 
+	[ "$ARCH" = "amd64" ] && cp $DISTDIR/config-${CKV}-${OVZ_KV}.x86_64 ${D}/usr/src/linux-${KV_FULL}/.config
+	[ "$ARCH" = "x86" ] && cp $DISTDIR/config-${CKV}-${OVZ_KV}.i686 ${D}/usr/src/linux-${KV_FULL}/.config
 }
+
 pkg_postinst() {
 	kernel-2_pkg_postinst
 }

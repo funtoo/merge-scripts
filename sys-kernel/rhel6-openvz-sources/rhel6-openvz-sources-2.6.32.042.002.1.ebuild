@@ -2,6 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/sys-kernel/openvz-sources/openvz-sources-2.6.18.028.066.7.ebuild,v 1.1 2009/11/26 19:12:49 pva Exp $
 
+EAPI=2
 ETYPE="sources"
 
 CKV=2.6.32
@@ -63,9 +64,10 @@ src_install() {
 	kernel-2_src_install
 	cp $DISTDIR/config-${CKV}-${OVZ_KV}.i686 ${D}/usr/src/linux-${KV_FULL}/arch/x86/configs/i386_defconfig 
 	cp $DISTDIR/config-${CKV}-${OVZ_KV}.x86_64 ${D}/usr/src/linux-${KV_FULL}/arch/x86/configs/x86_64_defconfig 
+	[ "$ARCH" = "amd64" ] && cp $DISTDIR/config-${CKV}-${OVZ_KV}.x86_64 ${D}/usr/src/linux-${KV_FULL}/.config
+	[ "$ARCH" = "x86" ] && cp $DISTDIR/config-${CKV}-${OVZ_KV}.i686 ${D}/usr/src/linux-${KV_FULL}/.config
 }
+
 pkg_postinst() {
 	kernel-2_pkg_postinst
-	# having ARCH set by ebuild.sh will mess up the kernel Makefile, so unset it:
-	( unset ARCH; cd $ROOT/usr/src/linux-$KV_FULL; make defconfig ) || die "couldn't make defconfig"
 }
