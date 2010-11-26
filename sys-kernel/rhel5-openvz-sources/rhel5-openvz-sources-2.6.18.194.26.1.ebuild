@@ -65,9 +65,9 @@ prior to building kernel."
 src_install() {
 	kernel-2_src_install
 	cp $DISTDIR/kernel-${CKV}-i686-ent.config.ovz ${D}/usr/src/linux-${KV_FULL}/arch/x86/configs/defconfig 
-	cp $DISTDIR/config-${CKV}-x86_64.config.ovz ${D}/usr/src/linux-${KV_FULL}/arch/x86_64/configs/defconfig 
-	[ "$ARCH" = "amd64" ] && cp $DISTDIR/config-${CKV}-x86_64.config.ovz ${D}/usr/src/linux-${KV_FULL}/.config
-	[ "$ARCH" = "x86" ] && cp $DISTDIR/config-${CKV}-i686-ent.config.ovz ${D}/usr/src/linux-${KV_FULL}/.config
+	cp $DISTDIR/kernel-${CKV}-x86_64.config.ovz ${D}/usr/src/linux-${KV_FULL}/arch/x86_64/configs/defconfig 
+	[ "$ARCH" = "amd64" ] && cp $DISTDIR/kernel-${CKV}-x86_64.config.ovz ${D}/usr/src/linux-${KV_FULL}/.config
+	[ "$ARCH" = "x86" ] && cp $DISTDIR/kernel-${CKV}-i686-ent.config.ovz ${D}/usr/src/linux-${KV_FULL}/.config
 }
 pkg_postinst() {
 	kernel-2_pkg_postinst
