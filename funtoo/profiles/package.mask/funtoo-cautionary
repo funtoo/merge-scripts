@@ -1,0 +1,26 @@
+# Daniel Robbins <drobbins@funtoo.org> (6 Aug 2009)
+# Mask new versions for caution, and these should all
+# be tested and upgraded together. This helps ensure that
+# any new glibc upgrade will be built against any upgraded
+# linux-headers.
+
+# For toolchain upgrade ll-2010.2:
+>sys-libs/glibc-2.11.2-r2
+>sys-kernel/linux-headers-2.6.32
+>sys-devel/gcc-4.4.5
+>sys-devel/binutils-2.20.1
+# glibc-2.10 isn't compatible with make-3.82+
+>=sys-devel/make-3.82
+
+# Daniel Robbins <drobbins@funtoo.org> (20 Apr 2010)
+
+#udev-160 is now in unstable...
+>=sys-fs/udev-161
+
+# Daniel Robbins <drobbins@funtoo.org> (02 Aug 2009)
+# let's watch upstream bugs for a bit:
+>=dev-lang/python-3
+
+# Daniel Robbins <drobbins@funtooo.org> (22 Jul 2009)
+# I only recommend the 2.6.18 stable openvz-sources
+>=sys-kernel/openvz-sources-2.6.19
