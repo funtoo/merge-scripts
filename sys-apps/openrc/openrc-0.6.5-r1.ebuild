@@ -4,7 +4,7 @@
 
 inherit eutils flag-o-matic multilib toolchain-funcs
 
-NETV=1.0.6
+NETV=1.0.7
 DATEV=2010.11.26
 SRC_URI="http://www.funtoo.org/archive/corenetwork/corenetwork-${NETV}.tar.bz2 http://www.funtoo.org/archive/openrc/openrc-${PV}.${DATEV}.tar.bz2"
 DESCRIPTION="OpenRC manages the services, startup and shutdown of a host"
