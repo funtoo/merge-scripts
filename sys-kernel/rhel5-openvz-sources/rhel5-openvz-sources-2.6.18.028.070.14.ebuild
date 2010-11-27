@@ -10,11 +10,7 @@ OKV=$CKV
 OVZ_KERNEL="028stab070"
 OVZ_REV="14"
 OVZ_KV=${OVZ_KERNEL}.${OVZ_REV}
-if [[ ${PR} == "r0" ]]; then
-	KV_FULL=${CKV}-rhel5-openvz-${OVZ_KV}
-else
-	KV_FULL=${CKV}-rhel5-openvz-${OVZ_KV}-${PR}
-fi
+KV_FULL=${PN}-${PVR}
 EXTRAVERSION=-${OVZ_KV}
 KERNEL_URI="mirror://kernel/linux/kernel/v${KV_MAJOR}.${KV_MINOR}/linux-${CKV}.tar.bz2"
 
@@ -33,7 +29,7 @@ SRC_URI="${KERNEL_URI}
 	http://download.openvz.org/kernel/branches/rhel5-${CKV}/${OVZ_KV}/patches/$MAINPATCH"
 
 UNIPATCH_STRICTORDER=1
-UNIPATCH_LIST="$DISTDIR/$MAINPATCH"
+UNIPATCH_LIST="$DISTDIR/$MAINPATCH $FILESDIR/gcc-4.1.2.patch"
 
 #			${FILESDIR}/${PN}-2.6.18.028.064.7-bridgemac.patch
 #			${FILESDIR}/${PN}-2.6.18.028.068.3-cpu.patch
@@ -60,8 +56,8 @@ Slight modifications to the kernel configuration necessary for booting
 are usually fine. If you are using genkernel, the default configuration
 should be sufficient for your needs."
 
-K_EXTRAEWARN="THIS KERNEL MUST BE BUILT WITH GCC-4.1 - use gcc-config
-prior to building kernel."
+K_EXTRAEWARN="THIS KERNEL MUST BE BUILT WITH GCC-4.1. Makefile will use
+gcc-4.1.2 directly."
 
 src_install() {
 	kernel-2_src_install
