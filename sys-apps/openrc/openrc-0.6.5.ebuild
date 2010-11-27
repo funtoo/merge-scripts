@@ -4,8 +4,8 @@
 
 inherit eutils flag-o-matic multilib toolchain-funcs
 
-NETV=1.0.5
-DATEV=2010.10.27
+NETV=1.0.6
+DATEV=2010.11.26
 SRC_URI="http://www.funtoo.org/archive/corenetwork/corenetwork-${NETV}.tar.bz2 http://www.funtoo.org/archive/openrc/openrc-${PV}.${DATEV}.tar.bz2"
 DESCRIPTION="OpenRC manages the services, startup and shutdown of a host"
 HOMEPAGE="http://roy.marples.name/openrc"
@@ -14,7 +14,7 @@ RESTRICT="nomirror"
 
 LICENSE="BSD-2"
 SLOT="0"
-KEYWORDS="x86 amd64"
+KEYWORDS="~x86 ~amd64"
 IUSE="debug ncurses pam unicode kernel_linux kernel_FreeBSD"
 
 RDEPEND="kernel_linux? ( >=sys-apps/sysvinit-2.86-r11 )
@@ -165,4 +165,9 @@ pkg_postinst() {
 	elog "You should now update all files in /etc, using etc-update"
 	elog "or equivalent before rebooting."
 	elog
+
+	if path_exists -o "${ROOT}"/etc/conf.d/local.{start,stop} ; then
+		ewarn "/etc/conf.d/local.{start,stop} are deprecated.  Please convert"
+		ewarn "your files to /etc/conf.d/local and delete the files."
+	fi
 }
