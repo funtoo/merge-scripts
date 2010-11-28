@@ -25,6 +25,8 @@ src_compile() {
 	unset LDFLAGS
 	DEFAULT_KERNEL_SOURCE="${S}" CMD_KERNEL_DIR="${S}" genkernel ${GKARGS} \
 		--no-mrproper \
+		--no-save-config \
+		--kernname="${PN/-binaries/}" \
 		--kerneldir="${WORKDIR}/linux-${P/-binaries/-sources}" \
 		--cachedir="${WORKDIR}"/cache \
 		--makeopts="${MAKEOPTS}" \
