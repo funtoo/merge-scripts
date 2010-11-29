@@ -12,7 +12,7 @@ SRC_URI="http://www.funtoo.org/archive/vzctl/${P}-funtoo-4.tar.bz2"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~ia64 ~ppc64 ~sparc ~x86"
+KEYWORDS="amd64 ia64 ppc64 sparc x86"
 IUSE="bash-completion"
 
 RDEPEND="
