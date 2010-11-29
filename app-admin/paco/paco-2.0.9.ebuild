@@ -25,18 +25,15 @@ src_prepare() {
 	eautoreconf
 }
 
-
 src_configure() {
 	if ! use gtk; then myconf+=" --disable-gpaco"; fi
 	if ! use tools; then myconf+=" --disable-scripts"; fi
-
 	econf $myconf
 }
 
 src_install() {
-	einstall || die
+	make DESTDIR="${D}" install || die
 	dodoc BUGS ChangeLog README doc/pacorc doc/faq.txt
-	
 	# We want docs in /usr/share/doc/paco.
 	rm -fr "${D}/usr/share/paco" || die
 }
