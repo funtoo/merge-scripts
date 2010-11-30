@@ -282,7 +282,7 @@ pkg_postinst() {
 	then
 		# no default version of python enabled - enable ourselves, so
 		# /usr/bin/python exists:
-		eselect python set --python2 > /dev/null 2>&1
+		eselect python set python${SLOT} > /dev/null 2>&1
 	fi
 
 	python_mod_optimize -f -x "/(site-packages|test|tests)/" $(python_get_libdir)
