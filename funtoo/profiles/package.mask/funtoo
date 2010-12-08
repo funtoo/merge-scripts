@@ -67,3 +67,4 @@ sys-apps/paludis
 # Having both unmasked causes "emerge dev-db/mysql" to fail, which is
 # not optimal.
 dev-db/mysql-community
+

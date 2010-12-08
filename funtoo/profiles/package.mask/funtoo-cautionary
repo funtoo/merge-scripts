@@ -28,3 +28,4 @@
 # Daniel Robbins <drobbins@funtooo.org> (22 Jul 2009)
 # I only recommend the 2.6.18 stable openvz-sources
 >=sys-kernel/openvz-sources-2.6.19
+
