@@ -1,6 +1,52 @@
 # ChangeLog for dev-libs/glib
 # Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
-# $Header: /var/cvsroot/gentoo-x86/dev-libs/glib/ChangeLog,v 1.421 2010/09/08 20:41:23 eva Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-libs/glib/ChangeLog,v 1.430 2010/10/17 15:12:35 pacho Exp $
+
+*glib-2.26.0-r1 (17 Oct 2010)
+
+  17 Oct 2010; Pacho Ramos <pacho@gentoo.org> -glib-2.26.0.ebuild,
+  +glib-2.26.0-r1.ebuild, +files/glib-2.26.0-error-pileup.patch,
+  +files/glib-2.26.0-not-close.patch, +files/glib-2.26.0-unref-null.patch:
+  Revision bump to include one important upstream fix to prevent evince
+  crash at startup, also fix test and prevent error pileup. Remove previous
+  broken version.
+
+  17 Oct 2010; Raúl Porcel <armin76@gentoo.org> glib-2.24.1-r1.ebuild:
+  alpha/ia64/m68k/s390/sh/sparc stable wrt #324077
+
+  14 Oct 2010; Markus Meier <maekke@gentoo.org> glib-2.24.1-r1.ebuild:
+  arm stable, bug #324077
+
+  07 Oct 2010; Samuli Suominen <ssuominen@gentoo.org> glib-2.24.1-r1.ebuild:
+  ppc64 stable wrt #324077
+
+  06 Oct 2010; Gilles Dartiguelongue <eva@gentoo.org> glib-2.24.2.ebuild,
+  glib-2.26.0.ebuild,
+  +files/glib-2.26.0-disable-locale-sensitive-test.patch,
+  +files/glib-2.26.0-disable-volumemonitor-broken-test.patch:
+  Fix testsuite failure on hardened, bug #338891. Disable visibility with
+  USE=debug, bug #274647. Disable 3 tests in the 2.26 testsuite to allow a
+  successful run and sync the ebuild back with latest changes in 2.24.
+
+*glib-2.26.0 (28 Sep 2010)
+
+  28 Sep 2010; <nirbheek@gentoo.org> +glib-2.26.0.ebuild:
+  Bump to 2.26.0, stable release with various bug fixes
+
+  25 Sep 2010; <nirbheek@gentoo.org> glib-2.25.17.ebuild:
+  Drop patch that is no longer used for in-tree 2.24 ebuilds. Syncing error
+  pointed out by eva
+
+*glib-2.25.17 (25 Sep 2010)
+
+  25 Sep 2010; <nirbheek@gentoo.org> +glib-2.25.17.ebuild,
+  +files/glib-2.25-punt-python-check.patch,
+  +files/glib-2.25-skip-tests-with-dbus-keyring.patch, metadata.xml:
+  Bump to 2.25.17, needed for gdk-pixbuf-2.22 and gtk+-2.22. Stable release
+  will be made within the next week.
+
+  11 Sep 2010; Joseph Jezak <josejx@gentoo.org> glib-2.24.1-r1.ebuild:
+  Marked ppc for bug #324077.
 
   08 Sep 2010; Gilles Dartiguelongue <eva@gentoo.org> glib-2.20.5-r1.ebuild,
   glib-2.22.4.ebuild, glib-2.22.5.ebuild, glib-2.24.1-r1.ebuild,
