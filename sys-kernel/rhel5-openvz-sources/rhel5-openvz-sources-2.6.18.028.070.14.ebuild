@@ -29,11 +29,7 @@ SRC_URI="${KERNEL_URI}
 	http://download.openvz.org/kernel/branches/rhel5-${CKV}/${OVZ_KV}/patches/$MAINPATCH"
 
 UNIPATCH_STRICTORDER=1
-UNIPATCH_LIST="$DISTDIR/$MAINPATCH $FILESDIR/gcc-4.1.2.patch"
-
-#			${FILESDIR}/${PN}-2.6.18.028.064.7-bridgemac.patch
-#			${FILESDIR}/${PN}-2.6.18.028.068.3-cpu.patch
-#			${FILESDIR}/uvesafb-0.1-rc3-2.6.18-openvz-028.066.10.patch"
+UNIPATCH_LIST="$DISTDIR/$MAINPATCH $FILESDIR/gcc-4.1.2.patch ${FILESDIR}/${PN}-2.6.18.028.064.7-bridgemac.patch ${FILESDIR}/uvesafb-0.1-rc3-2.6.18-openvz-028.066.10.patch"
 
 K_EXTRAEINFO="
 This OpenVZ kernel uses RHEL5 (Red Hat Enterprise Linux 5) patch set.
