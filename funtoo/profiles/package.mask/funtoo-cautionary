@@ -1,7 +1,3 @@
-# Piotr Karbowski <piotr.karbowski@gmail.com> (08 Dec 2010)
-# Mask new versions for testing.
->dev-libs/glib-2.24.2
-
 # Daniel Robbins <drobbins@funtoo.org> (6 Aug 2009)
 # Mask new versions for caution, and these should all
 # be tested and upgraded together. This helps ensure that
