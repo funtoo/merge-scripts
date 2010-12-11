@@ -8,7 +8,7 @@ DESCRIPTION="UFTP is an encrypted multicast file transfer program, designed to s
 HOMEPAGE="http://www.tcnj.edu/~bush/uftp.html"
 SRC_URI="http://www.tcnj.edu/~bush/downloads/${P}.tar"
 
-LICENSE="GPL-2"
+LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64 x86"
 IUSE="+ssl"
@@ -18,13 +18,19 @@ RDEPEND="${DEPEND}"
 
 src_compile() {
 	if use ssl; then
-		emake
+		emake CFLAGS="${CFLAGS}"
 	else
-		emake NO_ENCRYPTION=1
+		emake CFLAGS="${CFLAGS}" NO_ENCRYPTION=1
 	fi
 }
 
 src_install() {
 	make DESTDIR=${D} install || die "install failed"
 	mv ${D}/bin ${D}/usr/bin || die "mv failed"
+	newinitd "${FILESDIR}"/uftpd.init uftpd || die "newinitd failed"
+	newconfd "${FILESDIR}"/uftpd.conf uftpd || die "newconfd failed"
+	diropts -o nobody
+	keepdir /var/log/uftpd || die "dodir failed"
+	dodir /var/run/uftpd || die "dodir run failed"
+	keepdir /var/tmp/uftpd || die "dodir tmp failed"
 }
