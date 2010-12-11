@@ -1,0 +1,18 @@
+4570bd5d47f8ae1d12ea0b53f8f6d1fe2e106f0f
+Fix build failure on some 64bit archs
+
+Build failure seen on some 64Bit archs. Was seen on PowerPC64 also.
+See Debian BTS #526012
+Index: fusecompress-2.5/src/boost/integer/endian.hpp
+===================================================================
+--- fusecompress-2.5.orig/src/boost/integer/endian.hpp	2009-04-13 19:57:20.000000000 +0530
++++ fusecompress-2.5/src/boost/integer/endian.hpp	2009-05-05 17:36:32.000000000 +0530
+@@ -211,7 +211,7 @@
+         endian() {}
+     #ifdef BOOST_BIG_ENDIAN
+         endian(T val) : integer(val) { }
+-        endian & operator=(T val) { integer = val); return *this; }
++        endian & operator=(T val) { integer = val; return *this; }
+         operator T() const { return integer; }
+     #else
+         endian(T val)             { detail::store_big_endian<T, sizeof(T)>(&integer, val); }
