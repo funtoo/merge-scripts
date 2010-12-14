@@ -100,6 +100,7 @@ class InsertEbuilds(MergeStep):
 			if not os.path.isdir(catdir):
 				# not a valid category in source overlay, so skip it
 				continue
+			runShell("install -d %s" % catdir)
 			for pkg in os.listdir(catdir):
 				pkgdir = os.path.join(catdir, pkg)
 				if not os.path.isdir(pkgdir):
