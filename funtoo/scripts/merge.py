@@ -137,7 +137,7 @@ class ProfileDepFix(MergeStep):
 					continue
 				sp = line.split()
 				if len(sp) >= 2:
-					prof_path = sp[2]
+					prof_path = sp[1]
 					runShell("rm -f %s/profiles/%s/deprecated" % ( tree.root, prof_path ))
 
 class GenCache(MergeStep):
@@ -163,7 +163,17 @@ class GitAdd(MergeStep):
 	def run(self,tree):
 		runShell("( cd %s; git add . )" % tree.root )
 		if self.commit:
-			runShell("( cd %s; [ -n \"$(git status --porcelain)\" ] && git commit -a -m \"%s\" )" % ( tree.root, self.message ))
+			cmd = "( cd %s; [ -n \"$(git status --porcelain)\" ] && git commit -a -F - << EOF || exit 0\n" % tree.root
+			for line in self.message.split("\n"):
+				cmd += line+"\n"
+			cmd += "EOF\n"
+			cmd += ")\n" 
+			print "running: %s" % cmd
+			# we use os.system because this multi-line command breaks runShell() - really, breaks commands.getstatusoutput().
+			retval = os.system(cmd)
+			if retval != 0:
+				print "Commit failed."
+				sys.exit(1)
 
 steps = [
 	SyncTree("/var/git/portage-gentoo",exclude=["/metadata/cache/**"]),
@@ -173,17 +183,25 @@ steps = [
 	SyncDir("/root/git/funtoo-overlay","licenses"),
 	SyncDir("/root/git/funtoo-overlay","eclass"),
 	InsertEbuilds("/root/git/funtoo-overlay",replace=True),
-	InsertEbuilds("/root/git/tarsius-overlay",replace=False),
+	#InsertEbuilds("/root/git/tarsius-overlay",replace=False),
 	GenCache()
 ]
 
 
 a = UnifiedTree("/var/src/merge-portage-work",steps)
 a.run()
+message="""
+
+This is a multi-line message. It should prove useful in providing detail merge information.
+
+w00t!
+
+"""
+
 b = UnifiedTree("/var/git/merge-portage-prod", [ 
 	GitPrep("funtoo.org"), 
 	SyncTree("/var/src/merge-portage-work"), 
-	GitAdd(commit=True,message="glorious funtoo updates") 
+	GitAdd(commit=True,message=message) 
 ])
 b.run()
 c = UnifiedTree("/var/git/merge-portage-mini", [ 
