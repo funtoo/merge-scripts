@@ -1,6 +1,6 @@
-Slight funtoo modifications to virtuals
+Foo.
 
-From: Daniel Robbins <drobbins@funtoo.org>
+From: Piotr Karbowski <jabberuser@gmail.com>
 
 
 ---
@@ -8,7 +8,7 @@ From: Daniel Robbins <drobbins@funtoo.org>
  1 files changed, 1 insertions(+), 0 deletions(-)
 
 diff --git a/profiles/base/virtuals b/profiles/base/virtuals
-index 33437e1..a902d40 100644
+index 1abe4d1..933b986 100644
 --- a/profiles/base/virtuals
 +++ b/profiles/base/virtuals
 @@ -11,6 +11,7 @@
@@ -17,5 +17,5 @@ index 33437e1..a902d40 100644
  virtual/aspell-dict			app-dicts/aspell-en
 +virtual/baselayout			sys-apps/openrc
  virtual/blackbox			x11-wm/blackbox
- virtual/commonlisp			dev-lisp/sbcl
  virtual/cron				sys-process/vixie-cron
+ virtual/dev-manager			sys-fs/udev
