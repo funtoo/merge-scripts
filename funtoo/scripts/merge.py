@@ -5,6 +5,20 @@ import commands
 
 debug = False
 
+def headSHA1(tree):
+	head = None
+	hfile = os.path.join(tree,".git/HEAD")
+	if os.path.exists(hfile):
+		infile = open(hfile,"r")
+		head = infile.readline().split()[1]
+		infile.close()
+		hfile2 = os.path.join(tree,".git")
+		hfile2 = os.path.join(hfile2,head)
+		if os.path.exists(hfile2):
+			infile = open(hfile2,"r")
+			head = infile.readline().split()[0]
+	return head
+
 def runShell(string):
 	if debug:
 		print string
@@ -62,29 +76,61 @@ class SyncDir(MergeStep):
 
 class SyncTree(SyncDir):
 	# sync a full portage tree, deleting any excess files in the target dir:
-	def __init__(self,srcroot,exclude=[]):
-		SyncDir.__init__(self,srcroot,srcdir=None,destdir=None,exclude=exclude,delete=True)
+	def __init__(self,srctree,exclude=[]):
+		self.srctree = srctree
+		SyncDir.__init__(self,srctree.root,srcdir=None,destdir=None,exclude=exclude,delete=True)
+		
+	def run(self,desttree):
+		SyncDir.run(self,desttree)
+		desttree.merged.append([self.srctree.name,self.srctree.head()])	
 
-class UnifiedTree(object):
-	def __init__(self,root,steps):
+class Tree(object):
+	def __init__(self,name,root):
+		self.name = name
 		self.root = root
+		self.merged = []
+
+	def head(self):
+		return headSHA1(self.root)
+
+class UnifiedTree(Tree):
+	def __init__(self,name,root,steps):
 		self.steps = steps
+		Tree.__init__(self,name,root)
 
 	def run(self):
 		for step in self.steps:
 			step.run(self)
 
+	def gitAdd(self,commit=False):
+		runShell("( cd %s; git add . )" % self.root )
+		if commit:
+			cmd = "( cd %s; [ -n \"$(git status --porcelain)\" ] && git commit -a -F - << EOF || exit 0\n" % self.root
+			cmd += "merged trees: \n\n"
+			for name, sha1 in self.merged:
+				if sha1 != None:
+					cmd += "%s: %s\n" % ( name, sha1 )
+			cmd += "EOF\n"
+			cmd += ")\n" 
+			print "running: %s" % cmd
+			# we use os.system because this multi-line command breaks runShell() - really, breaks commands.getstatusoutput().
+			retval = os.system(cmd)
+			if retval != 0:
+				print "Commit failed."
+				sys.exit(1)
+	
+
 class InsertEbuilds(MergeStep):
 
-	def __init__(self,root,replace=False,categories=None):
-		self.root = root
+	def __init__(self,srctree,replace=False,categories=None):
+		self.srctree = srctree
 		self.replace = replace
 		self.categories = categories
 
-	def run(self,tree):
-
+	def run(self,desttree):
+		desttree.merged.append([self.srctree.name,self.srctree.head()])	
 		# Figure out what categories to process:
-		catpath = os.path.join(self.root,"profiles/categories")
+		catpath = os.path.join(self.srctree.root,"profiles/categories")
 
 		if self.categories != None:
 			# categories specified in __init__:
@@ -92,23 +138,23 @@ class InsertEbuilds(MergeStep):
 		elif os.path.exists(catpath):
 			# categories defined in profile:
 			a = []
-			f = open(os.path.join(self.root,"profiles/categories"),"r")
+			f = open(os.path.join(self.srctree.root,"profiles/categories"),"r")
 			for cat in f.readlines():
 				a.append(cat.strip())
 			f.close()
 		else:
 			# no categories specified to __init__, and no profiles/categories file, so auto-detect categories:
 			a = []
-			cats = os.listdir(self.root)
+			cats = os.listdir(self.srctree.root)
 			for cat in cats:
 				# All categories have a "-" in them and are directories:
-				if os.path.isdir(os.path.join(self.root,cat)) and cat.find("-") != -1:
+				if os.path.isdir(os.path.join(self.srctree.root,cat)) and cat.find("-") != -1:
 					a.append(cat)
 
 		# Our main loop:
-		print "# Merging in ebuilds from %s" % self.root 
+		print "# Merging in ebuilds from %s" % self.srctree.root 
 		for cat in a:
-			catdir = os.path.join(self.root,cat)
+			catdir = os.path.join(self.srctree.root,cat)
 			if not os.path.isdir(catdir):
 				# not a valid category in source overlay, so skip it
 				continue
@@ -118,7 +164,7 @@ class InsertEbuilds(MergeStep):
 				if not os.path.isdir(pkgdir):
 					# not a valid package dir in source overlay, so skip it
 					continue
-				tpkgdir = os.path.join(tree.root,cat)
+				tpkgdir = os.path.join(desttree.root,cat)
 				tpkgdir = os.path.join(tpkgdir,pkg)
 				copy = False
 				if self.replace:
@@ -156,59 +202,49 @@ class Minify(MergeStep):
 		runShell("( cd %s; find -iname ChangeLog -exec rm -f {} \; )" % tree.root )
 		runShell("( cd %s; find -iname Manifest -exec sed -n -i -e \"/DIST/p\" {} \; )" % tree.root )
 
-class GitAdd(MergeStep):
-	def __init__(self,commit=False,message="(no message)"):
-		self.commit = commit
-		self.message = message
-	def run(self,tree):
-		runShell("( cd %s; git add . )" % tree.root )
-		if self.commit:
-			cmd = "( cd %s; [ -n \"$(git status --porcelain)\" ] && git commit -a -F - << EOF || exit 0\n" % tree.root
-			for line in self.message.split("\n"):
-				cmd += line+"\n"
-			cmd += "EOF\n"
-			cmd += ")\n" 
-			print "running: %s" % cmd
-			# we use os.system because this multi-line command breaks runShell() - really, breaks commands.getstatusoutput().
-			retval = os.system(cmd)
-			if retval != 0:
-				print "Commit failed."
-				sys.exit(1)
+
+# CHANGE TREE CONFIGURATION BELOW:
+
+gentoo_src = Tree("gentoo","/var/git/portage-gentoo")
+funtoo_overlay = Tree("funtoo-overlay", "/root/git/funtoo-overlay")
+tarsius_overlay = Tree("tarsius-overlay", "/root/git/tarsius-overlay")
 
 steps = [
-	SyncTree("/var/git/portage-gentoo",exclude=["/metadata/cache/**"]),
-	ApplyPatchSeries("/root/git/funtoo-overlay/funtoo/patches"),
-	SyncDir("/root/git/funtoo-overlay","funtoo/profiles","profiles"),
+	SyncTree(gentoo_src,exclude=["/metadata/cache/**"]),
+	ApplyPatchSeries("%s/funtoo/patches" % funtoo_overlay.root ),
+	SyncDir(funtoo_overlay.root,"funtoo/profiles","profiles"),
 	ProfileDepFix(),
-	SyncDir("/root/git/funtoo-overlay","licenses"),
-	SyncDir("/root/git/funtoo-overlay","eclass"),
-	InsertEbuilds("/root/git/funtoo-overlay",replace=True),
-	#InsertEbuilds("/root/git/tarsius-overlay",replace=False),
+	SyncDir(funtoo_overlay.root,"licenses"),
+	SyncDir(funtoo_overlay.root,"eclass"),
+	InsertEbuilds(funtoo_overlay, replace=True),
+	InsertEbuilds(tarsius_overlay, replace=False),
 	GenCache()
 ]
 
+# work tree is a non-git tree in tmpfs for enhanced performance - we do all the heavy lifting there:
 
-a = UnifiedTree("/var/src/merge-portage-work",steps)
-a.run()
-message="""
+work = UnifiedTree("work","/var/src/merge-portage-work",steps)
+work.run()
 
-This is a multi-line message. It should prove useful in providing detail merge information.
+steps = [
+	GitPrep("funtoo.org"),
+	SyncTree(work)
+]
 
-w00t!
+# then for the production tree, we rsync all changes on top of our prod git tree and commit:
 
-"""
+prod = UnifiedTree("prod","/var/git/merge-portage-prod",steps)
+prod.run()
+prod.gitAdd(commit=True)
 
-b = UnifiedTree("/var/git/merge-portage-prod", [ 
+# then for the mini tree, we rsync all work changes on top of our mini git tree, minify, and commit:
+
+mini = UnifiedTree("mini","/var/git/merge-portage-mini", [ 
 	GitPrep("funtoo.org"), 
-	SyncTree("/var/src/merge-portage-work"), 
-	GitAdd(commit=True,message=message) 
+	SyncTree(work, exclude=["ChangeLog"]), 
+	Minify() 
 ])
-b.run()
-c = UnifiedTree("/var/git/merge-portage-mini", [ 
-	GitPrep("funtoo.org"), 
-	SyncTree("/var/src/merge-portage-work", exclude=["ChangeLog"]), 
-	Minify(), 
-	GitAdd(commit=True,message="glorious funtoo updates") 
-])
-c.run()
+
+mini.run()
+mini.gitAdd(commit=True)
 
