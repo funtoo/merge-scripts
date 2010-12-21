@@ -1,9 +1,5 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
-# Piotr Karbowski <piotr.karbowski@gmail.com> (21 Dec 2010
-# Masked for testing.
-=net-misc/dhcpcd-5.2.8-r1
-
 # Daniel Robbins <drobbins@funtoo.org> (21 Oct 2010)
 # Masked for testing:
 >=dev-lang/perl-5.12.2
