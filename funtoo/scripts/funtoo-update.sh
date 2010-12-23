@@ -47,8 +47,7 @@ for pat in `cat funtoo/patches/series | grep -v '^#'`
 do
 	( cd $final; git apply "$src/funtoo/patches/$pat" ) || die "patch $pat failed"
 done
-rsync -av "$src"/funtoo/profiles/ $final/profiles/ || die "rsync of whole profile files failed"
-
+rsync -av --exclude repo_name "$src"/profiles/ $final/profiles/ || die "rsync of whole profile files failed"
 
 # remove any lingering "deprecated" files.
 for f in $(cat $final/profiles/profiles.desc | grep -v "#" | awk '{ print $2 }')
