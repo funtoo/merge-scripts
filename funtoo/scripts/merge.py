@@ -212,7 +212,7 @@ tarsius_overlay = Tree("tarsius-overlay", "/root/git/tarsius-overlay")
 steps = [
 	SyncTree(gentoo_src,exclude=["/metadata/cache/**"]),
 	ApplyPatchSeries("%s/funtoo/patches" % funtoo_overlay.root ),
-	SyncDir(funtoo_overlay.root,"funtoo/profiles","profiles"),
+	SyncDir(funtoo_overlay.root,"profiles","profiles", exclude=["repo_name"]),
 	ProfileDepFix(),
 	SyncDir(funtoo_overlay.root,"licenses"),
 	SyncDir(funtoo_overlay.root,"eclass"),
