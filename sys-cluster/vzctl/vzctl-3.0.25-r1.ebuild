@@ -30,7 +30,7 @@ src_prepare() {
 	cd "${WORKDIR}"/${GITHUB_USER}-${PN}-*
 	S="$(pwd)"
 	# Set default OSTEMPLATE on gentoo
-	sed -e 's:=redhat-:=funtoo:' -i etc/dists/default || die
+	sed -e 's:=redhat-:=funtoo-:' -i etc/dists/default || die
 	eautoreconf
 }
 
