@@ -1,5 +1,9 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Daniel Robbins <drobbins@funtoo.org> (22 Dec 2010)
+# Masked for testing - initial test release:
+>=sys-cluster/vzctl-3.0.25
+
 # Piotr Karbowski <piotr.karbowski@gmail.com> (21 Dec 2010)
 # Newer openresolv seen to be broken.
 >net-dns/openresolv-3.3.4-r1
