@@ -9,7 +9,7 @@ inherit bash-completion autotools eutils
 DESCRIPTION="OpenVZ Containers control utility"
 HOMEPAGE="http://openvz.org/"
 GITHUB_USER="funtoo"
-GITHUB_TAG="${P}-funtoo"
+GITHUB_TAG="${PF}-funtoo"
 SRC_URI="https://github.com/${GITHUB_USER}/${PN}/tarball/${GITHUB_TAG} -> ${GITHUB_TAG}.tar.gz"
 
 LICENSE="GPL-2"

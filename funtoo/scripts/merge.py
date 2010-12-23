@@ -82,42 +82,57 @@ class SyncTree(SyncDir):
 		
 	def run(self,desttree):
 		SyncDir.run(self,desttree)
-		desttree.merged.append([self.srctree.name,self.srctree.head()])	
+		desttree.logTree(self.srctree)
 
 class Tree(object):
-	def __init__(self,name,root):
+	def __init__(self,name,root,pull=False):
 		self.name = name
 		self.root = root
 		self.merged = []
+		if pull:
+			runShell("(cd %s; git pull)" % self.root)		
 
 	def head(self):
 		return headSHA1(self.root)
 
+
+	def logTree(self,srctree):
+		# record name and SHA of src tree in dest tree, used for git commit message/auditing:
+		if srctree.name == None:
+			# this tree doesn't have a name, so just copy any existing history from that tree
+			self.merged.extend(srctree.merged)
+		else:
+			# this tree has a name, so record the name of the tree and its SHA1 for reference
+			self.merged.append([srctree.name, headSHA1(srctree.root)])
+
 class UnifiedTree(Tree):
-	def __init__(self,name,root,steps):
+	def __init__(self,root,steps):
 		self.steps = steps
-		Tree.__init__(self,name,root)
+		Tree.__init__(self,name=None,root=root,pull=False)
 
 	def run(self):
 		for step in self.steps:
 			step.run(self)
 
-	def gitAdd(self,commit=False):
+	def gitCommit(self,message="",push=False):
 		runShell("( cd %s; git add . )" % self.root )
-		if commit:
-			cmd = "( cd %s; [ -n \"$(git status --porcelain)\" ] && git commit -a -F - << EOF || exit 0\n" % self.root
-			cmd += "merged trees: \n\n"
-			for name, sha1 in self.merged:
-				if sha1 != None:
-					cmd += "%s: %s\n" % ( name, sha1 )
-			cmd += "EOF\n"
-			cmd += ")\n" 
-			print "running: %s" % cmd
-			# we use os.system because this multi-line command breaks runShell() - really, breaks commands.getstatusoutput().
-			retval = os.system(cmd)
-			if retval != 0:
-				print "Commit failed."
-				sys.exit(1)
+		cmd = "( cd %s; [ -n \"$(git status --porcelain)\" ] && git commit -a -F - << EOF || exit 0\n" % self.root
+		if message != "":
+			cmd += "%s\n\n" % message
+		cmd += "merged: \n\n"
+		for name, sha1 in self.merged:
+			if sha1 != None:
+				cmd += "  %s: %s\n" % ( name, sha1 )
+		cmd += "EOF\n"
+		cmd += ")\n" 
+		print "running: %s" % cmd
+		# we use os.system because this multi-line command breaks runShell() - really, breaks commands.getstatusoutput().
+		retval = os.system(cmd)
+		if retval != 0:
+			print "Commit failed."
+			sys.exit(1)
+		if push != False:
+			runShell("(cd %s; git push %s)" % ( self.root, push )) 
 	
 
 class InsertEbuilds(MergeStep):
@@ -128,7 +143,7 @@ class InsertEbuilds(MergeStep):
 		self.categories = categories
 
 	def run(self,desttree):
-		desttree.merged.append([self.srctree.name,self.srctree.head()])	
+		desttree.logTree(self.srctree)
 		# Figure out what categories to process:
 		catpath = os.path.join(self.srctree.root,"profiles/categories")
 
@@ -205,14 +220,18 @@ class Minify(MergeStep):
 
 # CHANGE TREE CONFIGURATION BELOW:
 
+pull = True
+#push = False
+push = "origin funtoo.org"
+
 gentoo_src = Tree("gentoo","/var/git/portage-gentoo")
-funtoo_overlay = Tree("funtoo-overlay", "/root/git/funtoo-overlay")
-tarsius_overlay = Tree("tarsius-overlay", "/root/git/tarsius-overlay")
+funtoo_overlay = Tree("funtoo-overlay", "/root/git/funtoo-overlay",pull=True)
+tarsius_overlay = Tree("tarsius-overlay", "/root/git/tarsius-overlay",pull=True)
 
 steps = [
 	SyncTree(gentoo_src,exclude=["/metadata/cache/**"]),
 	ApplyPatchSeries("%s/funtoo/patches" % funtoo_overlay.root ),
-	SyncDir(funtoo_overlay.root,"profiles","profiles", exclude=["repo_name"]),
+	SyncDir(funtoo_overlay.root,"profiles","profiles", exclude=["repo_name","categories"]),
 	ProfileDepFix(),
 	SyncDir(funtoo_overlay.root,"licenses"),
 	SyncDir(funtoo_overlay.root,"eclass"),
@@ -223,7 +242,7 @@ steps = [
 
 # work tree is a non-git tree in tmpfs for enhanced performance - we do all the heavy lifting there:
 
-work = UnifiedTree("work","/var/src/merge-portage-work",steps)
+work = UnifiedTree("/var/src/merge-portage-work",steps)
 work.run()
 
 steps = [
@@ -233,18 +252,18 @@ steps = [
 
 # then for the production tree, we rsync all changes on top of our prod git tree and commit:
 
-prod = UnifiedTree("prod","/var/git/merge-portage-prod",steps)
+prod = UnifiedTree("/var/git/portage-prod",steps)
 prod.run()
-prod.gitAdd(commit=True)
+prod.gitCommit(message="glorious funtoo updates",push=push)
 
 # then for the mini tree, we rsync all work changes on top of our mini git tree, minify, and commit:
 
-mini = UnifiedTree("mini","/var/git/merge-portage-mini", [ 
+mini = UnifiedTree("/var/git/portage-mini-2010", [ 
 	GitPrep("funtoo.org"), 
 	SyncTree(work, exclude=["ChangeLog"]), 
 	Minify() 
 ])
 
 mini.run()
-mini.gitAdd(commit=True)
+mini.gitCommit(message="glorious funtoo updates",push=push)
 
