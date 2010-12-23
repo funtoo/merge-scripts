@@ -1,6 +1,6 @@
 #!/usr/bin/python2
 
-import os,sys
+import os,sys,types
 import commands
 
 debug = False
@@ -182,7 +182,7 @@ class InsertEbuilds(MergeStep):
 				tpkgdir = os.path.join(desttree.root,cat)
 				tpkgdir = os.path.join(tpkgdir,pkg)
 				copy = False
-				if self.replace:
+				if self.replace == True or (type(self.replace) == types.ListType and "%s/%s" % (cat,pkg) in self.replace):
 					runShell("rm -rf %s; cp -a %s %s" % (tpkgdir, pkgdir, tpkgdir ))
 				else:
 					runShell("[ ! -e %s ] && cp -a %s %s || echo \"# skipping %s/%s\"" % (tpkgdir, pkgdir, tpkgdir, cat, pkg ))
@@ -221,8 +221,10 @@ class Minify(MergeStep):
 # CHANGE TREE CONFIGURATION BELOW:
 
 pull = True
-#push = False
-push = "origin funtoo.org"
+if len(sys.argv) > 1 and sys.argv[1] == "nopush":
+	push = False
+else:
+	push = "origin funtoo.org"
 
 gentoo_src = Tree("gentoo","/var/git/portage-gentoo")
 funtoo_overlay = Tree("funtoo-overlay", "/root/git/funtoo-overlay",pull=True)
@@ -239,6 +241,7 @@ steps = [
 	InsertEbuilds(tarsius_overlay, replace=False),
 	GenCache()
 ]
+#InsertEbuilds(tarsius_overlay, replace=["sys-libs/libixp","x11-wm/wmii","dev-vcs/cvsps"]),
 
 # work tree is a non-git tree in tmpfs for enhanced performance - we do all the heavy lifting there:
 
