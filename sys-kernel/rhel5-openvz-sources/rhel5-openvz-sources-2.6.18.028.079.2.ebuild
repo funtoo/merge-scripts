@@ -33,7 +33,8 @@ UNIPATCH_LIST="$DISTDIR/$MAINPATCH $FILESDIR/gcc-4.1.2.patch ${FILESDIR}/${PN}-2
 K_EXTRAEINFO="
 This OpenVZ kernel uses RHEL5 (Red Hat Enterprise Linux 5) patch set.
 This patch set is maintained by Red Hat for enterprise use, and contains
-further modifications by the OpenVZ development team.
+further modifications by the OpenVZ development team and the Funtoo
+Linux project.
 
 Red Hat typically only ensures that their kernels build using their
 own official kernel configurations. Significant variations from these
@@ -58,6 +59,12 @@ src_install() {
 	kernel-2_src_install
 	cp $DISTDIR/config-${CKV}-${OVZ_KV}.i686 ${D}/usr/src/linux-${KV_FULL}/arch/i386/defconfig 
 	cp $DISTDIR/config-${CKV}-${OVZ_KV}.x86_64 ${D}/usr/src/linux-${KV_FULL}/arch/x86_64/defconfig 
+	local MYARCH
+	for MYARCH in i386 x86_64
+	do
+		# add missing uvesafb config option (came from our patch) to default config
+		echo "CONFIG_FB_UVESA=y" >> "${D}/usr/src/linux-${KV_FULL}/arch/$MYARCH/defconfig" || die "uvesafb config fail"
+	done
 	[ "$ARCH" = "amd64" ] && cp $DISTDIR/config-${CKV}-${OVZ_KV}.x86_64 ${D}/usr/src/linux-${KV_FULL}/.config
 	[ "$ARCH" = "x86" ] && cp $DISTDIR/config-${CKV}-${OVZ_KV}.i686 ${D}/usr/src/linux-${KV_FULL}/.config
 }

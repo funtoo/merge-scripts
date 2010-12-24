@@ -12,37 +12,49 @@ KEYWORDS="amd64 x86"
 IUSE=""
 DESCRIPTION="RHEL5 kernel with OpenVZ patchset - initrd and bzImage"
 HOMEPAGE="http://www.openvz.org"
+S="${WORKDIR}/linux-${P/-binaries/-sources}"
 
 src_prepare() {
 	# copy installed kernel sources to temp dir to do our build:
-	cp -a $ROOT/usr/src/linux-${P/-binaries/-sources} ${WORKDIR}/ || die "couldn't copy original source"
+	cp -a $ROOT/usr/src/linux-${P/-binaries/-sources} ${S} || die "couldn't copy original source"
 }
 
 src_compile() {
-	install -d ${WORKDIR}/{lib,cache,boot/grub}
-	install -d "${S}"/temp
+	install -d ${D}/{lib,boot/grub}
+	install -d ${T}/{cache,twork}
+	local kcfg
+	if [ "$ARCH" = "amd64" ]
+	then
+		kcfg="$S/arch/x86_64/defconfig"
+	elif [ "$ARCH" = "x86" ]
+	then
+		kcfg="$S/arch/i386/defconfig"
+	else
+		die "unrecognized ARCH: $ARCH"
+	fi
 	unset ARCH # interferes with kernel Makefile
 	unset LDFLAGS
+
 	DEFAULT_KERNEL_SOURCE="${S}" CMD_KERNEL_DIR="${S}" genkernel ${GKARGS} \
 		--no-mrproper \
 		--no-save-config \
+		--kernel-config=$kcfg \
 		--kernname="${PN/-binaries/}" \
-		--kerneldir="${WORKDIR}/linux-${P/-binaries/-sources}" \
-		--cachedir="${WORKDIR}"/cache \
+		--kerneldir="${S}" \
 		--makeopts="${MAKEOPTS}" \
 		--kernel-cc=gcc-4.1.2 \
-		--tempdir="${S}"/temp \
+		--cachedir="${T}/cache" \
+		--tempdir="${T}/twork" \
 		--logfile="${WORKDIR}"/genkernel.log \
-		--bootdir="${WORKDIR}"/boot \
+		--bootdir="${D}"/boot \
 		--mountboot \
 		--lvm \
 		--luks \
 		--iscsi \
-		--module-prefix="${WORKDIR}" \
+		--module-prefix="${D}" \
 		all || die "genkernel failed"
 }
 
 src_install() {
-	mv ${WORKDIR}/lib ${D}/ || die "couldn't grab"
-	mv ${WORKDIR}/boot ${D}/ || die "couldn't grab2"
+	einfo "src_install steps performed by src_compile; skipping."
 }
