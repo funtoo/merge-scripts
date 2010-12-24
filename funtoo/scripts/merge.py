@@ -238,10 +238,9 @@ steps = [
 	SyncDir(funtoo_overlay.root,"licenses"),
 	SyncDir(funtoo_overlay.root,"eclass"),
 	InsertEbuilds(funtoo_overlay, replace=True),
-	InsertEbuilds(tarsius_overlay, replace=False),
+	InsertEbuilds(tarsius_overlay, replace=["sys-libs/libixp","x11-wm/wmii","dev-vcs/cvsps"]),
 	GenCache()
 ]
-#InsertEbuilds(tarsius_overlay, replace=["sys-libs/libixp","x11-wm/wmii","dev-vcs/cvsps"]),
 
 # work tree is a non-git tree in tmpfs for enhanced performance - we do all the heavy lifting there:
 
