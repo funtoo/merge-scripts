@@ -70,6 +70,7 @@ src_unpack() {
 	[[ ${READLINE_PLEVEL} -gt 0 ]] && epatch $(patches -s ${READLINE_PLEVEL} readline ${READLINE_VER})
 	cd ../..
 
+	epatch "${FILESDIR}"/${PN}-4.1-document-system-bashrc.patch
 	epatch "${FILESDIR}"/${PN}-4.1-fbsd-eaccess.patch #303411
 
 	if ! use vanilla ; then

@@ -1,0 +1,133 @@
+From d2b782699c19ce4fce76d0a9bb37ca131c663863 Mon Sep 17 00:00:00 2001
+From: Jonas Bernoulli <jonas@bernoul.li>
+Date: Fri, 24 Dec 2010 15:19:48 +0100
+Subject: [PATCH] document use of /etc/bash/bashrc
+
+---
+ doc/bash.1       |   23 +++++++++++++++++------
+ doc/bashref.texi |   20 +++++++++++++-------
+ 2 files changed, 30 insertions(+), 13 deletions(-)
+
+diff --git a/doc/bash.1 b/doc/bash.1
+index 1890b3c..b199c30 100644
+--- a/doc/bash.1
++++ b/doc/bash.1
+@@ -184,7 +184,9 @@ Display a usage message on standard output and exit successfully.
+ .PD
+ Execute commands from
+ .I file
+-instead of the standard personal initialization file
++instead of the system-wide initialization file
++.I /etc/bash/bashrc
++and the standard personal initialization file
+ .I ~/.bashrc
+ if the shell is interactive (see
+ .SM
+@@ -215,7 +217,9 @@ reads these files when it is invoked as a login shell (see
+ below).
+ .TP
+ .B \-\-norc
+-Do not read and execute the personal initialization file
++Do not read and execute the system-wide initialization file
++.I /etc/bash/bashrc
++and the personal initialization file
+ .I ~/.bashrc
+ if the shell is interactive.
+ This option is on by default if the shell is invoked as
+@@ -323,13 +327,16 @@ exists.
+ .PP
+ When an interactive shell that is not a login shell is started,
+ .B bash
+-reads and executes commands from \fI~/.bashrc\fP, if that file exists.
++first reads and executes commands from \fI/etc/bash/bashrc\fP, if
++that file exists.  After reading that file, it reads and executes
++commands from \fI~/.bashrc\fP, if that file exists.
+ This may be inhibited by using the
+ .B \-\-norc
+ option.
+ The \fB\-\-rcfile\fP \fIfile\fP option will force
+ .B bash
+-to read and execute commands from \fIfile\fP instead of \fI~/.bashrc\fP.
++to read and execute commands from \fIfile\fP instead of
++\fI/etc/bash/bashrc\fP and \fI~/.bashrc\fP.
+ .PP
+ When
+ .B bash
+@@ -415,7 +422,8 @@ daemon, usually \fIrshd\fP, or the secure shell daemon \fIsshd\fP.
+ If
+ .B bash
+ determines it is being run in this fashion, it reads and executes
+-commands from \fI~/.bashrc\fP, if that file exists and is readable.
++commands from \fI/etc/bash/bashrc\fP and \fI~/.bashrc\fP, if these
++files exist and are readable.
+ It will not do this if invoked as \fBsh\fP.
+ The
+ .B \-\-norc
+@@ -9625,7 +9633,10 @@ script.
+ The \fBbash\fP executable
+ .TP
+ .FN /etc/profile
+-The systemwide initialization file, executed for login shells
++The system-wide initialization file, executed for login shells
++.TP
++.FN /etc/bash/bashrc
++The system-wide per-interactive-shell startup file
+ .TP
+ .FN ~/.bash_profile
+ The personal initialization file, executed for login shells
+diff --git a/doc/bashref.texi b/doc/bashref.texi
+index bf8e3d0..dda1e6f 100644
+--- a/doc/bashref.texi
++++ b/doc/bashref.texi
+@@ -5312,7 +5312,9 @@ Display a usage message on standard output and exit successfully.
+ 
+ @item --init-file @var{filename}
+ @itemx --rcfile @var{filename}
+-Execute commands from @var{filename} (instead of @file{~/.bashrc})
++Execute commands from @var{filename} (instead of the system-wide startup
++file @file{/etc/bash/bashrc} and the standard personal initialization
++file @file{~/.bashrc})
+ in an interactive shell.
+ 
+ @item --login
+@@ -5329,7 +5331,8 @@ or any of the personal initialization files
+ when Bash is invoked as a login shell.
+ 
+ @item --norc
+-Don't read the @file{~/.bashrc} initialization file in an
++Don't read the system-wide startup file @file{/etc/bash/bashrc}
++or the personal initialization file @file{~/.bashrc} in an
+ interactive shell.  This is on by default if the shell is
+ invoked as @code{sh}.
+ 
+@@ -5461,10 +5464,13 @@ the file @file{~/.bash_logout}, if it exists.
+ @subsubheading Invoked as an interactive non-login shell
+ 
+ When an interactive shell that is not a login shell is started, Bash
+-reads and executes commands from @file{~/.bashrc}, if that file exists.
+-This may be inhibited by using the @option{--norc} option.
++first reads and executes commands from the file @file{/etc/bash/bashrc},
++if that file exists. After reading that file, it reads and executes
++commands from @file{~/.bashrc}, if that file exists.
++Loading these files may be inhibited by using the @option{--norc} option.
+ The @option{--rcfile @var{file}} option will force Bash to read and
+-execute commands from @var{file} instead of @file{~/.bashrc}.
++execute commands from @var{file} instead of
++@file{/etc/bash/bashrc} and @file{~/.bashrc}.
+ 
+ So, typically, your @file{~/.bash_profile} contains the line
+ @example
+@@ -5530,8 +5536,8 @@ Bash attempts to determine when it is being run with its standard input
+ connected to a a network connection, as if by the remote shell
+ daemon, usually @code{rshd}, or the secure shell daemon @code{sshd}.
+ If Bash determines it is being run in
+-this fashion, it reads and executes commands from @file{~/.bashrc}, if that
+-file exists and is readable.
++this fashion, it reads and executes commands from @file{/etc/bash/bashrc}
++and @file{~/.bashrc}, if these files exist and are readable.
+ It will not do this if invoked as @code{sh}.
+ The @option{--norc} option may be used to inhibit this behavior, and the
+ @option{--rcfile} option may be used to force another file to be read, but
+-- 
+1.7.3.4
+
