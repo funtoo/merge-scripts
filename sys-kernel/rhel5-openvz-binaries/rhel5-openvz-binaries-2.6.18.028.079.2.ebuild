@@ -2,6 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/sys-kernel/openvz-sources/openvz-sources-2.6.18.028.066.7.ebuild,v 1.1 2009/11/26 19:12:49 pva Exp $
 
+inherit mount-boot
+
 EAPI=2
 SLOT=0
 DEPEND="=sys-kernel/${P/-binaries/-sources}
@@ -20,7 +22,7 @@ src_prepare() {
 }
 
 src_compile() {
-	install -d ${D}/{lib,boot/grub}
+	install -d ${WORKDIR}/out/{lib,boot/grub}
 	install -d ${T}/{cache,twork}
 	local kcfg
 	if [ "$ARCH" = "amd64" ]
@@ -45,16 +47,15 @@ src_compile() {
 		--kernel-cc=gcc-4.1.2 \
 		--cachedir="${T}/cache" \
 		--tempdir="${T}/twork" \
-		--logfile="${WORKDIR}"/genkernel.log \
-		--bootdir="${D}"/boot \
-		--mountboot \
+		--logfile="${WORKDIR}/genkernel.log" \
+		--bootdir="${WORKDIR}/out/boot" \
 		--lvm \
 		--luks \
 		--iscsi \
-		--module-prefix="${D}" \
+		--module-prefix="${WORKDIR}/out" \
 		all || die "genkernel failed"
 }
 
 src_install() {
-	einfo "src_install steps performed by src_compile; skipping."
+	cp -a ${WORKDIR}/out/* ${D}/ || die "couldn't copy output files into place"
 }
