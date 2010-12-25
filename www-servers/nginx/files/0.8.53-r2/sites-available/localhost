@@ -1,0 +1,7 @@
+server {
+	listen 127.0.0.1;
+	server_name localhost;
+	access_log /var/log/nginx/localhost.access_log main;
+	error_log /var/log/nginx/localhost.error_log info;
+	root /var/www/localhost/htdocs;
+}
