@@ -1,5 +1,9 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Daniel Robbins <drobbins@funtoo.org> (1 Jan 2010)
+# Masked temporarily while I fix a few things.
+>=sys-apps/portage-2.2
+
 # Piotr Karbowski <piotr@funtoo.org> (28 Dec 2010)
 # Mask because of multiple compilation breaks.
 >=app-text/poppler-0.16.0
