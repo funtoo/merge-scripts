@@ -14,6 +14,9 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~m68k ~mips ~ppc ~ppc64 ~s390 ~sh ~spar
 PROVIDE="virtual/portage"
 SLOT="0"
 IUSE="build doc epydoc +ipc linguas_pl python3 selinux"
+GITHUB_REPO="portage-funtoo"
+GITHUB_USER="funtoo"
+GITHUB_TAG="funtoo-2.2_alpha6"
 
 python_dep="python3? ( =dev-lang/python-3* )
 	!python3? (
@@ -58,10 +61,9 @@ prefix_src_archives() {
 
 PV_PL="2.1.2"
 PATCHVER_PL=""
-TARBALL_PV=2.2_rc93
-SRC_URI="http://www.funtoo.org/archive/${PF}.tar.bz2 linguas_pl? ( mirror://gentoo/${PN}-man-pl-${PV_PL}.tar.bz2i )"
+SRC_URI="https://github.com/${GITHUB_USER}/${GITHUB_REPO}/tarball/${GITHUB_TAG} -> portage-${GITHUB_TAG}.tar.gz"
+SRC_URI="$SRC_URI linguas_pl? ( mirror://gentoo/${PN}-man-pl-${PV_PL}.tar.bz2 )"
 
-S="${WORKDIR}"/${PN}-${TARBALL_PV}
 S_PL="${WORKDIR}"/${PN}-${PV_PL}
 
 compatible_python_is_selected() {
@@ -95,6 +97,8 @@ pkg_setup() {
 }
 
 src_prepare() {
+	cd "${WORKDIR}"/${GITHUB_USER}-${PN}-*
+	S="$(pwd)"
 	if [ -n "${PATCHVER}" ] ; then
 		if [[ -L $S/bin/ebuild-helpers/portageq ]] ; then
 			rm "$S/bin/ebuild-helpers/portageq" \

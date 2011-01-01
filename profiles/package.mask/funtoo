@@ -21,10 +21,6 @@
 # http://git.overlays.gentoo.org/gitweb/?p=proj/portage.git;a=patch;h=5426e509c7053f75746bbb6ce0673e0663e4e98a
 >=dev-lang/python-2.6.6
 
-# Daniel Robbins <drobbins@funtoo.org> (09 Sep 2010)
-# Masked for testing:
->=sys-apps/portage-2.2_rc78
-
 # Daniel Robbins <drobbins@funtoo.org> (01 Sep 2010)
 # let's stick with a known-good version of ruby by
 # default, and protect against ruby-1.9.2 things that
