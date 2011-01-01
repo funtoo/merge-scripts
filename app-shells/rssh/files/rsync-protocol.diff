@@ -1,0 +1,78 @@
+From: Russ Allbery <rra@stanford.edu>
+Subject: [PATCH] Handle the rsync v3 -e option for protocol information
+
+As of rsync 3, rsync reused the -e option to pass protocol information
+from the client to the server.  We therefore cannot reject all -e
+options to rsync, only ones not sent with --server or containing
+something other than protocol information as an argument.
+
+Based on work by Robert Hardy.
+
+Debian Bug#471803
+
+Signed-off-by: Russ Allbery <rra@stanford.edu>
+
+---
+ util.c |   32 ++++++++++++++++++++++++++++++--
+ 1 files changed, 30 insertions(+), 2 deletions(-)
+
+diff --git a/util.c b/util.c
+index 8178c40..90b5b04 100644
+--- a/util.c
++++ b/util.c
+@@ -56,6 +56,7 @@
+ #ifdef HAVE_LIBGEN_H
+ #include <libgen.h>
+ #endif /* HAVE_LIBGEN_H */
++#include <regex.h>
+ 
+ /* LOCAL INCLUDES */
+ #include "pathnames.h"
+@@ -187,6 +188,33 @@ bool check_command( char *cl, ShellOptions_t *opts, char *cmd, int cmdflag )
+ }
+ 
+ /*
++ * check_rsync_e() - take the command line passed to rssh and look for a -e
++ *                   option.  If one is found, make sure --server is provided
++ *                   and the option contains only the protocol information.
++ *                   Returns 1 if the command line is safe; 0 otherwise.
++ */
++static int check_rsync_e( char *cl )
++{
++	int	status;
++	regex_t	re;
++
++	/*
++	 * This is more complicated than it looks because we don't want to
++	 * trigger on the e in --server, but we do want to catch the common
++	 * case of -ltpre.iL (which contains -e.).
++	 */
++	static const char pattern[] = "[ \t\v\f]-([^-][^ ]*)?e[^.0-9]";
++
++	if ( strstr(cl, "--server") == NULL ) return 0;
++	if ( regcomp(&re, pattern, REG_EXTENDED | REG_NOSUB) != 0 ){
++		return 0;
++	}
++	status = regexec(&re, cl, 0, NULL, 0);
++	regfree(&re);
++	return (status == 0) ? 0 : 1;
++}
++
++/*
+  * check_command_line() - take the command line passed to rssh, and verify
+  * 			  that the specified command is one the user is
+  * 			  allowed to run.  Return the path of the command
+@@ -230,9 +258,9 @@ char *check_command_line( char *cl, ShellOptions_t *opts )
+ 
+ 	if ( check_command(cl, opts, PATH_RSYNC, RSSH_ALLOW_RSYNC) ){
+ 		/* filter -e option */
+-		if ( opt_exist(cl, 'e') ){
++		if ( opt_exist(cl, 'e') && !check_rsync_e(cl) ){
+ 			fprintf(stderr, "\ninsecure -e option not allowed.");
+-			log_msg("insecure -e option in rdist command line!");
++			log_msg("insecure -e option in rsync command line!");
+ 			return NULL;
+ 		}
+ 		
+-- 
+tg: (35a8db6..) fixes/rsync-protocol (depends on: upstream)
