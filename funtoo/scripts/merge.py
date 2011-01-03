@@ -229,6 +229,7 @@ else:
 gentoo_src = Tree("gentoo","/var/git/portage-gentoo")
 funtoo_overlay = Tree("funtoo-overlay", "/root/git/funtoo-overlay",pull=True)
 tarsius_overlay = Tree("tarsius-overlay", "/root/git/tarsius-overlay",pull=True)
+foo_overlay = Tree("foo-overlay", "/root/git/foo-overlay",pull=True)
 
 steps = [
 	SyncTree(gentoo_src,exclude=["/metadata/cache/**"]),
@@ -239,6 +240,7 @@ steps = [
 	SyncDir(funtoo_overlay.root,"eclass"),
 	InsertEbuilds(funtoo_overlay, replace=True),
 	InsertEbuilds(tarsius_overlay, replace=["sys-libs/libixp","x11-wm/wmii","dev-vcs/cvsps","net-print/foo2zjs"]),
+	InsertEbuilds(foo_overlay, replace=False),
 	GenCache()
 ]
 
