@@ -137,7 +137,9 @@ class UnifiedTree(Tree):
 
 class InsertEbuilds(MergeStep):
 
-	def __init__(self,srctree,replace=False,categories=None):
+	def __init__(self,srctree,select="all",skip=None,replace=False,categories=None):
+		self.select = select
+		self.skip = skip
 		self.srctree = srctree
 		self.replace = replace
 		self.categories = categories
@@ -175,9 +177,16 @@ class InsertEbuilds(MergeStep):
 				continue
 			runShell("install -d %s" % catdir)
 			for pkg in os.listdir(catdir):
+				catpkg = "%s/%s" % (cat,pkg)
 				pkgdir = os.path.join(catdir, pkg)
 				if not os.path.isdir(pkgdir):
 					# not a valid package dir in source overlay, so skip it
+					continue
+				if type(self.select) == types.ListType and catpkg not in self.select:
+					# we have a list of pkgs to merge, and this isn't on the list, so skip:
+					continue
+				if type(self.skip) == types.ListType and catpkg in self.skip:
+					# we have a list of pkgs to skip, and this catpkg is on the list, so skip:
 					continue
 				tpkgdir = os.path.join(desttree.root,cat)
 				tpkgdir = os.path.join(tpkgdir,pkg)
@@ -238,9 +247,9 @@ steps = [
 	ProfileDepFix(),
 	SyncDir(funtoo_overlay.root,"licenses"),
 	SyncDir(funtoo_overlay.root,"eclass"),
-	InsertEbuilds(funtoo_overlay, replace=True),
-	InsertEbuilds(tarsius_overlay, replace=["sys-libs/libixp","x11-wm/wmii","dev-vcs/cvsps","net-print/foo2zjs"]),
-	InsertEbuilds(foo_overlay, replace=["app-shells/rssh"]),
+	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
+	InsertEbuilds(tarsius_overlay, select="all", skip=None, replace=["sys-libs/libixp","x11-wm/wmii","dev-vcs/cvsps","net-print/foo2zjs"]),
+	InsertEbuilds(foo_overlay, select="all", skip=None, replace=["app-shells/rssh"]),
 	GenCache()
 ]
 
