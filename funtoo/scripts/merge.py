@@ -19,7 +19,7 @@ def headSHA1(tree):
 			head = infile.readline().split()[0]
 	return head
 
-def runShell(string):
+def runShell(string,abortOnFail=True):
 	if debug:
 		print string
 	else:
@@ -30,7 +30,8 @@ def runShell(string):
 			print
 			print "output:"
 			print out[1]
-			sys.exit(1)
+			if abortOnFail:
+				sys.exit(1)
 
 class MergeStep(object):
 	pass
@@ -175,7 +176,7 @@ class InsertEbuilds(MergeStep):
 			if not os.path.isdir(catdir):
 				# not a valid category in source overlay, so skip it
 				continue
-			runShell("install -d %s" % catdir)
+			#runShell("install -d %s" % catdir)
 			for pkg in os.listdir(catdir):
 				catpkg = "%s/%s" % (cat,pkg)
 				pkgdir = os.path.join(catdir, pkg)
@@ -212,7 +213,7 @@ class ProfileDepFix(MergeStep):
 
 class GenCache(MergeStep):
 	def run(self,tree):
-		runShell("egencache --update --portdir=%s --jobs=12" % tree.root)
+		runShell("egencache --update --portdir=%s --jobs=12" % tree.root, abortOnFail=False)
 
 class GitPrep(MergeStep):
 	def __init__(self,branch):
