@@ -1,0 +1,29 @@
+Templary patch for gentoo's package.mask to strip perl mask.
+
+From: Piotr Karbowski <piotr@funtoo.org>
+
+
+---
+ profiles/package.mask/gentoo |    9 ---------
+ 1 files changed, 0 insertions(+), 9 deletions(-)
+
+diff --git a/profiles/package.mask/gentoo b/profiles/package.mask/gentoo
+index a77ccdf..4efe56e 100644
+--- a/profiles/package.mask/gentoo
++++ b/profiles/package.mask/gentoo
+@@ -42,15 +42,6 @@
+ # removal in xarthisius' overlay
+ media-libs/gle
+ 
+-# Torsten Veller <tove@gentoo.org> (06 Jan 2011)
+-# Next step to remove old perl and libperl versions.
+-# Versions prior 5.12 are masked and will be removed when 5.14 is available.
+-# If you are a sparc-fbsd user and your only keyworded perl version was masked,
+-# test perl-5.12.2 and reply to bug 288028
+-# For other complaints go to bug 350785
+-<dev-lang/perl-5.12.2
+-<sys-devel/libperl-5.10.1
+-
+ # Michał Górny <mgorny@gentoo.org> (05 Jan 2011)
+ # Moved to my dev overlay (found in layman as 'mgorny').
+ # Masked for removal in 30 days.

@@ -1,4 +1,4 @@
-# This series applies on GIT commit 5af58421b100f99a6a220c042de04b936ecc21bb
+# This series applies on GIT commit d2b29c6bab0f0b309780851e8f24eb9f8907398a
 02-virtuals
 03-use
 04-packages
@@ -7,3 +7,4 @@
 09-funtoo-profile-1.0
 11-ruby
 12-eclass
+13-gentoo-package.mask

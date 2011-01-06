@@ -10,10 +10,10 @@ From: Daniel Robbins <drobbins@funtoo.org>
  3 files changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/eclass/ruby-fakegem.eclass b/eclass/ruby-fakegem.eclass
-index 517d7ad..feef616 100644
+index e1ef05d..4a77c41 100644
 --- a/eclass/ruby-fakegem.eclass
 +++ b/eclass/ruby-fakegem.eclass
-@@ -196,7 +196,11 @@ ruby_fakegem_binwrapper() {
+@@ -248,7 +248,11 @@ ruby_fakegem_binwrapper() {
  			use ruby_targets_${implementation} || continue
  			if [ -z $rubycmd ]; then
  				# if no other implementation was set before, set it.
