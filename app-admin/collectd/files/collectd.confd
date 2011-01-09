@@ -1,0 +1,16 @@
+# Copyright 1999-2010 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/app-admin/collectd/files/collectd.confd,v 1.1 2010/09/28 15:17:05 dilfridge Exp $
+
+# Nice value used to launch collectd, to change priority of the process. As
+# you usually will want to run it in background, a default of 5 is used.
+#
+#COLLECTD_NICELVL='5'
+
+# Location of configuration file. Modify if you don't like the standard one.
+#
+#COLLECTD_CFGFILE='/etc/collectd.conf'
+
+# File used to store the PID file. Usually you won't need to touch it.
+#
+#COLLECTD_PIDFILE='/var/run/collectd.pid'
