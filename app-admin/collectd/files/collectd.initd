@@ -44,7 +44,10 @@ start() {
 	checkconfig || return 1
 
 	ebegin "Starting collectd"
-	start-stop-daemon --start \
+	# LD_PRELOAD fixes Perl plugin issue, described here:
+	# http://mailman.verplant.org/pipermail/collectd/2008-March/001616.html
+	# Fix #4 was tried first, didn't seem to work. This did:
+	LD_PRELOAD="/usr/lib/libperl.so" start-stop-daemon --start \
 		--nicelevel "${COLLECTD_NICELVL}" --exec /usr/sbin/collectd -- \
 			-P "${COLLECTD_PIDFILE}" -C "${COLLECTD_CFGFILE}"
 	eend $? "Failed to start collectd"

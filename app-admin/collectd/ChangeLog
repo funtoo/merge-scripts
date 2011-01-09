@@ -2,6 +2,15 @@
 # Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/app-admin/collectd/ChangeLog,v 1.12 2010/12/24 13:49:22 a3li Exp $
 
+*collectd-4.10.2-r3 (09 Jan 2011)
+
+  09 Jan 2011; Daniel Robbins <drobbins@funtoo.org> +collected-4.10.2-r3.ebuild:
+  New version to address perl module loading issue documented in this URL:
+  http://mailman.verplant.org/pipermail/collectd/2008-March/001616.html - fix
+  #4 was tried first, but it didn't work, but this fix did. This allows perl
+  modules to import other modules and work correctly. This allows the included
+  OpenVZ module to work correctly.
+
   24 Dec 2010; Alex Legler <a3li@gentoo.org> -collectd-4.10.1-r4.ebuild:
   Removing vulnerable ebuilds, bug 347622.
 

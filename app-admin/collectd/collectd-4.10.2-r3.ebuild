@@ -260,10 +260,8 @@ src_configure() {
 		myconf+=" --with-libiptc=no"
 	fi
 
-	# for CFLAGS hack, see: http://mailman.verplant.org/pipermail/collectd/2008-March/001620.html
-
 	# Finally, run econf.
-	KERNEL_DIR="${KERNEL_DIR}" CFLAGS="$CFLAGS -DLT_LAZY_OR_NOW='RTLD_LAZY|RTLD_GLOBAL'" econf --config-cache --without-included-ltdl --localstatedir=/var ${myconf}
+	KERNEL_DIR="${KERNEL_DIR}" econf --config-cache --without-included-ltdl --localstatedir=/var ${myconf}
 }
 
 src_install() {
