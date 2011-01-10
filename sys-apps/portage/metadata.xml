@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
-	<herd>no-herd</herd>
+	<herd>funtoo</herd>
 	<upstream>
-		<bugs-to>mailto:dev-portage@gentoo.org</bugs-to>
-		<changelog>http://sources.gentoo.org/viewcvs.py/*checkout*/portage/main/trunk/RELEASE-NOTES</changelog>
+		<bugs-to>mailto:funtoo-dev@groups.google.com</bugs-to>
+		<changelog>https://github.com/funtoo/portage-funtoo/commits/master</changelog>
 	</upstream>
+	<maintainer><email>drobbins@funtoo.org</email></maintainer>
 	<maintainer><email>dev-portage@gentoo.org</email></maintainer>
 	<maintainer><email>zmedico@gentoo.org</email></maintainer>
 	<use>

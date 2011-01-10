@@ -1,6 +1,6 @@
 # Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-apps/portage/portage-2.1.7.17.ebuild,v 1.11 2010/03/10 14:12:36 ranger Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-apps/portage/portage-2.2_rc98.ebuild,v 1.1 2010/10/18 11:54:33 zmedico Exp $
 
 # Require EAPI 2 since we now require at least python-2.6 (for python 3
 # syntax support) which also requires EAPI 2.
@@ -10,28 +10,36 @@ inherit eutils multilib python
 DESCRIPTION="Portage is the package management and distribution system for Gentoo"
 HOMEPAGE="http://www.gentoo.org/proj/en/portage/index.xml"
 LICENSE="GPL-2"
-KEYWORDS="alpha amd64 arm hppa ia64 m68k ~mips ppc ppc64 s390 sh sparc x86 ~sparc-fbsd ~x86-fbsd"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~m68k ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~sparc-fbsd ~x86 ~x86-fbsd"
 PROVIDE="virtual/portage"
 SLOT="0"
-IUSE="build doc epydoc linguas_pl python3 selinux"
+IUSE="build doc epydoc +ipc linguas_pl python3 selinux"
+GITHUB_REPO="portage-funtoo"
+GITHUB_USER="funtoo"
+GITHUB_TAG="funtoo-2.2.1"
 
 python_dep="python3? ( =dev-lang/python-3* )
-	!python3? ( || ( dev-lang/python:2.8 dev-lang/python:2.7 dev-lang/python:2.6 >=dev-lang/python-3 ) )"
+	!python3? (
+		build? ( || ( dev-lang/python:2.8 dev-lang/python:2.7 dev-lang/python:2.6 ) )
+		!build? ( || ( dev-lang/python:2.8 dev-lang/python:2.7 dev-lang/python:2.6 >=dev-lang/python-3 ) )
+	)"
 
 # The pysqlite blocker is for bug #282760.
 DEPEND="${python_dep}
 	!build? ( >=sys-apps/sed-4.0.5 )
 	doc? ( app-text/xmlto ~app-text/docbook-xml-dtd-4.4 )
 	epydoc? ( >=dev-python/epydoc-2.0 !<=dev-python/pysqlite-2.4.1 )"
+# Require sandbox-2.2 for bug #288863.
 RDEPEND="${python_dep}
 	!build? ( >=sys-apps/sed-4.0.5
 		>=app-shells/bash-3.2_p17
 		>=app-admin/eselect-1.2 )
 	elibc_FreeBSD? ( sys-freebsd/freebsd-bin )
-	elibc_glibc? ( >=sys-apps/sandbox-1.6 )
-	elibc_uclibc? ( >=sys-apps/sandbox-1.6 )
+	elibc_glibc? ( >=sys-apps/sandbox-2.2 )
+	elibc_uclibc? ( >=sys-apps/sandbox-2.2 )
 	>=app-misc/pax-utils-0.1.17
-	selinux? ( sys-libs/libselinux )"
+	selinux? ( sys-libs/libselinux )
+	!<app-shells/bash-3.2_p17"
 PDEPEND="
 	!build? (
 		>=net-misc/rsync-2.6.4
@@ -53,19 +61,9 @@ prefix_src_archives() {
 
 PV_PL="2.1.2"
 PATCHVER_PL=""
-TARBALL_PV=2.1.7
-SRC_URI="mirror://gentoo/${PN}-${TARBALL_PV}.tar.bz2
-	$(prefix_src_archives ${PN}-${TARBALL_PV}.tar.bz2)
-	linguas_pl? ( mirror://gentoo/${PN}-man-pl-${PV_PL}.tar.bz2
-		$(prefix_src_archives ${PN}-man-pl-${PV_PL}.tar.bz2) )"
+SRC_URI="https://github.com/${GITHUB_USER}/${GITHUB_REPO}/tarball/${GITHUB_TAG} -> portage-${GITHUB_TAG}.tar.gz"
+SRC_URI="$SRC_URI linguas_pl? ( mirror://gentoo/${PN}-man-pl-${PV_PL}.tar.bz2 )"
 
-PATCHVER=$PV
-if [ -n "${PATCHVER}" ]; then
-	SRC_URI="${SRC_URI} mirror://gentoo/${PN}-${PATCHVER}.patch.bz2
-	$(prefix_src_archives ${PN}-${PATCHVER}.patch.bz2)"
-fi
-
-S="${WORKDIR}"/${PN}-${TARBALL_PV}
 S_PL="${WORKDIR}"/${PN}-${PV_PL}
 
 compatible_python_is_selected() {
@@ -99,6 +97,8 @@ pkg_setup() {
 }
 
 src_prepare() {
+	cd "${WORKDIR}"/${GITHUB_USER}-${PN}-*
+	S="$(pwd)"
 	if [ -n "${PATCHVER}" ] ; then
 		if [[ -L $S/bin/ebuild-helpers/portageq ]] ; then
 			rm "$S/bin/ebuild-helpers/portageq" \
@@ -107,10 +107,22 @@ src_prepare() {
 		epatch "${WORKDIR}/${PN}-${PATCHVER}.patch"
 	fi
 	einfo "Setting portage.VERSION to ${PVR} ..."
-	sed -i "s/^VERSION=.*/VERSION=\"${PVR}\"/" pym/portage/__init__.py || \
+	sed -e "s/^VERSION=.*/VERSION=\"${PVR}\"/" -i pym/portage/__init__.py || \
 		die "Failed to patch portage.VERSION"
+	sed -e "1s/VERSION/${PVR}/" -i doc/fragment/version || \
+		die "Failed to patch VERSION in doc/fragment/version"
+	sed -e "1s/VERSION/${PVR}/" -i man/* || \
+		die "Failed to patch VERSION in man page headers"
+
+	if ! use ipc ; then
+		einfo "Disabling ipc..."
+		sed -e "s:_enable_ipc_daemon = True:_enable_ipc_daemon = False:" \
+			-i pym/_emerge/AbstractEbuildProcess.py || \
+			die "failed to patch AbstractEbuildProcess.py"
+	fi
 
 	if use python3; then
+		einfo "Converting shebangs for python3..."
 		python_convert_shebangs -r 3 .
 	fi
 }
@@ -126,11 +138,6 @@ src_compile() {
 		einfo "Generating api docs"
 		mkdir "${WORKDIR}"/api
 		local my_modules epydoc_opts=""
-		# A name collision between the portage.dbapi class and the
-		# module with the same name triggers an epydoc crash unless
-		# portage.dbapi is excluded from introspection.
-		ROOT=/ has_version '>=dev-python/epydoc-3_pre0' && \
-			epydoc_opts='--exclude-introspect portage\.dbapi'
 		my_modules="$(find "${S}/pym" -name "*.py" \
 			| sed -e 's:/__init__.py$::' -e 's:\.py$::' -e "s:^${S}/pym/::" \
 			 -e 's:/:.:g' | sort)" || die "error listing modules"
@@ -146,6 +153,8 @@ src_compile() {
 }
 
 src_test() {
+	# make files executable, in case they were created by patch
+	find bin -type f | xargs chmod +x
 	PYTHONPATH=${S}/pym:${PYTHONPATH:+:}${PYTHONPATH} \
 		./pym/portage/tests/runTests || die "test(s) failed"
 }
@@ -159,9 +168,10 @@ src_install() {
 	insinto /etc
 	doins etc-update.conf dispatch-conf.conf || die
 
-	dodir "${portage_share_config}"
-	insinto "${portage_share_config}"
-	doins "${S}/cnf/make.globals" || die
+	insinto "$portage_share_config/sets"
+	doins "$S"/cnf/sets/*.conf || die
+	insinto "$portage_share_config"
+	doins "$S/cnf/make.globals" || die
 	if [ -f "make.conf.${ARCH}".diff ]; then
 		patch make.conf "make.conf.${ARCH}".diff || \
 			die "Failed to patch make.conf.example"
@@ -179,21 +189,12 @@ src_install() {
 	insinto /etc/logrotate.d
 	doins "${S}"/cnf/logrotate.d/elog-save-summary || die
 
-	# BSD and OSX need a sed wrapper so that find/xargs work properly
-	if use userland_GNU; then
-		rm "${S}"/bin/ebuild-helpers/sed || die "Failed to remove sed wrapper"
-	fi
+	# Funtoo has removed the sed wrapper from the upstream sources...
 
 	local x symlinks
 
-	# current tarball contains outdated stuff
-	rm -rf "$S"/bin/ebuild-helpers/3
-	for x in dohard dosed ; do
-		dosym ../../banned-helper ${portage_base}/bin/ebuild-helpers/4/$x
-	done
-
-	for x in $(find "$S"/bin -type d) ; do
-		x=${x#$S/}
+	cd "$S" || die "cd failed"
+	for x in $(find bin -type d) ; do
 		exeinto $portage_base/$x || die "exeinto failed"
 		cd "$S"/$x || die "cd failed"
 		doexe $(find . -mindepth 1 -maxdepth 1 -type f ! -type l) || \
@@ -204,10 +205,15 @@ src_install() {
 		fi
 	done
 
-	for x in $(find "$S"/pym -type d) ; do
-		x=${x#$S/}
+	# create this manually until it's in a release tarball
+	dosym ../../banned-helper $portage_base/bin/ebuild-helpers/4/prepalldocs
+
+	cd "$S" || die "cd failed"
+	for x in $(find pym/* -type d) ; do
 		insinto $portage_base/$x || die "insinto failed"
 		cd "$S"/$x || die "cd failed"
+		# __pycache__ directories contain no py files
+		[[ "*.py" != $(echo *.py) ]] || continue
 		doins *.py || die "doins failed"
 		symlinks=$(find . -mindepth 1 -maxdepth 1 -type l)
 		if [ -n "$symlinks" ] ; then
@@ -231,12 +237,12 @@ src_install() {
 		doman -i18n=pl_PL.UTF-8 "${S_PL}"/man/pl_PL.UTF-8/*.[0-9]
 	fi
 
-	dodoc "${S}"/{ChangeLog,NEWS,RELEASE-NOTES}
+	dodoc "${S}"/{NEWS,RELEASE-NOTES}
 	use doc && dohtml -r "${S}"/doc/*
 	use epydoc && dohtml -r "${WORKDIR}"/api
 
 	dodir /usr/bin
-	for x in ebuild egencache emerge portageq repoman ; do
+	for x in ebuild egencache emerge portageq quickpkg repoman ; do
 		dosym ../${libdir}/portage/bin/${x} /usr/bin/${x}
 	done
 
@@ -244,11 +250,9 @@ src_install() {
 	local my_syms="archive-conf
 		dispatch-conf
 		emaint
-		emerge-webrsync
 		env-update
 		etc-update
 		fixpackages
-		quickpkg
 		regenworld"
 	local x
 	for x in ${my_syms}; do
@@ -274,10 +278,21 @@ pkg_preinst() {
 		rm "${ROOT}/etc/make.globals"
 	fi
 
+	has_version "<${CATEGORY}/${PN}-2.2_alpha"
+	MINOR_UPGRADE=$?
+
+	has_version "<=${CATEGORY}/${PN}-2.2_pre5"
+	WORLD_MIGRATION_UPGRADE=$?
+
+	# If portage-2.1.6 is installed and the preserved_libs_registry exists,
+	# assume that the NEEDED.ELF.2 files have already been generated.
+	has_version "<=${CATEGORY}/${PN}-2.2_pre7" && \
+		! ( [ -e "$ROOT"var/lib/portage/preserved_libs_registry ] && \
+		has_version ">=${CATEGORY}/${PN}-2.1.6_rc" )
+	NEEDED_REBUILD_UPGRADE=$?
+
 	[[ -n $PORTDIR_OVERLAY ]] && has_version "<${CATEGORY}/${PN}-2.1.6.12"
 	REPO_LAYOUT_CONF_WARN=$?
-	has_version "<${CATEGORY}/${PN}-2.1.7"
-	UPGRADE_FROM_2_1=$?
 }
 
 pkg_postinst() {
@@ -285,7 +300,32 @@ pkg_postinst() {
 	# will be identified and removed in postrm.
 	python_mod_optimize /usr/$(get_libdir)/portage/pym
 
-	local warning_shown=0
+	if [ $WORLD_MIGRATION_UPGRADE = 0 ] ; then
+		einfo "moving set references from the worldfile into world_sets"
+		cd "${ROOT}/var/lib/portage/"
+		grep "^@" world >> world_sets
+		sed -i -e '/^@/d' world
+	fi
+
+	if [ $NEEDED_REBUILD_UPGRADE = 0 ] ; then
+		einfo "rebuilding NEEDED.ELF.2 files"
+		for cpv in "${ROOT}/var/db/pkg"/*/*; do
+			if [ -f "${cpv}/NEEDED" ]; then
+				rm -f "${cpv}/NEEDED.ELF.2"
+				while read line; do
+					filename=${line% *}
+					needed=${line#* }
+					needed=${needed//+/++}
+					needed=${needed//#/##}
+					needed=${needed//%/%%}
+					newline=$(scanelf -BF "%a;%F;%S;%r;${needed}" $filename)
+					newline=${newline//  -  }
+					echo "${newline:3}" >> "${cpv}/NEEDED.ELF.2"
+				done < "${cpv}/NEEDED"
+			fi
+		done
+	fi
+
 	if [ $REPO_LAYOUT_CONF_WARN = 0 ] ; then
 		ewarn
 		echo "If you want overlay eclasses to override eclasses from" \
@@ -293,29 +333,27 @@ pkg_postinst() {
 			"for information about the new layout.conf and repos.conf" \
 			"configuration files." \
 			| fmt -w 75 | while read -r ; do ewarn "$REPLY" ; done
-	fi
-	if [[ $UPGRADE_FROM_2_1 = 0 && -n $PORTAGE_BINHOST ]] ; then
 		ewarn
-		echo "If you have an old PORTAGE_BINHOST setting in /etc/make.conf" \
-		"then you will encounter bug #303211. Therefore, please ensure" \
-		"that your PORTAGE_BINHOST setting points to a remote directory" \
-		"containing a \$PKGDIR/Packages file which is created by" \
-		">=portage-2.1.6. If \$PKGDIR/Packages does not exist on" \
-		"the server or it is incomplete, you must run \`emaint" \
-		"--fix binhost\` on the server in order to generate it." \
-		"See \`man make.conf\` for more information about" \
-		"PORTAGE_BINHOST." | \
-		fmt -w 70 | while read -r ; do ewarn "$REPLY" ; done
-		warning_shown=1
-	fi
-	if [ $warning_shown = 1 ] ; then
-		ewarn # for symmetry
 	fi
 
 	einfo
 	einfo "For help with using portage please consult the Gentoo Handbook"
 	einfo "at http://www.gentoo.org/doc/en/handbook/handbook-x86.xml?part=3"
 	einfo
+
+	if [ $MINOR_UPGRADE = 0 ] ; then
+		elog "If you're upgrading from a pre-2.2 version of portage you might"
+		elog "want to remerge world (emerge -e world) to take full advantage"
+		elog "of some of the new features in 2.2."
+		elog "This is not required however for portage to function properly."
+		elog
+	fi
+
+	if [ -z "${PV/*_rc*}" ]; then
+		elog "If you always want to use the latest development version of portage"
+		elog "please read http://www.gentoo.org/proj/en/portage/doc/testing.xml"
+		elog
+	fi
 }
 
 pkg_postrm() {
