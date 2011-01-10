@@ -12,10 +12,6 @@
 # Newer openresolv seen to be broken.
 >net-dns/openresolv-3.3.4-r1
 
-# Daniel Robbins <drobbins@funtoo.org> (21 Oct 2010)
-# Masked for testing:
->=dev-lang/perl-5.12.2
-
 # Piotr Karbowski <jabberuser@gmail.com> (11 Oct 2010)
 # Mask for new python until funtoo's portage will support it.
 # http://git.overlays.gentoo.org/gitweb/?p=proj/portage.git;a=patch;h=5426e509c7053f75746bbb6ce0673e0663e4e98a
