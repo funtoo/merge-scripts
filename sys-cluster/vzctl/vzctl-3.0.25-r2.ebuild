@@ -14,7 +14,7 @@ SRC_URI="https://github.com/${GITHUB_USER}/${PN}/tarball/${GITHUB_TAG} -> ${GITH
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~ia64 ~ppc64 ~sparc ~x86"
+KEYWORDS="amd64 ia64 ppc64 sparc x86"
 IUSE="bash-completion"
 
 RDEPEND="

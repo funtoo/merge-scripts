@@ -4,15 +4,17 @@
 
 EAPI="2"
 
-inherit bash-completion eutils
+inherit bash-completion autotools eutils
 
-DESCRIPTION="OpenVZ ConTainers control utility"
+DESCRIPTION="OpenVZ Containers control utility"
 HOMEPAGE="http://openvz.org/"
-SRC_URI="http://download.openvz.org/utils/${PN}/${PV}/src/${P}.tar.bz2"
+GITHUB_USER="funtoo"
+GITHUB_TAG="${PF}-funtoo"
+SRC_URI="https://github.com/${GITHUB_USER}/${PN}/tarball/${GITHUB_TAG} -> ${GITHUB_TAG}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~ia64 ~ppc64 ~sparc ~x86"
+KEYWORDS="amd64 ia64 ppc64 sparc x86"
 IUSE="bash-completion"
 
 RDEPEND="
@@ -20,17 +22,16 @@ RDEPEND="
 	sys-apps/ed
 	sys-apps/iproute2
 	sys-fs/vzquota
-	virtual/cron"
-
-DEPEND="${RDEPEND}"
+	virtual/cron
+	>=sys-apps/openrc-0.6.5-r1"
+DEPEND=""
 
 src_prepare() {
+	cd "${WORKDIR}"/${GITHUB_USER}-${PN}-*
+	S="$(pwd)"
 	# Set default OSTEMPLATE on gentoo
-	sed -e 's:=redhat-:=gentoo-:' -i etc/dists/default || die
-	epatch "${FILESDIR}/0001-Don-t-prepend-full-path-for-ip-command.patch" #334277
-	epatch "${FILESDIR}/0002-Update-udev-rules-to-match-current-specification.patch" #335762
-	epatch "${FILESDIR}/vzctl-3.0.24.2-bz2-xz-support.patch" #vroman funtoo
-	epatch "${FILESDIR}/vzctl-3.0.24.2-cidr-suffix.patch" #vroman funtoo
+	sed -e 's:=redhat-:=funtoo-:' -i etc/dists/default || die
+	eautoreconf
 }
 
 src_configure() {
@@ -66,9 +67,9 @@ pkg_postinst() {
 
 	if [[ -n ${conf_without_OSTEMPLATE} ]]; then
 		ewarn
-		ewarn "OSTEMPLATE default was changed from redhat-like to gentoo."
+		ewarn "OSTEMPLATE default was changed from Red Hat to Funtoo."
 		ewarn "This means that any VEID.conf files without explicit or correct"
-		ewarn "OSTEMPLATE set will use gentoo scripts instead of redhat."
+		ewarn "OSTEMPLATE set will use Funtoo scripts instead of Red Hat."
 		ewarn "Please check the following configs:"
 		for file in ${conf_without_OSTEMPLATE}; do
 			ewarn "${file}"
