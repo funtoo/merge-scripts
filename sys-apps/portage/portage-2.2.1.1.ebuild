@@ -39,7 +39,8 @@ RDEPEND="${python_dep}
 	elibc_uclibc? ( >=sys-apps/sandbox-2.2 )
 	>=app-misc/pax-utils-0.1.17
 	selinux? ( sys-libs/libselinux )
-	!<app-shells/bash-3.2_p17"
+	!<app-shells/bash-3.2_p17
+	>=net-misc/wget-1.12-r3"
 PDEPEND="
 	!build? (
 		>=net-misc/rsync-2.6.4
