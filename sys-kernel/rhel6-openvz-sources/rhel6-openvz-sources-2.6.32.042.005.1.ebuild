@@ -29,7 +29,7 @@ SRC_URI="${KERNEL_URI}
 	http://download.openvz.org/kernel/branches/${OVZ_BRANCH}-${CKV}/${OVZ_KV}/patches/$MAINPATCH"
 
 UNIPATCH_STRICTORDER=1
-UNIPATCH_LIST="${FILESDIR}/rhel5-openvz-sources-2.6.18.028.064.7-bridgemac.patch"
+UNIPATCH_LIST="$DISTDIR/$MAINPATCH ${FILESDIR}/rhel5-openvz-sources-2.6.18.028.064.7-bridgemac.patch"
 
 K_EXTRAEINFO="
 This OpenVZ kernel uses RHEL6 (Red Hat Enterprise Linux 6) patch set.
