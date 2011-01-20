@@ -3,6 +3,11 @@
 # Daniel Robbins <drobbins@funtoo.org> (20 Jan 2011)
 # Masked for testing:
 
+>=net-misc/dhcpcd-5.2.10
+
+# Daniel Robbins <drobbins@funtoo.org> (20 Jan 2011)
+# Masked for testing:
+
 >=sys-apps/openrc-0.7
 
 # Daniel Robbins <drobbins@funtoo.org> (20 Jan 2011)
