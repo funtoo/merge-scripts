@@ -62,7 +62,7 @@ prefix_src_archives() {
 
 PV_PL="2.1.2"
 PATCHVER_PL=""
-SRC_URI="https://www.github.com/${GITHUB_USER}/${GITHUB_REPO}/tarball/${GITHUB_TAG} -> portage-${GITHUB_TAG}.tar.gz"
+SRC_URI="http://www.github.com/${GITHUB_USER}/${GITHUB_REPO}/tarball/${GITHUB_TAG} -> portage-${GITHUB_TAG}.tar.gz"
 SRC_URI="$SRC_URI linguas_pl? ( mirror://gentoo/${PN}-man-pl-${PV_PL}.tar.bz2 )"
 
 S_PL="${WORKDIR}"/${PN}-${PV_PL}
