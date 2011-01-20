@@ -2,10 +2,10 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/sys-apps/openrc/openrc-0.3.0-r1.ebuild,v 1.1 2008/10/08 16:19:11 cardoe Exp $
 
+EAPI="2"
+
 inherit eutils flag-o-matic multilib toolchain-funcs
 
-NETV=1.0.7
-SRC_URI="http://www.funtoo.org/archive/corenetwork/corenetwork-${NETV}.tar.bz2 http://www.funtoo.org/distfiles/openrc-${PV}.tar.bz2"
 DESCRIPTION="OpenRC manages the services, startup and shutdown of a host"
 HOMEPAGE="http://roy.marples.name/openrc"
 PROVIDE="virtual/baselayout"
@@ -13,7 +13,7 @@ RESTRICT="nomirror"
 
 LICENSE="BSD-2"
 SLOT="0"
-KEYWORDS="x86 amd64 sparc"
+KEYWORDS="~x86 ~amd64 ~sparc"
 IUSE="debug ncurses pam unicode kernel_linux kernel_FreeBSD"
 
 RDEPEND="kernel_linux? ( >=sys-apps/sysvinit-2.86-r11 )
@@ -23,7 +23,20 @@ RDEPEND="kernel_linux? ( >=sys-apps/sysvinit-2.86-r11 )
 	>=sys-apps/baselayout-2.1
 	>=sys-fs/udev-135
 	sys-apps/iproute2"
+
 DEPEND="ncurses? ( sys-libs/ncurses ) pam? ( virtual/pam ) virtual/os-headers"
+
+GITHUB_REPO="${PN}"
+GITHUB_USER="funtoo"
+GITHUB_TAG="funtoo-openrc-${PVR}"
+
+NETV="1.0.8"
+GITHUB_REPO_CN="corenetwork"
+GITHUB_TAG_CN="$NETV"
+
+SRC_URI="
+	https://www.github.com/${GITHUB_USER}/${GITHUB_REPO}/tarball/${GITHUB_TAG} -> ${PN}-${GITHUB_TAG}.tar.gz
+	https://www.github.com/${GITHUB_USER}/${GITHUB_REPO_CN}/tarball/${GITHUB_TAG_CN} -> corenetwork-${GITHUB_TAG_CN}.tar.gz"
 
 pkg_setup() {
 	LIBDIR="lib"
@@ -44,6 +57,14 @@ pkg_setup() {
 	export DEBUG=$(usev debug)
 	export MKPAM=$(usev pam)
 	export MKTERMCAP=$(usev ncurses)
+}
+
+pre_src_prepare() {
+	# rename github directories to the names we're expecting:
+	local old=${WORKDIR}/${GITHUB_USER}-${PN}-*
+	mv $old "${WORKDIR}/${P}" || die "move fail 1"
+	old="${WORKDIR}/${GITHUB_USER}-corenetwork-*"
+	mv $old "${WORKDIR}/corenetwork-${NETV}" || die "move fail 2"
 }
 
 src_compile() {
