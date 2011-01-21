@@ -1,37 +1,5 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
-# Daniel Robbins <drobbins@funtoo.org> (20 Jan 2011)
-# Masked for testing:
-
->=net-misc/dhcpcd-5.2.10
-
-# Daniel Robbins <drobbins@funtoo.org> (20 Jan 2011)
-# Masked for testing:
-
->=sys-apps/openrc-0.7
-
-# Daniel Robbins <drobbins@funtoo.org> (20 Jan 2011)
-# Masked for testing:
-
->=sys-kernel/genkernel-3.4.11.1
-
-# Piotr Karbowski <piotr@funtoo.org> (28 Dec 2010)
-# Mask because of multiple compilation breaks.
->=app-text/poppler-0.16.0
-
-# Daniel Robbins <drobbins@funtoo.org> (22 Dec 2010)
-# Masked for testing - initial test release:
->=sys-cluster/vzctl-3.0.25
-
-# Piotr Karbowski <piotr.karbowski@gmail.com> (21 Dec 2010)
-# Newer openresolv seen to be broken.
->net-dns/openresolv-3.3.4-r1
-
-# Piotr Karbowski <jabberuser@gmail.com> (11 Oct 2010)
-# Mask for new python until funtoo's portage will support it.
-# http://git.overlays.gentoo.org/gitweb/?p=proj/portage.git;a=patch;h=5426e509c7053f75746bbb6ce0673e0663e4e98a
->=dev-lang/python-2.6.6
-
 # Daniel Robbins <drobbins@funtoo.org> (01 Sep 2010)
 # let's stick with a known-good version of ruby by
 # default, and protect against ruby-1.9.2 things that
