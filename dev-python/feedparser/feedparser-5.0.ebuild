@@ -23,14 +23,20 @@ RDEPEND=">=dev-python/sgmllib-1.0"
 
 PYTHON_MODNAME="feedparser.py"
 DOCS="LICENSE"
+DISTUTILS_USE_SEPARATE_SOURCE_DIRECTORIES="1"
 
 src_prepare() {
 	python_copy_sources
 	tweak() {
-		[ "$PYTHON_ABI" != "3.*" ] && return
-		2to3 -w feedparser/feedparser.py feedparser/feedparsertest.py
+		[ "${PYTHON_ABI%%.*}" != "3" ] && return
+		2to3 -w feedparser/feedparser.py feedparser/feedparsertest.py || die "2to3 fail"
+		2to3 -w setup.py || die "2to3 fail"
 	}
 	python_execute_function --action-message 'Conditonally running 2to3' -s tweak
+}
+
+src_compile() {
+	distutils_src_compile
 }
 
 src_install() {
