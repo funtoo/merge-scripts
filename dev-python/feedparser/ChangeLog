@@ -1,0 +1,85 @@
+# ChangeLog for dev-python/feedparser
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/dev-python/feedparser/ChangeLog,v 1.21 2010/11/25 15:15:10 sping Exp $
+
+*feedparser-4.2_pre316 (25 Nov 2010)
+
+  25 Nov 2010; Sebastian Pipping <sping@gentoo.org>
+  +feedparser-4.2_pre316.ebuild:
+  Bump to snapshot of revision 316 (current trunk) to fix email subjects of
+  rss2email. Except feedparser.py, all files in the snapshot are taken from the
+  4.1 release. Fix license from Python to BSD-2.
+
+  14 Aug 2010; Raúl Porcel <armin76@gentoo.org> feedparser-4.1.ebuild:
+  sparc stable
+
+  22 May 2010; Raúl Porcel <armin76@gentoo.org> feedparser-4.1.ebuild:
+  Add ~arm
+
+  08 Nov 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  feedparser-4.1.ebuild:
+  Set SUPPORT_PYTHON_ABIS. Set PYTHON_MODNAME (bug #288424).
+
+  10 Oct 2009; Fabian Groffen <grobian@gentoo.org> feedparser-4.1.ebuild:
+  Merge from Prefix
+
+  10 Sep 2009; Arfrever Frehtes Taifersar Arahesis <arfrever@gentoo.org>
+  feedparser-4.1.ebuild:
+  Fix dependencies (bug #265936).
+
+  11 May 2008; Markus Rothe <corsair@gentoo.org> feedparser-4.1.ebuild:
+  Stable on ppc64; bug #221147
+
+  03 Apr 2007; Peter Weller <welp@gentoo.org> feedparser-4.1.ebuild:
+  Keyworded ~x86-fbsd
+
+  29 Mar 2007; Markus Rothe <corsair@gentoo.org> feedparser-4.1.ebuild:
+  Added ~ppc64; bug #172367
+
+  15 Oct 2006; Bryan Østergaard <kloeri@gentoo.org> feedparser-4.1.ebuild:
+  Stable on ia64.
+
+  08 Sep 2006; Thomas Cort <tcort@gentoo.org> feedparser-4.1.ebuild:
+  Stable on alpha and amd64.
+
+  16 Jul 2006; Tobias Scherbaum <dertobi123@gentoo.org>
+  feedparser-4.1.ebuild:
+  ppc stable
+
+  16 Jul 2006; Alastair Tse <liquidx@gentoo.org> -feedparser-3.3.ebuild,
+  -feedparser-4.0.2.ebuild, feedparser-4.1.ebuild:
+  cleanup old ebuilds and stable bump
+
+  12 Jun 2006; Jason Wever <weeve@gentoo.org> feedparser-4.1.ebuild:
+  Added ~sparc keyword wrt bug #130382.
+
+  04 May 2006; Stephanie Lockwood-Childs <wormo@gentoo.org>
+  feedparser-4.1.ebuild:
+  mark ~ppc (Bug #130382)
+
+  13 Apr 2006; Thomas Cort <tcort@gentoo.org> feedparser-4.1.ebuild:
+  Added ~alpha keyword.
+
+  01 Apr 2006; Aron Griffis <agriffis@gentoo.org> feedparser-4.1.ebuild:
+  Mark 4.1 ~ia64
+
+*feedparser-4.1 (29 Mar 2006)
+
+  29 Mar 2006; Lukasz Strzygowski <lucass@gentoo.org>
+  +feedparser-4.1.ebuild:
+  Version bump.
+
+  24 Jan 2006; Patrick McLean <chutzpah@gentoo.org> feedparser-4.0.2.ebuild:
+  Added to ~amd64 (bug #117999).
+
+*feedparser-4.0.2 (05 Jan 2006)
+
+  05 Jan 2006; Alastair Tse <liquidx@gentoo.org> +feedparser-4.0.2.ebuild:
+  version bump. added html docs.
+
+*feedparser-3.3 (03 Nov 2005)
+
+  03 Nov 2005; Alastair Tse <liquidx@gentoo.org> +metadata.xml,
+  +feedparser-3.3.ebuild:
+  initial commit (ebuild thanks to Fabian Groffen #69803)
+
