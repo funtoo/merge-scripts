@@ -27,6 +27,10 @@ src_prepare() {
 	python_copy_sources
 }
 
+src_compile() {
+	return
+}
+
 src_install() {
 	realinst() {
 		[ "${PYTHON_ABI}" != "3.*" ] && return
