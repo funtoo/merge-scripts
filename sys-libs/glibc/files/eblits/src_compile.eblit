@@ -1,6 +1,6 @@
 # Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-libs/glibc/files/eblits/src_compile.eblit,v 1.15 2010/09/30 06:29:21 vapier Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-libs/glibc/files/eblits/src_compile.eblit,v 1.16 2010/11/10 21:51:18 vapier Exp $
 
 glibc_do_configure() {
 	local myconf
@@ -78,7 +78,7 @@ glibc_do_configure() {
 		--build=${CBUILD_OPT:-${CBUILD}}
 		--host=${CTARGET_OPT:-${CTARGET}}
 		$(use_enable profile)
-		--without-gd
+		$(use_with gd)
 		--with-headers=$(alt_build_headers)
 		--prefix=/usr
 		--libdir=/usr/$(get_libdir)

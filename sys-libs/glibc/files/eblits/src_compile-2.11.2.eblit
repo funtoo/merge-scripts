@@ -1,6 +1,6 @@
 # Copyright 1999-2007 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-libs/glibc/files/eblits/src_compile-2.11.2.eblit,v 1.1 2010/08/10 08:08:05 vapier Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-libs/glibc/files/eblits/src_compile-2.11.2.eblit,v 1.2 2010/11/25 12:52:35 vapier Exp $
 
 glibc_do_configure() {
 	local myconf
@@ -76,7 +76,7 @@ glibc_do_configure() {
 		--build=${CBUILD_OPT:-${CBUILD}}
 		--host=${CTARGET_OPT:-${CTARGET}}
 		$(use_enable profile)
-		--without-gd
+		$(use_with gd)
 		--with-headers=$(alt_build_headers)
 		--prefix=/usr
 		--libdir=/usr/$(get_libdir)
@@ -133,6 +133,7 @@ toolchain-glibc_headers_compile() {
 	# hopefully they don't affect header geneation, so let's hope for
 	# the best here ...
 	export \
+		ac_cv_header_cpuid_h=yes \
 		libc_cv_386_tls=yes \
 		libc_cv_asm_cfi_directives=yes \
 		libc_cv_broken_visibility_attribute=no \
@@ -140,6 +141,7 @@ toolchain-glibc_headers_compile() {
 		libc_cv_mlong_double_128=yes \
 		libc_cv_mlong_double_128ibm=yes \
 		libc_cv_ppc_machine=yes \
+		libc_cv_ppc_rel16=yes \
 		libc_cv_visibility_attribute=yes \
 		libc_cv_z_combreloc=yes \
 		libc_cv_z_execstack=yes \
