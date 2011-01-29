@@ -9,7 +9,7 @@ SLOT=0
 DEPEND="=sys-kernel/${P/-binaries/-sources}
 	    >=sys-kernel/genkernel-3.4.10.908
 		=sys-devel/gcc-4.1.2*"
-RDEPEND="!>=sys-fs/udev-147"
+RDEPEND="!>=sys-fs/udev-147 sys-cluster/vzctl"
 KEYWORDS="amd64 x86"
 IUSE=""
 DESCRIPTION="RHEL5 kernel with OpenVZ patchset - initrd and bzImage"
