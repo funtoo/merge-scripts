@@ -1,0 +1,76 @@
+# ChangeLog for sys-apps/man-db
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/sys-apps/man-db/ChangeLog,v 1.14 2010/12/22 18:40:23 vapier Exp $
+
+*man-db-2.5.9 (22 Dec 2010)
+
+  22 Dec 2010; Mike Frysinger <vapier@gentoo.org> +man-db-2.5.9.ebuild:
+  Version bump #349399 by Rafał Mużyło.
+
+*man-db-2.5.7-r1 (23 Aug 2010)
+
+  23 Aug 2010; Mike Frysinger <vapier@gentoo.org> +man-db-2.5.7-r1.ebuild,
+  +files/man-db-2.5.7-uncompressed-non-en.patch:
+  Add fix from upstream for issues with non-english uncompressed man pages
+  #327347 by Florian.
+
+  29 Mar 2010; Mike Frysinger <vapier@gentoo.org> man-db-2.5.7.ebuild,
+  +files/man-db-2.5.7-non-gnu-nroff.patch:
+  Add fix from upstream for building with non-GNU nroff #309635 by Pun.
+
+*man-db-2.5.7 (07 Mar 2010)
+
+  07 Mar 2010; Mike Frysinger <vapier@gentoo.org> +man-db-2.5.7.ebuild:
+  Version bump #307991 by C W Rose.
+
+  02 Oct 2009; Diego E. Pettenò <flameeyes@gentoo.org> man-db-2.5.6.ebuild:
+  Fix doc installation.
+
+*man-db-2.5.6 (02 Oct 2009)
+
+  02 Oct 2009; Diego E. Pettenò <flameeyes@gentoo.org>
+  +man-db-2.5.6.ebuild, +files/man-db-2.5.6-fix-no-groff.patch:
+  Version bump, with a patch to work with heirloom-doctools… for the most
+  part. Note that man pages will not look as good as with sys-apps/man at
+  least.
+
+  29 Sep 2009; Diego E. Pettenò <flameeyes@gentoo.org> man-db-2.5.3.ebuild,
+  man-db-2.5.5.ebuild:
+  Add groff dependency.
+
+*man-db-2.5.5 (05 Apr 2009)
+
+  05 Apr 2009; Mike Frysinger <vapier@gentoo.org> +man-db-2.5.5.ebuild:
+  Version bump #264993 by Arfrever Frehtes Taifersar Arahesis.
+
+*man-db-2.5.3 (17 Nov 2008)
+
+  17 Nov 2008; Mike Frysinger <vapier@gentoo.org> +man-db-2.5.3.ebuild:
+  Version bump.
+
+*man-db-2.5.2 (25 Oct 2008)
+
+  25 Oct 2008; Mike Frysinger <vapier@gentoo.org> +man-db-2.5.2.ebuild:
+  Version bump.
+
+*man-db-2.5.1 (24 Feb 2008)
+
+  24 Feb 2008; Mike Frysinger <vapier@gentoo.org> +man-db-2.5.1.ebuild:
+  Version bump.
+
+*man-db-2.4.4 (13 Apr 2007)
+
+  13 Apr 2007; Mike Frysinger <vapier@gentoo.org>
+  +files/man-db-2.4.4-sections.patch, +man-db-2.4.4.ebuild:
+  Version bump #173919 by Pierre-Yves Rofes.
+
+*man-db-2.4.3-r1 (06 Oct 2006)
+
+  06 Oct 2006; Mike Frysinger <vapier@gentoo.org>
+  +files/man-db-2.4.3-sections.patch, +man-db-2.4.3-r1.ebuild:
+  Respect more man sections #149857.
+
+*man-db-2.4.3 (21 Feb 2006)
+
+  21 Feb 2006; Mike Frysinger <vapier@gentoo.org> :
+  Initial import.  Ebuild submitted by me.
