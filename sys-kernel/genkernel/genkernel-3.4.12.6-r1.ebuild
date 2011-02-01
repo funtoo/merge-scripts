@@ -53,13 +53,17 @@ RESTRICT=""
 KEYWORDS="alpha amd64 arm hppa ia64 mips ppc ppc64 s390 sparc x86"
 IUSE="ibm selinux"
 
-DEPEND="sys-fs/e2fsprogs app-text/asciidoc selinux? ( sys-libs/libselinux )"
+DEPEND="sys-fs/e2fsprogs selinux? ( sys-libs/libselinux )"
 RDEPEND="${DEPEND} app-arch/cpio sys-fs/lvm2"
 
 src_prepare() {
 	cd "${WORKDIR}"/${GITHUB_USER}-${PN}-*
 	S="$(pwd)"
 	use selinux && sed -i 's/###//g' "${S}"/gen_compile.sh
+}
+
+src_compile() {
+	return
 }
 
 src_install() {
