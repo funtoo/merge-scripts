@@ -97,9 +97,12 @@ pkg_setup() {
 	fi
 }
 
+src_unpack() {
+	unpack ${A}
+	S="${WORKDIR}"/${GITHUB_USER}-${PN}-*
+}
+
 src_prepare() {
-	cd "${WORKDIR}"/${GITHUB_USER}-${PN}-*
-	S="$(pwd)"
 	if [ -n "${PATCHVER}" ] ; then
 		if [[ -L $S/bin/ebuild-helpers/portageq ]] ; then
 			rm "$S/bin/ebuild-helpers/portageq" \
