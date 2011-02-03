@@ -31,12 +31,14 @@ mount-boot_mount_boot_partition() {
 
 	[ -z "${fstabstate}" ] && return 0
 
+	# Get /proc/mount entries matching /boot and /foo/bar/boot, respectively, or
+	# "" if not found:
+
 	local procstate=$(awk '$2 ~ /^\/boot$/ {print $2}' /proc/mounts)
+	local procstate_install=$(awk '$2 ~ /^\.*/boot$/ {print $2}' /proc/mounts)
 
 	# no /boot proc entry, but there's a /foo/bar/boot entry, so we're likely
 	# installing gentoo in chroot. Don't interfere with mounting:
-
-	local procstate_install=$(awk '$2 ~ /^\.*/boot$/ {print $2}' /proc/mounts)
 
 	[ -z "${procstate}" ] && [ -n "${procstate_install}" ] && return 0
 
@@ -69,7 +71,7 @@ mount-boot_mount_boot_partition() {
 			einfo "Files will be installed there for ${PN} to function correctly."
 			einfo
 		fi
-	elif [ -z "${procstate}" ]; then
+	else
 		mount /boot -o rw
 		if [ "$?" -eq 0 ]; then
 			einfo
