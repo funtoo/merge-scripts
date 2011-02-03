@@ -99,10 +99,11 @@ pkg_setup() {
 
 src_unpack() {
 	unpack ${A}
-	S="${WORKDIR}"/${GITHUB_USER}-${PN}-*
+	mv "${WORKDIR}/${GITHUB_USER}-${PN}-funtoo"-??????? "${S}" || die
 }
 
 src_prepare() {
+	cd ${S}
 	if [ -n "${PATCHVER}" ] ; then
 		if [[ -L $S/bin/ebuild-helpers/portageq ]] ; then
 			rm "$S/bin/ebuild-helpers/portageq" \
