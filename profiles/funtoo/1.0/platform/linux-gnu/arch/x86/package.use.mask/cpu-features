@@ -1,0 +1,21 @@
+# Mounir Lamouri <volkmar@gentoo.org> (07 Nov 2009)
+# Masked in base, unmask for amd64/x86. Bug 267264
+media-gfx/k3d -cuda
+
+# Tomáš Chvátal <scarabeus@gentoo.org> (10 Sep 2009)
+# quakeforge has video_cards_voodoo enabled only for x86
+games-fps/quakeforge -video_cards_tdfx
+
+# Raúl Porcel <armin76@gentoo.org> (02 Dec 2008)
+media-libs/realcodecs win32codecs
+
+# Tomas Chvatal <scarabeus@gentoo.org> (24 Nov 2008)
+# masked in base, unmask for x86/amd64
+sci-misc/boinc -cuda
+
+# Robert Buchholz <rbu@gentoo.org> (16 Aug 2008)
+# masked in base, unmask for x86/amd64
+dev-python/kaa-base -tls
+
+# Steve Dibb <beandog@gentoo.org> (29 Sept 2008)
+media-video/mplayer -cpudetection -custom-cpuopts -win32codecs -bindist -vdpau
