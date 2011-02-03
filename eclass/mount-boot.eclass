@@ -35,7 +35,7 @@ mount-boot_mount_boot_partition() {
 	# "" if not found:
 
 	local procstate=$(awk '$2 ~ /^\/boot$/ {print $2}' /proc/mounts)
-	local procstate_install=$(awk '$2 ~ /^\.*/boot$/ {print $2}' /proc/mounts)
+	local procstate_install=$(awk '$2 ~ /^.*\/boot$/ {print $2}' /proc/mounts)
 
 	# no /boot proc entry, but there's a /foo/bar/boot entry, so we're likely
 	# installing gentoo in chroot. Don't interfere with mounting:
@@ -95,12 +95,6 @@ mount-boot_pkg_preinst() {
 	mount-boot_mount_boot_partition
 }
 
-mount-boot_pkg_prerm() {
-	touch "${ROOT}"/boot/.keep 2>/dev/null
-	mount-boot_mount_boot_partition
-	touch "${ROOT}"/boot/.keep 2>/dev/null
-}
-
 mount-boot_umount_boot_partition() {
 	if [[ -n ${DONT_MOUNT_BOOT} ]] ; then
 		return
@@ -122,9 +116,5 @@ mount-boot_umount_boot_partition() {
 }
 
 mount-boot_pkg_postinst() {
-	mount-boot_umount_boot_partition
-}
-
-mount-boot_pkg_postrm() {
 	mount-boot_umount_boot_partition
 }
