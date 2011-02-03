@@ -88,10 +88,6 @@ mount-boot_mount_boot_partition() {
 			die "Please mount your /boot partition manually!"
 		fi
 		touch /boot/.e.mount
-	else
-		einfo
-		einfo "Assuming you do not have a separate /boot partition."
-		einfo
 	fi
 }
 
