@@ -11,7 +11,7 @@ USE="$USE ipv6 tcpd"										#core network
 USE="$USE zlib bzip2"										#core compression
 USE="$USE berkdb gdbm"										#core databases
 USE="$USE readline ncurses"									#core gui/interactivity frameworks
-USE="$USE perl python mudflap openmp"								#core languages
+USE="$USE mudflap openmp"									#core languages
 
 INPUT_DEVICES="evdev"
 VIDEO_CARDS="dummy"
