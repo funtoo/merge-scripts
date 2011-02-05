@@ -7,7 +7,7 @@
 
 # Env vars to expand into USE vars.  Modifying this requires prior
 # discussion on gentoo-dev@gentoo.org.
-USE_EXPAND="APACHE2_MODULES APACHE2_MPMS FOO2ZJS_DEVICES MISDN_CARDS FRITZCAPI_CARDS FCDSL_CARDS VIDEO_CARDS DVB_CARDS LIRC_DEVICES INPUT_DEVICES LINGUAS USERLAND KERNEL ELIBC CROSSCOMPILE_OPTS ALSA_CARDS ALSA_PCM_PLUGINS LCD_DEVICES CAMERAS NETBEANS_MODULES QEMU_SOFTMMU_TARGETS QEMU_USER_TARGETS SANE_BACKENDS"
+USE_EXPAND="APACHE2_MODULES APACHE2_MPMS FOO2ZJS_DEVICES MISDN_CARDS FRITZCAPI_CARDS FCDSL_CARDS VIDEO_CARDS DVB_CARDS LIRC_DEVICES INPUT_DEVICES LINGUAS USERLAND KERNEL ELIBC CROSSCOMPILE_OPTS ALSA_CARDS ALSA_PCM_PLUGINS LCD_DEVICES CAMERAS NETBEANS_MODULES QEMU_SOFTMMU_TARGETS QEMU_USER_TARGETS SANE_BACKENDS RUBY_TARGETS PHP_TARGETS NGINX_MODULES_HTTP NGINX_MODULES_MAIL XFCE_PLUGINS XTABLES_ADDONS GPSD_PROTOCOLS COLLECTD_PLUGINS"
 
 # USE_EXPAND variables whose contents are not shown in package manager
 # output. Changes need discussion on gentoo-dev.
@@ -26,7 +26,7 @@ ALSA_PCM_PLUGINS="adpcm alaw asym copy dmix dshare dsnoop empty extplug file hoo
 
 # Benedikt Böhm <hollow@gentoo.org> (27 Nov 2007)
 # Sane defaults for built-in apache modules
-APACHE2_MODULES="actions alias auth_basic authn_alias authn_anon authn_dbm authn_default authn_file authz_dbm authz_default authz_groupfile authz_host authz_owner authz_user autoindex cache dav dav_fs dav_lock deflate dir disk_cache env expires ext_filter file_cache filter headers include info log_config logio mem_cache mime mime_magic negotiation rewrite setenvif speling status unique_id userdir usertrack vhost_alias"
+APACHE2_MODULES="actions alias auth_basic authn_alias authn_anon authn_dbm authn_default authn_file authz_dbm authz_default authz_groupfile authz_host authz_owner authz_user autoindex cache cgi cgid dav dav_fs dav_lock deflate dir disk_cache env expires ext_filter file_cache filter headers include info log_config logio mem_cache mime mime_magic negotiation rewrite setenvif speling status unique_id userdir usertrack vhost_alias"
 
 # Robert Buchholz <rbu@gentoo.org> (17 Jan 2006)
 # Some common lcd devices
@@ -36,3 +36,8 @@ LCD_DEVICES="bayrad cfontz cfontz633 glk hd44780 lb216 lcdm001 mtxorb ncurses te
 # Netbeans modules/clusters
 NETBEANS="apisupport cnd groovy gsf harness ide identity j2ee java mobility nb php profiler soa visualweb webcommon websvccommon xml"
 
+# Default Ruby build targets
+RUBY_TARGETS="ruby18"
+
+# Small default list of enabled plugins for collectd
+COLLECTD_PLUGINS="df interface irq load memory rrdtool swap syslog"
