@@ -1,0 +1,2 @@
+USE="$USE xorg"							# desktop gui frameworks
+USE="$USE cdr dri gpm"						# desktop hardware support
