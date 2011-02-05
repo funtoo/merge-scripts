@@ -2,6 +2,8 @@ ELIBC="glibc"
 KERNEL="linux"
 USERLAND="GNU"
 
+LDFLAGS="-Wl,-O1 -Wl,--sort-common -Wl,--as-needed"
+
 USE="kernel_linux userland_GNU elibc_glibc unicode nptl modules"				#core kernel and userland
 USE="$USE pam acl ssl crypt cracklib" 								#core security
 USE="$USE nls iconv xml pcre" 									#core subsystems
@@ -14,4 +16,3 @@ USE="$USE dri cdr dvd dvdr dvdread gpm"								#core hardware support
 
 INPUT_DEVICES="evdev"
 VIDEO_CARDS="dummy"
-LDFLAGS="-Wl,-O1 -Wl,--sort-common -Wl,--as-needed"
