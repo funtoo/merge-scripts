@@ -1,5 +1,5 @@
 # Media: desktop or server-based media USE flags and settings. For servers, these are useful
 # for media servers. Do not include any desktop-related USE flags such as dri, etc.
 
-USE="$USE encode win32codecs vorbis mp3 mpeg alsa mad mp3 mpeg ogg alac flac lame wavpack" 	#core media features
-USE="$USE gif png jpeg tiff truetype"								#core graphics
+USE="$USE alac alsa encode flac lame mad mp3 mp3 mpeg mpeg ogg vorbis wavpack win32codecs" 	#core media features
+USE="$USE gif jpeg png tiff truetype"								#core graphics
