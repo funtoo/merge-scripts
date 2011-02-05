@@ -5,7 +5,7 @@ USERLAND="GNU"
 LDFLAGS="-Wl,-O1 -Wl,--sort-common -Wl,--as-needed"
 
 USE="kernel_linux userland_GNU elibc_glibc unicode nptl modules"				#core kernel and userland
-USE="$USE pam acl ssl crypt cracklib" 								#core security
+USE="$USE pam ssl crypt cracklib" 								#core security
 USE="$USE nls iconv xml pcre" 									#core subsystems
 USE="$USE zlib bzip2"										#core compression
 USE="$USE berkdb gdbm"										#core databases
