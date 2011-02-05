@@ -1,2 +1,0 @@
-USE="gif jpeg png tiff"
-USE="$USE alsa"
