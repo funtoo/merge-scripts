@@ -8,10 +8,10 @@ From: Piotr Karbowski <piotr@funtoo.org>
  1 files changed, 0 insertions(+), 9 deletions(-)
 
 diff --git a/profiles/package.mask/gentoo b/profiles/package.mask/gentoo
-index a77ccdf..4efe56e 100644
+index e94621b..bf73878 100644
 --- a/profiles/package.mask/gentoo
 +++ b/profiles/package.mask/gentoo
-@@ -42,15 +42,6 @@
+@@ -301,15 +301,6 @@ app-i18n/skktools
  # removal in xarthisius' overlay
  media-libs/gle
  
@@ -24,6 +24,6 @@ index a77ccdf..4efe56e 100644
 -<dev-lang/perl-5.12.2
 -<sys-devel/libperl-5.10.1
 -
- # Michał Górny <mgorny@gentoo.org> (05 Jan 2011)
- # Moved to my dev overlay (found in layman as 'mgorny').
- # Masked for removal in 30 days.
+ # Kacper Kowalik <xarthisius@gentoo.org> (28 Dec 2010)
+ # Masked for removal in 30 days, abandoned by
+ # upstream, bugs #238796, #241344, #316941
