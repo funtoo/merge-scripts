@@ -4,26 +4,24 @@ From: Piotr Karbowski <piotr@funtoo.org>
 
 
 ---
- profiles/package.mask/gentoo |    9 ---------
- 1 files changed, 0 insertions(+), 9 deletions(-)
+ profiles/package.mask/gentoo |    7 +++++--
+ 1 files changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/profiles/package.mask/gentoo b/profiles/package.mask/gentoo
-index e94621b..bf73878 100644
+index 73c3634..1d238d6 100644
 --- a/profiles/package.mask/gentoo
 +++ b/profiles/package.mask/gentoo
-@@ -301,15 +301,6 @@ app-i18n/skktools
- # removal in xarthisius' overlay
- media-libs/gle
- 
--# Torsten Veller <tove@gentoo.org> (06 Jan 2011)
--# Next step to remove old perl and libperl versions.
--# Versions prior 5.12 are masked and will be removed when 5.14 is available.
--# If you are a sparc-fbsd user and your only keyworded perl version was masked,
--# test perl-5.12.2 and reply to bug 288028
--# For other complaints go to bug 350785
+@@ -334,8 +334,11 @@ app-i18n/skktools
+ # If you are a sparc-fbsd user and your only keyworded perl version was masked,
+ # test perl-5.12.2 and reply to bug 288028
+ # For other complaints go to bug 350785
 -<dev-lang/perl-5.12.2
 -<sys-devel/libperl-5.10.1
--
- # Kacper Kowalik <xarthisius@gentoo.org> (28 Dec 2010)
- # Masked for removal in 30 days, abandoned by
- # upstream, bugs #238796, #241344, #316941
++#
++# Piotr Karbowski <piotr@funtoo.org> (11 Feb 2011)
++# Hashing this mask, we still want this perl to be alive.
++#<dev-lang/perl-5.12.2
++#<sys-devel/libperl-5.10.1
+ 
+ # Diego E. Pettenò <flameeyes@gentoo.org> (26 Dec 2010)
+ #  on behalf of QA team
