@@ -47,7 +47,6 @@ src_compile() {
 		--disable-efiemu \
 		$(use_enable mkfont grub-mkfont ) \
 		$(use_enable debug mm-debug) \
-		$(use_enable debug grub-emu) \
 		$(use_enable debug grub-emu-usb) \
 		$(use_enable debug grub-fstest)
 	emake -j1 || die "making regular stuff"
@@ -65,7 +64,7 @@ src_install() {
 	if use binfont 
 	then
 		insinto /usr/share/grub/fonts
-		cd ${T}; xz -d ${BINFONT}.xz || die
-		newins ${BINFONT} unifont.pf2 || die
+		cd ${T}; xz -dc ${DISTDIR}/${BINFONT}.xz > unifont.pf2 || die
+		doins unifont.pf2 || die
 	fi
 }
