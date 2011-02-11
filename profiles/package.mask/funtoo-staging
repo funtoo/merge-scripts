@@ -1,5 +1,10 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Daniel Robbins <drobbins@funtoo.org> (10 Feb 2011)
+# Masked for testing
+>=sys-boot/grub-1.98-r2
+>=sys-boot/boot-update-1.5
+
 # Daniel Robbins <drobbins@funtoo.org> (27 Jan 2011)
 # Masked for testing
 >=sys-apps/portage-2.2.2
