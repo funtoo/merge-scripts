@@ -30,26 +30,16 @@ mount-boot_mount_boot_partition() {
 
 	[ -z "${fstabstate}" ] && return 0
 
-	# Get /proc/mount entries matching /boot and /foo/bar/boot, respectively, or
-	# "" if not found:
+	# on a root filesystem or in a chroot, "mount" should list something like
+	# "/dev/sda1 on /boot" if something is mounted at /boot or /mnt/gentoo/boot:
 
-	local procstate=$(awk '$2 ~ /^\/boot$/ {print $2}' /proc/mounts)
-	local procstate_install=$(awk '$2 ~ /^.*\/boot$/ {print $2}' /proc/mounts)
-
-	# no /boot proc entry, but there's a /foo/bar/boot entry, so we're likely
-	# installing gentoo in chroot. Don't interfere with mounting:
-
-	[ -z "${procstate}" ] && [ -n "${procstate_install}" ] && return 0
-
-	# We are on an already-installed, non-chrooted system.
-	# We have an fstab entry. It is now safe to perform ro/rw remount logic.
-	# First, let's see if it /proc is already mounted:
+	local procstate=$(mount | awk '$3 ~ /^\/boot$/ {print $3}')
 
 	if [ -n "${procstate}" ]; then
 
 		# Determine if /proc was mounted read-only:
 
-		local proc_ro=$(awk '{ print $2 " ," $4 "," }' /proc/mounts | sed -n '/\/boot .*,ro,/p')
+		local proc_ro=$(mount | awk '$3 ~ /^\/boot$/ {print $6}' | sed -ne '/[(,]ro[,)]/p')
 
 		if [ -n "${proc_ro}" ]; then
 			einfo
