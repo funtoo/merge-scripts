@@ -22,7 +22,7 @@ PDEPEND="sys-boot/boot-update"
 PROVIDE="virtual/bootloader"
 
 export STRIP_MASK="*/grub/*/*.mod"
-QA_EXECSTACK="sbin/grub-probe sbin/grub-setup sbin/grub-mkdevicemap"
+QA_EXECSTACK="sbin/grub-probe sbin/grub-setup sbin/grub-mkdevicemap bin/grub-script-check"
 
 src_unpack() {
 	cd ${WORKDIR}; unpack ${A}
@@ -35,10 +35,14 @@ src_unpack() {
 	cat ${FILESDIR}/grub-1.98-mapper-symlink-getroot.patch | patch -p1 || die "patch failed"
 }
 
-src_compile() {
-	use custom-cflags || unset CFLAGS CPPFLAGS LDFLAGS
-	use static && append-ldflags -static
-
+src_prepare() {
+	# without this, if mkfont is disabled in USE but unifont is merged, the
+	# build will fail:
+	if ! use mkfont; then
+		sed -ie 's/^FONT_SOURCE =.*$/FONT_SOURCE =/g' Makefile.in || die "Makefile.in tweak"
+	fi
+}
+src_configure() {
 	econf \
 		--disable-werror \
 		--sbindir=/sbin \
@@ -49,8 +53,14 @@ src_compile() {
 		$(use_enable debug mm-debug) \
 		$(use_enable debug grub-emu-usb) \
 		$(use_enable debug grub-fstest)
-	emake -j1 || die "making regular stuff"
+}
+
+src_compile() {
+	use custom-cflags || unset CFLAGS CPPFLAGS LDFLAGS
+	use static && append-ldflags -static
+	emake || die "making regular stuff"
 	# As of 1.97.1, GRUB still needs -j1 to build. Reason: grub_script.tab.c
+	# This *appears* to be fixed in 1.98. Testing it.
 }
 
 src_install() {
