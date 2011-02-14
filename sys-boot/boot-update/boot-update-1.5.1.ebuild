@@ -31,15 +31,10 @@ src_install() {
 	dosbin sbin/boot-update
 
 	dodoc etc/boot.conf.example
+	insinto /etc
+	doins etc/boot.conf
 }
 
 src_compile() {
 	return
-}
-
-pkg_postinst() {
-	if [ ! -e ${ROOT}/etc/boot.conf ] && [ -e ${ROOT}/usr/share/doc/${PF}/boot.conf.example.bz2 ]
-	then
-		bzcat ${ROOT}/usr/share/doc/${PF}/boot.conf.example.bz2 > ${ROOT}/etc/boot.conf
-	fi
 }
