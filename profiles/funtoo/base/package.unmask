@@ -1,0 +1,3 @@
+# unmask latest portage for this profile while it's still in beta.
+
+sys-apps/portage
