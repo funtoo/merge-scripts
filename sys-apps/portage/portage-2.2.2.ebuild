@@ -13,15 +13,10 @@ LICENSE="GPL-2"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~m68k ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~sparc-fbsd ~x86 ~x86-fbsd"
 PROVIDE="virtual/portage"
 SLOT="0"
-IUSE="build doc epydoc experimental +ipc linguas_pl python3 selinux"
+IUSE="build doc epydoc +ipc linguas_pl python3 selinux"
 GITHUB_REPO="portage-funtoo"
 GITHUB_USER="funtoo"
-
-if use experimental ; then
-	GITHUB_TAG="funtoo-path"
-else
-	GITHUB_TAG="funtoo-${PVR}"
-fi
+GITHUB_TAG="funtoo-${PVR}"
 
 python_dep="python3? ( =dev-lang/python-3* )
 	!python3? (
