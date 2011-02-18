@@ -43,11 +43,3 @@ index 3306b4d..9daeb62 100644
  
  # 2009/09/21 Robin H. Johnson <robbat2@gentoo.org>
  # http://archives.gentoo.org/gentoo-dev/msg_dc705dc2c1a45e18a85aa62e8fb17009.xml
-diff --git a/profiles/default/linux/package.use b/profiles/default/linux/package.use
-new file mode 100644
-index 0000000..c5f5be9
---- /dev/null
-+++ b/profiles/default/linux/package.use
-@@ -0,0 +1,2 @@
-+www-servers/cherokee threads admin fastcgi
-+=sys-devel/gcc-4.4.3* default
