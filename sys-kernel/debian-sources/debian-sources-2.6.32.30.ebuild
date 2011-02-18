@@ -38,7 +38,7 @@ src_unpack() {
 	python2 debian/bin/patch.apply $EXTRAVERSION || die
 	if use openvz
 	then
-		python2 debian/bin/patch.apply -f openvz || die
+		python2 debian/bin/patch.apply -a $ARCH -f openvz || die
 	fi
 	#unipatch "${UNIPATCH_LIST}"
 }
