@@ -7,3 +7,4 @@
 # Piotr Karbowski <piotr@funtoo.org> (28 Dec 2010)
 # Mask because of multiple compilation breaks.
 >=app-text/poppler-0.16.0
+
