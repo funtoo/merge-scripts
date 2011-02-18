@@ -13,15 +13,15 @@ detect_version
 
 KEYWORDS="~amd64 ~x86"
 IUSE=""
-DESCRIPTION="Full Linux kernel sources - RHEL5 kernel with OpenVZ patchset"
-HOMEPAGE="http://www.openvz.org"
+DESCRIPTION="Debian Sources - with optional OpenVZ support"
+HOMEPAGE="http://www.debian.org"
 SRC_URI="
 	 http://ftp.de.debian.org/debian/pool/main/l/linux-2.6/linux-2.6_2.6.32.orig.tar.gz
 	 http://ftp.de.debian.org/debian/pool/main/l/linux-2.6/linux-2.6_2.6.32-30.diff.gz"
 
 UNIPATCH_STRICTORDER=1
 UNIPATCH_LIST="${FILESDIR}/debian-sources-2.6.32.30-bridgemac.patch"
-
+IUSE="openvz"
 K_EXTRAEINFO=""
 
 src_unpack() {
@@ -31,7 +31,16 @@ src_unpack() {
 	mv linux-* linux-${KV_FULL} || die
 	mv debian linux-${KV_FULL}/ || die
 	cd ${S}
-	unipatch "${UNIPATCH_LIST}"
+	sed -i \
+		-e 's/^sys.path.append.*$/sys.path.append(".\/debian\/lib\/python")/' \
+		-e 's/^_default_home =.*$/_default_home = ".\/debian\/patches"/' \
+		debian/bin/patch.apply || die
+	python2 debian/bin/patch.apply $EXTRAVERSION || die
+	if use openvz
+	then
+		python2 debian/bin/patch.apply -f openvz || die
+	fi
+	#unipatch "${UNIPATCH_LIST}"
 }
 
 pkg_postinst() {
