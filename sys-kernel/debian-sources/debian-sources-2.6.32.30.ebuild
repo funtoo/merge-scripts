@@ -1,11 +1,10 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 2011 Funtoo Technologies 
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-kernel/openvz-sources/openvz-sources-2.6.18.028.066.7.ebuild,v 1.1 2009/11/26 19:12:49 pva Exp $
 
 EAPI=2
 ETYPE="sources"
 
-KV_FULL=${PN}-${PVR}
+KV_FULL=debian-${PVR}
 EXTRAVERSION=30
 
 inherit kernel-2
@@ -41,6 +40,7 @@ src_unpack() {
 		python2 debian/bin/patch.apply -a $ARCH -f openvz || die
 	fi
 	#unipatch "${UNIPATCH_LIST}"
+	kernel-2_unpack_set_extraversion
 }
 
 pkg_postinst() {
