@@ -1237,6 +1237,13 @@ gcc-compiler-configure() {
 		hppa)
 			[[ ${GCCMAJOR} == "3" ]] && confgcc="${confgcc} --enable-sjlj-exceptions"
 			;;
+		# In the sparc64 world, the 64 bits compiler is used only to rebuild a kernel, so no libc available as a consequence, the compilation will fail at libiberty, so put --without-headers here.
+		# OpenMP is not needed in this context.
+		sparc)
+			if [[ "${PN}" == "kgcc64" ]] ; then
+				confgcc="${confgcc} --disable-libgomp --without-headers"
+			fi
+			;;
 	esac
 
 	GCC_LANG="c"
