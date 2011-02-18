@@ -2,10 +2,13 @@
 
 # Daniel Robbins <drobbins@funtoo.org> (27 Jan 2011)
 # Masked for testing
+>=sys-apps/portage-2.2.2
 
 # Piotr Karbowski <piotr@funtoo.org> (28 Dec 2010)
 # Mask because of multiple compilation breaks.
+>=app-text/poppler-0.16.0
 
 # Piotr Karbowski <piotr.karbowski@gmail.com> (21 Dec 2010)
 # Newer openresolv seen to be broken.
+>net-dns/openresolv-3.3.4-r1
 
