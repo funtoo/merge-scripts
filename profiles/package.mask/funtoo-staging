@@ -1,5 +1,9 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Piotr Karbowski <piotr@funtoo.org> (20 Feb 2011)
+# Need testing.
+>dev-lang/perl-5.12.2-r2
+
 # Daniel Robbins <drobbins@funtoo.org> (27 Jan 2011)
 # Masked for testing
 >=sys-apps/portage-2.2.2
