@@ -1,0 +1,97 @@
+# ChangeLog for dev-libs/gobject-introspection
+# Copyright 1999-2011 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/dev-libs/gobject-introspection/ChangeLog,v 1.15 2011/01/26 15:55:42 xarthisius Exp $
+
+  26 Jan 2011; Kacper Kowalik <xarthisius@gentoo.org>
+  gobject-introspection-0.10.1.ebuild:
+  ~ppc/~ppc64 wrt #324847
+
+*gobject-introspection-0.10.1 (12 Jan 2011)
+
+  12 Jan 2011; Gilles Dartiguelongue <eva@gentoo.org>
+  +gobject-introspection-0.10.1.ebuild:
+  Version bump.
+
+*gobject-introspection-0.10.0 (22 Dec 2010)
+
+  22 Dec 2010; Gilles Dartiguelongue <eva@gentoo.org>
+  -gobject-introspection-0.9.0.ebuild, -gobject-introspection-0.9.3.ebuild,
+  -gobject-introspection-0.9.6.ebuild, -gobject-introspection-0.9.10.ebuild,
+  +gobject-introspection-0.10.0.ebuild:
+  Version bump. Clean up old revisions.
+
+*gobject-introspection-0.9.12 (13 Oct 2010)
+
+  13 Oct 2010; Gilles Dartiguelongue <eva@gentoo.org>
+  +gobject-introspection-0.9.12.ebuild:
+  Version bump. More multi ABI python changes.
+
+*gobject-introspection-0.9.10 (02 Oct 2010)
+*gobject-introspection-0.9.0-r1 (02 Oct 2010)
+
+  02 Oct 2010; Gilles Dartiguelongue <eva@gentoo.org>
+  -gobject-introspection-0.6.9.ebuild,
+  +gobject-introspection-0.9.0-r1.ebuild,
+  +files/gobject-introspection-0.9.0-python27.patch,
+  +gobject-introspection-0.9.10.ebuild:
+  Version bump. Fix build with python 2.7, bug #327759. Install
+  documentation with USE=doc, bug #335110.
+
+*gobject-introspection-0.9.6 (21 Sep 2010)
+
+  21 Sep 2010; Arun Raghavan <ford_prefect@gentoo.org>
+  +gobject-introspection-0.9.6.ebuild:
+  Bump to 0.9.6. Lots of fixes and additions. Breaks ABI (gir version bumped
+  from 1.1 to 1.2, so all introspection packages will need updating. Watch
+  out for a revbump later with a tool to update when ABI breaks.
+
+*gobject-introspection-0.9.3 (22 Aug 2010)
+
+  22 Aug 2010; Jonathan Callen <abcd@gentoo.org>
+  +gobject-introspection-0.9.3.ebuild:
+  Bump to 0.9.3, from gnome overlay
+
+  24 Jul 2010; Raúl Porcel <armin76@gentoo.org>
+  gobject-introspection-0.9.0.ebuild:
+  Add ~alpha/~ia64/~s390/~sh/~sparc wrt #324847
+
+  21 Jul 2010; Markus Meier <maekke@gentoo.org>
+  gobject-introspection-0.9.0.ebuild:
+  add ~arm, bug #324847
+
+*gobject-introspection-0.9.0 (11 Jul 2010)
+
+  11 Jul 2010; Nirbheek Chauhan <nirbheek@gentoo.org>
+  +gobject-introspection-0.9.0.ebuild:
+  Bump to 0.9.0
+
+  11 Jun 2010; Arun Raghavan <ford_prefect@gentoo.org>
+  -gobject-introspection-0.6.7.ebuild, -gobject-introspection-0.6.8.ebuild:
+  Remove old ebuilds
+
+*gobject-introspection-0.6.14 (11 Jun 2010)
+
+  11 Jun 2010; Arun Raghavan <ford_prefect@gentoo.org>
+  +gobject-introspection-0.6.14.ebuild:
+  Bump to 0.6.14. Upstream doesn't like ChangeLogs, so meh. Added USE=test
+  and bumped to EAPI-3 for python eclass lovin'.
+
+*gobject-introspection-0.6.9 (19 Mar 2010)
+
+  19 Mar 2010; Nirbheek Chauhan <nirbheek@gentoo.org>
+  +gobject-introspection-0.6.9.ebuild:
+  Bump to 0.6.9; minimal changes
+
+*gobject-introspection-0.6.8 (18 Mar 2010)
+
+  18 Mar 2010; Nirbheek Chauhan <nirbheek@gentoo.org>
+  +gobject-introspection-0.6.8.ebuild:
+  Bump to 0.6.8, all tests pass.
+
+*gobject-introspection-0.6.7 (26 Feb 2010)
+
+  26 Feb 2010; Nirbheek Chauhan <nirbheek@gentoo.org>
+  +gobject-introspection-0.6.7.ebuild, +metadata.xml:
+  Add initial ebuild for gobject-introspection, infrastructure for
+  generation of gobject library bindings
+

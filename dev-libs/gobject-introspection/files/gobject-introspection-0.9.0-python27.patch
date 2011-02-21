@@ -1,0 +1,29 @@
+---
+Fix build with python2.7.
+
+Gentoo: #327759.
+
+Thanks to pld-linux people.
+
+--- a/giscanner/xmlwriter.py	2009-09-17 10:53:45.000000000 +0200
++++ b/giscanner/xmlwriter.py	2010-07-08 15:36:27.702842362 +0200
+@@ -67,7 +67,7 @@
+     return attr_value
+ 
+ 
+-with LibtoolImporter:
++with LibtoolImporter(None, None):
+     from giscanner._giscanner import collect_attributes
+ 
+ 
+--- a/giscanner/sourcescanner.py	2010-06-29 15:35:09.000000000 +0200
++++ b/giscanner/sourcescanner.py	2010-07-08 15:40:05.096144193 +0200
+@@ -196,7 +196,7 @@
+ class SourceScanner(object):
+ 
+     def __init__(self):
+-        with LibtoolImporter:
++        with LibtoolImporter(None, None):
+             from giscanner._giscanner import SourceScanner
+         self._scanner = SourceScanner()
+         self._filenames = []
