@@ -28,7 +28,7 @@ HOMEPAGE="http://www.perl.org/"
 LICENSE="|| ( Artistic GPL-1 GPL-2 GPL-3 )"
 SLOT="0"
 KEYWORDS="alpha amd64 arm hppa ia64 m68k ~mips ppc ppc64 s390 sh sparc x86 ~x86-fbsd"
-IUSE="berkdb build debug doc gdbm ithreads"
+IUSE="berkdb debug doc gdbm ithreads"
 
 COMMON_DEPEND="berkdb? ( sys-libs/db )
 	gdbm? ( >=sys-libs/gdbm-1.8.3 )
@@ -290,9 +290,6 @@ src_install() {
 #	keepdir "${VENDOR_ARCH}" #338802 for enc2xs
 
 	local installtarget=install
-	if use build ; then
-		installtarget=install.perl
-	fi
 	make DESTDIR="${D}" ${installtarget} || die "Unable to make ${installtarget}"
 
 	rm -f "${D}"/usr/bin/perl
@@ -341,10 +338,6 @@ src_install() {
 			--libpods='perlfunc:perlguts:perlvar:perlrun:perlop'
 	fi
 
-	if use build ; then
-		src_remove_extra_files
-	fi
-
 	dual_scripts
 }
 
@@ -369,10 +362,8 @@ pkg_postinst() {
 				find "${DIR}" -depth -type d -print0 | xargs -0 -r rmdir &> /dev/null
 			fi
 		done
-		if ! use build ; then
 			ebegin "Generating ConfigLocal.pm (ignore any error)"
 			enc2xs -C
-		fi
 		ebegin "Converting C header files to the corresponding Perl format (ignore any error)"
 		pushd /usr/include >/dev/null
 			h2ph -Q -a -d ${ARCH_LIB} \
@@ -445,7 +436,7 @@ src_remove_dual_scripts() {
 	else
 		for i in "$@" ; do
 			if ! [[ -f "${D}"/usr/bin/${i} ]] ; then
-				use build || ewarn "/usr/bin/${i} does not exist!"
+				ewarn "/usr/bin/${i} does not exist!"
 				continue
 			fi
 			mv "${D}"/usr/bin/${i}{,-${ver}-${P}} || die
