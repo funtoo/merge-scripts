@@ -1,0 +1,75 @@
+Fix source build error if using GCC 4.4 due an invalid cast
+Index: xorp-1.6/libxorp/ipvxnet.hh
+===================================================================
+--- xorp-1.6.orig/libxorp/ipvxnet.hh	2009-01-05 18:30:58.000000000 +0000
++++ xorp-1.6/libxorp/ipvxnet.hh	2010-04-22 22:22:52.000000000 +0000
+@@ -54,7 +54,7 @@ inline void
+ IPNet<IPvX>::initialize_from_string(const char *cp)
+     throw (InvalidString, InvalidNetmaskLength)
+ {
+-    char *slash = strrchr(cp, '/');
++    const char *slash = strrchr(cp, '/');
+     if (slash == 0) xorp_throw(InvalidString, "Missing slash");
+ 
+     if (*(slash + 1) == 0)
+Index: xorp-1.6/libxipc/finder_msgs.cc
+===================================================================
+--- xorp-1.6.orig/libxipc/finder_msgs.cc	2010-04-22 22:22:51.000000000 +0000
++++ xorp-1.6/libxipc/finder_msgs.cc	2010-04-22 22:22:52.000000000 +0000
+@@ -228,8 +228,8 @@ ParsedFinderXrlResponse::ParsedFinderXrl
+     : ParsedFinderMessageBase(data, FinderXrlResponse::c_type), _xrl_args(0)
+ {
+     data += bytes_parsed();
+-    char* p0 = strstr(data, "/");
+-    char* p1 = strstr(data, "\n");
++    const char* p0 = strstr(data, "/");
++    const char* p1 = strstr(data, "\n");
+     if (p0 == 0 || p1 == 0) {
+ 	xorp_throw(BadFinderMessageFormat, "XrlError not present");
+     }
+Index: xorp-1.6/libxorp/ipnet.hh
+===================================================================
+--- xorp-1.6.orig/libxorp/ipnet.hh	2009-01-05 18:30:57.000000000 +0000
++++ xorp-1.6/libxorp/ipnet.hh	2010-04-22 22:22:52.000000000 +0000
+@@ -563,13 +563,13 @@ template <class A> void
+ IPNet<A>::initialize_from_string(const char *cp)
+     throw (InvalidString, InvalidNetmaskLength)
+ {
+-    char *slash = strrchr(cp, '/');
++    const char *slash = strrchr(cp, '/');
+     if (slash == 0)
+ 	xorp_throw(InvalidString, "Missing slash");
+ 
+     if (*(slash + 1) == 0)
+ 	xorp_throw(InvalidString, "Missing prefix length");
+-    char *n = slash + 1;
++    const char *n = slash + 1;
+     while (*n != 0) {
+ 	if (*n < '0' || *n > '9') {
+ 	    xorp_throw(InvalidString, "Bad prefix length");
+Index: xorp-1.6/libxipc/xrl_pf_factory.cc
+===================================================================
+--- xorp-1.6.orig/libxipc/xrl_pf_factory.cc	2010-04-22 22:22:51.000000000 +0000
++++ xorp-1.6/libxipc/xrl_pf_factory.cc	2010-04-22 22:22:52.000000000 +0000
+@@ -69,7 +69,7 @@ XrlPFSender*
+ XrlPFSenderFactory::create_sender(EventLoop& eventloop,
+ 				  const char* protocol_colon_address)
+ {
+-    char *colon = strstr(protocol_colon_address, ":");
++    const char *colon = strstr(protocol_colon_address, ":");
+     if (colon == 0) {
+ 	debug_msg("No colon in supposedly colon separated <protocol><address>"
+ 		  "combination\n\t\"%s\".\n", protocol_colon_address);
+Index: xorp-1.6/policy/common/element.cc
+===================================================================
+--- xorp-1.6.orig/policy/common/element.cc	2010-04-22 22:47:40.000000000 +0000
++++ xorp-1.6/policy/common/element.cc	2010-04-22 22:48:34.000000000 +0000
+@@ -89,7 +89,7 @@ ElemCom32::ElemCom32(const char* c_str)
+     }
+ 
+     int len = strlen(c_str);
+-    char *colon = strstr(c_str, ":");
++    const char *colon = strstr(c_str, ":");
+ 
+     if(len > 0 && colon != NULL) {
+ 	uint32_t msw, lsw;

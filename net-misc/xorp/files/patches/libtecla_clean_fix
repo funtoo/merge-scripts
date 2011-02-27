@@ -1,0 +1,15 @@
+Index: xorp-1.6/cli/libtecla/Makefile.in
+===================================================================
+--- xorp-1.6.orig/cli/libtecla/Makefile.in	2010-01-26 19:16:28.000000000 +0000
++++ xorp-1.6/cli/libtecla/Makefile.in	2010-01-26 19:19:41.000000000 +0000
+@@ -180,7 +180,9 @@ clean:
+ 
+ distclean: clean
+ 	rm -f config.cache config.status config.log Makefile libtecla.map.opt
+-	cp $(srcdir)/Makefile.stub Makefile
++	#This Makefile is not included in orig.tar.gz so the stub should 
++	#not be copied to Makefile
++	#cp $(srcdir)/Makefile.stub Makefile
+ 
+ install_lib: $(TARGETS) $(LIBDIR)
+ 	@for lib in libtecla.a libtecla_r.a ; do \

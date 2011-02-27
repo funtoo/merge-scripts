@@ -1,0 +1,27 @@
+#!/sbin/runscript
+
+depend() {
+	need net
+}
+
+checkconfig() {
+	if [[ ! -f ${XORP_CONFIG} ]] ; then
+		eerror "Please create ${XORP_CONFIG} first."
+		eerror "You can use the sample config provided (/etc/xorp/config.boot.dist)"
+		return 1
+	fi
+	return 0
+}
+
+start() {
+	checkconfig || return 1
+	ebegin "Starting xorp"
+	start-stop-daemon --start --quiet --background  --exec /usr/xorp/bin/xorp_rtrmgr -- -b ${XORP_CONFIG} >/dev/null
+	eend $?
+}
+
+stop() {
+	ebegin "Stopping xorp"
+	start-stop-daemon --stop --quiet --retry 20 --exec /usr/xorp/bin/xorp_rtrmgr
+	eend $?
+}

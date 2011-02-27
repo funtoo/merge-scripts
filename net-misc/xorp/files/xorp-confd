@@ -1,0 +1,4 @@
+# Config file for /etc/init.d/xorp
+
+# Set preferred options here
+XORP_CONFIG="/etc/xorp/config.boot"

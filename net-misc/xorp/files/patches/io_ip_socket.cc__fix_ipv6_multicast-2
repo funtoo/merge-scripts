@@ -1,0 +1,20 @@
+Index: xorp-1.6-debian_dir/fea/data_plane/io/io_ip_socket.cc
+===================================================================
+--- xorp-1.6-debian_dir.orig/fea/data_plane/io/io_ip_socket.cc	2009-06-12 17:36:29.000000000 +0100
++++ xorp-1.6-debian_dir/fea/data_plane/io/io_ip_socket.cc	2009-06-12 17:36:33.000000000 +0100
+@@ -2281,6 +2281,15 @@ IoIpSocket::send_packet(const string& if
+ 	    cmsgp->cmsg_type  = IPV6_HOPOPTS;
+ 	    hbhbuf = CMSG_DATA(cmsgp);
+ 	    currentlen = inet6_opt_init(hbhbuf, hbhlen);
++
++	    //
++	    // XXX: A hack for Linux with buggy inet6_opt_init()
++	    // implementation. Note that the problem has been fixed
++	    // in glibc-2.8.
++	    //
++	    struct ip6_hbh* ip6_hbh = (struct ip6_hbh *)hbhbuf;
++	    ip6_hbh->ip6h_len = (hbhlen / 8) - 1;
++
+ 	    if (currentlen == -1) {
+ 		error_msg = c_format("inet6_opt_init(len = %d) failed",
+ 				     hbhlen);
