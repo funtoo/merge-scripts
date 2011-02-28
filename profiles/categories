@@ -18,6 +18,7 @@ mail-mta
 media-libs
 media-sound
 media-video
+net-dialup
 net-firewall
 net-fs
 net-im
