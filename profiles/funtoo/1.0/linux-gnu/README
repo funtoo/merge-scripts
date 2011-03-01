@@ -1,0 +1,33 @@
+ABOUT THIS DIRECTORY
+====================
+
+This is a NEW, improved layout that Daniel is working on. It is UNTESTED and
+likely has bugs, especially in parents files. This layout was developed on
+Monday, February 28, 2011. The goal of the funtoo/1.0/linux-gnu directory is to
+house everything that was in the funtoo/1.0/ directory - basically, linux-gnu
+is the implicit platform, so we have it right after 1.0 and remove a lot of
+complexity in the directory structure.
+
+Changes
+=======
+
+Also new in this design is a "stable" and "current" profile! The intention is
+that the user will select "stable" or "current" via a profile selection rather
+than manually modifying ACCEPT_KEYWORDS in /etc/make.conf. This allows *other*
+things to be changed between stable and current, such as virtuals settings, and
+is a lot more flexible.
+
+Another change related to this is moving the funtoo-stable package.keywords
+file to a package.unmask file inside the builds/stable profile. This is easier
+to maintain and architecture agnostic.
+
+Yet another change is renaming "arch/x86" to "arch/x86-32bit" and "arch/amd64"
+to "arch/x86-64bit".  These names are more easily understood by end-users. No
+changes have been made to KEYWORDS names.
+
+New Conventions
+===============
+
+Sub-directories where you are supposed to select only one option are in
+singular form. (platform, arch, build) Sub-directories where you may select
+more than one option are in plural form. (mix-ins)

@@ -1,0 +1,5 @@
+See http://en.wikipedia.org/wiki/Mixin.
+
+Mix-ins are not stand-alone profiles, but they enable certain functionality, such
+as media support, common workstation settings, or RHEL5-compatibility. You use
+them in combination with an official system profile.

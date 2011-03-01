@@ -1,0 +1,3 @@
+"Flavors" are profiles that contain almost all necessary settings to function as stand-alone profiles.
+
+missing: arch - a user needs to pick an arch. not decided whether we'll pull in stable or unstable builds. Probably yes.

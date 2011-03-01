@@ -1,0 +1,5 @@
+-multilib
+-amd64
+-ssse3
+-emul-linux-x86
+-lilo

@@ -1,0 +1,5 @@
+I am attempting to use package.unmask instead of package.keywords for a more straightforward way to move things to stable.
+
+This, however, has not been tested, so proceed with caution.
+
+-Daniel
