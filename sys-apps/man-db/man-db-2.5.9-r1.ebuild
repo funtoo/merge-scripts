@@ -1,6 +1,5 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation, Funtoo Technologies
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-apps/man-db/man-db-2.5.9.ebuild,v 1.1 2010/12/22 18:40:23 vapier Exp $
 
 EAPI="2"
 
@@ -22,7 +21,6 @@ RDEPEND="berkdb? ( sys-libs/db )
 	!sys-apps/man"
 DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )"
-PROVIDE="virtual/man"
 
 pkg_setup() {
 	enewgroup man 15
