@@ -4,4 +4,4 @@
 EAPI=3
 SLOT="0"
 KEYWORDS="amd64 x86 sparc"
-RDEPEND="|| ( sys-apps/man-db sys-apps/man )"
+RDEPEND="sys-apps/man-db"
