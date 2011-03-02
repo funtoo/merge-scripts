@@ -1,5 +1,10 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Daniel Robbins <drobbins@funtoo.org> (02 Mar 2011)
+# mask sys-apps/man as part of a workaround to get
+# man-db to merge smoothly:
+sys-apps/man
+
 # Daniel Robbins <drobbins@funtoo.org> (01 Sep 2010)
 # let's stick with a known-good version of ruby by
 # default, and protect against ruby-1.9.2 things that
