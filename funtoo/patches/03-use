@@ -5,9 +5,7 @@ From: Piotr Karbowski <jabberuser@gmail.com>
 
 ---
  profiles/default/linux/make.defaults |   16 +++++++++++++++-
- profiles/default/linux/package.use   |    2 ++
- 2 files changed, 17 insertions(+), 1 deletions(-)
- create mode 100644 profiles/default/linux/package.use
+ 1 files changed, 15 insertions(+), 1 deletions(-)
 
 diff --git a/profiles/default/linux/make.defaults b/profiles/default/linux/make.defaults
 index 3306b4d..9daeb62 100644

@@ -41,10 +41,10 @@ index 90ca914..c36f08b 100644
  
  	echo $(type -p ${_ruby_name} 2>/dev/null)
 diff --git a/profiles/base/use.mask b/profiles/base/use.mask
-index 0a2652a..2b8a04f 100644
+index 8ba0976..57cc82b 100644
 --- a/profiles/base/use.mask
 +++ b/profiles/base/use.mask
-@@ -249,9 +249,7 @@ dxr3
+@@ -252,9 +252,7 @@ dxr3
  pvm
  
  # Alex Legler <a3li@gentoo.org> (7 Dec 2009)
