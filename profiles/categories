@@ -35,6 +35,7 @@ sys-devel
 sys-fs
 sys-kernel
 sys-libs
+virtual
 www-servers
 x11-apps
 x11-wm
