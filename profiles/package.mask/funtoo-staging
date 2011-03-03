@@ -1,5 +1,9 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Oleg Vinichenko <oleg@funtoo.org> (3 March 2011)
+# Masked fot testing
+>=sys-apps/gdisk-0.6.14
+
 # Piotr Karbowski <piotr@funtoo.org> (20 Feb 2011)
 # Need testing.
 >dev-lang/perl-5.12.2-r2
@@ -11,7 +15,3 @@
 # Piotr Karbowski <piotr@funtoo.org> (28 Dec 2010)
 # Mask because of multiple compilation breaks.
 >=app-text/poppler-0.16.0
-
-# Oleg Vinichenko <oleg@funtoo.org> (3 March 2011)
-# Masked fot testing
->=sys-apps/gdisk-0.6.14
