@@ -13,7 +13,6 @@ LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="alpha amd64 arm hppa ia64 m68k mips ppc ppc64 s390 sh sparc x86"
 IUSE="berkdb +gdbm nls"
-PROVIDE="virtual/man"
 
 RDEPEND="berkdb? ( sys-libs/db )
 	gdbm? ( sys-libs/gdbm )
