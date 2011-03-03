@@ -12,3 +12,6 @@
 # Mask because of multiple compilation breaks.
 >=app-text/poppler-0.16.0
 
+# Oleg Vinichenko <oleg@funtoo.org> (3 March 2011)
+# Masked fot testing
+>=sys-apps/gdisk-0.6.14
