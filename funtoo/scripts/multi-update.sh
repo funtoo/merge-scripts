@@ -7,7 +7,7 @@ die() {
 	exit 1
 }
 
-cd /root/.git/funtoo-overlay || die "couldn't chdir"
+cd /root/git/funtoo-overlay || die "couldn't chdir"
 git pull
 ./funtoo/scripts/gentoo-update.sh || die "gentoo update failed"
 ./funtoo/scripts/merge.py || die "funtoo update failed"
