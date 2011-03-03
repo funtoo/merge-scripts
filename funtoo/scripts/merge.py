@@ -152,7 +152,7 @@ class InsertEbuilds(MergeStep):
 		if self.categories != None:
 			# categories specified in __init__:
 			a = self.categories
-		else
+		else:
 			a = []
 			if os.path.exists(catpath):
 				# categories defined in profile:
@@ -167,7 +167,7 @@ class InsertEbuilds(MergeStep):
 			for cat in cats:
 				# All categories have a "-" in them and are directories:
 				if os.path.isdir(os.path.join(self.srctree.root,cat)):
-					if (cat.find("-") != -1:) or cat == "virtuals":
+					if (cat.find("-") != -1) or cat == "virtuals":
 						if cat not in a:
 							a.append(cat)
 
