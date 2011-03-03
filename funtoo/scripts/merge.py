@@ -149,25 +149,27 @@ class InsertEbuilds(MergeStep):
 		desttree.logTree(self.srctree)
 		# Figure out what categories to process:
 		catpath = os.path.join(self.srctree.root,"profiles/categories")
-
 		if self.categories != None:
 			# categories specified in __init__:
 			a = self.categories
-		elif os.path.exists(catpath):
-			# categories defined in profile:
+		else
 			a = []
-			f = open(os.path.join(self.srctree.root,"profiles/categories"),"r")
-			for cat in f.readlines():
-				a.append(cat.strip())
-			f.close()
-		else:
-			# no categories specified to __init__, and no profiles/categories file, so auto-detect categories:
-			a = []
+			if os.path.exists(catpath):
+				# categories defined in profile:
+				f = open(os.path.join(self.srctree.root,"profiles/categories"),"r")
+				for cat in f.readlines():
+					cat = cat.strip()
+					if cat not in a:
+						a.append(cat)
+				f.close()
+			# auto-detect additional categories:
 			cats = os.listdir(self.srctree.root)
 			for cat in cats:
 				# All categories have a "-" in them and are directories:
-				if os.path.isdir(os.path.join(self.srctree.root,cat)) and cat.find("-") != -1:
-					a.append(cat)
+				if os.path.isdir(os.path.join(self.srctree.root,cat)):
+					if (cat.find("-") != -1:) or cat == "virtuals":
+						if cat not in a:
+							a.append(cat)
 
 		# Our main loop:
 		print "# Merging in ebuilds from %s" % self.srctree.root 
