@@ -1,6 +1,10 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
 # Oleg Vinichenko <oleg@funtoo.org> (4 March 2011)
+# gentoo tar for testing
+>=app-arch/tar-1.25
+
+# Oleg Vinichenko <oleg@funtoo.org> (4 March 2011)
 # new bash for testing
 >=app-shells/bash-4.1_p10
 
