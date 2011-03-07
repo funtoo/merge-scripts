@@ -1,0 +1,133 @@
+http://lists.gnu.org/archive/html/bug-tar/2010-11/msg00071.html
+http://bugs.gentoo.org/349164
+
+From 065cf0958c39600f2062cbeeb5b76929d03c207b Mon Sep 17 00:00:00 2001
+From: Paul Eggert <eggert@cs.ucla.edu>
+Date: Mon, 22 Nov 2010 22:50:58 -0800
+Subject: [PATCH] * src/names.c: tar: fix bug with --one-file-system --listed-incremental
+
+Problem (and idea for fix) reported by Martin Weigel
+<http://lists.gnu.org/archive/html/bug-tar/2010-11/msg00071.html>.
+* src/common.h (is_individual_file): Remove decl.
+* src/create.c (dump_file0): Replace "is_individual_file (p)"
+with "top_level".
+* src/incremen.c (procdir): Replace "!is_individual_file
+(name_buffer)" with "st->parent".  Fix bug with --one-file-system
+and --listed-incremental.
+* src/names.c (individual_file_table, register_individual_file):
+(is_individual_file): Remove.  All uses removed.
+---
+ src/common.h   |    1 -
+ src/create.c   |    4 ++--
+ src/incremen.c |    8 ++------
+ src/names.c    |   26 --------------------------
+ 4 files changed, 4 insertions(+), 35 deletions(-)
+
+diff --git a/src/common.h b/src/common.h
+index 35e056e..9444fd7 100644
+--- a/src/common.h
++++ b/src/common.h
+@@ -680,7 +680,6 @@ bool excluded_name (char const *name);
+ 
+ void add_avoided_name (char const *name);
+ bool is_avoided_name (char const *name);
+-bool is_individual_file (char const *name);
+ 
+ bool contains_dot_dot (char const *name);
+ 
+diff --git a/src/create.c b/src/create.c
+index a1e90a3..e8de6b9 100644
+--- a/src/create.c
++++ b/src/create.c
+@@ -1678,9 +1678,9 @@ dump_file0 (struct tar_stat_info *st, char const *name, char const *p)
+      put in the archive.
+ 
+      This check is omitted if incremental_option is set *and* the
+-     requested file is not explicitely listed in the command line. */
++     requested file is not explicitly listed in the command line.  */
+ 
+-  if (!(incremental_option && !is_individual_file (p))
++  if (! (incremental_option && ! top_level)
+       && !S_ISDIR (st->stat.st_mode)
+       && OLDER_TAR_STAT_TIME (*st, m)
+       && (!after_date_option || OLDER_TAR_STAT_TIME (*st, c)))
+diff --git a/src/incremen.c b/src/incremen.c
+index 628ff29..2b33c5d 100644
+--- a/src/incremen.c
++++ b/src/incremen.c
+@@ -426,7 +426,6 @@ procdir (const char *name_buffer, struct tar_stat_info *st,
+ {
+   struct directory *directory;
+   struct stat *stat_data = &st->stat;
+-  dev_t device = st->parent ? st->parent->stat.st_dev : 0;
+   bool nfs = NFS_FILE_STAT (*stat_data);
+ 
+   if ((directory = find_directory (name_buffer)) != NULL)
+@@ -540,11 +539,8 @@ procdir (const char *name_buffer, struct tar_stat_info *st,
+ 	}
+     }
+ 
+-  /* If the directory is on another device and --one-file-system was given,
+-     omit it... */
+-  if (one_file_system_option && device != stat_data->st_dev
+-      /* ... except if it was explicitely given in the command line */
+-      && !is_individual_file (name_buffer))
++  if (one_file_system_option && st->parent
++      && stat_data->st_dev != st->parent->stat.st_dev)
+     /* FIXME:
+ 	WARNOPT (WARN_XDEV,
+ 		 (0, 0,
+diff --git a/src/names.c b/src/names.c
+index 6e214bf..ba4d509 100644
+--- a/src/names.c
++++ b/src/names.c
+@@ -47,8 +47,6 @@ static char *cached_no_such_gname;
+ static uid_t cached_no_such_uid;
+ static gid_t cached_no_such_gid;
+ 
+-static void register_individual_file (char const *name);
+-
+ /* Given UID, find the corresponding UNAME.  */
+ void
+ uid_to_uname (uid_t uid, char **uname)
+@@ -360,8 +358,6 @@ name_next_elt (int change_dirs)
+ 	{
+ 	  if (unquote_option)
+ 	    unquote_string (name_buffer);
+-	  if (incremental_option)
+-	    register_individual_file (name_buffer);
+ 	  entry.type = ep->type;
+ 	  entry.v.name = name_buffer;
+ 	  return &entry;
+@@ -1152,28 +1148,6 @@ excluded_name (char const *name)
+   return excluded_file_name (excluded, name + FILE_SYSTEM_PREFIX_LEN (name));
+ }
+ 
+-static Hash_table *individual_file_table;
+-
+-static void
+-register_individual_file (char const *name)
+-{
+-  struct stat st;
+-
+-  if (deref_stat (name, &st) != 0)
+-    return; /* Will be complained about later */
+-  if (S_ISDIR (st.st_mode))
+-    return;
+-
+-  hash_string_insert (&individual_file_table, name);
+-}
+-
+-bool
+-is_individual_file (char const *name)
+-{
+-  return hash_string_lookup (individual_file_table, name);
+-}
+-
+-
+ 
+ /* Return the size of the prefix of FILE_NAME that is removed after
+    stripping NUM leading file name components.  NUM must be
+-- 
+1.7.3.1
+
