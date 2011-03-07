@@ -1,14 +1,17 @@
 #!/usr/bin/python2
 
 import os,sys,re
-import argparse
 import getopt
 
 re_head = re.compile('^binary-arch_(.*)_real::')
 re_flav = re.compile('binary-arch-flavour')
 re_item = re.compile("[A-Z_]*='[^']*'")
 
-f=open("debian/rules.gen","r")
+try:
+	f=open("debian/rules.gen","r")
+except:
+	print "Unable to open debian/rules.gen; can't continue."
+	sys.exit(1)
 lines=f.readlines()
 f.close()
 
@@ -202,6 +205,12 @@ if "KCONFIG" not in configdict[master_key]:
 cmd = "python2 debian/bin/kconfig.py '%s' %s" % ( outfile, configdict[master_key]["KCONFIG"] )
 if "KCONFIG_OPTIONS" in configdict[master_key]:
 	cmd += " %s" % configdict[master_key]["KCONFIG_OPTIONS"]
-os.system(cmd)
-print "Wrote %s kernel configuration to %s." % ( master_key, outfile )
+os.environ["PYTHONPATH"] = "debian/lib/python"
+retval = os.system(cmd)
+if retval == 0:
+	print "Wrote %s kernel configuration to %s." % ( master_key, outfile )
+	sys.exit(0)
+else:
+	print "There was an error extracting the Debian kernel config."
+	sys.exit(1)
 

@@ -38,10 +38,13 @@ src_unpack() {
 	then
 		python2 debian/bin/patch.apply -a $ARCH -f openvz || die
 	fi
-	#unipatch "${UNIPATCH_LIST}"
 	unpack_set_extraversion
-	# working on config extraction:
-	#sed -ne "/^binary-arch_.*::\$/ { s/^binary-arch_\(.*\)::\$/\[\1\]\n/;N;s/[[:space:]]*\\\$(MAKE) -f debian\/rules.real \([a-z-]*\)[[:space:]]*/\n\nKIND \1\n\n/;s/[[:space:]]\([A-Z_]*\)='\([^']*\)'/\1 \2\n/g;p }" rules.gen
+}
+
+src_install() {
+	kernel-2_src_install
+	exeinto /usr/src/linux-${KV_FULL}
+	doexe ${FILESDIR}/config-extract
 }
 
 pkg_postinst() {

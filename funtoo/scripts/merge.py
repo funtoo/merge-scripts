@@ -245,7 +245,7 @@ foo_overlay = Tree("foo-overlay", "/root/git/foo-overlay",pull=True)
 multimedia_overlay = Tree("multimedia-overlay", "/root/git/multimedia-overlay",pull=True)
 
 steps = [
-	SyncTree(gentoo_src,exclude=["/metadata/cache/**"]),
+	SyncTree(gentoo_src,exclude=["/metadata/cache/**","sys-kernel/openvz-sources"]),
 	ApplyPatchSeries("%s/funtoo/patches" % funtoo_overlay.root ),
 	SyncDir(funtoo_overlay.root,"profiles","profiles", exclude=["repo_name","categories"]),
 	ProfileDepFix(),
