@@ -1,6 +1,6 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-shells/bash/bash-4.1_p10.ebuild,v 1.1 2011/02/28 18:25:36 vapier Exp $
+# $Header: /var/cvsroot/gentoo-x86/app-shells/bash/bash-4.1_p9.ebuild,v 1.1 2010/10/09 22:03:22 vapier Exp $
 
 EAPI="1"
 
@@ -70,6 +70,7 @@ src_unpack() {
 	[[ ${READLINE_PLEVEL} -gt 0 ]] && epatch $(patches -s ${READLINE_PLEVEL} readline ${READLINE_VER})
 	cd ../..
 
+	epatch "${FILESDIR}"/${PN}-4.1-document-system-bashrc.patch
 	epatch "${FILESDIR}"/${PN}-4.1-fbsd-eaccess.patch #303411
 
 	if ! use vanilla ; then
