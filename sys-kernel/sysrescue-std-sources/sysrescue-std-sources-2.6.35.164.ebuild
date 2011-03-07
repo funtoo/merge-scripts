@@ -2,6 +2,7 @@ ETYPE="sources"
 inherit kernel-2 eutils
 
 KV=2.6.35
+KV_FULL="${PN}-${PVR}"
 S=${WORKDIR}/linux-${KV}
 DESCRIPTION="System Rescue CD Full sources for the Linux kernel, including gentoo and sysresccd patches."
 SRC_URI="mirror://kernel/linux/kernel/v2.6/linux-2.6.35.tar.bz2"

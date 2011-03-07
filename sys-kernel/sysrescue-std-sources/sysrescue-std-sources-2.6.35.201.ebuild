@@ -3,6 +3,8 @@ ETYPE="sources"
 inherit kernel-2 eutils
 
 KV="${PV%.*}"
+KV_FULL="${PN}-${PVR}"
+SYSRESC_REL="${PV##*.}"
 S=${WORKDIR}/linux-${KV}
 DESCRIPTION="System Rescue CD Full sources for the Linux kernel, including gentoo and sysresccd patches."
 SRC_URI="mirror://kernel/linux/kernel/v2.6/linux-2.6.35.tar.bz2 http://www.funtoo.org/archive/sysrescue-std-sources/std-sources-${PV}-patches-config.tar.xz"
@@ -12,7 +14,6 @@ LICENSE="GPL-2"
 SLOT="${KV}"
 KEYWORDS="-* ~amd64 ~x86"
 IUSE=""
-SYSRESC_REL="${PV##*.}"
 
 src_unpack()
 {
