@@ -3,7 +3,7 @@
 eval `keychain --noask --eval id_dsa`  || exit 1
 
 # This is the rsync mirror where we grab Portage updates from...
-src=rsync://rsync.gentoo.org/gentoo-portage/
+src=rsync://88.198.83.249/gentoo-portage/
 
 # This is the target directory for our updates...
 dst=/var/git/portage-gentoo/
