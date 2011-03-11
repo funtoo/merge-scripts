@@ -22,7 +22,8 @@ sys-kernel/sysrescue-std-binaries
 
 # Martin Scholz <golodhrim@funtoo.org> (3 March 2011)
 # Masked for testing
->=net-misc/dhcpcd-5.2.11
+#>=net-misc/dhcpcd-5.2.11
+# added to current (11 March 2011
 
 # Oleg Vinichenko <oleg@funtoo.org> (3 March 2011)
 # Masked for testing
