@@ -49,6 +49,14 @@ src_compile() {
 }
 
 src_install() {
-	rm -f ${WORKDIR}/out/lib/modules/*/build || die
 	cp -a ${WORKDIR}/out/* ${D}/ || die "couldn't copy output files into place"
+	install -d ${D}/usr/src/linux-${P} || die
+	# install the kernel config used to /usr/src/
+	cp ${WORKDIR}/build/.config ${D}/usr/src/linux-${P} || die
+	rm -f ${D}/lib/modules/*/source || die
+	rm -f ${D}/lib/modules/*/build || die
+	cd ${D}/lib/modules
+	local moddir="$(ls -d 2*)"
+	ln -s /usr/src/linux-${P} ${D}/lib/modules/${moddir}/source || die
+	ln -s /usr/src/linux-${P} ${D}/lib/modules/${moddir}/build || die
 }
