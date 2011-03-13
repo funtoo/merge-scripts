@@ -44,6 +44,9 @@ IUSE="debug n32"
 DEPEND="dev-lang/perl"
 RDEPEND="${DEPEND}"
 
+# EAPI-incompatible workaround for bug #253916:
+FEATURES="${FEATURES/distcc/}"
+
 KS="${WORKDIR}/linux-${OKV}"
 
 # Klibc has no PT_GNU_STACK support, so scanning for execstacks is moot
