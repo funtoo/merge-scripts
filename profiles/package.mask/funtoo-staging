@@ -1,5 +1,13 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Martin Scholz <golodhrim@funtoo.org> (16 March 2011)
+# Patched version of eix so that eix-sync uses emerge --sync
+# fixed with patch from JF added -r1 for that version
+# -r1 our patched version
+# -r2 mask to not break with newer version
+>=app-portage/eix-0.22.8-r2
+=app-portage/eix-0.22.8-r1
+
 # Oleg Vinichenko <oleg@funtoo.org> (12 March 2011)
 # New klibc to test with uvesafb
 >=dev-libs/klibc-1.5.20
@@ -20,11 +28,6 @@ sys-kernel/sysrescue-std-binaries
 # Oleg Vinichenko <oleg@funtoo.org> (3 March 2011)
 # New upstream gentoo sandbox for testing and for testing metro builds, masked
 >=sys-apps/sandbox-2.5 
-
-# Martin Scholz <golodhrim@funtoo.org> (3 March 2011)
-# Masked for testing
-#>=net-misc/dhcpcd-5.2.11
-# added to current (11 March 2011
 
 # Piotr Karbowski <piotr@funtoo.org> (20 Feb 2011)
 # Need testing.
