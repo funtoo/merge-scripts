@@ -9,7 +9,7 @@ HOMEMEPAGE="http://www.rodsbooks.com/gdisk/"
 SRC_URI="mirror://sourceforge/gptfdisk/${P}.tgz"
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~x86 ~amd64 ~sparc"
+KEYWORDS="x86 amd64 sparc"
 
 S="${WORKDIR}/${P}"
 
