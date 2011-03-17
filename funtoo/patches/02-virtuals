@@ -19,7 +19,7 @@ index 3f502ad..4255738 100644
  virtual/blackbox			x11-wm/blackbox
  virtual/cron				sys-process/vixie-cron
  virtual/dev-manager			sys-fs/udev
-@@ -25,7 +26,7 @@ virtual/logger				app-admin/metalog
+@@ -25,6 +26,6 @@ virtual/logger				app-admin/metalog
  virtual/lpr				net-print/cups
  virtual/m3				dev-lang/cm3-bin
  virtual/mailx				mail-client/mailx
