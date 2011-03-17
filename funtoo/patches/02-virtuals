@@ -27,4 +27,3 @@ index 3f502ad..4255738 100644
 +virtual/man				sys-apps/man-db
  virtual/modutils			sys-apps/module-init-tools
  virtual/mta				mail-mta/ssmtp
- virtual/ooo				app-office/openoffice-bin
