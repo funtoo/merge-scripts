@@ -250,8 +250,6 @@ src_install() {
 		use tk || rm -fr "${ED}usr/bin/idle${SLOT}" "${ED}"usr/lib*/python${SLOT}/{idlelib,lib-tk}
 	fi
 
-	prep_ml_includes $(python_get_includedir)
-
 	dodoc Misc/{ACKS,HISTORY,NEWS} || die "dodoc failed"
 
 	if use examples; then

@@ -1,6 +1,6 @@
 # Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-lang/python/python-3.1.3-r1.ebuild,v 1.1 2011/02/21 22:19:36 arfrever Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-lang/python/python-3.2.ebuild,v 1.1 2011/02/21 22:21:50 arfrever Exp $
 
 EAPI="3"
 WANT_AUTOMAKE="none"
@@ -11,26 +11,26 @@ if [[ "${PV}" == *_pre* ]]; then
 	inherit subversion
 
 	ESVN_PROJECT="python"
-	ESVN_REPO_URI="http://svn.python.org/projects/python/branches/release31-maint"
+	ESVN_REPO_URI="http://svn.python.org/projects/python/branches/release32-maint"
 	ESVN_REVISION=""
 else
 	MY_PV="${PV%_p*}"
 	MY_P="Python-${MY_PV}"
 fi
 
-PATCHSET_REVISION="1"
+PATCHSET_REVISION="0"
 
 DESCRIPTION="Python is an interpreted, interactive, object-oriented programming language."
 HOMEPAGE="http://www.python.org/"
 if [[ "${PV}" == *_pre* ]]; then
 	SRC_URI=""
 else
-	SRC_URI="http://www.python.org/ftp/python/${MY_PV}/${MY_P}.tar.bz2
+	SRC_URI="http://www.python.org/ftp/python/${MY_PV}/${MY_P}.tar.xz
 		mirror://gentoo/python-gentoo-patches-${MY_PV}$([[ "${PATCHSET_REVISION}" != "0" ]] && echo "-r${PATCHSET_REVISION}").tar.bz2"
 fi
 
 LICENSE="PSF-2.2"
-SLOT="3.1"
+SLOT="3.2"
 PYTHON_ABI="${SLOT}"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~m68k ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~sparc-fbsd ~x86-fbsd"
 IUSE="build doc elibc_uclibc examples gdbm ipv6 +ncurses +readline sqlite +ssl +threads tk +wide-unicode wininst +xml"
@@ -45,13 +45,17 @@ RDEPEND=">=app-admin/eselect-python-20091230
 				>=sys-libs/ncurses-5.2
 				readline? ( >=sys-libs/readline-4.1 )
 			)
-			sqlite? ( >=dev-db/sqlite-3.3.3:3 )
+			sqlite? ( >=dev-db/sqlite-3.3.8:3[extensions] )
 			ssl? ( dev-libs/openssl )
-			tk? ( >=dev-lang/tk-8.0 )
+			tk? (
+				>=dev-lang/tk-8.0
+				dev-tcltk/blt
+			)
 			xml? ( >=dev-libs/expat-2 )
 		)"
 DEPEND="${RDEPEND}
 		$([[ "${PV}" == *_pre* ]] && echo "=${CATEGORY}/${PN}-${PV%%.*}*")
+		$([[ "${PV}" != *_pre* ]] && echo "app-arch/xz-utils")
 		dev-util/pkgconfig
 		$([[ "${PV}" =~ ^[[:digit:]]+\.[[:digit:]]+_pre ]] && echo "doc? ( dev-python/sphinx )")
 		!sys-devel/gcc[libffi]"
@@ -107,6 +111,8 @@ src_prepare() {
 		Lib/distutils/command/install.py \
 		Lib/distutils/sysconfig.py \
 		Lib/site.py \
+		Lib/sysconfig.py \
+		Lib/test/test_site.py \
 		Makefile.pre.in \
 		Modules/Setup.dist \
 		Modules/getpath.c \
@@ -116,6 +122,12 @@ src_prepare() {
 		# Remove Microsoft Windows executables.
 		rm Lib/distutils/command/wininst-*.exe
 	fi
+
+	# Support versions of Autoconf other than 2.65.
+	sed -e "/version_required(2\.65)/d" -i configure.in || die "sed failed"
+
+	# Disable ABI flags.
+	sed -e "s/ABIFLAGS=\"\${ABIFLAGS}.*\"/:/" -i configure.in || die "sed failed"
 
 	if [[ "${PV}" == *_pre* ]]; then
 		sed -e "s/\(-DSVNVERSION=\).*\( -o\)/\1\\\\\"${ESVN_REVISION}\\\\\"\2/" -i Makefile.pre.in || die "sed failed"
@@ -181,8 +193,8 @@ src_configure() {
 	# Export CXX so it ends up in /usr/lib/python3.X/config/Makefile.
 	tc-export CXX
 
-	# Set LDFLAGS so we link modules with -lpython3.1 correctly.
-	# Needed on FreeBSD unless Python 3.1 is already installed.
+	# Set LDFLAGS so we link modules with -lpython3.2 correctly.
+	# Needed on FreeBSD unless Python 3.2 is already installed.
 	# Please query BSD team before removing this!
 	append-ldflags "-L."
 
@@ -202,11 +214,13 @@ src_configure() {
 		--with-computed-gotos \
 		--with-dbmliborder="${dbmliborder}" \
 		--with-libc="" \
+		--enable-loadable-sqlite-extensions \
+		--with-system-expat \
 		--with-system-ffi
 }
 
 src_compile() {
-	emake EPYTHON="python${PV%%.*}" || die "emake failed"
+	emake EPYTHON="python${PV%%.*}" CPPFLAGS="" CFLAGS="" LDFLAGS="" || die "emake failed"
 }
 
 src_test() {
@@ -216,24 +230,19 @@ src_test() {
 		return
 	fi
 
-	if ! use threads; then
-		ewarn "Disabling tests due to USE=\"-threads\""
-		return
-	fi
-
 	# Byte compiling should be enabled here.
 	# Otherwise test_import fails.
 	python_enable_pyc
 
 	# Skip failing tests.
-	local skip_tests="distutils"
+	local skip_tests="distutils gdb"
 
 	for test in ${skip_tests}; do
 		mv "${S}/Lib/test/test_${test}.py" "${T}"
 	done
 
 	# Rerun failed tests in verbose mode (regrtest -w).
-	emake test EXTRATESTOPTS="-w" < /dev/tty
+	emake test EXTRATESTOPTS="-w" CPPFLAGS="" CFLAGS="" LDFLAGS="" < /dev/tty
 	local result="$?"
 
 	for test in ${skip_tests}; do
@@ -260,13 +269,12 @@ src_install() {
 	emake DESTDIR="${D}" altinstall || die "emake altinstall failed"
 	python_clean_installation_image -q
 
-	mv "${ED}usr/bin/python${SLOT}-config" "${ED}usr/bin/python-config-${SLOT}"
+	sed \
+		-e "s/\(CONFIGURE_LDFLAGS=\).*/\1/" \
+		-e "s/\(PY_LDFLAGS=\).*/\1/" \
+		-i "${ED}$(python_get_libdir)/config-${SLOT}/Makefile" || die "sed failed"
 
-	# Fix collisions between different slots of Python.
-	mv "${ED}usr/bin/2to3" "${ED}usr/bin/2to3-${SLOT}"
-	mv "${ED}usr/bin/pydoc3" "${ED}usr/bin/pydoc${SLOT}"
-	mv "${ED}usr/bin/idle3" "${ED}usr/bin/idle${SLOT}"
-	rm -f "${ED}usr/bin/smtpd.py"
+	mv "${ED}usr/bin/python${SLOT}-config" "${ED}usr/bin/python-config-${SLOT}"
 
 	if use build; then
 		rm -fr "${ED}usr/bin/idle${SLOT}" "${ED}$(python_get_libdir)/"{idlelib,sqlite3,test,tkinter}
@@ -312,6 +320,17 @@ pkg_postinst() {
 	eselect_python_update
 
 	python_mod_optimize -f -x "/(site-packages|test|tests)/" $(python_get_libdir)
+
+        if [[ "$(eselect python show)" == "python2."* ]]; then
+                ewarn
+                ewarn "WARNING!"
+                ewarn "Many Python modules have not been ported yet to Python 3.*."
+                ewarn "Python 3 has not been activated and Python wrapper is still configured to use Python 2."
+                ewarn "You can manually activate Python ${SLOT} using \`eselect python set python${SLOT}\`."
+                ewarn "It is recommended to currently have Python wrapper configured to use Python 2."
+                ewarn "Having Python wrapper configured to use Python 3 is unsupported."
+                ewarn
+        fi
 
 	if [[ "${python_updater_warning}" == "1" ]]; then
 		ewarn

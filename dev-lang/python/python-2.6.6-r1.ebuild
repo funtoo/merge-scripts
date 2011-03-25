@@ -256,8 +256,6 @@ src_install() {
 
 	use threads || rm -fr "${ED}$(python_get_libdir)/multiprocessing"
 
-	prep_ml_includes $(python_get_includedir)
-
 	dodoc Misc/{ACKS,HISTORY,NEWS} || die "dodoc failed"
 
 	if use examples; then
