@@ -1,14 +1,5 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
-#Oleg Vinichenko (oleg@funtoo.org) (27 March 2011)
-# Mask new gtk , untill we fix the glib issue
-
->=x11-libs/gtk+-2.24
-
-# Oleg Vinichenko (oleg@funtoo.org) (27 March 2011)
-# Masking glib-2.28, due to metro failures
->=dev-libs/glib-2.28
-
 # Martin Scholz <golodhrim@funtoo.org> (16 March 2011)
 # Patched version of eix so that eix-sync uses emerge --sync
 # fixed with patch from JF added -r1 for that version
