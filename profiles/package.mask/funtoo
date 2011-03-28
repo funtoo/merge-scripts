@@ -33,10 +33,6 @@ net-zope/zope-fixers
 # allow users to upgrade
 =dev-lang/python-2.7*
 
-# Daniel Robbins <drobbins@funtoo.org> (28 Jan 2010)
-# man-1.6f-r4 breaks metro builds - looks like nice patches but needed more upstream testing
-=sys-apps/man-1.6f-r4
-
 # Daniel Robbins <drobbins@funtoo.org> (28 Dec 2009)
 # Requested by slashbeast (Piotr Karbowski) in #funtoo due to /etc/cron.hourly
 # running up to 4 times per hour:
