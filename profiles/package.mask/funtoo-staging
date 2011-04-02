@@ -1,5 +1,9 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Martin Scholz <golodhrim@funtoo.org> (02 April 2011)
+# adding new stable nvidia-driver to funtoo after user request
+>=x11-drivers/nvidia-drivers-260.19.44
+
 # Martin Scholz <golodhrim@funtoo.org> (16 March 2011)
 # Patched version of eix so that eix-sync uses emerge --sync
 # fixed with patch from JF added -r1 for that version
