@@ -1,5 +1,10 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Oleg Vinichenko <oleg@funtoo.org> (03 April 2011)
+# gdisk is now renamed to gptfdisk, adding new ebuild with some new features
+# masked for testing
+>=sys-apps/gptfdisk-0.7
+
 # Martin Scholz <golodhrim@funtoo.org> (02 April 2011)
 # adding new stable nvidia-driver to funtoo after user request
 >=x11-drivers/nvidia-drivers-260.19.44

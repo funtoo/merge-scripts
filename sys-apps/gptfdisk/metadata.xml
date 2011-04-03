@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<herd>funtoo</herd>
+	<longdescription lang="en">
+	GPT fdisk (aka gdisk) is a text-mode partitioning tool for Linux, FreeBSD,
+	or Mac OS X that works on Globally Unique Identifier (GUID) Partition Table
+	(GPT) disks, rather than on the more common (through 2009) Master Boot
+	Record (MBR) partition tables.
+	</longdescription>
+</pkgmetadata>
