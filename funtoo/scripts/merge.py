@@ -242,7 +242,7 @@ gentoo_src = Tree("gentoo","/var/git/portage-gentoo")
 funtoo_overlay = Tree("funtoo-overlay", "/root/git/funtoo-overlay",pull=True)
 tarsius_overlay = Tree("tarsius-overlay", "/root/git/tarsius-overlay",pull=True)
 foo_overlay = Tree("foo-overlay", "/root/git/foo-overlay",pull=True)
-bar_overlay = Tree("bar-overlay","/root/git/bar-funtoo-overlay", pull=True)
+bar_overlay = Tree("bar-overlay","/root/git/bar-overlay", pull=True)
 multimedia_overlay = Tree("multimedia-overlay", "/root/git/multimedia-overlay",pull=True)
 
 steps = [
