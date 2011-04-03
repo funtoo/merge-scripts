@@ -242,6 +242,7 @@ gentoo_src = Tree("gentoo","/var/git/portage-gentoo")
 funtoo_overlay = Tree("funtoo-overlay", "/root/git/funtoo-overlay",pull=True)
 tarsius_overlay = Tree("tarsius-overlay", "/root/git/tarsius-overlay",pull=True)
 foo_overlay = Tree("foo-overlay", "/root/git/foo-overlay",pull=True)
+bar_overlay = Tree("bar-overlay","/root/git/bar-funtoo-overlay", pull=True)
 multimedia_overlay = Tree("multimedia-overlay", "/root/git/multimedia-overlay",pull=True)
 
 steps = [
@@ -254,6 +255,7 @@ steps = [
 	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(tarsius_overlay, select="all", skip=None, replace=["sys-libs/libixp","x11-wm/wmii","dev-vcs/cvsps","net-print/foo2zjs"]),
 	InsertEbuilds(foo_overlay, select="all", skip=None, replace=["app-shells/rssh"]),
+	InsertEbuilds(bar_overlay, select="all", skip=None, replace=False),
 	InsertEbuilds(multimedia_overlay, select=["media-video/mplayer-uau"], skip=None, replace=False),
 	GenCache()
 ]
