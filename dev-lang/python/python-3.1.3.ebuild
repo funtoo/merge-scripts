@@ -289,8 +289,6 @@ src_install() {
 
 	use threads || rm -fr "${ED}$(python_get_libdir)/multiprocessing"
 
-	prep_ml_includes $(python_get_includedir)
-
 	dodoc Misc/{ACKS,HISTORY,NEWS} || die "dodoc failed"
 
 	if use examples; then
@@ -315,6 +313,13 @@ eselect_python_update() {
 }
 
 pkg_postinst() {
+	if [ -z "$(eselect python show --ABI)" ]
+	then
+		# no default version of python enabled - enable ourselves, so
+		# /usr/bin/python exists:
+		eselect python set python${SLOT} > /dev/null 2>&1
+	fi
+
 	eselect_python_update
 
 	python_mod_optimize -f -x "/(site-packages|test|tests)/" $(python_get_libdir)

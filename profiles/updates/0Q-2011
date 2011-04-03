@@ -1,0 +1,2 @@
+move media-video/mplayer-uau media-video/mplayer2
+move sys-apps/gdisk sys-apps/gptfdisk

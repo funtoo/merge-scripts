@@ -10,7 +10,7 @@ From: Daniel Robbins <drobbins@funtoo.org>
  3 files changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/eclass/ruby-fakegem.eclass b/eclass/ruby-fakegem.eclass
-index e1ef05d..4a77c41 100644
+index 62ac9a9..9d0f009 100644
 --- a/eclass/ruby-fakegem.eclass
 +++ b/eclass/ruby-fakegem.eclass
 @@ -248,7 +248,11 @@ ruby_fakegem_binwrapper() {

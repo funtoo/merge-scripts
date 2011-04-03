@@ -1,6 +1,6 @@
 # Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-libs/glibc/glibc-2.11.3.ebuild,v 1.1 2011/01/08 23:30:16 vapier Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-libs/glibc/glibc-2.11.3.ebuild,v 1.7 2011/03/07 11:25:07 armin76 Exp $
 
 inherit eutils versionator libtool toolchain-funcs flag-o-matic gnuconfig multilib
 
@@ -25,7 +25,7 @@ fi
 MANPAGE_VER=""                                 # pregenerated manpages
 INFOPAGE_VER=""                                # pregenerated infopages
 LIBIDN_VER=""                                  # it's integrated into the main tarball now
-PATCH_VER="1"                                  # Gentoo patchset
+PATCH_VER="2"                                  # Gentoo patchset
 PORTS_VER=${RELEASE_VER%.?}                    # version of glibc ports addon
 LT_VER=""                                      # version of linuxthreads addon
 NPTL_KERN_VER=${NPTL_KERN_VER:-"2.6.9"}        # min kernel version nptl requires
@@ -145,14 +145,14 @@ eblit-include() {
 	local e v func=$1 ver=$2
 	[[ -z ${func} ]] && die "Usage: eblit-include <function> [version]"
 	for v in ${ver:+-}${ver} -${PVR} -${PV} "" ; do
-		e="${FILESDIR}/eblits/${func}${v}.eblit"
+		e="${FILESDIR}/eblits-${PV}/${func}${v}.eblit"
 		if [[ -e ${e} ]] ; then
 			source "${e}"
 			return 0
 		fi
 	done
 	${skipable} && return 0
-	die "Could not locate requested eblit '${func}' in ${FILESDIR}/eblits/"
+	die "Could not locate requested eblit '${func}' in ${FILESDIR}/eblits-${PV}/"
 }
 
 # eblit-run-maybe <function>

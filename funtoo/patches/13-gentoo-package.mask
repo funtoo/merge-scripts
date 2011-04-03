@@ -8,10 +8,10 @@ From: Piotr Karbowski <piotr@funtoo.org>
  1 files changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/profiles/package.mask/gentoo b/profiles/package.mask/gentoo
-index e258089..d4a5758 100644
+index e02131e..7b29722 100644
 --- a/profiles/package.mask/gentoo
 +++ b/profiles/package.mask/gentoo
-@@ -549,8 +549,11 @@ app-i18n/skktools
+@@ -634,8 +634,11 @@ app-i18n/skktools
  # If you are a sparc-fbsd user and your only keyworded perl version was masked,
  # test perl-5.12.2 and reply to bug 288028
  # For other complaints go to bug 350785

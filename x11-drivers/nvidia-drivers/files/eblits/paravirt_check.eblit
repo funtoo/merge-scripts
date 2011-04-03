@@ -1,0 +1,20 @@
+# Copyright 1999-2008 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/x11-drivers/nvidia-drivers/files/eblits/paravirt_check.eblit,v 1.1 2008/12/18 18:27:35 cardoe Exp $
+
+paravirt_check() {
+	ebegin "Checking for Paravirtualized guest support"
+	linux_chkconfig_present PARAVIRT
+
+	if [[ $? -eq 0 ]]; then
+		eerror "Please disable PARAVIRT in your kernel config, found at:"
+		eerror
+		eerror "  Processor type and features"
+		eerror "    [*] Paravirtualized guest support"
+		eerror
+		eerror "or XEN support"
+		eerror
+		eerror "and recompile your kernel .."
+		die "PARAVIRT support detected!"
+	fi
+}
