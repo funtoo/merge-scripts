@@ -20,7 +20,6 @@
 # -r1 our patched version
 # -r2 mask to not break with newer version
 >=app-portage/eix-0.22.8-r2
->>>>>>> bffc7ae615c4def980f57f7446d376147248466d
 
 # Oleg Vinichenko <oleg@funtoo.org> (12 March 2011)
 # New klibc to test with uvesafb
