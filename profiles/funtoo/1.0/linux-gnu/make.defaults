@@ -10,7 +10,7 @@ USE="$USE nls iconv xml pcre" 									#core subsystems
 USE="$USE zlib bzip2"										#core compression
 USE="$USE berkdb gdbm"										#core databases
 USE="$USE readline ncurses"									#core gui/interactivity frameworks
-USE="$USE mudflap openmp"									#core languages
+USE="$USE mudflap openmp python perl"								#core languages
 
 INPUT_DEVICES="evdev"
 VIDEO_CARDS="dummy"
