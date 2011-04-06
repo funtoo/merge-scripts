@@ -115,7 +115,7 @@ video_cards_virtualbox
 video_cards_omapfb
 
 # linux-only drivers
-video_cards_nouveau
+#video_cards_nouveau
 video_cards_qxl
 
 # not needed on non-x86, non-amd64, non-ppc systems
