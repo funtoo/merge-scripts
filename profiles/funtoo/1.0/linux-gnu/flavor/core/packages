@@ -31,6 +31,7 @@
 *app-shells/bash
 *dev-lang/perl
 *dev-lang/python
+*net-dns/openresolv
 *net-misc/iputils
 *net-misc/rsync
 *net-misc/wget
@@ -46,6 +47,11 @@
 #*>=sys-apps/portage-2.0.51.22
 *sys-process/procps
 *sys-process/psmisc
+*sys-apps/busybox
+*sys-apps/iproute2
+*sys-apps/funtoo-netscripts
+*sys-apps/man-pages
+*sys-apps/util-linux
 *sys-apps/sed
 *sys-apps/shadow
 *sys-apps/texinfo
