@@ -1,5 +1,9 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Martin Scholz <golodhrim@funtoo.org> (09 April 20110
+# Adding new stable release of dhcpcd 5.2.12
+>=net-misc/dhcpcd-5.2.12
+
 # Adrien Dessemond <adessemond@funtoo.org> (03 April 2011)
 # This also masks Perl 5.12.3 (for testing)
 >=dev-lang/perl-5.12.2-r6
@@ -8,10 +12,6 @@
 # gdisk is now renamed to gptfdisk, adding new ebuild with some new features
 # masked for testing
 >=sys-apps/gptfdisk-0.7.1
-
-# Martin Scholz <golodhrim@funtoo.org> (02 April 2011)
-# adding new stable nvidia-driver to funtoo after user request
->=x11-drivers/nvidia-drivers-260.19.44
 
 # Martin Scholz <golodhrim@funtoo.org> (16 March 2011)
 # Patched version of eix so that eix-sync uses emerge --sync

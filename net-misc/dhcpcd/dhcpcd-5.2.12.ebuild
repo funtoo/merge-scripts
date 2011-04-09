@@ -1,6 +1,6 @@
 # Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-misc/dhcpcd/dhcpcd-5.2.11.ebuild,v 1.1 2011/01/04 23:13:45 williamh Exp $
+# $Header: /var/cvsroot/gentoo-x86/net-misc/dhcpcd/dhcpcd-5.2.12.ebuild,v 1.1 2011/04/09 23:05:45 golodhrim Exp $
 
 EAPI=1
 
@@ -16,7 +16,7 @@ KEYWORDS="~alpha amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc x86 ~
 SLOT="0"
 IUSE="+zeroconf elibc_glibc"
 
-DEPEND=""
+DEPEND=">sys-apps/openrc-0.6.0"
 RDEPEND=""
 PROVIDE="virtual/dhcpc"
 
