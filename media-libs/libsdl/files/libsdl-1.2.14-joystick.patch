@@ -1,0 +1,37 @@
+--- SDL-1.2.14/src/joystick/linux/SDL_sysjoystick.c	2009-10-18 13:54:40.000000000 -0400
++++ SDL-1.2.14-mod/src/joystick/linux/SDL_sysjoystick.c	2010-08-15 22:28:19.000000000 -0400
+@@ -700,26 +700,26 @@
+ 				continue;
+ 			}
+ 			if ( test_bit(i, absbit) ) {
+-				int values[5];
++				struct input_absinfo values;
+ 
+-				if ( ioctl(fd, EVIOCGABS(i), values) < 0 )
++				if ( ioctl(fd, EVIOCGABS(i), &values) < 0 )
+ 					continue;
+ #ifdef DEBUG_INPUT_EVENTS
+ 				printf("Joystick has absolute axis: %x\n", i);
+ 				printf("Values = { %d, %d, %d, %d, %d }\n",
+-					values[0], values[1],
+-					values[2], values[3], values[4]);
++					values.value, values.minimum,
++					values.maximum, values.fuzz, values.flat);
+ #endif /* DEBUG_INPUT_EVENTS */
+ 				joystick->hwdata->abs_map[i] = joystick->naxes;
+-				if ( values[1] == values[2] ) {
++				if ( values.minimum == values.maximum ) {
+ 				    joystick->hwdata->abs_correct[i].used = 0;
+ 				} else {
+ 				    joystick->hwdata->abs_correct[i].used = 1;
+ 				    joystick->hwdata->abs_correct[i].coef[0] =
+-					(values[2] + values[1]) / 2 - values[4];
++					(values.maximum + values.minimum) / 2 - values.flat;
+ 				    joystick->hwdata->abs_correct[i].coef[1] =
+-					(values[2] + values[1]) / 2 + values[4];
+-				    t = ((values[2] - values[1]) / 2 - 2 * values[4]);
++					(values.maximum + values.minimum) / 2 + values.flat;
++				    t = ((values.maximum - values.minimum) / 2 - 2 * values.flat);
+ 				    if ( t != 0 ) {
+ 					joystick->hwdata->abs_correct[i].coef[2] = (1 << 29) / t;
+ 				    } else {
