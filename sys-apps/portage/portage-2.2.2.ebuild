@@ -278,6 +278,12 @@ src_install() {
 
 	dodir /etc/portage
 	keepdir /etc/portage
+
+	if use experimental ; then
+		if [[ ! -e /etc/portage/portdir ]] ; then
+			echo "$(portageq portdir)" >> "${D}"/etc/portage/portdir
+		fi
+	fi
 }
 
 pkg_preinst() {
