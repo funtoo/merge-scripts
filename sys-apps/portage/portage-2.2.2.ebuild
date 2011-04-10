@@ -5,7 +5,13 @@
 # Require EAPI 2 since we now require at least python-2.6 (for python 3
 # syntax support) which also requires EAPI 2.
 EAPI=2
-inherit eutils multilib python
+inherit eutils multilib python git
+
+if use experimental ; then
+	EGIT_REPO_URI="git://github.com/rh1/portage-funtoo.git"
+	EGIT_BRANCH="funtoo-path"
+	EGIT_COMMIT="a5ebecd7b9f816c67b5aa8533fdec36f5ce07961"
+fi
 
 DESCRIPTION="Portage is the package management and distribution system for Gentoo"
 HOMEPAGE="http://www.gentoo.org/proj/en/portage/index.xml"
@@ -13,7 +19,7 @@ LICENSE="GPL-2"
 KEYWORDS="alpha amd64 arm hppa ia64 m68k mips ppc ppc64 s390 sh sparc sparc-fbsd x86 x86-fbsd"
 PROVIDE="virtual/portage"
 SLOT="0"
-IUSE="build doc epydoc +ipc linguas_pl python3 selinux"
+IUSE="build doc epydoc experimental +ipc linguas_pl python3 selinux"
 GITHUB_REPO="portage-funtoo"
 GITHUB_USER="funtoo"
 GITHUB_TAG="funtoo-${PVR}"
@@ -98,8 +104,12 @@ pkg_setup() {
 }
 
 src_unpack() {
-	unpack ${A}
-	mv "${WORKDIR}/${GITHUB_USER}-${PN}-funtoo"-??????? "${S}" || die
+	if use experimental ; then
+		git_src_unpack
+	else
+		unpack ${A}
+		mv "${WORKDIR}/${GITHUB_USER}-${PN}-funtoo"-??????? "${S}" || die
+	fi
 }
 
 src_prepare() {
