@@ -1,6 +1,11 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
-# Martin Scholz <golodhrim@funtoo.org> (09 April 20110
+# Ryan Harris <rh1@programmer.net> (10 April 2011)
+# Added new libsdl revision with fix for sound in virtualbox-bin
+# See Gentoo bug #310793
+>=media-libs/libsdl-1.2.14-r7
+
+# Martin Scholz <golodhrim@funtoo.org> (09 April 2011)
 # Adding new stable release of dhcpcd 5.2.12
 >=net-misc/dhcpcd-5.2.12
 
