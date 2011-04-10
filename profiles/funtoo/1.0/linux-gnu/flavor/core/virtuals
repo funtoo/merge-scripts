@@ -18,7 +18,6 @@ virtual/dev-manager			sys-fs/udev
 virtual/dhcpc				net-misc/dhcpcd
 virtual/fam				app-admin/gamin
 virtual/gsasl				net-libs/libgsasl
-virtual/gzip				app-arch/gzip
 virtual/httpd-php			dev-lang/php
 virtual/imap-c-client			net-libs/c-client
 virtual/imapd				net-mail/courier-imap

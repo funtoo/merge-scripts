@@ -73,7 +73,6 @@
 *sys-libs/zlib
 *virtual/dev-manager
 *virtual/editor
-*virtual/gzip
 *virtual/libc
 *virtual/man
 *virtual/modutils
