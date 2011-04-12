@@ -16,7 +16,6 @@ virtual/inetd				sys-apps/xinetd
 virtual/libc				sys-libs/glibc
 virtual/linux-sources			sys-kernel/gentoo-sources
 virtual/modutils			sys-apps/module-init-tools
-virtual/portage				sys-apps/portage
 virtual/skkserv				app-i18n/skkserv
 virtual/ssh				net-misc/openssh
 virtual/w3m				www-client/w3m
