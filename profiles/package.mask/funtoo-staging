@@ -13,11 +13,6 @@
 # Adding new stable release of dhcpcd 5.2.12
 >=net-misc/dhcpcd-5.2.12
 
-# Oleg Vinichenko <oleg@funtoo.org> (03 April 2011)
-# gdisk is now renamed to gptfdisk, adding new ebuild with some new features
-# masked for testing
->=sys-apps/gptfdisk-0.7.1
-
 # Martin Scholz <golodhrim@funtoo.org> (16 March 2011)
 # Patched version of eix so that eix-sync uses emerge --sync
 # fixed with patch from JF added -r1 for that version
