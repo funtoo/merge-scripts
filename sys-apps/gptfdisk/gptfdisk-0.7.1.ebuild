@@ -11,6 +11,9 @@ LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86 ~sparc"
 
+DEPEND=">=dev-libs/icu-4.6.1"
+RDEPEND="${DEPEND}"
+
 S="${WORKDIR}/${P}"
 
 src_install() {
