@@ -59,7 +59,8 @@ prefix_src_archives() {
 	done
 }
 
-EGIT_REPO_URI="git://github.com/rh1/portage-funtoo.git"
+#EGIT_REPO_URI="git://github.com/rh1/portage-funtoo.git"
+EGIT_REPO_URI="git://github.com/funtoo/portage-funtoo.git"
 EGIT_BRANCH="funtoo-path"
 EGIT_COMMIT="a5ebecd7b9f816c67b5aa8533fdec36f5ce07961"
 PV_PL="2.1.2"
