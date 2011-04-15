@@ -1,5 +1,10 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Oleg Vinichenko <oleg@funtoo.org> (15 April 2011)
+# Cleaning experimental in portage-2.2.2 and creating portage-9999.ebuild 
+# for funtoo-path git portage. Test mask
+=sys-apps/portage-9999
+
 # Adrien Dessemond <adessemond@funtoo.org> (12 Apr 2011)
 # Unmasks perl 5.12.3 but keep 5.12.2-r6 masked
 =dev-lang/perl-5.12.2-r6
