@@ -5,7 +5,7 @@
 # Require EAPI 2 since we now require at least python-2.6 (for python 3
 # syntax support) which also requires EAPI 2.
 EAPI=2
-inherit eutils multilib python 
+inherit eutils multilib python git
 
 DESCRIPTION="Portage is the package management and distribution system for Gentoo"
 HOMEPAGE="http://www.gentoo.org/proj/en/portage/index.xml"
@@ -59,11 +59,12 @@ prefix_src_archives() {
 	done
 }
 
+EGIT_REPO_URI="git://github.com/rh1/portage-funtoo.git"
+EGIT_BRANCH="funtoo-path"
+EGIT_COMMIT="a5ebecd7b9f816c67b5aa8533fdec36f5ce07961"
 PV_PL="2.1.2"
 PATCHVER_PL=""
-SRC_URI="https://www.github.com/${GITHUB_USER}/${GITHUB_REPO}/tarball/${GITHUB_TAG} -> portage-${GITHUB_TAG}.tar.gz"
 SRC_URI="$SRC_URI linguas_pl? ( mirror://gentoo/${PN}-man-pl-${PV_PL}.tar.bz2 )"
-
 S_PL="${WORKDIR}"/${PN}-${PV_PL}
 
 compatible_python_is_selected() {
@@ -95,10 +96,7 @@ pkg_setup() {
 		python_set_active_version 3
 	fi
 }
-src_unpack() {
-		unpack ${A}
-	    mv "${WORKDIR}/${GITHUB_USER}-${PN}-funtoo"-??????? "${S}" || die
-}
+
 src_prepare() {
 	cd ${S}
 	if [ -n "${PATCHVER}" ] ; then
@@ -265,6 +263,10 @@ src_install() {
 
 	dodir /etc/portage
 	keepdir /etc/portage
+
+		if [[ ! -e /etc/portage/portdir ]] ; then
+			echo "$(portageq portdir)" >> "${D}"/etc/portage/portdir
+		fi
 }
 
 pkg_preinst() {
