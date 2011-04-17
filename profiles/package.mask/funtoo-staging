@@ -5,18 +5,10 @@
 # for funtoo-path git portage. Test mask
 =sys-apps/portage-9999
 
-# Adrien Dessemond <adessemond@funtoo.org> (12 Apr 2011)
-# Unmasks perl 5.12.3 but keep 5.12.2-r6 masked
-=dev-lang/perl-5.12.2-r6
-
 # Ryan Harris <rh1@programmer.net> (10 April 2011)
 # Added new libsdl revision with fix for sound in virtualbox-bin
 # See Gentoo bug #310793
 >=media-libs/libsdl-1.2.14-r7
-
-# Martin Scholz <golodhrim@funtoo.org> (09 April 2011)
-# Adding new stable release of dhcpcd 5.2.12
->=net-misc/dhcpcd-5.2.12
 
 # Martin Scholz <golodhrim@funtoo.org> (16 March 2011)
 # Patched version of eix so that eix-sync uses emerge --sync

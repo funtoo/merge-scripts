@@ -1,3 +1,16 @@
+# Adrien Dessemond <adessemond@funtoo.org> (13 Apr 2011)
+# Will be removed in 30 days, please upgrade to dev-lang/perl-5.12.3
+=dev-lang/perl-5.12.2-r6
+
+# Adrien Dessemond <adessemond@funtoo.org> (13 Apr 2011)
+# DO NOT USE this one the ebuild does not include kernel revision dependencies (>= 2.6.38 REQUIRED) and it can affect many of our users 
+# See bug #359445
+=net-wireless/iwl5000-ucode-8.83.5.1
+
+# Adrien Dessemond <adessemond@funtoo.org> (13 Apr 2011)
+# Prevent the next easy-to-predict major disaster
+>=media-libs/libpng-1.5
+
 # Daniel Robbins <drobbins@funtoo.org> (6 Aug 2009)
 # Mask new versions for caution, and these should all
 # be tested and upgraded together. This helps ensure that
