@@ -5,10 +5,6 @@
 # for funtoo-path git portage. Test mask
 =sys-apps/portage-9999
 
-# Adrien Dessemond <adessemond@funtoo.org> (12 Apr 2011)
-# Unmasks perl 5.12.3 but keep 5.12.2-r6 masked
-=dev-lang/perl-5.12.2-r6
-
 # Ryan Harris <rh1@programmer.net> (10 April 2011)
 # Added new libsdl revision with fix for sound in virtualbox-bin
 # See Gentoo bug #310793
