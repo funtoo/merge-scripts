@@ -1,0 +1,16 @@
+
+gnome-base/gvfs gdu
+sys-block/parted device-mapper 
+
+# The following are required by ekiga-3
+net-libs/opal sip
+net-libs/ptlib wav
+
+# Required by app-admin/sabayon
+x11-base/xorg-server kdrive
+
+# Required by gnome-extra/hamster-applet
+dev-lang/python sqlite
+
+# Required for app-text/evince
+app-text/poppler cairo
