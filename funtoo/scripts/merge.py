@@ -244,6 +244,7 @@ tarsius_overlay = Tree("tarsius-overlay", "/root/git/tarsius-overlay",pull=True)
 foo_overlay = Tree("foo-overlay", "/root/git/foo-overlay",pull=True)
 bar_overlay = Tree("bar-overlay","/root/git/bar-overlay", pull=True)
 multimedia_overlay = Tree("multimedia-overlay", "/root/git/multimedia-overlay",pull=True)
+golodhrim_overlay = Tree("golodhrim-overlay", "/root/git/golodhrim-overlay",pull=True)
 
 steps = [
 	SyncTree(gentoo_src,exclude=["/metadata/cache/**","sys-kernel/openvz-sources"]),
@@ -257,6 +258,7 @@ steps = [
 	InsertEbuilds(foo_overlay, select="all", skip=None, replace=["app-shells/rssh"]),
 	InsertEbuilds(bar_overlay, select="all", skip=None, replace=False),
 	InsertEbuilds(multimedia_overlay, select=["media-video/mplayer-uau"], skip=None, replace=False),
+	InsertEbuilds(golodhrim_overlay, select="all", skip=None, replace=False),
 	GenCache()
 ]
 
