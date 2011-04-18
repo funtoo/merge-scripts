@@ -1,4 +1,4 @@
-
+sys-fs/udev extras
 gnome-base/gvfs gdu
 sys-block/parted device-mapper 
 
