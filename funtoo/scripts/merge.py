@@ -255,7 +255,7 @@ steps = [
 	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(tarsius_overlay, select="all", skip=None, replace=["sys-libs/libixp","x11-wm/wmii","dev-vcs/cvsps","net-print/foo2zjs"]),
 	InsertEbuilds(foo_overlay, select="all", skip=None, replace=["app-shells/rssh"]),
-	InsertEbuilds(bar_overlay, select="all", skip=None, replace=False),
+	InsertEbuilds(bar_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(multimedia_overlay, select=["media-video/mplayer-uau"], skip=None, replace=False),
 	GenCache()
 ]
