@@ -1,19 +1,18 @@
-# This file describes the packages that by default satisfy a certain virtual.
-#
-# TODO: move "core" packages to build/stable and build/unstable virtuals
-# files. This way the core system can be different between stable and
-# unstable.
+# Copyright 1999-2011 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License, v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/base/virtuals,v 1.155 2011/04/16 19:56:05 ulm Exp $
 
-# KEEP THIS FILE SORTED ALPHABETICALLY OR RISK WRATH
+# This file describes the packages that by default satisfy a certain virtual
+# That this file exists in the base profile implies that these packages will
+# work on any architecture that needs that virtual
 
-virtual/aspell-dict			app-dicts/aspell-en
-virtual/blackbox			x11-wm/blackbox
-virtual/bootloader			sys-boot/grub
+# NOTE: Old-style virtuals are considered deprecated, bug 350792 is tracking
+# their removal. Consider using new-style (GLEP 37) virtuals instead.
+# http://archives.gentoo.org/gentoo-dev/msg_9078a2f41ba2fa8120805dc96aab16a0.xml
+
+# PLEASE DON'T ADD ANY NEW ENTRIES!
+
 virtual/cron				sys-process/vixie-cron
-virtual/dev-manager			sys-fs/udev
-virtual/dhcpc				net-misc/dhcpcd
-virtual/inetd				sys-apps/xinetd
 virtual/libc				sys-libs/glibc
 virtual/linux-sources			sys-kernel/gentoo-sources
 virtual/modutils			sys-apps/module-init-tools
-virtual/ssh				net-misc/openssh
