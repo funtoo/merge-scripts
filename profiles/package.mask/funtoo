@@ -25,7 +25,7 @@ sys-apps/man
 # ebuild to be the most recent for stable and 
 # unstable to avoid this problem:
 
->=dev-python/beautifulsoup-3.1
+=dev-python/beautifulsoup-3.1*
 net-zope/zope-fixers
 >=net-zope/zope-interface-3.6.1
 

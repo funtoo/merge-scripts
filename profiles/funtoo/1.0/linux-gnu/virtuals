@@ -1,4 +1,0 @@
-# Use this virtuals file to either overload the base profile's defined
-# virtuals, or add virtuals that are specific to this family of profiles
-
-virtual/os-headers			sys-kernel/linux-headers
