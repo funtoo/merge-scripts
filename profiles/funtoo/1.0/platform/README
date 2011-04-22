@@ -1,5 +1,0 @@
-A platform is specified as "<kernel>-<userland>". Current platforms are:
-
-linux-gnu	This is standard GNU/Linux
-xnu-apple	This is Apple MacOS X (XNU kernel, Apple (BSD-derived) userland)
-
