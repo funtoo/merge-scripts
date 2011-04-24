@@ -14,6 +14,11 @@
 -dxr3
 -kqemu
 
+-sane_backends_canon_pp
+-sane_backends_hpsj5s
+-sane_backends_mustek_pp
+-sane_backends_qcam
+
 # MASK
 
 alsa_cards_cs5535audio

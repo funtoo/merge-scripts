@@ -1,6 +1,6 @@
-# Copyright 2004 Gentoo Foundation.
+# Copyright 1999-2011 Gentoo Foundation.
 # Distributed under the terms of the GNU General Public License, v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/arch/x86/use.mask,v 1.13 2010/01/08 10:45:32 flameeyes Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/x86/use.mask,v 1.23 2011/03/30 20:06:32 chithanh Exp $
 
 # Unmask the flag which corresponds to ARCH.
 -x86
@@ -8,6 +8,21 @@
 # This file masks out USE flags that are simply NOT allowed in the default
 # x86 profile.  This works, for example, if another architecture's
 # profile have a USE flag associated with (such as altivec, mmx, etc).
+
+# 2010/07/27 - Matti Bickel <mabi@gentoo.org>
+# app-text/fdf is only supported on x86
+-fdftk
+
+# 2010/02/14 - Samuli Suominen <ssuominen@gentoo.org>
+# Unmask amd64/x86 only SANE_BACKENDS
+-sane_backends_canon_pp
+-sane_backends_hpsj5s
+-sane_backends_mustek_pp
+-sane_backends_qcam
+
+# 2010/05/03 - Alex Legler <a3li@gentoo.org>
+# Add support for Ruby Enterprise Edition targets where rubyee is available
+-ruby_targets_ree18
 
 # 2010/01/08 - Diego E. Pettenò <flameeyes@gentoo.org>
 # Add support for JRuby targets where jruby is available
@@ -25,6 +40,10 @@
 -mmxext
 -sse
 -sse2
+-sse3
+-sse4
+-sse4a
+-sse5
 -ssse3
 -svga
 -kqemu
@@ -54,6 +73,8 @@
 -video_cards_via
 -video_cards_virtualbox
 -video_cards_xgi
+-video_cards_nouveau
+-video_cards_qxl
 
 # Modular X: mask for architectures on which they aren't available
 video_cards_newport
@@ -106,3 +127,6 @@ video_cards_newport
 
 # RealMagic Hollywood+/Creative DXR3 support
 -dxr3
+
+# 64bit Windows doesn't work on 32bit systems
+win64
