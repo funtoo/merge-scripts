@@ -1,5 +1,5 @@
 app-text/poppler qt4
-dev-python/PyQt4 sql webkit
+dev-python/PyQt4 declarative sql svg webkit
 kde-base/kdelibs opengl
 sys-fs/udev extras
 x11-libs/qt-assistant qt3support
@@ -8,3 +8,8 @@ x11-libs/qt-declarative qt3support
 x11-libs/qt-gui mng qt3support
 x11-libs/qt-opengl qt3support
 x11-libs/qt-sql qt3support
+
+# Needed by blas which is pulled in when emerging kde-meta
+# Leave until virtual/fortran is properly implemented
+sys-devel/gcc[fortran]
+
