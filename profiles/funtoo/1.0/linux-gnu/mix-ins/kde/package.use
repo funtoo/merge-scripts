@@ -11,5 +11,5 @@ x11-libs/qt-sql qt3support
 
 # Needed by blas which is pulled in when emerging kde-meta
 # Leave until virtual/fortran is properly implemented
-sys-devel/gcc[fortran]
+sys-devel/gcc fortran
 
