@@ -11,6 +11,5 @@
 ~net-misc/keychain-2.7.1 amd64 x86
 =sys-apps/man-1.6g amd64 x86
 ~sys-fs/device-mapper-1.02.28 amd64 x86
-=sys-fs/lvm2-2.02.68 amd64 x86
 ~sys-libs/ncurses-5.7 amd64 x86
 ~sys-libs/readline-6.1 amd64 x86
