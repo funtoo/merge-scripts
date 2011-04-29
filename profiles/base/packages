@@ -46,6 +46,7 @@
 *sys-apps/gawk
 *sys-apps/grep
 *sys-apps/kbd
+*sys-apps/module-init-tools
 *sys-apps/net-tools
 #*>=sys-apps/portage-2.0.51.22
 *sys-process/procps
@@ -76,7 +77,6 @@
 *virtual/init
 *virtual/libc
 *virtual/man
-*virtual/modutils
 *virtual/os-headers
 *virtual/package-manager
 *virtual/pager
