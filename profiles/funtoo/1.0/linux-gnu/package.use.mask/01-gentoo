@@ -1,9 +1,15 @@
 # Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/base/package.use.mask,v 1.231 2011/04/28 13:52:14 aballier Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/base/package.use.mask,v 1.234 2011/04/30 10:16:35 nirbheek Exp $
 
 # This file requires >=portage-2.1.1
 # New entries go on top.
+
+# Nirbheek Chauhan <nirbheek@gentoo.org> (30 Apr 2011)
+# glade-catalog creation needs >glade-3.9.0, which is broken and
+# needs to be slotted. See bug 364831 for details
+>=x11-libs/gtksourceview-3 glade
+>=x11-libs/vte-0.28 glade
 
 # Nirbheek Chauhan <nirbheek@gentoo.org> (24 Apr 2011)
 # Unmask introspection for specific packages. The migration to unmasking of
@@ -12,11 +18,15 @@
 >=x11-libs/pango-1.28.4 -introspection
 >=dev-libs/atk-1.32.0-r1 -introspection
 >=x11-libs/gtk+-3 -introspection
+>=x11-libs/gtk+-2.24 -introspection
 >=dev-libs/libunique-3 -introspection
 >=dev-libs/gdl-3 -introspection
 >=dev-libs/json-glib-0.12 -introspection
 >=media-libs/clutter-1.6 -introspection
 >=media-libs/clutter-gtk-1 -introspection
+>=net-libs/libsoup-2.34 -introspection
+>=net-libs/libsoup-gnome-2.34 -introspection
+>=x11-libs/vte-0.28 -introspection
 net-libs/rest -introspection
 net-libs/libsocialweb -introspection
 

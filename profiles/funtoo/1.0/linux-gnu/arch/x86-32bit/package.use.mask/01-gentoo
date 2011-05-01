@@ -1,8 +1,12 @@
 # Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/arch/x86/package.use.mask,v 1.54 2011/04/12 07:57:21 leio Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/x86/package.use.mask,v 1.55 2011/04/28 21:02:01 grozin Exp $
 
 # This file requires >=portage-2.1.1
+
+# Andrey Grozin <grozin@gentoo.org> (28 Apr 2011)
+# cmucl is only available on x86
+sci-mathematics/fricas -cmucl
 
 # Luca Barbato <lu_zero@gentoo.org> (28 Feb 2011)
 # # Masked in base, unmask for amd64/x86
