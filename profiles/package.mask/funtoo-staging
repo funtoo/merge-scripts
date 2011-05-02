@@ -1,9 +1,8 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
-# Oleg Vinichenko <oleg@funtoo.org> (15 April 2011)
-# Cleaning experimental in portage-2.2.2 and creating portage-9999.ebuild 
-# for funtoo-path git portage. Test mask
-=sys-apps/portage-9999
+# Adrien Dessemond <adessemond@funtoo.org> (02 May 2011)
+# tcp-wrappers-7.6 with some patches coming from Debian (most notably additional manual pages and CIDR Support)
+>=sys-apps/tcp-wrappers-7.6-r9
 
 # Martin Scholz <golodhrim@funtoo.org> (16 March 2011)
 # Patched version of eix so that eix-sync uses emerge --sync
