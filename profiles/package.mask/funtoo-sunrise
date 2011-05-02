@@ -1,3 +1,9 @@
 # Adrien Dessemond <adessemond@funtoo.org> (18 Apr 2011)
 # Mask live ebuild
 =app-arch/pxz-9999
+
+# Oleg Vinichenko <oleg@funtoo.org> (15 April 2011)
+# Cleaning experimental in portage-2.2.2 and creating portage-9999.ebuild
+# for funtoo-path git portage. Test mask
+=sys-apps/portage-9999
+
