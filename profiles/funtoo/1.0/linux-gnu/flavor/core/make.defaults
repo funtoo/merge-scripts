@@ -24,10 +24,6 @@ PROFILE_ONLY_VARIABLES="ARCH ELIBC KERNEL USERLAND"
 # Sane defaults for built-in apache modules
 APACHE2_MODULES="actions alias auth_basic authn_alias authn_anon authn_dbm authn_default authn_file authz_dbm authz_default authz_groupfile authz_host authz_owner authz_user autoindex cache cgi cgid dav dav_fs dav_lock deflate dir disk_cache env expires ext_filter file_cache filter headers include info log_config logio mem_cache mime mime_magic negotiation rewrite setenvif speling status unique_id userdir usertrack vhost_alias"
 
-# Robert Buchholz <rbu@gentoo.org> (17 Jan 2006)
-# Some common lcd devices
-LCD_DEVICES="bayrad cfontz cfontz633 glk hd44780 lb216 lcdm001 mtxorb ncurses text"
-
 # Miroslav Šulc <fordfrog@gentoo.org> (19 Nov 2008)
 # Netbeans modules/clusters
 NETBEANS="apisupport cnd groovy gsf harness ide identity j2ee java mobility nb php profiler soa visualweb webcommon websvccommon xml"
