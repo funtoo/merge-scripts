@@ -14,7 +14,9 @@ KV_FULL=${PN}-${PVR}
 EXTRAVERSION=-${OVZ_KV}
 KERNEL_ARCHIVE="linux-${CKV}.tar.bz2"
 KERNEL_URI="mirror://kernel/linux/kernel/v${KV_MAJOR}.${KV_MINOR}/${KERNEL_ARCHIVE}"
+RESTRICT="binchecks strip"
 
+LICENSE="GPL-2"
 KEYWORDS=""
 IUSE=""
 DESCRIPTION="Full Linux kernel sources - RHEL5 kernel with OpenVZ patchset"
@@ -25,9 +27,7 @@ SRC_URI="${KERNEL_URI}
 	http://download.openvz.org/kernel/branches/rhel5-${CKV}/${OVZ_KV}/configs/kernel-${CKV}-x86_64.config.ovz -> config-${CKV}-${OVZ_KV}.x86_64
 	http://download.openvz.org/kernel/branches/rhel5-${CKV}/${OVZ_KV}/patches/$MAINPATCH"
 S="$WORKDIR/linux-${CKV}"
-
-# requires gcc-4.1.2 to "run" (compile):
-RDEPEND="=sys-devel/gcc-4.1.2*"
+DEPEND="=sys-devel/gcc-4.1.2*"
 
 K_EXTRAEINFO="
 This OpenVZ kernel uses RHEL5 (Red Hat Enterprise Linux 5) patch set.
@@ -82,18 +82,15 @@ pkg_setup() {
 	case $ARCH in
 		x86)
 			defconfig_src=i686
-			defconfig_dst=i386
 			;;
 		amd64)
 			defconfig_src=x86_64
-			defconfig_dst=x86_64
 			;;
 		*)
 			die "unsupported ARCH: $ARCH"
 			;;
 	esac
 	defconfig_src="${DISTDIR}/config-${CKV}-${OVZ_KV}.${defconfig_src}"
-	defconfig_dst="${D}/usr/src/linux-${KV_FULL}/arch/${defconfig_dst}/defconfig"
 	unset ARCH; unset LDFLAGS #will interfere with Makefile if set
 }
 
@@ -116,12 +113,12 @@ src_prepare() {
 }
 
 src_compile() {
-	install -d ${WORKDIR}/out/{lib,boot/grub}
+	install -d ${WORKDIR}/out/{lib,boot}
 	install -d ${T}/{cache,twork}
 	install -d $WORKDIR/build $WORKDIR/out/lib/firmware
 	DEFAULT_KERNEL_SOURCE="${S}" INSTALL_FW_PATH=${WORKDIR}/out/lib/firmware CMD_KERNEL_DIR="${S}" genkernel ${GKARGS} \
 		--no-save-config \
-		--kernel-config="$defconfig_dst" \
+		--kernel-config="$defconfig_src" \
 		--kernname="${PN/-sources/}" \
 		--build-src="$S" \
 		--build-dst=${WORKDIR}/build \
@@ -139,10 +136,17 @@ src_compile() {
 }
 
 src_install() {
-	cp -a ${WORKDIR}/out/* ${D}/ || die "couldn't copy output files into place"
 	cd ${S}
 	make -s clean || die "make clean failed"
+	cp -a ${WORKDIR}/out/* ${D}/ || die "couldn't copy output files into place"
+	# copy sources into place:
 	dodir /usr/src
 	cp -a ${S} ${D}/usr/src/linux-${P} || die
+	# module symlink fixup:
+	rm -f ${D}/lib/modules/*/source || die
+	rm -f ${D}/lib/modules/*/build || die
+	cd ${D}/lib/modules
+	local moddir="$(ls -d 2*)"
+	ln -s /usr/src/linux-${P} ${D}/lib/modules/${moddir}/source || die
+	ln -s /usr/src/linux-${P} ${D}/lib/modules/${moddir}/build || die
 }
-
