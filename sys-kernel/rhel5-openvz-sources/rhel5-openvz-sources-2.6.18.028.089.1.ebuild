@@ -3,6 +3,9 @@
 # $Header: /var/cvsroot/gentoo-x86/sys-kernel/openvz-sources/openvz-sources-2.6.18.028.066.7.ebuild,v 1.1 2009/11/26 19:12:49 pva Exp $
 
 EAPI=2
+
+inherit mount-boot
+
 SLOT=$PVR
 CKV=2.6.18
 OKV=$CKV
@@ -18,7 +21,7 @@ RESTRICT="binchecks strip"
 
 LICENSE="GPL-2"
 KEYWORDS=""
-IUSE=""
+IUSE="binary"
 DESCRIPTION="Full Linux kernel sources - RHEL5 kernel with OpenVZ patchset"
 HOMEPAGE="http://www.openvz.org"
 MAINPATCH="patch-${OVZ_PATCHV}-combined.gz"
@@ -113,6 +116,7 @@ src_prepare() {
 }
 
 src_compile() {
+	! use binary && return
 	install -d ${WORKDIR}/out/{lib,boot}
 	install -d ${T}/{cache,twork}
 	install -d $WORKDIR/build $WORKDIR/out/lib/firmware
@@ -136,12 +140,15 @@ src_compile() {
 }
 
 src_install() {
-	cd ${S}
-	make -s clean || die "make clean failed"
-	cp -a ${WORKDIR}/out/* ${D}/ || die "couldn't copy output files into place"
 	# copy sources into place:
 	dodir /usr/src
 	cp -a ${S} ${D}/usr/src/linux-${P} || die
+	cd ${D}/usr/src/linux-${P}
+	# if we didn't use genkernel, we're done:
+	use binary || return
+	# prep sources after compile and copy binaries into place:
+	make -s clean || die "make clean failed"
+	cp -a ${WORKDIR}/out/* ${D}/ || die "couldn't copy output files into place"
 	# module symlink fixup:
 	rm -f ${D}/lib/modules/*/source || die
 	rm -f ${D}/lib/modules/*/build || die
