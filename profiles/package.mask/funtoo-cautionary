@@ -1,3 +1,7 @@
+# Adrien Dessemond <adessemond@funtoo.org> (10 May 2011)
+# See Gentoo bug #366643 (failed patch)
+=net-misc/openssh-5.8_p2
+
 # Adrien Dessemond <adessemond@funtoo.org> (22 Apr 2011)
 # Random data corruption observed, investigations in progress
 app-arch/pxz
