@@ -37,7 +37,7 @@ src_unpack() {
 	unpack ${A}
 	if [[ ! -d ${S} ]] ; then
 		# When upgrading from older version, xz unpack may not work #271543
-		xz -dc "${DISTDIR}/${A}" | tar xf - || die
+		xz -dc "${DISTDIR}/${A}" | tar xof - || die
 	fi
 }
 
