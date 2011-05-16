@@ -3,7 +3,7 @@ diff -urN linux-uvesafb-clean/Documentation/fb/uvesafb.txt linux-uvesafb-try/Doc
 +++ linux-uvesafb-try/Documentation/fb/uvesafb.txt	2010-01-16 12:57:33.000000000 +0000
 @@ -0,0 +1,188 @@
 +
-+uvesafb - A Generic Driver for VBE2+ compliant video cards
++uvesafb - A Generic Driver for VBE3+ compliant video cards
 +==========================================================
 +
 +1. Requirements

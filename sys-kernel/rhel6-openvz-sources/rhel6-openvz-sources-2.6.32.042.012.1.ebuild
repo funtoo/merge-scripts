@@ -7,12 +7,11 @@ EAPI=2
 inherit mount-boot
 
 SLOT=$PVR
-CKV=2.6.18
+CKV=2.6.32
 OKV=$CKV
-OVZ_KERNEL="028stab089"
+OVZ_KERNEL="042test012"
 OVZ_REV="1"
 OVZ_KV=${OVZ_KERNEL}.${OVZ_REV}
-OVZ_PATCHV="238.9.1.el5.${OVZ_KV}"
 KV_FULL=${PN}-${PVR}
 EXTRAVERSION=-${OVZ_KV}
 KERNEL_ARCHIVE="linux-${CKV}.tar.bz2"
@@ -24,16 +23,15 @@ KEYWORDS="~x86 ~amd64"
 IUSE="binary"
 DESCRIPTION="Full Linux kernel sources - RHEL5 kernel with OpenVZ patchset"
 HOMEPAGE="http://www.openvz.org"
-MAINPATCH="patch-${OVZ_PATCHV}-combined.gz"
+MAINPATCH="patch-${OVZ_KV}-combined.gz"
 SRC_URI="${KERNEL_URI}
-	http://download.openvz.org/kernel/branches/rhel5-${CKV}/${OVZ_KV}/configs/kernel-${CKV}-i686-ent.config.ovz -> config-${CKV}-${OVZ_KV}.i686
-	http://download.openvz.org/kernel/branches/rhel5-${CKV}/${OVZ_KV}/configs/kernel-${CKV}-x86_64.config.ovz -> config-${CKV}-${OVZ_KV}.x86_64
-	http://download.openvz.org/kernel/branches/rhel5-${CKV}/${OVZ_KV}/patches/$MAINPATCH"
+	http://download.openvz.org/kernel/branches/rhel6-${CKV}/${OVZ_KV}/configs/config-${CKV}-${OVZ_KV}.i686
+	http://download.openvz.org/kernel/branches/rhel6-${CKV}/${OVZ_KV}/configs/config-${CKV}-${OVZ_KV}.x86_64
+	http://download.openvz.org/kernel/branches/rhel6-${CKV}/${OVZ_KV}/patches/$MAINPATCH"
 S="$WORKDIR/linux-${CKV}"
-DEPEND="=sys-devel/gcc-4.1.2*"
 
 K_EXTRAEINFO="
-This OpenVZ kernel uses RHEL5 (Red Hat Enterprise Linux 5) patch set.
+This OpenVZ kernel uses RHEL6 (Red Hat Enterprise Linux 6) patch set.
 This patch set is maintained by Red Hat for enterprise use, and contains
 further modifications by the OpenVZ development team and the Funtoo
 Linux project.
@@ -45,7 +43,7 @@ configurations can result in build failures.
 For best results, always start with a .config provided by the OpenVZ 
 team from:
 
-http://wiki.openvz.org/Download/kernel/rhel5/${OVZ_KERNEL}.
+http://wiki.openvz.org/Download/kernel/rhel6/${OVZ_KERNEL}.
 
 On amd64 and x86 arches, one of these configurations has automatically been
 enabled in the kernel source tree that was just installed for you.
@@ -53,9 +51,6 @@ enabled in the kernel source tree that was just installed for you.
 Slight modifications to the kernel configuration necessary for booting
 are usually fine. If you are using genkernel, the default configuration
 should be sufficient for your needs."
-
-K_EXTRAEWARN="THIS KERNEL MUST BE BUILT WITH GCC-4.1. Makefile will use
-gcc-4.1.2 directly."
 
 src_unpack() {
 	unpack ${KERNEL_ARCHIVE}
@@ -99,17 +94,11 @@ pkg_setup() {
 
 src_prepare() {
 	apply $DISTDIR/$MAINPATCH -p1
-	apply ${FILESDIR}/${PN}-2.6.18.028.064.7-bridgemac.patch -p1
-	apply ${FILESDIR}/uvesafb-0.1-rc3-2.6.18-openvz-028.066.10.patch -p1
+	apply ${FILESDIR}/rhel5-openvz-sources-2.6.18.028.064.7-bridgemac.patch -p1
 	sed -i -e "s:^\(EXTRAVERSION =\).*:\1 ${EXTRAVERSION}:" Makefile || die
 	sed	-i -e 's:#export\tINSTALL_PATH:export\tINSTALL_PATH:' Makefile || die
-	cp $DISTDIR/config-${CKV}-${OVZ_KV}.i686 arch/i386/defconfig || die
-	cp $DISTDIR/config-${CKV}-${OVZ_KV}.x86_64 arch/x86_64/defconfig || die
-	for MYARCH in i386 x86_64
-	do
-		# add missing uvesafb config option (came from our patch) to default config
-		echo "CONFIG_FB_UVESA=y" >> "arch/$MYARCH/defconfig" || die "uvesafb config fail"
-	done
+	cp $DISTDIR/config-${CKV}-${OVZ_KV}.i686 arch/x86/configs/i386_defconfig || die
+	cp $DISTDIR/config-${CKV}-${OVZ_KV}.x86_64 arch/x86/configs/x86_64_defconfig || die
 	rm -f .config >/dev/null
 	make -s mrproper || die "make mrproper failed"
 	make -s include/linux/version.h || die "make include/linux/version.h failed"
