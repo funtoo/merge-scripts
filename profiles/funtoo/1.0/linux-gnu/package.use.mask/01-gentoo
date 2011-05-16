@@ -1,6 +1,6 @@
 # Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/base/package.use.mask,v 1.236 2011/05/02 15:55:43 nirbheek Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/base/package.use.mask,v 1.238 2011/05/09 21:20:22 chithanh Exp $
 
 # This file requires >=portage-2.1.1
 # New entries go on top.
@@ -32,10 +32,6 @@
 net-libs/rest -introspection
 net-libs/libsocialweb -introspection
 
-# Chí-Thanh Christopher Nguyễn <chithanh@gentoo.org> (18 Apr 2011)
-# Explicitly allow video_cards_nouveau for libdrm until bug #364027 is fixed.
->=x11-libs/libdrm-2.4.25 -video_cards_nouveau
-
 # Andrey Grozin <grozin@gentoo.org> (29 Mar 2011)
 # dev-lang/swig-2.0.2 with -octave generated .cpp files
 # incompatible with >=sci-mathematics/octave-3.4.0
@@ -53,10 +49,6 @@ media-video/mplayer2 vdpau bluray
 #
 # Mask pdnsd's Linux-specific USE flags.
 net-dns/pdnsd isdn urandom
-
-# Samuli Suominen <ssuominen@gentoo.org> (27 Mar 2011)
-# Remove this when KDE 4.6 is stable.
-kde-base/solid -hal
 
 # Gilles Dartiguelongue <eva@gentoo.org> (26 Mar 2011)
 # Mask due to unsatisfied dependencies
@@ -192,7 +184,6 @@ media-gfx/k3d cuda
 # Broken on so many setups it is just insane.
 # 0.7 is API/ABI incompatible but is the way to go.
 # Masking to lower maintainance headache, bug #291501.
-<gnome-base/nautilus-2.28 tracker
 media-video/totem tracker
 
 # Tomáš Chvátal <scarabeus@gentoo.org> (27 Oct 2009)
