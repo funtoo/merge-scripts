@@ -23,9 +23,3 @@
 # Daniel Robbins <drobbins@funtoo.org> (9 March 2011)
 # Needs some testing -
 sys-kernel/sysrescue-std-binaries
-
-# Daniel Robbins <drobbins@funtoo.org> (9 March 2011)
-# -r3 - Has new firmware options - needs testing:
-# -r4 has new --build-src and --build-dst options:
->=sys-kernel/genkernel-3.4.12.6-r3
-
