@@ -16,10 +16,6 @@
 # -r2 mask to not break with newer version
 >=app-portage/eix-0.22.8-r2
 
-# Oleg Vinichenko <oleg@funtoo.org> (12 March 2011)
-# New klibc to test with uvesafb
->=dev-libs/klibc-1.5.20
-
 # Daniel Robbins <drobbins@funtoo.org> (9 March 2011)
 # Needs some testing -
 sys-kernel/sysrescue-std-binaries
