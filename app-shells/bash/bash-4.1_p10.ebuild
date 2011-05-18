@@ -177,7 +177,9 @@ pkg_preinst() {
 		# rewrite the symlink to ensure that its mtime changes. having /bin/sh
 		# missing even temporarily causes a fatal error with paludis.
 		local target=$(readlink "${ROOT}"/bin/sh)
-		ln -sf "${target}" "${ROOT}"/bin/sh
+		local tmp=$(emktemp "${ROOT}"/bin)
+		ln -sf "${target}" "${tmp}"
+		mv -f "${tmp}" "${ROOT}"/bin/sh
 	fi
 }
 
