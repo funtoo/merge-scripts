@@ -59,10 +59,8 @@ prefix_src_archives() {
 	done
 }
 
-#EGIT_REPO_URI="git://github.com/rh1/portage-funtoo.git"
 EGIT_REPO_URI="git://github.com/funtoo/portage-funtoo.git"
 EGIT_BRANCH="funtoo-path"
-EGIT_COMMIT="a5ebecd7b9f816c67b5aa8533fdec36f5ce07961"
 PV_PL="2.1.2"
 PATCHVER_PL=""
 SRC_URI="$SRC_URI linguas_pl? ( mirror://gentoo/${PN}-man-pl-${PV_PL}.tar.bz2 )"
@@ -198,8 +196,10 @@ src_install() {
 	for x in $(find bin -type d) ; do
 		exeinto $portage_base/$x || die "exeinto failed"
 		cd "$S"/$x || die "cd failed"
-		doexe $(find . -mindepth 1 -maxdepth 1 -type f ! -type l) || \
-			die "doexe failed"
+		files=$(find . -mindepth 1 -maxdepth 1 -type f ! -type l)
+		if [ -n "$files" ] ; then
+			doexe $files || die "doexe failed"
+		fi
 		symlinks=$(find . -mindepth 1 -maxdepth 1 -type l)
 		if [ -n "$symlinks" ] ; then
 			cp -P $symlinks "$D$portage_base/$x" || die "cp failed"
