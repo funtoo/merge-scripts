@@ -1,3 +1,7 @@
+# Adrien Dessemond <adessemond@funtoo.org> (22 May 2011)
+# Mask live ebuild (for Linux kernel 2.6.38 and later)
+=sys-block/iscsitarget-9999
+
 # Adrien Dessemond <adessemond@funtoo.org> (18 Apr 2011)
 # Mask live ebuild
 =app-arch/pxz-9999
