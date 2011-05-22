@@ -1,5 +1,9 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Ryan Harris <rh1@funtoo.org> (21 May 2011)
+# Masked for testing
+>=www-servers/nginx-1.0.2
+
 # Daniel Robbins <drobbins@funtoo.org> (21 May 2011)
 # masked for testing
 =sys-kernel/genkernel-3.4.15*
