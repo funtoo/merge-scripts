@@ -1,6 +1,5 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 2011 Funtoo Technologies
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-kernel/openvz-sources/openvz-sources-2.6.18.028.066.7.ebuild,v 1.1 2009/11/26 19:12:49 pva Exp $
 
 EAPI=2
 
@@ -9,7 +8,7 @@ inherit mount-boot
 SLOT=$PVR
 CKV=2.6.32
 OKV=$CKV
-OVZ_KERNEL="042test012"
+OVZ_KERNEL="042stab013"
 OVZ_REV="1"
 OVZ_KV=${OVZ_KERNEL}.${OVZ_REV}
 KV_FULL=${PN}-${PVR}
@@ -19,7 +18,7 @@ KERNEL_URI="mirror://kernel/linux/kernel/v${KV_MAJOR}.${KV_MINOR}/${KERNEL_ARCHI
 RESTRICT="binchecks strip"
 
 LICENSE="GPL-2"
-KEYWORDS="~x86 ~amd64"
+KEYWORDS="x86 amd64"
 IUSE="binary"
 DEPEND="binary? ( >=sys-kernel/genkernel-3.4.12.6-r4 )"
 RDEPEND="binary? ( >=sys-fs/udev-160 )"
@@ -114,7 +113,7 @@ src_compile() {
 	DEFAULT_KERNEL_SOURCE="${S}" INSTALL_FW_PATH=${WORKDIR}/out/lib/firmware CMD_KERNEL_DIR="${S}" genkernel ${GKARGS} \
 		--no-save-config \
 		--kernel-config="$defconfig_src" \
-		--kernname="${PN/-sources/}" \
+		--kernname="${PN}" \
 		--build-src="$S" \
 		--build-dst=${WORKDIR}/build \
 		--makeopts="${MAKEOPTS}" \
@@ -135,10 +134,18 @@ src_install() {
 	dodir /usr/src
 	cp -a ${S} ${D}/usr/src/linux-${P} || die
 	cd ${D}/usr/src/linux-${P}
-	# if we didn't use genkernel, we're done:
+	# prepare for real-world use and 3rd-party module building:
+	make mrproper || die
+	cp $defconfig_src .config || die
+	make oldconfig || die
+	# if we didn't use genkernel, we're done. The kernel source tree is left in
+	# an unconfigured state - you can't compile 3rd-party modules against it yet.
 	use binary || return
-	# prep sources after compile and copy binaries into place:
-	make -s clean || die "make clean failed"
+	make prepare || die
+	make scripts || die
+	# OK, now the source tree is configured to allow 3rd-party modules to be
+	# built against it, since we want that to work since we have a binary kernel
+	# built.
 	cp -a ${WORKDIR}/out/* ${D}/ || die "couldn't copy output files into place"
 	# module symlink fixup:
 	rm -f ${D}/lib/modules/*/source || die
@@ -147,4 +154,16 @@ src_install() {
 	local moddir="$(ls -d 2*)"
 	ln -s /usr/src/linux-${P} ${D}/lib/modules/${moddir}/source || die
 	ln -s /usr/src/linux-${P} ${D}/lib/modules/${moddir}/build || die
+}
+
+pkg_postinst() {
+	# if K_EXTRAEINFO is set then lets display it now
+	if [[ -n ${K_EXTRAEINFO} ]]; then
+		echo ${K_EXTRAEINFO} | fmt |
+		while read -s ELINE; do	einfo "${ELINE}"; done
+	fi
+	if [ ! -e ${ROOT}usr/src/linux ]
+	then
+		ln -s linux-${P} ${ROOT}usr/src/linux
+	fi
 }

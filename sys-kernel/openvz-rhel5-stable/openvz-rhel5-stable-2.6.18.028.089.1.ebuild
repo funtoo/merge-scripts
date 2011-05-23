@@ -101,7 +101,7 @@ pkg_setup() {
 
 src_prepare() {
 	apply $DISTDIR/$MAINPATCH -p1
-	apply ${FILESDIR}/${PN}-2.6.18.028.064.7-bridgemac.patch -p1
+	apply ${FILESDIR}/rhel5-openvz-stable-2.6.18.028.064.7-bridgemac.patch -p1
 	apply ${FILESDIR}/uvesafb-0.1-rc3-2.6.18-openvz-028.066.10.patch -p1
 	sed -i -e "s:^\(EXTRAVERSION =\).*:\1 ${EXTRAVERSION}:" Makefile || die
 	sed	-i -e 's:#export\tINSTALL_PATH:export\tINSTALL_PATH:' Makefile || die
@@ -125,7 +125,7 @@ src_compile() {
 	DEFAULT_KERNEL_SOURCE="${S}" INSTALL_FW_PATH=${WORKDIR}/out/lib/firmware CMD_KERNEL_DIR="${S}" genkernel ${GKARGS} \
 		--no-save-config \
 		--kernel-config="$defconfig_src" \
-		--kernname="${PN/-sources/}" \
+		--kernname="${PN}" \
 		--build-src="$S" \
 		--build-dst=${WORKDIR}/build \
 		--makeopts="${MAKEOPTS}" \
