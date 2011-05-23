@@ -115,9 +115,17 @@ src_install() {
 	cp -a ${S} ${D}/usr/src/linux-${P} || die
 	cd ${D}/usr/src/linux-${P}
 	# if we didn't use genkernel, we're done:
+	make mrproper || die
+	cp $defconfig_src .config || die
+	make oldconfig || die
+	# if we didn't use genkernel, we're done. The kernel source tree is left in
+	# an unconfigured state - you can't compile 3rd-party modules against it yet.
 	use binary || return
-	# prep sources after compile and copy binaries into place:
-	make -s clean || die "make clean failed"
+	make prepare || die
+	make scripts || die
+	# OK, now the source tree is configured to allow 3rd-party modules to be
+	# built against it, since we want that to work since we have a binary kernel
+	# built.
 	cp -a ${WORKDIR}/out/* ${D}/ || die "couldn't copy output files into place"
 	# module symlink fixup:
 	rm -f ${D}/lib/modules/*/source || die
@@ -126,4 +134,16 @@ src_install() {
 	local moddir="$(ls -d 2*)"
 	ln -s /usr/src/linux-${P} ${D}/lib/modules/${moddir}/source || die
 	ln -s /usr/src/linux-${P} ${D}/lib/modules/${moddir}/build || die
+}
+
+pkg_postinst() {
+	# if K_EXTRAEINFO is set then lets display it now
+	if [[ -n ${K_EXTRAEINFO} ]]; then
+		echo ${K_EXTRAEINFO} | fmt |
+		while read -s ELINE; do	einfo "${ELINE}"; done
+	fi
+	if [ ! -e ${ROOT}usr/src/linux ]
+	then
+		ln -s linux-${P} ${ROOT}usr/src/linux
+	fi
 }
