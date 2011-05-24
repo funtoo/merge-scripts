@@ -155,7 +155,6 @@ src_install() {
 	make prepare || die
 	make scripts || die
 	# prep sources after compile and copy binaries into place:
-	make -s clean || die "make clean failed"
 	cp -a ${WORKDIR}/out/* ${D}/ || die "couldn't copy output files into place"
 	# module symlink fixup:
 	rm -f ${D}/lib/modules/*/source || die
