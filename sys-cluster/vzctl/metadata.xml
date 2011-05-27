@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
-	<herd>vserver</herd>
+	<herd>funtoo</herd>
 	<maintainer>
-		<email>pva@gentoo.org</email>
-		<name>Peter Volkov</name>
+		<email>drobbins@funtoo.org</email>
+		<name>Daniel Robbins</name>
 	</maintainer>
 </pkgmetadata>

@@ -36,7 +36,6 @@ src_prepare() {
 src_configure() {
 	econf \
 		--localstatedir=/var \
-		--enable-cron \
 		--enable-udev \
 		$(use_enable bash-completion bashcomp) \
 		--enable-logrotate
