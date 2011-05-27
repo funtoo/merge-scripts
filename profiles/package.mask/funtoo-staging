@@ -1,11 +1,14 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Daniel Robbins (26 May 2011)
+# masked for testing
+=sys-cluster/vzctl-3.0.27
+
 # Oleg Vinichenko <oleg@funtoo.org> (23 May 2011)
 # Masked for testing
 >=app-arch/tar-1.26
 >=app-shells/bash-4.2
 =sys-devel/bison-2.5
-
 
 # Ryan Harris <rh1@funtoo.org> (21 May 2011)
 # Masked for testing
