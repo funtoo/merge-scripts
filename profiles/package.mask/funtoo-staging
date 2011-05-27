@@ -14,10 +14,6 @@
 # Masked for testing
 >=www-servers/nginx-1.0.2
 
-# Daniel Robbins <drobbins@funtoo.org> (21 May 2011)
-# masked for testing
-=sys-kernel/genkernel-3.4.15*
-
 # Martin Scholz <golodhrim@funtoo.org> (12 May 2011)
 # wine 1.3.19 has buildfailures with win64 useflag enabled, will be masked until
 # there is resolved message.
