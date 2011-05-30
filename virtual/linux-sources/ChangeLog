@@ -1,0 +1,11 @@
+# ChangeLog for virtual/linux-sources
+# Copyright 1999-2011 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/virtual/linux-sources/ChangeLog,v 1.1 2011/04/30 17:05:28 ulm Exp $
+
+*linux-sources-2.6 (30 Apr 2011)
+*linux-sources-2.4 (30 Apr 2011)
+
+  30 Apr 2011; Ulrich Mueller <ulm@gentoo.org> +linux-sources-2.4.ebuild,
+  +linux-sources-2.6.ebuild, +metadata.xml:
+  Initial import, bug 118442.
+
