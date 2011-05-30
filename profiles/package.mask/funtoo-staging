@@ -1,5 +1,9 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Daniel Robbins (30 May 2011)
+# masked for testing
+=sys-boot/grub-1.99
+
 # Daniel Robbins (26 May 2011)
 # masked for testing
 =sys-cluster/vzctl-3.0.27
