@@ -1,5 +1,9 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Adrien Dessemond <adessemond@funtoo.org> (02 Jun 2011)
+# masked for testing (should build even with FUSE+Linux 3.x series)
+=sys-fs/zfs-fuse-0.7.0
+
 # Daniel Robbins (30 May 2011)
 # masked for testing
 =sys-boot/grub-1.99
