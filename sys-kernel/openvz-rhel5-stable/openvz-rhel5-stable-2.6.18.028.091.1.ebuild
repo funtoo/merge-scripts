@@ -89,9 +89,11 @@ pkg_setup() {
 	case $ARCH in
 		x86)
 			defconfig_src=i686
+			defconfig_dst=i386
 			;;
 		amd64)
 			defconfig_src=x86_64
+			defconfig_dst=x86_64
 			;;
 		*)
 			die "unsupported ARCH: $ARCH"
@@ -101,6 +103,7 @@ pkg_setup() {
 		defconfig_src="${defconfig_src}.xen"
 	fi
 	defconfig_src="${DISTDIR}/config-${CKV}-${OVZ_KV}.${defconfig_src}"
+	defconfig_dst="${S}/arch/${defconfig_dst}/defconfig"
 	unset ARCH; unset LDFLAGS #will interfere with Makefile if set
 }
 
@@ -156,7 +159,7 @@ src_install() {
 	cp -a ${S} ${D}/usr/src/linux-${P} || die
 	cd ${D}/usr/src/linux-${P}
 	make mrproper || die
-	cp $defconfig_src .config || die
+	cp $defconfig_dst .config || die
 	make oldconfig || die
 	# if we didn't use genkernel, we're done. The kernel source tree is left in
 	# an unconfigured state - you can't compile 3rd-party modules against it yet.
