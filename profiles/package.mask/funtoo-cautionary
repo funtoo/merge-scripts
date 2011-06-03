@@ -1,3 +1,7 @@
+# Adrien Dessemond <adessemond@funtoo.org> (03 Jun 2011)
+# updated to -r1 which includes an explicit dependency on parted < 3.0 (see bug #369417)
+=sys-block/gparted-0.8.0
+
 # Adrien Dessemond <adessemond@funtoo.org> (10 May 2011)
 # See Gentoo bug #366643 (failed patch)
 =net-misc/openssh-5.8_p2
