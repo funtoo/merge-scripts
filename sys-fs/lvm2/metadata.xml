@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
-	<herd>no-herd</herd>
+	<herd>funtoo</herd>
 	<maintainer>
-		<email>robbat2@gentoo.org</email>
-		<name>Robin H. Johnson</name>
-	</maintainer>
-	<maintainer>
-		<email>cardoe@gentoo.org</email>
-		<name>Doug Goldstein</name>
-	</maintainer>
-	<maintainer>
-		<email>agk@redhat.com</email>
-		<name>Alasdair Kergon</name>
-		<description>Upstream Maintainer (please CC on bugs)</description>
+		<email>drobbins@funtoo.org</email>
+		<name>Daniel Robbins</name>
 	</maintainer>
 	<use>
 		<flag name='clvm'>Allow users to build clustered lvm2</flag>
