@@ -233,10 +233,29 @@ class Minify(MergeStep):
 # CHANGE TREE CONFIGURATION BELOW:
 
 pull = True
-if len(sys.argv) > 1 and sys.argv[1] == "nopush":
+if len(sys.argv) > 1 and "nopush" in sys.argv[1:]:
 	push = False
 else:
 	push = "origin funtoo.org"
+
+if len(sys.argv) > 1 and sys.argv[1][0] == "/":
+	dest = sys.argv[1]
+	dest_mini = sys.argv[1]+"-mini"
+	branch = "master" 
+else:
+	dest = "/var/git/portage-prod"
+	dest_mini = "/var/git/portage-mini-2010"
+	branch = "funtoo.org"
+
+for test in [ dest, dest_mini ]:
+	if not os.path.isdir(test):
+		os.makedirs(test)
+	if not os.path.isdir("%s/.git" % test):
+		runShell("( cd %s; git init )" % test )
+		runShell("echo 'created by merge.py' > %s/README" % test )
+		runShell("( cd %s; git add README; git commit -a -m 'initial commit by merge.py' )" % test )
+		print("Pushing disabled automatically because repository created from scratch.")
+		push = False
 
 gentoo_src = Tree("gentoo","/var/git/portage-gentoo")
 funtoo_overlay = Tree("funtoo-overlay", "/root/git/funtoo-overlay",pull=True)
@@ -268,20 +287,20 @@ work = UnifiedTree("/var/src/merge-portage-work",steps)
 work.run()
 
 steps = [
-	GitPrep("funtoo.org"),
+	GitPrep(branch),
 	SyncTree(work)
 ]
 
 # then for the production tree, we rsync all changes on top of our prod git tree and commit:
 
-prod = UnifiedTree("/var/git/portage-prod",steps)
+prod = UnifiedTree(dest,steps)
 prod.run()
 prod.gitCommit(message="glorious funtoo updates",push=push)
 
 # then for the mini tree, we rsync all work changes on top of our mini git tree, minify, and commit:
 
-mini = UnifiedTree("/var/git/portage-mini-2010", [ 
-	GitPrep("funtoo.org"), 
+mini = UnifiedTree( dest_mini, [
+	GitPrep(branch), 
 	SyncTree(work, exclude=["ChangeLog"]), 
 	Minify() 
 ])
