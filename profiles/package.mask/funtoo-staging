@@ -8,10 +8,6 @@
 # masked for testing
 =sys-boot/grub-1.99
 
-# Daniel Robbins (26 May 2011)
-# masked for testing
-=sys-cluster/vzctl-3.0.27
-
 # Oleg Vinichenko <oleg@funtoo.org> (23 May 2011)
 # Masked for testing
 >=app-arch/tar-1.26
