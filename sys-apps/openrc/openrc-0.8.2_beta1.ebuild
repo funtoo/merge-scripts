@@ -10,6 +10,8 @@ GITHUB_REPO="${PN}"
 GITHUB_USER="funtoo"
 GITHUB_TAG="funtoo-openrc-${PVR}"
 
+KEYWORDS="x86 amd64 sparc"
+
 NETV="1.0.8"
 GITHUB_REPO_CN="corenetwork"
 GITHUB_TAG_CN="$NETV"
