@@ -241,7 +241,7 @@ else:
 if len(sys.argv) > 1 and sys.argv[1][0] == "/":
 	dest = sys.argv[1]
 	dest_mini = sys.argv[1]+"-mini"
-	branch = "master" 
+	branch = "funtoo.org" 
 else:
 	dest = "/var/git/portage-prod"
 	dest_mini = "/var/git/portage-mini-2010"
@@ -254,6 +254,7 @@ for test in [ dest, dest_mini ]:
 		runShell("( cd %s; git init )" % test )
 		runShell("echo 'created by merge.py' > %s/README" % test )
 		runShell("( cd %s; git add README; git commit -a -m 'initial commit by merge.py' )" % test )
+		runShell("( cd %s; git checkout -b funtoo.org; git rm -f README; git commit -a -m 'initial funtoo.org commit' )" % test )
 		print("Pushing disabled automatically because repository created from scratch.")
 		push = False
 
