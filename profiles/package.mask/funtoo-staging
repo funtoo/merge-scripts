@@ -1,5 +1,9 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Daniel Robbins (05 Jun 2011)
+# Masked for testing
+=sys-apps/module-init-tools-3.16
+
 # Adrien Dessemond <adessemond@funtoo.org> (02 Jun 2011)
 # masked for testing (should build even with FUSE+Linux 3.x series)
 =sys-fs/zfs-fuse-0.7.0
