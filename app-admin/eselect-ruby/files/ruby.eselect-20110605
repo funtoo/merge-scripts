@@ -79,7 +79,7 @@ create_symlinks() {
 	case $version in
 	[0-9][0-9])
 		# create ruby1.9 symlink if we have ruby19, for example:
-		ln -s ${f}${version} "${path}/${version:0:1}.${version:0:2}"
+		ln -s "ruby${version}" "${path}/ruby${version:0:1}.${version:1:2}"
 		;;
 	esac
 
@@ -143,7 +143,12 @@ do_list() {
 	local targets=( $(find_targets) )
 	local i line
 
-	for (( i = 0; i < ${#targets[@]}; i++ )) ; do
+	i=0
+	while [ $i -lt ${#targets[@]} ]; do
+		if [ -L "${targets[i]}" ]; then
+			unset targets[i]
+			continue
+		fi
 		line=$(basename "${targets[i]}")
 
 		# Do we have a matching rubygems?
@@ -157,6 +162,7 @@ do_list() {
 		else
 			targets[i]=${line}
 		fi
+		i=$(( $i + 1 ))
 	done
 	write_numbered_list -m "(none found)" "${targets[@]}"
 }
