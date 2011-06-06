@@ -61,7 +61,7 @@ prefix_src_archives() {
 
 EGIT_REPO_URI="git://github.com/funtoo/portage-funtoo.git"
 EGIT_BRANCH="current"
-EGIT_COMMIT="a341f5431e1490d9907b50437793ba4cd91b35b7"
+EGIT_COMMIT="4672beb76237f2b0d1ac5f90a27abb40434963f2"
 PV_PL="2.1.2"
 PATCHVER_PL=""
 SRC_URI="$SRC_URI linguas_pl? ( mirror://gentoo/${PN}-man-pl-${PV_PL}.tar.bz2 )"
