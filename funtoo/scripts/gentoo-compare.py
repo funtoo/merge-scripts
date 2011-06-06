@@ -11,10 +11,13 @@ import portage.versions
 import os,sys
 import commands
 
-def getKeywords(portdir, ebuild):
+def getKeywords(portdir, ebuild, warn):
 	a = commands.getstatusoutput("funtoo/scripts/keywords.sh %s %s" % ( portdir, ebuild ) )
 	if a[0] == 0:
-		return (0, set(a[1].split()))
+		my_set = set(a[1].split())
+		if warn and len(my_set) == 0:
+			print "WARNING: ebuild %s has no keywords" % ebuild
+		return (0, my_set)
 	else:
 		return a
 	
@@ -25,7 +28,7 @@ if len(sys.argv) != 2:
 
 gportdir=sys.argv[1]
 
-def filterOnKeywords(portdir, ebuilds, keywords):
+def filterOnKeywords(portdir, ebuilds, keywords, warn=False):
 
 	""" 
 	This function accepts a path to a portage tree, a list of ebuilds, and a list of
@@ -51,7 +54,7 @@ def filterOnKeywords(portdir, ebuilds, keywords):
 		fbest = portage.versions.best(filtered)
 		if fbest == "":
 			break
-		retval, fkeywords = getKeywords(portdir, "%s/%s/%s.ebuild" % (cat, pkg, fbest.split("/")[1] ))
+		retval, fkeywords = getKeywords(portdir, "%s/%s/%s.ebuild" % (cat, pkg, fbest.split("/")[1] ), warn)
 		if len(keywords & fkeywords) == 0:
 			filtered.remove(fbest)
 		else:
@@ -89,14 +92,14 @@ def version_compare(portdir,gportdir,keywords):
 		for pkg in os.listdir(cat):
 			ebuilds = get_cpv_in_portdir(".",cat,pkg)
 			gebuilds = get_cpv_in_portdir(gportdir,cat,pkg)
-			ebuilds = filterOnKeywords(".", ebuilds, keywords)
+			ebuilds = filterOnKeywords(".", ebuilds, keywords, warn=True)
 
 			if len(ebuilds) == 0:
 				continue
 	
 			fbest = portage.versions.best(ebuilds)
 	
-			gebuilds = filterOnKeywords(gportdir, gebuilds, keywords)
+			gebuilds = filterOnKeywords(gportdir, gebuilds, keywords, warn=False)
 
 			if len(gebuilds) == 0:
 				continue

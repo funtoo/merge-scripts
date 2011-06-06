@@ -11,7 +11,6 @@ dev-haskell
 dev-lang
 dev-libs
 dev-python
-dev-ruby
 dev-util
 mail-filter
 mail-mta

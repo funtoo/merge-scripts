@@ -248,7 +248,7 @@ class Minify(MergeStep):
 # CHANGE TREE CONFIGURATION BELOW:
 
 pull = True
-if len(sys.argv) > 1 and sys.argv[1] == "nopush":
+if len(sys.argv) > 1 and "nopush" in sys.argv[1:]:
 	push = False
 else:
 	push = "origin funtoo.org"
@@ -260,6 +260,26 @@ foo_overlay = Tree("foo-overlay", "master", "https://github.com/slashbeast/foo-o
 bar_overlay = Tree("bar-overlay", "master", "git://github.com/adessemond/bar-overlay.git", pull=True)
 multimedia_overlay = Tree("multimedia-overlay", "master", "git://gitorious.org/gentoo-multimedia/gentoo-multimedia.git", pull=True)
 golodhrim_overlay = Tree("golodhrim-overlay", "master", "https://github.com/golodhrim/golodhrim-overlay.git", pull=True)
+
+if len(sys.argv) > 1 and sys.argv[1][0] == "/":
+	dest = sys.argv[1]
+	dest_mini = sys.argv[1]+"-mini"
+	branch = "funtoo.org" 
+else:
+	dest = "/var/git/portage-prod"
+	dest_mini = "/var/git/portage-mini-2010"
+	branch = "funtoo.org"
+
+for test in [ dest, dest_mini ]:
+	if not os.path.isdir(test):
+		os.makedirs(test)
+	if not os.path.isdir("%s/.git" % test):
+		runShell("( cd %s; git init )" % test )
+		runShell("echo 'created by merge.py' > %s/README" % test )
+		runShell("( cd %s; git add README; git commit -a -m 'initial commit by merge.py' )" % test )
+		runShell("( cd %s; git checkout -b funtoo.org; git rm -f README; git commit -a -m 'initial funtoo.org commit' )" % test )
+		print("Pushing disabled automatically because repository created from scratch.")
+		push = False
 
 steps = [
 	SyncTree(gentoo_src,exclude=["/metadata/cache/**","sys-kernel/openvz-sources"]),
@@ -283,20 +303,20 @@ work = UnifiedTree("/var/src/merge-portage-work",steps)
 work.run()
 
 steps = [
-	GitPrep("funtoo.org"),
+	GitPrep(branch),
 	SyncTree(work)
 ]
 
 # then for the production tree, we rsync all changes on top of our prod git tree and commit:
 
-prod = UnifiedTree("/var/git/portage-prod",steps)
+prod = UnifiedTree(dest,steps)
 prod.run()
 prod.gitCommit(message="glorious funtoo updates",push=push)
 
 # then for the mini tree, we rsync all work changes on top of our mini git tree, minify, and commit:
 
-mini = UnifiedTree("/var/git/portage-mini-2010", [ 
-	GitPrep("funtoo.org"), 
+mini = UnifiedTree( dest_mini, [
+	GitPrep(branch), 
 	SyncTree(work, exclude=["ChangeLog"]), 
 	Minify() 
 ])
