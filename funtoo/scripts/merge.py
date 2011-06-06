@@ -124,7 +124,9 @@ class Tree(object):
 class UnifiedTree(Tree):
 	def __init__(self,root,steps):
 		self.steps = steps
-		Tree.__init__(self,name=None,root=root,url=None, pull=False)
+		self.root = root
+		self.name = None
+		self.merged = []
 
 	def run(self):
 		for step in self.steps:
