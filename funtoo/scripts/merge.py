@@ -86,12 +86,27 @@ class SyncTree(SyncDir):
 		desttree.logTree(self.srctree)
 
 class Tree(object):
-	def __init__(self,name,root,pull=False):
+	def __init__(self,name,branch="master",url=None,pull=False, trylocal=None):
 		self.name = name
-		self.root = root
+		self.branch = branch
+		self.url = url
 		self.merged = []
-		if pull:
-			runShell("(cd %s; git pull)" % self.root)		
+		self.trylocal = trylocal
+		if self.trylocal and os.path.exists(self.trylocal):
+			base = os.path.basename(self.trylocal)
+			self.root = trylocal
+		else:
+			base = "/var/src/source-trees"
+			self.root = "%s/%s" % ( base, self.name )
+		if not os.path.exists(base):
+			os.makedirs(base)
+		if os.path.exists(self.root):
+			runShell("(cd %s, git checkout %s)" % ( self.root, self.branch )
+			if pull:
+				runShell("(cd %s; git pull origin %s)" % ( self.root, self.branch )		
+		else:
+			runShell("(cd %s, git clone %s %s)" % ( base, self.url, self.name ))
+			runShell("(cd %s; git checkout %s)" % ( self.root, self.branch ))
 
 	def head(self):
 		return headSHA1(self.root)
@@ -109,7 +124,7 @@ class Tree(object):
 class UnifiedTree(Tree):
 	def __init__(self,root,steps):
 		self.steps = steps
-		Tree.__init__(self,name=None,root=root,pull=False)
+		Tree.__init__(self,name=None,root=root,url=None, pull=False)
 
 	def run(self):
 		for step in self.steps:
@@ -238,13 +253,13 @@ if len(sys.argv) > 1 and sys.argv[1] == "nopush":
 else:
 	push = "origin funtoo.org"
 
-gentoo_src = Tree("gentoo","/var/git/portage-gentoo")
-funtoo_overlay = Tree("funtoo-overlay", "/root/git/funtoo-overlay",pull=True)
-tarsius_overlay = Tree("tarsius-overlay", "/root/git/tarsius-overlay",pull=True)
-foo_overlay = Tree("foo-overlay", "/root/git/foo-overlay",pull=True)
-bar_overlay = Tree("bar-overlay","/root/git/bar-overlay", pull=True)
-multimedia_overlay = Tree("multimedia-overlay", "/root/git/multimedia-overlay",pull=True)
-golodhrim_overlay = Tree("golodhrim-overlay", "/root/git/golodhrim-overlay",pull=True)
+gentoo_src = Tree("gentoo","gentoo.org", "git://github.com/funtoo/portage.git", pull=True, trylocal="/var/git/portage-gentoo")
+funtoo_overlay = Tree("funtoo-overlay", "master", "git://github.com/funtoo/funtoo-overlay.git", pull=True)
+tarsius_overlay = Tree("tarsius-overlay", "master", "https://github.com/golodhrim/tarsius-overlay.git", pull=True)
+foo_overlay = Tree("foo-overlay", "master", "https://github.com/slashbeast/foo-overlay.git", pull=True)
+bar_overlay = Tree("bar-overlay", "master", "git://github.com/adessemond/bar-overlay.git", pull=True)
+multimedia_overlay = Tree("multimedia-overlay", "master", "git://gitorious.org/gentoo-multimedia/gentoo-multimedia.git", pull=True)
+golodhrim_overlay = Tree("golodhrim-overlay", "master", "https://github.com/golodhrim/golodhrim-overlay.git", pull=True)
 
 steps = [
 	SyncTree(gentoo_src,exclude=["/metadata/cache/**","sys-kernel/openvz-sources"]),
