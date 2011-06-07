@@ -9,8 +9,8 @@ SLOT=$PVR
 CKV=2.6.32
 KV_FULL=${PN}-${PVR}
 EXTRAVERSION=-32.62
-KERNEL_ARCHIVE="linux_${CKV}.orig.tar.gz"
-KERNEL_URI="http://archive.ubuntu.com/ubuntu/pool/main/l/linux/${KERNEL_ARCHIVE}"
+KERNEL_ARCHIVE="linux-${CKV}.tar.bz2"
+KERNEL_URI="mirror://kernel/linux/kernel/v${KV_MAJOR}.${KV_MINOR}/${KERNEL_ARCHIVE}"
 RESTRICT="binchecks strip"
 
 LICENSE="GPL-2"
@@ -45,32 +45,31 @@ apply() {
 			;;
 	esac
 	[ ! -e $p ] && die "patch $p not found"
-	echo "Applying patch $p"; $ca $p | patch -s $* || die "patch $p failed"
+	echo "Applying patch $p"; $ca $p | patch $* || die "patch $p failed"
 }
 
 pkg_setup() {
 	case $ARCH in
 		x86)
-			defconfig_src=i686
+			defconfig_src=i386-config.flavour.generic-pae-full
 			;;
 		amd64)
-			defconfig_src=x86_64
+			defconfig_src=amd64-config.flavour.server-full
 			;;
 		*)
 			die "unsupported ARCH: $ARCH"
 			;;
 	esac
-	defconfig_src="${DISTDIR}/config-${CKV}-${OVZ_KV}.${defconfig_src}"
+	defconfig_src="${TEMP}/${defconfig_src}"
 	unset ARCH; unset LDFLAGS #will interfere with Makefile if set
 }
 
 src_prepare() {
 	apply $DISTDIR/$MAINPATCH -p1
+
 	sed -i -e "s:^\(EXTRAVERSION =\).*:\1 ${EXTRAVERSION}:" Makefile || die
 	sed	-i -e 's:#export\tINSTALL_PATH:export\tINSTALL_PATH:' Makefile || die
 	rm -f .config >/dev/null
-	make -s mrproper || die "make mrproper failed"
-	make -s include/linux/version.h || die "make include/linux/version.h failed"
 
 	# Ubuntu:
 
@@ -80,6 +79,9 @@ src_prepare() {
 	sed -i -e 's:^tmpdir=.*$:tmpdir=$TEMP:' debian/scripts/misc/kernelconfig || die
 
 	DROOT="debian" debian/scripts/misc/kernelconfig defaultconfig || die
+
+	make -s mrproper || die "make mrproper failed"
+	make -s include/linux/version.h || die "make include/linux/version.h failed"
 }
 
 src_compile() {
@@ -87,7 +89,7 @@ src_compile() {
 	install -d ${WORKDIR}/out/{lib,boot}
 	install -d ${T}/{cache,twork}
 	install -d $WORKDIR/build $WORKDIR/out/lib/firmware
-	DEFAULT_KERNEL_SOURCE="${S}" INSTALL_FW_PATH=${WORKDIR}/out/lib/firmware CMD_KERNEL_DIR="${S}" genkernel ${GKARGS} \
+	DEFAULT_KERNEL_SOURCE="${S}" CMD_KERNEL_DIR="${S}" genkernel ${GKARGS} \
 		--no-save-config \
 		--kernel-config="$defconfig_src" \
 		--kernname="${PN}" \
@@ -137,11 +139,6 @@ src_install() {
 }
 
 pkg_postinst() {
-	# if K_EXTRAEINFO is set then lets display it now
-	if [[ -n ${K_EXTRAEINFO} ]]; then
-		echo ${K_EXTRAEINFO} | fmt |
-		while read -s ELINE; do	einfo "${ELINE}"; done
-	fi
 	if [ ! -e ${ROOT}usr/src/linux ]
 	then
 		ln -s linux-${P} ${ROOT}usr/src/linux
