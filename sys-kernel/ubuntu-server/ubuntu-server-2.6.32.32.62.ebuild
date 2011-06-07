@@ -7,14 +7,10 @@ inherit mount-boot
 
 SLOT=$PVR
 CKV=2.6.32
-OKV=$CKV
-OVZ_KERNEL="042stab016"
-OVZ_REV="1"
-OVZ_KV=${OVZ_KERNEL}.${OVZ_REV}
 KV_FULL=${PN}-${PVR}
-EXTRAVERSION=-${OVZ_KV}
-KERNEL_ARCHIVE="linux-${CKV}.tar.bz2"
-KERNEL_URI="mirror://kernel/linux/kernel/v${KV_MAJOR}.${KV_MINOR}/${KERNEL_ARCHIVE}"
+EXTRAVERSION=-32.62
+KERNEL_ARCHIVE="linux_${CKV}.orig.tar.gz"
+KERNEL_URI="http://archive.ubuntu.com/ubuntu/pool/main/l/linux/${KERNEL_ARCHIVE}"
 RESTRICT="binchecks strip"
 
 LICENSE="GPL-2"
@@ -22,36 +18,11 @@ KEYWORDS="x86 amd64"
 IUSE="binary"
 DEPEND="binary? ( >=sys-kernel/genkernel-3.4.12.6-r4 )"
 RDEPEND="binary? ( >=sys-fs/udev-160 )"
-DESCRIPTION="Full Linux kernel sources - RHEL5 kernel with OpenVZ patchset"
+DESCRIPTION="Ubuntu Server sources (and optional binary kernel)"
 HOMEPAGE="http://www.openvz.org"
-MAINPATCH="patch-${OVZ_KV}-combined.gz"
-SRC_URI="${KERNEL_URI}
-	http://download.openvz.org/kernel/branches/rhel6-${CKV}/${OVZ_KV}/configs/config-${CKV}-${OVZ_KV}.i686
-	http://download.openvz.org/kernel/branches/rhel6-${CKV}/${OVZ_KV}/configs/config-${CKV}-${OVZ_KV}.x86_64
-	http://download.openvz.org/kernel/branches/rhel6-${CKV}/${OVZ_KV}/patches/$MAINPATCH"
+MAINPATCH="linux_${CKV}${EXTRAVERSION}.diff.gz"
+SRC_URI="${KERNEL_URI} http://archive.ubuntu.com/ubuntu/pool/main/l/linux/${MAINPATCH}"
 S="$WORKDIR/linux-${CKV}"
-
-K_EXTRAEINFO="
-This OpenVZ kernel uses RHEL6 (Red Hat Enterprise Linux 6) patch set.
-This patch set is maintained by Red Hat for enterprise use, and contains
-further modifications by the OpenVZ development team and the Funtoo
-Linux project.
-
-Red Hat typically only ensures that their kernels build using their
-own official kernel configurations. Significant variations from these
-configurations can result in build failures.
-
-For best results, always start with a .config provided by the OpenVZ 
-team from:
-
-http://wiki.openvz.org/Download/kernel/rhel6/${OVZ_KERNEL}.
-
-On amd64 and x86 arches, one of these configurations has automatically been
-enabled in the kernel source tree that was just installed for you.
-
-Slight modifications to the kernel configuration necessary for booting
-are usually fine. If you are using genkernel, the default configuration
-should be sufficient for your needs."
 
 src_unpack() {
 	unpack ${KERNEL_ARCHIVE}
@@ -95,14 +66,20 @@ pkg_setup() {
 
 src_prepare() {
 	apply $DISTDIR/$MAINPATCH -p1
-	apply ${FILESDIR}/rhel5-openvz-sources-2.6.18.028.064.7-bridgemac.patch -p1
 	sed -i -e "s:^\(EXTRAVERSION =\).*:\1 ${EXTRAVERSION}:" Makefile || die
 	sed	-i -e 's:#export\tINSTALL_PATH:export\tINSTALL_PATH:' Makefile || die
-	cp $DISTDIR/config-${CKV}-${OVZ_KV}.i686 arch/x86/configs/i386_defconfig || die
-	cp $DISTDIR/config-${CKV}-${OVZ_KV}.x86_64 arch/x86/configs/x86_64_defconfig || die
 	rm -f .config >/dev/null
 	make -s mrproper || die "make mrproper failed"
 	make -s include/linux/version.h || die "make include/linux/version.h failed"
+
+	# Ubuntu:
+
+	chmod +x debian/scripts/config-check || die
+	chmod +x debian/scripts/misc/splitconfig.pl || die
+	chmod +x debian/scripts/misc/kernelconfig || die
+	sed -i -e 's:^tmpdir=.*$:tmpdir=$TEMP:' debian/scripts/misc/kernelconfig || die
+
+	DROOT="debian" debian/scripts/misc/kernelconfig defaultconfig || die
 }
 
 src_compile() {
