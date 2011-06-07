@@ -284,7 +284,7 @@ for test in [ dest, dest_mini ]:
 		push = False
 
 steps = [
-	SyncTree(gentoo_src,exclude=["/metadata/cache/**","sys-kernel/openvz-sources"]),
+	SyncTree(gentoo_src,exclude=["/metadata/cache/**"]),
 	ApplyPatchSeries("%s/funtoo/patches" % funtoo_overlay.root ),
 	SyncDir(funtoo_overlay.root,"profiles","profiles", exclude=["repo_name","categories"]),
 	ProfileDepFix(),
