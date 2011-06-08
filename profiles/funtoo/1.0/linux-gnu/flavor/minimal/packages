@@ -8,6 +8,7 @@
 *app-arch/gzip
 *app-arch/tar
 *app-arch/xz-utils
+*app-editor/nano
 *app-shells/bash
 *dev-lang/perl
 *dev-lang/python
@@ -31,6 +32,7 @@
 #*>=sys-apps/portage-2.0.51.22
 *sys-process/procps
 *sys-process/psmisc
+*sys-apps/less
 *sys-apps/iproute2
 *sys-apps/sed
 *sys-apps/shadow
