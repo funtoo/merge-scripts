@@ -12,10 +12,7 @@ HOMEPAGE="http://www.gentoo.org/proj/en/portage/index.xml"
 LICENSE="GPL-2"
 KEYWORDS=""
 SLOT="0"
-IUSE="build doc epydoc +ipc linguas_pl python3 selinux"
-GITHUB_REPO="portage-funtoo"
-GITHUB_USER="funtoo"
-GITHUB_TAG="funtoo-${PVR}"
+IUSE="build doc epydoc +ipc +less linguas_pl python3 selinux"
 
 python_dep="python3? ( =dev-lang/python-3* )
 	!python3? (
@@ -36,10 +33,10 @@ RDEPEND="${python_dep}
 	elibc_FreeBSD? ( sys-freebsd/freebsd-bin )
 	elibc_glibc? ( >=sys-apps/sandbox-2.2 )
 	elibc_uclibc? ( >=sys-apps/sandbox-2.2 )
+	less? ( sys-apps/less )
 	>=app-misc/pax-utils-0.1.17
-	selinux? ( sys-libs/libselinux )
-	!<app-shells/bash-3.2_p17
-	>=net-misc/wget-1.12-r3"
+	selinux? ( || ( >=sys-libs/libselinux-2.0.94[python] <sys-libs/libselinux-2.0.94 ) )
+	!<app-shells/bash-3.2_p17"
 PDEPEND="
 	!build? (
 		>=net-misc/rsync-2.6.4
@@ -61,17 +58,18 @@ prefix_src_archives() {
 
 EGIT_REPO_URI="git://github.com/funtoo/portage-funtoo.git"
 EGIT_BRANCH="current"
-EGIT_COMMIT="a0ea11673c755aeb3b031c3a437cea11987e4ffb"
-PV_PL="2.1.2"
-PATCHVER_PL=""
-SRC_URI="$SRC_URI linguas_pl? ( mirror://gentoo/${PN}-man-pl-${PV_PL}.tar.bz2 )"
-S_PL="${WORKDIR}"/${PN}-${PV_PL}
+EGIT_COMMIT="0ce682143c1054206bb098b4e64368e1ba5b968d"
+S="${WORKDIR}"/${PN}
 
 compatible_python_is_selected() {
 	[[ $(/usr/bin/python -c 'import sys ; sys.stdout.write(sys.hexversion >= 0x2060000 and "good" or "bad")') = good ]]
 }
 
 pkg_setup() {
+    # Bug #359731 -Die early if get_libdir fails.
+    [[ -z $(get_libdir) ]] && \
+        die "get_libdir returned an empty string"
+
 	if ! use python3 && ! compatible_python_is_selected ; then
 		ewarn "Attempting to select a compatible default python interpreter"
 		local x success=0
@@ -98,33 +96,27 @@ pkg_setup() {
 }
 
 src_prepare() {
-	cd ${S}
-	if [ -n "${PATCHVER}" ] ; then
-		if [[ -L $S/bin/ebuild-helpers/portageq ]] ; then
-			rm "$S/bin/ebuild-helpers/portageq" \
-				|| die "failed to remove portageq helper symlink"
-		fi
-		epatch "${WORKDIR}/${PN}-${PATCHVER}.patch"
-	fi
-	einfo "Setting portage.VERSION to ${PVR} ..."
-	sed -e "s/^VERSION=.*/VERSION=\"${PVR}\"/" -i pym/portage/__init__.py || \
-		die "Failed to patch portage.VERSION"
-	sed -e "1s/VERSION/${PVR}/" -i doc/fragment/version || \
-		die "Failed to patch VERSION in doc/fragment/version"
-	sed -e "1s/VERSION/${PVR}/" -i man/* || \
-		die "Failed to patch VERSION in man page headers"
+    local _version=$(cd "${S}/.git" && git describe --tags | sed -e 's|-\([0-9]\+\)-.\+$|_p\1|')
+    _version=${_version:1}
+    einfo "Setting portage.VERSION to ${_version} ..."
+    sed -e "s/^VERSION=.*/VERSION='${_version}'/" -i pym/portage/__init__.py || \
+        die "Failed to patch portage.VERSION"
+    sed -e "1s/VERSION/${_version}/" -i doc/fragment/version || \
+        die "Failed to patch VERSION in doc/fragment/version"
+    sed -e "1s/VERSION/${_version}/" -i man/* || \
+        die "Failed to patch VERSION in man page headers"
 
-	if ! use ipc ; then
-		einfo "Disabling ipc..."
-		sed -e "s:_enable_ipc_daemon = True:_enable_ipc_daemon = False:" \
-			-i pym/_emerge/AbstractEbuildProcess.py || \
-			die "failed to patch AbstractEbuildProcess.py"
-	fi
+    if ! use ipc ; then
+	einfo "Disabling ipc..."
+	sed -e "s:_enable_ipc_daemon = True:_enable_ipc_daemon = False:" \
+            -i pym/_emerge/AbstractEbuildProcess.py || \
+	    die "failed to patch AbstractEbuildProcess.py"
+    fi
 
-	if use python3; then
-		einfo "Converting shebangs for python3..."
-		python_convert_shebangs -r 3 .
-	fi
+    if use python3; then
+	einfo "Converting shebangs for python3..."
+	python_convert_shebangs -r 3 .
+    fi
 }
 
 src_compile() {
@@ -153,10 +145,7 @@ src_compile() {
 }
 
 src_test() {
-	# make files executable, in case they were created by patch
-	find bin -type f | xargs chmod +x
-	PYTHONPATH=${S}/pym:${PYTHONPATH:+:}${PYTHONPATH} \
-		./pym/portage/tests/runTests || die "test(s) failed"
+    ./runtests.sh || die "tests failed"
 }
 
 src_install() {
@@ -234,18 +223,16 @@ src_install() {
 	doexe  "${S}"/pym/portage/tests/runTests
 
 	doman "${S}"/man/*.[0-9]
-	if use linguas_pl; then
-		doman -i18n=pl "${S_PL}"/man/pl/*.[0-9]
-		doman -i18n=pl_PL.UTF-8 "${S_PL}"/man/pl_PL.UTF-8/*.[0-9]
-	fi
-
-	dodoc "${S}"/{NEWS,RELEASE-NOTES}
+	
+	echo 'Producing ChangeLog from Git history...'
+	( cd "${S}/.git" && git log > "${S}"/ChangeLog )
+	dodoc "${S}"/{NEWS,RELEASE-NOTES} || die 'dodoc failed'
 	use doc && dohtml -r "${S}"/doc/*
 	use epydoc && dohtml -r "${WORKDIR}"/api
 
 	dodir /usr/bin
 	for x in ebuild egencache emerge portageq quickpkg repoman ; do
-		dosym ../${libdir}/portage/bin/${x} /usr/bin/${x}
+	    dosym ../${libdir}/portage/bin/${x} /usr/bin/${x}
 	done
 
 	dodir /usr/sbin
@@ -265,12 +252,8 @@ src_install() {
 
 	dodir /etc/portage
 	keepdir /etc/portage
-
-		if [[ ! -e /etc/portage/portdir ]] ; then
-			echo "$(portageq portdir)" >> "${D}"/etc/portage/portdir
-		fi
 }
-
+	
 pkg_preinst() {
 	if ! use build && ! has_version dev-python/pycrypto && \
 		! has_version '>=dev-lang/python-2.6[ssl]' ; then
