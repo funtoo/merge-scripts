@@ -12,7 +12,7 @@ HOMEPAGE="http://www.gentoo.org/proj/en/portage/index.xml"
 LICENSE="GPL-2"
 KEYWORDS="alpha amd64 arm hppa ia64 m68k mips ppc ppc64 s390 sh sparc sparc-fbsd x86 x86-fbsd"
 SLOT="0"
-IUSE="build doc epydoc +ipc linguas_pl python3 selinux"
+IUSE="build doc epydoc +ipc +less linguas_pl python3 selinux"
 GITHUB_REPO="portage-funtoo"
 GITHUB_USER="funtoo"
 GITHUB_TAG="funtoo-${PVR}"
@@ -36,6 +36,7 @@ RDEPEND="${python_dep}
 	elibc_FreeBSD? ( sys-freebsd/freebsd-bin )
 	elibc_glibc? ( >=sys-apps/sandbox-2.2 )
 	elibc_uclibc? ( >=sys-apps/sandbox-2.2 )
+	less? ( sys-apps/less )
 	>=app-misc/pax-utils-0.1.17
 	selinux? ( sys-libs/libselinux )
 	!<app-shells/bash-3.2_p17
