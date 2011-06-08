@@ -8,7 +8,7 @@
 *app-arch/gzip
 *app-arch/tar
 *app-arch/xz-utils
-*app-editor/nano
+*app-editors/nano
 *app-shells/bash
 *dev-lang/perl
 *dev-lang/python
