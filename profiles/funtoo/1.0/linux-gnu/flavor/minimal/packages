@@ -56,11 +56,9 @@
 *sys-libs/zlib
 *virtual/baselayout
 *virtual/dev-manager
-*virtual/editor
 *virtual/init
 *virtual/libc
 *virtual/man
 *virtual/os-headers
 *virtual/package-manager
-*virtual/pager
 *virtual/ssh
