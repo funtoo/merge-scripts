@@ -18,18 +18,16 @@ fi
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~x86 ~amd64"
-IUSE="selinux extras"
+IUSE="selinux extras hwdb"
 MIN_KERNEL="2.6.32"
 
 COMMON_DEPEND="selinux? ( sys-libs/libselinux )
 		sys-apps/acl
-		>=sys-apps/usbutils-0.82
 		virtual/libusb:0
-		sys-apps/pciutils
 		dev-libs/glib:2
 	>=dev-libs/gobject-introspection-0.6.9"
 DEPEND="${COMMON_DEPEND} dev-util/gperf >=sys-kernel/linux-headers-2.6.34"
-RDEPEND="${COMMON_DEPEND} !sys-apps/coldplug !<sys-fs/lvm2-2.02.45 !sys-fs/device-mapper >=sys-apps/baselayout-2.1.6"
+RDEPEND="${COMMON_DEPEND} hwdb? ( >=sys-apps/usbutils-0.82 sys-apps/pciutils ) !sys-apps/coldplug !<sys-fs/lvm2-2.02.45 !sys-fs/device-mapper >=sys-apps/baselayout-2.1.6"
 PROVIDE="virtual/dev-manager"
 
 pkg_setup() {
