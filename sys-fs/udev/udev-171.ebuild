@@ -18,7 +18,7 @@ fi
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~x86 ~amd64"
-IUSE="selinux extras hwdb"
+IUSE="selinux extras +hwdb"
 MIN_KERNEL="2.6.32"
 
 COMMON_DEPEND="selinux? ( sys-libs/libselinux )
