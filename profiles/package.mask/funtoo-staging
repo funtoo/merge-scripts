@@ -19,12 +19,6 @@
 # masked for testing
 =sys-boot/grub-1.99
 
-# Oleg Vinichenko <oleg@funtoo.org> (23 May 2011)
-# Masked for testing
->=app-arch/tar-1.26
->=app-shells/bash-4.2
-=sys-devel/bison-2.5
-
 # Adrien Dessemond <adessemond@funtoo.org> (02 May 2011)
 # tcp-wrappers-7.6 with some patches coming from Debian (most notably additional manual pages and CIDR Support)
 >=sys-apps/tcp-wrappers-7.6-r9
