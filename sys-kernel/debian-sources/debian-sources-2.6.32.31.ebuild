@@ -16,7 +16,7 @@ DESCRIPTION="Debian Sources - with optional OpenVZ support"
 HOMEPAGE="http://www.debian.org"
 SRC_URI="
 	 http://ftp.de.debian.org/debian/pool/main/l/linux-2.6/linux-2.6_2.6.32.orig.tar.gz
-	 http://ftp.de.debian.org/debian/pool/main/l/linux-2.6/linux-2.6_2.6.32-30.diff.gz"
+	 http://ftp.de.debian.org/debian/pool/main/l/linux-2.6/linux-2.6_2.6.32-31.diff.gz"
 UNIPATCH_STRICTORDER=1
 UNIPATCH_LIST="${FILESDIR}/debian-sources-2.6.32.30-bridgemac.patch"
 IUSE="openvz"
@@ -25,7 +25,7 @@ K_EXTRAEINFO=""
 src_unpack() {
 	cd ${WORKDIR}
 	unpack linux-2.6_2.6.32.orig.tar.gz
-	cat ${DISTDIR}/linux-2.6_2.6.32-30.diff.gz | gzip -d | patch -p1 || die
+	cat ${DISTDIR}/linux-2.6_2.6.32-31.diff.gz | gzip -d | patch -p1 || die
 	mv linux-* linux-${KV_FULL} || die
 	mv debian linux-${KV_FULL}/ || die
 	cd ${S}
