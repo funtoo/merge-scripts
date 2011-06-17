@@ -12,7 +12,7 @@ HOMEPAGE="http://www.gentoo.org/proj/en/portage/index.xml"
 LICENSE="GPL-2"
 KEYWORDS=""
 SLOT="0"
-IUSE="build doc epydoc +ipc +less linguas_pl python3 selinux"
+IUSE="build doc epydoc +ipc linguas_pl python3 selinux"
 
 python_dep="python3? ( =dev-lang/python-3* )
 	!python3? (
@@ -33,7 +33,6 @@ RDEPEND="${python_dep}
 	elibc_FreeBSD? ( sys-freebsd/freebsd-bin )
 	elibc_glibc? ( >=sys-apps/sandbox-2.2 )
 	elibc_uclibc? ( >=sys-apps/sandbox-2.2 )
-	less? ( sys-apps/less )
 	>=app-misc/pax-utils-0.1.17
 	selinux? ( || ( >=sys-libs/libselinux-2.0.94[python] <sys-libs/libselinux-2.0.94 ) )
 	!<app-shells/bash-3.2_p17"
