@@ -31,6 +31,10 @@ pkg_setup() {
 	enewuser man 13 -1 /usr/share/man man
 }
 
+src_prepare() {
+    epatch "${FILESDIR}"/${PN}-2.6.0.2-flock.h.patch
+}	
+
 src_configure() {
 	local db="gdbm"
 	use berkdb && ! use gdbm && db="db"
