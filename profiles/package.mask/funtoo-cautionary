@@ -15,10 +15,6 @@
 app-arch/pxz
 
 # Adrien Dessemond <adessemond@funtoo.org> (13 Apr 2011)
-# Will be removed in 30 days, please upgrade to dev-lang/perl-5.12.3
-=dev-lang/perl-5.12.2-r6
-
-# Adrien Dessemond <adessemond@funtoo.org> (13 Apr 2011)
 # DO NOT USE this one the ebuild does not include kernel revision dependencies (>= 2.6.38 REQUIRED) and it can affect many of our users 
 # See bug #359445
 =net-wireless/iwl5000-ucode-8.83.5.1
@@ -38,8 +34,6 @@ app-arch/pxz
 >sys-kernel/linux-headers-2.6.32
 >sys-devel/gcc-4.4.5
 >sys-devel/binutils-2.20.1
-# glibc-2.10 isn't compatible with make-3.82+
->=sys-devel/make-3.82
 
 # Daniel Robbins <drobbins@funtoo.org> (20 Apr 2010)
 
