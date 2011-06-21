@@ -1,16 +1,34 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2008 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-apps/openrc/openrc-0.8.2-r1.ebuild,v 1.6 2011/05/13 19:06:47 armin76 Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-apps/openrc/openrc-0.3.0-r1.ebuild,v 1.1 2008/10/08 16:19:11 cardoe Exp $
 
 EAPI="2"
 
 inherit eutils flag-o-matic multilib toolchain-funcs
 
+DESCRIPTION="OpenRC manages the services, startup and shutdown of a host"
+HOMEPAGE="http://roy.marples.name/openrc"
+PROVIDE="virtual/baselayout"
+RESTRICT="nomirror"
+
+LICENSE="BSD-2"
+SLOT="0"
+KEYWORDS="~x86 ~amd64 ~sparc"
+IUSE="debug ncurses pam unicode kernel_linux kernel_FreeBSD"
+
+RDEPEND="kernel_linux? ( >=sys-apps/sysvinit-2.86-r11 )
+	kernel_FreeBSD? ( virtual/init sys-process/fuser-bsd )
+	ncurses? ( sys-libs/ncurses )
+	pam? ( virtual/pam )
+	>=sys-apps/baselayout-2.1
+	>=sys-fs/udev-135
+	sys-apps/iproute2"
+
+DEPEND="ncurses? ( sys-libs/ncurses ) pam? ( virtual/pam ) virtual/os-headers"
+
 GITHUB_REPO="${PN}"
 GITHUB_USER="funtoo"
 GITHUB_TAG="funtoo-openrc-${PVR}"
-
-KEYWORDS="~x86 ~amd64 ~sparc"
 
 NETV="1.0.8"
 GITHUB_REPO_CN="corenetwork"
@@ -20,33 +38,11 @@ SRC_URI="
 	https://www.github.com/${GITHUB_USER}/${GITHUB_REPO}/tarball/${GITHUB_TAG} -> ${PN}-${GITHUB_TAG}.tar.gz
 	https://www.github.com/${GITHUB_USER}/${GITHUB_REPO_CN}/tarball/${GITHUB_TAG_CN} -> corenetwork-${GITHUB_TAG_CN}.tar.gz"
 
-DESCRIPTION="OpenRC manages the services, startup and shutdown of a host"
-HOMEPAGE="http://www.gentoo.org/proj/en/base/openrc/"
+pkg_setup() {
+	LIBDIR="lib"
+	[ "${SYMLINK_LIB}" = "yes" ] && LIBDIR=$(get_abi_LIBDIR "${DEFAULT_ABI}")
 
-PROVIDE="virtual/baselayout"
-RESTRICT="nomirror"
-
-LICENSE="BSD-2"
-SLOT="0"
-IUSE="debug elibc_glibc ncurses pam selinux unicode kernel_linux kernel_FreeBSD"
-
-RDEPEND="virtual/init
-	kernel_FreeBSD? ( sys-process/fuser-bsd )
-	elibc_glibc? ( >=sys-libs/glibc-2.5 )
-	ncurses? ( sys-libs/ncurses )
-	pam? ( virtual/pam )
-	>=sys-apps/baselayout-2.0.0
-	kernel_linux? ( !<sys-apps/module-init-tools-3.2.2-r2 )
-	!<sys-fs/udev-133
-	!<sys-apps/sysvinit-2.86-r11"
-DEPEND="${RDEPEND}
-	virtual/os-headers"
-
-make_args() {
-	unset LIBDIR #266688
-
-	MAKE_ARGS="${MAKE_ARGS} LIBNAME=$(get_libdir) LIBEXECDIR=/$(get_libdir)/rc"
-	MAKE_ARGS="${MAKE_ARGS} MKOLDNET=yes"
+	MAKE_ARGS="${MAKE_ARGS} LIBNAME=${LIBDIR}"
 
 	local brand="Unknown"
 	if use kernel_linux ; then
@@ -56,26 +52,14 @@ make_args() {
 		MAKE_ARGS="${MAKE_ARGS} OS=FreeBSD"
 		brand="FreeBSD"
 	fi
-	if use selinux; then
-			MAKE_ARGS="${MAKE_ARGS} MKSELINUX=yes"
-	fi
-	export BRANDING="Gentoo ${brand}"
-}
+	export BRANDING="Funtoo ${brand}"
 
-pkg_setup() {
 	export DEBUG=$(usev debug)
 	export MKPAM=$(usev pam)
 	export MKTERMCAP=$(usev ncurses)
 }
 
-src_unpack() {
-	unpack ${A}
-	cd "${S}"
-	sed -i 's:0444:0644:' mk/sys.mk
-	sed -i "/^DIR/s:/openrc:/${PF}:" doc/Makefile #241342
-}
-
-src_prepare() {
+pre_src_prepare() {
 	# rename github directories to the names we're expecting:
 	local old=${WORKDIR}/${GITHUB_USER}-${PN}-*
 	mv $old "${WORKDIR}/${P}" || die "move fail 1"
@@ -83,26 +67,40 @@ src_prepare() {
 	mv $old "${WORKDIR}/corenetwork-${NETV}" || die "move fail 2"
 }
 
-
 src_compile() {
-	make_args
+	cd $S
+	# catch people running `ebuild` w/out setup
+	if [[ -z ${MAKE_ARGS} ]] ; then
+		die "Your MAKE_ARGS is empty ... are you running 'ebuild' but forgot to execute 'setup' ?"
+	fi
+
+	#sed -i "/^VERSION[[:space:]]*=/s:=.*:=${PV}:" Makefile
+
 	tc-export CC AR RANLIB
+	echo emake ${MAKE_ARGS}
 	emake ${MAKE_ARGS} || die "emake ${MAKE_ARGS} failed"
 }
 
-# set_config <file> <option name> <yes value> <no value> test
-# a value of "#" will just comment out the option
-set_config() {
-	local file="${D}/$1" var=$2 val com
-	eval "${@:5}" && val=$3 || val=$4
-	[[ ${val} == "#" ]] && com="#" && val='\2'
-	sed -i -r -e "/^#?${var}=/{s:=([\"'])?([^ ]*)\1?:=\1${val}\1:;s:^#?:${com}:}" "${file}"
-}
-set_config_yes_no() {
-	set_config "$1" "$2" YES NO "${@:3}"
-}
+src_install() {
+	emake ${MAKE_ARGS} DESTDIR="${D}" install || die "make install failed"
+	gen_usr_ldscript libeinfo.so
+	gen_usr_ldscript librc.so
 
-corenet_install() {
+	dodir /etc/runlevels/default
+
+	keepdir /"${LIBDIR}"/rc/init.d
+	keepdir /"${LIBDIR}"/rc/tmp
+
+	# Backup our default runlevels
+	dodir /usr/share/"${PN}"
+	mv "${D}/etc/runlevels" "${D}/usr/share/${PN}"
+
+	# Setup unicode defaults for silly unicode users
+	use unicode && sed -i -e '/^.*unicode=/s:^.*"NO":unicode="YES":' "${D}"/etc/rc.conf
+
+	# Cater to the norm
+	(use x86 || use amd64) && sed -i -e '/^.*windowkeys=/s:^.*"NO":windowkeys="YES":' "${D}"/etc/conf.d/keymaps
+
 	# Remove upstream networking parts:
 
 	for pat in ${D}/etc/init.d/{net.lo,network,staticroute} \
@@ -123,53 +121,6 @@ corenet_install() {
 	ln -s /etc/init.d/netif.lo ${D}/usr/share/openrc/runlevels/sysinit/netif.lo || die
 }
 
-src_install() {
-	make_args
-	emake ${MAKE_ARGS} DESTDIR="${D}" install || die
-
-	# install the readme for the new network scripts
-	dodoc README.newnet
-
-	# move the shared libs back to /usr so ldscript can install
-	# more of a minimal set of files
-	# disabled for now due to #270646
-	#mv "${D}"/$(get_libdir)/lib{einfo,rc}* "${D}"/usr/$(get_libdir)/ || die
-	#gen_usr_ldscript -a einfo rc
-	gen_usr_ldscript libeinfo.so
-	gen_usr_ldscript librc.so
-
-	keepdir /$(get_libdir)/rc/{init.d,tmp}
-
-	# Backup our default runlevels
-	dodir /usr/share/"${PN}"
-	cp -PR "${D}"/etc/runlevels "${D}"/usr/share/${PN} || die
-	rm -rf "${D}"/etc/runlevels
-
-	# Stick with "old" net as the default for now
-	doconfd conf.d/net || die
-	pushd "${D}"/usr/share/${PN}/runlevels/boot > /dev/null
-	rm -f network staticroute
-	ln -s /etc/init.d/net.lo net.lo
-	popd > /dev/null
-
-	# Setup unicode defaults for silly unicode users
-	set_config_yes_no /etc/rc.conf unicode use unicode
-
-	# Cater to the norm
-	set_config_yes_no /etc/conf.d/keymaps windowkeys '(' use x86 '||' use amd64 ')'
-
-	# On HPPA, do not run consolefont by default (bug #222889)
-	if use hppa; then
-		rm -f "${D}"/usr/share/openrc/runlevels/boot/consolefont
-	fi
-
-	# Support for logfile rotation
-	insinto /etc/logrotate.d
-	newins "${FILESDIR}"/openrc.logrotate openrc
-
-	corenet_install
-}
-
 add_init() {
 	local runl=$1
 	shift
@@ -184,68 +135,14 @@ add_init() {
 		ln -snf /etc/init.d/${initd} "${ROOT}"/etc/runlevels/${runl}/${initd}
 	done
 }
-pkg_preinst() {
-	local f LIBDIR=$(get_libdir)
-
-	# avoid default thrashing in conf.d files when possible #295406
-	if [[ -e ${ROOT}/etc/conf.d/hostname ]] ; then
-		(
-		unset hostname HOSTNAME
-		source "${ROOT}"/etc/conf.d/hostname
-		: ${hostname:=${HOSTNAME}}
-		[[ -n ${hostname} ]] && set_config /etc/conf.d/hostname hostname "${hostname}"
-		)
-	fi
-
-	# upgrade timezone file ... do it before moving clock
-	if [[ -e ${ROOT}/etc/conf.d/clock && ! -e ${ROOT}/etc/timezone ]] ; then
-		(
-		unset TIMEZONE
-		source "${ROOT}"/etc/conf.d/clock
-		[[ -n ${TIMEZONE} ]] && echo "${TIMEZONE}" > "${ROOT}"/etc/timezone
-		)
-	fi
-
-	# /etc/conf.d/clock moved to /etc/conf.d/hwclock
-	local clock
-	use kernel_FreeBSD && clock="adjkerntz" || clock="hwclock"
-	if [[ -e ${ROOT}/etc/conf.d/clock ]] ; then
-		mv "${ROOT}"/etc/conf.d/clock "${ROOT}"/etc/conf.d/${clock}
-	fi
-	if [[ -e ${ROOT}/etc/init.d/clock ]] ; then
-		rm -f "${ROOT}"/etc/init.d/clock
-	fi
-	if [[ -L ${ROOT}/etc/runlevels/boot/clock ]] ; then
-		rm -f "${ROOT}"/etc/runlevels/boot/clock
-		ln -snf /etc/init.d/${clock} "${ROOT}"/etc/runlevels/boot/${clock}
-	fi
-	if [[ -L ${ROOT}${LIBDIR}/rc/init.d/started/clock ]] ; then
-		rm -f "${ROOT}${LIBDIR}"/rc/init.d/started/clock
-		ln -snf /etc/init.d/${clock} "${ROOT}${LIBDIR}"/rc/init.d/started/${clock}
-	fi
-
-	# /etc/conf.d/rc is no longer used for configuration
-	if [[ -e ${ROOT}/etc/conf.d/rc ]] ; then
-		elog "/etc/conf.d/rc is no longer used for configuration."
-		elog "Please migrate your settings to /etc/rc.conf as applicable"
-		elog "and delete /etc/conf.d/rc"
-	fi
-
-	# set default interactive shell to sulogin if it exists
-	set_config /etc/rc.conf rc_shell /sbin/sulogin "#" test -e /sbin/sulogin
-}
 
 pkg_postinst() {
-
-	#funtoo
-
 	local runl
 	install -d -m0755 ${ROOT}/etc/runlevels
 	local runldir="${ROOT}usr/share/openrc/runlevels"
 
 	# Remove old baselayout links
 	rm -f "${ROOT}"/etc/runlevels/boot/{check{fs,root},rmnologin}
-	rm -f "${ROOT}"/etc/init.d/{depscan,runscript}.sh
 	rm -f "${ROOT}"/etc/runlevels/boot/netif.lo
 
 	# CREATE RUNLEVEL DIRECTORIES	
@@ -274,7 +171,7 @@ pkg_postinst() {
 		do
 			if [ -e ${ROOT}/etc/runlevels/${runl}/${init} ] && [ ! -e ${runldir}/${runl}/${init} ]
 			then
-				ewarn "Initscript ${init} exists in runlevel ${runl} but not in OpenRC."
+				echo "Initscript ${init} exists in runlevel ${runl} but not in OpenRC."
 			fi
 		done
 	done
@@ -286,7 +183,7 @@ pkg_postinst() {
 	[[ "${ROOT}" = "/" ]] && "${ROOT}/libexec"/rc/bin/rc-depend -u
 
 	elog "You should now update all files in /etc, using etc-update"
-	elog "or equivalent before restarting any services or this host."
+	elog "or equivalent before rebooting."
 	elog
 
 	if path_exists -o "${ROOT}"/etc/conf.d/local.{start,stop} ; then
