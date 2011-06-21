@@ -106,7 +106,7 @@ corenet_install() {
 	# Remove upstream networking parts:
 
 	for pat in ${D}/etc/init.d/{net.lo,network,staticroute} \
-	${D}/usr/share/openrc/runlevels/boot/{net,lo,network,staticroute} \
+	${D}/usr/share/openrc/runlevels/boot/{net.lo,network,staticroute} \
 	${D}/etc/conf.d/{net,network,staticroute}; do
 		rm -f "$pat" || die "Couldn't remove upstream $pat from source."
 	done
