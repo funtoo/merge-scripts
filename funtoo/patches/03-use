@@ -30,7 +30,7 @@ index 3306b4d..9daeb62 100644
 +USE="${USE} -gpm"
 +
  # make sure toolchain has sane defaults <tooclhain@gentoo.org>
- USE="${USE} fortran mudflap openmp"
+ USE="${USE} mudflap fortran openmp"
  
 @@ -56,7 +70,7 @@ VIDEO_CARDS="dummy fbdev v4l"
  # 2010/07/12 - Samuli Suominen <ssuominen@gentoo.org>
