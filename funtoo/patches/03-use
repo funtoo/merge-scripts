@@ -20,7 +20,7 @@ index 3306b4d..9daeb62 100644
 +
 +#Codec/AV options that are useful on cmdline and desktop systems:
 +USE="${USE} encode win32codecs vorbis mp3 mpeg alsa mad mp3 mpeg ogg alac flac lame wavpack"
-+# Daniel Robbins removed gstreamer and mikmod (per request from Daniel Cordero and not needed for DLNA servers)
++USE="${USE} fortran" #sneak fortran back in - removed by gentoo
 +
 +#Hardware options useful on servers and desktops
 +USE="${USE} cdr dvd dvdr dvdread"
