@@ -22,7 +22,7 @@ RESTRICT="binchecks strip"
 LICENSE="GPL-2"
 KEYWORDS="~x86 ~amd64"
 IUSE="binary xen"
-DEPEND="binary? ( >=sys-kernel/genkernel-3.4.12.6-r4 )"
+DEPEND="binary? ( >=sys-kernel/genkernel-3.4.12.6-r4 ) =sys-devel/gcc-4.1.2*"
 RDEPEND="binary? ( <=sys-fs/udev-147 )"
 DESCRIPTION="Full Linux kernel sources - RHEL5 kernel with OpenVZ patchset"
 HOMEPAGE="http://www.openvz.org"
@@ -34,7 +34,6 @@ SRC_URI="${KERNEL_URI}
 	http://download.openvz.org/kernel/branches/rhel5-${CKV}-testing/${OVZ_KV}/configs/kernel-${CKV}-x86_64-xen.config.ovz -> config-${CKV}-${OVZ_KV}.x86_64.xen
 	http://download.openvz.org/kernel/branches/rhel5-${CKV}-testing/${OVZ_KV}/patches/$MAINPATCH"
 S="$WORKDIR/linux-${CKV}"
-DEPEND="=sys-devel/gcc-4.1.2*"
 
 K_EXTRAEINFO="
 This OpenVZ kernel uses RHEL5 (Red Hat Enterprise Linux 5) patch set.
