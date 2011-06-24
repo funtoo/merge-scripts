@@ -260,7 +260,6 @@ funtoo_overlay = Tree("funtoo-overlay", "master", "git://github.com/funtoo/funto
 tarsius_overlay = Tree("tarsius-overlay", "master", "https://github.com/golodhrim/tarsius-overlay.git", pull=True)
 foo_overlay = Tree("foo-overlay", "master", "https://github.com/slashbeast/foo-overlay.git", pull=True)
 bar_overlay = Tree("bar-overlay", "master", "git://github.com/adessemond/bar-overlay.git", pull=True)
-multimedia_overlay = Tree("multimedia-overlay", "master", "git://gitorious.org/gentoo-multimedia/gentoo-multimedia.git", pull=True)
 golodhrim_overlay = Tree("golodhrim-overlay", "master", "https://github.com/golodhrim/golodhrim-overlay.git", pull=True)
 
 if len(sys.argv) > 1 and sys.argv[1][0] == "/":
@@ -294,7 +293,6 @@ steps = [
 	InsertEbuilds(tarsius_overlay, select="all", skip=None, replace=["sys-libs/libixp","x11-wm/wmii","dev-vcs/cvsps","net-print/foo2zjs"]),
 	InsertEbuilds(foo_overlay, select="all", skip=None, replace=["app-shells/rssh"]),
 	InsertEbuilds(bar_overlay, select="all", skip=None, replace=True),
-	InsertEbuilds(multimedia_overlay, select=["media-video/mplayer-uau"], skip=None, replace=False),
 	InsertEbuilds(golodhrim_overlay, select="all", skip=None, replace=False),
 	GenCache()
 ]
