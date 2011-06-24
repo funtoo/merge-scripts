@@ -219,6 +219,7 @@ eblit-src_unpack-post() {
 			nscd/Makefile \
 			|| die "Failed to ensure nscd builds with ssp-all"
 	fi
+	epatch "${FILESDIR}"/glibc-2.11.2-AVX-DL-Linkage.patch
 }
 
 maint_pkg_create() {
