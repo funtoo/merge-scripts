@@ -1,5 +1,9 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Daniel Robbins <drobbins@funtoo.org> (26 Jun 2011)
+# masked for testing - non-unified path portage, but updated.
+>=sys-apps/portage-2.2_alpha41
+
 # Oleg Vinichenko <oleg@funtoo.org> (16 June 2011)
 #new man-db to test
 >=sys-apps/man-db-2.6.0
