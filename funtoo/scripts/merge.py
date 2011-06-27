@@ -264,11 +264,13 @@ golodhrim_overlay = Tree("golodhrim-overlay", "master", "https://github.com/golo
 
 if len(sys.argv) > 1 and sys.argv[1][0] == "/":
 	dest = sys.argv[1]
+	dest_mini_2010 = None
 	dest_mini = sys.argv[1]+"-mini"
 	branch = "funtoo.org" 
 else:
 	dest = "/var/git/portage-prod"
-	dest_mini = "/var/git/portage-mini-2010"
+	dest_mini_2010 = "/var/git/portage-mini-2010"
+	dest_mini = "/var/git/portage-mini-2011"
 	branch = "funtoo.org"
 
 for test in [ dest, dest_mini ]:
@@ -315,12 +317,18 @@ prod.gitCommit(message="glorious funtoo updates",push=push)
 
 # then for the mini tree, we rsync all work changes on top of our mini git tree, minify, and commit:
 
-mini = UnifiedTree( dest_mini, [
-	GitPrep(branch), 
-	SyncTree(work, exclude=["ChangeLog"]), 
-	Minify() 
-])
+minis = [ dest_mini ]
+if dest_mini_2010 != None:
+	minis.append(dest_mini_2010)
 
-mini.run()
-mini.gitCommit(message="glorious funtoo updates",push=push)
+for d_mini in minis:
+	mini = UnifiedTree( d_mini, [
+		GitPrep(branch), 
+		SyncTree(work, exclude=["ChangeLog"]), 
+		Minify() 
+	])
+
+	mini.run()
+	mini.gitCommit(message="glorious funtoo updates",push=push)
+
 
