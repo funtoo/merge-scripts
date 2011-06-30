@@ -30,7 +30,8 @@ app-arch/pxz
 # linux-headers.
 
 # For toolchain upgrade ll-2010.2:
->sys-libs/glibc-2.11.2-r2
+# glibc updated 30 Jun 2011:
+>sys-libs/glibc-2.11.3
 >sys-kernel/linux-headers-2.6.32
 >sys-devel/gcc-4.4.5
 >sys-devel/binutils-2.20.1
