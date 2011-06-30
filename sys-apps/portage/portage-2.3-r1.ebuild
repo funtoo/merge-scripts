@@ -15,7 +15,7 @@ SLOT="0"
 IUSE="build doc epydoc +ipc linguas_pl python2 python3 selinux"
 GITHUB_REPO="portage-funtoo"
 GITHUB_USER="funtoo"
-GITHUB_TAG="funtoo-merged-2011-06-26-r3"
+GITHUB_TAG="funtoo-merged-2011-06-26-r4"
 
 python_dep="python3? ( =dev-lang/python-3* )
 	!python2? ( !python3? (
