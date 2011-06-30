@@ -205,9 +205,9 @@ src_install() {
 	doins "${S}"/cnf/logrotate.d/elog-save-summary || die
 
 	# BSD and OSX need a sed wrapper so that find/xargs work properly
-	if use userland_GNU; then
-		rm "${S}"/bin/ebuild-helpers/sed || die "Failed to remove sed wrapper"
-	fi
+	#if use userland_GNU; then
+	#	rm "${S}"/bin/ebuild-helpers/sed || die "Failed to remove sed wrapper"
+	#fi
 
 	local x symlinks files
 
