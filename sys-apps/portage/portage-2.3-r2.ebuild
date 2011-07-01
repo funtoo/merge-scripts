@@ -205,9 +205,12 @@ src_install() {
 	doins "${S}"/cnf/logrotate.d/elog-save-summary || die
 
 	# BSD and OSX need a sed wrapper so that find/xargs work properly
-	#if use userland_GNU; then
-	#	rm "${S}"/bin/ebuild-helpers/sed || die "Failed to remove sed wrapper"
-	#fi
+	# This does not exist in Funtoo Linux.
+	if use userland_GNU; then
+		if -e "${S}"/bin/ebuild-helpers/sed; then
+			rm "${S}"/bin/ebuild-helpers/sed || die "Failed to remove sed wrapper"
+		fi
+	fi
 
 	local x symlinks files
 
