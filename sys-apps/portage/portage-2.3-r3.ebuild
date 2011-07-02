@@ -28,7 +28,8 @@ python_dep="python3? ( =dev-lang/python-3* )
 DEPEND="${python_dep}
 	!build? ( >=sys-apps/sed-4.0.5 )
 	doc? ( app-text/xmlto ~app-text/docbook-xml-dtd-4.4 )
-	epydoc? ( >=dev-python/epydoc-2.0 !<=dev-python/pysqlite-2.4.1 )"
+	epydoc? ( >=dev-python/epydoc-2.0 !<=dev-python/pysqlite-2.4.1 )
+	>=sys-devel/libtool-2.4-r1"
 # Require sandbox-2.2 for bug #288863.
 RDEPEND="${python_dep}
 	!build? ( >=sys-apps/sed-4.0.5
