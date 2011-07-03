@@ -1,8 +1,7 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-cluster/vzctl/vzctl-3.0.24.2.ebuild,v 1.1 2010/09/10 07:46:45 pva Exp $
 
-EAPI="2"
+EAPI="4"
 
 inherit bash-completion autotools eutils
 
@@ -22,13 +21,15 @@ RDEPEND="
 	sys-apps/ed
 	sys-apps/iproute2
 	sys-fs/vzquota
-	virtual/cron
 	>=sys-apps/openrc-0.6.5-r1"
 DEPEND=""
 
+src_unpack() {
+	unpack ${A}
+	mv funtoo-vzctl-??????? vzctl-${PV} || die
+}
+
 src_prepare() {
-	cd "${WORKDIR}"/${GITHUB_USER}-${PN}-*
-	S="$(pwd)"
 	# Set default OSTEMPLATE on gentoo
 	sed -e 's:=redhat-:=funtoo-:' -i etc/dists/default || die
 	eautoreconf
@@ -37,7 +38,6 @@ src_prepare() {
 src_configure() {
 	econf \
 		--localstatedir=/var \
-		--enable-cron \
 		--enable-udev \
 		$(use_enable bash-completion bashcomp) \
 		--enable-logrotate
@@ -47,8 +47,8 @@ src_install() {
 	make DESTDIR="${D}" install install-gentoo || die "make install failed"
 
 	# install the bash-completion script into the right location
-	rm -rf "${D}"/etc/bash_completion.d
-	dobashcompletion "${S}"/etc/bash_completion.d/vzctl.sh vzctl
+	rm -rf "${ED}"/etc/bash_completion.d
+	dobashcompletion etc/bash_completion.d/vzctl.sh vzctl
 
 	# We need to keep some dirs
 	keepdir /vz/{dump,lock,root,private,template/cache}
@@ -59,7 +59,7 @@ pkg_postinst() {
 	bash-completion_pkg_postinst
 	local conf_without_OSTEMPLATE
 	for file in \
-		$(find "${ROOT}/etc/vz/conf/" \( -name *.conf -a \! -name 0.conf \)); do
+		$(find "${EROOT}/etc/vz/conf/" \( -name *.conf -a \! -name 0.conf \)); do
 		if ! grep '^OSTEMPLATE' $file > /dev/null; then
 			conf_without_OSTEMPLATE+=" $file"
 		fi
@@ -76,22 +76,8 @@ pkg_postinst() {
 		done
 		ewarn
 	fi
-
-	#ewarn "To avoid loosing network to CTs on iface down/up, please, add the"
-	#ewarn "following code to /etc/conf.d/net:"
-	#ewarn " postup() {"
-	#ewarn "     /usr/sbin/vzifup-post \${IFACE}"
-	#ewarn " }"
-
-	elog "NOTE: Starting with vzctl-3.0.22 the mechanism for choosing the"
-	elog "interfaces to send ARP requests to has been improved (see description"
-	elog "of NEIGHBOUR_DEVS in vz.conf(5) man page). In case CT IP addresses"
-	elog "are not on the same subnet as HN IPs, it may lead to such CTs being"
-	elog "unreachable from the outside world."
-	elog
-	elog "The solution is to set up a device route(s) for the network your CTs are"
-	elog "in. For more details, see http://bugzilla.openvz.org/show_bug.cgi?id=771#c1"
-	elog
-	elog "The old vzctl behavior can be restored by setting NEIGHBOUR_DEVS to any"
-	elog 'value other than "detect" in /etc/vz/vz.conf.'
+	ewarn "Starting with 3.0.25 there is new vzeventd service to reboot CTs."
+	ewarn "Please, drop /usr/share/vzctl/scripts/vpsnetclean and"
+	ewarn "/usr/share/vzctl/scripts/vpsreboot from crontab and use"
+	ewarn "/etc/init.d/vzeventd."
 }
