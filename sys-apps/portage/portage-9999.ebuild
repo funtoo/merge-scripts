@@ -41,7 +41,7 @@ PDEPEND="
 		>=net-misc/rsync-2.6.4
 		userland_GNU? ( >=sys-apps/coreutils-6.4 )
 	)
-	>=sys-devel/libtool-2.4-r2"
+	>=sys-devel/libtool-2.4-r3"
 # coreutils-6.4 rdep is for date format in emerge-webrsync #164532
 # rsync-2.6.4 rdep is for the --filter option #167668
 
@@ -66,9 +66,9 @@ compatible_python_is_selected() {
 }
 
 pkg_setup() {
-    # Bug #359731 -Die early if get_libdir fails.
-    [[ -z $(get_libdir) ]] && \
-        die "get_libdir returned an empty string"
+	# Bug #359731 -Die early if get_libdir fails.
+	[[ -z $(get_libdir) ]] && \
+		die "get_libdir returned an empty string"
 
 	if ! use python3 && ! compatible_python_is_selected ; then
 		ewarn "Attempting to select a compatible default python interpreter"
@@ -96,27 +96,27 @@ pkg_setup() {
 }
 
 src_prepare() {
-    local _version=$(cd "${S}/.git" && git describe --tags | sed -e 's|-\([0-9]\+\)-.\+$|_p\1|')
-    _version=${_version:1}
-    einfo "Setting portage.VERSION to ${_version} ..."
-    sed -e "s/^VERSION=.*/VERSION='${_version}'/" -i pym/portage/__init__.py || \
-        die "Failed to patch portage.VERSION"
-    sed -e "1s/VERSION/${_version}/" -i doc/fragment/version || \
-        die "Failed to patch VERSION in doc/fragment/version"
-    sed -e "1s/VERSION/${_version}/" -i man/* || \
-        die "Failed to patch VERSION in man page headers"
+	local _version=$(cd "${S}/.git" && git describe --tags | sed -e 's|-\([0-9]\+\)-.\+$|_p\1|')
+	_version=${_version:1}
+	einfo "Setting portage.VERSION to ${_version} ..."
+	sed -e "s/^VERSION=.*/VERSION='${_version}'/" -i pym/portage/__init__.py || \
+		die "Failed to patch portage.VERSION"
+	sed -e "1s/VERSION/${_version}/" -i doc/fragment/version || \
+		die "Failed to patch VERSION in doc/fragment/version"
+	sed -e "1s/VERSION/${_version}/" -i man/* || \
+		die "Failed to patch VERSION in man page headers"
 
-    if ! use ipc ; then
-	einfo "Disabling ipc..."
-	sed -e "s:_enable_ipc_daemon = True:_enable_ipc_daemon = False:" \
-            -i pym/_emerge/AbstractEbuildProcess.py || \
+	if ! use ipc ; then
+		einfo "Disabling ipc..."
+		sed -e "s:_enable_ipc_daemon = True:_enable_ipc_daemon = False:" \
+	  		-i pym/_emerge/AbstractEbuildProcess.py || \
 	    die "failed to patch AbstractEbuildProcess.py"
-    fi
+	fi
 
-    if use python3; then
-	einfo "Converting shebangs for python3..."
-	python_convert_shebangs -r 3 .
-    fi
+	if use python3; then
+		einfo "Converting shebangs for python3..."
+		python_convert_shebangs -r 3 .
+	fi
 }
 
 src_compile() {
@@ -145,7 +145,7 @@ src_compile() {
 }
 
 src_test() {
-    ./runtests.sh || die "tests failed"
+	./runtests.sh || die "tests failed"
 }
 
 src_install() {
@@ -223,7 +223,6 @@ src_install() {
 	doexe  "${S}"/pym/portage/tests/runTests
 
 	doman "${S}"/man/*.[0-9]
-	
 	echo 'Producing ChangeLog from Git history...'
 	( cd "${S}/.git" && git log > "${S}"/ChangeLog )
 	dodoc "${S}"/{NEWS,RELEASE-NOTES} || die 'dodoc failed'
@@ -253,7 +252,7 @@ src_install() {
 	dodir /etc/portage
 	keepdir /etc/portage
 }
-	
+
 pkg_preinst() {
 	if ! use build && ! has_version dev-python/pycrypto && \
 		! has_version '>=dev-lang/python-2.6[ssl]' ; then

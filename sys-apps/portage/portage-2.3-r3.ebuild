@@ -45,7 +45,7 @@ PDEPEND="
 		>=net-misc/rsync-2.6.4
 		userland_GNU? ( >=sys-apps/coreutils-6.4 )
 	)
-	>=sys-devel/libtool-2.4-r2"
+	>=sys-devel/libtool-2.4-r3"
 # coreutils-6.4 rdep is for date format in emerge-webrsync #164532
 # NOTE: FEATURES=install-sources requires debugedit and rsync
 
