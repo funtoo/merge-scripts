@@ -8,11 +8,11 @@ inherit linux-info
 
 DESCRIPTION="Broadcom's NetXtremeII (bnx2 and bnx2x) Gigabit and 10GBe drivers"
 HOMEPAGE="http://www.broadcom.com/support/ethernet_nic/netxtremeii.php"
-SRC_URI="http://www.broadcom.com/docs/driver_download/NXII/linux-${PV}.zip -> broadcom-linux-${PV}.zip"
+SRC_URI="http://www.funtoo.org/distfiles/broadcom-linux-${PV}.zip"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="amd64 x86"
 IUSE=""
 
 DEPEND="app-arch/unzip"
