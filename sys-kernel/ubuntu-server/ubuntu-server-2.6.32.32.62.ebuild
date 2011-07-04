@@ -21,7 +21,7 @@ RDEPEND="binary? ( >=sys-fs/udev-160 )"
 DESCRIPTION="Ubuntu Server sources (and optional binary kernel)"
 HOMEPAGE="http://www.openvz.org"
 MAINPATCH="linux_${CKV}${EXTRAVERSION}.diff.gz"
-SRC_URI="${KERNEL_URI} http://archive.ubuntu.com/ubuntu/pool/main/l/linux/${MAINPATCH}"
+SRC_URI="${KERNEL_URI} http://www.funtoo.org/distfiles/${MAINPATCH}"
 S="$WORKDIR/linux-${CKV}"
 
 src_unpack() {
@@ -119,7 +119,7 @@ src_install() {
 	# prepare for real-world use and 3rd-party module building:
 	make mrproper || die
 	cp $defconfig_src .config || die
-	make oldconfig || die
+	yes "" | make oldconfig || die
 	# if we didn't use genkernel, we're done. The kernel source tree is left in
 	# an unconfigured state - you can't compile 3rd-party modules against it yet.
 	use binary || return
