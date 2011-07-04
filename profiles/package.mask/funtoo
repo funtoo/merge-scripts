@@ -1,5 +1,9 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+#Daniel Robbins (03 Jul 2011)
+#not the best stable kernel:
+>=sys-kernel/ubuntu-server-2.6.35
+
 # Daniel Robbins <drobbins@funtoo.org> (02 Mar 2011)
 # mask sys-apps/man as part of a workaround to get
 # man-db to merge smoothly:
