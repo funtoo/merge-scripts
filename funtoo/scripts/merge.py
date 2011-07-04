@@ -261,6 +261,7 @@ tarsius_overlay = Tree("tarsius-overlay", "master", "https://github.com/golodhri
 foo_overlay = Tree("foo-overlay", "master", "https://github.com/slashbeast/foo-overlay.git", pull=True)
 bar_overlay = Tree("bar-overlay", "master", "git://github.com/adessemond/bar-overlay.git", pull=True)
 golodhrim_overlay = Tree("golodhrim-overlay", "master", "https://github.com/golodhrim/golodhrim-overlay.git", pull=True)
+felicitus_overlay = Tree("felicitus-overlay", "master", "https://github.com/timoahummel/felicitus_overlay.git", pull=True)
 
 if len(sys.argv) > 1 and sys.argv[1][0] == "/":
 	dest = sys.argv[1]
@@ -296,6 +297,7 @@ steps = [
 	InsertEbuilds(foo_overlay, select="all", skip=None, replace=["app-shells/rssh"]),
 	InsertEbuilds(bar_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(golodhrim_overlay, select="all", skip=None, replace=False),
+	InsertEbuilds(felicitus_overlay, select="all", skip=None, replace=False),
 	GenCache()
 ]
 
