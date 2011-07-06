@@ -1,12 +1,12 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Oleg Vinichenko (06 July 2011)
+# freetype mask due to some packages breakage
+>=media-libs/freetype-2.4.5
+
 # Daniel RObbins (02 Jul 2011)
 # Hey, we have an even newer openrc - not yet tested - and masked:
 >=sys-apps/openrc-0.8.3
-
-# Adrien Dessemond <adessemond@funtoo.org>  (07 Jun 2011)
-# Too new to be unmasked issues exists and needs to be corrected and carefully tested
->=sys-apps/openrc-0.8
 
 # Daniel Robbins (05 Jun 2011)
 # Masked for testing
