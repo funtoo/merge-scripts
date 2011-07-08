@@ -29,4 +29,4 @@
 # fixed with patch from JF added -r1 for that version
 # -r1 our patched version
 # -r2 mask to not break with newer version
->=app-portage/eix-0.22.8-r2
+>=app-portage/eix-0.22.9
