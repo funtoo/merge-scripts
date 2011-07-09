@@ -271,7 +271,6 @@ src_install() {
 	local my_syms="archive-conf
 		dispatch-conf
 		emaint
-		emerge-webrsync
 		env-update
 		etc-update
 		fixpackages
