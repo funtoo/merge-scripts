@@ -1,5 +1,9 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+#Daniel Robbins (13 Jul 2011)
+#pyxml is BAD - avoid if possible - see http://permalink.gmane.org/gmane.linux.gentoo.devel/71149
+dev-python/pyxml
+
 #Daniel Robbins (03 Jul 2011)
 #not the best stable kernel:
 >=sys-kernel/ubuntu-server-2.6.35
