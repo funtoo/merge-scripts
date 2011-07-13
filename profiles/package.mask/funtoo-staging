@@ -4,10 +4,6 @@
 # freetype mask due to some packages breakage
 >=media-libs/freetype-2.4.5
 
-# Daniel RObbins (02 Jul 2011)
-# Hey, we have an even newer openrc - not yet tested - and masked:
->=sys-apps/openrc-0.8
-
 # Daniel Robbins (05 Jun 2011)
 # Masked for testing
 =sys-apps/module-init-tools-3.16
