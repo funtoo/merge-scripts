@@ -29,6 +29,7 @@ RDEPEND="dev-python/setuptools
 		|| ( >=dev-lang/python-2.5[sqlite] dev-python/pysqlite )
 	)"
 DEPEND="${RDEPEND}
+	dev-python/setuptools
 	test? (
 		>=dev-db/sqlite-3.3.13
 		>=dev-python/nose-0.10.4
