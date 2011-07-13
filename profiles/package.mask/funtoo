@@ -24,10 +24,6 @@ sys-apps/man
 net-zope/zope-fixers
 >=net-zope/zope-interface-3.6.1
 
-# Daniel Robbins <drobbins@funtoo.org> (07 Jul 2010)
-# allow users to upgrade
-=dev-lang/python-2.7*
-
 # Daniel Robbins <drobbins@funtoo.org> (28 Dec 2009)
 # Requested by slashbeast (Piotr Karbowski) in #funtoo due to /etc/cron.hourly
 # running up to 4 times per hour:
