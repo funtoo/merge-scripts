@@ -1,0 +1,1281 @@
+--- rsnapshot-program.pl	2008/08/09 02:15:49	1.398
++++ rsnapshot-program.pl	2011/05/09 13:19:24	1.430
+@@ -26,7 +26,7 @@
+ #                                                                      #
+ ########################################################################
+ 
+-# $Id: rsnapshot-program.pl,v 1.398 2008/08/09 02:15:49 djk20 Exp $
++# $Id: rsnapshot-program.pl,v 1.430 2011/05/09 13:19:24 drhyde Exp $
+ 
+ # tabstops are set to 4 spaces
+ # in vi, do: set ts=4 sw=4
+@@ -81,7 +81,7 @@
+ # array of backup points to rollback, in the event of failure
+ my @rollback_points;
+ 
+-# "intervals" are user defined time periods (e.g., hourly, daily)
++# "intervals" are user defined time periods (e.g., alpha, beta)
+ # this array holds hash_refs containing the name of the interval,
+ # and the number of snapshots to keep of it
+ #
+@@ -187,6 +187,8 @@
+ $SIG{'QUIT'}	= sub { bail('rsnapshot was sent QUIT signal... cleaning up'); };
+ $SIG{'ABRT'}	= sub { bail('rsnapshot was sent ABRT signal... cleaning up'); };
+ $SIG{'TERM'}	= sub { bail('rsnapshot was sent TERM signal... cleaning up'); };
++# For a PIPE error, we dont want any more output so set $verbose less than 1.
++$SIG{'PIPE'}	= sub { $verbose = 0; bail('rsnapshot was sent PIPE signal... Hint: if rsnapshot is running from cron, check that mail is installed on this system, or redirect stdout and stderr in cron job'); };
+ 
+ ########################################
+ ###      CORE PROGRAM STRUCTURE      ###
+@@ -224,7 +226,7 @@
+ }
+ 
+ # parse config file (if it exists)
+-if (defined($config_file) && (-f "$config_file") && (-r "$config_file")) {
++if (defined($config_file) && -r $config_file) {
+ 	# if there is a problem, this subroutine will exit the program and notify the user of the error
+ 	parse_config_file();
+ 	validate_config_file();
+@@ -283,7 +285,10 @@
+ handle_interval( $cmd );
+ 
+ # if we have a lockfile, remove it
+-remove_lockfile();
++# however, this will have already been done if use_lazy_deletes is turned
++#   on, and there may be a lockfile from another process now in place,
++#   so in that case don't just blindly delete!
++remove_lockfile() unless($use_lazy_deletes);
+ 
+ # if we got this far, the program is done running
+ # write to the log and syslog with the status of the outcome
+@@ -344,7 +349,7 @@
+     diff             - Front-end interface to the rsnapshot-diff program.
+                        Accepts two optional arguments which can be either
+                        filesystem paths or backup directories within the
+-                       snapshot_root (e.g., /etc/ daily.0/etc/). The default
++                       snapshot_root (e.g., /etc/ beta.0/etc/). The default
+                        is to compare the two most recent snapshots.
+     du               - Show disk usage in the snapshot_root.
+                        Accepts an optional destination path for comparison
+@@ -458,7 +463,7 @@
+ 			for (my $i=1; $i<scalar(@ARGV); $i++) {
+ 				print STDERR "Unknown option: $ARGV[$i]\n";
+ 				print STDERR "Please make sure all switches come before commands\n";
+-				print STDERR "(e.g., 'rsnapshot -v hourly', not 'rsnapshot hourly -v')\n";
++				print STDERR "(e.g., 'rsnapshot -v alpha', not 'rsnapshot alpha -v')\n";
+ 				exit(1);
+ 			}
+ 			
+@@ -504,9 +509,9 @@
+ 	# open the config file
+ 	my $config_file = shift() || $config_file;
+ 	my $CONFIG;
+-	if($config_file =~ /^`.*`$/) {
+-	    open($CONFIG, "$config_file|") ||
+-	        bail("Couldn't execute \"$config_file\" to get config information\nAre you sure you have permission?");
++	if($config_file =~ /^`(.*)`$/) {
++	    open($CONFIG, "$1 |") 
++	        or bail("Couldn't execute \"$1\" to get config information\n");
+ 	} else {
+ 	    $CONFIG = IO::File->new($config_file)
+ 		or bail("Could not open config file \"$config_file\"\nAre you sure you have permission?");
+@@ -529,8 +534,8 @@
+ 		# ignore blank lines
+ 		if (is_blank($line)) { next; }
+ 
+-		# if the next line begins with space or tab it belongs to this line
+-		while (defined ($configs[$file_line_num]) && $configs[$file_line_num] =~ /^(\t|\s)/) {
++		# if the next line begins with space or tab and also has a non-space character, then it belongs to this line as a continuation.
++		while (defined ($configs[$file_line_num]) && $configs[$file_line_num] =~ /^[\t ]+\S/) {
+ 			(my $newline = $configs[$file_line_num]) =~ s/^\s+|\s+$//g;
+ 			$line = $line . "\t" . $newline;
+ 			$file_line_num++;
+@@ -568,7 +573,7 @@
+ 			$value =~ /^`(.*)`$/;
+ 			if(
+ 			    (defined($value) && -f $value && -r $value) ||
+-			    (defined($1) && -x $1)
++			    (defined($1) && is_valid_script($1))
+ 			) {
+ 				$line_syntax_ok = 1;
+ 				parse_config_file($value);
+@@ -619,7 +624,7 @@
+ 					next;
+ 				}
+ 				# make sure it's writable
+-				if ( ! -w "$value" ) {
++				if ( $cmd ne 'du' && ! -w "$value" ) {
+ 					config_err($file_line_num, "$line - snapshot_root exists but is not writable");
+ 					next;
+ 				}
+@@ -755,45 +760,45 @@
+ 		
+ 		# CHECK FOR lvcreate (optional)
+ 		if ($var eq 'linux_lvm_cmd_lvcreate') {
+-			if ((-f "$value") && (-x "$value") && (1 == is_real_local_abs_path($value))) {
++			if (is_valid_script($value)) {
+ 				$config_vars{'linux_lvm_cmd_lvcreate'} = $value;
+ 				$line_syntax_ok = 1;
+ 				next;
+ 			} else {
+-				config_err($file_line_num, "$line - $value is not executable");
++				config_err($file_line_num, "$line - $value is not a valid executable");
+ 				next;
+ 			}
+ 		}
+ 		# CHECK FOR lvremove (optional)
+ 		if ($var eq 'linux_lvm_cmd_lvremove') {
+-			if ((-f "$value") && (-x "$value") && (1 == is_real_local_abs_path($value))) {
++			if (is_valid_script($value)) {
+ 				$config_vars{'linux_lvm_cmd_lvremove'} = $value;
+ 				$line_syntax_ok = 1;
+ 				next;
+ 			} else {
+-				config_err($file_line_num, "$line - $value is not executable");
++				config_err($file_line_num, "$line - $value is not a valid executable");
+ 				next;
+ 			}
+ 		}
+ 		# CHECK FOR mount (optional)
+ 		if ($var eq 'linux_lvm_cmd_mount') {
+-			if ((-f "$value") && (-x "$value") && (1 == is_real_local_abs_path($value))) {
++			if (is_valid_script($value)) {
+ 				$config_vars{'linux_lvm_cmd_mount'} = $value;
+ 				$line_syntax_ok = 1;
+ 				next;
+ 			} else {
+-				config_err($file_line_num, "$line - $value is not executable");
++				config_err($file_line_num, "$line - $value is not a valid executable");
+ 				next;
+ 			}
+ 		}
+ 		# CHECK FOR umount (optional)
+ 		if ($var eq 'linux_lvm_cmd_umount') {
+-			if ((-f "$value") && (-x "$value") && (1 == is_real_local_abs_path($value))) {
++			if (is_valid_script($value)) {
+ 				$config_vars{'linux_lvm_cmd_umount'} = $value;
+ 				$line_syntax_ok = 1;
+ 				next;
+ 			} else {
+-				config_err($file_line_num, "$line - $value is not executable");
++				config_err($file_line_num, "$line - $value is not a valid executable");
+ 				next;
+ 			}
+ 		}
+@@ -915,18 +920,11 @@
+ 				next;
+ 			}
+ 			
+-			if (!defined($dest))	{
++			if (!defined($dest) || $dest eq "")	{
+ 				config_err($file_line_num, "$line - no destination path specified for backup point");
+ 				next;
+ 			}
+ 			
+-			# make sure we have a local path for the destination
+-			# (we do NOT want an absolute path)
+-			if ( is_valid_local_abs_path($dest) ) {
+-				config_err($file_line_num, "$line - Backup destination $dest must be a local, relative path");
+-				next;
+-			}
+-			
+ 			# make sure we aren't traversing directories
+ 			if ( is_directory_traversal($src) ) {
+ 				config_err($file_line_num, "$line - Directory traversal attempted in $src");
+@@ -1005,8 +1003,9 @@
+ 			
+ 			# validate destination path
+ 			#
+-			if ( is_valid_local_abs_path($dest) ) {
+-				config_err($file_line_num, "$line - Full paths not allowed for backup destinations");
++			# make sure we have a local NON absolute path for dest
++			if ( ! is_valid_local_non_abs_path($dest) ) {
++				config_err($file_line_num, "$line - Backup destination $dest must be a local, relative path");
+ 				next;
+ 			}
+ 			
+@@ -1022,106 +1021,26 @@
+ 			}
+ 			
+ 			# remember src/dest
+-			# also, first check to see that we're not backing up the snapshot directory
+-			#
+-			# there are now two methods of making sure the user doesn't accidentally backup their snapshot_root
+-			# recursively in a backup point: the good way, and the old way.
+-			#
+-			# in the old way, when rsnapshot detects the snapshot_root is under a backup point, the files and
+-			# directories under that backup point are enumerated and get turned into several distinct rsync calls.
+-			# for example, if you tried to back up "/", it would do a separate rsync invocation for "/bin/", "/etc/",
+-			# and so on. this wouldn't be so bad except that it makes certain rsync options like one_fs and the
+-			# include/exclude rules act funny since rsync isn't starting where the user expects (and there is no
+-			# really good way to provide a workaround, either automatically or manually). however, changing this
+-			# behaviour that users have come to rely on would not be very nice, so the old code path is left here
+-			# for those that specifically enable the rsync_long_args parameter but don't set the --relative option.
+-			#
+-			# the new way is much nicer, but relies on the --relative option to rsync, which only became the default
+-			# in rsnapshot 1.2.0 (primarily for this feature). basically, rsnapshot dynamically constructs an exclude
+-			# path to avoid backing up the snapshot_root. clean and simple. many thanks to bharat mediratta for coming
+-			# up with this solution!!!
++			my %hash;
++			$hash{'src'}	= $src;
++			$hash{'dest'}	= $dest;
++			if (defined($opts_ref)) {
++				$hash{'opts'} = $opts_ref;
++			}
++			
++			# If this backup point contains the snapshot root, add an exclude to avoid
++			# backing up the snapshot root recursively.  The exclude is anchored (by virtue
++			# of the leading slash of $config_vars{'snapshot_root'}) and applies to absolute
++			# paths (the "/" modifier), so it should match the snapshot root and nothing else
++			# regardless of --relative.
+ 			#
+-			# we only need to do any of this if the user IS trying to backup the snapshot_root
++			# This should work in any version of rsync since 2.6.4 except for 2.6.7, due to a bug:
++			# http://lists.samba.org/archive/rsync/2006-March/014953.html
+ 			if ((is_real_local_abs_path("$src")) && ($config_vars{'snapshot_root'} =~ m/^$src/)) {
+-				
+-				# old, less good, backward compatibility method
+-				if ( defined($config_vars{'rsync_long_args'}) && ($config_vars{'rsync_long_args'} !~ m/--relative/) ) {
+-					# remove trailing slashes from source and dest, since we will be using our own
+-					$src    = remove_trailing_slash($src);
+-					$dest   = remove_trailing_slash($dest);
+-					
+-					opendir(SRC, "$src") or bail("Could not open $src");
+-					
+-					while (my $node = readdir(SRC)) {
+-						next if ($node =~ m/^\.\.?$/o); # skip '.' and '..'
+-						
+-						# avoid double slashes from root filesystem
+-						if ($src eq '/') {
+-							$src = '';
+-						}
+-						
+-						# if this directory is in the snapshot_root, skip it
+-						# otherwise, back it up
+-						#
+-						if ("$config_vars{'snapshot_root'}" !~ m/^$src\/$node/) {
+-							my %hash;
+-							
+-							$hash{'src'}    = "$src/$node";
+-							$hash{'dest'}   = "$dest/$node";
+-							
+-							if (defined($opts_ref)) {
+-								$hash{'opts'} = $opts_ref;
+-							}
+-							push(@backup_points, \%hash);
+-						}
+-					}
+-					closedir(SRC);
+-					
+-				# new, shiny, preferred method. the way of the future.
+-				} else {
+-					my %hash;
+-					my $exclude_path;
+-					
+-					$hash{'src'}	= $src;
+-					$hash{'dest'}	= $dest;
+-					if (defined($opts_ref)) {
+-						$hash{'opts'} = $opts_ref;
+-					}
+-					
+-					# dynamically generate an exclude path to avoid backing up the snapshot root.
+-					# depending on the backup point and the snapshot_root location, this could be
+-					# almost anything. it's tempting to think that just using the snapshot_root as
+-					# the exclude path will work, but it doesn't. instead, this an exclude path that
+-					# starts relative to the backup point. for example, if snapshot_root is set to
+-					# /backup/private/snapshots/, and the backup point is /backup/, the exclude path
+-					# will be private/snapshots/. the trailing slash does not appear to matter.
+-					#
+-					# it's also worth noting that this doesn't work at all without the --relative
+-					# flag being passed to rsync (which is now the default).
+-					#
+-					# this method was added by bharat mediratta, and replaces my older, less elegant
+-					# attempt to run multiple invocations of rsync instead.
+-					#
+-					$exclude_path = $config_vars{'snapshot_root'};
+-					$exclude_path =~ s/^$src//;
+-					
+-					# pass it to rsync on this backup point only
+-					$hash{'opts'}{'extra_rsync_long_args'} .= sprintf(' --exclude=%s', $exclude_path);
+-					
+-					push(@backup_points, \%hash);
+-				}
+-				
+-			# the user is NOT trying to backup the snapshot_root. no workarounds required at all.
+-			} else {
+-				my %hash;
+-				$hash{'src'}	= $src;
+-				$hash{'dest'}	= $dest;
+-				if (defined($opts_ref)) {
+-					$hash{'opts'} = $opts_ref;
+-				}
+-				push(@backup_points, \%hash);
++				$hash{'opts'}{'extra_rsync_long_args'} .= sprintf(' --filter=-/_%s', $config_vars{'snapshot_root'});
+ 			}
+ 			
++			push(@backup_points, \%hash);
+ 			next;
+ 		}
+ 		
+@@ -1147,8 +1066,8 @@
+ 			@script_argv = split(/\s+/, $full_script);
+ 			$script = $script_argv[0];
+ 			
+-			# make sure the destination is a full path
+-			if (1 == is_valid_local_abs_path($dest)) {
++			# make sure the destination is a relative path
++			if (0 == is_valid_local_non_abs_path($dest)) {
+ 				config_err($file_line_num, "$line - Backup destination $dest must be a local, relative path");
+ 				next;
+ 			}
+@@ -1553,7 +1472,21 @@
+ 				if ( -e "$config_vars{'snapshot_root'}" ) {
+ 					print_err ("$config_vars{'snapshot_root'} is not a directory.", 1);
+ 				} else {
+-					print_err ("$config_vars{'snapshot_root'} does not exist.", 1);
++					my $snapshot_root = $config_vars{'snapshot_root'};
++					# Check parent directories until we find one that exists
++					while (! -e $snapshot_root) { 
++						print_err ("$snapshot_root does not exist.", 1);
++						$snapshot_root =~ m%(.*)/[^/]*%;
++						if (defined($1) && $1 ne $snapshot_root) {
++							$snapshot_root = $1;
++						} else {
++							last;
++						}
++					}
++					if (-e $snapshot_root && ! -d $snapshot_root) {
++						print_err ("$snapshot_root is not a directory.", 1);
++						syslog_err("$snapshot_root is not a directory.");
++					}
+ 				}
+ 				print_err ("rsnapshot refuses to create snapshot_root when no_create_root is enabled", 1);
+ 				syslog_err("rsnapshot refuses to create snapshot_root when no_create_root is enabled");
+@@ -1577,6 +1510,7 @@
+ 			my $tmp_dest_path = $$bp_ref{'dest'};
+ 			
+ 			# normalize multiple slashes, and strip trailing slash
++			# FIXME: Decide whether to allow an empty destination path, and reject or handle such paths accordingly.
+ 			$tmp_dest_path =~ s/\/+/\//g;
+ 			$tmp_dest_path =~ s/\/$//;
+ 			
+@@ -1608,7 +1542,7 @@
+ 					$tmp_b  .= '/';
+ 					$tmp_bs .= '/';
+ 					
+-					if ("$b_dest" =~ m/^$bs_dest/) {
++					if ("$tmp_b" =~ m/^$tmp_bs/) {
+ 						# duplicate entries, stop here
+ 						print_err (
+ 							"destination conflict between \"$tmp_b\" and \"$tmp_bs\" in backup / backup_script entries",
+@@ -1638,7 +1572,7 @@
+ 					$path1 .= '/';
+ 					$path2 .= '/';
+ 					
+-					if (("$path1" =~ m/$path2/) or ("$path2" =~ m/$path1/)) {
++					if (("$path1" =~ m/^$path2/) or ("$path2" =~ m/^$path1/)) {
+ 						print_err (
+ 							"destination conflict between \"$path1\" and \"$path2\" in multiple backup_script entries", 1
+ 						);
+@@ -2347,9 +2281,12 @@
+ }
+ 
+ # accepts no arguments
+-# accepts the path to a lockfile and tries to remove it
+-# returns undef if lockfile isn't defined in the config file, and 1 upon success
+-# also, it can exit the program with a value of 1 if it can't remove the lockfile
++#
++# returns undef if lockfile isn't defined in the config file
++# return 1 upon success or if there's no lockfile to remove
++# warn if the PID in the lockfile is not the same as the PID of this process
++# exit with a value of 1 if it can't read the lockfile
++# exit with a value of 1 if it can't remove the lockfile
+ #
+ # we don't use bail() to exit on error, because that would call
+ # this subroutine twice in the event of a failure
+@@ -2363,6 +2300,17 @@
+ 	my $result = undef;
+ 	
+ 	if ( -e "$lockfile" ) {
++	        if(open(LOCKFILE, $lockfile)) {
++		  chomp(my $locked_pid = <LOCKFILE>);
++		  close(LOCKFILE);
++		  if($locked_pid != $$) {
++		    print_warn("About to remove lockfile $lockfile which belongs to a different process (this is OK if it's a stale lock)");
++		  }
++		} else {
++		  print_err ("Could not read lockfile $lockfile: $!", 0);
++		  syslog_err("Error! Could not read lockfile $lockfile: $!");
++		  exit(1);
++		}
+ 		print_cmd("rm -f $lockfile");
+ 		if (0 == $test) {
+ 			$result = unlink($lockfile);
+@@ -2436,27 +2384,27 @@
+ 	my %hash;
+ 	
+ 	# which of the intervals are we operating on?
+-	# if we defined hourly, daily, weekly ... hourly = 0, daily = 1, weekly = 2
++	# if we defined alpha, beta, gamma ... alpha = 0, beta = 1, gamma = 2
+ 	my $interval_num;
+ 	
+ 	# the highest possible number for the current interval context
+-	# if we are working on hourly, and hourly is set to 6, this would be
++	# if we are working on alpha, and alpha is set to 6, this would be
+ 	# equal to 5 (since we start at 0)
+ 	my $interval_max;
+ 	
+ 	# this is the name of the previous interval, in relation to the one we're
+-	# working on. e.g., if we're operating on weekly, this should be "daily"
++	# working on. e.g., if we're operating on gamma, this should be "beta"
+ 	my $prev_interval;
+ 	
+ 	# same as $interval_max, except for the previous interval.
+ 	# this is used to determine which of the previous snapshots to pull from
+-	# e.g., cp -al hourly.$prev_interval_max/ daily.0/
++	# e.g., cp -al alpha.$prev_interval_max/ beta.0/
+ 	my $prev_interval_max;
+ 	
+ 	# FIGURE OUT WHICH INTERVAL WE'RE RUNNING, AND HOW IT RELATES TO THE OTHERS
+ 	# THEN RUN THE ACTION FOR THE CHOSEN INTERVAL
+ 	# remember, in each hashref in this loop:
+-	#   "interval" is something like "daily", "weekly", etc.
++	#   "interval" is something like "beta", "gamma", etc.
+ 	#   "number" is the number of these intervals to keep on the filesystem
+ 	
+ 	my $i = 0;
+@@ -2485,7 +2433,7 @@
+ 		
+ 		# which of the previous interval's numbered directories should we pull from
+ 		# for the interval we're currently set to run?
+-		# e.g., daily.0/ might get pulled from hourly.6/
++		# e.g., beta.0/ might get pulled from alpha.6/
+ 		#
+ 		$prev_interval_max = $$i_ref{'number'} - 1;
+ 		
+@@ -2665,8 +2613,11 @@
+ 	if ($path =~ m/^\s/)				{ return (undef); }
+ 	if ($path =~ m/\s$/)				{ return (undef); }
+ 	
+-	# must have user@host:[~]/path syntax for ssh
+-	if ($path =~ m/^.*?\@.*?:~?\/.*$/)	{ return (1); }
++	# don't match paths that look like URIs (rsync://, etc.)
++	if ($path =~ m,://,)				{ return (undef); }
++	
++	# must have [user@]host:[~]/path syntax for ssh
++	if ($path =~ m/^(.*?\@)?.*?:~?\/.*$/)	{ return (1); }
+ 	
+ 	return (0);
+ }
+@@ -2758,6 +2709,26 @@
+ }
+ 
+ # accepts path
++# returns 1 if it's a syntactically valid non-absolute (relative) path
++# returns 0 otherwise
++# does not check for directory traversal, since we want to use 
++# a different error message if there is ".." in the path
++sub is_valid_local_non_abs_path {
++	my $path	= shift(@_);
++	
++	if (!defined($path)) { return (0); }
++	if ($path =~ m/^\//) {
++		return (0);		# Absolute path => bad
++	}
++	
++	if ($path =~ m/^\S/) {
++		 return (1);		# Starts with a non-whitespace => good
++	} else {
++		 return (0);		# Empty or starts with whitespace => bad
++	}
++}
++
++# accepts path
+ # returns 1 if it's a directory traversal attempt
+ # returns 0 if it's safe
+ sub is_directory_traversal {
+@@ -2868,8 +2839,8 @@
+ 	
+ 	# here we used to check for interval.delete directories.  This was
+ 	# removed when we switched to using _delete.$$ directories.  This
+-	# was done so that you can run another (eg) rsnapshot hourly, while
+-	# the .delete directory from the previous hourly backup was still
++	# was done so that you can run another (eg) rsnapshot alpha, while
++	# the .delete directory from the previous alpha backup was still
+ 	# going.  Potentially you may have several parallel deletes going on
+ 	# with the new scheme, but I'm pretty sure that you'll catch up
+ 	# eventually and not hopelessly wedge the machine -- DRC
+@@ -2989,14 +2960,17 @@
+ 				bail("Error! rm_rf(\"$config_vars{'snapshot_root'}/_delete.$$\")\n");
+ 			}
+ 		}
+-	} else {
++	} elsif($use_lazy_deletes) {
++	        # only spit this out if lazy deletes are turned on.
++		# Still need to suppress this if they're turned on but we've
++		# not done enough backups to yet need to delete anything
+ 		print_msg("No directory to delete: $config_vars{'snapshot_root'}/_delete.$$", 5);
+ 	}
+ }
+ 
+ # accepts an interval_data_ref
+-# acts on the interval defined as $$id_ref{'interval'} (e.g., hourly)
+-# this should be the smallest interval (e.g., hourly, not daily)
++# acts on the interval defined as $$id_ref{'interval'} (e.g., alpha)
++# this should be the smallest interval (e.g., alpha, not beta)
+ #
+ # rotates older dirs within this interval, hard links .0 to .1,
+ # and rsync data over to .0
+@@ -3304,19 +3278,13 @@
+ 	
+ 	# other misc variables
+ 	my @cmd_stack				= undef;
+-	my $src						= undef;
++	my $src						= $$bp_ref{'src'};
+ 	my $result					= undef;
+-	my $using_relative			= 0;
+ 	
+ 	my $linux_lvm                     = 0;
+ 	my $linux_lvm_oldpwd              = undef;
+ 	my $linux_lvm_snapshotname        = undef;
+ 
+-	if (defined($$bp_ref{'src'})) {
+-		$src = remove_trailing_slash( "$$bp_ref{'src'}" );
+-		$src = add_slashdot_if_root( "$src" );
+-	}
+-	
+ 	# if we're using link-dest later, that target depends on whether we're doing a 'sync' or a regular interval
+ 	# if we're doing a "sync", then look at [lowest-interval].0 instead of [cur-interval].1
+ 	my $interval_link_dest;
+@@ -3325,16 +3293,9 @@
+ 	# start looking for link_dest targets at interval.$start_num
+ 	my $start_num = 1;
+ 	
+-	my $sync_dir_was_present = 0;
+-	
+ 	# if we're doing a sync, we'll start looking at [lowest-interval].0 for a link_dest target
+ 	if ($interval eq 'sync') {
+ 		$start_num = 0;
+-		
+-		# remember now if the .sync directory exists
+-		if ( -d "$config_vars{'snapshot_root'}/.sync" ) {
+-			$sync_dir_was_present = 1;
+-		}
+ 	}
+ 	
+ 	# look for the most recent link_dest target directory
+@@ -3342,9 +3303,17 @@
+ 	foreach my $i_ref (@intervals) {
+ 		if (defined($$i_ref{'number'})) {
+ 			for (my $i = $start_num; $i < $$i_ref{'number'}; $i++) {
++				my $i_check;
++				if ($test && $interval ne 'sync') {
++					# A real run would already have rotated the snapshots up, but this test run hasn't.
++					# Hence, to know whether $i would exist at this point of a real run, we must check for $i - 1.
++					$i_check = $i - 1;
++				} else {
++					$i_check = $i;
++				}
+ 				
+ 				# once we find a valid link_dest target, the search is over
+-				if ( -e "$config_vars{'snapshot_root'}/$$i_ref{'interval'}.$i/$$bp_ref{'dest'}" ) {
++				if ( -e "$config_vars{'snapshot_root'}/$$i_ref{'interval'}.$i_check/$$bp_ref{'dest'}" ) {
+ 					if (!defined($interval_link_dest) && !defined($interval_num_link_dest)) {
+ 						$interval_link_dest		= $$i_ref{'interval'};
+ 						$interval_num_link_dest = $i;
+@@ -3370,8 +3339,8 @@
+ 			$tmp_rollback_point	= remove_trailing_slash($tmp_rollback_point);
+ 			
+ 			if ("$tmp_dest" eq "$tmp_rollback_point") {
+-				print_warn ("$$bp_ref{'src'} skipped due to rollback plan", 2);
+-				syslog_warn("$$bp_ref{'src'} skipped due to rollback plan");
++				print_warn ("$src skipped due to rollback plan", 2);
++				syslog_warn("$src skipped due to rollback plan");
+ 				return (undef);
+ 			}
+ 		}
+@@ -3444,11 +3413,11 @@
+ 	# SEE WHAT KIND OF SOURCE WE'RE DEALING WITH
+ 	#
+ 	# local filesystem
+-	if ( is_real_local_abs_path($$bp_ref{'src'}) ) {
++	if ( is_real_local_abs_path($src) ) {
+ 		# no change
+ 		
+ 	# if this is a user@host:/path, use ssh
+-	} elsif ( is_ssh_path($$bp_ref{'src'}) ) {
++	} elsif ( is_ssh_path($src) ) {
+ 		
+ 		# if we have any args for SSH, add them
+ 		if ( defined($ssh_args) ) {
+@@ -3460,17 +3429,17 @@
+ 		}
+ 		
+ 	# anonymous rsync
+-	} elsif ( is_anon_rsync_path($$bp_ref{'src'}) ) {
++	} elsif ( is_anon_rsync_path($src) ) {
+ 		# make rsync quiet if we're running in quiet mode
+ 		if ($verbose < 2) { $rsync_short_args .= 'q'; }
+ 		
+ 	# cwrsync path
+-	} elsif ( is_cwrsync_path($$bp_ref{'src'}) ) {
++	} elsif ( is_cwrsync_path($src) ) {
+ 		# make rsync quiet if we're running in quiet mode
+ 		if ($verbose < 2) { $rsync_short_args .= 'q'; }
+ 		
+ 	# LVM path
+-	} elsif ( is_linux_lvm_path($$bp_ref{'src'}) ) {
++	} elsif ( is_linux_lvm_path($src) ) {
+ 		# take LVM snapshot and mount, reformat src into local path
+ 
+         unless (defined($config_vars{'linux_lvm_snapshotsize'})) {
+@@ -3487,15 +3456,15 @@
+         }
+ 
+         # parse LVM src ('lvm://vgname/volname/path')
+-        my ($linux_lvmvgname,$linux_lvmvolname, $linux_lvmpath) = ($$bp_ref{'src'} =~ m|^lvm://([^/]+)/([^/]+)/(.*)$|);
++        my ($linux_lvmvgname,$linux_lvmvolname, $linux_lvmpath) = ($src =~ m|^lvm://([^/]+)/([^/]+)/(.*)$|);
+         # lvmvolname and/or path could be the string "0", so test for 'defined':
+         unless (defined($linux_lvmvgname) and defined($linux_lvmvolname) and defined($linux_lvmpath)) {
+-            bail("Could not understand LVM source \"$$bp_ref{'src'}\" in backup_lowest_interval()");
++            bail("Could not understand LVM source \"$src\" in backup_lowest_interval()");
+         }
+         
+         # assemble and execute LVM snapshot command
+         @cmd_stack = ();
+-        push(@cmd_stack, $config_vars{'linux_lvm_cmd_lvcreate'});
++        push(@cmd_stack, split(' ',$config_vars{'linux_lvm_cmd_lvcreate'}));
+         push(@cmd_stack, '--snapshot');
+ 
+         push(@cmd_stack, '--size');
+@@ -3518,7 +3487,7 @@
+         
+         # mount the snapshot
+         @cmd_stack = ();
+-        push(@cmd_stack, $config_vars{'linux_lvm_cmd_mount'});
++        push(@cmd_stack, split(' ', $config_vars{'linux_lvm_cmd_mount'}));
+ 
+         $linux_lvm_snapshotname = join('/', $config_vars{'linux_lvm_vgpath'}, $linux_lvmvgname, $config_vars{'linux_lvm_snapshotname'});
+         push(@cmd_stack, $linux_lvm_snapshotname);
+@@ -3545,12 +3514,12 @@
+             }
+         }
+ 
+-        $$bp_ref{'src'} = './' .  $linux_lvmpath;
++        $src = './' .  $linux_lvmpath;
+         $linux_lvm = 1;
+ 		
+ 	# this should have already been validated once, but better safe than sorry
+ 	} else {
+-		bail("Could not understand source \"$$bp_ref{'src'}\" in backup_lowest_interval()");
++		bail("Could not understand source \"$src\" in backup_lowest_interval()");
+ 	}
+ 	
+ 	# if we're using --link-dest, we'll need to specify the link-dest directory target
+@@ -3558,23 +3527,11 @@
+ 	if (1 == $link_dest) {
+ 		# bp_ref{'dest'} and snapshot_root have already been validated, but these might be blank
+ 		if (defined($interval_link_dest) && defined($interval_num_link_dest)) {
+-			
+-			# make sure the directory exists
+-			if ( -d "$config_vars{'snapshot_root'}/$interval_link_dest.$interval_num_link_dest/$$bp_ref{'dest'}" ) {
+-				
+-				# we don't use link_dest if we already synced once to this directory
+-				if (0 && $sync_dir_was_present) { # always false
+-					
+-					# skip --link-dest, this is the second time the sync has been run, because the .sync directory already exists
+-					
+-				# default: push link_dest arguments onto cmd stack
+-				} else {
+-					push(
+-						@rsync_long_args_stack,
+-						"--link-dest=$config_vars{'snapshot_root'}/$interval_link_dest.$interval_num_link_dest/$$bp_ref{'dest'}"
+-					);
+-				}
+-			}
++			# push link_dest arguments onto cmd stack
++			push(
++				@rsync_long_args_stack,
++				"--link-dest=$config_vars{'snapshot_root'}/$interval_link_dest.$interval_num_link_dest/$$bp_ref{'dest'}"
++			);
+ 		}
+ 	}
+ 	
+@@ -3586,7 +3543,7 @@
+ 	#
+ 	if (
+ 		(1 == $link_dest) &&
+-		(is_file($$bp_ref{'src'})) &&
++		(is_file($src)) &&
+ 		defined($interval_link_dest) &&
+ 		defined($interval_num_link_dest) &&
+ 		(-f "$config_vars{'snapshot_root'}/$interval_link_dest.$interval_num_link_dest/$$bp_ref{'dest'}")
+@@ -3616,36 +3573,9 @@
+ 		}
+ 	}
+ 	
+-	# figure out if we're using the --relative flag to rsync.
+-	# this influences how the source paths are constructed below.
+-	foreach my $rsync_long_arg (@rsync_long_args_stack) {
+-		if (defined($rsync_long_arg)) {
+-			if ('--relative' eq $rsync_long_arg) {
+-				$using_relative = 1;
+-			}
+-		}
+-	}
+-	
+-	if (defined($$bp_ref{'src'})) {
+-		# make sure that the source path doesn't have a trailing slash if we're using the --relative flag
+-		# this is to work around a bug in most versions of rsync that don't properly delete entries
+-		# when the --relative flag is set.
+-		#
+-		if (1 == $using_relative) {
+-			$src = remove_trailing_slash( "$$bp_ref{'src'}" );
+-			$src = add_slashdot_if_root( "$src" );
+-			
+-		# no matter what, we need a source path
+-		} else {
+-			# put a trailing slash on it if we know it's a directory and it doesn't have one
+-			if ((-d "$$bp_ref{'src'}") && ($$bp_ref{'src'} !~ /\/$/)) {
+-				$src = $$bp_ref{'src'} . '/';
+-				
+-			# just use it as-is
+-			} else {
+-				$src = $$bp_ref{'src'};
+-			}
+-		}
++	# put a trailing slash on the source if we know it's a directory and it doesn't have one
++	if ((-d "$src") && ($$bp_ref{'src'} !~ /\/$/)) {
++		$src .= '/';
+ 	}
+ 	
+ 	# BEGIN RSYNC COMMAND ASSEMBLY
+@@ -3692,8 +3622,7 @@
+ 	$result = 1;
+ 	if (0 == $test) {
+ 		while ($tryCount < $rsync_numtries && $result !=0) {
+-			# join is Michael Ashley's fix for some filter/space problems		
+-			$result = system(join(' ', @cmd_stack));
++			$result = system(@cmd_stack);
+ 			$tryCount += 1;
+ 		}
+ 
+@@ -3722,15 +3651,13 @@
+         }
+ 
+         @cmd_stack = ();
+-        push(@cmd_stack, $config_vars{'linux_lvm_cmd_umount'});
++        push(@cmd_stack, split(' ', $config_vars{'linux_lvm_cmd_umount'}));
+ 
+         push(@cmd_stack, $config_vars{'linux_lvm_mountpath'});
+         
+         print_cmd(@cmd_stack);
+         if (0 == $test) {
+-            # silence gratuitous lvremove output
+-            #$result = system(@cmd_stack);
+-            $result = system(join " ", @cmd_stack, ">/dev/null");
++            $result = system(@cmd_stack);
+             
+             if ($result != 0) {
+                 bail("Unmount LVM snapshot failed: $result");
+@@ -3745,7 +3672,9 @@
+         
+         print_cmd(@cmd_stack);
+         if (0 == $test) {
+-            $result = system(@cmd_stack);
++            # silence gratuitous lvremove output
++            #$result = system(@cmd_stack);
++            $result = system(join " ", @cmd_stack, ">/dev/null");
+             
+             if ($result != 0) {
+                 bail("Removal of LVM snapshot failed: $result");
+@@ -3769,18 +3698,21 @@
+ 		$#stack++;
+ 	        next;
+             # not in quotes and got a quote? remember that we're in quotes
+-            } elsif($thischar =~ /['"]/ && !$inquotes) {
++	    # NB the unnecessary \ are to appease emacs
++            } elsif($thischar =~ /[\'\"]/ && !$inquotes) {
+ 	        $inquotes = $thischar;
+             # in quotes and got a different quote? no nesting allowed
+-            } elsif($thischar =~ /['"]/ && $inquotes ne $thischar) {
++	    #   more emacs appeasement
++            } elsif($thischar =~ /[\'\"]/ && $inquotes ne $thischar) {
+ 	        print_err("Nested quotes not allowed in $argname", 1);
+ 	        syslog_err("Nested quotes not allowed in $argname");
+ 		exit(1);
+         # in quotes and got a close quote
+ 	    } elsif($thischar eq $inquotes) {
+ 	        $inquotes = '';
+-            }
+-	    $stack[-1] .= $thischar;
++            } else {
++	        $stack[-1] .= $thischar;
++	    }
+ 	}
+ 	if($inquotes) {
+ 	    print_err("Unbalanced quotes in $argname", 1);
+@@ -4236,7 +4168,7 @@
+ 
+ # accepts an interval_data_ref
+ # looks at $$id_ref{'interval'} as the interval to act on,
+-# and the previous interval $$id_ref{'prev_interval'} to pull up the directory from (e.g., daily, hourly)
++# and the previous interval $$id_ref{'prev_interval'} to pull up the directory from (e.g., beta, alpha)
+ # the interval being acted upon should not be the lowest one.
+ #
+ # rotates older dirs within this interval, and hard links
+@@ -4333,7 +4265,7 @@
+ 		# or if the previous interval isn't the smallest one,
+ 		# move the last one up a level
+ 		if (($prev_interval_max >= 1) or ($interval_num >= 2)) {
+-			# mv hourly.5 to daily.0 (or whatever intervals we're using)
++			# mv alpha.5 to beta.0 (or whatever intervals we're using)
+ 			print_cmd(
+ 				"mv $config_vars{'snapshot_root'}/$prev_interval.$prev_interval_max/ ",
+ 				"$config_vars{'snapshot_root'}/$interval.0/"
+@@ -4408,6 +4340,29 @@
+ 	return ($result);
+ }
+ 
++# This is to test whether cp -al seems to work in a simple case
++# return 0  if cp -al succeeds
++# return 1  if cp -al fails
++# return -1 if something else failed - test inconclusive
++sub test_cp_al {
++	my $s = "$config_vars{'snapshot_root'}/cp_al1";
++	my $d = "$config_vars{'snapshot_root'}/cp_al2";
++	my $result;
++
++	-d $s || mkdir($s) || return (-1);
++	open(TT1, ">>$s/tt1") || return (-1);
++	close(TT1) || return (-1);
++	$result = system( $config_vars{'cmd_cp'}, '-al', "$s", "$d" );
++	if ($result != 0) {
++		return (1);
++	}
++	unlink("$d/tt1");
++	unlink("$s/tt1");
++	rmdir($d);
++	rmdir($s);
++	return (0);
++}
++
+ # this is a wrapper to call the GNU version of "cp"
+ # it might fail in mysterious ways if you have a different version of "cp"
+ #
+@@ -4434,7 +4389,10 @@
+ 	$result = system( $config_vars{'cmd_cp'}, '-al', "$src", "$dest" );
+ 	if ($result != 0) {
+ 		$status = $result >> 8;
+-		print_err("$config_vars{'cmd_cp'} -al $src $dest failed (result $result, exit status $status).  Perhaps your cp does not support -al options?", 2);
++		print_err("$config_vars{'cmd_cp'} -al $src $dest failed (result $result, exit status $status).", 2);
++		if (test_cp_al() > 0 ) {
++			print_err("Perhaps your cp does not support -al options?", 2);
++		}
+ 		return (0);
+ 	}
+ 	
+@@ -4728,8 +4686,7 @@
+ 	print_cmd(@cmd_stack);
+ 	
+ 	if (0 == $test) {
+-                # join is Michael Ashley's fix for some filter/space problems
+-		my $result = system(join(' ', @cmd_stack));
++		my $result = system(@cmd_stack);
+ 		
+ 		if ($result != 0) {
+ 			# bitmask return value
+@@ -4832,9 +4789,9 @@
+ # that's why the print_* subroutines aren't used here.
+ #
+ sub show_disk_usage {
+-	my $intervals_str = '';
++	my @du_dirs = ();
+ 	my $cmd_du	= 'du';
+-	my $du_args	= '-csh';
++	my $du_args	= $default_du_args;
+ 	my $dest_path = '';
+ 	my $retval;
+ 	
+@@ -4867,7 +4824,7 @@
+ 			print STDERR "ERROR: Directory traversal is not allowed\n";
+ 			exit(1);
+ 		}
+-		if (is_valid_local_abs_path($dest_path)) {
++		if (! is_valid_local_non_abs_path($dest_path)) {
+ 			print STDERR "ERROR: Full paths are not allowed\n";
+ 			exit(1);
+ 		}
+@@ -4879,7 +4836,7 @@
+ 		# if we have a .sync directory, that will have the most recent files, and should be first
+ 		if (-d "$config_vars{'snapshot_root'}/.sync") {
+ 			if (-r "$config_vars{'snapshot_root'}/.sync") {
+-				$intervals_str .= "$config_vars{'snapshot_root'}/.sync ";
++				push(@du_dirs, "$config_vars{'snapshot_root'}/.sync");
+ 			}
+ 		}
+ 		
+@@ -4890,22 +4847,24 @@
+ 			
+ 			for (my $i=0; $i < $max_interval_num; $i++) {
+ 				if (-r "$config_vars{'snapshot_root'}/$interval.$i/$dest_path") {
+-					$intervals_str .= "$config_vars{'snapshot_root'}/$interval.$i/$dest_path ";
++					push(@du_dirs, "$config_vars{'snapshot_root'}/$interval.$i/$dest_path");
+ 				}
+ 			}
+ 		}
+ 	}
+-	chop($intervals_str);
+ 	
+ 	# if we can see any of the intervals, find out how much space they're taking up
+ 	# most likely we can either see all of them or none at all
+-	if ('' ne $intervals_str) {
++	if (scalar(@du_dirs) > 0) {
++		my @cmd_stack = ($cmd_du,
++			split_long_args_with_quotes('du_args', $du_args),
++			@du_dirs);
+ 		if (defined($verbose) && ($verbose >= 3)) {
+-			print wrap_cmd("$cmd_du $du_args $intervals_str"), "\n\n";
++			print wrap_cmd(join(' ', @cmd_stack)), "\n\n";
+ 		}
+ 		
+ 		if (0 == $test) {
+-			$retval = system("$cmd_du $du_args $intervals_str");
++			$retval = system(@cmd_stack);
+ 			if (0 == $retval) {
+ 				# exit showing success
+ 				exit(0);
+@@ -4929,7 +4888,7 @@
+ 	exit(1);
+ }
+ 
+-# accept two args from $ARGV[1] and [2], like "daily.0" "daily.1" etc.
++# accept two args from $ARGV[1] and [2], like "beta.0" "beta.1" etc.
+ # stick the full snapshot_root path on the beginning, and call rsnapshot-diff with these args
+ # NOTE: since this is a read-only operation, we're not concerned with directory traversals and relative paths
+ sub show_rsnapshot_diff {
+@@ -6217,7 +6176,8 @@
+ =over 4
+ 
+ Paths to lvcreate, lvremove, mount and umount commands, for use with Linux
+-LVMs.  The lvcreate, lvremove, mount and umount commands are required for
++LVMs.  You may include options to the commands also. 
++The lvcreate, lvremove, mount and umount commands are required for
+ managing snapshots of LVM volumes and are otherwise optional.
+ 
+ =back
+@@ -6226,7 +6186,7 @@
+ 
+ =over 4
+ 
+-"name" refers to the name of this backup level (e.g., hourly, daily,
++"name" refers to the name of this backup level (e.g., alpha, beta,
+ so also called the 'interval'). "number"
+ is the number of snapshots for this type of interval that will be retained.
+ The value of "name" will be the command passed to B<rsnapshot> to perform
+@@ -6234,43 +6194,43 @@
+ 
+ A deprecated alias for 'retain' is 'interval'.
+ 
+-Example: B<retain hourly 6>
++Example: B<retain alpha 6>
+ 
+-[root@localhost]# B<rsnapshot hourly>
++[root@localhost]# B<rsnapshot alpha>
+ 
+ For this example, every time this is run, the following will happen:
+ 
+-<snapshot_root>/hourly.5/ will be deleted, if it exists.
++<snapshot_root>/alpha.5/ will be deleted, if it exists.
+ 
+-<snapshot_root>/hourly.{1,2,3,4} will all be rotated +1, if they exist.
++<snapshot_root>/alpha.{1,2,3,4} will all be rotated +1, if they exist.
+ 
+-<snapshot_root>/hourly.0/ will be copied to <snapshot_root>/hourly.1/
++<snapshot_root>/alpha.0/ will be copied to <snapshot_root>/alpha.1/
+ using hard links.
+ 
+ Each backup point (explained below) will then be rsynced to the
+-corresponding directories in <snapshot_root>/hourly.0/
++corresponding directories in <snapshot_root>/alpha.0/
+ 
+ Backup levels must be specified in the config file in order, from most
+ frequent to least frequent. The first entry is the one which will be
+-synced with the backup points. The subsequent backup levels (e.g., daily,
+-weekly, etc) simply rotate, with each higher backup level pulling from the
++synced with the backup points. The subsequent backup levels (e.g., beta,
++gamma, etc) simply rotate, with each higher backup level pulling from the
+ one below it for its .0 directory.
+ 
+ Example:
+ 
+ =over 4
+ 
+-B<retain  hourly 6>
++B<retain  alpha 6>
+ 
+-B<retain  daily  7>
++B<retain  beta  7>
+ 
+-B<retain  weekly 4>
++B<retain  gamma 4>
+ 
+ =back
+ 
+-daily.0/ will be copied from hourly.5/, and weekly.0/ will be copied from daily.6/
++beta.0/ will be copied from alpha.5/, and gamma.0/ will be copied from beta.6/
+ 
+-hourly.0/ will be rsynced directly from the filesystem.
++alpha.0/ will be rsynced directly from the filesystem.
+ 
+ =back
+ 
+@@ -6398,21 +6358,10 @@
+ 
+ =over 4
+ 
+-List of long arguments to pass to rsync. Beginning with rsnapshot 1.2.0, this
+-default has changed. In previous versions, the default values were
+-
+-    --delete --numeric-ids
+-
+-Starting with version 1.2.0, the default values are
+-
++List of long arguments to pass to rsync.  The default values are
+     --delete --numeric-ids --relative --delete-excluded
+-
+-This directly affects how the destination paths in your backup points are
+-constructed. Depending on what behaviour you want, you can explicitly set
+-the values to make the program behave like the old version or the current
+-version. The newer settings are recommended if you're just starting. If
+-you are upgrading, read the upgrade guide in the INSTALL file in the
+-source distribution for more information.
++This means that the directory structure in each backup point destination 
++will match that in the backup point source.
+ 
+ Quotes are permitted in rsync_long_args, eg --rsync-path="sudo /usr/bin/rsync".
+ You may use either single (') or double (") quotes, but nested quotes (including
+@@ -6488,7 +6437,7 @@
+ 
+ The details of how this works have changed in rsnapshot version 1.3.1.
+ Originally you could only ever have one .delete directory per backup level.
+-Now you can have many, so if your next (eg) hourly backup kicks off while the
++Now you can have many, so if your next (eg) alpha backup kicks off while the
+ previous one is still doing a lazy delete you may temporarily have extra
+ _delete directories hanging around.
+ 
+@@ -6526,17 +6475,6 @@
+ 
+ =back
+ 
+-
+-B<UPGRADE NOTICE:>
+-
+-=over 4
+-
+-If you have used an older version of rsnapshot, you might notice that the
+-destination paths on the backup points have changed. Please read the INSTALL
+-file in the source distribution for upgrade options.
+-
+-=back
+-
+ B<backup>  /etc/                       localhost/
+ 
+ B<backup>  root@example.com:/etc/      example.com/
+@@ -6580,6 +6518,15 @@
+ 
+ =back
+ 
++B<backup   example.com:/etc/       example.com/>
++
++=over 4
++
++Same thing but let ssh choose the remote username (as specified in
++~/.ssh/config, otherwise the same as the local username)
++
++=back
++
+ B<backup   root@example.com:/usr/local/ example.com/>
+ 
+ =over 4
+@@ -6699,10 +6646,10 @@
+     linux_lvm_vgpath          /dev
+     linux_lvm_mountpath       /mnt/lvm-snapshot
+ 
+-    retain              hourly  6
+-    retain              daily   7
+-    retain              weekly  7
+-    retain              monthly 3
++    retain              alpha  6
++    retain              beta   7
++    retain              gamma  7
++    retain              delta 3
+ 
+     backup              /etc/                     localhost/
+     backup              /home/                    localhost/
+@@ -6716,6 +6663,8 @@
+ 
+ =back
+ 
++=back
++
+ =head1 USAGE
+ 
+ B<rsnapshot> can be used by any user, but for system-wide backups
+@@ -6728,18 +6677,18 @@
+ also want to run it from the command line once or twice to get
+ a feel for what it's doing.
+ 
+-Here is an example crontab entry, assuming that backup levels B<hourly>,
+-B<daily>, B<weekly> and B<monthly> have been defined in B</etc/rsnapshot.conf>
++Here is an example crontab entry, assuming that backup levels B<alpha>,
++B<beta>, B<gamma> and B<delta> have been defined in B</etc/rsnapshot.conf>
+ 
+ =over 4
+ 
+-B<0 */4 * * *         /usr/local/bin/rsnapshot hourly>
++B<0 */4 * * *         /usr/local/bin/rsnapshot alpha>
+ 
+-B<50 23 * * *         /usr/local/bin/rsnapshot daily>
++B<50 23 * * *         /usr/local/bin/rsnapshot beta>
+ 
+-B<40 23 * * 6         /usr/local/bin/rsnapshot weekly>
++B<40 23 * * 6         /usr/local/bin/rsnapshot gamma>
+ 
+-B<30 23 1 * *         /usr/local/bin/rsnapshot monthly>
++B<30 23 1 * *         /usr/local/bin/rsnapshot delta>
+ 
+ =back
+ 
+@@ -6747,30 +6696,30 @@
+ 
+ =over 4
+ 
+-6 hourly backups a day (once every 4 hours, at 0,4,8,12,16,20)
++6 alpha backups a day (once every 4 hours, at 0,4,8,12,16,20)
+ 
+-1 daily backup every day, at 11:50PM
++1 beta backup every day, at 11:50PM
+ 
+-1 weekly backup every week, at 11:40PM, on Saturdays (6th day of week)
++1 gamma backup every week, at 11:40PM, on Saturdays (6th day of week)
+ 
+-1 monthly backup every month, at 11:30PM on the 1st day of the month
++1 delta backup every month, at 11:30PM on the 1st day of the month
+ 
+ =back
+ 
+ It is usually a good idea to schedule the larger backup levels to run a bit before the
+-lower ones. For example, in the crontab above, notice that "daily" runs 10 minutes
+-before "hourly".  The main reason for this is that the daily rotate will
+-pull out the oldest hourly and make that the youngest daily (which means
+-that the next hourly rotate will not need to delete the oldest hourly),
++lower ones. For example, in the crontab above, notice that "beta" runs 10 minutes
++before "alpha".  The main reason for this is that the beta rotate will
++pull out the oldest alpha and make that the youngest beta (which means
++that the next alpha rotate will not need to delete the oldest alpha),
+ which is more efficient.  A secondary reason is that it is harder to
+ predict how long the lowest backup level will take, since it needs to actually
+ do an rsync of the source as well as the rotate that all backups do.
+ 
+-If rsnapshot takes longer than 10 minutes to do the "daily" rotate
+-(which usually includes deleting the oldest daily snapshot), then you
++If rsnapshot takes longer than 10 minutes to do the "beta" rotate
++(which usually includes deleting the oldest beta snapshot), then you
+ should increase the time between the backup levels.
+ Otherwise (assuming you have set the B<lockfile> parameter, as is recommended)
+-your hourly snapshot will fail sometimes because the daily still has the lock.  
++your alpha snapshot will fail sometimes because the beta still has the lock.  
+ 
+ Remember that these are just the times that the program runs.
+ To set the number of backups stored, set the B<retain> numbers in
+@@ -6812,11 +6761,11 @@
+ 
+ =over 4
+ 
+-B<rsnapshot diff daily.0 daily.1>
++B<rsnapshot diff beta.0 beta.1>
+ 
+-B<rsnapshot diff daily.0/localhost/etc daily.1/localhost/etc>
++B<rsnapshot diff beta.0/localhost/etc beta.1/localhost/etc>
+ 
+-B<rsnapshot diff /.snapshots/daily.0 /.snapshots/daily.1>
++B<rsnapshot diff /.snapshots/beta.0 /.snapshots/beta.1>
+ 
+ =back
+ 
+@@ -6833,13 +6782,13 @@
+ 
+ =over 4
+ 
+-B<0 */4 * * *         /usr/local/bin/rsnapshot sync && /usr/local/bin/rsnapshot hourly>
++B<0 */4 * * *         /usr/local/bin/rsnapshot sync && /usr/local/bin/rsnapshot alpha>
+ 
+-B<50 23 * * *         /usr/local/bin/rsnapshot daily>
++B<50 23 * * *         /usr/local/bin/rsnapshot beta>
+ 
+-B<40 23 1,8,15,22 * * /usr/local/bin/rsnapshot weekly>
++B<40 23 1,8,15,22 * * /usr/local/bin/rsnapshot gamma>
+ 
+-B<30 23 1 * *         /usr/local/bin/rsnapshot monthly>
++B<30 23 1 * *         /usr/local/bin/rsnapshot delta>
+ 
+ =back
+ 
+@@ -6990,17 +6939,17 @@
+ remove the files from the smallest backup level's ".0" directory.
+ 
+ For example, if you were previously backing up /home/ with a destination
+-of localhost/, and hourly is your smallest backup level, you would need to do
++of localhost/, and alpha is your smallest backup level, you would need to do
+ the following to reclaim that disk space:
+ 
+ =over 4
+ 
+-rm -rf <snapshot_root>/hourly.0/localhost/home/
++rm -rf <snapshot_root>/alpha.0/localhost/home/
+ 
+ =back
+ 
+ Please note that the other snapshots previously made of /home/ will still
+-be using that disk space, but since the files are flushed out of hourly.0/,
++be using that disk space, but since the files are flushed out of alpha.0/,
+ they will no longer be copied to the subsequent directories, and will thus
+ be removed in due time as the rotations happen.
+ 
+@@ -7020,7 +6969,7 @@
+ =over 4
+ 
+ =item -
+-Primary author and previous maintainer of rsnapshot.
++Primary author and original maintainer of rsnapshot.
+ 
+ =back
+ 
+@@ -7029,7 +6978,7 @@
+ =over 4
+ 
+ =item -
+-Current co-maintainer of rsnapshot
++Previous maintainer of rsnapshot
+ 
+ =item -
+ Wrote the rsnapshot-diff utility
+@@ -7045,7 +6994,7 @@
+ =over 4
+ 
+ =item -
+-Co-maintainer, with responsibility for release management since 1.2.9
++Current rsnapshot maintainer
+ 
+ =item -
+ Fixed race condition in lock file creation, improved error reporting
+@@ -7267,3 +7216,8 @@
+ 
+ =cut
+ 
++# more emacs-appeasement
++######################################################################
++### Local Variables:
++### tab-width: 4
++### End:
