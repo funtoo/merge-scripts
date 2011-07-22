@@ -257,10 +257,9 @@ else:
 
 gentoo_src = Tree("gentoo","gentoo.org", "git://github.com/funtoo/portage.git", pull=True, trylocal="/var/git/portage-gentoo")
 funtoo_overlay = Tree("funtoo-overlay", "master", "git://github.com/funtoo/funtoo-overlay.git", pull=True)
-tarsius_overlay = Tree("tarsius-overlay", "master", "https://github.com/golodhrim/tarsius-overlay.git", pull=True)
 foo_overlay = Tree("foo-overlay", "master", "https://github.com/slashbeast/foo-overlay.git", pull=True)
 bar_overlay = Tree("bar-overlay", "master", "git://github.com/adessemond/bar-overlay.git", pull=True)
-golodhrim_overlay = Tree("golodhrim-overlay", "master", "https://github.com/golodhrim/golodhrim-overlay.git", pull=True)
+flora_overlay = Tree("flora", "master", "https://github.com/funtoo/flora.git", pull=True)
 felicitus_overlay = Tree("felicitus-overlay", "master", "https://github.com/timoahummel/felicitus_overlay.git", pull=True)
 
 if len(sys.argv) > 1 and sys.argv[1][0] == "/":
@@ -293,10 +292,9 @@ steps = [
 	SyncDir(funtoo_overlay.root,"licenses"),
 	SyncDir(funtoo_overlay.root,"eclass"),
 	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
-	InsertEbuilds(tarsius_overlay, select="all", skip=None, replace=["sys-libs/libixp","x11-wm/wmii","dev-vcs/cvsps","net-print/foo2zjs"]),
 	InsertEbuilds(foo_overlay, select="all", skip=None, replace=["app-shells/rssh"]),
 	InsertEbuilds(bar_overlay, select="all", skip=None, replace=True),
-	InsertEbuilds(golodhrim_overlay, select="all", skip=None, replace=False),
+	InsertEbuilds(flora_overlay, select="all", skip=None, replace=False),
 	InsertEbuilds(felicitus_overlay, select="all", skip=None, replace=False),
 	GenCache()
 ]
