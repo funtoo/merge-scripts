@@ -24,16 +24,14 @@ RDEPEND="dev-python/setuptools
 	mssql? ( dev-python/pymssql )
 	mysql? ( dev-python/mysql-python )
 	postgres? ( >=dev-python/psycopg-2 )
-	sqlite? (
-		>=dev-db/sqlite-3.3.13
-		|| ( >=dev-lang/python-2.5[sqlite] dev-python/pysqlite )
-	)"
+	sqlite? ( dev-lang/python[sqlite] )
+	"
 DEPEND="${RDEPEND}
 	dev-python/setuptools
 	test? (
 		>=dev-db/sqlite-3.3.13
 		>=dev-python/nose-0.10.4
-		|| ( >=dev-lang/python-2.5[sqlite] dev-python/pysqlite )
+		dev-lang/python[sqlite]
 	)"
 
 S="${WORKDIR}/${MY_P}"
