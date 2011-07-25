@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<herd>no-herd</herd>
+	<maintainer>
+		<email>loki_val@gentoo.org</email>
+		<name>Peter Alfredsen</name>
+	</maintainer>
+	<use>
+		<flag name='tools'>Build the xmlrpc* tools.</flag>
+		<flag name='abyss'>Build the Abyss mini web-server.</flag>
+		<flag name='threads'>Controls whether to build the Abyss web-server with pthreads or fork 'threading'.</flag>
+	</use>
+</pkgmetadata>
