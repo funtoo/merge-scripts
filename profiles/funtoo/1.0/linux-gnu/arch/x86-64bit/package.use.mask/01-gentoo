@@ -1,6 +1,6 @@
 # Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/arch/amd64/package.use.mask,v 1.93 2011/05/14 01:14:45 lack Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/amd64/package.use.mask,v 1.102 2011/07/29 17:44:40 xarthisius Exp $
 
 # When you add an entry to the top of this file, add your name, the date, and
 # an explanation of why something is getting masked. Please be extremely
@@ -18,9 +18,34 @@
 
 #--- END OF EXAMPLES ---
 
+# Kacper Kowalik <xarthisius@gentoo.org> (29 Jul 2011)
+# mask assembler as it currently doesn't work
+dev-lang/path64 assembler
+
+# Anthony G. Basile <blueness@gentoo.org> (22 Jul 2011)
+# nat-pmp and upnp are only stable on amd64/x86 for this package
+>=net-misc/tor-0.2.3 -nat-pmp -upnp
+
+# Robin H. Johnson <robbat2@gentoo.org> (10 Jul 2011)
+# PPS should work on all arches, but only keyworded on amd64/x86
+>=net-misc/ntp-4.2.6_p3-r1 -parse-clocks
+
+# Alexey Shvetsov <alexxy@gentoo.org> (1 Jul 2011)
+# Use mask infiniband for stable corosync and glusterfs
+=sys-cluster/glusterfs-3.1.2 infiniband
+=sys-cluster/corosync-1.3.0 infiniband
+
+# Markos Chandras <hwoarang@gentoo.org> (10 Jun 2011)
+# Unmask firebird on qt-sql per bug #337451
+x11-libs/qt-sql -firebird
+
+# Bernard Cafarelli <voyageur@gentoo.org> (6 Jun 2011)
+# libobjc2/clang works on amd64
+gnustep-base/gnustep-make -libobjc2
+
 # Jim Ramsay <lack@gentoo.org> (14 May 2011)
-# Mask 'kde' flag for adobe-flash, since the KCM plugin is 32-bit only.
-www-plugins/adobe-flash kde
+# Mask 'kde' flag for adobe-flash, since the KCM plugin in 10.3 is 32-bit only.
+<www-plugins/adobe-flash-11 kde
 
 # Markos Chandras <hwoarang@gentoo.org> (03 May 2011)
 # Unmask firebird only for php
