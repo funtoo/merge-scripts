@@ -4,6 +4,10 @@
 # new debian-sources to test
 =sys-kernel/debian-sources-2.6.32.35
 
+# Veronica <nCdy@funtoo.org> (02 Aug 2011)
+# 3.0 Debian sources Masked for testing:
+>=sys-kernel/debian-sources-3.0
+
 # Oleg Vinichenko (24 July)
 # procps mask due to metro stage failures (see bug #353630)
 >=sys-process/procps-3.2.8_p10 
