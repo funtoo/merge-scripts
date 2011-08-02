@@ -45,7 +45,6 @@ src_install() {
 	kernel-2_src_install
 	exeinto /usr/src/linux-${KV_FULL}
 	doexe ${FILESDIR}/config-extract
-	doexe ${FILESDIR}/.config
 }
 
 pkg_postinst() {
