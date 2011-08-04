@@ -17,15 +17,15 @@ fi
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~x86 ~amd64"
-IUSE="selinux extras +hwdb"
+KEYWORDS="~x86 ~amd64 ~sparc"
+IUSE="selinux extras +hwdb +gudev"
 MIN_KERNEL="2.6.32"
 
 COMMON_DEPEND="selinux? ( sys-libs/libselinux )
 		sys-apps/acl
 		virtual/libusb:0
-		dev-libs/glib:2
-	>=dev-libs/gobject-introspection-0.6.9"
+		gudev? ( dev-libs/glib:2 )
+	    dev-libs/gobject-introspection"
 DEPEND="${COMMON_DEPEND} dev-util/gperf >=sys-kernel/linux-headers-2.6.34"
 RDEPEND="${COMMON_DEPEND} hwdb? ( >=sys-apps/usbutils-0.82 sys-apps/pciutils ) !sys-apps/coldplug !<sys-fs/lvm2-2.02.45 !sys-fs/device-mapper >=sys-apps/baselayout-2.1.6"
 PROVIDE="virtual/dev-manager"
