@@ -1,18 +1,16 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 2011 Funtoo Technologies
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-kernel/openvz-sources/openvz-sources-2.6.18.028.066.7.ebuild,v 1.1 2009/11/26 19:12:49 pva Exp $
 
 EAPI=2
 
 inherit mount-boot
 
 SLOT=$PVR
-CKV=2.6.18
+CKV=2.6.32
 OKV=$CKV
-OVZ_KERNEL="028stab091"
+OVZ_KERNEL="042stab025"
 OVZ_REV="1"
 OVZ_KV=${OVZ_KERNEL}.${OVZ_REV}
-OVZ_PATCHV="238.12.1.el5.${OVZ_KV}"
 KV_FULL=${PN}-${PVR}
 EXTRAVERSION=-${OVZ_KV}
 KERNEL_ARCHIVE="linux-${CKV}.tar.bz2"
@@ -21,22 +19,20 @@ RESTRICT="binchecks strip"
 
 LICENSE="GPL-2"
 KEYWORDS="x86 amd64"
-IUSE="binary xen"
-DEPEND="binary? ( >=sys-kernel/genkernel-3.4.12.6-r4 ) =sys-devel/gcc-4.1.2*"
-RDEPEND="binary? ( <=sys-fs/udev-147 )"
+IUSE="binary"
+DEPEND="binary? ( >=sys-kernel/genkernel-3.4.12.6-r4 )"
+RDEPEND="binary? ( >=sys-fs/udev-160 )"
 DESCRIPTION="Full Linux kernel sources - RHEL5 kernel with OpenVZ patchset"
 HOMEPAGE="http://www.openvz.org"
-MAINPATCH="patch-${OVZ_PATCHV}-combined.gz"
+MAINPATCH="patch-${OVZ_KV}-combined.gz"
 SRC_URI="${KERNEL_URI}
-	http://download.openvz.org/kernel/branches/rhel5-${CKV}-testing/${OVZ_KV}/configs/kernel-${CKV}-i686-ent.config.ovz -> config-${CKV}-${OVZ_KV}.i686
-	http://download.openvz.org/kernel/branches/rhel5-${CKV}-testing/${OVZ_KV}/configs/kernel-${CKV}-i686-xen.config.ovz -> config-${CKV}-${OVZ_KV}.i686.xen
-	http://download.openvz.org/kernel/branches/rhel5-${CKV}-testing/${OVZ_KV}/configs/kernel-${CKV}-x86_64.config.ovz -> config-${CKV}-${OVZ_KV}.x86_64
-	http://download.openvz.org/kernel/branches/rhel5-${CKV}-testing/${OVZ_KV}/configs/kernel-${CKV}-x86_64-xen.config.ovz -> config-${CKV}-${OVZ_KV}.x86_64.xen
-	http://download.openvz.org/kernel/branches/rhel5-${CKV}-testing/${OVZ_KV}/patches/$MAINPATCH"
+	http://download.openvz.org/kernel/branches/rhel6-${CKV}/${OVZ_KV}/configs/config-${CKV}-${OVZ_KV}.i686
+	http://download.openvz.org/kernel/branches/rhel6-${CKV}/${OVZ_KV}/configs/config-${CKV}-${OVZ_KV}.x86_64
+	http://download.openvz.org/kernel/branches/rhel6-${CKV}/${OVZ_KV}/patches/$MAINPATCH"
 S="$WORKDIR/linux-${CKV}"
 
 K_EXTRAEINFO="
-This OpenVZ kernel uses RHEL5 (Red Hat Enterprise Linux 5) patch set.
+This OpenVZ kernel uses RHEL6 (Red Hat Enterprise Linux 6) patch set.
 This patch set is maintained by Red Hat for enterprise use, and contains
 further modifications by the OpenVZ development team and the Funtoo
 Linux project.
@@ -48,7 +44,7 @@ configurations can result in build failures.
 For best results, always start with a .config provided by the OpenVZ 
 team from:
 
-http://wiki.openvz.org/Download/kernel/rhel5/${OVZ_KERNEL}.
+http://wiki.openvz.org/Download/kernel/rhel6/${OVZ_KERNEL}.
 
 On amd64 and x86 arches, one of these configurations has automatically been
 enabled in the kernel source tree that was just installed for you.
@@ -56,9 +52,6 @@ enabled in the kernel source tree that was just installed for you.
 Slight modifications to the kernel configuration necessary for booting
 are usually fine. If you are using genkernel, the default configuration
 should be sufficient for your needs."
-
-K_EXTRAEWARN="THIS KERNEL MUST BE BUILT WITH GCC-4.1. Makefile will use
-gcc-4.1.2 directly."
 
 src_unpack() {
 	unpack ${KERNEL_ARCHIVE}
@@ -88,41 +81,25 @@ pkg_setup() {
 	case $ARCH in
 		x86)
 			defconfig_src=i686
-			defconfig_dst=i386
 			;;
 		amd64)
 			defconfig_src=x86_64
-			defconfig_dst=x86_64
 			;;
 		*)
 			die "unsupported ARCH: $ARCH"
 			;;
 	esac
-	if use xen; then
-		defconfig_src="${defconfig_src}.xen"
-	fi
 	defconfig_src="${DISTDIR}/config-${CKV}-${OVZ_KV}.${defconfig_src}"
-	defconfig_dst="${S}/arch/${defconfig_dst}/defconfig"
 	unset ARCH; unset LDFLAGS #will interfere with Makefile if set
 }
 
 src_prepare() {
 	apply $DISTDIR/$MAINPATCH -p1
-	apply ${FILESDIR}/openvz-rhel5-stable-2.6.18.028.064.7-bridgemac.patch -p1
-	apply ${FILESDIR}/uvesafb-0.1-rc3-2.6.18-openvz-028.066.10.patch -p1
+	apply ${FILESDIR}/rhel5-openvz-sources-2.6.18.028.064.7-bridgemac.patch -p1
 	sed -i -e "s:^\(EXTRAVERSION =\).*:\1 ${EXTRAVERSION}:" Makefile || die
 	sed	-i -e 's:#export\tINSTALL_PATH:export\tINSTALL_PATH:' Makefile || die
-	local xensuf=""
-	if use xen; then
-		xensuf=".xen"
-	fi
-	cp $DISTDIR/config-${CKV}-${OVZ_KV}.i686${xensuf} arch/i386/defconfig || die
-	cp $DISTDIR/config-${CKV}-${OVZ_KV}.x86_64${xensuf} arch/x86_64/defconfig || die
-	for MYARCH in i386 x86_64
-	do
-		# add missing uvesafb config option (came from our patch) to default config
-		echo "CONFIG_FB_UVESA=y" >> "arch/$MYARCH/defconfig" || die "uvesafb config fail"
-	done
+	cp $DISTDIR/config-${CKV}-${OVZ_KV}.i686 arch/x86/configs/i386_defconfig || die
+	cp $DISTDIR/config-${CKV}-${OVZ_KV}.x86_64 arch/x86/configs/x86_64_defconfig || die
 	rm -f .config >/dev/null
 	make -s mrproper || die "make mrproper failed"
 	make -s include/linux/version.h || die "make include/linux/version.h failed"
@@ -157,20 +134,26 @@ src_install() {
 	dodir /usr/src
 	cp -a ${S} ${D}/usr/src/linux-${P} || die
 	cd ${D}/usr/src/linux-${P}
+	# prepare for real-world use and 3rd-party module building:
 	make mrproper || die
-	cp $defconfig_dst .config || die
+	cp $defconfig_src .config || die
 	make oldconfig || die
 	# if we didn't use genkernel, we're done. The kernel source tree is left in
 	# an unconfigured state - you can't compile 3rd-party modules against it yet.
 	use binary || return
 	make prepare || die
 	make scripts || die
-	# prep sources after compile and copy binaries into place:
+	# OK, now the source tree is configured to allow 3rd-party modules to be
+	# built against it, since we want that to work since we have a binary kernel
+	# built.
 	cp -a ${WORKDIR}/out/* ${D}/ || die "couldn't copy output files into place"
 	# module symlink fixup:
 	rm -f ${D}/lib/modules/*/source || die
 	rm -f ${D}/lib/modules/*/build || die
 	cd ${D}/lib/modules
+	# module strip:
+	find -iname *.ko -exec strip --strip-debug {} \;
+	# back to the symlink fixup:
 	local moddir="$(ls -d 2*)"
 	ln -s /usr/src/linux-${P} ${D}/lib/modules/${moddir}/source || die
 	ln -s /usr/src/linux-${P} ${D}/lib/modules/${moddir}/build || die
