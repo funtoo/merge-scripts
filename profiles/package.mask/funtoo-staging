@@ -1,5 +1,10 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Daniel Robbins (5 Aug 2011)
+# New openvz stuff to test
+=sys-kernel/openvz-rhel5-stable-2.6.18.028.092.2
+=sys-kernel/openvz-rhel6-stable-2.6.32.042.025.1
+
 # Oleg Vinichenko (1 August)
 # new debian-sources to test
 =sys-kernel/debian-sources-2.6.32.35
