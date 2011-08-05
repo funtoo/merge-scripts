@@ -99,6 +99,9 @@ src_compile() {
 		--libexecdir="${udev_libexec_dir}" \
 		--enable-logging \
 		--enable-introspection \
+		--enable-gudev \
+		--enable-hwdb \
+		$(use_enable gudev) \
 		$(use_enable extras) \
 		$(use_with selinux)
 
