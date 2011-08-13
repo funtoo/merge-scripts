@@ -28,6 +28,11 @@
 ## Eclipse ebuild, see Gentoo bug #325271
 =dev-util/eclipse-sdk-3.7.0
 ################################################################
+
+# Oleg Vinichenko (13 August 2011)
+# eix bump, masked for testing)
+=app-portage/eix-0.22.11
+
 # Daniel Robbins (5 Aug 2011)
 # New openvz stuff to test
 =sys-kernel/openvz-rhel5-stable-2.6.18.028.092.2
@@ -58,9 +63,3 @@
 # tcp-wrappers-7.6 with some patches coming from Debian (most notably additional manual pages and CIDR Support)
 >=sys-apps/tcp-wrappers-7.6-r9
 
-# Martin Scholz <golodhrim@funtoo.org> (16 March 2011)
-# Patched version of eix so that eix-sync uses emerge --sync
-# fixed with patch from JF added -r1 for that version
-# -r1 our patched version
-# -r2 mask to not break with newer version
->=app-portage/eix-0.22.9
