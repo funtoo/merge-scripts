@@ -24,7 +24,7 @@ DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )"
 
 src_prepare() {
-    epatch "${FILESDIR}/${P}-disable-rsync.patch"
+epatch "${FILESDIR}/${P}-disable-rsync.patch"
 }		 
 
 src_configure() {
