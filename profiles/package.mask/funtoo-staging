@@ -1,5 +1,9 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Daniel Robbins (14 Aug 2011)
+# it's broken - masking until we have a good fix.
+=sys-boot/boot-update-1.5.3
+
 ##############################################################
 ### Mask for eclipse-sdk (flora overlay import)
 ### responsible Jean Francis Roy
