@@ -342,6 +342,9 @@ pkg_postinst() {
 		elog "please read http://www.gentoo.org/proj/en/portage/doc/testing.xml"
 		elog
 	fi
+	ewarn "You will need to change the configuration files"
+	ewarn "according to unified path and funtoo 1.0 profile"
+	ewarn "http://www.funtoo.org/wiki/Funtoo_1.0_Profile"
 }
 
 pkg_postrm() {
