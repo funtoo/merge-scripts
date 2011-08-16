@@ -137,7 +137,7 @@ src_install() {
 	# prepare for real-world use and 3rd-party module building:
 	make mrproper || die
 	cp $defconfig_src .config || die
-	make oldconfig || die
+	yes "" | make oldconfig || die
 	# if we didn't use genkernel, we're done. The kernel source tree is left in
 	# an unconfigured state - you can't compile 3rd-party modules against it yet.
 	use binary || return
