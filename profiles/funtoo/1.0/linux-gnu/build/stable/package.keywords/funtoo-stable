@@ -1,0 +1,2 @@
+=dev-libs/gmp-5* ~amd64 ~x86 ~sparc
+=sys-fs/device-mapper-1.02.28 ~amd64 ~x86 ~sparc
