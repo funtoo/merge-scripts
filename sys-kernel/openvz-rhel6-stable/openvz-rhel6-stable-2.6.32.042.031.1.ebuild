@@ -8,7 +8,7 @@ inherit mount-boot
 SLOT=$PVR
 CKV=2.6.32
 OKV=$CKV
-OVZ_KERNEL="042stab025"
+OVZ_KERNEL="042stab031"
 OVZ_REV="1"
 OVZ_KV=${OVZ_KERNEL}.${OVZ_REV}
 KV_FULL=${PN}-${PVR}
