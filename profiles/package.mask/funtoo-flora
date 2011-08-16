@@ -1,0 +1,31 @@
+# PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
+
+##############################################################
+### Mask for eclipse-sdk (flora overlay import)
+### responsible Jean Francis Roy
+### imported Martin 'golodhrim' Scholz
+###############################################################
+##
+## Eclipse is very out-of-date in Gentoo as newer versions 
+## depend on packages that are waiting to hit Portage. Some of
+## the packages masked below are not ready yet (not "clean"
+## enough to hit Portage), but here we provide a simple way for
+## Funtoo users to test them out and report problems if there
+## are any.
+##
+###############################################################
+#
+## Dependencies with no particular bug attached to it
+=dev-java/asm-3.3.1
+=dev-java/lucene-analyzers-2.9.4
+=dev-java/sat4j-core-2.3.0
+=dev-java/sat4j-pseudo-2.3.0
+=dev-java/swt-3.7
+#
+## Dependency, see Gentoo bug #328747
+=www-servers/jetty-6.1.24
+#
+## Eclipse ebuild, see Gentoo bug #325271
+=dev-util/eclipse-sdk-3.7.0
+################################################################
+
