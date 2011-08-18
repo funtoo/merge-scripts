@@ -292,7 +292,7 @@ steps = [
 	SyncDir(funtoo_overlay.root,"licenses"),
 	SyncDir(funtoo_overlay.root,"eclass"),
 	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
-	InsertEbuilds(foo_overlay, select="all", skip=None, replace=["app-shells/rssh"]),
+	InsertEbuilds(foo_overlay, select="all", skip=None, replace=["app-shells/rssh","net-misc/unison"]),
 	InsertEbuilds(bar_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(flora_overlay, select="all", skip=None, replace=False),
 	InsertEbuilds(felicitus_overlay, select="all", skip=None, replace=False),
