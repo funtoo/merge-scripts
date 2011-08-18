@@ -5,6 +5,8 @@ import commands
 
 debug = False
 
+os.putenv("FEATURES","mini-manifest")
+
 def headSHA1(tree):
 	head = None
 	hfile = os.path.join(tree,".git/HEAD")
@@ -264,16 +266,12 @@ felicitus_overlay = Tree("felicitus-overlay", "master", "https://github.com/timo
 
 if len(sys.argv) > 1 and sys.argv[1][0] == "/":
 	dest = sys.argv[1]
-	dest_mini_2010 = None
-	dest_mini = sys.argv[1]+"-mini"
 	branch = "funtoo.org" 
 else:
-	dest = "/var/git/portage-prod"
-	dest_mini_2010 = "/var/git/portage-mini-2010"
-	dest_mini = "/var/git/portage-mini-2011"
+	dest = "/var/git/portage-mini-2011"
 	branch = "funtoo.org"
 
-for test in [ dest, dest_mini ]:
+for test in [ dest ]:
 	if not os.path.isdir(test):
 		os.makedirs(test)
 	if not os.path.isdir("%s/.git" % test):
@@ -285,7 +283,7 @@ for test in [ dest, dest_mini ]:
 		push = False
 
 steps = [
-	SyncTree(gentoo_src,exclude=["/metadata/cache/**"]),
+	SyncTree(gentoo_src,exclude=["/metadata/cache/**","ChangeLog"]),
 	ApplyPatchSeries("%s/funtoo/patches" % funtoo_overlay.root ),
 	SyncDir(funtoo_overlay.root,"profiles","profiles", exclude=["repo_name","categories"]),
 	ProfileDepFix(),
@@ -296,6 +294,7 @@ steps = [
 	InsertEbuilds(bar_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(flora_overlay, select="all", skip=None, replace=False),
 	InsertEbuilds(felicitus_overlay, select="all", skip=None, replace=False),
+	Minify(),
 	GenCache()
 ]
 
@@ -314,21 +313,3 @@ steps = [
 prod = UnifiedTree(dest,steps)
 prod.run()
 prod.gitCommit(message="glorious funtoo updates",push=push)
-
-# then for the mini tree, we rsync all work changes on top of our mini git tree, minify, and commit:
-
-minis = [ dest_mini ]
-if dest_mini_2010 != None:
-	minis.append(dest_mini_2010)
-
-for d_mini in minis:
-	mini = UnifiedTree( d_mini, [
-		GitPrep(branch), 
-		SyncTree(work, exclude=["ChangeLog"]), 
-		Minify() 
-	])
-
-	mini.run()
-	mini.gitCommit(message="glorious funtoo updates",push=push)
-
-
