@@ -19,10 +19,10 @@
 ## I've also included the minetest server initscript.
 ##############################################################
 ## Mask for FriBID git version
-+=www-plugins/fribid-9999
+=www-plugins/fribid-9999
 #
 ## Mask for Minetest git version
-+=games-mud/minetest-9999
+=games-mud/minetest-9999
 ##############################################################
 
 ##############################################################
