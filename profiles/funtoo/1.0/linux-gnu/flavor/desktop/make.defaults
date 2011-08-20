@@ -1,6 +1,6 @@
 USE="$USE X xorg udev dbus"						# desktop gui frameworks
 USE="$USE cdr dri gpm"	                             			# desktop hardware support
 INPUT_DEVICES="evdev"
-VIDEO_CARDS="fbdev glint intel mach64 mga neomagic nouveau nv r128 radeon savage sis tdfx trident vesa via vmware voodoo"
+VIDEO_CARDS="fbdev glint intel mach64 mga neomagic nouveau nv r128 radeon savage sis tdfx trident vesa via virtualbox vmware voodoo"
 LCD_DEVICES="bayrad cfontz cfontz633 glk hd44780 lb216 lcdm001 mtxorb ncurses text"
 
