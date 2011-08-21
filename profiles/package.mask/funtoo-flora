@@ -1,6 +1,31 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
 ##############################################################
+### Mask for FriBID and Minetest (flora overlay import
+### responsible edwtjo
+### imported Martin 'golodhrim' Scholz
+##############################################################
+## FriBID is a open source browser plugin compatible with to a 
+## closed source Swedish authentication system, Nexus Safe 
+## Personal (BankID), used by the government and banks. This 
+## is needed for Swedish users in order to carry out day to 
+## day activities, like paying bills and doing tax return.
+##
+## Minetest is a multi user dungeon mining game. like 
+## minecraft. This is only the git version ebuild since the 
+## only available minetest tag is broken upstream. The tagged 
+## version ebuild can be found in my own repository but it is 
+## only there as a reference and is not part of this commit. 
+## I've also included the minetest server initscript.
+##############################################################
+## Mask for FriBID git version
+=www-plugins/fribid-9999
+#
+## Mask for Minetest git version
+=games-mud/minetest-9999
+##############################################################
+
+##############################################################
 ### Mask for eclipse-sdk (flora overlay import)
 ### responsible Jean Francis Roy
 ### imported Martin 'golodhrim' Scholz
