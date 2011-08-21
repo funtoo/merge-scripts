@@ -13,10 +13,6 @@
 # it's broken - masking until we have a good fix.
 =sys-boot/boot-update-1.5.3
 
-# Oleg Vinichenko (13 August 2011)
-# eix bump, masked for testing)
-=app-portage/eix-0.22.11
-
 # Oleg Vinichenko (1 August)
 # new debian-sources to test
 =sys-kernel/debian-sources-2.6.32.35
