@@ -19,7 +19,7 @@
 
 # Adrien Dessemond <adessemond@funtoo.org> (19 Aug 2011)
 # Fixes an issue with Python 2.7.x that appear only under Linux 3.x series (DLFCN module not being found, see Gentoo bug #374579)
-=sys-lang/python-2.7.1-r3
+=dev-lang/python-2.7.1-r3
 
 # Daniel Robbins (16 Aug 2011)
 # these should be tested as a pair,but genkernel needs testing with other kernels too. Some minor firmware fixes.
