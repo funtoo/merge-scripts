@@ -3,18 +3,23 @@
 
 inherit eutils vim-plugin
 
+MyP=funtoo-syntax-${PV}
+
 DESCRIPTION="vim plugin: Funtoo Ebuild, Eclass, GLEP, ChangeLog and Portage Files syntax highlighting, filetype and indent settings"
 HOMEPAGE="http://www.funtoo.org/"
-SRC_URI="mirror://gentoo/${P}.tar.bz2"
+SRC_URI="funtoo? ( mirror://gentoo/${MyP}.tar.bz2 )
+		 gentoo? ( mirror://gentoo/${PN}-20101212.tar.bz2 )"
 
 LICENSE="vim"
 KEYWORDS="alpha amd64 arm hppa ia64 m68k ~mips ppc ppc64 s390 sh sparc x86 ~ppc-aix ~sparc-fbsd ~x86-fbsd ~x64-freebsd ~hppa-hpux ~ia64-hpux ~x86-interix ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~m68k-mint ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
-IUSE="ignore-glep31"
+IUSE="ignore-glep31 funtoo gentoo"
 
-VIM_PLUGIN_HELPFILES="funtoo-syntax"
+if use funtoo ; then
+	VIM_PLUGIN_HELPFILES="funtoo-syntax"
+else
+	VIM_PLUGIN_HELPFILES="gentoo-syntax"
+fi
 VIM_PLUGIN_MESSAGES="filetype"
-
-DEPEND="!app-vim/gentoo-syntax"
 
 src_unpack() {
 	unpack ${A}
