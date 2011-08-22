@@ -1,5 +1,9 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Martin Scholz <golodhrim@funtoo.org> (22 Aug 2011)
+# Masked till source is up at funtoo
+=app-vim/funtoo-syntax-20110821
+
 # Adrien Dessemond <adessemond@funtoo.org> (21 Aug 2011)
 # Masked for testing!
 
