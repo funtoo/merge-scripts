@@ -5,6 +5,15 @@
 =app-vim/funtoo-syntax-20110821
 
 # Adrien Dessemond <adessemond@funtoo.org> (21 Aug 2011)
+# Masked for testing!
+
+=app-emulation/virtualbox-4.1.2
+=app-emulation/virtualbox-bin-4.1.2
+=app-emulation/virtualbox-additions-4.1.2
+=app-emulation/virtualbox-extpack-oracle-4.1.2
+=app-emulation/virtualbox-modules-4.1.2
+
+# Adrien Dessemond <adessemond@funtoo.org> (21 Aug 2011)
 # Masked for testing
 =sys-block/iscsitarget-1.4.20.2_p20110821
 
