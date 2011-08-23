@@ -2,7 +2,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
     <head>
-        <title>Nginx HTTP Server on Funtoo Technologies Server</title>
+        <title>Nginx HTTP Server on Funtoo Linux</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <style type="text/css">
             /*<![CDATA[*/
@@ -74,7 +74,7 @@
     </head>
 
     <body>
-        <h1>Welcome to <strong>nginx</strong> on Funtoo Technologies!</h1>
+        <h1>Welcome to <strong>nginx</strong> on Funtoo Linux!</h1>
 
         <div class="content">
             <p>This page is used to test the proper operation of the
@@ -91,18 +91,26 @@
                     Funtoo Technologies.  It is located in
                     <tt>/usr/share/nginx/html</tt>.</p>
 
-                    <p>You should now put your content in a location at
+                    <p>You can now put your content in a location at
 		    <tt>/var/www/<em>vHOST</em>/htdocs</tt> and edit the
 		    <tt>root</tt> configuration directive in the 
 		    <strong>nginx</strong> configuration file
-		    <tt>/etc/nginx/sites-available/localhost</tt>. For a default
-		    option comment the <tt>/usr/share/nginx/html</tt> line
-		    with a # and comment out the <tt>/var/www/localhost/htdocs</tt>
-		    one by removing the #.</p>
+		    <tt>/etc/nginx/sites-available/localhost</tt> if <em>vHOST</em>
+		    equals to localhost, else copy it to <em>vHOST</em> and edit that
+		    file. To use the default, comment out the 
+		    <tt>/usr/share/nginx/html</tt> line with a # and uncomment the 
+		    <tt>/var/www/localhost/htdocs</tt> one by removing the #.</p>
 
-		    <p>Link your files from <tt>/etc/nginx/sites-availabe</tt> to
-		    <tt>/etc/nginx/sites-enabled</tt>. Funtoo Technologies uses an
-		    approach to easily handle configs for virtual hosts.</p>
+		    <p>Funtoo Linux makes handling your <strong>nginx</strong>
+		    config files easy: just create a symlink in 
+		    <tt>/etc/nginx/sites-enabled/</tt> to each configuration in 
+		    <tt>/etc/nginx/sites-available/</tt> that you would like to 
+		    activate. Please note that you must restart the server or 
+		    reload the configuration for changes to take effect.</p>
+
+		    <p>To restart nginx use <tt>/etc/init.d/nginx restart</tt>,</br>
+		    in most cases a simple reload of config files with
+		    <tt>/etc/init.d/nginx reload</tt> should be enough.</p>
 
                 </div>
             </div>
