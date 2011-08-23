@@ -30,10 +30,6 @@
 # it's broken - masking until we have a good fix.
 =sys-boot/boot-update-1.5.3
 
-# Oleg Vinichenko (1 August)
-# new debian-sources to test
-=sys-kernel/debian-sources-2.6.32.35
-
 # Veronica <nCdy@funtoo.org> (02 Aug 2011)
 # 3.0 Debian sources Masked for testing:
 >=sys-kernel/debian-sources-3.0
