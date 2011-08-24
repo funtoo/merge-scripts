@@ -1,5 +1,9 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Martin Scholz <golodhrim@funtoo.org> (24 Aug 2011)
+# Testing Mask for linode sources
+=sys-kernel/linode-sources-3.0.1
+
 # Martin Scholz <golodhrim@funtoo.org> (22 Aug 2011)
 # Masked as portage 2.3 and early are broken with it
 # portage 9999 runs it :)
