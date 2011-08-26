@@ -8,7 +8,7 @@ inherit mount-boot
 SLOT=$PVR
 CKV=2.6.32
 OKV=$CKV
-OVZ_KERNEL="042stab015"
+OVZ_KERNEL="042stab033"
 OVZ_REV="1"
 OVZ_KV=${OVZ_KERNEL}.${OVZ_REV}
 KV_FULL=${PN}-${PVR}
@@ -96,6 +96,9 @@ pkg_setup() {
 src_prepare() {
 	apply $DISTDIR/$MAINPATCH -p1
 	apply ${FILESDIR}/rhel5-openvz-sources-2.6.18.028.064.7-bridgemac.patch -p1
+	# disable video4linux version 1 - deprecated as of linux-headers-2.6.38:
+	# http://forums.gentoo.org/viewtopic-t-872167.html?sid=60f2e6e08cf1f2e99b3e61772a1dc276
+	sed -i -e "s:video4linux/::g" Documentation/Makefile || die
 	sed -i -e "s:^\(EXTRAVERSION =\).*:\1 ${EXTRAVERSION}:" Makefile || die
 	sed	-i -e 's:#export\tINSTALL_PATH:export\tINSTALL_PATH:' Makefile || die
 	cp $DISTDIR/config-${CKV}-${OVZ_KV}.i686 arch/x86/configs/i386_defconfig || die
@@ -137,7 +140,7 @@ src_install() {
 	# prepare for real-world use and 3rd-party module building:
 	make mrproper || die
 	cp $defconfig_src .config || die
-	make oldconfig || die
+	yes "" | make oldconfig || die
 	# if we didn't use genkernel, we're done. The kernel source tree is left in
 	# an unconfigured state - you can't compile 3rd-party modules against it yet.
 	use binary || return
@@ -151,6 +154,9 @@ src_install() {
 	rm -f ${D}/lib/modules/*/source || die
 	rm -f ${D}/lib/modules/*/build || die
 	cd ${D}/lib/modules
+	# module strip:
+	find -iname *.ko -exec strip --strip-debug {} \;
+	# back to the symlink fixup:
 	local moddir="$(ls -d 2*)"
 	ln -s /usr/src/linux-${P} ${D}/lib/modules/${moddir}/source || die
 	ln -s /usr/src/linux-${P} ${D}/lib/modules/${moddir}/build || die
