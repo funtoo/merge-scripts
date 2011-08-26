@@ -32,15 +32,15 @@ app-arch/pxz
 
 # For toolchain upgrade ll-2010.2:
 # glibc updated 30 Jun 2011:
+# headers updated 26 Aug 2011:
 >sys-libs/glibc-2.11.3
->sys-kernel/linux-headers-2.6.32
+>sys-kernel/linux-headers-2.6.38
 >sys-devel/gcc-4.4.5
 >sys-devel/binutils-2.20.1
 
-# Daniel Robbins <drobbins@funtoo.org> (20 Apr 2010)
-
-#udev-160 is now in unstable...
->=sys-fs/udev-161
+# Oleg Vinichenko <oleg@funtoo.org> (26 Aug 2011)
+#udev-171 is now in unstable
+>=sys-fs/udev-172
 
 # Daniel Robbins <drobbins@funtoo.org> (02 Aug 2009)
 # let's watch upstream bugs for a bit:
