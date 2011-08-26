@@ -26,7 +26,7 @@ COMMON_DEPEND="selinux? ( sys-libs/libselinux )
 		virtual/libusb:0
 		gudev? ( dev-libs/glib:2 )
 	    dev-libs/gobject-introspection
-		hwdb? ( >=sys-apps/usbutils-0.82 sys-apps/pciutils )	
+		>=sys-apps/usbutils-0.82 sys-apps/pciutils
 		"
 DEPEND="${COMMON_DEPEND} dev-util/gperf >=sys-kernel/linux-headers-2.6.34"
 RDEPEND="${COMMON_DEPEND} !sys-apps/coldplug !<sys-fs/lvm2-2.02.45 !sys-fs/device-mapper >=sys-apps/baselayout-2.1.6"
