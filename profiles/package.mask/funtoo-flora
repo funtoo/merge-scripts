@@ -1,6 +1,15 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
 ##############################################################
+### Mask for linux-sources-3.0
+### responsible tobert
+### imported Martin 'golodhrim' Scholz
+##############################################################
+##
+##############################################################
+=virtual/linux-sources-3.0
+
+##############################################################
 ### Mask for FriBID and Minetest (flora overlay import
 ### responsible edwtjo
 ### imported Martin 'golodhrim' Scholz
