@@ -1,5 +1,9 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Daniel Robbins (31 Aug 2011)
+# This ebuild had no keywords, replaced with keywords and this mask. Needs testing, review.
+=sys-devel/gcc-config-1.5.1*
+
 # Martin Scholz <golodhrim@funtoo.org> (24 Aug 2011)
 # Testing Mask for linode sources
 =sys-kernel/linode-sources-3.0.1

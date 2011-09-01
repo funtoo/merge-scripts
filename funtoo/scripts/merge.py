@@ -98,7 +98,7 @@ class Tree(object):
 			base = os.path.basename(self.trylocal)
 			self.root = trylocal
 		else:
-			base = "/var/src/source-trees"
+			base = "/var/git/source-trees"
 			self.root = "%s/%s" % ( base, self.name )
 		if not os.path.exists(base):
 			os.makedirs(base)
