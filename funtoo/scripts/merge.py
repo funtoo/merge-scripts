@@ -6,6 +6,7 @@ import commands
 debug = False
 
 os.putenv("FEATURES","mini-manifest")
+mergeLog = open("/var/tmp/merge.log","w")
 
 def headSHA1(tree):
 	head = None
@@ -213,10 +214,18 @@ class InsertEbuilds(MergeStep):
 				tpkgdir = os.path.join(desttree.root,cat)
 				tpkgdir = os.path.join(tpkgdir,pkg)
 				copy = False
+				copied = False
 				if self.replace == True or (type(self.replace) == types.ListType and "%s/%s" % (cat,pkg) in self.replace):
 					runShell("rm -rf %s; cp -a %s %s" % (tpkgdir, pkgdir, tpkgdir ))
+					copied = True
 				else:
+					if not os.path.exists(tpkgdir):
+						copied = True
 					runShell("[ ! -e %s ] && cp -a %s %s || echo \"# skipping %s/%s\"" % (tpkgdir, pkgdir, tpkgdir, cat, pkg ))
+				if copied:
+					# log here.
+					cpv = "/".join(tpkgdir.split("/")[-2:])
+					mergeLog.write("%s\n" % cpv)
 
 class ProfileDepFix(MergeStep):
 
