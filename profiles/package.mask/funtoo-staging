@@ -2,7 +2,7 @@
 
 # Daniel Robbins (06 Sep 2011)
 # masked for testing
-=sys-apps/portage-2.3-r5
+>=sys-apps/portage-2.3-r5
 
 # Daniel Robbins (31 Aug 2011)
 # This ebuild had no keywords, replaced with keywords and this mask. Needs testing, review.
