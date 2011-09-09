@@ -40,7 +40,7 @@ c1:12345:respawn:/sbin/agetty --noclear 38400 tty1 linux
 c2:2345:respawn:/sbin/agetty --noclear 38400 tty2 linux
 c3:2345:respawn:/sbin/agetty --noclear 38400 tty3 linux
 c4:2345:respawn:/sbin/agetty --noclear 38400 tty4 linux
-c5:2345:respawn:/sbin/agetty -noclear 38400 tty5 linux
+c5:2345:respawn:/sbin/agetty --noclear 38400 tty5 linux
 c6:2345:respawn:/sbin/agetty --noclear 38400 tty6 linux
 
 # SERIAL CONSOLES
