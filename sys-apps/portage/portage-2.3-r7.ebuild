@@ -19,10 +19,10 @@ GITHUB_TAG="funtoo-2.3-stable-staging-merged-2.2_alpha55"
 
 python_dep="python3? ( =dev-lang/python-3* )
 	!python2? ( !python3? (
-		build? ( || ( dev-lang/python:2.7 dev-lang/python:2.6 ) )
-		!build? ( || ( dev-lang/python:2.7 dev-lang/python:2.6 >=dev-lang/python-3 ) )
+		build? ( || ( dev-lang/python:2.7 dev-lang/python:2.6[threads] ) )
+		!build? ( || ( dev-lang/python:2.7 dev-lang/python:2.6[threads] >=dev-lang/python-3 ) )
 	) )
-	python2? ( !python3? ( || ( dev-lang/python:2.7 dev-lang/python:2.6 ) ) )"
+	python2? ( !python3? ( || ( dev-lang/python:2.7 dev-lang/python:2.6[threads] ) ) )"
 
 # The pysqlite blocker is for bug #282760.
 DEPEND="${python_dep}
@@ -42,8 +42,8 @@ RDEPEND="${python_dep}
 	!<app-shells/bash-3.2_p17"
 PDEPEND="
 	!build? (
-		>=net-misc/rsync-2.6.4
-		userland_GNU? ( >=sys-apps/coreutils-6.4 )
+		>=net-misc/rsync-1.6.4
+		userland_GNU? ( >=sys-apps/coreutils-5.4 )
 	)
 	>=sys-devel/libtool-2.4-r3"
 # coreutils-6.4 rdep is for date format in emerge-webrsync #164532
