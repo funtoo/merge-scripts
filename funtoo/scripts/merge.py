@@ -39,6 +39,25 @@ def runShell(string,abortOnFail=True):
 class MergeStep(object):
 	pass
 
+class ThirdPartyMirrors(MergeStep):
+
+	def run(self,tree):
+		orig = "%s/profiles/thirdpartymirrors" % tree.root
+		new = "%/profiles/thirdpartymirrors.new" % tree.root
+		a = open(orig, "r")
+		b = open(new, "w")
+		for line in a:
+			ls = line.split()
+			if len(ls) and ls[0] == gentoo:
+				b.write("gentoo\t"+ls[1]+" http://www.funtoo.org/distfiles "+" ".join(ls[2:])+"\n")
+			else:
+				b.write(line)
+		a.close()
+		b.close()
+		os.unlink(orig)
+		os.link(new, orig)
+		os.unlink(new)
+
 class ApplyPatchSeries(MergeStep):
 	def __init__(self,path):
 		self.path = path
@@ -49,6 +68,7 @@ class ApplyPatchSeries(MergeStep):
 			if line[0:1] == "#":
 				continue
 			runShell( "( cd %s; git apply %s/%s )" % ( tree.root, self.path, line[:-1] ))
+
 
 class SyncDir(MergeStep):
 	def __init__(self,srcroot,srcdir=None,destdir=None,exclude=[],delete=False):
@@ -294,6 +314,7 @@ for test in [ dest ]:
 steps = [
 	SyncTree(gentoo_src,exclude=["/metadata/cache/**","ChangeLog"]),
 	ApplyPatchSeries("%s/funtoo/patches" % funtoo_overlay.root ),
+	ThirdPartyMirrors(),
 	SyncDir(funtoo_overlay.root,"profiles","profiles", exclude=["repo_name","categories"]),
 	ProfileDepFix(),
 	SyncDir(funtoo_overlay.root,"licenses"),
