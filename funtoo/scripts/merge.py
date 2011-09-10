@@ -43,7 +43,7 @@ class ThirdPartyMirrors(MergeStep):
 
 	def run(self,tree):
 		orig = "%s/profiles/thirdpartymirrors" % tree.root
-		new = "%/profiles/thirdpartymirrors.new" % tree.root
+		new = "%s/profiles/thirdpartymirrors.new" % tree.root
 		a = open(orig, "r")
 		b = open(new, "w")
 		for line in a:
