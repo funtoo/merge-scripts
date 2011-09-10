@@ -48,7 +48,7 @@ class ThirdPartyMirrors(MergeStep):
 		b = open(new, "w")
 		for line in a:
 			ls = line.split()
-			if len(ls) and ls[0] == gentoo:
+			if len(ls) and ls[0] == "gentoo":
 				b.write("gentoo\t"+ls[1]+" http://www.funtoo.org/distfiles "+" ".join(ls[2:])+"\n")
 			else:
 				b.write(line)
