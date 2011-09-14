@@ -1,5 +1,9 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Daniel Robbins (14 Sep 2011)
+# masked for testing
+>=sys-kernel/genkernel-3.4.18
+
 # Daniel Robbins (08 Sep 2011)
 # masked for testing
 =sys-kernel/openvz-rhel6-stable-2.6.32.042.036.1
