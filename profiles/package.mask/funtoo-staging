@@ -2,10 +2,6 @@
 
 # Daniel Robbins (14 Sep 2011)
 # masked for testing
->=sys-kernel/genkernel-3.4.18
-
-# Daniel Robbins (14 Sep 2011)
-# masked for testing
 =sys-kernel/openvz-rhel5-stable-2.6.18.028.093.2
 
 # Daniel Robbins (31 Aug 2011)
