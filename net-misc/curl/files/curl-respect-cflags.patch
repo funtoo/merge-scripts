@@ -1,0 +1,281 @@
+diff -urN curl-7.21.4.old/m4/curl-compilers.m4 curl-7.21.4/m4/curl-compilers.m4
+--- curl-7.21.4.old/m4/curl-compilers.m4	2011-02-19 18:05:43.000000000 +0100
++++ curl-7.21.4/m4/curl-compilers.m4	2011-02-19 18:11:04.000000000 +0100
+@@ -86,19 +86,19 @@
+     clangvhi=`echo $clangver | cut -d . -f1`
+     clangvlo=`echo $clangver | cut -d . -f2`
+     compiler_num=`(expr $clangvhi "*" 100 + $clangvlo) 2>/dev/null`
+-    flags_dbg_all="-g -g0 -g1 -g2 -g3"
+-    flags_dbg_all="$flags_dbg_all -ggdb"
+-    flags_dbg_all="$flags_dbg_all -gstabs"
+-    flags_dbg_all="$flags_dbg_all -gstabs+"
+-    flags_dbg_all="$flags_dbg_all -gcoff"
+-    flags_dbg_all="$flags_dbg_all -gxcoff"
+-    flags_dbg_all="$flags_dbg_all -gdwarf-2"
+-    flags_dbg_all="$flags_dbg_all -gvms"
+-    flags_dbg_yes="-g"
+-    flags_dbg_off="-g0"
+-    flags_opt_all="-O -O0 -O1 -O2 -Os -O3 -O4"
+-    flags_opt_yes="-Os"
+-    flags_opt_off="-O0"
++    flags_dbg_all=""
++    flags_dbg_all=""
++    flags_dbg_all=""
++    flags_dbg_all=""
++    flags_dbg_all=""
++    flags_dbg_all=""
++    flags_dbg_all=""
++    flags_dbg_all=""
++    flags_dbg_yes=""
++    flags_dbg_off=""
++    flags_opt_all=""
++    flags_opt_yes=""
++    flags_opt_off=""
+   else
+     AC_MSG_RESULT([no])
+   fi
+@@ -117,12 +117,12 @@
+     test "$curl_cv_have_def___DECC_VER" = "yes"; then
+     AC_MSG_RESULT([yes])
+     compiler_id="DEC_C"
+-    flags_dbg_all="-g -g0 -g1 -g2 -g3"
+-    flags_dbg_yes="-g2"
+-    flags_dbg_off="-g0"
+-    flags_opt_all="-O -O0 -O1 -O2 -O3 -O4"
+-    flags_opt_yes="-O1"
+-    flags_opt_off="-O0"
++    flags_dbg_all=""
++    flags_dbg_yes=""
++    flags_dbg_off=""
++    flags_opt_all=""
++    flags_opt_yes=""
++    flags_opt_off=""
+   else
+     AC_MSG_RESULT([no])
+   fi
+@@ -146,19 +146,19 @@
+     gccvhi=`echo $gccver | cut -d . -f1`
+     gccvlo=`echo $gccver | cut -d . -f2`
+     compiler_num=`(expr $gccvhi "*" 100 + $gccvlo) 2>/dev/null`
+-    flags_dbg_all="-g -g0 -g1 -g2 -g3"
+-    flags_dbg_all="$flags_dbg_all -ggdb"
+-    flags_dbg_all="$flags_dbg_all -gstabs"
+-    flags_dbg_all="$flags_dbg_all -gstabs+"
+-    flags_dbg_all="$flags_dbg_all -gcoff"
+-    flags_dbg_all="$flags_dbg_all -gxcoff"
+-    flags_dbg_all="$flags_dbg_all -gdwarf-2"
+-    flags_dbg_all="$flags_dbg_all -gvms"
+-    flags_dbg_yes="-g"
+-    flags_dbg_off="-g0"
+-    flags_opt_all="-O -O0 -O1 -O2 -O3 -Os"
+-    flags_opt_yes="-O2"
+-    flags_opt_off="-O0"
++    flags_dbg_all=""
++    flags_dbg_all=""
++    flags_dbg_all=""
++    flags_dbg_all=""
++    flags_dbg_all=""
++    flags_dbg_all=""
++    flags_dbg_all=""
++    flags_dbg_all=""
++    flags_dbg_yes=""
++    flags_dbg_off=""
++    flags_opt_all=""
++    flags_opt_yes=""
++    flags_opt_off=""
+   else
+     AC_MSG_RESULT([no])
+   fi
+@@ -175,12 +175,12 @@
+   if test "$curl_cv_have_def___HP_cc" = "yes"; then
+     AC_MSG_RESULT([yes])
+     compiler_id="HP_UX_C"
+-    flags_dbg_all="-g -s"
+-    flags_dbg_yes="-g"
+-    flags_dbg_off="-s"
+-    flags_opt_all="-O +O0 +O1 +O2 +O3 +O4"
+-    flags_opt_yes="+O2"
+-    flags_opt_off="+O0"
++    flags_dbg_all=""
++    flags_dbg_yes=""
++    flags_dbg_off=""
++    flags_opt_all=""
++    flags_opt_yes=""
++    flags_opt_off=""
+   else
+     AC_MSG_RESULT([no])
+   fi
+@@ -197,19 +197,19 @@
+   if test "$curl_cv_have_def___IBMC__" = "yes"; then
+     AC_MSG_RESULT([yes])
+     compiler_id="IBM_C"
+-    flags_dbg_all="-g -g0 -g1 -g2 -g3"
+-    flags_dbg_yes="-g"
++    flags_dbg_all=""
++    flags_dbg_yes=""
+     flags_dbg_off=""
+-    flags_opt_all="-O -O0 -O1 -O2 -O3 -O4 -O5"
+-    flags_opt_all="$flags_opt_all -qnooptimize"
+-    flags_opt_all="$flags_opt_all -qoptimize=0"
+-    flags_opt_all="$flags_opt_all -qoptimize=1"
+-    flags_opt_all="$flags_opt_all -qoptimize=2"
+-    flags_opt_all="$flags_opt_all -qoptimize=3"
+-    flags_opt_all="$flags_opt_all -qoptimize=4"
+-    flags_opt_all="$flags_opt_all -qoptimize=5"
+-    flags_opt_yes="-O2"
+-    flags_opt_off="-qnooptimize"
++    flags_opt_all=""
++    flags_opt_all=""
++    flags_opt_all=""
++    flags_opt_all=""
++    flags_opt_all=""
++    flags_opt_all=""
++    flags_opt_all=""
++    flags_opt_all=""
++    flags_opt_yes=""
++    flags_opt_off=""
+   else
+     AC_MSG_RESULT([no])
+   fi
+@@ -230,27 +230,27 @@
+     CURL_CHECK_DEF([__unix__], [], [silent])
+     if test "$curl_cv_have_def___unix__" = "yes"; then
+       compiler_id="INTEL_UNIX_C"
+-      flags_dbg_all="-g -g0"
+-      flags_dbg_yes="-g"
+-      flags_dbg_off="-g0"
+-      flags_opt_all="-O -O0 -O1 -O2 -O3 -Os"
+-      flags_opt_yes="-O2"
+-      flags_opt_off="-O0"
++      flags_dbg_all=""
++      flags_dbg_yes=""
++      flags_dbg_off=""
++      flags_opt_all=""
++      flags_opt_yes=""
++      flags_opt_off=""
+     else
+       compiler_id="INTEL_WINDOWS_C"
+-      flags_dbg_all="/ZI /Zi /zI /zi /ZD /Zd /zD /zd /Z7 /z7 /Oy /Oy-"
+-      flags_dbg_all="$flags_dbg_all /debug"
+-      flags_dbg_all="$flags_dbg_all /debug:none"
+-      flags_dbg_all="$flags_dbg_all /debug:minimal"
+-      flags_dbg_all="$flags_dbg_all /debug:partial"
+-      flags_dbg_all="$flags_dbg_all /debug:full"
+-      flags_dbg_all="$flags_dbg_all /debug:semantic_stepping"
+-      flags_dbg_all="$flags_dbg_all /debug:extended"
+-      flags_dbg_yes="/Zi /Oy-"
+-      flags_dbg_off="/debug:none /Oy-"
+-      flags_opt_all="/O /O0 /O1 /O2 /O3 /Od /Og /Og- /Oi /Oi-"
+-      flags_opt_yes="/O2"
+-      flags_opt_off="/Od"
++      flags_dbg_all=""
++      flags_dbg_all=""
++      flags_dbg_all=""
++      flags_dbg_all=""
++      flags_dbg_all=""
++      flags_dbg_all=""
++      flags_dbg_all=""
++      flags_dbg_all=""
++      flags_dbg_yes=""
++      flags_dbg_off=""
++      flags_opt_all=""
++      flags_opt_yes=""
++      flags_opt_off=""
+     fi
+   else
+     AC_MSG_RESULT([no])
+@@ -268,8 +268,8 @@
+   if test "$curl_cv_have_def___LCC__" = "yes"; then
+     AC_MSG_RESULT([yes])
+     compiler_id="LCC"
+-    flags_dbg_all="-g"
+-    flags_dbg_yes="-g"
++    flags_dbg_all=""
++    flags_dbg_yes=""
+     flags_dbg_off=""
+     flags_opt_all=""
+     flags_opt_yes=""
+@@ -294,12 +294,12 @@
+     test "$compiler_id" = "unknown"; then
+     AC_MSG_RESULT([yes])
+     compiler_id="SGI_MIPS_C"
+-    flags_dbg_all="-g -g0 -g1 -g2 -g3"
+-    flags_dbg_yes="-g"
+-    flags_dbg_off="-g0"
+-    flags_opt_all="-O -O0 -O1 -O2 -O3 -Ofast"
+-    flags_opt_yes="-O2"
+-    flags_opt_off="-O0"
++    flags_dbg_all=""
++    flags_dbg_yes=""
++    flags_dbg_off=""
++    flags_opt_all=""
++    flags_opt_yes=""
++    flags_opt_off=""
+   else
+     AC_MSG_RESULT([no])
+   fi
+@@ -321,12 +321,12 @@
+      test "$curl_cv_have_def__COMPILER_VERSION" = "yes"); then
+     AC_MSG_RESULT([yes])
+     compiler_id="SGI_MIPSPRO_C"
+-    flags_dbg_all="-g -g0 -g1 -g2 -g3"
+-    flags_dbg_yes="-g"
+-    flags_dbg_off="-g0"
+-    flags_opt_all="-O -O0 -O1 -O2 -O3 -Ofast"
+-    flags_opt_yes="-O2"
+-    flags_opt_off="-O0"
++    flags_dbg_all=""
++    flags_dbg_yes=""
++    flags_dbg_off=""
++    flags_opt_all=""
++    flags_opt_yes=""
++    flags_opt_off=""
+   else
+     AC_MSG_RESULT([no])
+   fi
+@@ -343,11 +343,11 @@
+   if test "$curl_cv_have_def___SUNPRO_C" = "yes"; then
+     AC_MSG_RESULT([yes])
+     compiler_id="SUNPRO_C"
+-    flags_dbg_all="-g -s"
+-    flags_dbg_yes="-g"
+-    flags_dbg_off="-s"
+-    flags_opt_all="-O -xO -xO1 -xO2 -xO3 -xO4 -xO5"
+-    flags_opt_yes="-xO2"
++    flags_dbg_all=""
++    flags_dbg_yes=""
++    flags_dbg_off=""
++    flags_opt_all=""
++    flags_opt_yes=""
+     flags_opt_off=""
+   else
+     AC_MSG_RESULT([no])
+@@ -365,8 +365,8 @@
+   if test "$curl_cv_have_def___TINYC__" = "yes"; then
+     AC_MSG_RESULT([yes])
+     compiler_id="TINY_C"
+-    flags_dbg_all="-g -b"
+-    flags_dbg_yes="-g"
++    flags_dbg_all=""
++    flags_dbg_yes=""
+     flags_dbg_off=""
+     flags_opt_all=""
+     flags_opt_yes=""
+@@ -389,12 +389,12 @@
+     CURL_CHECK_DEF([__UNIX__], [], [silent])
+     if test "$curl_cv_have_def___UNIX__" = "yes"; then
+       compiler_id="WATCOM_UNIX_C"
+-      flags_dbg_all="-g1 -g1+ -g2 -g3"
+-      flags_dbg_yes="-g2"
++      flags_dbg_all=""
++      flags_dbg_yes=""
+       flags_dbg_off=""
+-      flags_opt_all="-O0 -O1 -O2 -O3"
+-      flags_opt_yes="-O2"
+-      flags_opt_off="-O0"
++      flags_opt_all=""
++      flags_opt_yes=""
++      flags_opt_off=""
+     else
+       compiler_id="WATCOM_WINDOWS_C"
+       flags_dbg_all=""

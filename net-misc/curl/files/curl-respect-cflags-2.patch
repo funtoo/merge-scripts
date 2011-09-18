@@ -1,0 +1,36 @@
+diff --git a/m4/curl-compilers.m4 b/m4/curl-compilers.m4
+index adafaa6..b7517c1 100644
+--- a/m4/curl-compilers.m4
++++ b/m4/curl-compilers.m4
+@@ -199,19 +199,19 @@ AC_DEFUN([CURL_CHECK_COMPILER_IBM_C], [
+   if test "$curl_cv_have_def___IBMC__" = "yes"; then
+     AC_MSG_RESULT([yes])
+     compiler_id="IBM_C"
+-    flags_dbg_all="-g -g0 -g1 -g2 -g3"
+-    flags_dbg_yes="-g"
++    flags_dbg_all=""
++    flags_dbg_yes=""
+     flags_dbg_off=""
+-    flags_opt_all="-O -O0 -O1 -O2 -O3 -O4 -O5"
+-    flags_opt_all="$flags_opt_all -qnooptimize"
+-    flags_opt_all="$flags_opt_all -qoptimize=0"
+-    flags_opt_all="$flags_opt_all -qoptimize=1"
+-    flags_opt_all="$flags_opt_all -qoptimize=2"
+-    flags_opt_all="$flags_opt_all -qoptimize=3"
+-    flags_opt_all="$flags_opt_all -qoptimize=4"
+-    flags_opt_all="$flags_opt_all -qoptimize=5"
+-    flags_opt_yes="-O2"
+-    flags_opt_off="-qnooptimize"
++    flags_opt_all=""
++    flags_opt_all=""
++    flags_opt_all=""
++    flags_opt_all=""
++    flags_opt_all=""
++    flags_opt_all=""
++    flags_opt_all=""
++    flags_opt_all=""
++    flags_opt_yes=""
++    flags_opt_off=""
+     flags_prefer_cppflags="yes"
+   else
+     AC_MSG_RESULT([no])

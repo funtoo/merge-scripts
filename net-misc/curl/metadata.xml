@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+  <herd>no-herd</herd>
+  <maintainer>
+    <email>angelos@gentoo.org</email>
+    <name>Christoph Mende</name>
+  </maintainer>
+  <use>
+    <flag name="ares">Enabled c-ares dns support</flag>
+    <flag name="libssh2">Enabled SSH urls in curl using libssh2</flag>
+    <flag name="gnutls">Prefer gnutls over nss and openssl as the crypto engine</flag>
+    <flag name="nss">Prefer NSS over openssl as the crypto engine</flag>
+    <flag name="ssl">Enable crypto engine support (via openssl if USE='-gnutls -nss')</flag>
+  </use>
+</pkgmetadata>
