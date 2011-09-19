@@ -280,11 +280,13 @@ class Minify(MergeStep):
 
 # CHANGE TREE CONFIGURATION BELOW:
 
+branch = "funtoo.org"
 pull = True
 if len(sys.argv) > 1 and "nopush" in sys.argv[1:]:
 	push = False
+	sys.argv.remove("nopush")
 else:
-	push = "origin funtoo.org"
+	push = "origin %s" % branch
 
 gentoo_src = Tree("gentoo","gentoo.org", "git://github.com/funtoo/portage.git", pull=True, trylocal="/var/git/portage-gentoo")
 funtoo_overlay = Tree("funtoo-overlay", "master", "git://github.com/funtoo/funtoo-overlay.git", pull=True)
@@ -293,12 +295,11 @@ bar_overlay = Tree("bar-overlay", "master", "git://github.com/adessemond/bar-ove
 flora_overlay = Tree("flora", "master", "https://github.com/funtoo/flora.git", pull=True)
 felicitus_overlay = Tree("felicitus-overlay", "master", "https://github.com/timoahummel/felicitus_overlay.git", pull=True)
 
-if len(sys.argv) > 1 and sys.argv[1][0] == "/":
+if len(sys.argv) == 2 and sys.argv[1][0] == "/":
 	dest = sys.argv[1]
-	branch = "funtoo.org" 
 else:
-	dest = "/var/git/portage-mini-2011"
-	branch = "funtoo.org"
+	print("Please specify destination git tree (absolute path) as first argument, and branch as second argument.")
+	sys.exit(1)
 
 for test in [ dest ]:
 	if not os.path.isdir(test):
@@ -307,7 +308,7 @@ for test in [ dest ]:
 		runShell("( cd %s; git init )" % test )
 		runShell("echo 'created by merge.py' > %s/README" % test )
 		runShell("( cd %s; git add README; git commit -a -m 'initial commit by merge.py' )" % test )
-		runShell("( cd %s; git checkout -b funtoo.org; git rm -f README; git commit -a -m 'initial funtoo.org commit' )" % test )
+		runShell("( cd %s; git checkout -b %s; git rm -f README; git commit -a -m 'initial %s commit' )" % ( branch, test, branch) )
 		print("Pushing disabled automatically because repository created from scratch.")
 		push = False
 
