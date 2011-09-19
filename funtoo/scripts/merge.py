@@ -308,7 +308,7 @@ for test in [ dest ]:
 		runShell("( cd %s; git init )" % test )
 		runShell("echo 'created by merge.py' > %s/README" % test )
 		runShell("( cd %s; git add README; git commit -a -m 'initial commit by merge.py' )" % test )
-		runShell("( cd %s; git checkout -b %s; git rm -f README; git commit -a -m 'initial %s commit' )" % ( branch, test, branch) )
+		runShell("( cd %s; git checkout -b %s; git rm -f README; git commit -a -m 'initial %s commit' )" % ( test, branch, branch) )
 		print("Pushing disabled automatically because repository created from scratch.")
 		push = False
 
