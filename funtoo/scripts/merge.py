@@ -1,6 +1,7 @@
 #!/usr/bin/python2
 
 import os,sys,types
+import argparse
 import commands
 
 debug = False
@@ -280,26 +281,33 @@ class Minify(MergeStep):
 
 # CHANGE TREE CONFIGURATION BELOW:
 
-branch = "funtoo.org"
 pull = True
-if len(sys.argv) > 1 and "nopush" in sys.argv[1:]:
+
+parser = argparse.ArgumentParser(description="merge.py checkouts funtoo.org's Gentoo tree, some developers overlays and the funtoo-overlay, and merges them to create Funtoo's unified Portage tree.")
+parser.add_argument("--nopush", action="store_true", help="Prevents the script to push the git repositories")
+parser.add_argument("--branch", default="master", help="The funtoo-overlay branch to use. Default: master.")
+parser.add_argument("destination", help="The destination git repository.")
+
+args = parser.parse_args()
+
+if args.nopush:
 	push = False
-	sys.argv.remove("nopush")
 else:
-	push = "origin %s" % branch
+	push = "origin funtoo.org"
+
+dest = args.destination
+if dest[0] != "/":
+	print("Please specify destination git tree with an absolute path.")
+	sys.exit(1)
+
+branch = args.branch
 
 gentoo_src = Tree("gentoo","gentoo.org", "git://github.com/funtoo/portage.git", pull=True, trylocal="/var/git/portage-gentoo")
-funtoo_overlay = Tree("funtoo-overlay", "master", "git://github.com/funtoo/funtoo-overlay.git", pull=True)
+funtoo_overlay = Tree("funtoo-overlay", branch, "git://github.com/funtoo/funtoo-overlay.git", pull=True)
 foo_overlay = Tree("foo-overlay", "master", "https://github.com/slashbeast/foo-overlay.git", pull=True)
 bar_overlay = Tree("bar-overlay", "master", "git://github.com/adessemond/bar-overlay.git", pull=True)
 flora_overlay = Tree("flora", "master", "https://github.com/funtoo/flora.git", pull=True)
 felicitus_overlay = Tree("felicitus-overlay", "master", "https://github.com/timoahummel/felicitus_overlay.git", pull=True)
-
-if len(sys.argv) == 2 and sys.argv[1][0] == "/":
-	dest = sys.argv[1]
-else:
-	print("Please specify destination git tree (absolute path) as first argument, and branch as second argument.")
-	sys.exit(1)
 
 for test in [ dest ]:
 	if not os.path.isdir(test):
@@ -308,7 +316,7 @@ for test in [ dest ]:
 		runShell("( cd %s; git init )" % test )
 		runShell("echo 'created by merge.py' > %s/README" % test )
 		runShell("( cd %s; git add README; git commit -a -m 'initial commit by merge.py' )" % test )
-		runShell("( cd %s; git checkout -b %s; git rm -f README; git commit -a -m 'initial %s commit' )" % ( test, branch, branch) )
+		runShell("( cd %s; git checkout -b funtoo.org; git rm -f README; git commit -a -m 'initial funtoo.org commit' )" % ( test ) )
 		print("Pushing disabled automatically because repository created from scratch.")
 		push = False
 
@@ -335,7 +343,7 @@ work = UnifiedTree("/var/src/merge-portage-work",steps)
 work.run()
 
 steps = [
-	GitPrep(branch),
+	GitPrep("funtoo.org"),
 	SyncTree(work)
 ]
 
