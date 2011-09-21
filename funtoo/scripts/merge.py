@@ -125,6 +125,7 @@ class Tree(object):
 		if not os.path.exists(base):
 			os.makedirs(base)
 		if os.path.exists(self.root):
+			runShell("(cd %s; git fetch origin)" % self.root )
 			runShell("(cd %s; git checkout %s)" % ( self.root, self.branch ))
 			if pull:
 				runShell("(cd %s; git pull origin %s)" % ( self.root, self.branch ))
