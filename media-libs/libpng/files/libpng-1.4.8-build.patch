@@ -1,0 +1,12 @@
+This patch is only because we are using apng patch from 1.4.7 in 1.4.8
+
+--- pngtest.c
++++ pngtest.c
+@@ -33,6 +33,7 @@
+ 
+ #include "zlib.h"
+ #include "png.h"
++#include "pngpriv.h"
+ 
+ /* Copied from pngpriv.h but only used in error messages below. */
+ #ifndef PNG_ZBUF_SIZE
