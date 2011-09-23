@@ -9,7 +9,7 @@ SRC_URI="mirror://sourceforge/gptfdisk/${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~x86 ~sparc"
+KEYWORDS="amd64 x86 sparc"
 
 DEPEND=">=dev-libs/icu-4.6"
 RDEPEND="${DEPEND}"

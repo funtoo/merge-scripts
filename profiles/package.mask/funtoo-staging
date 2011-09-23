@@ -5,10 +5,6 @@
 # need test
 =app-shells/bash-4.2_p10-r1 
 
-# Oleg Vinichenko (20 Sep 2011)
-# gptfdisk update, masked for testing
-=sys-apps/gptfdisk-0.8.0 
-
 # Daniel Robbins (14 Sep 2011)
 # masked for testing
 =sys-kernel/openvz-rhel5-stable-2.6.18.028.093.2
