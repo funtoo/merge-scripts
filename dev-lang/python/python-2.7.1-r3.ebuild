@@ -128,6 +128,7 @@ src_prepare() {
 	fi
 
 	EPATCH_EXCLUDE="${excluded_patches}" EPATCH_SUFFIX="patch" epatch "${patchset_dir}"
+	epatch "${FILESDIR}/linux2.patch"
 
 	sed -i -e "s:@@GENTOO_LIBDIR@@:$(get_libdir):g" \
 		Lib/distutils/command/install.py \
