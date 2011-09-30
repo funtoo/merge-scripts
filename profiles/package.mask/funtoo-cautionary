@@ -1,3 +1,7 @@
+# Adrien Dessemond
+# Several packages like dev-tex/luatex and are broken by app-text/poppler 0.18.0 (dev-libs/glib 2.30.0 prevents poppler 0.16.x from being built). Masked until  issues are solved => Gentoo bug #384885
+>=app-text/poppler-0.18.0
+>=dev-libs/glib-2.30.0
 
 # Adrien Dessemond <adessemond@funtoo.org> (22 Sep 2011)
 # Depends on the so famous libpng (1.5) which is maked for the moment.in Funtoo to due insufficent QA done so far
@@ -51,3 +55,4 @@ app-arch/pxz
 # Daniel Robbins <drobbins@funtoo.org> (02 Aug 2009)
 # let's watch upstream bugs for a bit:
 >=dev-lang/python-3
+
