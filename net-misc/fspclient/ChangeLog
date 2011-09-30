@@ -1,8 +1,0 @@
-# ChangeLog for net-misc/fspclient
-# Copyright 1999-2009 Gentoo Foundation; Distributed under the GPL v2
-# $Header: $
-
-*fspclient-0.91.0 (05 Mar 2009)
-
-  05 Mar 2009; Daniel Cordero <theappleman@gmail.com> +fspclient-0.91.0.ebuild :
-  New package.

@@ -1,3 +1,0 @@
-#!/bin/sh
-exec /usr/bin/dcraw -e -c "$1" > "$2"
-
