@@ -322,7 +322,7 @@ for test in [ dest ]:
 		push = False
 
 steps = [
-	SyncTree(gentoo_src,exclude=["/metadata/cache/**","ChangeLog"]),
+	SyncTree(gentoo_src,exclude=["/metadata/cache/**","ChangeLog", "dev-util/metro"]),
 	ApplyPatchSeries("%s/funtoo/patches" % funtoo_overlay.root ),
 	ThirdPartyMirrors(),
 	SyncDir(funtoo_overlay.root,"profiles","profiles", exclude=["repo_name","categories"]),
