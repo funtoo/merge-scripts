@@ -14,7 +14,7 @@ SRC_URI="ftp://ftp.uni-erlangen.de/pub/utilities/${PN}/${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="x86 ~x86 amd64 ~amd64"
+KEYWORDS="x86 amd64 sparc"
 IUSE="debug nethack pam selinux multiuser"
 
 RDEPEND=">=sys-libs/ncurses-5.2
