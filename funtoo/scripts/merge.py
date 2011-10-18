@@ -308,7 +308,6 @@ funtoo_overlay = Tree("funtoo-overlay", branch, "git://github.com/funtoo/funtoo-
 foo_overlay = Tree("foo-overlay", "master", "https://github.com/slashbeast/foo-overlay.git", pull=True)
 bar_overlay = Tree("bar-overlay", "master", "git://github.com/adessemond/bar-overlay.git", pull=True)
 flora_overlay = Tree("flora", "master", "https://github.com/funtoo/flora.git", pull=True)
-felicitus_overlay = Tree("felicitus-overlay", "master", "https://github.com/timoahummel/felicitus_overlay.git", pull=True)
 
 for test in [ dest ]:
 	if not os.path.isdir(test):
@@ -334,7 +333,6 @@ steps = [
 	InsertEbuilds(foo_overlay, select="all", skip=None, replace=["app-shells/rssh","net-misc/unison"]),
 	InsertEbuilds(bar_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(flora_overlay, select="all", skip=None, replace=False),
-	InsertEbuilds(felicitus_overlay, select="all", skip=None, replace=False),
 	Minify(),
 	GenCache()
 ]
