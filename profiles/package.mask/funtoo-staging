@@ -13,11 +13,6 @@
 # temporary mask for poppler due to multiple breakages
 >=app-text/poppler-0.18.0
 
-# Oleg Vinichenko (22 Sep 2011)
-# bash job control fix, cross-compilation compilation
-# need test
-=app-shells/bash-4.2_p10-r1 
-
 # Daniel Robbins (14 Sep 2011)
 # masked for testing
 =sys-kernel/openvz-rhel5-stable-2.6.18.028.093.2
@@ -56,8 +51,4 @@
 # Daniel Robbins (30 May 2011)
 # masked for testing
 =sys-boot/grub-1.99
-
-# Adrien Dessemond <adessemond@funtoo.org> (02 May 2011)
-# tcp-wrappers-7.6 with some patches coming from Debian (most notably additional manual pages and CIDR Support)
->=sys-apps/tcp-wrappers-7.6-r9
 
