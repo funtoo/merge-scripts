@@ -1,6 +1,6 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
-# Martin Scholz <golodhrim@funtoo.org> (20 Oct 2011)                                                                                                                                             
+# Martin Scholz <golodhrim@funtoo.org> (20 Oct 2011)
 # mask of gd as depends on libpng 1.5
 >=media-libs/gd-2.0.35-r3
 
