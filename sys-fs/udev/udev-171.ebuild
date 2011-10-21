@@ -17,7 +17,7 @@ fi
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~x86 ~amd64 ~sparc"
+KEYWORDS="*"
 IUSE="selinux extras +hwdb +gudev"
 MIN_KERNEL="2.6.32"
 
@@ -103,6 +103,8 @@ src_compile() {
 		--enable-introspection \
 		--enable-gudev \
 		--enable-hwdb \
+		--with-pci-ids-path="${EPREFIX}/usr/share/misc/pci.ids" \
+		--with-usb-ids-path="${EPREFIX}/usr/share/misc/usb.ids" \
 		$(use_enable gudev) \
 		$(use_enable extras) \
 		$(use_with selinux)
