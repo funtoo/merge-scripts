@@ -37,7 +37,6 @@ GITHUB_TAG_CN="$NETV"
 SRC_URI="
 	https://www.github.com/${GITHUB_USER}/${GITHUB_REPO}/tarball/${GITHUB_TAG} -> ${PN}-${GITHUB_TAG}.tar.gz
 	http://www.funtoo.org/distfiles/${PN}-${GITHUB_TAG}.tar.gz
-	https://www.github.com/${GITHUB_USER}/${GITHUB_REPO_CN}/tarball/${GITHUB_TAG_CN} -> corenetwork-${GITHUB_TAG_CN}.tar.gz
 	http://www.funtoo.org/distfiles/corenetwork-${GITHUB_TAG_CN}.tar.gz
 	"
 
