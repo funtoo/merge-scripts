@@ -3,11 +3,6 @@
 >=app-text/poppler-0.18.0
 >=dev-libs/glib-2.30.0
 
-# Adrien Dessemond <adessemond@funtoo.org> (22 Sep 2011)
-# Depends on the so famous libpng (1.5) which is maked for the moment.in Funtoo to due insufficent QA done so far
-#  
->=dev-db/virtuoso-server-6.1.3-r1
-
 # Adrien Dessemond <adessemond@funtoo.org> (23 Aug 2011)
 # Google Earth requires >=sys-lib/glibc-2.12 (dependency added in the Funtoo fork of sci-geosciences/googleearth-6.0.3.2197)
 # As of August 23rd 2011 Funtoo does only provide sys-lib/glibc 2.11, thus not satisfying a required dependency => mask!
@@ -33,7 +28,8 @@ app-arch/pxz
 # Adrien Dessemond <adessemond@funtoo.org> (13 Apr 2011)
 # Prevent the next easy-to-predict major disaster with >= 1.5
 # A.D. 18 Sept 2011: Revised for >=1.4.8-r2 Gentoo pushed an 1.4 ebuild with a changed slot that makes portage report blockers and we are unsure about the exact consequences on our tree
->=media-libs/libpng-1.4.8-r2
+# Update 21 Oct 2011: Revised for >1.5.5. This update went very well and we can think of removing any libpng cautionary mask in the future.
+>media-libs/libpng-1.5.5
 
 # Daniel Robbins <drobbins@funtoo.org> (6 Aug 2009)
 # Mask new versions for caution, and these should all
