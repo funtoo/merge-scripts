@@ -24,10 +24,6 @@
 # Masked for testing
 =sys-block/iscsitarget-1.4.20.2_p20110821
 
-# Adrien Dessemond <adessemond@funtoo.org> (19 Aug 2011)
-# Fixes an issue with Python 2.7.x that appear only under Linux 3.x series (DLFCN module not being found, see Gentoo bug #374579)
-=dev-lang/python-2.7.1-r3
-
 # Daniel Robbins (14 Aug 2011)
 # it's broken - masking until we have a good fix.
 =sys-boot/boot-update-1.5.3
