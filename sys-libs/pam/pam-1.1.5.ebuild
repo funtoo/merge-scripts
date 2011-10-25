@@ -1,10 +1,10 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-libs/pam/pam-1.1.2.ebuild,v 1.7 2010/10/25 03:01:54 jer Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-libs/pam/pam-1.1.5.ebuild,v 1.1 2011/10/25 19:20:15 flameeyes Exp $
 
-EAPI="3"
+EAPI="4"
 
-inherit libtool multilib eutils autotools pam toolchain-funcs flag-o-matic db-use
+inherit libtool multilib eutils pam toolchain-funcs flag-o-matic db-use
 
 MY_PN="Linux-PAM"
 MY_P="${MY_PN}-${PV}"
@@ -12,12 +12,12 @@ MY_P="${MY_PN}-${PV}"
 HOMEPAGE="http://www.kernel.org/pub/linux/libs/pam/"
 DESCRIPTION="Linux-PAM (Pluggable Authentication Modules)"
 
-SRC_URI="mirror://kernel/linux/libs/pam/library/${MY_P}.tar.bz2
-	mirror://kernel/linux/libs/pam/documentation/${MY_P}-docs.tar.bz2"
+SRC_URI="https://fedorahosted.org/releases/l/i/linux-pam/${MY_P}.tar.bz2
+	https://fedorahosted.org/releases/l/i/linux-pam/${MY_P}-docs.tar.bz2"
 
 LICENSE="|| ( BSD GPL-2 )"
 SLOT="0"
-KEYWORDS="~alpha amd64 arm hppa ~ia64 ~m68k ~mips ppc ~ppc64 ~s390 ~sh ~sparc x86 ~amd64-linux ~ia64-linux ~x86-linux"
+KEYWORDS="~amd64 ~sparc ~x86"
 IUSE="cracklib nls elibc_FreeBSD selinux vim-syntax audit test elibc_glibc debug berkdb"
 
 RDEPEND="nls? ( virtual/libintl )
@@ -25,18 +25,19 @@ RDEPEND="nls? ( virtual/libintl )
 	audit? ( sys-process/audit )
 	selinux? ( >=sys-libs/libselinux-1.28 )
 	berkdb? ( sys-libs/db )
-	elibc_glibc? ( >=sys-libs/glibc-2.7 )"
+	elibc_glibc? ( >=sys-libs/glibc-2.7	 )"
 DEPEND="${RDEPEND}
+	>=sys-devel/libtool-2
 	sys-devel/flex
-	nls? ( sys-devel/gettext )"
+	nls? ( sys-devel/gettext )
+	dev-util/pkgconfig"
 PDEPEND="sys-auth/pambase
 	vim-syntax? ( app-vim/pam-syntax )"
 RDEPEND="${RDEPEND}
+	!sys-auth/openpam
 	!sys-auth/pam_userdb"
 
 S="${WORKDIR}/${MY_P}"
-
-PROVIDE="virtual/pam"
 
 check_old_modules() {
 	local retval="0"
@@ -79,20 +80,6 @@ pkg_setup() {
 }
 
 src_prepare() {
-	# Avoid building xtests during "make all"; note that for what
-	# we're concerned xtests are not even executed, so we should
-	# probably use EXTRA_PROGRAMS.
-	epatch "${FILESDIR}/${MY_PN}-0.99.8.1-xtests.patch"
-
-	# Fix tests to find Berkeley DB as installed by Gentoo (with a
-	# library suffix but no suffix on the ELF symbols).
-	epatch "${FILESDIR}/${MY_PN}-1.1.1-gentoodb.patch"
-
-	# Remove libtool-2 libtool macros, see bug 261167
-	rm m4/libtool.m4 m4/lt*.m4 || die "rm libtool macros failed."
-
-	eautoreconf
-
 	elibtoolize
 }
 
@@ -154,7 +141,7 @@ src_install() {
 		fi
 	done
 
-	dodoc CHANGELOG ChangeLog README AUTHORS Copyright NEWS || die
+	dodoc CHANGELOG ChangeLog README AUTHORS Copyright NEWS	|| die
 
 	docinto modules
 	for dir in modules/pam_*; do
@@ -165,6 +152,13 @@ src_install() {
 	# modules, and libpam is installed as a shared object only, so we
 	# don't need them for static linking either.
 	find "${D}" -name '*.la' -delete
+
+	# setting default number of open files to 16000, with the ability to
+	# push the limit up to 64000. This provides reasonable defaults for modern
+	# systems that need to handle things like slowloris in defaultconfigs.
+	
+	echo "*     soft    nofile  16000" >> ${D}/etc/security/limits.conf || die "limits set fail"
+	echo "*     hard    nofile  64000" >> ${D}/etc/security/limits.conf || die "limits set fail"
 }
 
 pkg_preinst() {
@@ -179,11 +173,15 @@ pkg_postinst() {
 	ewarn "restart the software manually after the update."
 	ewarn ""
 	ewarn "You can get a list of such software running a command like"
-	ewarn "  lsof / | egrep 'DEL.*libpam\\.so'"
-	elog ""
-	elog "Because of a bug present up to version 1.1.1-r2, you might have"
-	elog "an executable /var/log/tallylog file. If it is so, you can safely"
-	elog "correct it by running the command"
-	elog "  chmod -x /var/log/tallylog"
-	elog ""
+	ewarn "  lsof / | egrep -i 'del.*libpam\\.so'"
+	ewarn ""
+	ewarn "Alternatively, simply reboot your system."
+	if [ -x "${ROOT}"/var/log/tallylog ] ; then
+		elog ""
+		elog "Because of a bug present up to version 1.1.1-r2, you have"
+		elog "an executable /var/log/tallylog file. You can safely"
+		elog "correct it by running the command"
+		elog "  chmod -x /var/log/tallylog"
+		elog ""
+	fi
 }
