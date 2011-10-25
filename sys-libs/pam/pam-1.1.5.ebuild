@@ -25,7 +25,7 @@ RDEPEND="nls? ( virtual/libintl )
 	audit? ( sys-process/audit )
 	selinux? ( >=sys-libs/libselinux-1.28 )
 	berkdb? ( sys-libs/db )
-	elibc_glibc? ( >=sys-libs/glibc-2.7	 )"
+	elibc_glibc? ( >=sys-libs/glibc-2.7 )"
 DEPEND="${RDEPEND}
 	>=sys-devel/libtool-2
 	sys-devel/flex
@@ -141,7 +141,7 @@ src_install() {
 		fi
 	done
 
-	dodoc CHANGELOG ChangeLog README AUTHORS Copyright NEWS	|| die
+	dodoc CHANGELOG ChangeLog README AUTHORS Copyright NEWS || die
 
 	docinto modules
 	for dir in modules/pam_*; do
