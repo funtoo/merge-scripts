@@ -3,15 +3,6 @@
 # libnl:3 mask, wireless breakage (27 Oct 2011)
 >=dev-libs/libnl-3.2.1
 
-# Oleg Vinichenko (26 Oct 2011)
-# new portage, merged from experimental
-# masked for testing
-=sys-apps/portage-2.3.1-r3
-
-# Oleg Vinichenko (26 Oct 2011)
-# pam update, masked for testing, remove old
-=sys-libs/pam-1.1.5
-
 # Martin Scholz <golodhrim@funtoo.org> (13 Oct 2011)
 # Masked as portage 2.3.7 works with it (testmask)
 =app-vim/gentoo-syntax-20111013
