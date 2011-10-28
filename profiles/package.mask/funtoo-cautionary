@@ -25,12 +25,6 @@ app-arch/pxz
 # See bug #359445
 =net-wireless/iwl5000-ucode-8.83.5.1
 
-# Adrien Dessemond <adessemond@funtoo.org> (13 Apr 2011)
-# Prevent the next easy-to-predict major disaster with >= 1.5
-# A.D. 18 Sept 2011: Revised for >=1.4.8-r2 Gentoo pushed an 1.4 ebuild with a changed slot that makes portage report blockers and we are unsure about the exact consequences on our tree
-# Update 21 Oct 2011: Revised for >1.5.5. This update went very well and we can think of removing any libpng cautionary mask in the future.
->media-libs/libpng-1.5.5
-
 # Daniel Robbins <drobbins@funtoo.org> (6 Aug 2009)
 # Mask new versions for caution, and these should all
 # be tested and upgraded together. This helps ensure that
