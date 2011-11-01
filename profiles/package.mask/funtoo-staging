@@ -1,11 +1,11 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Martin Scholz (01 Nov 2011)
+# www-servers/nginx-1.1.7 masked for testing
+=www-servers/nginx-1.1.7
+
 # libnl:3 mask, wireless breakage (27 Oct 2011)
 >=dev-libs/libnl-3.2.1
-
-# Martin Scholz <golodhrim@funtoo.org> (13 Oct 2011)
-# Masked as portage 2.3.7 works with it (testmask)
-=app-vim/gentoo-syntax-20111013
 
 # Oleg Vinichenko (30 Sep 2011)
 # temporary mask for poppler due to multiple breakages
