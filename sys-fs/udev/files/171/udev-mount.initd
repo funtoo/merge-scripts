@@ -6,7 +6,7 @@ description="Mount /dev and let udev create the device-nodes"
 
 depend()
 {
-	keyword -openvz -vserver
+	keyword -openvz -vserver -lxc
 	provide dev
 	need sysfs
 	before checkfs fsck

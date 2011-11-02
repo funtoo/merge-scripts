@@ -4,7 +4,7 @@
 # $Header: /var/cvsroot/gentoo-x86/sys-fs/udev/files/udev-postmount-130-r2.initd,v 1.1 2008/10/28 21:59:05 zzam Exp $
 
 depend() {
-	keyword -openvz -vserver
+	keyword -openvz -vserver -lxc
 	need udev-mount localmount
 }
 
