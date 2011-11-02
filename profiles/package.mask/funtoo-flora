@@ -1,6 +1,15 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
 ##############################################################
+### Mask for Liberal Crime Squad
+### responsible p4
+### imported Martin 'golodhrim' Scholz
+##############################################################
+##
+##############################################################
+=games-rpg/lcs-9999
+
+##############################################################
 ### Mask for linux-sources-3.0
 ### responsible tobert
 ### imported Martin 'golodhrim' Scholz
