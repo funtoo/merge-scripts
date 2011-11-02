@@ -40,7 +40,7 @@ app-arch/pxz
 
 # Oleg Vinichenko <oleg@funtoo.org> (26 Aug 2011)
 #udev-171 is now in unstable
->=sys-fs/udev-172
+>=sys-fs/udev-171
 
 # Daniel Robbins <drobbins@funtoo.org> (02 Aug 2009)
 # let's watch upstream bugs for a bit:
