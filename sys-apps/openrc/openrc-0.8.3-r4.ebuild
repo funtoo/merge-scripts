@@ -30,14 +30,13 @@ GITHUB_REPO="${PN}"
 GITHUB_USER="funtoo"
 GITHUB_TAG="funtoo-openrc-0.8.3"
 
-NETV="1.1-r1"
+NETV="1.2"
 GITHUB_REPO_CN="corenetwork"
 GITHUB_TAG_CN="$NETV"
 
 SRC_URI="
 	https://www.github.com/${GITHUB_USER}/${GITHUB_REPO}/tarball/${GITHUB_TAG} -> ${PN}-${GITHUB_TAG}.tar.gz
 	http://www.funtoo.org/distfiles/${PN}-${GITHUB_TAG}.tar.gz
-	https://www.github.com/${GITHUB_USER}/${GITHUB_REPO_CN}/tarball/${GITHUB_TAG_CN} -> corenetwork-${GITHUB_TAG_CN}.tar.gz
 	http://www.funtoo.org/distfiles/corenetwork-${GITHUB_TAG_CN}.tar.gz
 	"
 
@@ -122,6 +121,10 @@ src_install() {
 	chown -R root:root ${D}/etc/netif.d || die
 	chmod -R 0644 ${D}/etc/netif.d || die
 	ln -s /etc/init.d/netif.lo ${D}/usr/share/openrc/runlevels/sysinit/netif.lo || die
+
+	# Install gentoo pam.d file:
+
+	newpamd "${FILESDIR}"/start-stop-daemon.pam start-stop-daemon
 }
 
 add_init() {
