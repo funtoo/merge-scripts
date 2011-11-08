@@ -4,11 +4,6 @@
 # pam limits fix to openrc, need test, masked
 =sys-apps/openrc-0.8.3-r4
 
-# Martin Scholz (01 Nov 2011)
-# www-servers/nginx-1.1.7 masked for testing
-=www-servers/nginx-1.1.7
-=www-servers/nginx-1.0.9
-
 # libnl:3 mask, wireless breakage (27 Oct 2011)
 >=dev-libs/libnl-3.2.1
 
