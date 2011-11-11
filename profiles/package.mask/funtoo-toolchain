@@ -1,0 +1,11 @@
+# Jean-Francis Roy <jeanfrancis@funtoo.org> (11 Nov 2011)
+# Mask new versions for caution, and these should all
+# be tested and upgraded together. This helps ensure that
+# any new glibc upgrade will be built against any upgraded
+# linux-headers.
+
+# For next toolchain upgrade 
+>sys-libs/glibc-2.13-r4
+>sys-kernel/linux-headers-2.6.39
+>sys-devel/gcc-4.6.2
+>sys-devel/binutils-2.21.1-r1
