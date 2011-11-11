@@ -9,3 +9,13 @@
 >sys-kernel/linux-headers-2.6.39
 >sys-devel/gcc-4.6.2
 >sys-devel/binutils-2.21.1-r1
+
+# Jean-Francis Roy <jeanfrancis@funtoo.org> (11 Nov 2011)
+# Masked for testing the new toolchain. To be deleted soon! 
+>sys-libs/glibc-2.11.3
+>sys-kernel/linux-headers-2.6.32
+>sys-devel/gcc-4.4.5
+>sys-devel/binutils-2.20.1
+>=sys-fs/udev-171
+>=sys-devel/libtool-2.4-r4
+
