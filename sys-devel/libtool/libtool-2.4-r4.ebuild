@@ -13,7 +13,7 @@ SRC_URI="mirror://gnu/${PN}/${P}.tar.xz"
 
 LICENSE="GPL-2"
 SLOT="2"
-KEYWORDS="*"
+KEYWORDS="~*"
 IUSE="vanilla"
 
 RDEPEND="sys-devel/gnuconfig
@@ -22,7 +22,8 @@ RDEPEND="sys-devel/gnuconfig
 	!=sys-devel/libtool-2*:1.5"
 DEPEND="${RDEPEND}
 	>=sys-devel/binutils-2.20
-	app-arch/xz-utils"
+	app-arch/xz-utils
+	>=sys-devel/gcc-4.6.2"
 
 pkg_setup() {
 	# avoid the sed ebuild-helper if it was accidentally installed.

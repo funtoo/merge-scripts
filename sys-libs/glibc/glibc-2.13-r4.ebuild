@@ -1,6 +1,6 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-libs/glibc/glibc-2.10.1-r1.ebuild,v 1.12 2010/01/22 19:27:20 tgall Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-libs/glibc/glibc-2.13-r4.ebuild,v 1.1 2011/07/13 06:15:52 vapier Exp $
 
 inherit eutils versionator libtool toolchain-funcs flag-o-matic gnuconfig multilib
 
@@ -8,7 +8,7 @@ DESCRIPTION="GNU libc6 (also called glibc2) C library"
 HOMEPAGE="http://www.gnu.org/software/libc/libc.html"
 
 LICENSE="LGPL-2"
-KEYWORDS="*"
+KEYWORDS="~*"
 RESTRICT="strip" # strip ourself #46186
 EMULTILIB_PKG="true"
 
@@ -17,22 +17,20 @@ if [[ ${PV} == *_p* ]] ; then
 RELEASE_VER=${PV%_p*}
 BRANCH_UPDATE=""
 SNAP_VER=${PV#*_p}
-LIBIDN_VER=""
 else
 RELEASE_VER=${PV}
 BRANCH_UPDATE=""
 SNAP_VER=""
-LIBIDN_VER=${RELEASE_VER}
 fi
 MANPAGE_VER=""                                 # pregenerated manpages
 INFOPAGE_VER=""                                # pregenerated infopages
-PATCH_VER="6"                                  # Gentoo patchset
-PORTS_VER=${RELEASE_VER}                       # version of glibc ports addon
+LIBIDN_VER=""                                  # it's integrated into the main tarball now
+PATCH_VER="8"                                  # Gentoo patchset
+PORTS_VER="2.13"                               # version of glibc ports addon
 LT_VER=""                                      # version of linuxthreads addon
 NPTL_KERN_VER=${NPTL_KERN_VER:-"2.6.9"}        # min kernel version nptl requires
 #LT_KERN_VER=${LT_KERN_VER:-"2.4.1"}           # min kernel version linuxthreads requires
 
-# drobbins TODO - remove gd USE with next rev bump -
 IUSE="debug gd glibc-omitfp hardened multilib nls selinux profile vanilla crosscompile_opts_headers-only ${LT_VER:+glibc-compat20 nptl nptlonly}"
 S=${WORKDIR}/glibc-${RELEASE_VER}${SNAP_VER:+-${SNAP_VER}}
 
@@ -77,21 +75,24 @@ else
 	# Why SLOT 2.2 you ask yourself while sippin your tea ?
 	# Everyone knows 2.2 > 0, duh.
 	SLOT="2.2"
-	PROVIDE="virtual/libc"
 fi
 
 # General: We need a new-enough binutils for as-needed
 # arch: we need to make sure our binutils/gcc supports TLS
-DEPEND="=sys-devel/gcc-4.4*
-	arm? ( >=sys-devel/binutils-2.16.90 )
+DEPEND=">=sys-devel/gcc-3.4.4
+	arm? ( >=sys-devel/binutils-2.16.90 >=sys-devel/gcc-4.1.0 )
+	x86? ( >=sys-devel/gcc-4.3 )
+	amd64? ( >=sys-devel/binutils-2.19 >=sys-devel/gcc-4.3 )
+	ppc? ( >=sys-devel/gcc-4.1.0 )
+	ppc64? ( >=sys-devel/gcc-4.1.0 )
 	>=sys-devel/binutils-2.15.94
 	${LT_VER:+nptl? (} >=sys-kernel/linux-headers-${NPTL_KERN_VER} ${LT_VER:+)}
 	>=sys-devel/gcc-config-1.3.12
 	>=app-misc/pax-utils-0.1.10
-	=virtual/os-headers-2.6.32*
+	virtual/os-headers
 	nls? ( sys-devel/gettext )
 	>=sys-apps/sandbox-1.2.18.1-r2
-	>=sys-apps/portage-2.1.2
+	!<sys-apps/portage-2.1.2
 	selinux? ( sys-libs/libselinux )"
 RDEPEND="!sys-kernel/ps3-sources
 	nls? ( sys-devel/gettext )
@@ -101,8 +102,10 @@ if [[ ${CATEGORY/cross-} != ${CATEGORY} ]] ; then
 	DEPEND="${DEPEND} !crosscompile_opts_headers-only? ( ${CATEGORY}/gcc )"
 	[[ ${CATEGORY} == *-linux* ]] && DEPEND="${DEPEND} ${CATEGORY}/linux-headers"
 else
-	DEPEND="${DEPEND} >=sys-libs/timezone-data-2007c"
-	RDEPEND="${RDEPEND} sys-libs/timezone-data"
+	DEPEND="${DEPEND} !vanilla? ( >=sys-libs/timezone-data-2007c )"
+	RDEPEND="${RDEPEND}
+		vanilla? ( !sys-libs/timezone-data )
+		!vanilla? ( sys-libs/timezone-data )"
 fi
 
 SRC_URI=$(
@@ -141,14 +144,14 @@ eblit-include() {
 	local e v func=$1 ver=$2
 	[[ -z ${func} ]] && die "Usage: eblit-include <function> [version]"
 	for v in ${ver:+-}${ver} -${PVR} -${PV} "" ; do
-		e="${FILESDIR}/eblits/${func}${v}.eblit"
+		e="${FILESDIR}/eblits-${PV}/${func}${v}.eblit"
 		if [[ -e ${e} ]] ; then
 			source "${e}"
 			return 0
 		fi
 	done
 	${skipable} && return 0
-	die "Could not locate requested eblit '${func}' in ${FILESDIR}/eblits/"
+	die "Could not locate requested eblit '${func}' in ${FILESDIR}/eblits-${PV}/"
 }
 
 # eblit-run-maybe <function>
@@ -181,22 +184,27 @@ for x in setup {pre,post}inst ; do
 	fi
 done
 
+pkg_setup() {
+	eblit-run pkg_setup
+
+	# Static binary sanity check #332927
+	if [[ ${ROOT} == "/" ]] && \
+	   has_version "<${CATEGORY}/${P}" && \
+	   built_with_use sys-apps/coreutils static
+	then
+		eerror "Please rebuild coreutils with USE=-static, then install"
+		eerror "glibc, then you may rebuild coreutils with USE=static."
+		die "Avoiding system meltdown #332927"
+	fi
+}
+
 eblit-src_unpack-post() {
-
-
-	cd ${S}
-	epatch "$FILESDIR/CVE-2010-3847-dst-expansion-fix.patch"
-	epatch "$FILESDIR/CVE-2010-3856-disable-ld_audit.patch"
-
 	if use hardened ; then
 		cd "${S}"
 		einfo "Patching to get working PIE binaries on PIE (hardened) platforms"
-		gcc-specs-pie && epatch "${FILESDIR}"/2.5/glibc-2.5-hardened-pie.patch
+		gcc-specs-pie && epatch "${FILESDIR}"/2.12/glibc-2.12-hardened-pie.patch
 		epatch "${FILESDIR}"/2.10/glibc-2.10-hardened-configure-picdefault.patch
 		epatch "${FILESDIR}"/2.10/glibc-2.10-hardened-inittls-nosysenter.patch
-
-		einfo "Patching Glibc to support older SSP __guard"
-		epatch "${FILESDIR}"/2.10/glibc-2.10-hardened-ssp-compat.patch
 
 		einfo "Installing Hardened Gentoo SSP and FORTIFY_SOURCE handler"
 		cp -f "${FILESDIR}"/2.6/glibc-2.6-gentoo-stack_chk_fail.c \
@@ -223,12 +231,6 @@ eblit-src_unpack-post() {
 			-e 's:-fstack-protector$:-fstack-protector-all:' \
 			nscd/Makefile \
 			|| die "Failed to ensure nscd builds with ssp-all"
-	fi
-
-	local gcc_force="4.4"
-	# Funtoo forces glibc to be compiled using a particular gcc:
-	if [[ "$(gcc -dumpversion | cut -b1-3)" != "$gcc_force" ]]; then 
-		gcc-config "$gcc_force" || die "Unable to force gcc to version $gcc_force; please do this manually."
 	fi
 }
 
