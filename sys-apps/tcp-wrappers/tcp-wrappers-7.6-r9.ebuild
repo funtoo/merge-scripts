@@ -32,15 +32,22 @@ src_unpack() {
 	epatch ${PATCHDIR}/${P}-makefile.patch
 	epatch ${PATCHDIR}/generic
 	epatch ${PATCHDIR}/${P}-shared.patch
-	use ipv6 && epatch ${PATCHDIR}/${P}-ipv6-1.14.diff
 
+	if use ipv6 ; then
+		epatch ${PATCHDIR}/${P}-ipv6-1.14.diff	|| die
+	fi	
+	
 	# Funtoo specific: Various extra patches not included by Gentoo and present in Debian
 	# Note the previous patches should have been applied to get CIDR support patches being applied without errors
+	
 	einfo "Applying patches coming from Debian"
+
+	if use ipv6 ; then
+		epatch ${FILESDIR}/${P}-debian-14_cidr_support || die
+	fi	
 	epatch ${FILESDIR}/${P}-debian-00_man_quoting.diff
 	epatch ${FILESDIR}/${P}-debian-00_man_typos
 	#epatch ${FILESDIR}/${P}-debian-01_man_portability
-	epatch ${FILESDIR}/${P}-debian-14_cidr_support
 	epatch ${FILESDIR}/${P}-debian-fix_static
 	epatch ${FILESDIR}/${P}-debian-man_fromhost
 	epatch ${FILESDIR}/${P}-debian-match_port

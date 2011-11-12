@@ -12,7 +12,7 @@ SRC_URI="mirror://kernel/linux/utils/kernel/hotplug/${P}.tar.bz2 mirror://gentoo
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~m68k ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86"
+KEYWORDS="*"
 IUSE="selinux extras"
 
 COMMON_DEPEND="selinux? ( sys-libs/libselinux )

@@ -1,3 +1,8 @@
+# Adrien Dessemond
+# Several packages like dev-tex/luatex and are broken by app-text/poppler 0.18.0 (dev-libs/glib 2.30.0 prevents poppler 0.16.x from being built). Masked until  issues are solved => Gentoo bug #384885
+>=app-text/poppler-0.18.0
+>=dev-libs/glib-2.30.0
+
 # Adrien Dessemond <adessemond@funtoo.org> (23 Aug 2011)
 # Google Earth requires >=sys-lib/glibc-2.12 (dependency added in the Funtoo fork of sci-geosciences/googleearth-6.0.3.2197)
 # As of August 23rd 2011 Funtoo does only provide sys-lib/glibc 2.11, thus not satisfying a required dependency => mask!
@@ -20,28 +25,8 @@ app-arch/pxz
 # See bug #359445
 =net-wireless/iwl5000-ucode-8.83.5.1
 
-# Adrien Dessemond <adessemond@funtoo.org> (13 Apr 2011)
-# Prevent the next easy-to-predict major disaster with >= 1.5
-# A.D. 18 Sept 2011: Revised for >=1.4.8-r2 Gentoo pushed an 1.4 ebuild with a changed slot that makes portage report blockers and we are unsure about the exact consequences on our tree
->=media-libs/libpng-1.4.8-r2
-
-# Daniel Robbins <drobbins@funtoo.org> (6 Aug 2009)
-# Mask new versions for caution, and these should all
-# be tested and upgraded together. This helps ensure that
-# any new glibc upgrade will be built against any upgraded
-# linux-headers.
-
-# For toolchain upgrade ll-2010.2:
-# glibc updated 30 Jun 2011:
->sys-libs/glibc-2.11.3
->sys-kernel/linux-headers-2.6.32
->sys-devel/gcc-4.4.5
->sys-devel/binutils-2.20.1
-
-# Oleg Vinichenko <oleg@funtoo.org> (26 Aug 2011)
-#udev-171 is now in unstable
->=sys-fs/udev-172
 
 # Daniel Robbins <drobbins@funtoo.org> (02 Aug 2009)
 # let's watch upstream bugs for a bit:
 >=dev-lang/python-3
+
