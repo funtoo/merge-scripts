@@ -23,6 +23,8 @@ MYDIR="$FILESDIR/2.02.70"
 S="${WORKDIR}/${PN/lvm/LVM}.${PV}"
 
 src_prepare() {
+	# bug 332905
+	epatch "${FILESDIR}"/${PN}-2.02.72-dynamic-static-ldflags.patch
 	#cat $MYDIR/patches/lvm2-2.02.65-libdir.patch | patch -p1 || die "patch failed"
 	eautoreconf
 }
