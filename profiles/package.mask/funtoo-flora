@@ -7,6 +7,9 @@
 ##############################################################
 ##
 ##############################################################
+# Live SVN build for Font Manager which fixes Red Hat bug #658328. See
+# https://bugzilla.redhat.com/show_bug.cgi?id=658328 for more details.
+=media-gfx/font-manager-9999
 =games-rpg/lcs-9999
 
 ##############################################################
