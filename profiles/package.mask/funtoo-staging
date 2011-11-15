@@ -1,5 +1,10 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Oleg Vinichenko (15 Nov 2011)
+# new portage upstream, masked for
+# testing
+>=sys-apps/portage-2.3.2
+
 # Oleg  Vinichenko (27 Oct 2011)
 # libnl:3 mask, wireless breakage
 >=dev-libs/libnl-3.2.1
