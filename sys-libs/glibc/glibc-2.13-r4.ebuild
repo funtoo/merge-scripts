@@ -79,8 +79,9 @@ fi
 
 # General: We need a new-enough binutils for as-needed
 # arch: we need to make sure our binutils/gcc supports TLS
-# For Funtpoo toolchain-update, we force the DEPEND on linux-headers-2.6.39
-# and gcc-4.6.2
+# For Funtoo toolchain-update, we force the DEPEND on linux-headers-2.6.39
+# and libtool-2.4-r4 to have a cleaner merge order. libtool-2.4-r4 depends
+# on gcc-4.6.2 and will be built between gcc and glibc.
 DEPEND=">=sys-devel/gcc-3.4.4
 	arm? ( >=sys-devel/binutils-2.16.90 >=sys-devel/gcc-4.1.0 )
 	x86? ( >=sys-devel/gcc-4.3 )
@@ -97,7 +98,7 @@ DEPEND=">=sys-devel/gcc-3.4.4
 	!<sys-apps/portage-2.1.2
 	selinux? ( sys-libs/libselinux )
         >=sys-kernel/linux-headers-2.6.39
-        >=sys-devel/gcc-4.6.2"
+        >=sys-devel/libtool-2.4-r4"
 RDEPEND="!sys-kernel/ps3-sources
 	nls? ( sys-devel/gettext )
 	selinux? ( sys-libs/libselinux )"
