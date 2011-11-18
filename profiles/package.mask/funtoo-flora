@@ -66,7 +66,6 @@
 =dev-java/lucene-analyzers-2.9.4
 =dev-java/sat4j-core-2.3.0
 =dev-java/sat4j-pseudo-2.3.0
-=dev-java/swt-3.7
 #
 ## Dependency, see Gentoo bug #328747
 =www-servers/jetty-6.1.24
