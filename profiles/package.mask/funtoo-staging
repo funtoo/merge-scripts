@@ -1,8 +1,8 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
-# Oleg  Vinichenko (27 Oct 2011)
-# libnl:3 mask, wireless breakage
->=dev-libs/libnl-3.2.1
+# Oleg Vinichenko (19 Nov 2011)
+# gptfdisk update, masked for testing
+=sys-apps/gptfdisk-0.8.1
 
 # Oleg Vinichenko (30 Sep 2011)
 # temporary mask for poppler due to multiple breakages
@@ -27,10 +27,6 @@
 # Daniel Robbins (14 Aug 2011)
 # it's broken - masking until we have a good fix.
 =sys-boot/boot-update-1.5.3
-
-# Veronica <nCdy@funtoo.org> (02 Aug 2011)
-# 3.0 Debian sources Masked for testing:
->=sys-kernel/debian-sources-3.0
 
 # Oleg Vinichenko (24 July)
 =app-backup/rsnapshot-1.3.1-r2
