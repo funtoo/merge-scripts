@@ -10,11 +10,10 @@ SRC_URI="mirror://nongnu/${PN}/${P}dsf.tar.bz2"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~sparc ~x86"
+KEYWORDS="*"
 IUSE="selinux ibm static kernel_FreeBSD"
 
-RDEPEND="selinux? ( >=sys-libs/libselinux-1.28 )
-	!<sys-apps/util-linux-2.20"
+RDEPEND="selinux? ( >=sys-libs/libselinux-1.28 )"
 DEPEND="${RDEPEND}
 	virtual/os-headers"
 
