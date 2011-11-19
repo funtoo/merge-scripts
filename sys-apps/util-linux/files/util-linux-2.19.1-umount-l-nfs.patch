@@ -1,0 +1,92 @@
+https://bugs.gentoo.org/370051
+
+From b3b0c657818aa6191e6494f88d671601dd9d837d Mon Sep 17 00:00:00 2001
+From: Petr Uzel <petr.uzel@suse.cz>
+Date: Wed, 29 Jun 2011 10:24:09 +0200
+Subject: [PATCH] umount: do not hang with disconnected NFS mounts
+
+Since util-linux commit f4612577c942a3683b97632ad0b49671897c2070,
+umount stat(2)s its argument to check whether it can be associated
+with some loop device. This could hang with broken NFS mounts.
+
+Fix by first checking mtab if umount's argument is mounted and only if
+we fail, check if there is a loop device associated.
+
+http://marc.info/?l=util-linux-ng&m=130924963804836&w=2
+
+Reported-by: Konstantin Khlebnikov <khlebnikov@openvz.org>
+Signed-off-by: Petr Uzel <petr.uzel@suse.cz>
+---
+ mount/umount.c |   42 ++++++++++++++++++++++--------------------
+ 1 files changed, 22 insertions(+), 20 deletions(-)
+
+diff --git a/mount/umount.c b/mount/umount.c
+index 0349cb3..96c940e 100644
+--- a/mount/umount.c
++++ b/mount/umount.c
+@@ -600,6 +600,7 @@ umount_file (char *arg) {
+ 	int fstab_has_user, fstab_has_users, fstab_has_owner, fstab_has_group;
+ 	int ok, status = 0;
+ 	struct stat statbuf;
++	char *loopdev = NULL;
+ 
+ 	if (!*arg) {		/* "" would be expanded to `pwd` */
+ 		die(2, _("Cannot unmount \"\"\n"));
+@@ -608,26 +609,7 @@ umount_file (char *arg) {
+ 
+ 	file = canonicalize(arg); /* mtab paths are canonicalized */
+ 
+-	/* if file is a regular file, check if it is associated
+-	 * with some loop device
+-	 */
+-	if (!stat(file, &statbuf) && S_ISREG(statbuf.st_mode)) {
+-		char *loopdev = NULL;
+-		switch (find_loopdev_by_backing_file(file, &loopdev)) {
+-		case 0:
+-			if (verbose)
+-				printf(_("%s is associated with %s, trying to unmount it\n"),
+-				       arg, loopdev);
+-			file = loopdev;
+-			break;
+-		case 2:
+-			if (verbose)
+-				printf(_("%s is associated with more than one loop device: not unmounting\n"),
+-				       arg);
+-			break;
+-		}
+-	}
+-
++try_loopdev:
+ 	if (verbose > 1)
+ 		printf(_("Trying to unmount %s\n"), file);
+ 
+@@ -659,6 +641,26 @@ umount_file (char *arg) {
+ 	if (!mc && verbose)
+ 		printf(_("Could not find %s in mtab\n"), file);
+ 
++	/* not found in mtab - check if it is associated with some loop device
++	 * (only if it is a regular file)
++	 */
++	if (!mc && !loopdev && !stat(file, &statbuf) && S_ISREG(statbuf.st_mode)) {
++		switch (find_loopdev_by_backing_file(file, &loopdev)) {
++		case 0:
++			if (verbose)
++				printf(_("%s is associated with %s\n"),
++				       arg, loopdev);
++			file = loopdev;
++			goto try_loopdev;
++			break;
++		case 2:
++			if (verbose)
++				printf(_("%s is associated with more than one loop device: not unmounting\n"),
++				       arg);
++			break;
++		}
++	}
++
+ 	if (restricted) {
+ 		char *mtab_user = NULL;
+ 
+-- 
+1.7.6
+

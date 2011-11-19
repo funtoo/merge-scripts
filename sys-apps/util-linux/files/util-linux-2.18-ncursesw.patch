@@ -1,0 +1,66 @@
+From 01f6b78145dbb46ed9205613daf7d06956a5795f Mon Sep 17 00:00:00 2001
+From: Mike Frysinger <vapier@gentoo.org>
+Date: Thu, 1 Jul 2010 13:40:33 -0400
+Subject: [PATCH] cfdisk: search for ncursesw/ncurses.h
+
+Some distros install the wide version of ncurses side by side with the
+non-wide version and place the wide headers in an ncursesw/ subdir.  So
+detect that behavior and include the right header with cfdisk.
+
+Signed-off-by: Mike Frysinger <vapier@gentoo.org>
+---
+ configure.ac   |    1 +
+ fdisk/cfdisk.c |    2 ++
+ 2 files changed, 3 insertions(+), 0 deletions(-)
+
+# ATM we avoid regenerating autotools
+#diff --git a/configure.ac b/configure.ac
+#index 8c5f92f..e4f8884 100644
+#--- a/configure.ac
+#+++ b/configure.ac
+#@@ -442,6 +442,7 @@ if test "x$with_ncurses" != xno; then
+     if test "x$with_ncurses" = xauto; then
+       UTIL_CHECK_LIB(ncursesw, initscr, ncurses)
+       if test "x$have_ncurses" = xyes; then
++        AC_CHECK_HEADERS([ncursesw/ncurses.h])
+         NCURSES_LIBS="-lncursesw"
+       fi
+     fi
+--- a/config.h.in
++++ b/config.h.in
+@@ -229,6 +229,9 @@
+ /* Define to 1 if you have the <ncurses/ncurses.h> header file. */
+ #undef HAVE_NCURSES_NCURSES_H
+ 
++/* Define to 1 if you have the <ncursesw/ncurses.h> header file. */
++#undef HAVE_NCURSESW_NCURSES_H
++
+ /* Define to 1 if you have the <netinet/in.h> header file. */
+ #undef HAVE_NETINET_IN_H
+ 
+--- a/configure
++++ b/configure
+@@ -17784,7 +17784,7 @@ if test "x$with_ncurses" != xno; then
+   have_ncurses=no
+ 
+ 
+-for ac_header in ncurses.h ncurses/ncurses.h
++for ac_header in ncurses.h ncurses/ncurses.h ncursesw/ncurses.h
+ do
+ as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
+ if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
+diff --git a/fdisk/cfdisk.c b/fdisk/cfdisk.c
+index 552858b..7fa0b19 100644
+--- a/fdisk/cfdisk.c
++++ b/fdisk/cfdisk.c
+@@ -75,6 +75,8 @@
+ #include <slcurses.h>
+ #elif defined(HAVE_SLANG_SLCURSES_H)
+ #include <slang/slcurses.h>
++#elif defined(HAVE_NCURSESW_NCURSES_H) && defined(HAVE_WIDECHAR)
++#include <ncursesw/ncurses.h>
+ #elif defined(HAVE_NCURSES_H)
+ #include <ncurses.h>
+ #elif defined(HAVE_NCURSES_NCURSES_H)
+-- 
+1.7.1
