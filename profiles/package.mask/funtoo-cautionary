@@ -1,3 +1,8 @@
+# Oleg Vinichenko (26 Nov 2011)
+# gobejct-introspecti)))))))))nmasked for unknown reason
+# stages failures
+>=dev-libs/gobject-introspection-1.30
+
 # Adrien Dessemond
 # Several packages like dev-tex/luatex and are broken by app-text/poppler 0.18.0 (dev-libs/glib 2.30.0 prevents poppler 0.16.x from being built). Masked until  issues are solved => Gentoo bug #384885
 >=app-text/poppler-0.18.0
