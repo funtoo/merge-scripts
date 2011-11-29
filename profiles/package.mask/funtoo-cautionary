@@ -1,7 +1,6 @@
 # Adrien Dessemond
 # Several packages like dev-tex/luatex and are broken by app-text/poppler 0.18.0 (dev-libs/glib 2.30.0 prevents poppler 0.16.x from being built). Masked until  issues are solved => Gentoo bug #384885
 >=app-text/poppler-0.18.0
->=dev-libs/glib-2.30.0
 
 # Adrien Dessemond <adessemond@funtoo.org> (23 Aug 2011)
 # Google Earth requires >=sys-lib/glibc-2.12 (dependency added in the Funtoo fork of sci-geosciences/googleearth-6.0.3.2197)
