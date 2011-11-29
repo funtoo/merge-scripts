@@ -195,4 +195,7 @@ pkg_postinst() {
 		ewarn "/etc/conf.d/local.{start,stop} are deprecated.  Please convert"
 		ewarn "your files to /etc/conf.d/local and delete the files."
 	fi
+
+	ewarn "Make sure that correct symlink exist"
+	ewarn "Re-establish it by ln -s /etc/init.d/netif.tmpl /etc/init.d/netif.ethX"
 }
