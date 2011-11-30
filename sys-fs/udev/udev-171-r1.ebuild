@@ -17,7 +17,7 @@ fi
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="*"
+KEYWORDS="~*"
 IUSE="selinux extras +hwdb +gudev"
 MIN_KERNEL="2.6.32"
 
