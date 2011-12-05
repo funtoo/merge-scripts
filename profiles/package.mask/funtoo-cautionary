@@ -7,19 +7,6 @@
 # Several packages like dev-tex/luatex and are broken by app-text/poppler 0.18.0 (dev-libs/glib 2.30.0 prevents poppler 0.16.x from being built). Masked until  issues are solved => Gentoo bug #384885
 >=app-text/poppler-0.18.0
 
-# Adrien Dessemond <adessemond@funtoo.org> (23 Aug 2011)
-# Google Earth requires >=sys-lib/glibc-2.12 (dependency added in the Funtoo fork of sci-geosciences/googleearth-6.0.3.2197)
-# As of August 23rd 2011 Funtoo does only provide sys-lib/glibc 2.11, thus not satisfying a required dependency => mask!
->=sci-geosciences/googleearth-6.0.3.2197
-
-# Adrien Dessemond <adessemond@funtoo.org> (03 Jun 2011)
-# updated to -r1 which includes an explicit dependency on parted < 3.0 (see bug #369423)
-=sys-block/partitionmanager-1.0.3
-
-# Adrien Dessemond <adessemond@funtoo.org> (03 Jun 2011)
-# updated to -r1 which includes an explicit dependency on parted < 3.0 (see bug #369417)
-=sys-block/gparted-0.8.0
-
 # Adrien Dessemond <adessemond@funtoo.org> (22 Apr 2011)
 # Random data corruption observed, investigations in progress
 app-arch/pxz
