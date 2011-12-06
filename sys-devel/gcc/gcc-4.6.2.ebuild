@@ -76,7 +76,6 @@ src_unpack() {
 	use vanilla && return 0
 
 	[[ ${CHOST} == ${CTARGET} ]] && epatch "${FILESDIR}"/gcc-spec-env.patch
-	epatch "${FILESDIR}"/gcc-4.6-arm.patch
 }
 
 pkg_setup() {
