@@ -13,7 +13,7 @@ PATCH_VER="1"
 SRC_URI="mirror://gentoo/gentoo-headers-base-${PV}.tar.xz"
 [[ -n ${PATCH_VER} ]] && SRC_URI="${SRC_URI} mirror://gentoo/gentoo-headers-${PV}-${PATCH_VER}.tar.xz"
 
-KEYWORDS="*"
+KEYWORDS="~*"
 
 DEPEND="app-arch/xz-utils"
 RDEPEND=""
