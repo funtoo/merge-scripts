@@ -1,8 +1,3 @@
-# Piotr Karbowski
-# Broken deps, it does want static-libs openssl even when USE='-static'.
-# https://bugs.gentoo.org/show_bug.cgi?id=392713
-=net-misc/wget-1.13.4-r1
-
 # Adrien Dessemond
 # Several packages like dev-tex/luatex and are broken by app-text/poppler 0.18.0 (dev-libs/glib 2.30.0 prevents poppler 0.16.x from being built). Masked until  issues are solved => Gentoo bug #384885
 >=app-text/poppler-0.18.0

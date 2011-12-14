@@ -12,7 +12,7 @@ SRC_URI="mirror://berlios/${PN}/${P}.tar.xz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~sparc ~x86"
+KEYWORDS="*"
 IUSE="debug doc nls optimization security strong-optimization sqlite tools zsh-completion"
 
 RDEPEND="sqlite? ( >=dev-db/sqlite-3 )
