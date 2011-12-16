@@ -179,10 +179,10 @@ src_install () {
 	keepdir /etc/snmp /var/lib/net-snmp
 
 	newinitd "${FILESDIR}"/snmpd.init snmpd || die
-	newconfd "${FILESDIR}"/snmpd.conf snmpd || die
+	newconfd "${FILESDIR}"/snmpd.conf.d snmpd || die
 
 	newinitd "${FILESDIR}"/snmptrapd.init snmptrapd || die
-	newconfd "${FILESDIR}"/snmptrapd.conf snmptrapd || die
+	newconfd "${FILESDIR}"/snmptrapd.conf.d snmptrapd || die
 
 	# Remove everything not required for an agent.
 	# Keep only the snmpd, snmptrapd, MIBs, headers and libraries.

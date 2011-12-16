@@ -52,7 +52,9 @@ DEPEND="${COMMON}
 	>=sys-devel/autoconf-2.61-r2
 	>=sys-apps/sed-4
 	doc? ( app-doc/doxygen )"
-
+pkg_setup() {
+	use python && python_pkg_setup
+}
 src_prepare() {
 	sed -i \
 		-e 's|\(database_file =.*\)/local\(.*\)$|\1\2|' \
@@ -124,7 +126,7 @@ src_configure() {
 		--with-mib-modules="${mibs}" \
 		--with-logfile="/var/log/net-snmpd.log" \
 		--with-persistent-directory="/var/lib/net-snmp" \
-		--disable-ucd-snmp-compatibility \
+		--enable-ucd-snmp-compatibility \
 		--enable-shared \
 		--with-ldflags="${LDFLAGS}" \
 		--enable-as-needed \
@@ -183,10 +185,10 @@ src_install () {
 	keepdir /etc/snmp /var/lib/net-snmp
 
 	newinitd "${FILESDIR}"/snmpd.init snmpd || die
-	newconfd "${FILESDIR}"/snmpd.conf snmpd || die
+	newconfd "${FILESDIR}"/snmpd.conf.d snmpd || die
 
 	newinitd "${FILESDIR}"/snmptrapd.init snmptrapd || die
-	newconfd "${FILESDIR}"/snmptrapd.conf snmptrapd || die
+	newconfd "${FILESDIR}"/snmptrapd.conf.d snmptrapd || die
 
 	# Remove everything not required for an agent.
 	# Keep only the snmpd, snmptrapd, MIBs, headers and libraries.
@@ -203,6 +205,13 @@ src_install () {
 	# bug 113788, install example config
 	insinto /etc/snmp
 	newins "${S}"/EXAMPLE.conf snmpd.conf.example || die
+	doins ${FILESDIR}/snmpd.conf || die
+}
+
+pkg_preinst() {
+	if [ -e ${ROOT}/etc/snmp/snmpd.conf ]; then
+		rm -f ${ROOT}/etc/snmp/snmpd.conf
+	fi
 }
 
 pkg_postinst() {

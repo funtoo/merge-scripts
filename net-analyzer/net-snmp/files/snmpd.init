@@ -1,9 +1,9 @@
 #!/sbin/runscript
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-analyzer/net-snmp/files/snmpd.init,v 1.2 2011/12/04 10:17:16 swegener Exp $
+# $Header: /var/cvsroot/gentoo-x86/net-analyzer/net-snmp/files/snmpd.init,v 1.1 2009/10/16 08:51:05 gengor Exp $
 
-extra_started_commands="reload"
+opts="${opts} reload"
 
 depend() {
 	use logger
@@ -22,8 +22,7 @@ checkconfig() {
 start() {
 	checkconfig || return 1
 	ebegin "Starting ${SVCNAME}"
-	start-stop-daemon --start --quiet --exec /usr/sbin/snmpd \
-		-- -p ${SNMPD_PIDFILE} ${SNMPD_FLAGS}
+	start-stop-daemon --start --quiet --background -p ${SNMPD_PIDFILE} ${SNMPD_FLAGS} /usr/sbin/snmpd
 	eend $?
 }
 
