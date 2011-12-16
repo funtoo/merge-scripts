@@ -32,7 +32,7 @@ fi
 LICENSE="PSF-2.2"
 SLOT="2.7"
 PYTHON_ABI="${SLOT}"
-KEYWORDS="amd64 x86 sparc"
+KEYWORDS="*"
 IUSE="-berkdb build doc elibc_uclibc examples gdbm ipv6 +ncurses +readline sqlite +ssl +threads tk +wide-unicode wininst +xml"
 
 RDEPEND=">=app-admin/eselect-python-20091230
