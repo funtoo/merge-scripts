@@ -1,6 +1,17 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
 ##############################################################
+### Mask for live Radeon-related ebuilds 
+### responsible Mathieu Bélanger (destroyfx)
+### imported Jean-Francis Roy 
+##############################################################
+##
+##############################################################
+=x11-drivers/xf86-video-ati-9999
+=media-libs/mesa-9999
+=x11-libs/libdrm-9999
+
+##############################################################
 ### Mask for Liberal Crime Squad
 ### responsible p4
 ### imported Martin 'golodhrim' Scholz

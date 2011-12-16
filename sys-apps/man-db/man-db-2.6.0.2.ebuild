@@ -13,14 +13,14 @@ SRC_URI="http://download.savannah.nongnu.org/releases/man-db/${P}.tar.gz"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~x86 ~sparc"
-IUSE="berkdb +gdbm nls"
+IUSE="berkdb +gdbm nls zlib"
 
-RDEPEND="
-    dev-libs/libpipeline
+RDEPEND="dev-libs/libpipeline
 	berkdb? ( sys-libs/db )
 	gdbm? ( sys-libs/gdbm )
 	!berkdb? ( !gdbm? ( sys-libs/gdbm ) )
 	|| ( sys-apps/groff >=app-doc/heirloom-doctools-080407-r2 )
+	zlib? ( sys-libs/zlib )
 	!sys-apps/man"
 DEPEND="
 	${RDEPEND}
@@ -38,6 +38,7 @@ src_prepare() {
 src_configure() {
 	local db="gdbm"
 	use berkdb && ! use gdbm && db="db"
+	export ac_cv_lib_z_gzopen=$(usex zlib)
 	econf \
 		--with-sections="1 1p 8 2 3 3p 4 5 6 7 9 0p tcl n l p o 1x 2x 3x 4x 5x 6x 7x 8x" \
 		$(use_enable nls) \

@@ -1,4 +1,4 @@
-# Copyright 2011 Funtoo Technologies (Rosen Alexandrow - sandikata@yandex.ru)
+# Copyright 2011 Funtoo Technologies 
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=2
@@ -11,12 +11,11 @@ EXTRAVERSION=${KV_DEB}
 inherit kernel-2
 detect_version
 
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="~amd64 ~x86 ~sparc"
 DESCRIPTION="Debian Sources - with optional OpenVZ support"
 HOMEPAGE="http://www.debian.org"
-SRC_URI="
-	 http://ftp.bg.debian.org/debian/pool/main/l/linux-2.6/linux-2.6_3.0.0.orig.tar.gz
-	 http://ftp.bg.debian.org/debian/pool/main/l/linux-2.6/linux-2.6_3.0.0-4.diff.gz"
+SRC_URI="http://ftp.bg.debian.org/debian/pool/main/l/linux-2.6/linux-2.6_3.1.4.orig.tar.gz
+	 http://ftp.bg.debian.org/debian/pool/main/l/linux-2.6/linux-2.6_3.1.4-1.diff.gz"
 UNIPATCH_STRICTORDER=1
 UNIPATCH_LIST="${FILESDIR}/debian-sources-2.6.38.3-bridgemac.patch"
 IUSE="openvz"
@@ -24,8 +23,8 @@ K_EXTRAEINFO=""
 
 src_unpack() {
 	cd ${WORKDIR}
-	unpack linux-2.6_3.0.0.orig.tar.gz
-	cat ${DISTDIR}/linux-2.6_3.0.0-4.diff.gz | gzip -d | patch -p1 || die
+	unpack linux-2.6_3.1.4.orig.tar.gz
+	cat ${DISTDIR}/linux-2.6_3.1.4-1.diff.gz | gzip -d | patch -p1 || die
 	mv linux-* linux-${KV_FULL} || die
 	mv debian linux-${KV_FULL}/ || die
 	cd ${S}
