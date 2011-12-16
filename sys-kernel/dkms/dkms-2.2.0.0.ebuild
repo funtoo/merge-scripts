@@ -11,7 +11,7 @@ HOMEPAGE="http://linux.dell.com/dkms"
 LICENSE="GPL-2"
 DEPEND=""
 RDEPEND="app-arch/rpm"
-KEYWORDS="x86 amd64"
+KEYWORDS="*"
 SLOT="0"
 
 src_compile() {
