@@ -134,7 +134,7 @@ src_configure() {
 }
 
 src_compile() {
-	emake OTHERLDFLAGS="${LDFLAGS}" || die "emake failed"
+	emake -j1 OTHERLDFLAGS="${LDFLAGS}" || die "emake failed"
 
 	if use python; then
 		cd python
