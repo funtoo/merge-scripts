@@ -52,9 +52,11 @@ DEPEND="${COMMON}
 	>=sys-devel/autoconf-2.61-r2
 	>=sys-apps/sed-4
 	doc? ( app-doc/doxygen )"
+
 pkg_setup() {
 	use python && python_pkg_setup
 }
+
 src_prepare() {
 	sed -i \
 		-e 's|\(database_file =.*\)/local\(.*\)$|\1\2|' \
@@ -97,13 +99,16 @@ src_configure() {
 	use lm_sensors && mibs="${mibs} hardware/sensors"
 	use smux && mibs="${mibs} smux"
 
+	# We use --without-python below because distutils takes care of building
+	# python directly.
+
 	local myconf="$(use_enable ipv6) \
 			$(use_enable mfd-rewrites) \
 			$(use_enable perl embedded-perl) \
 			$(use_enable !ssl internal-md5) \
 			$(use_with elf) \
 			$(use_with perl perl-modules INSTALLDIRS=vendor ) \
-			$(use_with python python-modules) \
+			--without-python \
 			$(use_with ssl openssl) \
 			$(use_with tcpd libwrap)"
 	if use rpm ; then
