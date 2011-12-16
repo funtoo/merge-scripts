@@ -1,0 +1,11 @@
+--- pciutils-3.1.7/lib/configure
++++ pciutils-3.1.7/lib/configure
+@@ -85,7 +85,7 @@
+ 		esac
+ 		echo >>$c '#define PCI_HAVE_STDINT_H'
+ 		;;
+-	freebsd)
++	freebsd*)
+ 		echo_n " fbsd-device"
+ 		echo >>$c '#define PCI_HAVE_PM_FBSD_DEVICE'
+ 		echo >>$c '#define PCI_PATH_FBSD_DEVICE "/dev/pci"'
