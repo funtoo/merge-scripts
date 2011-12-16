@@ -2,7 +2,7 @@
 
 # Oleg Vinichenko (30 Sep 2011)
 # temporary mask for poppler due to multiple breakages
->=app-text/poppler-0.18.0
+#>=app-text/poppler-0.18.0
 
 # Daniel Robbins (14 Sep 2011)
 # masked for testing
