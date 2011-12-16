@@ -67,6 +67,7 @@ src_unpack() {
 
 	cat ${FILESDIR}/${PVR}/grub-legacy-0.97-r12-device-map.patch | patch -p1 || die "patch failure"
 	cat ${FILESDIR}/${PVR}/grub-legacy-0.97-r12-setup.patch | patch -p1 || die "patch failure"
+	cat ${FILESDIR}/${PVR}/grub-legacy-0.97-r12-gcc-4.6.patch | patch -p1 || die "patch failure"
 
 	eautoreconf
 
