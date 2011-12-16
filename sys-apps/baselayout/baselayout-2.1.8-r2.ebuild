@@ -12,15 +12,13 @@ S2=$WORKDIR/realdev-1.0
 
 LICENSE="GPL-2 BSD-2"
 SLOT="0"
-KEYWORDS="alpha amd64 arm hppa ia64 m68k mips ppc ppc64 s390 sh sparc sparc-fbsd x86 x86-fbsd"
+KEYWORDS="*"
 IUSE="build"
 PDEPEND="sys-apps/openrc"
 
 pkg_preinst() {
 	# execute critical sub-functions (defined elsewhere in this ebuild):
-
 	# migrate to new modules.conf filenames:
-	
 	modfix
 
 	# create initial set of library directories if appropriate:
@@ -29,7 +27,6 @@ pkg_preinst() {
 }
 
 create_lib_dirs() {
-	
 	# Only do this for non-root filesystems. Also note that all filesystem-
 	# modifying commands below will only execute if the target file does
 	# not already exist. This should provide reasonable protection for existing
@@ -52,7 +49,6 @@ create_lib_dirs() {
 
 	for dir in ${libdirs} 
 	do
-		
 		# If SYMLINK_LIB is set, this means that the "lib" dirs should be
 		# created as  symlinks, so don't create real "lib" dirs in this case.
 		# For example, on amd64 multilib (the default,) SYMLINK_LIB is set to
@@ -77,7 +73,6 @@ create_lib_dirs() {
 
 		# If the "lib" target doesn't exist, then create a "lib" link
 		# pointing to something like "lib64" (libdir of the DEFAULT_ABI)
-		
 		[ -e ${ROOT}lib ] || ln -sf ${dir} ${ROOT}lib || die
 		[ -e ${ROOT}usr/lib ] || ln -sf ${dir} ${ROOT}usr/lib || die
 		[ -e ${ROOT}usr/local/lib ] || ln -sf ${dir} ${ROOT}usr/local/lib || die
@@ -122,7 +117,6 @@ src_install() {
 		libdir=$(get_abi_LIBDIR "${DEFAULT_ABI}")
 		rcscripts_dir="/${libdir}/rcscripts"
 	fi
-	
 	dodir /etc /usr/share/baselayout
 	cp -pPR etc/* etc.Linux/* ${D}/etc/ || die
 	cp -pPR share.Linux/* ${D}/usr/share/baselayout || die
@@ -170,9 +164,9 @@ src_install() {
 	keepdir /usr/share/man
 	keepdir /usr/share/misc
 	keepdir /usr/src
-	
+
 	keepdir /var
-	
+
 	keepdir /var/adm
 	keepdir /var/spool/lpd
 	keepdir /var/spool/news
@@ -196,7 +190,7 @@ src_install() {
 	diropts -m0700
 	keepdir /root
 	insinto /root
-	
+
 	dodoc ChangeLog
 
 	into /
@@ -209,7 +203,7 @@ src_install() {
 	# "/usr/local/lib" is on this list, which may not be necessary
 	# is SYMLINK_LIB is set in the profile. If possible, this should
 	# be tweaked/simplified:
-	
+
 	if has_multilib_profile || [ $(get_libdir) != "lib" -o -n "${CONF_MULTILIBDIR}" ]; then
 		local libdirs="$(get_all_libdirs)" libdirs_env= dir=
 		: ${libdirs:=lib}	# it isn't that we don't trust multilib.eclass...
@@ -256,7 +250,7 @@ pkg_postinst() {
 
 	# carefully set perms for shadow to prevent non-root users from viewing
 	# encrypted password files.
-	
+
 	for x in shadow ; do
 		[ -e "${ROOT}etc/${x}" ] && chmod 0600 "${ROOT}etc/$x"
 	done

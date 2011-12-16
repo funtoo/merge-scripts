@@ -12,7 +12,7 @@ SRC_URI="http://download.savannah.nongnu.org/releases/man-db/${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64 ~x86 ~sparc"
+KEYWORDS="*"
 IUSE="berkdb +gdbm nls zlib"
 
 RDEPEND="dev-libs/libpipeline
@@ -32,8 +32,8 @@ pkg_setup() {
 }
 
 src_prepare() {
-    epatch "${FILESDIR}"/${PN}-2.6.0.2-flock.h.patch
-}	
+	epatch "${FILESDIR}"/${PN}-2.6.0.2-flock.h.patch
+}
 
 src_configure() {
 	local db="gdbm"
@@ -55,7 +55,7 @@ src_install() {
 }
 
 pkg_preinst() {
-    if [ -f "${ROOT}var/cache/man/whatis" ]
+	if [ -f "${ROOT}var/cache/man/whatis" ]
 	then
 	   einfo "Cleaning stale ${ROOT}var/cache/man directory..."
 	   rm -rf "${ROOT}var/cache/man"
@@ -66,9 +66,9 @@ pkg_preinst() {
 }
 
 pkg_postinst() {
-    if [ "$ROOT" = "/" ]
-    then
-        einfo  "Generating/updating man-db cache..."
+	if [ "$ROOT" = "/" ]
+	then
+		einfo  "Generating/updating man-db cache..."
 		/etc/cron.daily/man-db
 	fi
 }
