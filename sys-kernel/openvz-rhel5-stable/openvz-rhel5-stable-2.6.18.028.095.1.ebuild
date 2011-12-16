@@ -9,10 +9,10 @@ inherit mount-boot
 SLOT=$PVR
 CKV=2.6.18
 OKV=$CKV
-OVZ_KERNEL="028stab091"
+OVZ_KERNEL="028stab095"
 OVZ_REV="1"
 OVZ_KV=${OVZ_KERNEL}.${OVZ_REV}
-OVZ_PATCHV="238.12.1.el5.${OVZ_KV}"
+OVZ_PATCHV="274.7.1.el5.${OVZ_KV}"
 KV_FULL=${PN}-${PVR}
 EXTRAVERSION=-${OVZ_KV}
 KERNEL_ARCHIVE="linux-${CKV}.tar.bz2"
@@ -22,17 +22,17 @@ RESTRICT="binchecks strip"
 LICENSE="GPL-2"
 KEYWORDS="x86 amd64"
 IUSE="binary xen"
-DEPEND="binary? ( >=sys-kernel/genkernel-3.4.12.6-r4 ) =sys-devel/gcc-4.1.2*"
+DEPEND="binary? ( >=sys-kernel/genkernel-3.4.15-r2 ) =sys-devel/gcc-4.1.2*"
 RDEPEND="binary? ( <=sys-fs/udev-147 )"
 DESCRIPTION="Full Linux kernel sources - RHEL5 kernel with OpenVZ patchset"
 HOMEPAGE="http://www.openvz.org"
 MAINPATCH="patch-${OVZ_PATCHV}-combined.gz"
 SRC_URI="${KERNEL_URI}
-	http://download.openvz.org/kernel/branches/rhel5-${CKV}-testing/${OVZ_KV}/configs/kernel-${CKV}-i686-ent.config.ovz -> config-${CKV}-${OVZ_KV}.i686
-	http://download.openvz.org/kernel/branches/rhel5-${CKV}-testing/${OVZ_KV}/configs/kernel-${CKV}-i686-xen.config.ovz -> config-${CKV}-${OVZ_KV}.i686.xen
-	http://download.openvz.org/kernel/branches/rhel5-${CKV}-testing/${OVZ_KV}/configs/kernel-${CKV}-x86_64.config.ovz -> config-${CKV}-${OVZ_KV}.x86_64
-	http://download.openvz.org/kernel/branches/rhel5-${CKV}-testing/${OVZ_KV}/configs/kernel-${CKV}-x86_64-xen.config.ovz -> config-${CKV}-${OVZ_KV}.x86_64.xen
-	http://download.openvz.org/kernel/branches/rhel5-${CKV}-testing/${OVZ_KV}/patches/$MAINPATCH"
+	http://download.openvz.org/kernel/branches/rhel5-${CKV}/${OVZ_KV}/configs/kernel-${CKV}-i686-ent.config.ovz -> config-${CKV}-${OVZ_KV}.i686
+	http://download.openvz.org/kernel/branches/rhel5-${CKV}/${OVZ_KV}/configs/kernel-${CKV}-i686-xen.config.ovz -> config-${CKV}-${OVZ_KV}.i686.xen
+	http://download.openvz.org/kernel/branches/rhel5-${CKV}/${OVZ_KV}/configs/kernel-${CKV}-x86_64.config.ovz -> config-${CKV}-${OVZ_KV}.x86_64
+	http://download.openvz.org/kernel/branches/rhel5-${CKV}/${OVZ_KV}/configs/kernel-${CKV}-x86_64-xen.config.ovz -> config-${CKV}-${OVZ_KV}.x86_64.xen
+	http://download.openvz.org/kernel/branches/rhel5-${CKV}/${OVZ_KV}/patches/$MAINPATCH"
 S="$WORKDIR/linux-${CKV}"
 
 K_EXTRAEINFO="
@@ -133,14 +133,13 @@ src_compile() {
 	install -d ${WORKDIR}/out/{lib,boot}
 	install -d ${T}/{cache,twork}
 	install -d $WORKDIR/build $WORKDIR/out/lib/firmware
-	DEFAULT_KERNEL_SOURCE="${S}" INSTALL_FW_PATH=${WORKDIR}/out/lib/firmware CMD_KERNEL_DIR="${S}" genkernel ${GKARGS} \
+	genkernel ${GKARGS} \
 		--no-save-config \
 		--kernel-config="$defconfig_src" \
 		--kernname="${PN}" \
 		--build-src="$S" \
 		--build-dst=${WORKDIR}/build \
 		--makeopts="${MAKEOPTS}" \
-		--firmware-dst=${WORKDIR}/out/lib/firmware \
 		--cachedir="${T}/cache" \
 		--tempdir="${T}/twork" \
 		--logfile="${WORKDIR}/genkernel.log" \
@@ -159,7 +158,7 @@ src_install() {
 	cd ${D}/usr/src/linux-${P}
 	make mrproper || die
 	cp $defconfig_dst .config || die
-	make oldconfig || die
+	yes "" | make oldconfig || die
 	# if we didn't use genkernel, we're done. The kernel source tree is left in
 	# an unconfigured state - you can't compile 3rd-party modules against it yet.
 	use binary || return
