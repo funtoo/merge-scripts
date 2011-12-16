@@ -27,7 +27,7 @@ HTTP_HEADERS_MORE_MODULE_SHA1="137855d"
 HTTP_PUSH_MODULE_P="nginx_http_push_module-0.692"
 
 # http_cache_purge (http://labs.frickle.com/nginx_ngx_cache_purge/, BSD-2 license)
-HTTP_CACHE_PURGE_MODULE_P="ngx_cache_purge-1.3"
+HTTP_CACHE_PURGE_MODULE_P="ngx_cache_purge-1.4"
 
 # HTTP Upload module from Valery Kholodkov
 # (http://www.grid.net.ru/nginx/upload.en.html, BSD license)
@@ -62,7 +62,7 @@ SRC_URI="http://nginx.org/download/${P}.tar.gz
 
 LICENSE="as-is BSD BSD-2 GPL-2 MIT"
 SLOT="0"
-KEYWORDS="amd64 ppc x86 x86-fbsd sparc"
+KEYWORDS="~*"
 
 NGINX_MODULES_STD="access auth_basic autoindex browser charset empty_gif fastcgi
 geo gzip limit_req limit_zone map memcached proxy referer rewrite scgi ssi
@@ -287,6 +287,11 @@ src_install() {
 	dodir /etc/${PN}/sites-available
 	insinto /etc/${PN}/sites-available
 	doins $FILESDIR/${PVR}/sites-available/localhost || die
+	dodir /usr/share/nginx/html
+	insinto /usr/share/nginx/html
+	doins ${FILESDIR}/example/index.html
+	doins ${FILESDIR}/example/nginx-logo.png
+	doins ${FILESDIR}/example/powered-by-funtoo.png
 
 	doman man/nginx.8
 	dodoc CHANGES* README
