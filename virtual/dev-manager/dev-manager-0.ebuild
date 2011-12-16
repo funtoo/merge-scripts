@@ -8,7 +8,7 @@ SRC_URI=""
 
 LICENSE=""
 SLOT="0"
-KEYWORDS="amd64 sparc x86"
+KEYWORDS="*"
 IUSE=""
 
 DEPEND=""
