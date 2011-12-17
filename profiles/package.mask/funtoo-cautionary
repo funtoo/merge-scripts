@@ -1,3 +1,6 @@
+# require unmask...
+=dev-lang/python-3*
+
 # Piotr Karbowski
 # Broken deps, it does want static-libs openssl even when USE='-static'.
 # https://bugs.gentoo.org/show_bug.cgi?id=392713
