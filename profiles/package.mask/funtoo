@@ -1,5 +1,9 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+#Daniel Robbins (19 Dec 2011)
+#I am working on this ebuild - not yet ready for prime time.
+>=net-analyzer/net-snmp-5.7
+
 #Daniel Robbins (13 Jul 2011)
 #pyxml is BAD - avoid if possible - see http://permalink.gmane.org/gmane.linux.gentoo.devel/71149
 dev-python/pyxml
