@@ -211,22 +211,18 @@ src_install () {
 	insinto /etc/snmp
 	newins "${S}"/EXAMPLE.conf snmpd.conf.example || die
 	insinto /usr/share/snmp
-	newins ${FILESDIR}/snmpd.conf snmpd.conf.basic || die
-}
-
-pkg_preinst() {
-	if ! [ -e ${ROOT}/etc/snmp/snmpd.conf ]; then
-		cp $ROOT/usr/share/snmp/snmpd.conf.basic ${ROOT}/etc/snmp/snmpd.conf
-	fi
+	newins ${FILESDIR}/$PVR/snmpd.conf snmpd.conf.basic || die
 }
 
 pkg_postinst() {
+	if ! [ -e ${ROOT}/etc/snmp/snmpd.conf ]; then
+		cp $ROOT/usr/share/snmp/snmpd.conf.basic ${ROOT}/etc/snmp/snmpd.conf
+		elog "A basic working snmpd configuration file has been installed to /etc/snmpd/snmpd.conf."
+	fi
+
 	if use python; then
 		distutils_pkg_postinst
 	fi
-
-	elog "An example configuration file has been installed in"
-	elog "/etc/snmp/snmpd.conf.example."
 }
 
 pkg_postrm() {

@@ -22,7 +22,7 @@ checkconfig() {
 start() {
 	checkconfig || return 1
 	ebegin "Starting ${SVCNAME}"
-	start-stop-daemon --start --quiet --background -- /usr/sbin/snmpd ${SNMPD_OPTS} -p ${SNMPD_PIDFILE} 
+	start-stop-daemon --start --quiet -p ${SNMPD_PIDFILE} -- /usr/sbin/snmpd ${SNMPD_OPTS} -p ${SNMPD_PIDFILE} 
 	eend $?
 }
 
