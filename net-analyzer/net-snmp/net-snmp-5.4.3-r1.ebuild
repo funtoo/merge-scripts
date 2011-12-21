@@ -4,8 +4,12 @@
 
 EAPI="3"
 PYTHON_DEPEND="python? 2"
+SUPPORT_PYTHON_ABIS="1"
+RESTRICT_PYTHON_ABIS="3.* *-jython"
+PYTHON_MODNAME="netsnmp"
+DISTUTILS_GLOBAL_OPTIONS=( "--basedir=${S}" )
 
-inherit fixheadtails flag-o-matic perl-module python autotools
+inherit fixheadtails flag-o-matic perl-module python autotools distutils
 
 DESCRIPTION="Software for generating and retrieving SNMP data"
 HOMEPAGE="http://net-snmp.sourceforge.net/"
@@ -13,7 +17,7 @@ SRC_URI="mirror://sourceforge/${PN}/${P}.tar.gz"
 
 LICENSE="as-is BSD"
 SLOT="0"
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86"
+KEYWORDS="*"
 IUSE="bzip2 diskio doc elf extensible ipv6 kernel_linux lm_sensors mfd-rewrites minimal perl python rpm selinux sendmail smux ssl tcpd X zlib"
 
 COMMON="ssl? ( >=dev-libs/openssl-0.9.6d )
@@ -46,10 +50,7 @@ DEPEND="${COMMON}
 	doc? ( app-doc/doxygen )"
 
 pkg_setup() {
-	if use python; then
-		python_set_active_version 2
-		python_pkg_setup
-	fi
+	use python && python_pkg_setup
 }
 
 src_prepare() {
@@ -67,7 +68,6 @@ src_prepare() {
 		die "sed fixproc failed"
 
 	if use python ; then
-		PYTHON_DIR="$(python_get_sitedir)"
 		sed -i -e "s:\(install --basedir=\$\$dir\):\1 --root='${D}':" Makefile.in || \
 			die "sed python failed"
 	fi
@@ -103,13 +103,16 @@ src_configure() {
 	use sendmail && mibs="${mibs} mibII/mta_sendmail"
 	use smux && mibs="${mibs} smux"
 
+	# We use --without-python below because distutils takes care of building
+	# python directly.
+
 	local myconf="$(use_enable ipv6) \
 			$(use_enable mfd-rewrites) \
 			$(use_enable perl embedded-perl) \
 			$(use_enable !ssl internal-md5) \
 			$(use_with elf) \
-			$(use_with perl perl-modules) \
-			$(use_with python python-modules) \
+			$(use_with perl perl-modules INSTALLDIRS=vendor ) \
+			--without-python \
 			$(use_with ssl openssl) \
 			$(use_with tcpd libwrap)"
 	if use rpm ; then
@@ -142,6 +145,12 @@ src_configure() {
 src_compile() {
 	emake -j1 OTHERLDFLAGS="${LDFLAGS}" || die "emake failed"
 
+	if use python; then
+		cd python
+		distutils_src_compile
+		cd ..
+	fi
+
 	if use doc ; then
 		einfo "Building HTML Documentation"
 		make docsdox || die "failed to build docs"
@@ -164,6 +173,12 @@ src_install () {
 	# bug #317965
 	emake -j1 DESTDIR="${D}" install || die "make install failed"
 
+	if use python; then
+		cd python
+		distutils_src_install
+		cd ..
+	fi
+
 	if use perl ; then
 		fixlocalpod
 		use X || rm -f "${D}"/usr/bin/tkmib
@@ -178,11 +193,11 @@ src_install () {
 
 	keepdir /etc/snmp /var/lib/net-snmp
 
-	newinitd "${FILESDIR}"/snmpd.init snmpd || die
-	newconfd "${FILESDIR}"/snmpd.conf.d snmpd || die
+	newinitd "${FILESDIR}"/$PVR/snmpd.init snmpd || die
+	newconfd "${FILESDIR}"/$PVR/snmpd.conf.d snmpd || die
 
-	newinitd "${FILESDIR}"/snmptrapd.init snmptrapd || die
-	newconfd "${FILESDIR}"/snmptrapd.conf.d snmptrapd || die
+	newinitd "${FILESDIR}"/$PVR/snmptrapd.init snmptrapd || die
+	newconfd "${FILESDIR}"/$PVR/snmptrapd.conf.d snmptrapd || die
 
 	# Remove everything not required for an agent.
 	# Keep only the snmpd, snmptrapd, MIBs, headers and libraries.
@@ -199,6 +214,14 @@ src_install () {
 	# bug 113788, install example config
 	insinto /etc/snmp
 	newins "${S}"/EXAMPLE.conf snmpd.conf.example || die
+	insinto /usr/share/snmp
+	newins ${FILESDIR}/snmpd.conf snmpd.conf.basic || die
+}
+
+pkg_preinst() {
+	if ! [ -e ${ROOT}/etc/snmp/snmpd.conf ]; then
+		cp $ROOT/usr/share/snmp/snmpd.conf.basic ${ROOT}/etc/snmp/snmpd.conf
+	fi
 }
 
 pkg_postinst() {

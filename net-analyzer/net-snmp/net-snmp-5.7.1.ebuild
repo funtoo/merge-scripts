@@ -189,11 +189,11 @@ src_install () {
 
 	keepdir /etc/snmp /var/lib/net-snmp
 
-	newinitd "${FILESDIR}"/snmpd.init snmpd || die
-	newconfd "${FILESDIR}"/snmpd.conf.d snmpd || die
+	newinitd "${FILESDIR}"/$PVR/snmpd.init snmpd || die
+	newconfd "${FILESDIR}"/$PVR/snmpd.conf.d snmpd || die
 
-	newinitd "${FILESDIR}"/snmptrapd.init snmptrapd || die
-	newconfd "${FILESDIR}"/snmptrapd.conf.d snmptrapd || die
+	newinitd "${FILESDIR}"/$PVR/snmptrapd.init snmptrapd || die
+	newconfd "${FILESDIR}"/$PVR/snmptrapd.conf.d snmptrapd || die
 
 	# Remove everything not required for an agent.
 	# Keep only the snmpd, snmptrapd, MIBs, headers and libraries.
@@ -210,12 +210,13 @@ src_install () {
 	# bug 113788, install example config
 	insinto /etc/snmp
 	newins "${S}"/EXAMPLE.conf snmpd.conf.example || die
-	doins ${FILESDIR}/snmpd.conf || die
+	insinto /usr/share/snmp
+	newins ${FILESDIR}/snmpd.conf snmpd.conf.basic || die
 }
 
 pkg_preinst() {
-	if [ -e ${ROOT}/etc/snmp/snmpd.conf ]; then
-		rm -f ${ROOT}/etc/snmp/snmpd.conf
+	if ! [ -e ${ROOT}/etc/snmp/snmpd.conf ]; then
+		cp $ROOT/usr/share/snmp/snmpd.conf.basic ${ROOT}/etc/snmp/snmpd.conf
 	fi
 }
 
