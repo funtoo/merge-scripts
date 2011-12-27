@@ -3,5 +3,5 @@
 
 EAPI=3
 SLOT="0"
-KEYWORDS="amd64 x86 sparc"
+KEYWORDS="*"
 RDEPEND="sys-apps/openrc sys-apps/baselayout"

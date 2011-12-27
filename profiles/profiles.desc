@@ -16,4 +16,8 @@ x86             default/linux/x86/2008.0/desktop                  stable
 x86             default/linux/x86/2008.0/developer                stable
 x86             default/linux/x86/2008.0/server                   stable
  
+arm             default/linux/arm/10.0                            stable
+arm             default/linux/arm/10.0/desktop                    stable
+arm             default/linux/arm/10.0/developer                  stable
+arm             default/linux/arm/10.0/server                     stable
 # vim: set ts=8:

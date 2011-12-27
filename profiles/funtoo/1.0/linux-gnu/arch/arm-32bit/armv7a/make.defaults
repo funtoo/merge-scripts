@@ -1,0 +1,3 @@
+CHOST="armv7a-unknown-linux-gnueabi"
+CFLAGS="-O2 -pipe -march=armv7-a -mfpu=vfpv3-d16 -mfloat-abi=softfp"
+CXXFLAGS="${CFLAGS}"
