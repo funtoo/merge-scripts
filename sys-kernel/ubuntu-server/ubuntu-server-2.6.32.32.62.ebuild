@@ -16,7 +16,7 @@ RESTRICT="binchecks strip"
 LICENSE="GPL-2"
 KEYWORDS="*"
 IUSE="binary"
-DEPEND="binary? ( >=sys-kernel/genkernel-3.4.12.6-r4 )"
+DEPEND="binary? ( >=sys-kernel/genkernel-3.4.12.6-r4 ) =sys-devel/gcc-4.4.5*"
 RDEPEND="binary? ( >=sys-fs/udev-160 )"
 DESCRIPTION="Ubuntu Server sources (and optional binary kernel)"
 HOMEPAGE="http://www.openvz.org"
@@ -66,6 +66,7 @@ pkg_setup() {
 
 src_prepare() {
 	apply $DISTDIR/$MAINPATCH -p1
+	apply $FILESDIR/$PVR/gcc-4.4.5.patch -p1
 
 	sed -i -e "s:^\(EXTRAVERSION =\).*:\1 ${EXTRAVERSION}:" Makefile || die
 	sed	-i -e 's:#export\tINSTALL_PATH:export\tINSTALL_PATH:' Makefile || die
