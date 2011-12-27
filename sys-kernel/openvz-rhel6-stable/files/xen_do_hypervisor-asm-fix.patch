@@ -1,0 +1,12 @@
+diff -urN linux-2.6.32/arch/x86/kernel/entry_64.S linux-2.6.32.hyp/arch/x86/kernel/entry_64.S
+--- linux-2.6.32/arch/x86/kernel/entry_64.S	2011-12-27 01:58:49.076824867 +0000
++++ linux-2.6.32.hyp/arch/x86/kernel/entry_64.S	2011-12-27 02:00:07.252777428 +0000
+@@ -1319,7 +1319,7 @@
+ 	decl PER_CPU_VAR(irq_count)
+ 	jmp  error_exit
+ 	CFI_ENDPROC
+-END(do_hypervisor_callback)
++END(xen_do_hypervisor_callback)
+ 
+ /*
+  * Hypervisor uses this for application faults while it executes.
