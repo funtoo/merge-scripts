@@ -136,6 +136,7 @@ src_configure() {
 		--with-ldflags="${LDFLAGS}" \
 		--enable-as-needed \
 		${myconf}
+		sed -e "s/#define HAVE_PCI_LOOKUP_NAME 1/#define HAVE_PCI_LOOKUP_NAME 0/" include/net-snmp/net-snmp-config.h || die
 }
 
 src_compile() {
