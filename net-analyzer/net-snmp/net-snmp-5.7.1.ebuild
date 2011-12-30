@@ -32,8 +32,10 @@ COMMON="ssl? ( >=dev-libs/openssl-0.9.6d )
 	bzip2? ( app-arch/bzip2 )
 	zlib? ( >=sys-libs/zlib-1.1.4 )
 	elf? ( dev-libs/elfutils )
-	python? ( dev-python/setuptools )
-	>=sys-apps/pciutils-3.1.8-r1"
+	python? ( dev-python/setuptools )"
+
+#	Disabling PCI support for now as it messes up interface names when it works:
+#	>=sys-apps/pciutils-3.1.8-r1"
 
 # pciutils-3.1.8-r1 has a fix to pci_init() to allow pci_access->error() to be
 # overridden with something that does not call exit() and still have pci_init()
@@ -99,7 +101,7 @@ src_configure() {
 	use lm_sensors && mibs="${mibs} hardware/sensors"
 	use smux && mibs="${mibs} smux"
 
-	# We use --without-python below because distutils takes care of building
+	# We use --without-python-modules below because distutils takes care of building
 	# python directly.
 
 	local myconf="$(use_enable ipv6) \
@@ -108,7 +110,7 @@ src_configure() {
 			$(use_enable !ssl internal-md5) \
 			$(use_with elf) \
 			$(use_with perl perl-modules INSTALLDIRS=vendor ) \
-			--without-python \
+			--without-python-modules \
 			$(use_with ssl openssl) \
 			$(use_with tcpd libwrap)"
 	if use rpm ; then
@@ -136,6 +138,7 @@ src_configure() {
 		--with-ldflags="${LDFLAGS}" \
 		--enable-as-needed \
 		${myconf}
+	sed -i -e "s/#define HAVE_PCI_LOOKUP_NAME.*1/#undef HAVE_PCI_LOOKUP_NAME/" include/net-snmp/net-snmp-config.h || die
 }
 
 src_compile() {
