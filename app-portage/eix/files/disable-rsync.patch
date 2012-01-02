@@ -1,7 +1,7 @@
-diff -Nuar -urN eix-0.23.4/src/eix-sync.in eix-0.23.4-norsync/src/eix-sync.in
---- eix-0.23.4/src/eix-sync.in	2011-12-10 11:12:27.000000000 +0200
-+++ eix-0.23.4-norsync/src/eix-sync.in	2011-12-27 17:23:25.000000000 +0200
-@@ -44,13 +44,7 @@
+diff -Nuar eix-0.23.5/src/eix-sync.in eix-0.23.5-norsync/src/eix-sync.in
+--- eix-0.23.5/src/eix-sync.in	2012-01-01 22:49:51.000000000 +0200
++++ eix-0.23.5-norsync/src/eix-sync.in	2012-01-02 06:58:37.590124332 +0200
+@@ -43,13 +43,7 @@
  -d   Only show differences to the previously saved database and exit.
       Except for executing the !! lines in ${eixsyncconf}
       this is the same as eix-diff ${eixprevious}.
@@ -15,7 +15,7 @@ diff -Nuar -urN eix-0.23.4/src/eix-sync.in eix-0.23.4-norsync/src/eix-sync.in
  -U   Do not touch the database and omit the hooks after eix-update (@ entries)
       and do not show differences. This option implies -R
  -u   Update database only and show differences. This is equivalent to -0l@s ""
-@@ -66,8 +60,6 @@
+@@ -65,8 +59,6 @@
  -t   Use temporary file to save the current database (-d will not be possible).
  -T   Do not measure time
  -q   Be quiet (close stdout)
@@ -24,7 +24,7 @@ diff -Nuar -urN eix-0.23.4/src/eix-sync.in eix-0.23.4-norsync/src/eix-sync.in
  -c CMD Run CMD instead of emerge --sync.
  -C OPT Add OPT to the emerge --sync command (or whatever is used instead).
         This option can be used accumulatively.
-@@ -175,8 +167,6 @@
+@@ -180,8 +172,6 @@
  	measure_time=:
  	metadata=false
  	skip_sync=false
@@ -33,7 +33,7 @@ diff -Nuar -urN eix-0.23.4/src/eix-sync.in eix-0.23.4-norsync/src/eix-sync.in
  	doupdate=:
  	synchooks=:
  	test_for_root=:
-@@ -193,11 +183,9 @@
+@@ -200,11 +190,9 @@
  do	case "${opt}" in
  		i) DefaultOpts;;
  		d) diffonly=:;;
@@ -46,7 +46,7 @@ diff -Nuar -urN eix-0.23.4/src/eix-sync.in eix-0.23.4-norsync/src/eix-sync.in
  		l) nolayman=:;;
  		@) nohooks=:;;
  		S) synchooks=false;;
-@@ -207,8 +195,6 @@
+@@ -214,8 +202,6 @@
  		T) measure_time=false;;
  		q) quiet=:;;
  		L) Push layman_opt "${OPTARG}";;
@@ -55,7 +55,7 @@ diff -Nuar -urN eix-0.23.4/src/eix-sync.in eix-0.23.4-norsync/src/eix-sync.in
  		c) Push -c emergecmd "${OPTARG}";;
  		C) Push emergecmd "${OPTARG}";;
  		o) Push updatecmd "${OPTARG}";;
-@@ -221,8 +207,6 @@
+@@ -228,8 +214,6 @@
  done
  opt=''
  ${diffonly} && DiffOnly
@@ -64,7 +64,7 @@ diff -Nuar -urN eix-0.23.4/src/eix-sync.in eix-0.23.4-norsync/src/eix-sync.in
  ${measure_time} || time_begin=''
  measure_time=false
  case "${time_begin}" in
-@@ -321,29 +305,6 @@
+@@ -349,34 +333,6 @@
  	trap ExitAll EXIT HUP INT TERM
  }
  
@@ -81,7 +81,12 @@ diff -Nuar -urN eix-0.23.4/src/eix-sync.in eix-0.23.4-norsync/src/eix-sync.in
 -	ReadVar portage_rsync_opts PORTAGE_RSYNC_OPTS || \
 -		portage_rsync_opts="--recursive --links --safe-links --perms --times --compress --force --whole-file --delete --stats --timeout=180 --exclude=/distfiles --exclude=/local --exclude=/packages"
 -	ReadVar portage_rsync_extra_opts PORTAGE_RSYNC_EXTRA_OPTS
--	eval "set -- ${before_rsync}"
+-	case "${-}" in
+-	*f*)	eval "set -- ${before_rsync}";;
+-	*)	set -f
+-		eval "set -- ${before_rsync}"
+-		set +f;;
+-	esac
 -	for curr_cmd
 -	do	c=`eval "${curr_cmd}"` || \
 -			die "`eval_gettext '${curr_cmd} failed'`"
@@ -94,7 +99,7 @@ diff -Nuar -urN eix-0.23.4/src/eix-sync.in eix-0.23.4-norsync/src/eix-sync.in
  ClearCache() {
  	${clearcache} || return 0
  	# Cleaning old cache
-@@ -357,14 +318,6 @@
+@@ -391,28 +347,11 @@
  }
  
  CallEmergeSync() {
@@ -108,9 +113,7 @@ diff -Nuar -urN eix-0.23.4/src/eix-sync.in eix-0.23.4-norsync/src/eix-sync.in
 -	fi
  	${skip_sync} && return
  	RootTest
- 	eval "set -- ${emergecmd}"
-@@ -373,15 +326,6 @@
- 		|| die "`eval_gettext '${runarg} failed'`"
+ 	MyVarCommand "${emergecmd}" -t sync
  }
  
 -CallSyncClient() {
@@ -125,7 +128,7 @@ diff -Nuar -urN eix-0.23.4/src/eix-sync.in eix-0.23.4-norsync/src/eix-sync.in
  CallEmergeMetadata() {
  	${doupdate} && ${metadata} || return 0
  	RootTest
-@@ -466,7 +410,6 @@
+@@ -486,7 +425,6 @@
  	ExecuteConfig 'sync'
  	CallEmergeSync
  	${synchooks} && DoHook "${after_sync}"
