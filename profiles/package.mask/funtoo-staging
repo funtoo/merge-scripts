@@ -4,10 +4,6 @@
 # DO NOT use on production, only for testing purposes!!!
 =sys-apps/baselayout-2.1.9
 
-# Oleg Vinichenko ( 30 Dec 2011)
-# nginx update, test mask
->=www-servers/nginx-1.1.12
-
 # Daniel Robbins (14 Sep 2011)
 # masked for testing
 =sys-kernel/openvz-rhel5-stable-2.6.18.028.093.2
