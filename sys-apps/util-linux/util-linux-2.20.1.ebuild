@@ -23,7 +23,7 @@ else
 	KEYWORDS="amd64 sparc x86"
 fi
 
-LICENSE="GPL-2"
+LICENSE="GPL-2 GPL-3 LGPL-2.1 BSD-4 MIT public-domain"
 SLOT="0"
 IUSE="+cramfs crypt ddate loop-aes ncurses nls old-linux perl selinux slang static-libs uclibc unicode"
 
