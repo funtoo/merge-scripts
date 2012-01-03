@@ -11,7 +11,7 @@ PATCH_VER="1"
 SRC_URI="http://www.funtoo.org/distfiles/gentoo-headers-base-${PV}.tar.lzma"
 [[ -n ${PATCH_VER} ]] && SRC_URI="${SRC_URI} http://www.funtoo.org/distfiles/gentoo-headers-${PV}-${PATCH_VER}.tar.lzma"
 
-KEYWORDS="-* ~alpha ~amd64 ~arm ~hppa ~ia64 ~m68k ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-linux ~x86-linux x86 amd64"
+KEYWORDS="*"
 RESTRICT="mirror"
 DEPEND="|| ( app-arch/xz-utils app-arch/lzma-utils )"
 RDEPEND=""
