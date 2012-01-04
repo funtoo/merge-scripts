@@ -10,7 +10,7 @@ SRC_URI="https://github.com/${GITHUB_USER}/${PN}/tarball/${GITHUB_TAG} -> ${P}.t
 
 LICENSE="AS-IS"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="~*"
 IUSE="doc"
 
 RDEPEND="dev-vcs/git"
