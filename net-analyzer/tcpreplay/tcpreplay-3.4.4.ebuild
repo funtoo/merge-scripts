@@ -6,7 +6,7 @@ SRC_URI="mirror://sourceforge/${PN}/${P}.tar.gz"
 
 LICENSE="BSD"
 SLOT="0"
-KEYWORDS="~"
+KEYWORDS="*"
 IUSE="debug pcapnav +tcpdump"
 
 DEPEND="
@@ -24,6 +24,7 @@ src_prepare() {
 
 src_configure() {
 	# By default it uses static linking. Avoid that, bug 252940
+	# We also want to tell it to use dynamic linking
 	econf --enable-shared \
 		--disable-local-libopts \
 		--enable-dynamic-link
