@@ -13,3 +13,4 @@
 ~sys-fs/device-mapper-1.02.28 amd64 x86
 ~sys-libs/ncurses-5.7 amd64 x86
 ~sys-libs/readline-6.1 amd64 x86
+=sys-kernel/linux-headers-2.6.32 amd64 x86 sparc
