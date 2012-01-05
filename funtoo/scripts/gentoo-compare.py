@@ -11,8 +11,14 @@ import portage.versions
 import os,sys
 import commands
 
+dirpath = os.path.dirname(os.path.realpath(__file__))
+portdir = os.path.normpath(os.path.join(dirpath,"../.."))
+
+print("List of differences between funtoo-overlay and gentoo")
+print("=====================================================")
+
 def getKeywords(portdir, ebuild, warn):
-	a = commands.getstatusoutput("funtoo/scripts/keywords.sh %s %s" % ( portdir, ebuild ) )
+	a = commands.getstatusoutput(dirpath + "/keywords.sh %s %s" % ( portdir, ebuild ) )
 	if a[0] == 0:
 		my_set = set(a[1].split())
 		if warn and len(my_set) == 0:
@@ -29,7 +35,6 @@ if len(sys.argv) != 2:
 gportdir=sys.argv[1]
 
 def filterOnKeywords(portdir, ebuilds, keywords, warn=False):
-
 	""" 
 	This function accepts a path to a portage tree, a list of ebuilds, and a list of
 	keywords. It will iteratively find the "best" version in the ebuild list (the most
@@ -89,10 +94,10 @@ def version_compare(portdir,gportdir,keywords):
 			continue
 		if not os.path.isdir(gportdir+"/"+cat):
 			continue
-		for pkg in os.listdir(cat):
-			ebuilds = get_cpv_in_portdir(".",cat,pkg)
+		for pkg in os.listdir(os.path.join(portdir,cat)):
+			ebuilds = get_cpv_in_portdir(portdir,cat,pkg)
 			gebuilds = get_cpv_in_portdir(gportdir,cat,pkg)
-			ebuilds = filterOnKeywords(".", ebuilds, keywords, warn=True)
+			ebuilds = filterOnKeywords(portdir, ebuilds, keywords, warn=True)
 
 			if len(ebuilds) == 0:
 				continue
@@ -125,5 +130,5 @@ for keyw in [ "amd64", "~amd64", "x86", "~x86" ]:
 		keyw = [ keyw, keyw[1:] ]
 	else:
 		keyw = [ keyw ]
-	version_compare(".",gportdir,keyw)
+	version_compare(portdir,gportdir,keyw)
 
