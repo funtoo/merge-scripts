@@ -24,7 +24,8 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	epatch "${FILESDIR}/disable-rsync.patch"
-} 
+	epatch "${FILESDIR}/${P}-portdir-cache.patch"
+}
 
 src_configure() {
 	econf $(use_with sqlite) $(use_with doc extra-doc) \
