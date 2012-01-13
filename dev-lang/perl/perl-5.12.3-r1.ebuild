@@ -225,7 +225,11 @@ src_configure() {
 		# We need to use " and not ', as the written config.sh use ' ...
 		myconf "-Dlibpth=/usr/local/$(get_libdir) /$(get_libdir) /usr/$(get_libdir)"
 	fi
-
+	# if MANIFEST exists, perl will attempt to see if the source archive is intact and complete.
+	# This test uses "ls", which with recent coreutils can fail if run from a non-terminal (ie. cron).
+	# These failures started consistently happening around Dec 2011.
+	# An easy way to eliminate these redundant tests is to remove the MANIFEST file:
+	rm -f MANIFEST || die
 	sh Configure \
 		-des \
 		-Duseshrplib \
