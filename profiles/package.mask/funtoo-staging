@@ -1,7 +1,4 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
-# Oleg Vinichenko (13 Jan 2012)
-# perl update, masked fore testing/stage building
-=dev-lang/perl-5.12.4-r1
 
 # Oleg Vinichenko ( 5 Jan 2012)
 # mask gobject-introspection version that breaks stages, until
