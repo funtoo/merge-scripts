@@ -4,7 +4,7 @@
 
 EAPI="4"
 
-inherit eutils multilib	bash-completion-r1 
+inherit eutils multilib	bash-completion-r1
 
 DESCRIPTION="Search and query ebuilds, portage incl. local settings, ext. overlays, version changes, and more"
 HOMEPAGE="http://eix.berlios.de"
@@ -24,7 +24,7 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	epatch "${FILESDIR}/${P}-disable-rsync.patch"
-} 
+}
 src_configure() {
 	econf $(use_with sqlite) $(use_with doc extra-doc) \
 		$(use_with zsh-completion) \
@@ -42,4 +42,4 @@ src_configure() {
 src_install() {
 	default
 	dobashcomp bash/eix
-}	
+}
