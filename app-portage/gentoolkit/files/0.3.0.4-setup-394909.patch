@@ -1,0 +1,41 @@
+From 10aaed2b07c11065418d0e9e2c7aa52ae0837300 Mon Sep 17 00:00:00 2001
+From: Paul Varner <fuzzyray@gentoo.org>
+Date: Mon, 19 Dec 2011 13:38:40 -0600
+Subject: [PATCH] Fix setup.py to work with EPREFIX changes in Portage (Bug
+ 394909).
+
+---
+ setup.py |   10 +++++-----
+ 1 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/setup.py b/setup.py
+index f65a933..1efba94 100755
+--- a/setup.py
++++ b/setup.py
+@@ -22,7 +22,7 @@ cwd = os.getcwd()
+ try: 
+ 	from portage.const import EPREFIX 
+ except ImportError: 
+-	EPREFIX='/' 
++	EPREFIX='' 
+ 
+ 
+ # Bash files that need `VERSION=""` subbed, relative to this dir:
+@@ -127,10 +127,10 @@ core.setup(
+ 	package_data = test_data,
+ 	scripts=(glob('bin/*')),
+ 	data_files=(
+-		(os.path.join(EPREFIX, 'etc/env.d'), ['data/99gentoolkit-env']),
+-		(os.path.join(EPREFIX, 'etc/revdep-rebuild'), ['data/revdep-rebuild/99revdep-rebuild']),
+-		(os.path.join(EPREFIX, 'etc/eclean'), glob('data/eclean/*')),
+-		(os.path.join(EPREFIX, 'usr/share/man/man1'), glob('man/*')),
++		(os.path.join(os.sep, EPREFIX.lstrip(os.sep), 'etc/env.d'), ['data/99gentoolkit-env']),
++		(os.path.join(os.sep, EPREFIX.lstrip(os.sep), 'etc/revdep-rebuild'), ['data/revdep-rebuild/99revdep-rebuild']),
++		(os.path.join(os.sep, EPREFIX.lstrip(os.sep), 'etc/eclean'), glob('data/eclean/*')),
++		(os.path.join(os.sep, EPREFIX.lstrip(os.sep), 'usr/share/man/man1'), glob('man/*')),
+ 	),
+ 	cmdclass={
+ 		'test': load_test(),
+-- 
+1.7.8
+

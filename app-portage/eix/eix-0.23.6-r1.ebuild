@@ -1,6 +1,6 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-portage/eix/eix-0.23.4.ebuild,v 1.1 2011/12/25 16:10:09 darkside Exp $
+# $Header: /var/cvsroot/gentoo-x86/app-portage/eix/eix-0.23.6.ebuild,v 1.1 2012/01/16 02:58:56 darkside Exp $
 
 EAPI=4
 
@@ -24,6 +24,7 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	epatch "${FILESDIR}/${P}-disable-rsync.patch"
+	epatch "${FILESDIR}/${P}-umask-typo.patch"
 }
 
 src_configure() {

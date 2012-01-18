@@ -1,0 +1,37 @@
+From 6edc15a5690a3c26a3c530669a922e01f50ab830 Mon Sep 17 00:00:00 2001
+From: Paul Varner <fuzzyray@gentoo.org>
+Date: Wed, 24 Aug 2011 12:28:06 -0500
+Subject: [PATCH] Fix traversal of cascading profiles by euse (Bug 379559).
+ Thanks to Ian Abbot for the patch!
+
+---
+ bin/euse |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/bin/euse b/bin/euse
+index be47cc9..bedba35 100755
+--- a/bin/euse
++++ b/bin/euse
+@@ -439,7 +439,6 @@ traverse_profile() {
+ 	
+ 	curdir="${2:-$(get_real_path ${MAKE_PROFILE_PATH})}"
+ 	
+-	[[ -f "${curdir}/${1}" ]] && rvalue="${curdir}/${1} ${rvalue}"
+ 	if [[ -f "${curdir}/parent" ]]; then
+ 		for parent in $(egrep -v '(^#|^ *$)' ${curdir}/parent); do
+ 			# Bug 231394, handle parent path being absolute
+@@ -448,9 +447,10 @@ traverse_profile() {
+ 			else
+ 				pdir="$(get_real_path ${curdir}/${parent})"
+ 			fi
+-			rvalue="$(traverse_profile ${1} ${pdir}) ${rvalue}"
++			rvalue="${rvalue} $(traverse_profile ${1} ${pdir})"
+ 		done
+ 	fi
++	[[ -f "${curdir}/${1}" ]] && rvalue="${rvalue} ${curdir}/${1}"
+ 
+ 	echo "${rvalue}"
+ } # }}}
+-- 
+1.7.3.4
+
