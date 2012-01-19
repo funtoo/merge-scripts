@@ -1,4 +1,10 @@
 # Adrien Dessemond <adessemond@funtoo.org> (13 Apr 2011)
+
+# Oleg Vinichenko (19 Jan 2012)
+# udev-177 is not ready for daily usage
+# for adventurous ones!
+=sys-fs/udev-177
+
 # DO NOT USE this one the ebuild does not include kernel revision dependencies (>= 2.6.38 REQUIRED) and it can affect many of our users 
 # See bug #359445
 =net-wireless/iwl5000-ucode-8.83.5.1
