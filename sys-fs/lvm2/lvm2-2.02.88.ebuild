@@ -11,7 +11,7 @@ SRC_URI="ftp://sources.redhat.com/pub/lvm2/${PN/lvm/LVM}.${PV}.tgz
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~*"
 
 IUSE="readline +static +static-libs clvm cman +lvm1 selinux"
 
@@ -192,7 +192,7 @@ src_install() {
 	for rc in $inits
 	do
 		newinitd "${MYDIR}/${rc}.rc" ${rc} || die
-		if [ -e "${MYDIR}/${rc}.confd" ] 
+		if [ -e "${MYDIR}/${rc}.confd" ]
 		then
 			newconfd "${MYDIR}/${rc}.confd" ${rc} || die
 		fi
