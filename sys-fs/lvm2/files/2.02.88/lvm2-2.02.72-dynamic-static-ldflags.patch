@@ -1,0 +1,67 @@
+X-Gentoo-Bug: 332905
+X-Patch-URL: https://bugs.gentoo.org/attachment.cgi?id=243283&action=view
+X-Gentoo-Bug-URL: https://bugs.gentoo.org/show_bug.cgi?id=332905
+
+diff -ur LVM2.2.02.72.orig/configure.in LVM2.2.02.72/configure.in
+--- LVM2.2.02.72.orig/configure.in	2010-07-28 16:55:42.000000000 +0300
++++ LVM2.2.02.72/configure.in	2010-08-17 03:00:24.000000000 +0300
+@@ -35,6 +35,7 @@
+ 		CLDNOWHOLEARCHIVE="-Wl,-no-whole-archive"
+ 		LDDEPS="$LDDEPS .export.sym"
+ 		LDFLAGS="$LDFLAGS -Wl,--export-dynamic"
++		STATIC_LDFLAGS="-Wl,--no-export-dynamic"
+ 		LIB_SUFFIX=so
+ 		DEVMAPPER=yes
+ 		ODIRECT=yes
+@@ -1282,6 +1283,7 @@
+ AC_SUBST(SELINUX_PC)
+ AC_SUBST(SNAPSHOTS)
+ AC_SUBST(STATICDIR)
++AC_SUBST(STATIC_LDFLAGS)
+ AC_SUBST(STATIC_LINK)
+ AC_SUBST(TESTING)
+ AC_SUBST(UDEV_LIBS)
+diff -ur LVM2.2.02.72.orig/daemons/dmeventd/Makefile.in LVM2.2.02.72/daemons/dmeventd/Makefile.in
+--- LVM2.2.02.72.orig/daemons/dmeventd/Makefile.in	2010-05-14 16:36:56.000000000 +0300
++++ LVM2.2.02.72/daemons/dmeventd/Makefile.in	2010-08-17 03:00:24.000000000 +0300
+@@ -61,7 +61,7 @@
+ 	$(DL_LIBS) $(LVMLIBS) $(LIBS) -rdynamic
+ 
+ dmeventd.static: $(LIB_STATIC) dmeventd.o $(interfacebuilddir)/libdevmapper.a
+-	$(CC) $(CFLAGS) $(LDFLAGS) -static -L. -L$(interfacebuilddir) -o $@ \
++	$(CC) $(CFLAGS) $(LDFLAGS) $(STATIC_LDFLAGS) -static -L. -L$(interfacebuilddir) -o $@ \
+ 	dmeventd.o $(DL_LIBS) $(LVMLIBS) $(LIBS) $(STATIC_LIBS)
+ 
+ ifeq ("@PKGCONFIG@", "yes")
+diff -ur LVM2.2.02.72.orig/make.tmpl.in LVM2.2.02.72/make.tmpl.in
+--- LVM2.2.02.72.orig/make.tmpl.in	2010-07-20 17:38:44.000000000 +0300
++++ LVM2.2.02.72/make.tmpl.in	2010-08-17 03:00:24.000000000 +0300
+@@ -38,6 +38,7 @@
+ CLDFLAGS += @CLDFLAGS@
+ LDDEPS += @LDDEPS@
+ LDFLAGS += @LDFLAGS@
++STATIC_LDFLAGS += @STATIC_LDFLAGS@
+ LIB_SUFFIX = @LIB_SUFFIX@
+ LVMINTERNAL_LIBS = -llvm-internal $(DL_LIBS)
+ DL_LIBS = @DL_LIBS@
+diff -ur LVM2.2.02.72.orig/tools/Makefile.in LVM2.2.02.72/tools/Makefile.in
+--- LVM2.2.02.72.orig/tools/Makefile.in	2010-06-25 21:23:10.000000000 +0300
++++ LVM2.2.02.72/tools/Makefile.in	2010-08-17 03:01:07.000000000 +0300
+@@ -126,7 +126,7 @@
+ 	      -o $@ dmsetup.o -ldevmapper $(LIBS)
+ 
+ dmsetup.static: dmsetup.o $(interfacebuilddir)/libdevmapper.a
+-	$(CC) $(CFLAGS) $(LDFLAGS) -static -L$(interfacebuilddir) \
++	$(CC) $(CFLAGS) $(LDFLAGS) $(STATIC_LDFLAGS) -static -L$(interfacebuilddir) \
+ 	      -o $@ dmsetup.o -ldevmapper $(STATIC_LIBS) $(LIBS)
+ 
+ all: device-mapper
+@@ -136,7 +136,7 @@
+ 		$(LVMLIBS) $(READLINE_LIBS) $(LIBS) -rdynamic
+ 
+ lvm.static: $(OBJECTS) lvm-static.o $(top_builddir)/lib/liblvm-internal.a  $(interfacebuilddir)/libdevmapper.a
+-	$(CC) $(CFLAGS) $(LDFLAGS) -static -L$(interfacebuilddir) -o $@ \
++	$(CC) $(CFLAGS) $(LDFLAGS) $(STATIC_LDFLAGS) -static -L$(interfacebuilddir) -o $@ \
+ 	      $(OBJECTS) lvm-static.o $(LVMLIBS) $(STATIC_LIBS) $(LIBS)
+ 
+ liblvm2cmd.a: $(top_builddir)/lib/liblvm-internal.a $(OBJECTS) lvmcmdlib.o lvm2cmd.o
