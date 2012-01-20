@@ -1,9 +1,16 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
+<<<<<<< HEAD
 
 # Martin Scholz (20 Jan 2012)
 # masked for testing
+=www-servers/nginx-1.0.11
+=www-servers/nginx-1.1.10
 =www-servers/nginx-1.1.13
 
+# Oleg Vinichenko (30 Sep 2011)
+# temporary mask for poppler due to multiple breakages
+>=app-text/poppler-0.18.0
+=======
 # Oleg Vinichenko (20 Jan  2012)
 # mask lvm2-2.02.88 as it have issues
 =sys-fs/lvm2-2.02.88
@@ -17,6 +24,7 @@
 # new baselayout with cleaned group/shadow
 # DO NOT use on production, only for testing purposes!!!
 =sys-apps/baselayout-2.1.9
+>>>>>>> afcdecc3b12ab68628115c553dc3839524be6ef2
 
 # Daniel Robbins (14 Sep 2011)
 # masked for testing
