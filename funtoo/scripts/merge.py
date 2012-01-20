@@ -38,7 +38,7 @@ steps = [
 
 # work tree is a non-git tree in tmpfs for enhanced performance - we do all the heavy lifting there:
 
-work = UnifiedTree("/var/src/merge-portage-work",steps)
+work = UnifiedTree("/var/src/merge-%s" % os.path.basename(dest),steps)
 work.run()
 
 steps = [
