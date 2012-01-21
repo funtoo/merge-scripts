@@ -5,6 +5,7 @@
 =dev-libs/mpfr-3* amd64 x86
 =dev-vcs/git-1.7* amd64 x86
 ~net-misc/keychain-2.7.1 amd64 x86
+=sys-apps/coreutils-8.15* amd64 x86
 =sys-apps/man-1.6g amd64 x86
 ~sys-fs/device-mapper-1.02.28 amd64 x86
 =sys-kernel/linux-headers-2.6.32 amd64 x86 sparc

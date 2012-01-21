@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<herd>funtoo</herd>
+	<maintainer>
+		<email>drobbins@funtoo.org</email>
+	</maintainer>
+
+	<use>
+		<flag name='compat'>Install module-init-tools compatible symlinks.</flag>
+		<flag name='tools'>Install module loading/unloading tools.</flag>
+	</use>
+</pkgmetadata>

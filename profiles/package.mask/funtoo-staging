@@ -1,5 +1,13 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Martin Scholz (20 Jan 2012)
+# masked for testing
+=www-servers/nginx-1.1.13
+
+# Oleg Vinichenko (20 Jan  2012)
+# mask lvm2-2.02.88 as it have issues
+=sys-fs/lvm2-2.02.88
+
 # Oleg Vinichenko ( 5 Jan 2012)
 # mask gobject-introspection version that breaks stages, until
 # resolved
