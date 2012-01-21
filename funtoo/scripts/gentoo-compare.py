@@ -126,9 +126,11 @@ def version_compare(portdir,gportdir,keywords):
 
 for keyw in [ "amd64", "~amd64", "x86", "~x86" ]:
 	if keyw[0] == "~":
-		# for unstable, add stable arch keyword too
-		keyw = [ keyw, keyw[1:] ]
+		# for unstable, add stable arch and ~* and * keywords too
+		keyw = [ keyw, keyw[1:], "~*", "*"]
 	else:
-		keyw = [ keyw ]
+		# for stable, also consider the * keyword
+		keyw = [ keyw, "*"]
+
 	version_compare(portdir,gportdir,keyw)
 

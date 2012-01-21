@@ -24,5 +24,5 @@ EXPORT_FUNCTIONS() {
 }
 
 
-a=$( cd $1; . $2  >/dev/null 2>&1; echo $KEYWORDS )
-echo $a
+a=$( cd $1; . $2  >/dev/null 2>&1; echo "$KEYWORDS" )
+echo "$a"
