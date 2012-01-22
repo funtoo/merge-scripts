@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+  <herd>funtoo</herd>
+  <upstream>
+    <remote-id type="cpan">Image-Scale</remote-id>
+  </upstream>
+  <maintainer><email>drobbins@funtoo.org</email></maintainer>
+</pkgmetadata>
