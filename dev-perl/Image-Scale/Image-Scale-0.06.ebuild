@@ -4,7 +4,7 @@
 EAPI=4
 
 MODULE_AUTHOR=AGRUNDMA
-MODULE_VERSION=0.08
+MODULE_VERSION=${PV}
 inherit perl-module
 
 DESCRIPTION="Fast, high-quality fixed-point image resizing"
