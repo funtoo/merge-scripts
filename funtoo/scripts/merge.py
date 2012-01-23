@@ -8,17 +8,6 @@ foo_overlay = Tree("foo-overlay", "master", "https://github.com/slashbeast/foo-o
 bar_overlay = Tree("bar-overlay", "master", "git://github.com/adessemond/bar-overlay.git", pull=True)
 flora_overlay = Tree("flora", "master", "https://github.com/funtoo/flora.git", pull=True)
 
-for test in [ dest ]:
-	if not os.path.isdir(test):
-		os.makedirs(test)
-	if not os.path.isdir("%s/.git" % test):
-		runShell("( cd %s; git init )" % test )
-		runShell("echo 'created by merge.py' > %s/README" % test )
-		runShell("( cd %s; git add README; git commit -a -m 'initial commit by merge.py' )" % test )
-		runShell("( cd %s; git checkout -b funtoo.org; git rm -f README; git commit -a -m 'initial funtoo.org commit' )" % ( test ) )
-		print("Pushing disabled automatically because repository created from scratch.")
-		push = False
-
 steps = [
 	SyncTree(gentoo_src,exclude=["/metadata/cache/**","ChangeLog", "dev-util/metro"]),
 	ApplyPatchSeries("%s/funtoo/patches" % funtoo_overlay.root ),
@@ -38,7 +27,7 @@ steps = [
 
 # work tree is a non-git tree in tmpfs for enhanced performance - we do all the heavy lifting there:
 
-work = UnifiedTree("/var/src/merge-%s" % os.path.basename(dest),steps)
+work = UnifiedTree("/var/src/merge-%s" % os.path.basename(dest[0]),steps)
 work.run()
 
 steps = [
@@ -48,6 +37,16 @@ steps = [
 
 # then for the production tree, we rsync all changes on top of our prod git tree and commit:
 
-prod = UnifiedTree(dest,steps)
-prod.run()
-prod.gitCommit(message="glorious funtoo updates",push=push)
+for d in dest:
+	if not os.path.isdir(d):
+		os.makedirs(d)
+	if not os.path.isdir("%s/.git" % d):
+		runShell("( cd %s; git init )" % d )
+		runShell("echo 'created by merge.py' > %s/README" % d )
+		runShell("( cd %s; git add README; git commit -a -m 'initial commit by merge.py' )" % d )
+		runShell("( cd %s; git checkout -b funtoo.org; git rm -f README; git commit -a -m 'initial funtoo.org commit' )" % ( d ) )
+		print("Pushing disabled automatically because repository created from scratch.")
+		push = False
+	prod = UnifiedTree(d,steps)
+	prod.run()
+	prod.gitCommit(message="glorious funtoo updates",push=push)
