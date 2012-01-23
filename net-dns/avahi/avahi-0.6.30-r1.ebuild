@@ -1,6 +1,6 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-dns/avahi/avahi-0.6.30-r1.ebuild,v 1.1 2011/08/14 12:52:06 nirbheek Exp $
+# $Header: /var/cvsroot/gentoo-x86/net-dns/avahi/avahi-0.6.30-r1.ebuild,v 1.9 2012/01/16 16:52:43 ssuominen Exp $
 
 EAPI="3"
 
@@ -16,8 +16,9 @@ SRC_URI="http://avahi.org/download/${P}.tar.gz"
 
 LICENSE="LGPL-2.1"
 SLOT="0"
-KEYWORDS="alpha amd64 arm hppa ia64 mips ppc ppc64 s390 sh sparc x86 x86-fbsd x86-linux"
-IUSE="autoipd bookmarks +dbus doc gdbm gtk gtk3 howl-compat +introspection ipv6 kernel_linux mdnsresponder-compat mono python qt4 test +utils"
+KEYWORDS="alpha amd64 arm hppa ia64 ~mips ppc ppc64 s390 sh sparc x86 ~x86-fbsd ~x86-linux"
+IUSE="autoipd bookmarks +dbus doc gdbm gtk gtk3 howl-compat +introspection ipv6
+kernel_linux mdnsresponder-compat mono python qt4 test +utils"
 
 DBUS_DEPEND=">=sys-apps/dbus-0.30"
 COMMON_DEPEND=">=dev-libs/libdaemon-0.14
@@ -97,6 +98,12 @@ src_prepare() {
 
 	# Make gtk utils optional
 	epatch "${FILESDIR}/${PN}-0.6.30-optional-gtk-utils.patch"
+
+	# Fix init scripts for >=openrc-0.9.0 (bug #383641)
+	epatch "${FILESDIR}/${PN}-0.6.x-openrc-0.9.x-init-scripts-fixes.patch"
+
+	# Drop DEPRECATED flags, bug #384743
+	sed -i -e 's:-D[A-Z_]*DISABLE_DEPRECATED=1::g' avahi-ui/Makefile.am || die
 
 	eautoreconf
 }

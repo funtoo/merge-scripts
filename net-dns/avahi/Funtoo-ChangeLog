@@ -1,3 +1,7 @@
+22 Jan 2012; Jean-Francis Roy <jeanfrancis@funtoo.org>:
+Version bump, fixes bug #397477 with >automake-1.11.1
+
+Daniel Robbins <drobbins@funtoo.org>:
 I've enabled +utils so you always get the command-line utilities.
 Dbus is now enabled (+dbus) because it is required by the command-line utilities.
 
