@@ -92,7 +92,7 @@ class SyncDir(MergeStep):
 				dest = os.path.normpath(tree.root)+"/"
 		if not os.path.exists(dest):
 			os.makedirs(dest)
-		cmd = "rsync -a --exclude /.git "
+		cmd = "rsync -a --exclude /.git --exclude .svn "
 		for e in self.exclude:
 			cmd += "--exclude %s " % e
 		if self.delete:
@@ -154,6 +154,24 @@ class Tree(object):
 		else:
 			# this tree has a name, so record the name of the tree and its SHA1 for reference
 			self.merged.append([srctree.name, headSHA1(srctree.root)])
+
+class SvnTree(object):
+	def __init__(self, name, url=None, trylocal=None):
+		self.name = name
+		self.url = url
+		self.trylocal = trylocal
+		if self.trylocal and os.path.exists(self.trylocal):
+			base = os.path.basename(self.trylocal)
+			self.root = trylocal
+		else:
+			base = "/var/svn/source-trees"
+			self.root = "%s/%s" % (base, self.name)
+		if not os.path.exists(base):
+			os.makedirs(base)
+		if os.path.exists(self.root):
+			runShell("(cd %s; svn up)" % self.root)
+		else:
+			runShell("(cd %s; svn co %s %s)" % (base, self.url, self.name))
 
 class UnifiedTree(Tree):
 	def __init__(self,root,steps):
