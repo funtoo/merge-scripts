@@ -3,6 +3,7 @@
 import os,sys,types
 import argparse
 import commands
+import shutil
 
 debug = False
 
@@ -99,6 +100,25 @@ class SyncDir(MergeStep):
 			cmd += "--delete "
 		cmd += "%s %s" % ( src, dest )
 		runShell(cmd)
+
+class SyncFiles(MergeStep): 
+	def __init__(self, srcroot, files):
+		self.srcroot = srcroot
+		self.files = files
+		if not isinstance(files, dict):
+			raise TypeError("'files' argument should be a dict of source:destination items")
+
+	def run(self, tree):
+		for src, dest in self.files.items():
+			if dest is not None:
+				dest = os.path.join(tree.root, dest)
+			else:
+				dest = os.path.join(tree.root, src)
+			src = os.path.join(self.srcroot, src)
+			dest_dir = os.path.dirname(dest)
+			if not os.path.exists(dest_dir):
+				os.makedirs(dest_dir)
+			shutil.copyfile(src, dest)
 
 class CleanTree(MergeStep):
 	# remove all files from tree, except dotfiles/dirs.
