@@ -157,7 +157,7 @@ class Tree(object):
 			runShell("(cd %s; git fetch origin)" % self.root )
 			runShell("(cd %s; git checkout %s)" % ( self.root, self.branch ))
 			if pull:
-				runShell("(cd %s; git pull origin %s)" % ( self.root, self.branch ))
+				runShell("(cd %s; git pull -f origin %s)" % ( self.root, self.branch ))
 		else:
 			runShell("(cd %s; git clone %s %s)" % ( base, self.url, self.name ))
 			runShell("(cd %s; git checkout %s)" % ( self.root, self.branch ))
