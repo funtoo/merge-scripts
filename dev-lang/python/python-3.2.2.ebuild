@@ -32,8 +32,8 @@ fi
 LICENSE="PSF-2"
 SLOT="3.2"
 PYTHON_ABI="${SLOT}"
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~m68k ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~sparc-fbsd ~x86-fbsd"
-IUSE="build doc elibc_uclibc examples gdbm ipv6 +ncurses +readline sqlite +ssl +threads tk +wide-unicode wininst +xml"
+KEYWORDS="~*"
+IUSE="build doc elibc_uclibc examples gdbm ipv6 +ncurses +readline +sqlite +ssl +threads tk +wide-unicode wininst +xml"
 
 RDEPEND=">=app-admin/eselect-python-20091230
 		>=sys-libs/zlib-1.1.3
@@ -337,6 +337,17 @@ pkg_postinst() {
 	eselect_python_update
 
 	python_mod_optimize -f -x "/(site-packages|test|tests)/" $(python_get_libdir)
+
+	if [[ "$(eselect python show)" == "python2."* ]]; then
+		ewarn
+		ewarn "WARNING!"
+		ewarn "Many Python modules have not been ported yet to Python 3.*."
+		ewarn "Python 3 has not been activated and Python wrapper is still configured to use Python 2."
+		ewarn "You can manually activate Python ${SLOT} using \`eselect python set python${SLOT}\`."
+		ewarn "It is recommended to currently have Python wrapper configured to use Python 2."
+		ewarn "Having Python wrapper configured to use Python 3 is unsupported."
+		ewarn
+	fi
 
 	if [[ "${python_updater_warning}" == "1" ]]; then
 		ewarn
