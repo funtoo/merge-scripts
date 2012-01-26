@@ -8,12 +8,12 @@ inherit bash-completion autotools eutils
 DESCRIPTION="OpenVZ Containers control utility"
 HOMEPAGE="http://openvz.org/"
 GITHUB_USER="funtoo"
-GITHUB_TAG="${PF}-funtoo"
+GITHUB_TAG="${P}-funtoo"
 SRC_URI="https://github.com/${GITHUB_USER}/${PN}/tarball/${GITHUB_TAG} -> ${GITHUB_TAG}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~ia64 ~ppc64 ~sparc ~x86"
+KEYWORDS="*"
 IUSE="bash-completion"
 
 RDEPEND="
@@ -53,6 +53,10 @@ src_install() {
 	# We need to keep some dirs
 	keepdir /vz/{dump,lock,root,private,template/cache}
 	keepdir /etc/vz/names /var/lib/vzctl/veip
+
+	# enable bridge auto-add for veth devices:
+	insinto /etc/vz
+	doins ${FILESDIR}/vznet.conf
 }
 
 pkg_postinst() {
