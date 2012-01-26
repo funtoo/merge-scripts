@@ -1,28 +1,26 @@
 # Copyright 2008 - 2011 Funtoo Technologies
 # Distributed under the terms of the GNU General Public License v2
 
+EAPI=4
+
 inherit eutils vim-plugin
 
-MyP=funtoo-syntax-${PV}
+GITHUB_REPO="${PN}"
+GITHUB_USER="funtoo"
+GITHUB_TAG="${PV}"
 
 DESCRIPTION="vim plugin: Funtoo Ebuild, Eclass, GLEP, ChangeLog and Portage Files syntax highlighting, filetype and indent settings"
 HOMEPAGE="http://www.funtoo.org/"
-SRC_URI="funtoo? ( mirror://gentoo/${MyP}.tar.bz2 )
-		 gentoo? ( mirror://gentoo/${PN}-20110821.tar.bz2 )"
-
+SRC_URI="https://github.com/funtoo/funtoo-syntax/tarball/$GITHUB_TAG -> ${PN}-${PV}.tar.gz"
 LICENSE="vim"
-KEYWORDS="~amd64 ~x86"
-IUSE="ignore-glep31 funtoo gentoo"
-
-if use funtoo ; then
-	VIM_PLUGIN_HELPFILES="funtoo-syntax"
-else
-	VIM_PLUGIN_HELPFILES="gentoo-syntax"
-fi
+KEYWORDS="*"
+IUSE="ignore-glep31"
+VIM_PLUGIN_HELPFILES="funtoo-syntax"
 VIM_PLUGIN_MESSAGES="filetype"
 
 src_unpack() {
 	unpack ${A}
+	mv "${WORKDIR}/${GITHUB_USER}"-* "${S}" || die
 	cd "${S}"
 
 	if use ignore-glep31 ; then
