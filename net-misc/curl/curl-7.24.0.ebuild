@@ -11,7 +11,7 @@ SRC_URI="http://curl.haxx.se/download/${P}.tar.bz2"
 
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~*"
 IUSE="ares gnutls idn ipv6 kerberos ldap ssh nss ssl static-libs test threads"
 
 RDEPEND="ldap? ( net-nds/openldap )

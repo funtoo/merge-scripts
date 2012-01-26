@@ -13,8 +13,8 @@ SRC_URI="http://curl.haxx.se/download/${P}.tar.bz2"
 
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~ppc-aix ~sparc-fbsd ~x86-fbsd ~x64-freebsd ~x86-freebsd ~hppa-hpux ~ia64-hpux ~x86-interix ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~m68k-mint ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
-IUSE="ares gnutls idn ipv6 kerberos ldap libssh2 nss ssl static-libs test threads"
+KEYWORDS="*"
+IUSE="ares gnutls idn ipv6 kerberos ldap ssh nss ssl static-libs test threads"
 
 RDEPEND="ldap? ( net-nds/openldap )
 		gnutls? ( net-libs/gnutls dev-libs/libgcrypt app-misc/ca-certificates )
@@ -23,7 +23,7 @@ RDEPEND="ldap? ( net-nds/openldap )
 		idn? ( net-dns/libidn )
 		ares? ( >=net-dns/c-ares-1.6 )
 		kerberos? ( virtual/krb5 )
-		libssh2? ( >=net-libs/libssh2-0.16 )"
+		ssh? ( >=net-libs/libssh2-0.16 )"
 
 # rtmpdump ( media-video/rtmpdump )  / --with-librtmp
 # fbopenssl (not in gentoo) --with-spnego
@@ -58,7 +58,7 @@ src_configure() {
 		$(use_enable ldap ldaps)
 		$(use_with idn libidn)
 		$(use_with kerberos gssapi "${EPREFIX}"/usr)
-		$(use_with libssh2)
+		$(use_with ssh libssh2)
 		$(use_enable static-libs static)
 		$(use_enable ipv6)
 		$(use_enable threads threaded-resolver)
