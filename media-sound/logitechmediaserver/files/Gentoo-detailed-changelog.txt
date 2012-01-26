@@ -1,0 +1,3 @@
+---- squeezeboxserver-7.5.0
+
+Updated for Squeezebox Server 7.5.0 (Gentoo bug#314073)

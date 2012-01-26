@@ -1,0 +1,31 @@
+diff -urN logitechmediaserver-7.7.1-33735-noCPAN.orig/Slim/bootstrap.pm logitechmediaserver-7.7.1-33735-noCPAN/Slim/bootstrap.pm
+--- logitechmediaserver-7.7.1-33735-noCPAN.orig/Slim/bootstrap.pm	2011-10-11 01:33:55.000000000 +0000
++++ logitechmediaserver-7.7.1-33735-noCPAN/Slim/bootstrap.pm	2012-01-22 22:20:49.405777915 +0000
+@@ -194,27 +194,6 @@
+ 			print "To run from source on Windows, please install ActivePerl 5.14.1.  ActivePerl 5.10.0 is no longer supported.\n";
+ 			print "http://downloads.activestate.com/ActivePerl/releases/5.14.1.1401/ActivePerl-5.14.1.1401-MSWin32-x86-294969.msi\n\n";
+ 		}
+-		else {
+-			print qq{
+-*******
+-
+-NOTE:
+-
+-If you're running some unsupported Linux/Unix platform, please use the buildme.sh 
+-script located here:
+-
+-http://svn.slimdevices.com/repos/slim/7.6/trunk/vendor/CPAN/
+-
+-If 7.6 is outdated by the time you read this, Replace "7.6" with the major version
+-You should never need to do this if you're on Windows or Mac OSX. If the installers
+-don't work for you, ask for help and/or report a bug.
+-
+-of Logitech Media Server you are running.
+-
+-*******
+-
+-			\n};
+-		}
+ 		
+ 		print "Exiting..\n";
+ 
