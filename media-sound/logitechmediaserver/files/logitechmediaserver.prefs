@@ -1,0 +1,3 @@
+dbusername: squeezeboxserver
+dbpassword: TBA
+dbsource: dbi:mysql:database=squeezeboxserver;mysql_socket=/var/run/mysqld/mysqld.sock
