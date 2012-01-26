@@ -7,6 +7,7 @@ funtoo_overlay = Tree("funtoo-overlay", branch, "git://github.com/funtoo/funtoo-
 foo_overlay = Tree("foo-overlay", "master", "https://github.com/slashbeast/foo-overlay.git", pull=True)
 bar_overlay = Tree("bar-overlay", "master", "git://github.com/adessemond/bar-overlay.git", pull=True)
 flora_overlay = Tree("flora", "master", "https://github.com/funtoo/flora.git", pull=True)
+progress_overlay = SvnTree("progress", "https://gentoo-progress.googlecode.com/svn/overlays/progress")
 
 steps = [
 	SyncTree(gentoo_src,exclude=["/metadata/cache/**","ChangeLog", "dev-util/metro"]),
@@ -20,10 +21,21 @@ steps = [
 	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(foo_overlay, select="all", skip=None, replace=["app-shells/rssh","net-misc/unison"]),
 	InsertEbuilds(bar_overlay, select="all", skip=None, replace=True),
-	InsertEbuilds(flora_overlay, select="all", skip=None, replace=False),
+	InsertEbuilds(flora_overlay, select="all", skip=None, replace=False)
+]
+if branch == "experimental":
+	steps.extend((
+		SyncDir(progress_overlay.root, "eclass"),
+		SyncFiles(progress_overlay.root, {
+			"profiles/package.mask":"profiles/package.mask/progress",
+			"profiles/use.mask":"profiles/use.mask/progress"
+		}),
+		InsertEbuilds(progress_overlay, select="all", skip=None, replace=True)
+	))
+steps.extend((
 	Minify(),
 	GenCache()
-]
+))
 
 # work tree is a non-git tree in tmpfs for enhanced performance - we do all the heavy lifting there:
 
