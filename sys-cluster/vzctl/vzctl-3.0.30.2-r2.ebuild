@@ -57,6 +57,10 @@ src_install() {
 	# enable bridge auto-add for veth devices:
 	insinto /etc/vz
 	doins ${FILESDIR}/vznet.conf
+
+	# install our tweaked /etc/init.d/vz
+	exeinto /etc/init.d
+	newexe ${FILESDIR}/${PV}/vz.initd vz
 }
 
 pkg_postinst() {
@@ -84,4 +88,10 @@ pkg_postinst() {
 	ewarn "Please, drop /usr/share/vzctl/scripts/vpsnetclean and"
 	ewarn "/usr/share/vzctl/scripts/vpsreboot from crontab and use"
 	ewarn "/etc/init.d/vzeventd."
+
+	# TODO - when Funtoo has an OpenRC with "condrestart", add an 
+	# /etc/init.d/vzeventd condrestart when ROOT = "/" to ensure that the
+	# latest vzeventd is running. Not doing this can result in containers
+	# not rebooting correctly after upgrade or other issues.
+
 }
