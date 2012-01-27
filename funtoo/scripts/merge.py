@@ -7,7 +7,6 @@ funtoo_overlay = Tree("funtoo-overlay", branch, "git://github.com/funtoo/funtoo-
 foo_overlay = Tree("foo-overlay", "master", "https://github.com/slashbeast/foo-overlay.git", pull=True)
 bar_overlay = Tree("bar-overlay", "master", "git://github.com/adessemond/bar-overlay.git", pull=True)
 flora_overlay = Tree("flora", "master", "https://github.com/funtoo/flora.git", pull=True)
-progress_overlay = SvnTree("progress", "https://gentoo-progress.googlecode.com/svn/overlays/progress")
 
 steps = [
 	SyncTree(gentoo_src,exclude=["/metadata/cache/**","ChangeLog", "dev-util/metro"]),
@@ -24,6 +23,7 @@ steps = [
 	InsertEbuilds(flora_overlay, select="all", skip=None, replace=False)
 ]
 if branch == "experimental":
+	progress_overlay = SvnTree("progress", "https://gentoo-progress.googlecode.com/svn/overlays/progress")
 	steps.extend((
 		SyncDir(progress_overlay.root, "eclass"),
 		SyncFiles(progress_overlay.root, {
