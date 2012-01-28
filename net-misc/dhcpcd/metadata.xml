@@ -3,10 +3,7 @@
 <pkgmetadata>
   <herd>funtoo</herd>
   <maintainer>
-  	<email>darkside@gentoo.org</email>
-	<name>Jeremy Olexa</name>
+  	<email>drobbins@funtoo.org</email>
+	<name>Daniel Robbins</name>
   </maintainer>
-  <use>
-    <flag name="compat">Enable commandline compability with dhcpcd-3.x</flag>
-  </use>
 </pkgmetadata>

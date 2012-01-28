@@ -1,29 +1,34 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-misc/dhcpcd/dhcpcd-5.2.11.ebuild,v 1.1 2011/01/04 23:13:45 williamh Exp $
+# $Header: /var/cvsroot/gentoo-x86/net-misc/dhcpcd/dhcpcd-5.2.12-r1.ebuild,v 1.6 2012/01/03 21:13:45 swift Exp $
 
-EAPI=1
+EAPI=4
 
-inherit eutils
+inherit eutils systemd
+
+MY_P="${P/_alpha/-alpha}"
+MY_P="${MY_P/_beta/-beta}"
+MY_P="${MY_P/_rc/-rc}"
+S="${WORKDIR}/${MY_P}"
 
 DESCRIPTION="A fully featured, yet light weight RFC2131 compliant DHCP client"
 HOMEPAGE="http://roy.marples.name/projects/dhcpcd/"
-SRC_URI="http://roy.marples.name/downloads/${PN}/${P}.tar.bz2"
+SRC_URI="http://roy.marples.name/downloads/${PN}/${MY_P}.tar.bz2"
 LICENSE="BSD-2"
 
-KEYWORDS="~alpha amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc x86 ~sparc-fbsd ~x86-fbsd"
+KEYWORDS="~*"
 
 SLOT="0"
 IUSE="+zeroconf elibc_glibc"
 
 DEPEND=""
-RDEPEND=""
-PROVIDE="virtual/dhcpc"
+RDEPEND="!<sys-apps/openrc-0.6.0"
 
-src_unpack() {
-	unpack ${A}
-	cd "${S}"
+pkg_setup() {
+	unset PREFIX #358167
+}
 
+src_prepare() {
 	if ! use zeroconf; then
 		elog "Disabling zeroconf support"
 		{
@@ -34,18 +39,26 @@ src_unpack() {
 	fi
 }
 
-src_compile() {
+src_configure() {
 	local hooks="--with-hook=ntp.conf"
 	use elibc_glibc && hooks="${hooks} --with-hook=yp.conf"
-	econf --prefix= --libexecdir=/$(get_libdir)/dhcpcd --dbdir=/var/lib/dhcpcd \
-		--localstatedir=/var ${hooks}
-	emake || die
+	econf \
+			--prefix="${EPREFIX}" \
+			--libexecdir="${EPREFIX}/lib/dhcpcd" \
+			--dbdir="${EPREFIX}/var/lib/dhcpcd" \
+		--localstatedir="${EPREFIX}/var" \
+		${hooks}
+}
+
+src_compile() {
+	emake
 }
 
 src_install() {
-	emake DESTDIR="${D}" install || die
-	dodoc README || die
+	emake DESTDIR="${D}" install
+	dodoc README
 	newinitd "${FILESDIR}"/${PN}.initd-r3 ${PN}
+	systemd_dounit "${FILESDIR}"/${PN}.service || die
 }
 
 pkg_postinst() {
@@ -70,9 +83,13 @@ pkg_postinst() {
 		elog "See the dhcpcd man page for more details."
 	fi
 
-	elog "Please note that this version of dhcpcd's initscript does not provide"
-	elog "'net'. This means that if you would like dhcpcd to start at boot, you"
-	elog "need to add it to the proper runlevel by typing something like:"
-	elog
-	elog "rc-update add dhcpcd default"
+	# Mea culpa, feel free to remove that after some time --mgorny.
+	if [[ -e "${ROOT}"/etc/systemd/system/network.target.wants/${PN}.service ]]
+	then
+		ebegin "Moving ${PN}.service to multi-user.target"
+		mv "${ROOT}"/etc/systemd/system/network.target.wants/${PN}.service \
+			"${ROOT}"/etc/systemd/system/multi-user.target.wants/
+		eend ${?} \
+			"Please try to re-enable dhcpcd.service"
+	fi
 }
