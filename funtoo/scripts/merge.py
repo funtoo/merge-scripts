@@ -23,6 +23,9 @@ steps = [
 	InsertEbuilds(flora_overlay, select="all", skip=None, replace=False)
 ]
 if branch == "experimental":
+	if not os.path.exists("/usr/bin/svn"):
+		print("svn binary not found at /usr/bin/svn. Exiting.")
+		sys.exit(1)
 	progress_overlay = SvnTree("progress", "https://gentoo-progress.googlecode.com/svn/overlays/progress")
 	steps.extend((
 		SyncDir(progress_overlay.root, "eclass"),
