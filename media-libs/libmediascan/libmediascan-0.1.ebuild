@@ -11,8 +11,18 @@ SRC_URI="http://svn.slimdevices.com/repos/slim/7.7/trunk/vendor/CPAN/libmediasca
 LICENSE="LGPL-3"
 SLOT="0"
 KEYWORDS="*"
-IUSE=""
+IUSE="+jpeg +png +gif"
 
-DEPEND="media-libs/libexif"
+DEPEND="jpeg? ( media-libs/libjpeg-turbo ) png? ( media-libs/libpng ) gif? ( media-libs/giflib ) media-libs/libexif media-video/ffmpeg[static-libs] sys-libs/db:5.2"
 RDEPEND="${DEPEND}"
 
+src_configure() {
+	econf --enable-static
+}
+
+src_install() {
+	emake DESTDIR="${D}" install
+	rm -rf ${D}/usr/include || die
+	insinto /usr/include
+	doins ${S}/include/libmediascan.h
+}
