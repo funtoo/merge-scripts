@@ -90,6 +90,8 @@ src_prepare() {
 	chmod +x config-extract || die
 	./config-extract ${myarch} ${opts} || die
 	cp .config ${T}/config || die
+	make -s mrproper || die "make mrproper failed"
+	make -s include/linux/version.h || die "make include/linux/version.h failed"
 }
 
 src_compile() {
@@ -97,9 +99,9 @@ src_compile() {
 	install -d ${WORKDIR}/out/{lib,boot}
 	install -d ${T}/{cache,twork}
 	install -d $WORKDIR/build $WORKDIR/out/lib/firmware
-	genkernel ${GKARGS} \
+	genkernel \
 		--no-save-config \
-		--kernel-config="$S/.config" \
+		--kernel-config="$T/config" \
 		--kernname="${PN}" \
 		--build-src="$S" \
 		--build-dst=${WORKDIR}/build \
