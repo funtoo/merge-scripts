@@ -13,8 +13,8 @@ KERNEL_ARCHIVE="linux-2.6_${PV}.orig.tar.gz"
 RESTRICT="binchecks strip"
 # based on : http://packages.ubuntu.com/maverick/linux-image-2.6.35-22-server
 LICENSE="GPL-2"
-KEYWORDS="~*"
-IUSE="openvz -binary"
+KEYWORDS="*"
+IUSE="openvz binary"
 DEPEND="binary? ( >=sys-kernel/genkernel-3.4.12.6-r4 )"
 RDEPEND="binary? ( >=sys-fs/udev-160 )"
 DESCRIPTION="Debian Sources (and optional binary kernel)"
@@ -91,6 +91,8 @@ src_prepare() {
 	chmod +x config-extract || die
 	./config-extract ${myarch} ${opts} || die
 	cp .config ${T}/config || die
+	make -s mrproper || die "make mrproper failed"
+	make -s include/linux/version.h || die "make include/linux/version.h failed"
 }
 
 src_compile() {
@@ -98,9 +100,9 @@ src_compile() {
 	install -d ${WORKDIR}/out/{lib,boot}
 	install -d ${T}/{cache,twork}
 	install -d $WORKDIR/build $WORKDIR/out/lib/firmware
-	genkernel ${GKARGS} \
+	genkernel \
 		--no-save-config \
-		--kernel-config="$S/.config" \
+		--kernel-config="$T/config" \
 		--kernname="${PN}" \
 		--build-src="$S" \
 		--build-dst=${WORKDIR}/build \
