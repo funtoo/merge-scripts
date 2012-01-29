@@ -1,9 +1,0 @@
-diff --git /a/src/eixrc/eixrc.in b/src/eixrc/eixrc.in
-index 3643ad9..4d7741a 100644
---- /a/src/eixrc/eixrc.in
-+++ b/src/eixrc/eixrc.in
-@@ -27,3 +27,4 @@
- # options --dump or --dump-defaults.
- # For more detailed explanations see the manpage of eix.
- 
-+PORTDIR_CACHE_METHOD=metadata-md5
