@@ -91,7 +91,6 @@ src_prepare() {
 	chmod +x config-extract || die
 	./config-extract ${myarch} ${opts} || die
 	cp .config ${T}/config || die
-	cp -a debian ${T}/debian || die
 	make -s mrproper || die "make mrproper failed"
 	make -s include/linux/version.h || die "make include/linux/version.h failed"
 }
