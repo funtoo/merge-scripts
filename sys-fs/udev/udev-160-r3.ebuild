@@ -93,7 +93,7 @@ src_compile() {
 
 	# sys-fs/lvm2 may require static libs - generate them just to be on the safe
 	# side. shared libs get generated too.
-	echo $(use_extras_introspection)
+	echo $(use_extras introspection)
 
 	econf \
 		--prefix=/usr \
@@ -104,6 +104,8 @@ src_compile() {
 		--with-rootlibdir=/$(get_libdir) \
 		--libexecdir="${udev_libexec_dir}" \
 		--enable-logging \
+		--with-pci-ids-path="${EPREFIX}/usr/share/misc/pci.ids" \
+		--with-usb-ids-path="${EPREFIX}/usr/share/misc/usb.ids" \
 		$(use_extras introspection) \
 		$(use_enable extras) \
 		$(use_with selinux)
