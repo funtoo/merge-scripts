@@ -11,7 +11,7 @@ MY_SRC="${PN}-${MY_PV}"
 MY_URI="ftp://ftp.porcupine.org/mirrors/postfix-release/experimental"
 VDA_PV="2.8.5"
 VDA_P="${PN}-vda-v10-${VDA_PV}"
-RC_VER="2.6"
+RC_VER="2.8"
 
 DESCRIPTION="A fast and secure drop-in replacement for sendmail."
 HOMEPAGE="http://www.postfix.org/"
@@ -287,14 +287,6 @@ pkg_postinst() {
 		SSL_ORGANIZATION="${SSL_ORGANIZATION:-Postfix SMTP Server}"
 		install_cert /etc/ssl/postfix/server
 		chown postfix:mail "${ROOT}"/etc/ssl/postfix/server.{key,pem}
-	fi
-
-	if [[ ! -e /etc/mail/aliases.db ]] ; then
-		ewarn
-		ewarn "You must edit /etc/mail/aliases to suit your needs"
-		ewarn "and then run /usr/bin/newaliases. Postfix will not"
-		ewarn "work correctly without it."
-		ewarn
 	fi
 
 	if [[ $(get_version_component_range 2 ${REPLACING_VERSIONS}) -lt 9 ]]; then
