@@ -8,11 +8,6 @@
 # masked for testing
 =www-servers/nginx-1.1.13
 
-# Oleg Vinichenko ( 5 Jan 2012)
-# mask gobject-introspection version that breaks stages, until
-# resolved
->=dev-libs/gobject-introspection-1.30.0-r1 
-
 # Oleg Vinichenko ( 1 Jan 2012)
 # new baselayout with cleaned group/shadow
 # DO NOT use on production, only for testing purposes!!!
