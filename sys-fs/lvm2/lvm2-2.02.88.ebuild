@@ -33,7 +33,7 @@ RDEPEND="${RDEPEND}
 
 DEPEND="${DEPEND_COMMON}
 		dev-util/pkgconfig
-		>=sys-devel/binutils-2.20.1-r1"
+		>=sys-devel/binutils-2.20.1"
 
 S="${WORKDIR}/${PN/lvm/LVM}.${PV}"
 
