@@ -11,7 +11,7 @@ SRC_URI="ftp://sources.redhat.com/pub/lvm2/${PN/lvm/LVM}.${PV}.tgz
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~*"
+KEYWORDS="*"
 
 IUSE="readline +static +static-libs clvm cman +lvm1 selinux"
 
