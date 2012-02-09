@@ -13,7 +13,7 @@ SRC_URI="mirror://gnu/${PN}/${P}.tar.xz"
 
 LICENSE="GPL-2"
 SLOT="2"
-KEYWORDS="*"
+KEYWORDS="~*"
 IUSE="vanilla"
 
 RDEPEND="sys-devel/gnuconfig
