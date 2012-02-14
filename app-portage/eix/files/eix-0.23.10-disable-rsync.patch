@@ -1,7 +1,8 @@
-diff -ru eix-0.23.6/src/eix-sync.in eix-0.23.6-norsync/src/eix-sync.in
---- eix-0.23.6/src/eix-sync.in	2012-01-14 07:16:22.000000000 -0500
-+++ eix-0.23.6-norsync/src/eix-sync.in	2012-01-16 11:00:56.478032246 -0500
-@@ -43,13 +43,7 @@
+diff --git a/a/src/eix-sync.in b/b/src/eix-sync.in
+index c8a46d6..2275415 100755
+--- a/a/src/eix-sync.in
++++ b/b/src/eix-sync.in
+@@ -43,13 +43,7 @@ The following options are available:
  -d   Only show differences to the previously saved database and exit.
       Except for executing the !! lines in ${eixsyncconf}
       this is the same as eix-diff ${eixprevious}.
@@ -15,7 +16,7 @@ diff -ru eix-0.23.6/src/eix-sync.in eix-0.23.6-norsync/src/eix-sync.in
  -U   Do not touch the database and omit the hooks after eix-update (@ entries)
       and do not show differences. This option implies -R
  -u   Update database only and show differences. This is equivalent to -0l@s ""
-@@ -65,8 +59,6 @@
+@@ -67,8 +61,6 @@ The following options are available:
  -t   Use temporary file to save the current database (-d will not be possible).
  -T   Do not measure time
  -q   Be quiet (close stdout)
@@ -24,7 +25,7 @@ diff -ru eix-0.23.6/src/eix-sync.in eix-0.23.6-norsync/src/eix-sync.in
  -c CMD Run CMD instead of emerge --sync.
  -C OPT Add OPT to the emerge --sync command (or whatever is used instead).
         This option can be used accumulatively.
-@@ -181,8 +173,6 @@
+@@ -215,8 +207,6 @@ DefaultOpts() {
  	measure_time=:
  	metadata=false
  	skip_sync=false
@@ -33,29 +34,23 @@ diff -ru eix-0.23.6/src/eix-sync.in eix-0.23.6-norsync/src/eix-sync.in
  	doupdate=:
  	synchooks=:
  	test_for_root=:
-@@ -201,11 +191,9 @@
+@@ -236,14 +226,11 @@ while getopts 'ids:02:UuFl@SMNtTqwWL:c:C:o:rRemHh?' opt
  do	case "${opt}" in
- 	i) DefaultOpts;;
- 	d) diffonly=:;;
--	s) server="${OPTARG}";;
- 	0) skip_sync=:;;
--	2) client="${OPTARG}";;
- 	U) doupdate=false;;
--	u) nolayman=:; nohooks=:; skip_sync=:; server='';;
-+	u) nolayman=:; nohooks=:; skip_sync=:;;
- 	l) nolayman=:;;
- 	@) nohooks=:;;
- 	S) synchooks=false;;
-@@ -215,8 +203,6 @@
- 	T) measure_time=false;;
- 	q) quiet=:;;
- 	L) Push layman_opt "${OPTARG}";;
--	w) Push -c emergecmd 'emerge-webrsync';;
--	W) Push -c emergecmd 'emerge-delta-webrsync';;
- 	c) Push -c emergecmd "${OPTARG}";;
- 	C) Push emergecmd "${OPTARG}";;
- 	o) Push updatecmd "${OPTARG}";;
-@@ -230,8 +216,6 @@
+ 	i)	DefaultOpts;;
+ 	d)	diffonly=:;;
+-	s)	server="${OPTARG}";;
+ 	0)	skip_sync=:;;
+-	2)	client="${OPTARG}";;
+ 	U)	doupdate=false;;
+ 	u)	nolayman=:
+ 		nohooks=:
+-		skip_sync=:
+-		server='';;
++		skip_sync=:;;
+ 	F)	FATAL_HOOKS=':';;
+ 	l)	nolayman=:;;
+ 	'@')	nohooks=:;;
+@@ -270,8 +257,6 @@ do	case "${opt}" in
  done
  opt=''
  ${diffonly} && DiffOnly
@@ -64,7 +59,7 @@ diff -ru eix-0.23.6/src/eix-sync.in eix-0.23.6-norsync/src/eix-sync.in
  ${measure_time} || time_begin=''
  measure_time=false
  case "${time_begin}" in
-@@ -351,34 +335,6 @@
+@@ -397,38 +382,6 @@ MakeTempFile() {
  	trap ExitAll EXIT HUP INT TERM
  }
  
@@ -82,15 +77,19 @@ diff -ru eix-0.23.6/src/eix-sync.in eix-0.23.6-norsync/src/eix-sync.in
 -		portage_rsync_opts="--recursive --links --safe-links --perms --times --compress --force --whole-file --delete --stats --timeout=180 --exclude=/distfiles --exclude=/local --exclude=/packages"
 -	ReadVar portage_rsync_extra_opts PORTAGE_RSYNC_EXTRA_OPTS
 -	case "${-}" in
--	*f*)	eval "set -- ${before_rsync}";;
--	*)	set -f
+-	*f*)
+-		eval "set -- ${before_rsync}";;
+-	*)
+-		set -f
 -		eval "set -- ${before_rsync}"
 -		set +f;;
 -	esac
 -	for curr_cmd
--	do	c=`eval "${curr_cmd}"` || \
--			die "`eval_gettext '${curr_cmd} failed'`"
--		eval "${c}"
+-	do	if c=`eval "${curr_cmd}"`
+-		then	eval "${c}" || WarnOrDie "`eval_gettext \
+-				'${c} (output of ${curr_cmd}) failed'`"
+-		else	WarnOrDie "`eval_gettext '${curr_cmd} failed'`"
+-		fi
 -	done
 -	rsync_opts="${portage_rsync_opts} ${portage_rsync_extra_opts} --exclude=/.unionfs"
 -	preprsync=:
@@ -99,7 +98,7 @@ diff -ru eix-0.23.6/src/eix-sync.in eix-0.23.6-norsync/src/eix-sync.in
  ClearCache() {
  	${clearcache} || return 0
  	# Cleaning old cache
-@@ -397,28 +353,11 @@
+@@ -449,28 +402,11 @@ ClearCache() {
  }
  
  CallEmergeSync() {
@@ -128,7 +127,7 @@ diff -ru eix-0.23.6/src/eix-sync.in eix-0.23.6-norsync/src/eix-sync.in
  CallEmergeMetadata() {
  	${doupdate} && ${metadata} || return 0
  	RootTest
-@@ -491,7 +430,6 @@
+@@ -543,7 +479,6 @@ MainSync() {
  	ExecuteConfig 'sync'
  	CallEmergeSync
  	${synchooks} && DoHook "${after_sync}"
