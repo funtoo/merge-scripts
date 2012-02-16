@@ -1,5 +1,9 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Martin Scholz (16 Feb 2012)
+# mask of latest graphite2 as of bug 403997 b.g.o
+=media-gfx/graphite2-1.1.0
+
 # Martin Scholz (15 Feb 2012)
 # masked for testing
 =www-servers/nginx-1.1.14
