@@ -1,0 +1,31 @@
+https://bugs.gentoo.org/401057
+
+From 937266598f21747d7bd84fdd332ee66c8452ba3e Mon Sep 17 00:00:00 2001
+From: Karel Zak <kzak@redhat.com>
+Date: Mon, 19 Dec 2011 22:51:38 +0100
+Subject: [PATCH] libmount: don't use "new" in header file
+
+Reported-by: ben <benscott@nwlink.com>
+Signed-off-by: Karel Zak <kzak@redhat.com>
+---
+ libmount/src/libmount.h.in |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/libmount/src/libmount.h.in b/libmount/src/libmount.h.in
+index 95a710e..7cc6cb6 100644
+--- a/libmount/src/libmount.h.in
++++ b/libmount/src/libmount.h.in
+@@ -341,8 +341,8 @@ extern struct libmnt_tabdiff *mnt_new_tabdiff(void);
+ extern void mnt_free_tabdiff(struct libmnt_tabdiff *df);
+ 
+ extern int mnt_diff_tables(struct libmnt_tabdiff *df,
+-			   struct libmnt_table *old,
+-			   struct libmnt_table *new);
++			   struct libmnt_table *old_tab,
++			   struct libmnt_table *new_tab);
+ 
+ extern int mnt_tabdiff_next_change(struct libmnt_tabdiff *df,
+ 				   struct libmnt_iter *itr,
+-- 
+1.7.8.4
+
