@@ -1,5 +1,10 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Oleg Vinichenko (20 Feb 2012)
+# new man-db version, works fine
+# need test metro stages
+=sys-apps/man-db-2.6.1
+
 # Martin Scholz (15 Feb 2012)
 # masked for testing
 =www-servers/nginx-1.1.14
