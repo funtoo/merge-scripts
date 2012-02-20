@@ -68,7 +68,11 @@ class ApplyPatchSeries(MergeStep):
 		for line in a:
 			if line[0:1] == "#":
 				continue
-			runShell( "( cd %s; git apply %s/%s )" % ( tree.root, self.path, line[:-1] ))
+			if line[0:4] == "EXEC":
+				ls = line.split()
+				runShell( "( cd %s; %s/%s )" % ( tree.root, self.path, ls[1] ))
+			else:
+				runShell( "( cd %s; git apply %s/%s )" % ( tree.root, self.path, line[:-1] ))
 
 
 class SyncDir(MergeStep):

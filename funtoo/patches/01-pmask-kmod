@@ -1,23 +1,3 @@
-diff --git a/profiles/package.mask/gentoo b/profiles/package.mask/gentoo
-index 845f9b9..1995d38 100644
---- a/profiles/package.mask/gentoo
-+++ b/profiles/package.mask/gentoo
-@@ -458,18 +458,6 @@ net-mail/vmailmgr-tools
- # Masking alpha release series.
- >=net-irc/atheme-services-7.0.0_alpha1
- 
--# William Hubbs <williamh@gentoo.org> (6 Nov 2011)
--# Masking this version of udev and its dependencies until we have a default
--# solution for the following issue:
--#
--# http://www.freedesktop.org/wiki/Software/systemd/separate-usr-is-broken
--~sys-fs/udev-175
--~sys-fs/udev-180
--~sys-fs/udev-181
--<sys-apps/kmod-9999
--~sys-fs/udev-init-scripts-8
-->=sys-apps/systemd-30
--
- # Michael Weber <xmw@gentoo.org> (04 Nov 2011)
- # Masked due security issue bug 385967
- =net-misc/radvd-1.7
+#!/bin/sh
+# remove udev, systemd masks that change often
+sed -i -e "/# Masking this version/,/systemd-30/d" profiles/package.mask/gentoo || exit 1
