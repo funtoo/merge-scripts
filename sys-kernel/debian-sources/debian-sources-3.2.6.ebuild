@@ -6,9 +6,9 @@ EAPI=2
 inherit mount-boot
 
 SLOT=$PVR
-CKV=3.1.8
+CKV=3.2.6
 KV_FULL=${PN}-${PVR}
-EXTRAVERSION=-2
+EXTRAVERSION=-1
 KERNEL_ARCHIVE="linux-2.6_${PV}.orig.tar.gz"
 RESTRICT="binchecks strip"
 # based on : http://packages.ubuntu.com/maverick/linux-image-2.6.35-22-server
