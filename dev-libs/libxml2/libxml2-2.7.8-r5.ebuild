@@ -86,9 +86,12 @@ src_prepare() {
 	epatch "${FILESDIR}/${P}-reallocation-failures.patch"
 
 	epatch "${FILESDIR}/${P}-disable_static_modules.patch"
-	
+
 	# Fix heap-based overflow in parsing long entity refernces
 	epatch "${FILESDIR}/${P}-allocation-error-copying-entities.patch"
+
+	# Make hash functions less predictable to prevent DoS
+	epatch "${FILESDIR}/${P}-hash-randomization.patch"
 
 	# Please do not remove, as else we get references to PORTAGE_TMPDIR
 	# in /usr/lib/python?.?/site-packages/libxml2mod.la among things.
