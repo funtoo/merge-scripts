@@ -38,6 +38,13 @@ src_install() {
 	python_convert_shebangs -r "" build-*/scripts-*
 	distutils_src_install
 
+	# Rename the python versions of revdep-rebuild, since we are not ready
+	# to switch to the python version yet. Link /usr/bin/revdep-rebuild to
+	# revdep-rebuild.sh. Leaving the python version available for potential
+	# testing by a wider audience
+	mv "${ED}"/usr/bin/revdep-rebuild "${ED}"/usr/bin/revdep-rebuild.py
+	dosym revdep-rebuild.sh /usr/bin/revdep-rebuild
+
 	# Create cache directory for revdep-rebuild
 	dodir /var/cache/revdep-rebuild
 	keepdir /var/cache/revdep-rebuild
