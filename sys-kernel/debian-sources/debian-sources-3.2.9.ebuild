@@ -6,7 +6,7 @@ EAPI=2
 inherit mount-boot
 
 SLOT=$PVR
-CKV=3.2.4
+CKV=3.2.9
 KV_FULL=${PN}-${PVR}
 EXTRAVERSION=-1
 KERNEL_ARCHIVE="linux-2.6_${PV}.orig.tar.gz"
