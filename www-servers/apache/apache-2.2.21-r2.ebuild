@@ -100,3 +100,9 @@ RDEPEND="${RDEPEND}
 	>=dev-libs/apr-1.4.5
 	>=dev-libs/openssl-0.9.8m
 	apache2_modules_mime? ( app-misc/mime-types )"
+
+src_install() {
+	apache-2_src_install
+	# Fix for the http://redmine.funtoo.org/issues/4
+	sed 's#while ( ! test -f "${PIDFILE}"#while ( test -f "${PIDFILE}"#' "${D}/etc/init.d/apache2" -i
+}
