@@ -1,4 +1,5 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
+
 # Oleg Vinichenko (13 Mar 2012)
 # bash update, metro tests
 =app-shells/bash-4.2_p24
@@ -12,10 +13,6 @@
 # mask latest gentoolkit as it consist of
 # development code
 =app-portage/gentoolkit-0.3.0.5
-
-# Martin Scholz (02 Mar 2012)
-# masked for testing
-=www-servers/nginx-1.1.16
 
 # Oleg Vinichenko (23 Jan 2012)
 # postfix-2.10 update, masked for testing
