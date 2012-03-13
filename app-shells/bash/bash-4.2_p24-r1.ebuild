@@ -71,6 +71,8 @@ src_unpack() {
 	rm -rf lib/{readline,termcap}/*
 	touch lib/{readline,termcap}/Makefile.in # for config.status
 	sed -ri -e 's:\$[(](RL|HIST)_LIBSRC[)]/[a-z]*.h::g' Makefile.in || die
+	sed -i -r '/^(HS|RL)USER/s:=.*:=:' doc/Makefile.in || die
+	touch -r . doc/*
 
 	epatch "${FILESDIR}"/${PN}-4.2-execute-job-control.patch #383237
 	epatch "${FILESDIR}"/${PN}-4.2-parallel-build.patch
