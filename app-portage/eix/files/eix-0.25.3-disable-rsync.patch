@@ -42,7 +42,8 @@ diff -Nuar eix-0.25.3/src/eix-sync.in eix-0.25.3-fixed/src/eix-sync.in
 -	2)	client=${OPTARG};;
  	U)	doupdate=false;;
  	u)	nolayman=:
- 		nohooks=:
+-		nohooks=:
++		nohooks=:;;
 -		skip_sync=:
 -		server='';;
  	F)	FATAL_HOOKS=':';;
