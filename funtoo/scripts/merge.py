@@ -2,11 +2,11 @@
 
 from merge_utils import *
 
-gentoo_src = Tree("gentoo","gentoo.org", "git://github.com/funtoo/portage.git", pull=True, trylocal="/var/git/portage-gentoo")
-funtoo_overlay = Tree("funtoo-overlay", branch, "git://github.com/funtoo/funtoo-overlay.git", pull=True)
+gentoo_src = Tree("gentoo","gentoo.org", "repos@git.funtoo.org:portage.git", pull=True, trylocal="/var/git/portage-gentoo")
+funtoo_overlay = Tree("funtoo-overlay", branch, "repos@git.funtoo.org:funtoo-overlay.git", pull=True)
 foo_overlay = Tree("foo-overlay", "master", "https://github.com/slashbeast/foo-overlay.git", pull=True)
 bar_overlay = Tree("bar-overlay", "master", "git://github.com/adessemond/bar-overlay.git", pull=True)
-flora_overlay = Tree("flora", "master", "https://github.com/funtoo/flora.git", pull=True)
+flora_overlay = Tree("flora", "master", "repos@git.funtoo.org:flora.git", pull=True)
 
 steps = [
 	SyncTree(gentoo_src,exclude=["/metadata/cache/**","ChangeLog", "dev-util/metro"]),
