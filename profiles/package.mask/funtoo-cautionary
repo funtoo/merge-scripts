@@ -1,4 +1,8 @@
-# Adrien Dessemond <adessemond@funtoo.org> (13 Apr 2011)
+# Jean-Francis Roy (20 Mar 2012)
+# udev-182 removed some feature that is now taken care of in consolekit.
+# Masking the latest version of consolekit as it depends on >=udev-182.
+# See b.g.o. 408713
+>=sys-auth/consolekit-0.4.5-r3
 
 # Oleg Vinichenko (19 Jan 2012)
 # udev-177 is not ready for daily usage
