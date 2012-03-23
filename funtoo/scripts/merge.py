@@ -22,19 +22,21 @@ steps = [
 	InsertEbuilds(bar_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(flora_overlay, select="all", skip=None, replace=False)
 ]
-if branch == "experimental":
-	if not os.path.exists("/usr/bin/svn"):
-		print("svn binary not found at /usr/bin/svn. Exiting.")
-		sys.exit(1)
-	progress_overlay = SvnTree("progress", "https://gentoo-progress.googlecode.com/svn/overlays/progress")
-	steps.extend((
-		SyncDir(progress_overlay.root, "eclass"),
-		SyncFiles(progress_overlay.root, {
-			"profiles/package.mask":"profiles/package.mask/progress",
-			"profiles/use.mask":"profiles/use.mask/progress"
-		}),
-		InsertEbuilds(progress_overlay, select="all", skip=None, replace=True, merge=["dev-lang/python", "dev-libs/boost", "dev-python/psycopg", "dev-python/pysqlite", "dev-python/python-docs", "dev-python/simpletal", "dev-python/wxpython", "x11-libs/vte"])
-	))
+
+# Progress overlay merge
+if not os.path.exists("/usr/bin/svn"):
+    print("svn binary not found at /usr/bin/svn. Exiting.")
+    sys.exit(1)
+progress_overlay = SvnTree("progress", "https://gentoo-progress.googlecode.com/svn/overlays/progress")
+steps.extend((
+    SyncDir(progress_overlay.root, "eclass"),
+    SyncFiles(progress_overlay.root, {
+        "profiles/package.mask":"profiles/package.mask/progress",
+        "profiles/use.mask":"profiles/use.mask/progress"
+    }),
+    InsertEbuilds(progress_overlay, select="all", skip=None, replace=True, merge=["dev-lang/python", "dev-libs/boost", "dev-python/psycopg", "dev-python/pysqlite", "dev-python/python-docs", "dev-python/simpletal", "dev-python/wxpython", "x11-libs/vte"])
+))
+
 steps.extend((
 	Minify(),
 	GenCache()
