@@ -1,11 +1,9 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 2012 Funtoo Technologies
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
 
-EAPI="2"
+EAPI="4-python"
 
-PYTHON_DEPEND="*"
-SUPPORT_PYTHON_ABIS="1"
+PYTHON_MULTIPLE_ABIS="1"
 PYTHON_MODNAME="cx_Oracle"
 
 inherit distutils
@@ -18,7 +16,7 @@ SRC_URI="mirror://sourceforge/${PN}/${MY_P}.tar.gz"
 
 LICENSE="Computronix"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="*"
 IUSE="doc examples"
 
 DEPEND=">=dev-db/oracle-instantclient-basic-10.2.0.3"

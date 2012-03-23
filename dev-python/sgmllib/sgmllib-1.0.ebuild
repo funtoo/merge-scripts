@@ -1,10 +1,10 @@
 # Copyright 2011 Funtoo Technologies
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI="2"
+EAPI="4-python"
 
-PYTHON_DEPEND="*"
-SUPPORT_PYTHON_ABIS="1"
+PYTHON_MULTIPLE_ABIS="1"
+PYTHON_RESTRICTED_ABIS="2.*"
 
 inherit distutils
 
@@ -14,11 +14,8 @@ SRC_URI="http://feedparser.googlecode.com/files/feedparser-5.0.tar.gz"
 
 LICENSE="PSF-2.4"
 SLOT="0"
-KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
+KEYWORDS="*"
 IUSE=""
-
-DEPEND=""
-RDEPEND=""
 
 S=$WORKDIR/feedparser-5.0
 
