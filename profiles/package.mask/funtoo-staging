@@ -13,7 +13,7 @@
 # Oleg Vinichenko ( 03 Mar 2012)
 # mask latest gentoolkit as it consist of
 # development code
-=app-portage/gentoolkit-0.3.0.5
+>=app-portage/gentoolkit-0.3.0.5
 
 # Oleg Vinichenko (23 Jan 2012)
 # postfix-2.10 update, masked for testing
