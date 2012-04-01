@@ -1,4 +1,9 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
+
+# Martin Scholz (02 Apr 2012)
+# mask of usbutils-006-r1 as of unresolvable blocks with hwlib and pciutils
+>=sys-apps/usbutils-006-r1
+
 # Oleg Vinichenko (28 Mar 2012)
 # update openresolv, masked for testing
 =net-dns/openresolv-3.5.1
