@@ -18,15 +18,17 @@ fi
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~*"
-IUSE="selinux extras +hwdb +gudev"
+IUSE="selinux extras +hwdb +gudev introspection"
 MIN_KERNEL="2.6.32"
 
 COMMON_DEPEND="selinux? ( sys-libs/libselinux )
 		sys-apps/acl
 		virtual/libusb:0
+		extras? ( dev-libs/gobject-introspection
+				  dev-libs/glib:2 )
 		gudev? ( dev-libs/glib:2 )
-	    dev-libs/gobject-introspection
-		>=sys-apps/usbutils-0.82 sys-apps/pciutils
+	    introspection? ( dev-libs/gobject-introspection )
+		hwdb? ( sys-apps/hwids )
 		"
 DEPEND="${COMMON_DEPEND} dev-util/gperf >=sys-kernel/linux-headers-2.6.34"
 RDEPEND="${COMMON_DEPEND} !sys-apps/coldplug !<sys-fs/lvm2-2.02.45 !sys-fs/device-mapper >=sys-apps/baselayout-2.1.6"
@@ -85,11 +87,14 @@ src_unpack() {
 	sed -e 's/GROUP="dialout"/GROUP="uucp"/' -i rules/{rules.d,arch}/*.rules || die "failed to change group dialout to uucp"
 }
 
+use_extras() { use extras && echo "--enable-${2:-$1}" || use_enable "$@" ; }
 src_compile() {
 	filter-flags -fprefetch-loop-arrays
 
 	# sys-fs/lvm2 may require static libs - generate them just to be on the safe
 	# side. shared libs get generated too.
+
+	echo $(use_extras introspection)
 
 	econf \
 		--prefix=/usr \
@@ -100,12 +105,11 @@ src_compile() {
 		--with-rootlibdir=/$(get_libdir) \
 		--libexecdir="${udev_libexec_dir}" \
 		--enable-logging \
-		--enable-introspection \
-		--enable-gudev \
 		--enable-hwdb \
 		--with-pci-ids-path="${EPREFIX}/usr/share/misc/pci.ids" \
 		--with-usb-ids-path="${EPREFIX}/usr/share/misc/usb.ids" \
-		$(use_enable gudev) \
+		$(use_extras introspection) \
+		$(use_extras gudev) \
 		$(use_enable extras) \
 		$(use_with selinux)
 
