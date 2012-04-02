@@ -16,6 +16,7 @@ git checkout gentoo.org || exit 1
 rsync --recursive --links --safe-links --perms --times --compress --force --whole-file --delete --timeout=180 --exclude=/.git --exclude=/metadata/cache/ --exclude=/distfiles --exclude=/local --exclude=/packages $src $dst || exit 1
 # We want to make extra-sure that we don't grab any metadata, since we don't keep metadata for the gentoo.org tree (space reasons)
 [ -e metadata/cache ] && rm -rf metadata/cache
+[ -e metadata/md5-cache ] && rm -rf metadata/md5-cache
 # the rsync command wiped our critical .gitignore file, so recreate it.
 echo "distfiles/*" > $dst/.gitignore || exit 2
 echo "packages/*" >> $dst/.gitignore || exit 3
