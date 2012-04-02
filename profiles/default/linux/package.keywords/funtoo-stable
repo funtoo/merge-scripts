@@ -1,3 +1,4 @@
+=dev-perl/XML-Parser-2.410.0 amd64 x86 sparc
 =dev-python/argparse-1.2.1* amd64 x86
 =dev-libs/libxml2-2.7.8* amd64 x86
 =dev-lang/python-3.2.3* amd64 x86
