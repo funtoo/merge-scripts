@@ -18,14 +18,14 @@ fi
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS=""
-IUSE="selinux +gudev -introspection"
+IUSE="selinux +gudev +hwdb -introspection"
 MIN_KERNEL="2.6.34"
 
 COMMON_DEPEND="selinux? ( sys-libs/libselinux )
 		sys-apps/acl
 		virtual/libusb:0
 		gudev? ( dev-libs/glib:2 )
-		>=sys-apps/usbutils-0.82 sys-apps/pciutils
+		hwdb? ( sys-apps/hwids )
 		>=sys-apps/kmod-4
 		"
 DEPEND="${COMMON_DEPEND} dev-util/gperf >=sys-kernel/linux-headers-2.6.34"
