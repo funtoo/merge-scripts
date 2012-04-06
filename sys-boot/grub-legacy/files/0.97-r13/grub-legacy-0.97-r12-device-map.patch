@@ -1,0 +1,39 @@
+diff -urN grub-0.97/util/grub-install.in grub-0.97-patched/util/grub-install.in
+--- grub-0.97/util/grub-install.in	2010-06-06 07:00:09.000000000 -0600
++++ grub-0.97-patched/util/grub-install.in	2010-06-06 07:07:17.000000000 -0600
+@@ -34,7 +34,7 @@
+ log_file=/tmp/grub-install.log.$$
+ img_file=/tmp/grub-install.img.$$
+ rootdir=
+-grub_prefix=/boot/grub
++grub_prefix=/boot/grub-legacy
+ 
+ install_device=
+ no_floppy=
+@@ -284,7 +284,7 @@
+ netbsd* | openbsd*)
+     # Because /boot is used for the boot block in NetBSD and OpenBSD, use /grub
+     # instead of /boot/grub.
+-    grub_prefix=/grub
++    grub_prefix=/grub-legacy
+     bootdir=${rootdir}
+     ;;
+ *)
+@@ -293,7 +293,7 @@
+     ;;
+ esac
+ 
+-grubdir=${bootdir}/grub
++grubdir=${bootdir}/grub-legacy
+ device_map=${grubdir}/device.map
+ 
+ # Check if GRUB is installed.
+@@ -391,7 +391,7 @@
+ if test "x$root_device" != "x$bootdir_device"; then
+     # Perhaps the user has a separate boot partition.
+     root_device=$bootdir_device
+-    grub_prefix="/grub"
++    grub_prefix="/grub-legacy"
+ fi
+ 
+ # Convert the root device to a GRUB drive.
