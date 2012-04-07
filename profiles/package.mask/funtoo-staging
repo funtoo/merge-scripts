@@ -1,5 +1,18 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
+# Martin Scholz (3 Apr 2012)
+# new nginx 1.1.18, masked for testing 
+=www-servers/nginx-1.1.18
+
+# Oleg Vinichenko (2 Apr 2012)
+# new openrc with possible ipv6 fixes, masked
+# for testing
+=sys-apps/openrc-0.8.3-r6
+
+# Oleg Vinichenko (2 Apr 2012)
+# mask a live hwids ebuild
+=sys-apps/hwids-99999999 
+
 # Oleg Vinichenko (28 Mar 2012)
 # update openresolv, masked for testing
 =net-dns/openresolv-3.5.1

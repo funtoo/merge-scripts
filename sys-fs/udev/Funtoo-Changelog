@@ -1,3 +1,8 @@
+20 April 2012; Jean-Francis Roy <jeanfrancis@funtoo.org>
+
+Bumping udev-171 to depend of new hwids.
+
+
 03 Feb 2012; Jean-Francis Roy <jeanfrancis@funtoo.org>
 
 Bumping to udev-160-r3 and udev-171-r2 to revert to some upstream changes. We
