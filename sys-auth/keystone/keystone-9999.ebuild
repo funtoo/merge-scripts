@@ -29,3 +29,13 @@ RDEPEND="${DEPEND}
 		 dev-python/python-novaclient
 		 dev-python/python-ldap
 		 dev-python/passlib"
+
+src_install() {
+	distutils_src_install
+	newconfd "${FILESDIR}/keystone.confd" keystone
+	newinitd "${FILESDIR}/keystone.initd" keystone
+
+	diropts -m 0750
+	dodir /var/run/keystone /var/log/keystone
+}
+
