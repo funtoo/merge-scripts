@@ -1,0 +1,2 @@
+CONFIG_FILE=/etc/keystone/keystone.conf
+PID_PATH=/var/run/keystone
