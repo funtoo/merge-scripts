@@ -15,7 +15,7 @@
 
 # Oleg Vinichenko (28 Mar 2012)
 # update openresolv, masked for testing
-=net-dns/openresolv-3.5.1
+>=net-dns/openresolv-3.5.1
 
 # Oleg Vinichenko (13 Mar 2012)
 # bash update, metro tests, -r1 appeared in tree because
