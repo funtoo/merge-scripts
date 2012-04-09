@@ -13,7 +13,7 @@ RESTRICT="mirror"
 
 LICENSE="BSD-2"
 SLOT="0"
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="debug ncurses pam unicode kernel_linux kernel_FreeBSD"
 
 RDEPEND="kernel_linux? ( >=sys-apps/sysvinit-2.86-r11 )

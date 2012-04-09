@@ -3,10 +3,6 @@
 # Martin Scholz (3 Apr 2012)
 # new nginx 1.1.18, masked for testing 
 =www-servers/nginx-1.1.18
-
-# Oleg Vinichenko (2 Apr 2012)
-# new openrc with possible ipv6 fixes, masked
-# for testing
 >=sys-apps/openrc-0.8.3-r6
 
 # Oleg Vinichenko (2 Apr 2012)
