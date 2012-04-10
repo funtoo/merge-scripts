@@ -1,6 +1,15 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
 ##############################################################
+### Mask for live ebuild of WMFS
+### responsible Martin Scholz (golodhrim)
+### imported Martin Scholz 
+##############################################################
+#
+##############################################################
+>=x11-wm/wmfs-9999
+
+##############################################################
 ### Mask for live Radeon-related ebuilds 
 ### responsible Mathieu Bélanger (destroyfx)
 ### imported Jean-Francis Roy 
