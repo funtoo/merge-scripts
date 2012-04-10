@@ -5,30 +5,37 @@
 EAPI=4-python
 
 PYTHON_MULTIPLE_ABIS=1
-PYTHON_RESTRICTED_ABIS="2.[45] 3.*"
+PYTHON_RESTRICTED_ABIS="2.[45] 3.* *-jython *-pypy-*"
 
-inherit git-2 distutils
+inherit distutils
 
-DESCRIPTIOn="Keystone is a cloud identity service written in Python, which
+if [ "$PV" = "9999" ]; then
+	inherit git-2
+	EGIT_REPO_URI="https://github.com/openstack/keystone.git"
+else
+	SRC_URI="http://launchpad.net/${PN}/essex/${PV}/+download/${P}.tar.gz"
+fi
+
+DESCRIPTION="Keystone is a cloud identity service written in Python, which
 provides authentication, authorization, and an OpenStack service catalog. It
 implements OpenStac's Identity API."
 HOMEPAGE="https://launchpad.net/keystone"
-EGIT_REPO_URI="https://github.com/openstack/keystone.git"
 
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="~*"
-IUSE=""
+IUSE="+doc"
 
-DEPEND="dev-python/setuptools
-		dev-python/pep8
-		dev-python/lxml
-		dev-python/python-daemon
-		!dev-python/keystoneclient"
-RDEPEND="${DEPEND}
-		 dev-python/python-novaclient
-		 dev-python/python-ldap
-		 dev-python/passlib"
+DEPEND="$( python_abi_depend dev-python/setuptools dev-python/pep8 dev-python/lxml dev-python/python-daemon !dev-python/keystoneclient ) doc? ( dev-python/sphinx )"
+RDEPEND="${DEPEND} $( python_abi_depend dev-python/python-novaclient dev-python/python-ldap dev-python/passlib )"
+
+src_compile() {
+	distutils_src_compile
+	if use doc; then
+		cd ${S}/doc || die
+		make man singlehtml || die
+	fi
+}
 
 src_install() {
 	distutils_src_install
@@ -37,5 +44,12 @@ src_install() {
 
 	diropts -m 0750
 	dodir /var/run/keystone /var/log/keystone
+
+	dodoc -r ${S}/etc
+	if use doc; then
+		doman ${S}/doc/build/man/keystone.1
+		dodoc -r ${S}/doc/build/singlehtml
+	fi
+
 }
 
