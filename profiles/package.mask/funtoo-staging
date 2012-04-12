@@ -22,11 +22,6 @@
 # openrc-0.9 dep
 =sys-apps/net-tools-1.60_p20120127084908
 
-# Oleg Vinichenko ( 03 Mar 2012)
-# mask latest gentoolkit as it consist of
-# development code
->=app-portage/gentoolkit-0.3.0.5
-
 # Oleg Vinichenko (23 Jan 2012)
 # postfix-2.10 update, masked for testing
 >=mail-mta/postfix-2.10
