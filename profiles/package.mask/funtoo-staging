@@ -12,11 +12,6 @@
 # update openresolv, masked for testing
 >=net-dns/openresolv-3.5.1
 
-# Oleg Vinichenko (13 Mar 2012)
-# bash update, metro tests, -r1 appeared in tree because
-# of > atom missing
->=app-shells/bash-4.2_p24
-
 # Oleg Vinichenko (12 Mar 2012)
 # mask most recent net-tools due to binary move and 
 # openrc-0.9 dep
