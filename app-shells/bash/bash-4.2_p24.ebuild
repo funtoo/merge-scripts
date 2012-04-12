@@ -68,7 +68,9 @@ src_unpack() {
 	[[ ${PLEVEL} -gt 0 ]] && epatch $(patches -s)
 
 	# Clean out local libs so we know we use system ones
+	mv lib/readline/doc __doc # leave .texi #407985
 	rm -rf lib/{readline,termcap}/*
+	mv __doc lib/readline/doc
 	touch lib/{readline,termcap}/Makefile.in # for config.status
 	sed -ri -e 's:\$[(](RL|HIST)_LIBSRC[)]/[[:alpha:]]*.h::g' Makefile.in || die
 
