@@ -1,8 +1,10 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
 
-# Martin Scholz (3 Apr 2012)
-# new nginx 1.1.18, masked for testing 
-=www-servers/nginx-1.1.18
+# Martin Scholz (13 Apr 2012)
+# new nginx 1.1.7 - 1.1.14 for removal at 30 Apr. 2012 till then all versions
+# up to 1.1.14 will stay stable, 1.1.15 is stabilized with that push and
+# versions up to 1.1.18 have the mp4 added, so please report build errors
+<=www-servers/nginx-1.1.14
 
 # Oleg Vinichenko (2 Apr 2012)
 # mask a live hwids ebuild
