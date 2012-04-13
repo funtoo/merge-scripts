@@ -1,6 +1,6 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-shells/bash/bash-4.2_p24.ebuild,v 1.1 2012/03/12 14:57:40 vapier Exp $
+# $Header: /var/cvsroot/gentoo-x86/app-shells/bash/bash-4.2_p24.ebuild,v 1.6 2012/04/03 18:22:36 vapier Exp $
 
 EAPI="1"
 
@@ -35,10 +35,10 @@ SRC_URI="mirror://gnu/bash/${MY_P}.tar.gz $(patches)"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~*"
-IUSE="afs bashlogger examples mem-scramble +net nls plugins vanilla"
+IUSE="afs bashlogger examples mem-scramble +net nls plugins +readline vanilla"
 
 DEPEND=">=sys-libs/ncurses-5.2-r2
-	>=sys-libs/readline-6.2
+	readline? ( >=sys-libs/readline-6.2 )
 	nls? ( virtual/libintl )"
 RDEPEND="${DEPEND}
 	!<sys-apps/portage-2.1.7.16
@@ -68,14 +68,19 @@ src_unpack() {
 	[[ ${PLEVEL} -gt 0 ]] && epatch $(patches -s)
 
 	# Clean out local libs so we know we use system ones
+	mv lib/readline/doc __doc # leave .texi #407985
 	rm -rf lib/{readline,termcap}/*
+	mv __doc lib/readline/doc
 	touch lib/{readline,termcap}/Makefile.in # for config.status
-	sed -ri -e 's:\$[(](RL|HIST)_LIBSRC[)]/[a-z]*.h::g' Makefile.in || die
+	sed -ri -e 's:\$[(](RL|HIST)_LIBSRC[)]/[[:alpha:]]*.h::g' Makefile.in || die
+
+	# Avoid regenerating docs after patches #407985
 	sed -i -r '/^(HS|RL)USER/s:=.*:=:' doc/Makefile.in || die
 	touch -r . doc/*
 
 	epatch "${FILESDIR}"/${PN}-4.2-execute-job-control.patch #383237
 	epatch "${FILESDIR}"/${PN}-4.2-parallel-build.patch
+	epatch "${FILESDIR}"/${PN}-4.2-no-readline.patch
 	epatch "${FILESDIR}"/${PN}-4.1-document-system-bashrc.patch
 }
 
@@ -104,6 +109,9 @@ src_compile() {
 	# in the PM (and the readline ebuild itself preserves the old
 	# libs during upgrades), linking against the system copy should
 	# be safe.
+	# Exact cached version here doesn't really matter as long as it
+	# is at least what's in the DEPEND up above.
+	export ac_cv_rl_version=6.2
 
 	# Force linking with system curses ... the bundled termcap lib
 	# sucks bad compared to ncurses.  For the most part, ncurses
@@ -112,13 +120,16 @@ src_compile() {
 
 	use plugins && append-ldflags -Wl,-rpath,/usr/$(get_libdir)/bash
 	econf \
-		--with-installed-readline \
+		--with-installed-readline=. \
 		--with-curses \
 		$(use_with afs) \
 		$(use_enable net net-redirections) \
 		--disable-profiling \
 		$(use_enable mem-scramble) \
 		$(use_with mem-scramble bash-malloc) \
+		$(use_enable readline) \
+		$(use_enable readline history) \
+		$(use_enable readline bang-history) \
 		${myconf}
 	emake || die
 

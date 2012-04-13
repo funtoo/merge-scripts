@@ -5,32 +5,17 @@
 =www-servers/nginx-1.1.18
 
 # Oleg Vinichenko (2 Apr 2012)
-# new openrc with possible ipv6 fixes, masked
-# for testing
-=sys-apps/openrc-0.8.3-r6
-
-# Oleg Vinichenko (2 Apr 2012)
 # mask a live hwids ebuild
 =sys-apps/hwids-99999999 
 
 # Oleg Vinichenko (28 Mar 2012)
 # update openresolv, masked for testing
-=net-dns/openresolv-3.5.1
-
-# Oleg Vinichenko (13 Mar 2012)
-# bash update, metro tests, -r1 appeared in tree because
-# of > atom missing
->=app-shells/bash-4.2_p24
+>=net-dns/openresolv-3.5.1
 
 # Oleg Vinichenko (12 Mar 2012)
 # mask most recent net-tools due to binary move and 
 # openrc-0.9 dep
 =sys-apps/net-tools-1.60_p20120127084908
-
-# Oleg Vinichenko ( 03 Mar 2012)
-# mask latest gentoolkit as it consist of
-# development code
->=app-portage/gentoolkit-0.3.0.5
 
 # Oleg Vinichenko (23 Jan 2012)
 # postfix-2.10 update, masked for testing
