@@ -20,5 +20,4 @@ KEYWORDS="*"
 IUSE="+doc"
 
 DEPEND="$( python_abi_depend dev-python/setuptools )"
-RDEPEND="${DEPEND} $( python_abi_depend dev-python/httplib2 )"
-#TODO: ADD ARGPARSE
+RDEPEND="${DEPEND} $( python_abi_depend dev-python/httplib2 virtual/python-argparse )"
