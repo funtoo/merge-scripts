@@ -23,11 +23,14 @@ HOMEPAGE="https://launchpad.net/keystone"
 
 LICENSE="Apache-2.0"
 SLOT="0"
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="+doc"
 
 DEPEND="$( python_abi_depend dev-python/setuptools dev-python/pep8 dev-python/lxml dev-python/python-daemon !dev-python/keystoneclient ) doc? ( dev-python/sphinx )"
-RDEPEND="${DEPEND} $( python_abi_depend dev-python/python-novaclient dev-python/python-ldap dev-python/passlib )"
+RDEPEND="${DEPEND} $( python_abi_depend dev-python/python-novaclient dev-python/python-ldap dev-python/passlib ) sys-auth/keystone-client"
+# note above: sys-auth/keystone-client provides "keystone" binary, but "keystone" hooks into the server
+# via API calls. Because of this de-coupling, not using python_abi_depend as it's not necessary for
+# python versions to match (even though it's a good idea.)
 
 src_compile() {
 	distutils_src_compile
@@ -50,6 +53,7 @@ src_install() {
 		doman ${S}/doc/build/man/keystone.1
 		dodoc -r ${S}/doc/build/singlehtml
 	fi
-
+	insinto /etc/keystone
+	doins ${S}/etc/keystone.conf.sample
 }
 
