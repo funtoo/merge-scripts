@@ -3,8 +3,12 @@
 <pkgmetadata>
 	<herd>no-herd</herd>
 	<maintainer>
-		<email>hollow@gentoo.org</email>
-		<name>Benedikt Böhm</name>
+		<email>golodhrim@funtoo.org</email>
+		<name>Martin Scholz</name>
+	</maintainer>
+	<maintainer>
+		<email>funtoo-dev@googlegroups.com</email>
+		<name>Funtoo Mailinglist</name>
 	</maintainer>
 	<maintainer>
 		<email>dev-zero@gentoo.org</email>
