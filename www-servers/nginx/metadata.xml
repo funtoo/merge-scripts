@@ -10,10 +10,6 @@
 		<email>funtoo-dev@googlegroups.com</email>
 		<name>Funtoo Mailinglist</name>
 	</maintainer>
-	<maintainer>
-		<email>dev-zero@gentoo.org</email>
-		<name>Tiziano Müller</name>
-	</maintainer>
 	<use>
 		<flag name='addition'>Enables HTTP addition filter module</flag>
 		<flag name='aio'>Enables file AIO support</flag>
