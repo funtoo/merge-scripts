@@ -57,6 +57,7 @@
 *sys-apps/sed
 *sys-apps/shadow
 *sys-apps/texinfo
+*sys-apps/usbutils
 *sys-apps/which
 *sys-devel/autoconf
 *sys-devel/automake
