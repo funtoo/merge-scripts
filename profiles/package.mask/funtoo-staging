@@ -1,4 +1,7 @@
 # PLEASE KEEP MOST RECENT MASKS ON TOP, REVERSE CHRONO ORDER
+# Oleg Vinichenko ( 18 Apr 2012)
+# new pambase, hardmasked!! testing
+>=sys-auth/pambase-20120417
 
 # Martin Scholz (13 Apr 2012)
 # new nginx 1.1.7 - 1.1.14 for removal at 30 Apr. 2012 till then all versions
