@@ -38,10 +38,6 @@
 # Testing Mask for linode sources
 =sys-kernel/linode-sources-3.0.1
 
-# Adrien Dessemond <adessemond@funtoo.org> (21 Aug 2011)
-# Masked for testing (15 Mar 2012 - remains to be tested)
-=sys-block/iscsitarget-1.4.20.2_p20110821
-
 # Daniel Robbins (14 Aug 2011)
 # it's broken - masking until we have a good fix.
 =sys-boot/boot-update-1.5.3
