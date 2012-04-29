@@ -15,7 +15,7 @@ EGIT_REPO_URI="https://github.com/openstack/nova.git"
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="*"
-IUSE="controller"
+IUSE="+controller"
 
 DEPEND="$(python_abi_depend dev-python/setuptools dev-python/lockfile dev-python/netaddr dev-python/eventlet dev-python/python-gflags dev-python/nosexcover dev-python/sqlalchemy-migrate dev-python/pylint dev-python/mox dev-python/pep8 dev-python/cheetah dev-python/carrot dev-python/lxml dev-python/python-daemon dev-python/wsgiref dev-python/sphinx dev-python/suds dev-python/paramiko dev-python/feedparser)"
 RDEPEND="${DEPEND} $(python_abi_depend dev-python/iso8601 dev-python/m2crypto dev-python/python-novaclient dev-python/nova-adminclient dev-python/boto dev-python/prettytable dev-python/mysql-python sys-cluster/glance ) controller? ( net-misc/rabbitmq-server ) app-admin/sudo net-firewall/iptables app-emulation/libvirt"
@@ -30,7 +30,7 @@ src_install() {
 	done
 
 	diropts -m 0750
-	dodir /var/run/nova /var/log/nova /var/lock/nova
+	dodir /var/run/nova /var/log/nova /var/lock/nova /etc/nova
 
 	# documentation
 	# api-paste config and others:

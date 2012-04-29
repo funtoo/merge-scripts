@@ -32,5 +32,8 @@ src_install() {
 	done
 
 	diropts -m 0750
-	dodir /var/run/glance /var/log/nova /var/lock/nova
+	dodir /var/run/glance /var/log/glance /var/lock/glance
+
+	insinto /etc/glance
+	doins ${S}/etc/*
 }
