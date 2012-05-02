@@ -20,7 +20,7 @@ KEYWORDS="*"
 IUSE=""
 
 DEPEND="$(python_abi_depend dev-python/setuptools)"
-RDEPEND="${DEPEND} $(python_abi_depend dev-python/webob dev-python/httplib2 dev-python/routes dev-python/paste dev-python/pastedeploy dev-python/pyxattr dev-python/kombu )"
+RDEPEND="${DEPEND} $(python_abi_depend dev-python/eventlet dev-python/iso8601 dev-python/webob dev-python/httplib2 dev-python/routes dev-python/paste dev-python/pastedeploy dev-python/pyxattr dev-python/kombu dev-python/sqlalchemy-migrate)"
 
 src_install() {
 	distutils_src_install
