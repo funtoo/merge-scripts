@@ -1,0 +1,41 @@
+#!/sbin/runscript
+# Copyright 2012 Funtoo Technologies
+# Distributed under the terms of the GNU General Public License v2
+
+PID_PATH="${PID_PATH:-/var/run/glance}"
+
+depend() {
+	case ${SVCNAME} in
+	glance-api)
+		need glance-registry
+		;;
+	glance-scrubber)
+		need glance-registry
+		;;
+	esac
+}
+
+checkconfig() {
+	for cfile in /etc/glance/${SVCNAME}-paste.ini /etc/glance/${SVCNAME}.conf
+	do
+		if [ ! -r $cfile ]; then
+			eerror "Not found: $cfile"
+			return 1
+		fi
+	done
+	return 0
+}
+
+start() {
+	checkconfig || return $?
+	ebegin "Starting ${SVCNAME}"
+	start-stop-daemon --start --quiet --pidfile "${PID_PATH}/${SVCNAME}.pid" --exec /usr/bin/glance-control -- ${SVCNAME##*-} start
+	eend $? "Failed to start ${SVCNAME}"
+}
+
+stop() {
+	checkconfig || return $?
+	ebegin "Stopping ${SVCNAME}"
+	start-stop-daemon --stop --quiet --pidfile "${PID_PATH}/${SVCNAME}.pid" --exec /usr/bin/glance-control -- ${SVCNAME##*-} stop
+	eend $? "Failed to stop ${SVCNAME}"
+}
