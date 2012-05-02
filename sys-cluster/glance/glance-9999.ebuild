@@ -33,4 +33,5 @@ src_install() {
 
 	insinto /etc/glance
 	doins ${S}/etc/*
+	sed -ie 'sX^sql_connection.*$Xsql_connection = sqlite:////etc/glance/glance.sqliteX' ${D}/etc/glance/glance-registry.conf || die
 }

@@ -5,14 +5,22 @@
 PID_PATH="${PID_PATH:-/var/run/glance}"
 
 depend() {
+	local needs
+	if [ -n "$( grep '^use_syslog.*True' /etc/glance/${SVCNAME}.conf )" ]
+	then
+		needs=logger
+	fi
 	case ${SVCNAME} in
 	glance-api)
-		need glance-registry
+		needs="$needs glance-registry"
 		;;
 	glance-scrubber)
-		need glance-registry
+		needs="$needs glance-registry"
 		;;
 	esac
+	if [ -n "$needs" ]; then
+		need $needs
+	fi
 }
 
 checkconfig() {
