@@ -1,0 +1,65 @@
+--- grub-core/kern/emu/getroot.c	2011-05-18 07:35:47 +0000
++++ grub-core/kern/emu/getroot.c	2011-05-21 05:03:55 +0000
+@@ -358,7 +358,7 @@
+ 
+       if (S_ISLNK (st.st_mode)) {
+ #ifdef __linux__
+-	if (strcmp (dir, "mapper") == 0) {
++	if (strcmp (dir, "mapper") == 0 || strcmp (dir, "/dev/mapper") == 0) {
+ 	  /* Follow symbolic links under /dev/mapper/; the canonical name
+ 	     may be something like /dev/dm-0, but the names under
+ 	     /dev/mapper/ are more human-readable and so we prefer them if
+@@ -609,20 +609,27 @@
+ 
+   if (os_dev)
+     {
+-      if (stat (os_dev, &st) >= 0)
+-	dev = st.st_rdev;
+-      else
++      char *tmp = os_dev;
++      os_dev = canonicalize_file_name (os_dev);
++      free (tmp);
++    }
++
++  if (os_dev)
++    {
++      if (strncmp (os_dev, "/dev/dm-", sizeof ("/dev/dm-") - 1) != 0)
++	return os_dev;
++      if (stat (os_dev, &st) < 0)
+ 	grub_util_error ("cannot stat `%s'", os_dev);
+       free (os_dev);
+-    }
+-  else
+-    {
+-      if (stat (dir, &st) >= 0)
+-	dev = st.st_dev;
+-      else
+-	grub_util_error ("cannot stat `%s'", dir);
+-    }
+-
++      dev = st.st_rdev;
++      return grub_find_device ("/dev/mapper", dev);
++    }
++
++  if (stat (dir, &st) < 0)
++    grub_util_error ("cannot stat `%s'", dir);
++
++  dev = st.st_dev;
++  
+ #ifdef __CYGWIN__
+   /* Cygwin specific function.  */
+   os_dev = grub_find_device (dir, dev);
+
+--- grub-core/kern/emu/hostdisk.c	2011-05-18 07:35:47 +0000
++++ grub-core/kern/emu/hostdisk.c	2011-05-21 05:03:55 +0000
+@@ -1408,7 +1408,8 @@
+ 		  if (tree)
+ 		    dm_tree_free (tree);
+ 		  free (path);
+-		  char *ret = grub_find_device (NULL, (major << 8) | minor);
++		  char *ret = grub_find_device ("/dev/mapper",
++						(major << 8) | minor);
+ 		  return ret;
+ 		}
+ 
+

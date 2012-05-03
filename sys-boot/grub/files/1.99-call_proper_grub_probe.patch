@@ -1,0 +1,12 @@
+diff -urN grub-1.99/util/grub.d/30_os-prober.in grub-1.99.new/util/grub.d/30_os-prober.in
+--- grub-1.99/util/grub.d/30_os-prober.in	2010-12-25 18:13:57.000000000 +0100
++++ grub-1.99.new/util/grub.d/30_os-prober.in	2011-08-28 12:35:40.965038455 +0200
+@@ -168,7 +168,7 @@
+       done
+     ;;
+     macosx)
+-      OSXUUID="`grub-probe --target=fs_uuid --device ${DEVICE} 2> /dev/null`"
++      OSXUUID="`${grub_probe} --target=fs_uuid --device ${DEVICE} 2> /dev/null`"
+       osx_entry xnu_kernel 32
+       osx_entry xnu_kernel64 64
+     ;;
