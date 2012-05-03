@@ -8,12 +8,6 @@
 # based on Ubuntu 12.04 LTS, hardmasked for testing
 >=sys-kernel/ubuntu-sources-3.2.0.23.36
 
-# Martin Scholz (13 Apr 2012)
-# new nginx 1.1.7 - 1.1.14 for removal at 30 Apr. 2012 till then all versions
-# up to 1.1.14 will stay stable, 1.1.15 is stabilized with that push and
-# versions up to 1.1.18 have the mp4 added, so please report build errors
-<www-servers/nginx-1.1.15
-
 # Oleg Vinichenko (2 Apr 2012)
 # mask a live hwids ebuild
 =sys-apps/hwids-99999999 
