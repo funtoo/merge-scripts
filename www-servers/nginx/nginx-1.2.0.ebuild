@@ -35,9 +35,9 @@ HTTP_UPLOAD_MODULE_PV="2.2.0"
 HTTP_UPLOAD_MODULE_P="nginx_upload_module-${HTTP_UPLOAD_MODULE_PV}"
 
 # ey-balancer/maxconn module (https://github.com/ry/nginx-ey-balancer, as-is)
-HTTP_EY_BALANCER_MODULE_PV="0.0.6"
+HTTP_EY_BALANCER_MODULE_PV="0.0.7"
 HTTP_EY_BALANCER_MODULE_P="nginx-ey-balancer-${HTTP_EY_BALANCER_MODULE_PV}"
-HTTP_EY_BALANCER_MODULE_SHA1="d373670"
+HTTP_EY_BALANCER_MODULE_SHA1="3189cf3"
 
 # http_slowfs_cache (http://labs.frickle.com/nginx_ngx_slowfs_cache/, BSD-2 license)
 HTTP_SLOWFS_CACHE_MODULE_PV="1.6"
@@ -52,17 +52,18 @@ HOMEPAGE="http://nginx.net/
 	http://labs.frickle.com/nginx_ngx_cache_purge/
 	http://www.grid.net.ru/nginx/upload.en.html"
 
+# switched ey-balancer from ry's overlay to msva's :)
 SRC_URI="http://nginx.org/download/${P}.tar.gz
 	nginx_modules_http_headers_more? ( http://github.com/agentzh/headers-more-nginx-module/tarball/v${HTTP_HEADERS_MORE_MODULE_PV} -> ${HTTP_HEADERS_MORE_MODULE_P}.tar.gz )
 	nginx_modules_http_push? ( http://pushmodule.slact.net/downloads/${HTTP_PUSH_MODULE_P}.tar.gz )
 	nginx_modules_http_cache_purge? ( http://labs.frickle.com/files/${HTTP_CACHE_PURGE_MODULE_P}.tar.gz )
 	nginx_modules_http_upload? ( http://www.grid.net.ru/nginx/download/${HTTP_UPLOAD_MODULE_P}.tar.gz )
-	nginx_modules_http_ey_balancer? ( https://github.com/ry/nginx-ey-balancer/tarball/v${HTTP_EY_BALANCER_MODULE_PV} -> ${HTTP_EY_BALANCER_MODULE_P}.tar.gz )
+	nginx_modules_http_ey_balancer? ( https://github.com/msva/nginx-ey-balancer/tarball/v${HTTP_EY_BALANCER_MODULE_PV} -> ${HTTP_EY_BALANCER_MODULE_P}.tar.gz )
 	nginx_modules_http_slowfs_cache? ( http://labs.frickle.com/files/${HTTP_SLOWFS_CACHE_MODULE_P}.tar.gz )"
 
 LICENSE="as-is BSD BSD-2 GPL-2 MIT"
 SLOT="0"
-KEYWORDS="*"
+KEYWORDS="~*"
 
 NGINX_MODULES_STD="access auth_basic autoindex browser charset empty_gif fastcgi
 geo gzip limit_req limit_zone map memcached proxy referer rewrite scgi ssi
@@ -147,9 +148,6 @@ pkg_setup() {
 src_prepare() {
 	sed -i 's/ make/ \\$(MAKE)/' "${S}"/auto/lib/perl/make
 
-	epatch "${FILESDIR}"/nginx-memory_disclosure.patch
-	epatch "${FILESDIR}"/nginx-http_mp4_module.patch  
-
 	if use nginx_modules_http_ey_balancer; then
 		epatch "${FILESDIR}"/nginx-0.8.32-ey-balancer.patch
 	fi
@@ -207,7 +205,7 @@ src_configure() {
 
 	if use nginx_modules_http_ey_balancer; then
 		http_enabled=1
-		myconf="${myconf} --add-module=${WORKDIR}/ry-nginx-ey-balancer-${HTTP_EY_BALANCER_MODULE_SHA1}"
+		myconf="${myconf} --add-module=${WORKDIR}/msva-nginx-ey-balancer-${HTTP_EY_BALANCER_MODULE_SHA1}"
 	fi
 
 	if use nginx_modules_http_slowfs_cache; then
