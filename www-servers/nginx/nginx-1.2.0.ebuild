@@ -324,7 +324,7 @@ src_install() {
 
 	if use nginx_modules_http_ey_balancer; then
 		docinto ${HTTP_EY_BALANCER_MODULE_P}
-		dodoc "${WORKDIR}"/ry-nginx-ey-balancer-${HTTP_EY_BALANCER_MODULE_SHA1}/README
+		dodoc "${WORKDIR}"/msva-nginx-ey-balancer-${HTTP_EY_BALANCER_MODULE_SHA1}/README
 	fi
 
 	if use nginx_modules_http_slowfs_cache; then
