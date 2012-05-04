@@ -171,7 +171,7 @@ src_compile() {
 }
 
 src_install() {
-	emake install DESTDIR="${D}" || die "make install failed"
+	emake -j1 install DESTDIR="${D}" || die "make install failed"
 	use bookmarks && use python && use dbus && use gtk || \
 		rm -f "${ED}"/usr/bin/avahi-bookmarks
 
