@@ -27,7 +27,7 @@ KEYWORDS="*"
 IUSE="+doc"
 
 DEPEND="$( python_abi_depend dev-python/setuptools dev-python/pep8 dev-python/lxml dev-python/python-daemon !dev-python/keystoneclient ) doc? ( dev-python/sphinx )"
-RDEPEND="${DEPEND} $( python_abi_depend dev-python/python-novaclient dev-python/python-ldap dev-python/passlib ) sys-auth/keystone-client"
+RDEPEND="${DEPEND} $( python_abi_depend dev-python/python-novaclient dev-python/python-ldap dev-python/passlib dev-python/eventlet dev-python/routes dev-python/webob dev-python/sqlalchemy dev-python/sqlalchemy-migrate ) sys-auth/keystone-client"
 # note above: sys-auth/keystone-client provides "keystone" binary, but "keystone" hooks into the server
 # via API calls. Because of this de-coupling, not using python_abi_depend as it's not necessary for
 # python versions to match (even though it's a good idea.)
