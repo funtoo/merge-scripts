@@ -18,7 +18,7 @@ fi
 
 DESCRIPTION="Keystone is a cloud identity service written in Python, which
 provides authentication, authorization, and an OpenStack service catalog. It
-implements OpenStac's Identity API."
+implements OpenStack's Identity API."
 HOMEPAGE="https://launchpad.net/keystone"
 
 LICENSE="Apache-2.0"
@@ -27,7 +27,7 @@ KEYWORDS="*"
 IUSE="+doc"
 
 DEPEND="$( python_abi_depend dev-python/setuptools dev-python/pep8 dev-python/lxml dev-python/python-daemon !dev-python/keystoneclient ) doc? ( dev-python/sphinx )"
-RDEPEND="${DEPEND} $( python_abi_depend dev-python/python-novaclient dev-python/python-ldap dev-python/passlib ) sys-auth/keystone-client"
+RDEPEND="${DEPEND} $( python_abi_depend dev-python/python-novaclient dev-python/python-ldap dev-python/passlib dev-python/eventlet dev-python/routes dev-python/webob dev-python/sqlalchemy dev-python/sqlalchemy-migrate ) sys-auth/keystone-client"
 # note above: sys-auth/keystone-client provides "keystone" binary, but "keystone" hooks into the server
 # via API calls. Because of this de-coupling, not using python_abi_depend as it's not necessary for
 # python versions to match (even though it's a good idea.)
@@ -46,14 +46,22 @@ src_install() {
 	newinitd "${FILESDIR}/keystone.initd" keystone
 
 	diropts -m 0750
-	dodir /var/run/keystone /var/log/keystone
+	keepdir /var/run/keystone /var/log/keystone /etc/keystone
 
 	dodoc -r ${S}/etc
 	if use doc; then
 		doman ${S}/doc/build/man/keystone.1
 		dodoc -r ${S}/doc/build/singlehtml
 	fi
-	insinto /etc/keystone
+	insinto /usr/share/keystone/etc
+	sed -i 's|^connection =.*|connection = sqlite:////etc/keystone/keystone.db|' ${S}/etc/keystone.conf.sample || die
 	doins ${S}/etc/keystone.conf.sample
+}
+
+pkg_postinst() {
+	if [ ! -e $ROOT/etc/keystone/keystone.conf ]; then
+		einfo "Installing default keystone.conf"
+		cp $ROOT/usr/share/keystone/etc/keystone.conf.sample $ROOT/etc/keystone/keystone.conf
+	fi
 }
 

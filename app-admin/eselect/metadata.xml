@@ -2,9 +2,4 @@
 <!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
 <herd>funtoo</herd>
-	<maintainer>
-		<email>drobbins@funtoo.org</email>
-		<name>Daniel Robbins</name>
-	</maintainer>
 </pkgmetadata>
-

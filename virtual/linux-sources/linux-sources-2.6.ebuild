@@ -17,6 +17,7 @@ DEPEND=""
 RDEPEND="|| (
 		hardened? ( >=sys-kernel/hardened-sources-2.6 )
 		>=sys-kernel/sysrescue-std-sources-2.6
+		>=sys-kernel/ubuntu-sources-2.6
 		>=sys-kernel/debian-sources-2.6
 		>=sys-kernel/openvz-rhel5-stable-2.6
 		>=sys-kernel/openvz-rhel6-stable-2.6
