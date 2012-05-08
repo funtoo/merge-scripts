@@ -23,6 +23,8 @@
 # ENABLED_SERVICES - stack.sh's list of services to start
 # DEVSTACK_DIR - Top-level DevStack directory
 
+source /etc/init.d/functions.sh
+
 ADMIN_PASSWORD=${ADMIN_PASSWORD:-secrete}
 SERVICE_PASSWORD=${SERVICE_PASSWORD:-$ADMIN_PASSWORD}
 export SERVICE_TOKEN=$SERVICE_TOKEN
@@ -30,11 +32,13 @@ export SERVICE_ENDPOINT=$SERVICE_ENDPOINT
 SERVICE_TENANT_NAME=${SERVICE_TENANT_NAME:-service}
 
 try() {
-        "$@" 
+        ebegin "$@"
+	"$@" 
         if [ $? -ne 0 ]; then
                 echo "!!! Command failure: $@"
                 exit 1
         fi
+	eend 0
 }
 
 get_id() {
@@ -42,13 +46,14 @@ get_id() {
 	# command failure and will exit the script on error with a script exit code of 1
 	local varname=$1
 	shift
-	echo "Running keystone $@"
+	ebegin "keystone $@"
 	# quotes around "$@" allows passwords with spaces to be handled properly:
 	keystone "$@" > /tmp/devstack.id.out
-       	[ $? -ne 0 ] && echo "!!! Command failure: $@" && exit 1
+       	[ $? -ne 0 ] && echo "!!! Command failure: keystone $@" && exit 1
 	eval $varname="$( cat /tmp/devstack.id.out | awk '/ id / { print $4 }' )"
-	# extra verbosity isn't bad....
-	echo " > Set $varname to $(eval echo \$$varname)"
+	eend 0
+	# extra verbosity isn't bad.... enable if you need it:
+	ebegin "Set $varname to $(eval echo \$$varname)"; eend 0
 }
 
 # Tenants
@@ -58,8 +63,8 @@ get_id DEMO_TENANT tenant-create --name=demo
 get_id INVIS_TENANT tenant-create --name=invisible_to_admin
 
 # Users
-get_id ADMIN_USER user-create --name=admin --pass="$ADMIN_PASSWORD" --email=admin@example.com
-get_id DEMO_USER user-create --name=demo --pass="$ADMIN_PASSWORD" --email=demo@example.com
+get_id ADMIN_USER user-create --pass="$ADMIN_PASSWORD" --name=admin --email=admin@example.com
+get_id DEMO_USER user-create --pass="$ADMIN_PASSWORD" --name=demo --email=demo@example.com
 
 # Roles
 get_id ADMIN_ROLE role-create --name=admin
@@ -86,16 +91,16 @@ try keystone user-role-add --user $DEMO_USER --role $MEMBER_ROLE --tenant_id $IN
 
 
 # Configure service users/roles
-get_id NOVA_USER user-create --name=nova \
-                                        --pass="$SERVICE_PASSWORD" \
+get_id NOVA_USER user-create --pass="$SERVICE_PASSWORD" --name=nova \
                                         --tenant_id $SERVICE_TENANT \
                                         --email=nova@example.com
 try keystone user-role-add --tenant_id $SERVICE_TENANT \
                        --user $NOVA_USER \
                        --role $ADMIN_ROLE
 
-get_id GLANCE_USER user-create --name=glance \
-                                          --pass="$SERVICE_PASSWORD" \
+get_id GLANCE_USER user-create \
+					--pass="$SERVICE_PASSWORD" \
+					--name=glance \
                                           --tenant_id $SERVICE_TENANT \
                                           --email=glance@example.com
 try keystone user-role-add --tenant_id $SERVICE_TENANT \
@@ -103,8 +108,9 @@ try keystone user-role-add --tenant_id $SERVICE_TENANT \
                        --role $ADMIN_ROLE
 
 if [[ "$ENABLED_SERVICES" =~ "swift" ]]; then
-    get_id SWIFT_USER user-create --name=swift \
+    get_id SWIFT_USER user-create \
                                              --pass="$SERVICE_PASSWORD" \
+					--name=swift \
                                              --tenant_id $SERVICE_TENANT \
                                              --email=swift@example.com
 try keystone user-role-add --tenant_id $SERVICE_TENANT \
@@ -122,8 +128,9 @@ try keystone user-role-add --tenant_id $SERVICE_TENANT \
 fi
 
 if [[ "$ENABLED_SERVICES" =~ "quantum" ]]; then
-    get_id QUANTUM_USER user-create --name=quantum \
-                                               --pass="$SERVICE_PASSWORD" \
+    get_id QUANTUM_USER user-create \
+				--pass="$SERVICE_PASSWORD" \
+    				--name=quantum \
                                                --tenant_id $SERVICE_TENANT \
                                                --email=quantum@example.com
     try keystone user-role-add --tenant_id $SERVICE_TENANT \
