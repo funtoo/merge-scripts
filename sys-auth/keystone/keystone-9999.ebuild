@@ -78,7 +78,7 @@ pkg_config() {
 	if [ $? -ne 0 ]; then
 		die "Error connecting to Keystone API. Please ensure that you have added keystone to your current runlevel and started it."
 	fi
-	einfo "Please provide a password for the Keystone admin account:"
+	einfo "Please specify a password to use for the Keystone admin account:"
 	read -rsp "    >" pwd1 ; echo
 
 	einfo "Retype the password"
@@ -89,7 +89,7 @@ pkg_config() {
 	fi
 	export ADMIN_PASSWORD="${pwd1}"
 	unset pwd1 pwd2
-	einfo "Please provide a password for the Keystone service account:"
+	einfo "Please specify a password to use for the Keystone service account:"
 	read -rsp "    >" pwd1 ; echo
 
 	einfo "Retype the password"
