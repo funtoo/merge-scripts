@@ -78,34 +78,28 @@ pkg_config() {
 	if [ $? -ne 0 ]; then
 		die "Error connecting to Keystone API. Please ensure that you have added keystone to your current runlevel and started it."
 	fi
-	if [ -z "${ADMIN_PASSWORD}" ]; then
+	einfo "Please provide a password for the Keystone admin account:"
+	read -rsp "    >" pwd1 ; echo
 
-		einfo "Please provide a password for the Keystone admin account:"
-		read -rsp "    >" pwd1 ; echo
+	einfo "Retype the password"
+	read -rsp "    >" pwd2 ; echo
 
-		einfo "Retype the password"
-		read -rsp "    >" pwd2 ; echo
-
-		if [[ "x$pwd1" != "x$pwd2" ]] ; then
-			die "Passwords are not the same"
-		fi
-		export ADMIN_PASSWORD="${pwd1}"
-		unset pwd1 pwd2
+	if [[ "x$pwd1" != "x$pwd2" ]] ; then
+		die "Passwords are not the same"
 	fi
-	if [ -z "${SERVICE_PASSWORD}" ]; then
+	export ADMIN_PASSWORD="${pwd1}"
+	unset pwd1 pwd2
+	einfo "Please provide a password for the Keystone service account:"
+	read -rsp "    >" pwd1 ; echo
 
-		einfo "Please provide a password for the Keystone service account:"
-		read -rsp "    >" pwd1 ; echo
+	einfo "Retype the password"
+	read -rsp "    >" pwd2 ; echo
 
-		einfo "Retype the password"
-		read -rsp "    >" pwd2 ; echo
-
-		if [[ "x$pwd1" != "x$pwd2" ]] ; then
-			die "Passwords are not the same"
-		fi
-		export SERVICE_PASSWORD="${pwd1}"
-		unset pwd1 pwd2
+	if [[ "x$pwd1" != "x$pwd2" ]] ; then
+		die "Passwords are not the same"
 	fi
+	export SERVICE_PASSWORD="${pwd1}"
+	unset pwd1 pwd2
 	einfo "Initializing Keystone database"
 	/usr/share/doc/$PF/scripts/keystone_data.sh || die "Error initializing Keystone - please ensure you have an empty DB"
 	einfo "Completed successfully!"
