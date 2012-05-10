@@ -1,8 +1,15 @@
 # Adrien Dessemond (09 May 2012)
 # Python 2.7.4-pre and 3.2.4-pre versions are problematic to fetch from upstream mecurial 
 # and per their nature should not be in Funtoo stable anyway
-=dev-lang/python-2.7.4_pre*
-=dev-lang/python-3.2.4_pre*
+=dev-lang/python-2.7.4_pre20120415
+=dev-lang/python-2.7.4_pre20120422
+=dev-lang/python-2.7.4_pre20120429
+=dev-lang/python-2.7.4_pre20120506
+=dev-lang/python-3.2.4_pre20120415
+=dev-lang/python-3.2.4_pre20120422
+=dev-lang/python-3.2.4_pre20120429
+=dev-lang/python-3.2.4_pre20120506
+
 
 # Daniel Robbins (06 May 2012)
 # Ryan Harris' eselect code for testing
