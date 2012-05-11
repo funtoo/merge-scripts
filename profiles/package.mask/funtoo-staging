@@ -1,3 +1,7 @@
+# Martin Scholz (11 May 2012)
+# Masking of libreoffice-bin > 3.5.* as needing toolchain upgrade
+>=app-office/libreoffice-bin-3.5*
+
 # Adrien Dessemond (09 May 2012)
 # Python 2.7.4-pre and 3.2.4-pre versions are problematic to fetch from upstream mecurial 
 # and per their nature should not be in Funtoo stable anyway
