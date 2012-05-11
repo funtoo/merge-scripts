@@ -4,6 +4,7 @@ import os,sys,types
 import argparse
 import commands
 import shutil
+import glob
 
 debug = False
 
@@ -42,15 +43,17 @@ class MergeStep(object):
 
 class AutoGlobMask(MergeStep):
 
-	def __init__(self,glob,maskdest):
+	def __init__(self,catpkg,glob,maskdest):
 		self.glob = glob
+		self.catpkg = catpkg
 		self.maskdest = maskdest
 
 	def run(self,tree):
-		f = open(os.path.join(tree.root,"profiles/package.mask", maskdest, "w")
-		os.cwd(tree.root)
+		f = open(os.path.join(tree.root,"profiles/package.mask", self.maskdest), "w")
+		os.chdir(os.path.join(tree.root,self.catpkg))
+		cat = self.catpkg.split("/")[0]
 		for item in glob.glob(self.glob+".ebuild"):
-			f.write("=%s\n" % item)
+			f.write("=%s/%s\n" % (cat,item[:-7]))
 		f.close()
 
 class ThirdPartyMirrors(MergeStep):

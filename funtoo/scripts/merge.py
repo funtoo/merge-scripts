@@ -33,7 +33,7 @@ steps = [
 		"profiles/use.mask":"profiles/use.mask/progress"
 	}),
 	InsertEbuilds(progress_overlay, select="all", skip=None, replace=True, merge=["dev-lang/python", "dev-libs/boost", "dev-python/psycopg", "dev-python/pysqlite", "dev-python/python-docs", "dev-python/simpletal", "dev-python/wxpython", "x11-libs/vte"]),
-	AutoGlobMask("dev-lang/python*_pre*", "funtoo-python"),
+	AutoGlobMask("dev-lang/python", "python*_pre*", "funtoo-python"),
 	Minify(),
 	GenCache()
 ]
