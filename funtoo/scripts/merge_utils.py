@@ -40,6 +40,19 @@ def runShell(string,abortOnFail=True):
 class MergeStep(object):
 	pass
 
+class AutoGlobMask(MergeStep):
+
+	def __init__(self,glob,maskdest):
+		self.glob = glob
+		self.maskdest = maskdest
+
+	def run(self,tree):
+		f = open(os.path.join(tree.root,"profiles/package.mask", maskdest, "w")
+		os.cwd(tree.root)
+		for item in glob.glob(self.glob+".ebuild"):
+			f.write("=%s\n" % item)
+		f.close()
+
 class ThirdPartyMirrors(MergeStep):
 
 	def run(self,tree):

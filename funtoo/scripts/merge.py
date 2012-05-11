@@ -2,11 +2,17 @@
 
 from merge_utils import *
 
+# Progress overlay merge
+if not os.path.exists("/usr/bin/svn"):
+	print("svn binary not found at /usr/bin/svn. Exiting.")
+	sys.exit(1)
+
 gentoo_src = Tree("gentoo","gentoo.org", "repos@git.funtoo.org:portage.git", pull=True, trylocal="/var/git/portage-gentoo")
 funtoo_overlay = Tree("funtoo-overlay", branch, "repos@git.funtoo.org:funtoo-overlay.git", pull=True)
 foo_overlay = Tree("foo-overlay", "master", "https://github.com/slashbeast/foo-overlay.git", pull=True)
 bar_overlay = Tree("bar-overlay", "master", "git://github.com/adessemond/bar-overlay.git", pull=True)
 flora_overlay = Tree("flora", "master", "repos@git.funtoo.org:flora.git", pull=True)
+progress_overlay = SvnTree("progress", "https://gentoo-progress.googlecode.com/svn/overlays/progress")
 
 steps = [
 	SyncTree(gentoo_src,exclude=["/metadata/cache/**","ChangeLog", "dev-util/metro"]),
@@ -20,27 +26,17 @@ steps = [
 	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(foo_overlay, select="all", skip=None, replace=["app-shells/rssh","net-misc/unison"]),
 	InsertEbuilds(bar_overlay, select="all", skip=None, replace=True),
-	InsertEbuilds(flora_overlay, select="all", skip=None, replace=False)
-]
-
-# Progress overlay merge
-if not os.path.exists("/usr/bin/svn"):
-    print("svn binary not found at /usr/bin/svn. Exiting.")
-    sys.exit(1)
-progress_overlay = SvnTree("progress", "https://gentoo-progress.googlecode.com/svn/overlays/progress")
-steps.extend((
-    SyncDir(progress_overlay.root, "eclass"),
-    SyncFiles(progress_overlay.root, {
-        "profiles/package.mask":"profiles/package.mask/progress",
-        "profiles/use.mask":"profiles/use.mask/progress"
-    }),
-    InsertEbuilds(progress_overlay, select="all", skip=None, replace=True, merge=["dev-lang/python", "dev-libs/boost", "dev-python/psycopg", "dev-python/pysqlite", "dev-python/python-docs", "dev-python/simpletal", "dev-python/wxpython", "x11-libs/vte"])
-))
-
-steps.extend((
+	InsertEbuilds(flora_overlay, select="all", skip=None, replace=False),
+	SyncDir(progress_overlay.root, "eclass"),
+	SyncFiles(progress_overlay.root, {
+		"profiles/package.mask":"profiles/package.mask/progress",
+		"profiles/use.mask":"profiles/use.mask/progress"
+	}),
+	InsertEbuilds(progress_overlay, select="all", skip=None, replace=True, merge=["dev-lang/python", "dev-libs/boost", "dev-python/psycopg", "dev-python/pysqlite", "dev-python/python-docs", "dev-python/simpletal", "dev-python/wxpython", "x11-libs/vte"]),
+	AutoGlobMask("dev-lang/python*_pre*", "funtoo-python"),
 	Minify(),
 	GenCache()
-))
+]
 
 # work tree is a non-git tree in tmpfs for enhanced performance - we do all the heavy lifting there:
 
