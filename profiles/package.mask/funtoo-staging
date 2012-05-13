@@ -1,7 +1,5 @@
-# Martin Scholz (11 May 2012)
-# iptables fork and temporary mask, need test.
->=net-firewall/iptables-1.4.13
-
+# Keeep the most recent masks in a reverse chrono order
+# newest on top
 # Masking of libreoffice-bin > 3.5.* as needing toolchain upgrade
 >=app-office/libreoffice-bin-3.5
 
