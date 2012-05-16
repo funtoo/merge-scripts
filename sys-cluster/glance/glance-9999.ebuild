@@ -4,7 +4,7 @@
 EAPI=4-python
 
 PYTHON_MULTIPLE_ABIS=1
-PYTHON_RESTRICTED_ABIS="2.[45] 3.* *-jython"
+PYTHON_RESTRICTED_ABIS="2.[45] 3.* *-jython *-pypy-*"
 
 inherit git-2 distutils
 
