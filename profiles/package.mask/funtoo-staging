@@ -1,6 +1,10 @@
 # Keeep the most recent masks in a reverse chrono order
 # newest on top
 
+# Ryan Harris ( 20 May 2012 )
+# Updated curl, masked for testing
+=net-misc/curl-7.25.0-r1
+
 # Oleg Vinichenko ( 16 May 2012)
 # new portage-23.4. masked for internat testing of
 # funtoo-1.0 profile
