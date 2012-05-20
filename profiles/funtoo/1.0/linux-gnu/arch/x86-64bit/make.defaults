@@ -48,3 +48,7 @@ LIBDIR_ppc="lib32"
 LIBDIR_x86="lib32"
 LIBDIR_x86_fbsd="lib32"
 LIBDIR_sparc32="lib32"
+
+# kvm defaults
+QEMU_SOFTMMU_TARGETS="i386 x86_64"
+QEMU_USER_TARGETS="i386 x86_64"

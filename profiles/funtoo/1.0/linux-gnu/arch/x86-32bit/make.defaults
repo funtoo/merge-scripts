@@ -4,3 +4,7 @@ ACCEPT_KEYWORDS="x86"
 CHOST="i686-pc-linux-gnu"
 CFLAGS="-O2 -mtune=i686 -pipe"
 CXXFLAGS="${CFLAGS}"
+
+# kvm defaults
+QEMU_SOFTMMU_TARGETS="i386"
+QEMU_USER_TARGETS="i386"
