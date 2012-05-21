@@ -5,11 +5,6 @@
 # Updated curl, masked for testing
 =net-misc/curl-7.25.0-r1
 
-# Oleg Vinichenko ( 16 May 2012)
-# new portage-23.4. masked for internat testing of
-# funtoo-1.0 profile
->=sys-apps/portage-2.3.4
-
 # Masking of libreoffice-bin > 3.5.* as needing toolchain upgrade
 >=app-office/libreoffice-bin-3.5
 
