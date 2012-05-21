@@ -1,0 +1,32 @@
+commit 9bb54267a1483e8f3b2de352c7be433f625e5606
+Author: Martin Pitt <martin.pitt@ubuntu.com>
+Date:   Thu Mar 31 19:23:19 2011 +0200
+
+    Revert "Do not build extras with --disable-extras"
+    
+    This reverts commit 905818f5961446ac32d1b2d165185fffddc4915a.
+    
+    We do want to build some extras, just not the ones with extra dependencies.
+    Thanks to Juergen Daubert for pointing this out.
+
+diff --git a/Makefile.am b/Makefile.am
+index df70bf7..2c20f46 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -225,7 +225,6 @@ dist_udevrules_DATA += \
+ 	extras/rule_generator/75-cd-aliases-generator.rules \
+ 	extras/rule_generator/75-persistent-net-generator.rules
+ 
+-if ENABLE_EXTRAS
+ # ------------------------------------------------------------------------------
+ # firmware - firmware loading
+ # ------------------------------------------------------------------------------
+@@ -314,8 +313,6 @@ extras_v4l_id_v4l_id_LDADD = libudev/libudev-private.la
+ libexec_PROGRAMS += extras/v4l_id/v4l_id
+ dist_udevrules_DATA += extras/v4l_id/60-persistent-v4l.rules
+ 
+-endif # ENABLE_EXTRAS
+-
+ # ------------------------------------------------------------------------------
+ # qemu -- qemu/kvm guest tweaks
+ # ------------------------------------------------------------------------------

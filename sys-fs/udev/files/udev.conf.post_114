@@ -1,0 +1,11 @@
+# The maximum size reserved for the tmpfs mounted on /dev
+tmpfs_size="10M"
+
+# Implictly blacklist the modules listed in modules.autoload
+# so that udev (with coldplugging) does not load them
+# but /etc/init.d/modules will do later.
+# This can guarantee correct load order needed for
+# some subsystems (like alsa, v4l, dvb, ...).
+# It should be generally safe.
+implicitly_blacklist_modules_autoload="yes"
+

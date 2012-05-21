@@ -1,0 +1,13 @@
+Index: udev-git/etc/udev/gentoo/65-permissions.rules
+===================================================================
+--- udev-git.orig/etc/udev/gentoo/65-permissions.rules
++++ udev-git/etc/udev/gentoo/65-permissions.rules
+@@ -15,7 +15,7 @@ KERNEL=="st[0-9]*|nst[0-9]*|ht[0-9]*|nht
+ SUBSYSTEMS=="scsi", KERNEL=="sg[0-9]*", ATTRS{type}=="[18]", GROUP="tape", MODE="660"
+ 
+ # dialout devices
+-KERNEL=="ippp*|isdn*|dcbri*|capi*", GROUP="uucp"
++KERNEL=="ippp*|isdn*|dcbri*|capi*|rfcomm*|ttyACM[0-9]*", GROUP="uucp"
+ KERNEL=="pilot",	GROUP="uucp"
+ 
+ # sound devices (sound=alsa, snd=oss)

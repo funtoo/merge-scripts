@@ -1,0 +1,94 @@
+https://bugs.gentoo.org/360849
+
+support opening the compressed pci/usb databases
+
+--- a/extras/usb-db/usb-db.c
++++ b/extras/usb-db/usb-db.c
+@@ -90,19 +90,60 @@
+ #define HEXCHARS "0123456789abcdefABCDEF"
+ #define WHITESPACE " \t\n\r"
+ 
++#ifdef USE_ZLIB
++
++#include <zlib.h>
++
++static ssize_t gz_getline(char **lineptr, size_t *n, void *stream)
++{
++	if (!*lineptr)
++		*lineptr = malloc(*n = 4096);
++	if (!*lineptr)
++		return -1;
++	if (gzgets(stream, *lineptr, *n - 1)) {
++		(*lineptr)[*n - 1] = '\0';
++		/* should return strlen(*lineptr), but caller doesn't care */
++		return 0;
++	}
++	return -1;
++}
++static int gz_fclose(void *stream)
++{
++	return gzclose(stream);
++}
++
++static ssize_t stdio_getline(char **lineptr, size_t *n, void *stream)
++{
++	return getline(lineptr, n, stream);
++}
++static int stdio_fclose(void *stream)
++{
++	return fclose(stream);
++}
++
++#endif
++
+ static int lookup_vid_pid(
+ 	uint16_t vid,
+ 	uint16_t pid,
+ 	char **vendor,
+ 	char **product) {
+ 
+-	FILE *f;
++	void *f;
+ 	int ret = -1;
+ 	int found_vendor = 0;
+ 	char *line = NULL;
+ 
+ 	*vendor = *product = NULL;
+ 
++#ifdef USE_ZLIB
++	ssize_t (*getline)(char **lineptr, size_t *n, void *stream) = stdio_getline;
++	int (*fclose)(void *stream) = stdio_fclose;
++	if ((f = gzopen(DATABASE ".gz", "r"))) {
++		getline = gz_getline;
++		fclose = gz_fclose;
++	} else
++#endif
+ 	if (!(f = fopen(DATABASE, "r"))) {
+ 		fprintf(stderr, "Failed to open database file "DATABASE": %s\n", strerror(errno));
+ 		return -1;
+@@ -111,11 +152,6 @@
+ 	for (;;) {
+ 		size_t n;
+ 
+-		if (line) {
+-			free(line);
+-			line = NULL;
+-		}
+-
+ 		if (getline(&line, &n, f) < 0)
+ 			break;
+ 
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -987,7 +987,7 @@
+ # ------------------------------------------------------------------------------
+ @ENABLE_HWDB_TRUE@extras_usb_db_usb_db_SOURCES = extras/usb-db/usb-db.c
+-@ENABLE_HWDB_TRUE@extras_usb_db_usb_db_CPPFLAGS = $(AM_CPPFLAGS) -DUSB_DATABASE=\"$(USB_DATABASE)\" -DBUILD_FOR_USB
++@ENABLE_HWDB_TRUE@extras_usb_db_usb_db_CPPFLAGS = $(AM_CPPFLAGS) -DUSB_DATABASE=\"$(USB_DATABASE)\" -DBUILD_FOR_USB -DUSE_ZLIB
+-@ENABLE_HWDB_TRUE@extras_usb_db_usb_db_LDADD = libudev/libudev-private.la
++@ENABLE_HWDB_TRUE@extras_usb_db_usb_db_LDADD = libudev/libudev-private.la -lz
+ @ENABLE_HWDB_TRUE@extras_usb_db_pci_db_SOURCES = extras/usb-db/usb-db.c
+-@ENABLE_HWDB_TRUE@extras_usb_db_pci_db_CPPFLAGS = $(AM_CPPFLAGS) -DPCI_DATABASE=\"$(PCI_DATABASE)\" -DBUILD_FOR_PCI
++@ENABLE_HWDB_TRUE@extras_usb_db_pci_db_CPPFLAGS = $(AM_CPPFLAGS) -DPCI_DATABASE=\"$(PCI_DATABASE)\" -DBUILD_FOR_PCI -DUSE_ZLIB
+-@ENABLE_HWDB_TRUE@extras_usb_db_pci_db_LDADD = libudev/libudev-private.la
++@ENABLE_HWDB_TRUE@extras_usb_db_pci_db_LDADD = libudev/libudev-private.la -lz

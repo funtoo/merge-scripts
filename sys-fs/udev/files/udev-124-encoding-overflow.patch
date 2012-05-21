@@ -1,0 +1,13 @@
+diff --git a/udev_utils_string.c b/udev_utils_string.c
+index e3dc137..0995da5 100644
+--- a/udev_utils_string.c
++++ b/udev_utils_string.c
+@@ -52,7 +52,7 @@ void remove_trailing_chars(char *path, char c)
+ 
+ size_t path_encode(char *s, size_t len)
+ {
+-	char t[(len * 3)+1];
++	char t[(len * 4)+1];
+ 	size_t i, j;
+ 
+ 	t[0] = '\0';

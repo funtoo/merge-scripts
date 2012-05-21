@@ -1,0 +1,8 @@
+# /etc/conf.d/udev: config file for udev
+
+# We discourage to disable persistent-net!!
+# this may lead to random interface naming
+
+# Disable adding new rules for persistent-net
+persistent_net_disable="no"
+
