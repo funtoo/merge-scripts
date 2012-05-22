@@ -1,10 +1,6 @@
 # Keeep the most recent masks in a reverse chrono order
 # newest on top
 
-# Jean-Francis Roy (21 May 2012)
-# Updated OpenRC, masked for testing
->sys-apps/openrc-0.8.3-r8
-
 # Ryan Harris ( 20 May 2012 )
 # Updated curl, masked for testing
 =net-misc/curl-7.25.0-r1
