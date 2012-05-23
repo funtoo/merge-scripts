@@ -243,7 +243,7 @@ src_install () {
 	mv "${S}"/examples "${D}"/usr/share/doc/${PF}/
 	mv "${D}"/etc/postfix/{*.default,makedefs.out} "${D}"/usr/share/doc/${PF}/
 
-	dodoc *README COMPATIBILITY HISTORY INSTALL PORTING RELEASE_NOTES*
+	dodoc *README COMPATIBILITY HISTORY PORTING RELEASE_NOTES*
 
 	pamd_mimic_system smtp auth account
 

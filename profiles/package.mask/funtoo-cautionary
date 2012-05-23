@@ -1,3 +1,7 @@
+# Jean-Francis Roy (22 May 2012)
+# Masking polkit version that depends on latest consolekit.
+>=sys-auth/polkit-0.105
+
 # Jean-Francis Roy (20 Mar 2012)
 # udev-182 removed some feature that is now taken care of in consolekit.
 # Masking the latest version of consolekit as it depends on >=udev-182.

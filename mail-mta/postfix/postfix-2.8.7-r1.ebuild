@@ -241,7 +241,7 @@ src_install () {
 	use mysql || sed -i -e "s/mysql //" "${D}/etc/init.d/postfix"
 	use postgres || sed -i -e "s/postgresql //" "${D}/etc/init.d/postfix"
 
-	dodoc *README COMPATIBILITY HISTORY INSTALL PORTING RELEASE_NOTES*
+	dodoc *README COMPATIBILITY HISTORY PORTING RELEASE_NOTES*
 
 	mv "${S}"/examples "${D}"/usr/share/doc/${PF}/
 	mv "${D}"/etc/postfix/{*.default,makedefs.out} "${D}"/usr/share/doc/${PF}/
