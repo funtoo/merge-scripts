@@ -1,9 +1,9 @@
-# profiles.desc - List of profiles for use with eselect
+# profiles.desc.example - Example profiles.desc file
 
 # The 'Type' column specifies the type of profile.
-# Currently supported types are arch, build, flavor, mix-ins, and mono.
+# Currently supported types are arch, build, flavor, mix-ins, and 2008.
 
-# The 'Name' column contains the path to the profile relative to the profiles directory"
+# The 'Name' column contains the path to the profile relative to "${PORTDIR}/profiles"
 
 # The 'Status' column is used to indicate the status of the profile.
 # Currently any flag besides "stable" causes profile to be highlighted in red when listed
@@ -11,6 +11,7 @@
 # The 'NoMix' column should contain a comma separated list profiles that should not be mixed with that profile
 # Must specify with path from type. Ex: 'flavor/desktop' , 'arch/x86-32bit' , ect ...
 
+# *** Note that the entries in MoMix are ficticious and only for example of how to use ***
 
 # Type		Name							Status		NoMix
 
@@ -23,14 +24,14 @@ build		funtoo/1.0/linux-gnu/build/experimental			testing
 
 flavor		funtoo/1.0/linux-gnu/flavor/minimal			testing
 flavor		funtoo/1.0/linux-gnu/flavor/core			testing
-flavor		funtoo/1.0/linux-gnu/flavor/desktop			testing
+flavor		funtoo/1.0/linux-gnu/flavor/desktop			testing		mix-ins/rhel5-compat,mix-ins/server-db
 
-mix-ins		funtoo/1.0/linux-gnu/mix-ins/dvd			testing
-mix-ins		funtoo/1.0/linux-gnu/mix-ins/gnome			testing
-mix-ins		funtoo/1.0/linux-gnu/mix-ins/kde			testing
+mix-ins		funtoo/1.0/linux-gnu/mix-ins/dvd			testing		mix-ins/server-db
+mix-ins		funtoo/1.0/linux-gnu/mix-ins/gnome			testing		mix-ins/server-db
+mix-ins		funtoo/1.0/linux-gnu/mix-ins/kde			testing		mix-ins/server-db
 mix-ins		funtoo/1.0/linux-gnu/mix-ins/media			testing
-mix-ins		funtoo/1.0/linux-gnu/mix-ins/rhel5-compat		testing
-mix-ins		funtoo/1.0/linux-gnu/mix-ins/server-db			testing
+mix-ins		funtoo/1.0/linux-gnu/mix-ins/rhel5-compat		testing		flavor/desktop
+mix-ins		funtoo/1.0/linux-gnu/mix-ins/server-db			testing		mix-ins/dvd,mix-ins/gnome,mix-ins/kde,flavor/desktop
 mix-ins		funtoo/1.0/linux-gnu/mix-ins/server-mail		testing
 mix-ins		funtoo/1.0/linux-gnu/mix-ins/server-web			testing
 mix-ins		funtoo/1.0/linux-gnu/mix-ins/workstation            	testing
@@ -53,19 +54,3 @@ mono		default/linux/arm/10.0/desktop				stable
 mono		default/linux/arm/10.0/developer			stable
 mono		default/linux/arm/10.0/server				stable
 
-# Keep for compatibility with original 'eselect profile'
-
-amd64		default/linux/amd64/2008.0				stable
-amd64		default/linux/amd64/2008.0/desktop			stable
-amd64		default/linux/amd64/2008.0/developer			stable
-amd64		default/linux/amd64/2008.0/server			stable
-
-x86		default/linux/x86/2008.0				stable
-x86		default/linux/x86/2008.0/desktop			stable
-x86		default/linux/x86/2008.0/developer			stable
-x86		default/linux/x86/2008.0/server				stable
-
-arm		default/linux/arm/10.0					stable
-arm		default/linux/arm/10.0/desktop				stable
-arm		default/linux/arm/10.0/developer			stable
-arm		default/linux/arm/10.0/server				stable
