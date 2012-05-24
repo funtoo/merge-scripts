@@ -628,7 +628,7 @@ write_numbered_profile_list() {
 # PUBLIC
 # Description of list action
 describe_list() {
-	echo "List available profile targets"
+	echo "List available profile targets. Usage: eselect profile list [profile_type]"
 }
 
 # PUBLIC
