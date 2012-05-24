@@ -3,7 +3,7 @@
 # The 'Type' column specifies the type of profile.
 # Currently supported types are arch, build, flavor, mix-ins, and mono.
 
-# The 'Name' column contains the path to the profile relative to the profiles directory"
+# The 'Name' column contains the path to the profile relative to /<path_to_tree>/profiles/
 
 # The 'Status' column is used to indicate the status of the profile.
 # Currently any flag besides "stable" causes profile to be highlighted in red when listed
