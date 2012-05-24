@@ -1,0 +1,823 @@
+# -*-eselect-*-  vim: ft=eselect
+# Copyright 2012 Funtoo Technologies LLC
+# Distributed under the terms of the GNU General Public License v2
+# $Id: $
+
+# This is a portage-only module.
+# This version of profile.eselect is written for use with Funtoo's
+# multi-profile approach
+
+inherit package-manager output
+
+DESCRIPTION="Manage portage profiles"
+MAINTAINER="rh1@funtoo.org"
+VERSION="funtoo-1.1_beta"
+
+### INIT ###
+
+# Global variables
+MAKE_PROFILE_DIR="/etc/portage/make.profile"
+PARENT_FILE="${MAKE_PROFILE_DIR}/parent"
+MAIN_PROFILE_DIRECTORY="$(portageq portdir)/profiles"
+MAIN_PROFILE_DESC_FILE="${MAIN_PROFILE_DIRECTORY}/profiles.desc"
+PORTAGE_OVERLAY_DIRS=( $(portageq portdir_overlay) )
+
+# IMPORTANT: Keep these in same order that profiles should appear in $PARENT_FILE
+VALID_PROFILE_TYPES=( "arch" "build" "flavor" "mix-ins" "mono" )
+REQUIRED_SINGLE_PROFILE_TYPES=( "arch" "build" "flavor" )
+MULTI_PROFILE_TYPES=( "arch" "build" "flavor" "mix-ins" )
+MONOLITHIC_PROFILE_TYPE=( "mono" )
+
+# Die if MAIN_PROFILE_DESC_FILE doesn't exist
+if [[ ! -e "${MAIN_PROFILE_DESC_FILE}" ]] ; then
+	die -q "Can't find profiles.desc at: ${MAIN_PROFILE_DESC_FILE}"
+fi
+
+# Create path to parent if needed.
+if [[ ! -e $(dirname "${PARENT_FILE}") ]] ; then
+	mkdir -p $(dirname "${PARENT_FILE}")
+fi
+
+# Create $PARENT_FILE if it doesn't exist.
+if [[ ! -e "${PARENT_FILE}" ]] ; then
+	touch "${PARENT_FILE}" || die -q "Error creating ${PARENT_FILE}"
+fi
+
+### HELPER FUNCTIONS ###
+
+# PRIVATE
+# Assigns a value and returns it based on profile type for use in determining where to add profile
+# $1 = profile_type
+assign_profile_value() {
+	local pro_type="${1}"
+	local pro_type_number count_num=1
+	for profile_type in ${VALID_PROFILE_TYPES[@]} ; do
+		if [[ "${pro_type}" == "${profile_type}" ]] ; then
+			pro_type_number=${count_num}
+		fi
+		count_num="$(( ${count_num}+1 ))"
+	done
+	if [[ -z "${pro_type}" ]] ; then
+		pro_type_number="${count_num}"
+	fi
+	echo "${pro_type_number}"
+}
+
+# PUBLIC
+# Checks passed in profile against NoMix profiles for currently set
+# profiles and returns a list of any conflicting profiles it finds.
+# $1 = Profile to check against
+check_for_nomix() {
+	local pro_to_check="${1}"
+	local repo_name="$(get_repo_name ${pro_to_check})"
+	local profile_desc_file="$(get_profiles_desc_file ${repo_name})"
+	local pro_to_check_type="$(get_profile_type ${pro_to_check})"
+	local stripped_pro_name
+
+	if [[ -z "${repo_name}" ]] ; then
+		# NoMix is only supported for new style multi profiles specified in format <repo_name>:<path_to_profile> so just return.
+		return
+	else
+		stripped_pro_name="${pro_to_check#${repo_name}:}"
+	fi
+
+	local profile_path
+	for profile_type in ${MULTI_PROFILE_TYPES[@]} ; do
+		if [[ "${profile_type}" == "${pro_to_check_type}" ]] ; then
+			profile_path="${stripped_pro_name%/${profile_type}/*}"
+		fi
+	done
+	if [[ -z "${profile_path}" ]] ; then
+		return
+	fi
+
+	local nomix=( $(awk '( $2 == "'"${stripped_pro_name}"'" ) && ( NF > 3 ) { print $4 }' "${profile_desc_file}" | awk -F "," '{ for ( x = 1; x <= NF; x++ ) { print $x } }') )
+	if [[ -n "${nomix}" ]] ; then
+		for profile in ${nomix[@]} ; do
+			for current_pro in $(get_currently_set_profiles) ; do
+				current_repo_name="$(get_repo_name ${current_pro})"
+				if [[ "${repo_name}" == "${current_repo_name}" ]] ; then
+					local full_pro="${repo_name}:${profile_path}/${profile}"
+					if [[ "${full_pro}" == "${current_pro}" ]] ; then
+						echo "${full_pro}"
+					fi
+				fi
+			done
+		done
+	fi
+}
+
+# PUBLIC
+# Converts number from profile list to name of profile
+# $1 = Number to convert
+convert_list_number() {
+	local pro_number="${1}"
+	local profiles=( $(get_profiles_list) )
+	echo "${profiles[$((${pro_number} - 1))]}"
+}
+
+# PUBLIC
+# Returns list of profiles in $PARENT_FILE
+get_currently_set_profiles() {
+	while read line ; do
+		if [[ "${line:0:1}" != "#" ]] ; then
+			echo "${line}"
+		fi
+	done < "${PARENT_FILE}"
+}
+
+# PUBLIC
+# Returns profiles.desc file from passed in repo
+# $1 = Name of repo to get file from
+get_profiles_desc_file() {
+	local repo_to_check="${1}"
+	for pro_desc_file in $(get_profiles_desc_files) ; do
+		local repo_name="$(get_repo_name_from_file ${pro_desc_file})"
+		if [[ "${repo_name}" == "${repo_to_check}" ]] ; then
+			echo "${pro_desc_file}"
+			return
+		fi
+	done
+}
+
+# PUBLIC
+# Returns list of profiles.desc files from main repo and
+# found by looking in PORTDIR_OVERLAY repos.
+get_profiles_desc_files() {
+	# Echo main repo first
+	echo "${MAIN_PROFILE_DESC_FILE}"
+
+	for repo in ${PORTAGE_OVERLAY_DIRS[@]} ; do
+		if [[ -e "${repo}/profiles/profiles.desc" ]] ; then
+			echo "${repo}/profiles/profiles.desc"
+		fi
+	done
+}
+
+# PUBLIC
+# Returns full list of available profiles.
+get_profiles_list() {
+	### MUST USE SAME ORDER AS write_numbered_list DOES SO convert_list_number WORKS ###
+	for profile_type in ${VALID_PROFILE_TYPES[@]} ; do
+		for pro_desc_file in $(get_profiles_desc_files) ; do
+			local repo_name="$(get_repo_name_from_file ${pro_desc_file})"
+			local profiles=( $(awk '$1 == "'"${profile_type}"'" { print $2 }' "${pro_desc_file}") )
+			for profile in ${profiles[@]} ; do
+				echo "${repo_name}:${profile}"
+			done
+		done
+	done
+}
+
+#PUBLIC
+# Returns type of profile
+# $1 = Profile to check. Must be in format <repo_name>:<path_to_profile>
+get_profile_type() {
+	local profile="${1}"
+	local repo_name="$(get_repo_name ${profile})"
+	for pro_desc_file in $(get_profiles_desc_files) ; do
+		curr_name="$(get_repo_name_from_file ${pro_desc_file})"
+		if [[ "${curr_name}" == "${repo_name}" ]] ; then
+			# Need to check against $VALID_PROFILE_TYPES due to original eselect syntax in profiles.desc.
+			# Otherwise awk will return wrong values such as 'amd64' and 'x86' for the old monolithic profiles
+			for pro_type in ${VALID_PROFILE_TYPES[@]} ; do
+				# Strip repo_name
+				local profile_type="$(awk '( $2 == "'"${profile#${repo_name}:}"'" ) && ( $1 == "'"$pro_type"'" ) { print $1 }' "${pro_desc_file}")"
+				if [[ "${profile_type}" == "${pro_type}" ]] ; then
+					echo "${profile_type}"
+					return
+				fi
+			done
+		fi
+	done
+}
+
+# PUBLIC
+# Returns repo name found at beginning of profile.
+# $1 = Profile to check. Must be in format <repo_name>:<path_to_profile>
+get_repo_name() {
+	local profile="${1}"
+	local repo_name="$(expr match "${profile}" "\([^:]\+:\{1\}\)")"
+	# Remove colon
+	echo "${repo_name%:}"
+}
+
+# PUBLIC
+# Returns name of repo associated with the passed in profiles.desc file
+# $1 = Full path to profiles.desc file. Ex: /usr/portage/profiles/profiles.desc
+get_repo_name_from_file() {
+	local repo_name_file="${1%profiles.desc}repo_name"
+	if [[ -e "${repo_name_file}" ]] ; then
+		echo $(cat "${repo_name_file}")
+	fi
+}
+
+# PUBLIC
+# Returns "True" if profile is set in $PARENT_FILE, "False" if not set.
+# $1 = Profile to look for
+is_profile_set() {
+	local profile="${1}"
+	for curr_pro in $(get_currently_set_profiles) ; do
+		if [[ "${profile}" == "${curr_pro}" ]] ; then
+			echo "True"
+			return
+		fi
+	done
+	# If we made it here, profile isn't set
+	echo "False"
+}
+
+# PUBLIC
+# Checks if parent file is valid. Returns "True" if valid, "False" if not.
+# $1 = "print_warn" If $1 is set to "print_warn" then print warning messages
+validate_parent_file() {
+	local print_warn
+	if [[ "${1}" == "print_warn" ]] ; then
+		print_warn="True"
+	else
+		print_warn="False"
+	fi
+
+	# Check if profiles are valid
+	local invalid_profiles profile_count=0
+	for profile in $(get_currently_set_profiles) ; do
+		if [[ "$(validate_profile ${profile})" != "True" ]] ; then
+			invalid_profiles["${profile_count}"]="${profile}"
+			profile_count="$(( ${profile_count}+1 ))"
+		fi
+	done
+
+	# Check if either no required profiles or too many set.
+	local no_profile no_profile_count=0 extra_profiles extra_profiles_count=0
+	for profile_type in ${REQUIRED_SINGLE_PROFILE_TYPES[@]} ; do
+		local profile_count=0
+		for profile in $(get_currently_set_profiles) ; do
+			local curr_type="$(get_profile_type ${profile})"
+			if [[ "${curr_type}" == "${profile_type}" ]] ; then
+				profile_count="$(( ${profile_count}+1 ))"
+			fi
+		done
+		if (( ${profile_count} == 0 )) ; then
+			no_profile["${no_profile_count}"]="${profile_type}"
+			no_profile_count="$(( ${no_profile_count}+1 ))"
+		elif (( ${profile_count} > 1 )) ; then
+			extra_profiles["${extra_profiles_count}"]="${profile_type}"
+			extra_profiles_count="$(( ${extra_profiles_count}+1 ))"
+		fi
+	done
+
+	# Check if mixing old style and new style profiles
+	local old_style=0 new_style=0 mixed_profiles
+	for profile in $(get_currently_set_profiles) ; do
+		local current_type="$(get_profile_type ${profile})"
+
+		if [[ "${current_type}" == "${MONOLITHIC_PROFILE_TYPE}" ]] ; then
+			old_style="$(( ${old_style}+1 ))"
+			continue
+		else
+			for profile_type in ${MULTI_PROFILE_TYPES[@]} ; do
+				if [[ "${current_type}" == "${profile_type}" ]] ; then
+					new_style="$(( ${new_style}+1 ))"
+					break
+				fi
+			done
+		fi
+	done
+	if (( ${old_style} > 0  && ${new_style} > 0 )) ; then
+		mixed_profiles="True"
+	fi
+
+	if [[ "${print_warn}" == "True" ]] ; then
+		# Display the results
+		if (( ${#invalid_profiles} > 0 )) ; then
+			write_warning_msg "The following profile(s) do not appear to be valid: ${invalid_profiles[@]}"
+		fi
+		if (( ${#no_profile} > 0 )) ; then
+			write_warning_msg "Your current profile setup does not contain any '${no_profile[@]}' type profile(s). Please add one of each."
+		fi
+		if (( ${#extra_profiles} > 0 )) ; then
+			write_warning_msg "Your current profile setup contains more than one '${extra_profiles[@]}' type profile(s). This is not recommended."
+		fi
+		if [[ "${mixed_profiles}" == "True" ]] ; then
+			write_warning_msg "It is not recommended to mix the old style monolithic profiles with the new style multi profile ones"
+		fi
+	fi
+}
+
+# PUBLIC
+# Checks if profile exists. Returns "True" if it exists, "False" if it doesn't
+# $1 = Profile to check
+validate_profile() {
+	local profile_valid profile="${1}"
+	if [[ "${profile:0:1}" == "/" ]] ; then
+		if [[ -d "${profile}" ]] ; then
+			profile_valid="True"
+		else
+			profile_valid="False"
+		fi
+	elif [[ "${profile:0:1}" == "." ]] ; then
+		if [[ -d "${MAKE_PROFILE_DIR}/${profile}" ]] ; then
+			profile_valid="True"
+		else
+			profile_valid="False"
+		fi
+	elif [[ "${profile:0:1}" == ":" ]] ; then
+		if [[ -d "${MAKE_PROFILE_DIR}/${profile:1}" ]] ; then
+			profile_valid="True"
+		else
+			profile_valid="False"
+		fi
+	elif [[ -n "$(get_repo_name ${profile})" ]] ; then
+		local repo_name="$(get_repo_name ${profile})"
+		for pro_desc_file in $(get_profiles_desc_files) ; do
+			curr_name="$(get_repo_name_from_file ${pro_desc_file})"
+			if [[ "${curr_name}" == "${repo_name}" ]] ; then
+				local full_profile="${pro_desc_file%profiles.desc}${profile#${repo_name}:}"
+				if [[ -d "${full_profile}" ]] ; then
+					profile_valid="True"
+					break
+				else
+					profile_valid="False"
+					break
+				fi
+			fi
+		done
+		# If profile_valid isn't set then couldn't find profile, mark invalid
+		if [[ -z "${profile_valid}" ]] ; then
+			profile_valid="False"
+		fi
+	else
+		# If here then not sure what this is. Doesn't appear to be valid profile.
+		profile_valid="False"
+	fi
+
+	echo "${profile_valid}"
+}
+
+### ADD ACTION ###
+
+# PUBLIC
+# Adds a profile to $PARENT_FILE
+add_profile() {
+	local pro_to_add="${1}"
+	if $(is_number "${pro_to_add}") ; then
+		pro_to_add="$(convert_list_number ${pro_to_add})"
+	fi
+
+	# Die if profile is already set
+	if [[ "$(is_profile_set ${pro_to_add})" == "True" ]] ; then
+		die -q "'${pro_to_add}' is already set in ${PARENT_FILE}"
+	fi
+
+	# Check for NoMix
+	local nomix=( $(check_for_nomix "${pro_to_add}") )
+	if [[ -n "${nomix}" ]] ; then
+		if [[ -z "${FORCE_ADD}" ]] ; then
+			die -q "Current profile contains the profile(s) '${nomix[@]}' which should not be used with '${pro_to_add}'. Use --force to override"
+		fi
+	fi
+
+	# Assign value to profile type, used to determine where to add profile
+	local pro_to_add_type="$(get_profile_type ${pro_to_add})"
+	local pro_type_number="$(assign_profile_value ${pro_to_add_type})"
+
+	# Loop through current profiles and add new one in right place
+	local now_set="False"
+	local temp_file="$(mktemp)"
+	for current_pro in $(get_currently_set_profiles) ; do
+		# Same as above, assign value to profile type
+		local current_type="$(get_profile_type ${current_pro})"
+		local current_type_number="$(assign_profile_value ${current_type})"
+		# Check if trying to add more than one ${REQUIRED_SINGLE_PROFILE_TYPES}
+		for profile_type in ${REQUIRED_SINGLE_PROFILE_TYPES[@]} ; do
+			if [[ "${pro_to_add_type}" == "${profile_type}" && "${pro_to_add_type}" == "${current_type}" ]] ; then
+				if [[ -z "${FORCE_ADD}" ]] ; then
+					rm "${temp_file}"
+					die -q "Your profile already contains a '${pro_to_add_type}' type profile. You should only have one set. Either use replace action or if you know what your doing you can override with '--force'"
+				fi
+			fi
+		done
+		if [[ "${now_set}" != "True" ]] ; then
+			if (( ${current_type_number} <= ${pro_type_number} )) ; then
+				echo "${current_pro}" >> "${temp_file}"
+			else
+				echo "${pro_to_add}" >> "${temp_file}"
+				echo "${current_pro}" >> "${temp_file}"
+				now_set="True"
+			fi
+		else
+			echo "${current_pro}" >> "${temp_file}"
+		fi
+	done
+	# If we didn't find spot to add above then just add to end of file.
+	if [[ "${now_set}" != "True" ]] ; then
+		echo "${pro_to_add}" >> "${temp_file}"
+	fi
+
+	# Move new parent file into place
+	mv "${temp_file}" "${PARENT_FILE}" || die -q "Error trying to update parent file. Temp file = ${temp_file}, Parent file = ${PARENT_FILE}"
+
+}
+
+# PUBLIC
+# Description of add action
+describe_add() {
+	echo "Adds a profile. Usage: eselect profile add <profile>"
+}
+
+# PUBLIC
+# Called by eselect when passed add as action
+do_add() {
+	# Parse cli args
+	FORCE_ADD=""
+	if [[ "${1}" == "--force" ]] ; then
+		FORCE_ADD="--force"
+		shift
+	fi
+
+	if [[ -z "${1}" ]] ; then
+		die -q "You didn't tell me what profile to add"
+	else
+		add_profile "${1}"
+		validate_parent_file "print_warn"
+	fi
+}
+
+### CLEAN ACTION ###
+
+# PUBLIC
+# Cleans $PARENT_FILE of all invalid entries and corrects order of profiles
+# $1 = "-p" || "--pretend" If set just prints what new $PARENT_FILE would contain
+clean_profiles() {
+	# Need temporary parent file
+	local temp_parent_file="$(mktemp)"
+
+	# Get rid of any invalid profiles.
+	for profile in $(get_currently_set_profiles) ; do
+		if [[ "$(validate_profile ${profile})" == "True" ]] ; then
+			echo "${profile}" >> "${temp_parent_file}"
+		fi
+	done
+
+	# Copy original $PARENT_FILE location before changing variable
+	local orig_parent_file="${PARENT_FILE}"
+	PARENT_FILE="${temp_parent_file}"
+
+	# Need 2 copies of current_profiles so we can modify one later
+	local current_profiles=( $(get_currently_set_profiles) )
+	local current_profiles_copy=( $(get_currently_set_profiles) )
+
+	# Loop through valid profile types and current profiles to add in right place
+	local temp_file=$(mktemp)
+	for (( x=0; x<${#VALID_PROFILE_TYPES[@]}; x++ )) ; do
+		local valid_type="${VALID_PROFILE_TYPES[${x}]}"
+		for profile in $(get_currently_set_profiles) ; do
+			curr_type="$(get_profile_type ${profile})"
+			if [[ "${curr_type}" == "${valid_type}" ]] ; then
+				echo "${profile}" >> "${temp_file}"
+			fi
+		done
+	done
+
+	# Remove all profiles we set above. Anything left goes at end of parent file
+	for profile in $(cat "${temp_file}") ; do
+		for (( x=0; x<${#current_profiles_copy[@]}; x++ )) ; do
+			if [[ "${profile}" == "${current_profiles[${x}]}" ]] ; then
+				unset current_profiles[x]
+			fi
+		done
+	done
+
+	if (( ${#current_profiles[@]} > 0 )) ; then
+		for profile in ${current_profiles[@]} ; do
+			echo "${profile}" >> "${temp_file}"
+		done
+	fi
+
+	# Clean up mess and either display results or update file
+	PARENT_FILE="${orig_parent_file}"
+	if [[ "${PRETEND_CLEAN}" == "True" ]] ; then
+		echo
+		write_list_start "If cleaned, parent file would contain:"
+		for profile in $(cat ${temp_file}) ; do
+			echo -e "\t${profile}"
+		done
+		rm "${temp_parent_file}"
+		rm "${temp_file}"
+		echo
+	else
+		rm "${temp_parent_file}"
+		mv "${temp_file}" "${PARENT_FILE}"
+	fi
+}
+
+# PUBLIC
+# Description of clean action
+describe_clean() {
+	echo "Removes any invalid profiles that are set. Use '-p' or '--pretend' to check what would be removed. "
+}
+
+# PUBLIC
+# Called by eselect when passed clean as action
+do_clean() {
+	if [[ "${1}" == "-p" || "${1}" == "--pretend" ]] ; then
+		PRETEND_CLEAN="True"
+		clean_profiles
+	else
+		PRETEND_CLEAN="False"
+		clean_profiles
+		validate_parent_file "print_warn"
+	fi
+}
+
+### LIST ACTION ###
+
+# PUBLIC
+# Writes a list entry
+# $1 = List number, $2 = Name of profile, $3 = Type of profile, $4 = Status flag,
+write_numbered_profile_list_entry() {
+	local list_num="${1}" profile="${2}" profile_type="${3}" status="${4}"
+
+	# Mark with "*" if in current profiles
+	local profile_set=$(is_profile_set "${profile}")
+	if [[ "${profile_set}" == "True" ]] ; then
+		profile="${profile} *"
+	fi
+
+	# Strip repo name if from main repo
+	profile="${profile#gentoo:}"
+
+	# Set colors
+	local left="${COLOUR_LIST_LEFT}"
+	local right="${COLOUR_LIST_RIGHT}"
+	local normal="${COLOUR_NORMAL}"
+	local stable="${COLOUR_LIST_HEADER}"
+	local not_stable="${COLOUR_WARN}"
+
+	# List number
+	echo -n -e "  ${left}"
+	echo -n -e "[$(apply_text_highlights "${left}" "${list_num}")]"
+	echo -n -e "${normal}"
+	space $(( 4 - ${#list_num} ))
+
+	# Profile name
+	if [[ "${status}" != stable ]] ; then
+		echo -n -e "${not_stable}"
+		echo -n -e "$(apply_text_highlights "${not_stable}" "${profile}")"
+		echo -e "${normal}"
+	else
+		echo -n -e "${right}"
+		echo -n -e "$(apply_text_highlights "${right}" "${profile}")"
+		echo -e "${normal}"
+	fi
+}
+
+# PRIVATE  For use with write_numbered_profile_list()
+# Prints list of <type> profiles.
+# $1 = profile type $2 = "True" if print this list otherwise "False".
+write_type_list() {
+	local profile_type="${1}" print_list
+	if [[ "${2}" == "True" ]] ; then
+		print_list="True"
+	else
+		print_list="False"
+	fi
+
+	if [[ "${print_list}" == "True" ]] ; then
+		write_list_start "Currently available ${profile_type} profiles:"
+	fi
+
+	for pro_desc_file in $(get_profiles_desc_files) ; do
+		local repo_name="$(get_repo_name_from_file ${pro_desc_file})"
+		local profiles=( $(awk '$1 == "'"${profile_type}"'" { print $2 }' "${pro_desc_file}") )
+		for profile in ${profiles[@]} ; do
+			if [[ "${print_list}" == "True" ]] ; then
+				local status="$(awk '($1 == "'"${profile_type}"'") && ($2 == "'"${profile}"'") { print $3 }' "${pro_desc_file}")"
+				write_numbered_profile_list_entry "${LIST_ENTRY_NUMBER}" "${repo_name}:${profile}" "${profile_type}" "${status}"
+			fi
+			LIST_ENTRY_NUMBER=$(( ${LIST_ENTRY_NUMBER}+1 ))
+		done
+	done
+}
+
+# PUBLIC
+# Writes a numbered list of profiles
+# "$1 = Type of profiles to list or "all" for all valid types
+write_numbered_profile_list() {
+	local list_type
+	if [[ -z "${1}" ]] ; then
+		list_type="all"
+	else
+		list_type="${1}"
+	fi
+
+	# Declare global var here.
+	# This is needed so that numbers on list will match entry order in get_profiles_list()
+	LIST_ENTRY_NUMBER="1"
+	for profile_type in ${VALID_PROFILE_TYPES[@]} ; do
+		local print_list
+		if [[ "${list_type}" == "all" || "${list_type}" == "${profile_type}" ]] ; then
+			print_list="True"
+		else
+			print_list="False"
+		fi
+		write_type_list "${profile_type}" "${print_list}"
+	done
+}
+
+# PUBLIC
+# Description of list action
+describe_list() {
+	echo "List available profile targets"
+}
+
+# PUBLIC
+# Called by eselect when passed list as action
+do_list() {
+	write_numbered_profile_list "${1}"
+	validate_parent_file "print_warn"
+}
+
+### REMOVE ACTION ###
+
+remove_profile() {
+	local pro_to_remove="${1}"
+	if $(is_number "${pro_to_remove}") ; then
+		pro_to_remove=$(convert_list_number ${pro_to_remove})
+	fi
+
+	local found_pro="False"
+	local temp_file="$(mktemp)"
+	for profile in $(get_currently_set_profiles); do
+		if [[ "${profile}" == ${pro_to_remove} ]] ; then
+			found_pro="True"
+		else
+			echo "${profile}" >> "${temp_file}"
+		fi
+	done
+
+	if [[ "${found_pro}" == "False" ]] ; then
+		rm "${temp_file}"
+		die -q "'${pro_to_remove}' was not found in your current profiles"
+	else
+		mv "${temp_file}" "${PARENT_FILE}" || die -q "Error trying to update parent file. Temp file = ${temp_file}, Parent file = ${PARENT_FILE}"
+	fi
+
+}
+
+# PUBLIC
+# Description of remove action
+describe_remove() {
+	echo "Removes a profile. Usage: eselect profile remove <profile>"
+}
+
+# PUBLIC
+# Called by eselect when passed remove as action
+do_remove() {
+	if [[ -z "${1}" ]] ; then
+		die -q "You didn't tell me what profile to remove"
+	else
+		remove_profile "${1}"
+		validate_parent_file "print_warn"
+	fi
+}
+
+### REPLACE ACTION ###
+
+# PUBLIC
+# Replaces a profile in $PARENT_FILE
+# $1 = profile to remove $2 = profile to add_profile
+replace_profile() {
+	local old_profile new_profile
+	if $(is_number ${1}) ; then
+		old_profile="$(convert_list_number ${1})"
+	else
+		old_profile="${1}"
+	fi
+	if $(is_number ${2}) ; then
+		new_profile="$(convert_list_number ${2})"
+	else
+		new_profile="${2}"
+	fi
+
+	# Copy original parent file to temp location before removing old profile, that way if something goes wrong we can restore it
+	local orig_parent_file="$(mktemp)"
+	cp "${PARENT_FILE}" "${orig_parent_file}"
+	remove_profile "${old_profile}"
+
+	# Check if profile already set
+	if [[ "$(is_profile_set ${new_profile})" == "True" ]] ; then
+		mv "${orig_parent_file}" "${PARENT_FILE}"
+		die -q "'${new_profile}' is already set in ${PARENT_FILE}"
+	fi
+
+	# Check for NoMix
+	local nomix=( $(check_for_nomix ${new_profile}) )
+	if [[ -n "${nomix}" ]] ; then
+		if [[ -z "${FORCE_ADD}" ]] ; then
+			mv "${orig_parent_file}" "${PARENT_FILE}"
+			die -q "Current profile contains the profile(s) '${nomix[@]}' which should not be used with '${new_profile}'. Use --force to override"
+		fi
+	fi
+
+	# Get type number for new profile
+	local new_profile_type="$(get_profile_type ${new_profile})"
+	new_pro_type_number="$(assign_profile_value ${new_profile_type})"
+
+	# Loop through current profiles and decide where to add new one.
+	local now_set="False"
+	local temp_file="$(mktemp)"
+	for current_pro in $(get_currently_set_profiles) ; do
+		# Assign value to profile type
+		local current_type="$(get_profile_type ${current_pro})"
+		local current_type_number="$(assign_profile_value ${current_type})"
+
+		# Check if trying to add more than one ${REQUIRED_SINGLE_PROFILE_TYPES}
+		for profile_type in ${REQUIRED_SINGLE_PROFILE_TYPES[@]} ; do
+			if [[ "${new_profile_type}" == "${profile_type}" && "${new_profile_type}" == "${current_type}" ]] ; then
+				if [[ -z "${FORCE_REPLACE}" ]] ; then
+					rm "${temp_file}"
+					mv "${orig_parent_file}" "${PARENT_FILE}"
+					die -q "Your profile already contains a '${new_profile_type}' type profile. You should only have one set. Either use replace action or if you know what your doing you can override with '--force'"
+				fi
+			fi
+		done
+		if [[ "${now_set}" != "True" ]] ; then
+			if (( ${current_type_number} <= ${new_pro_type_number} )) ; then
+				echo "${current_pro}" >> "${temp_file}"
+			else
+				echo "${new_profile}" >> "${temp_file}"
+				echo "${current_pro}" >> "${temp_file}"
+				now_set="True"
+			fi
+		else
+			echo "${current_pro}" >> "${temp_file}"
+		fi
+	done
+
+	# If we didn't find spot to add new profile above then just add to end of file.
+	if [[ "${now_set}" != "True" ]] ; then
+		echo "${new_profile}" >> "${temp_file}"
+	fi
+
+	# Move new parent file into place
+	mv "${temp_file}" "${PARENT_FILE}"
+	if (( $? != 0 )) ; then
+		mv "${orig_parent_file}" "${PARENT_FILE}"
+		rm "${temp_file}"
+		die -q "Error trying to update parent file. Temp file = ${temp_file}, Parent file = ${PARENT_FILE}"
+	else
+		rm "${orig_parent_file}"
+	fi
+}
+
+# PUBLIC
+# Description of replace action
+describe_replace() {
+	echo "Replaces a profile. Usage: eselect profile replace <old_profile> <new_profile>"
+}
+
+# PUBLIC
+# Called by eselect when passed replace as action
+do_replace() {
+	# Parse cli args
+	FORCE_REPLACE=""
+	if [[ "${1}" == "--force" ]] ; then
+		FORCE_REPLACE="--force"
+		shift
+	fi
+
+	if (( $# < 2 )) ; then
+		die -q "The replace action requires 2 arguments. Usage: eselect profile replace <old_profile> <new_profile>"
+	else
+		replace_profile "${1}" "${2}"
+		validate_parent_file "print_warn"
+	fi
+}
+
+### SHOW ACTION ###
+
+# PUBLIC
+# Displays currently set profiles
+show_profiles() {
+	profiles=( $(get_currently_set_profiles) )
+	echo
+	write_list_start "Currently set profiles:"
+	for profile in ${profiles[@]} ; do
+		echo -e "\t${profile}"
+	done
+	echo
+}
+
+# PUBLIC
+# Description of show action
+describe_show() {
+	echo "Displays list of profiles that are currently set"
+}
+
+# PUBLIC
+# Called by eselect when passed show as action
+do_show() {
+	show_profiles
+	validate_parent_file "print_warn"
+}

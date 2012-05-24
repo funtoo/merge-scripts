@@ -1,0 +1,11 @@
+# Copyright 1999-2011 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/releases/2008.0/package.mask,v 1.6 2011/08/09 04:29:56 zmedico Exp $
+
+# Zac Medico <zmedico@gentoo.org> (09 Aug 2011)
+# Bug #377907 - Use package.mask for compatibility with PMS section 5.2.7, and
+# future versions of sys-apps/portage.
+<sys-apps/baselayout-1.12.10-r5
+<sys-apps/portage-2.1.4.4
+<sys-devel/binutils-2.18-r1
+<sys-libs/glibc-2.4-r4
