@@ -1,10 +1,6 @@
 # Keeep the most recent masks in a reverse chrono order
 # newest on top
 
-# Ryan Harris ( 20 May 2012 )
-# Updated curl, masked for testing
-=net-misc/curl-7.25.0-r1
-
 # Masking of libreoffice-bin > 3.5.* as needing toolchain upgrade
 >=app-office/libreoffice-bin-3.5
 
