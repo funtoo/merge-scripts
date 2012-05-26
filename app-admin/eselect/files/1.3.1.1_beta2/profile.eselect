@@ -41,6 +41,7 @@ fi
 # Create $PARENT_FILE if it doesn't exist.
 if [[ ! -e "${PARENT_FILE}" ]] ; then
 	touch "${PARENT_FILE}" || die -q "Error creating ${PARENT_FILE}"
+	chmod 644 "${PARENT_FILE}"
 fi
 
 ### HELPER FUNCTIONS ###
@@ -105,6 +106,14 @@ check_for_nomix() {
 			done
 		done
 	fi
+}
+
+# PUBLIC
+# Creates and returns temporary file using mktemp and sets permissions to 644
+create_temp_file() {
+	local temp_file="$(mktemp)"
+	chmod 644 "${temp_file}"
+	echo "${temp_file}"
 }
 
 # PUBLIC
@@ -400,7 +409,7 @@ add_profile() {
 
 	# Loop through current profiles and add new one in right place
 	local now_set="False"
-	local temp_file="$(mktemp)"
+	local temp_file="$(create_temp_file)"
 	for current_pro in $(get_currently_set_profiles) ; do
 		# Same as above, assign value to profile type
 		local current_type="$(get_profile_type ${current_pro})"
@@ -481,7 +490,7 @@ do_add() {
 # $1 = "-p" || "--pretend" If set just prints what new $PARENT_FILE would contain
 clean_profiles() {
 	# Need temporary parent file
-	local temp_parent_file="$(mktemp)"
+	local temp_parent_file="$(create_temp_file)"
 
 	# Get rid of any invalid profiles.
 	for profile in $(get_currently_set_profiles) ; do
@@ -499,7 +508,7 @@ clean_profiles() {
 	local current_profiles_copy=( $(get_currently_set_profiles) )
 
 	# Loop through valid profile types and current profiles to add in right place
-	local temp_file=$(mktemp)
+	local temp_file=$(create_temp_file)
 	for (( x=0; x<${#VALID_PROFILE_TYPES[@]}; x++ )) ; do
 		local valid_type="${VALID_PROFILE_TYPES[${x}]}"
 		for profile in $(get_currently_set_profiles) ; do
@@ -710,7 +719,7 @@ remove_profile() {
 	fi
 
 	local found_pro="False"
-	local temp_file="$(mktemp)"
+	local temp_file="$(create_temp_file)"
 	for profile in $(get_currently_set_profiles); do
 		if [[ "${profile}" == ${pro_to_remove} ]] ; then
 			found_pro="True"
@@ -780,7 +789,7 @@ replace_profile() {
 	fi
 
 	# Copy original parent file to temp location before removing old profile, that way if something goes wrong we can restore it
-	local orig_parent_file="$(mktemp)"
+	local orig_parent_file="$(create_temp_file)"
 	cp "${PARENT_FILE}" "${orig_parent_file}"
 	remove_profile "${old_profile}"
 
@@ -805,7 +814,7 @@ replace_profile() {
 
 	# Loop through current profiles and decide where to add new one.
 	local now_set="False"
-	local temp_file="$(mktemp)"
+	local temp_file="$(create_temp_file)"
 	for current_pro in $(get_currently_set_profiles) ; do
 		# Assign value to profile type
 		local current_type="$(get_profile_type ${current_pro})"
