@@ -30,7 +30,7 @@ DEPEND="${RDEPEND}
 	>=sys-devel/libtool-2
 	sys-devel/flex
 	nls? ( sys-devel/gettext )
-	dev-util/pkgconfig"
+	virtual/pkgconfig"
 PDEPEND="sys-auth/pambase
 	vim-syntax? ( app-vim/pam-syntax )"
 RDEPEND="${RDEPEND}
