@@ -17,7 +17,7 @@ fi
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="acl selinux extras +hwdb +gudev introspection"
 MIN_KERNEL="2.6.32"
 

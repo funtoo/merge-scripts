@@ -12,7 +12,7 @@ SRC_URI="ftp://atrey.karlin.mff.cuni.cz/pub/linux/pci/${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="static-libs zlib"
 
 DEPEND="zlib? ( sys-libs/zlib )"
