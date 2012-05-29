@@ -11,7 +11,7 @@ SRC_URI="http://www.gzip.org/zlib/${P}.tar.gz
 
 LICENSE="ZLIB"
 SLOT="0"
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="minizip static-libs"
 
 RDEPEND="!<dev-libs/libxml2-2.7.7" #309623
