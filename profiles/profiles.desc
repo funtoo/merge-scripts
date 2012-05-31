@@ -24,6 +24,7 @@ build		funtoo/1.0/linux-gnu/build/experimental			testing
 flavor		funtoo/1.0/linux-gnu/flavor/minimal			testing
 flavor		funtoo/1.0/linux-gnu/flavor/core			testing
 flavor		funtoo/1.0/linux-gnu/flavor/desktop			testing
+flavor		funtoo/1.0/linux-gnu/flavor/server			testing
 
 mix-ins		funtoo/1.0/linux-gnu/mix-ins/dvd			testing
 mix-ins		funtoo/1.0/linux-gnu/mix-ins/gnome			testing
