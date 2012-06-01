@@ -15,3 +15,16 @@ dev-lang/python sqlite
 
 # Required for app-text/evince
 app-text/poppler cairo
+
+# Required by sys-auth/polkit[-systemd]
+sys-auth/consolekit policykit
+sys-auth/pambase consolekit
+
+# Required by media-libs/libcanberra[udev]
+media-libs/libcanberra alsa
+
+# Required by media-sound/sound-juicer
+gnome-base/gvfs cdda
+
+# Required by media-video/cheese
+x11-libs/gdk-pixbuf jpeg
