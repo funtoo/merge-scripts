@@ -1,1 +1,1 @@
-USE="eds evo gnome gnome-keyring gstreamer nautilus gtk"
+USE="$USE eds evo gnome gnome-keyring gstreamer nautilus gtk"
