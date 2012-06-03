@@ -1,5 +1,9 @@
 # Keeep the most recent masks in a reverse chrono order
 # newest on top
+# Oleg Vinichenko ( 3 Jun 2012)
+# mask newest automake until #419459 resolved
+# prevent stage failures
+>=sys-devel/automake-1.12.1
 
 # Martin Scholz (02 Jun 2012)
 # Masked for testing
