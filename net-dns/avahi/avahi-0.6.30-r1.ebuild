@@ -49,7 +49,7 @@ COMMON_DEPEND=">=dev-libs/libdaemon-0.14
 	kernel_linux? ( sys-libs/libcap )"
 DEPEND="${COMMON_DEPEND}
 	>=dev-util/intltool-0.40.5
-	>=dev-util/pkgconfig-0.9.0
+	virtual/pkgconfig
 	doc? (
 		app-doc/doxygen
 		mono? ( >=virtual/monodoc-1.1.8 )

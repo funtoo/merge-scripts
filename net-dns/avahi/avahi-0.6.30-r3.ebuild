@@ -16,7 +16,7 @@ SRC_URI="http://avahi.org/download/${P}.tar.gz"
 
 LICENSE="LGPL-2.1"
 SLOT="0"
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd ~x86-linux"
+KEYWORDS="~*"
 IUSE="+autoipd bookmarks +dbus doc gdbm gtk gtk3 howl-compat +introspection ipv6
 kernel_linux mdnsresponder-compat mono python qt4 test +utils"
 
@@ -49,7 +49,7 @@ COMMON_DEPEND=">=dev-libs/libdaemon-0.14
 	kernel_linux? ( sys-libs/libcap )"
 DEPEND="${COMMON_DEPEND}
 	>=dev-util/intltool-0.40.5
-	>=dev-util/pkgconfig-0.9.0
+    virtual/pkgconfig
 	doc? (
 		app-doc/doxygen
 		mono? ( >=virtual/monodoc-1.1.8 )
