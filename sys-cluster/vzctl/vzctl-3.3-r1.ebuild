@@ -3,16 +3,21 @@
 
 EAPI="4"
 
+GITHUB_USER="funtoo"
+GITHUB_TAG="${PF}-funtoo"
+SRC_URI="https://github.com/${GITHUB_USER}/${PN}/tarball/${GITHUB_TAG} -> ${GITHUB_TAG}.tar.gz"
+
 inherit bash-completion-r1 eutils
+
+if [ -n "$GITHUB_TAG" ]; then
+	inherit autotools
+	SRC_URI="https://github.com/${GITHUB_USER}/${PN}/tarball/${GITHUB_TAG} -> ${GITHUB_TAG}.tar.gz"
+else
+	SRC_URI="http://download.openvz.org/utils/${PN}/${PV}/src/${P}.tar.bz2"
+fi
 
 DESCRIPTION="OpenVZ Containers control utility"
 HOMEPAGE="http://openvz.org/"
-SRC_URI="http://download.openvz.org/utils/${PN}/${PV}/src/${P}.tar.bz2"
-
-#GITHUB_USER="funtoo"
-#GITHUB_TAG="${P}-funtoo"
-#SRC_URI="https://github.com/${GITHUB_USER}/${PN}/tarball/${GITHUB_TAG} -> ${GITHUB_TAG}.tar.gz"
-
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~*"
@@ -22,19 +27,23 @@ RDEPEND="
 	sys-apps/ed
 	sys-apps/iproute2
 	sys-fs/vzquota
-	sys-cluster/ploop
-	>=sys-apps/openrc-0.6.5-r1"
+	sys-cluster/ploop"
 
 DEPEND=""
 
-#src_unpack() {
-#	unpack ${A}
-#	mv funtoo-vzctl-??????? vzctl-${PV} || die
-#}
+src_unpack() {
+	unpack ${A}
+	if [ ! -d "vzctl-${PV}" ]; then
+		mv funtoo-vzctl-??????? vzctl-${PV} || die
+	fi
+}
 
 src_prepare() {
 	# Set default OSTEMPLATE on gentoo
 	sed -e 's:=redhat-:=funtoo-:' -i etc/dists/default || die
+	if [ ! -e $S/configure ]; then
+		eautoreconf
+	fi
 }
 
 src_configure() {
