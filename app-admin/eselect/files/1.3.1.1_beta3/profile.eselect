@@ -743,7 +743,7 @@ remove_profile() {
 # PUBLIC
 # Description of remove action
 describe_remove() {
-	echo "Removes a profile. Usage: eselect profile remove [-q] <profile>"
+	echo "Removes a profile. Usage: eselect profile remove [-q] <profile> [profile] [profile] ..."
 }
 
 # PUBLIC
