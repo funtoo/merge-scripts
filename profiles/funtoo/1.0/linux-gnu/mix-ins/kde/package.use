@@ -1,6 +1,9 @@
 app-text/poppler qt4
 dev-python/PyQt4 declarative sql svg webkit
 kde-base/kdelibs opengl
+kde-base/kwin opengl
+media-libs/gd png
+media-plugins/gst-plugins-meta ogg vorbis
 sys-fs/udev extras
 x11-libs/qt-assistant qt3support
 x11-libs/qt-core qt3support

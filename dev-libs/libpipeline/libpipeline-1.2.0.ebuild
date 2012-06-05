@@ -15,7 +15,7 @@ IUSE="static-libs test"
 
 RDEPEND=""
 DEPEND="${RDEPEND}
-	dev-util/pkgconfig
+	virtual/pkgconfig
 	test? ( dev-libs/check )"
 
 src_configure() {
