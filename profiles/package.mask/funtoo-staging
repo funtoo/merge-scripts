@@ -1,5 +1,11 @@
 # Keeep the most recent masks in a reverse chrono order
 # newest on top
+
+# Oleg Vinichenko (6 Jun 2012)
+# Mask latest openvz stable kernels, due to unresolved udev bug
+# boot hang
+>=sys-kernel/openvz-rhel6-stable-2.6.32.042.055.10
+
 # Oleg Vinichenko ( 3 Jun 2012)
 # mask newest automake until #419459 resolved
 # prevent stage failures
