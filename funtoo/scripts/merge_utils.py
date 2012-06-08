@@ -140,6 +140,27 @@ class SyncFiles(MergeStep):
 				os.makedirs(dest_dir)
 			shutil.copyfile(src, dest)
 
+class MergeUpdates(MergeStep): 
+	def __init__(self, srcroot):
+		self.srcroot = srcroot
+
+	def run(self, tree):
+		for src in sorted(glob.glob(os.path.join(self.srcroot, "profiles/updates/?Q-????")), key=lambda x: (x[-4:], x[-7])):
+			dest = os.path.join(tree.root, "profiles/updates", src[-7:])
+			if os.path.exists(dest):
+				src_file = open(src)
+				dest_file = open(dest)
+				src_lines = src_file.readlines()
+				dest_lines = dest_file.readlines()
+				src_file.close()
+				dest_file.close()
+				dest_lines.extend(src_lines)
+				dest_file = open(dest, "w")
+				dest_file.writelines(dest_lines)
+				dest_file.close()
+			else:
+				shutil.copyfile(src, dest)
+
 class CleanTree(MergeStep):
 	# remove all files from tree, except dotfiles/dirs.
 	def run(self,tree):
