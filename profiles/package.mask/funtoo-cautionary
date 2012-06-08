@@ -1,3 +1,7 @@
+# Oleg Vinichenko (8 June 2012)
+# mask udisks, pulls udev-182 too
+>=sys-fs/udisks-1.98.0
+
 # Jean-Francis Roy (22 May 2012)
 # Masking polkit version that depends on latest consolekit.
 >=sys-auth/polkit-0.105
