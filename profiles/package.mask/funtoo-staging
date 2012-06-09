@@ -1,6 +1,10 @@
 # Keeep the most recent masks in a reverse chrono order
 # newest on top
 
+# Daniel Robbins (09 Jun 2012)
+# Masked for testing
+>=sys-apps/openrc-0.10.2
+
 # Oleg Vinichenko (6 Jun 2012)
 # Mask latest openvz stable kernels, due to unresolved udev bug
 # boot hang
