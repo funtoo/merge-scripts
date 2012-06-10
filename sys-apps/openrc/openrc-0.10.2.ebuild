@@ -20,7 +20,7 @@ RDEPEND="kernel_linux? ( >=sys-apps/sysvinit-2.86-r11 )
 	kernel_FreeBSD? ( virtual/init sys-process/fuser-bsd )
 	ncurses? ( sys-libs/ncurses )
 	pam? ( virtual/pam )
-	>=sys-apps/baselayout-2.1
+	>=sys-apps/baselayout-2.2
 	>=sys-fs/udev-135
 	sys-apps/iproute2"
 
