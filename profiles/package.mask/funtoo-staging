@@ -1,6 +1,12 @@
 # Keeep the most recent masks in a reverse chrono order
 # newest on top
 
+# Martin Scholz (15 Jun 2012)
+# masking nginx 1.3.1 for testing, 1.3.0 is still included
+# if no errors are repoted till 21 Jun 2012 nginx 1.3.1 will hit current
+# another 3 weeks later it will be in stable
+>=www-servers/nginx-1.3.0
+
 # Daniel Robbins (09 Jan 2012)
 # Masked for testin
 >=sys-apps/baselayout-2.2.0
@@ -17,12 +23,6 @@
 # Martin Scholz (02 Jun 2012)
 # Masked for testing
 =net-libs/nodejs-0.6.18
-
-# Martin Scholz (27 May 2012)
-# Masking of nginx-1.3.0 for testing purposes
-# will be unmask for experimental by end of first june week
-# current will be hold a bit longer masked, users feel free to test
-=www-servers/nginx-1.3.0
 
 # Masking of libreoffice-bin > 3.5.* as needing toolchain upgrade
 >=app-office/libreoffice-bin-3.5
