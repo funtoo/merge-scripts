@@ -22,7 +22,7 @@ KEYWORDS="~x86 ~amd64"
 IUSE="binary"
 DEPEND="binary? ( >=sys-kernel/genkernel-3.4.12.6-r4 )"
 RDEPEND="binary? ( >=sys-fs/udev-160 )"
-DESCRIPTION="Full Linux kernel sources - RHEL5 kernel with OpenVZ patchset"
+DESCRIPTION="Full Linux kernel sources - RHEL6 kernel with OpenVZ patchset"
 HOMEPAGE="http://www.openvz.org"
 MAINPATCH="patch-${OVZ_KV}-combined.gz"
 SRC_URI="${KERNEL_URI}
