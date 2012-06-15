@@ -11,7 +11,7 @@ inherit package-manager output
 
 DESCRIPTION="Manage portage profiles"
 MAINTAINER="rh1@funtoo.org"
-VERSION="funtoo-1.1_beta"
+VERSION="funtoo-1.4_beta"
 
 ### INIT ###
 
@@ -26,6 +26,7 @@ PORTAGE_OVERLAY_DIRS=( $(portageq portdir_overlay) )
 VALID_PROFILE_TYPES=( "arch" "build" "flavor" "mix-ins" "mono" )
 REQUIRED_SINGLE_PROFILE_TYPES=( "arch" "build" "flavor" )
 MULTI_PROFILE_TYPES=( "arch" "build" "flavor" "mix-ins" )
+MULTIPLE_PROFILES_ALLOWED_TYPE=( "mix-ins" )
 MONOLITHIC_PROFILE_TYPE=( "mono" )
 
 # Die if MAIN_PROFILE_DESC_FILE doesn't exist
@@ -240,12 +241,6 @@ is_profile_set() {
 # Checks if parent file is valid.
 # $1 = "print_warn" If $1 is set to "print_warn" then print warning messages. If not set then just return "False" if anything in parent is invalid
 validate_parent_file() {
-	local print_warn
-	if [[ "${1}" == "print_warn" ]] ; then
-		print_warn="True"
-	else
-		print_warn="False"
-	fi
 
 	# Check if profiles are valid
 	local invalid_profiles profile_count=0
@@ -268,10 +263,10 @@ validate_parent_file() {
 		done
 		if (( ${profile_count} == 0 )) ; then
 			no_profile["${no_profile_count}"]="${profile_type}"
-			no_profile_count="$(( ${no_profile_count}+1 ))"
+			no_profile_count="$(( ${no_profile_count} + 1 ))"
 		elif (( ${profile_count} > 1 )) ; then
 			extra_profiles["${extra_profiles_count}"]="${profile_type}"
-			extra_profiles_count="$(( ${extra_profiles_count}+1 ))"
+			extra_profiles_count="$(( ${extra_profiles_count} + 1 ))"
 		fi
 	done
 
@@ -286,47 +281,29 @@ validate_parent_file() {
 		else
 			for profile_type in ${MULTI_PROFILE_TYPES[@]} ; do
 				if [[ "${current_type}" == "${profile_type}" ]] ; then
-					new_style="$(( ${new_style}+1 ))"
+					new_style="$(( ${new_style} + 1 ))"
 					break
 				fi
 			done
 		fi
 	done
-	if (( ${old_style} > 0  && ${new_style} > 0 )) ; then
-		mixed_profiles="True"
-	fi
 
-	if [[ "${print_warn}" == "True" ]] ; then
-		# Display the results
-		if (( ${#invalid_profiles} > 0 )) ; then
-			write_warning_msg "The following profile(s) do not appear to be valid: ${invalid_profiles[@]}"
-		fi
-		if (( ${#no_profile} > 0 )) ; then
-			write_warning_msg "Your current profile setup does not contain any '${no_profile[@]}' type profile(s). Please add one of each."
-		fi
-		if (( ${#extra_profiles} > 0 )) ; then
-			write_warning_msg "Your current profile setup contains more than one '${extra_profiles[@]}' type profile(s). This is not recommended."
-		fi
-		if [[ "${mixed_profiles}" == "True" ]] ; then
-			write_warning_msg "It is not recommended to mix the old style monolithic profiles with the new style multi profile ones"
-		fi
-	else
-		if (( ${#invalid_profiles} > 0 )) ; then
-			echo "False"
-			return
-		fi
-		if (( ${#no_profile} > 0 )) ; then
-			echo "False"
-			return
-		fi
-		if (( ${#extra_profiles} > 0 )) ; then
-			echo "False"
-			return
-		fi
-		if [[ "${mixed_profiles}" == "True" ]] ; then
-			echo "False"
-			return
-		fi
+	# Set global variables with results. Set as strings, not array
+	if (( ${#invalid_profiles} > 0 )) ; then
+		INVALID_PROFILES="${invalid_profiles[@]}"
+	fi
+	# Not having profiles set is only error if not using an old style monolithic profile
+	if (( ${#no_profile} > 0 && ${old_style} == 0 )) ; then
+		MISSING_PROFILE_TYPES="${no_profile[@]}"
+	fi
+	if (( ${#extra_profiles} > 0 )) ; then
+		EXTRA_PROFILE_TYPES="${extra_profiles[@]}"
+	fi
+	if (( ${old_style} > 0  && ${new_style} > 0 )) ; then
+		MIXED_PROFILES="True"
+	fi
+	if (( ${old_style} > 0 && ${new_style} == 0 )) ; then
+		USING_OLD_STYLE="True"
 	fi
 }
 
@@ -448,7 +425,7 @@ add_profile() {
 # PUBLIC
 # Description of add action
 describe_add() {
-	echo "Adds a profile. Usage: eselect profile add [-fq] <profile>"
+	echo "Adds profiles."
 }
 
 # PUBLIC
@@ -456,17 +433,13 @@ describe_add() {
 do_add() {
 	# Parse cli args
 	FORCE_ADD=""
-	QUIET=""
-	while getopts ":fq" option ; do
+	while getopts ":f" option ; do
 		case ${option} in
 			f)
 				FORCE_ADD="--force"
 				;;
-			q)
-				QUIET="True"
-				;;
 			*)
-				echo "Unrecognized option, use -q for quiet, -f for force"
+				echo "Unrecognized option, use -f for force"
 				;;
 		esac
 	done
@@ -476,10 +449,9 @@ do_add() {
 	if [[ -z "${1}" ]] ; then
 		die -q "You didn't tell me what profile to add"
 	else
-		add_profile "${1}"
-		if [[ -z "${QUIET}" ]] ; then
-			validate_parent_file "print_warn"
-		fi
+		for profile in ${@} ; do
+			add_profile "${profile}"
+		done
 	fi
 }
 
@@ -487,7 +459,7 @@ do_add() {
 
 # PUBLIC
 # Cleans $PARENT_FILE of all invalid entries and corrects order of profiles
-# $1 = "-p" || "--pretend" If set just prints what new $PARENT_FILE would contain
+# $1 = "-p" If set just prints what new $PARENT_FILE would contain
 clean_profiles() {
 	# Need temporary parent file
 	local temp_parent_file="$(create_temp_file)"
@@ -538,14 +510,11 @@ clean_profiles() {
 	PARENT_FILE="${orig_parent_file}"
 	if [[ "${PRETEND_CLEAN}" == "True" ]] ; then
 		echo
-		# TODO: use diff instead
-		write_list_start "If cleaned, parent file would contain:"
-		for profile in $(cat ${temp_file}) ; do
-			echo -e "\t${profile}"
-		done
+		write_list_start "Pretend flag set, Displaying diff of what would be changed:"
+		diff -u ${PARENT_FILE} ${temp_file}
+		echo
 		rm "${temp_parent_file}"
 		rm "${temp_file}"
-		echo
 	else
 		rm "${temp_parent_file}"
 		mv "${temp_file}" "${PARENT_FILE}"
@@ -555,25 +524,21 @@ clean_profiles() {
 # PUBLIC
 # Description of clean action
 describe_clean() {
-	echo "Removes any invalid profiles that are set. Use '-p' to check what would be removed. Usage: eselect profile clean [-pq]"
+	echo "Cleans up parent file. Removes invalid profiles. Fixes mis-ordered entries. Use '-p' to check what would be changed/removed."
 }
 
 # PUBLIC
 # Called by eselect when passed clean as action
 do_clean() {
-		# Parse cli args
-	QUIET=""
+	# Parse cli args
 	PRETEND_CLEAN=""
-	while getopts ":pq" option ; do
+	while getopts ":p" option ; do
 		case ${option} in
 			p)
 				PRETEND_CLEAN="True"
 				;;
-			q)
-				QUIET="True"
-				;;
 			*)
-				echo "Unrecognized option, use -p for pretend, -q for quiet"
+				echo "Unrecognized option, use -p for pretend"
 				;;
 		esac
 	done
@@ -581,18 +546,15 @@ do_clean() {
 	shift $(($OPTIND - 1))
 
 	clean_profiles
-	if [[ -z "${QUIET}" ]] ; then
-		validate_parent_file "print_warn"
-	fi
 }
 
 ### LIST ACTION ###
 
 # PUBLIC
 # Writes a list entry
-# $1 = List number, $2 = Name of profile, $3 = Type of profile, $4 = Status flag,
+# $1 = List number, $2 = Name of profile, $3 = Type of profile
 write_numbered_profile_list_entry() {
-	local list_num="${1}" profile="${2}" profile_type="${3}" status="${4}"
+	local list_num="${1}" profile="${2}" profile_type="${3}"
 
 	# Mark with "*" if in current profiles
 	local profile_set=$(is_profile_set "${profile}")
@@ -617,18 +579,12 @@ write_numbered_profile_list_entry() {
 	space $(( 4 - ${#list_num} ))
 
 	# Profile name
-	if [[ "${status}" != stable ]] ; then
-		echo -n -e "${not_stable}"
-		echo -n -e "$(apply_text_highlights "${not_stable}" "${profile}")"
-		echo -e "${normal}"
-	else
-		echo -n -e "${right}"
-		echo -n -e "$(apply_text_highlights "${right}" "${profile}")"
-		echo -e "${normal}"
-	fi
+	echo -n -e "${right}"
+	echo -n -e "$(apply_text_highlights "${right}" "${profile}")"
+	echo -e "${normal}"
 }
 
-# PRIVATE  For use with write_numbered_profile_list()
+# PRIVATE  For use with write_numbered_profile_list(), Also relies on global vars set by validate_parent_file function
 # Prints list of <type> profiles.
 # $1 = profile type $2 = "True" if print this list otherwise "False".
 write_type_list() {
@@ -648,8 +604,7 @@ write_type_list() {
 		local profiles=( $(awk '$1 == "'"${profile_type}"'" { print $2 }' "${pro_desc_file}") )
 		for profile in ${profiles[@]} ; do
 			if [[ "${print_list}" == "True" ]] ; then
-				local status="$(awk '($1 == "'"${profile_type}"'") && ($2 == "'"${profile}"'") { print $3 }' "${pro_desc_file}")"
-				write_numbered_profile_list_entry "${LIST_ENTRY_NUMBER}" "${repo_name}:${profile}" "${profile_type}" "${status}"
+				write_numbered_profile_list_entry "${LIST_ENTRY_NUMBER}" "${repo_name}:${profile}" "${profile_type}"
 			fi
 			LIST_ENTRY_NUMBER=$(( ${LIST_ENTRY_NUMBER}+1 ))
 		done
@@ -684,34 +639,20 @@ write_numbered_profile_list() {
 # PUBLIC
 # Description of list action
 describe_list() {
-	echo "List available profile targets. Usage: eselect profile list [-q] [profile_type]"
+	echo "List available profile targets."
 }
 
 # PUBLIC
 # Called by eselect when passed list as action
 do_list() {
-	QUIET=""
-	while getopts ":q" option ; do
-		case ${option} in
-			q)
-				QUIET="True"
-				;;
-			*)
-				echo "Unrecognized option, use -q for quiet"
-				;;
-		esac
-	done
-	# Remove option args
-	shift $(($OPTIND - 1))
-
 	write_numbered_profile_list "${1}"
-	if [[ -z "${QUIET}" ]] ; then
-		validate_parent_file "print_warn"
-	fi
 }
 
 ### REMOVE ACTION ###
 
+#PUBLIC
+# Removes a profile
+# $1 = profile to remove
 remove_profile() {
 	local pro_to_remove="${1}"
 	if $(is_number "${pro_to_remove}") ; then
@@ -740,33 +681,19 @@ remove_profile() {
 # PUBLIC
 # Description of remove action
 describe_remove() {
-	echo "Removes a profile. Usage: eselect profile remove [-q] <profile>"
+	echo "Removes a profile."
 }
 
 # PUBLIC
 # Called by eselect when passed remove as action
 do_remove() {
-	QUIET=""
-	while getopts ":q" option ; do
-		case ${option} in
-			q)
-				QUIET="True"
-				;;
-			*)
-				echo "Unrecognized option, use -q for quiet"
-				;;
-		esac
-	done
-	# Remove option args
-	shift $(($OPTIND - 1))
 
 	if [[ -z "${1}" ]] ; then
 		die -q "You didn't tell me what profile to remove"
 	else
-		remove_profile "${1}"
-		if [[ -z "${QUIET}" ]] ; then
-			validate_parent_file "print_warn"
-		fi
+		for profile in ${@} ; do
+			remove_profile "${profile}"
+		done
 	fi
 }
 
@@ -804,7 +731,7 @@ replace_profile() {
 	if [[ -n "${nomix}" ]] ; then
 		if [[ -z "${FORCE_REPLACE}" ]] ; then
 			mv "${orig_parent_file}" "${PARENT_FILE}"
-			die -q "Current profile contains the profile(s) '${nomix[@]}' which should not be used with '${new_profile}'. Use --force to override"
+			die -q "Current profile contains the profile(s) '${nomix[@]}' which should not be used with '${new_profile}'. Use -f to override"
 		fi
 	fi
 
@@ -862,7 +789,7 @@ replace_profile() {
 # PUBLIC
 # Description of replace action
 describe_replace() {
-	echo "Replaces a profile. Usage: eselect profile replace [-fq] <old_profile> <new_profile>"
+	echo "Replaces a profile. Use -f to force. Usage: eselect profile replace [-f] <old_pro> <new_pro>"
 }
 
 # PUBLIC
@@ -870,17 +797,13 @@ describe_replace() {
 do_replace() {
 	# Parse cli args
 	FORCE_REPLACE=""
-	QUIET=""
-	while getopts ":fq" option ; do
+	while getopts ":f" option ; do
 		case ${option} in
 			f)
 				FORCE_REPLACE="True"
 				;;
-			q)
-				QUIET="True"
-				;;
 			*)
-				echo "Unrecognized option, use -q for quiet, -f for force"
+				echo "Unrecognized option, Use -f for force"
 				;;
 		esac
 	done
@@ -888,12 +811,9 @@ do_replace() {
 	shift $(($OPTIND - 1))
 
 	if (( $# < 2 )) ; then
-		die -q "The replace action requires 2 arguments. Usage: eselect profile replace [-fq] <old_profile> <new_profile>"
+		die -q "The replace action requires 2 arguments. Usage: eselect profile replace [-f] <old_pro> <new_pro>"
 	else
 		replace_profile "${1}" "${2}"
-		if [[ -z "${QUIET}" ]] ; then
-			validate_parent_file "print_warn"
-		fi
 	fi
 }
 
@@ -902,40 +822,69 @@ do_replace() {
 # PUBLIC
 # Displays currently set profiles
 show_profiles() {
+
+	# Validate parent file so global vars are set
+	validate_parent_file
+
+	# Determine spacing
+	local spaceme=1
+	local no_type="(no type)"
+	for profile_type in ${VALID_PROFILE_TYPES[@]} ${no_type} ; do
+		if (( ${#profile_type} > ${spaceme} )) ; then
+			spaceme=${#profile_type}
+		fi
+	done
+	spaceme=$(( ${spaceme} + 1 ))
+
+	# Get profiles and write list
 	profiles=( $(get_currently_set_profiles) )
 	echo
 	write_list_start "Currently set profiles:"
-	for profile in ${profiles[@]} ; do
-		echo -e "\t${profile}"
-	done
+	if [[ "${USING_OLD_STYLE}" != "True" && "${MIXED_PROFILES}" != "True" && -z "${EXTRA_PROFILE_TYPES}" ]] ; then
+		# Print required types first
+		local profile_count=0
+		for (( x = 0 ; x < ${#REQUIRED_SINGLE_PROFILE_TYPES[@]}; x++ )) ; do
+			if [[ "${REQUIRED_SINGLE_PROFILE_TYPES[${x}]}" == "$(get_profile_type ${profiles[${profile_count}]})" ]] ; then
+				echo -e "$(space $(( spaceme -  ${#REQUIRED_SINGLE_PROFILE_TYPES[${x}]} )))${REQUIRED_SINGLE_PROFILE_TYPES[${x}]}: ${profiles[${profile_count}]}"
+				unset profiles["${profile_count}"]}
+				profile_count=$(( ${profile_count} + 1 ))
+			else
+				echo -e "$(space $(( spaceme -  ${#REQUIRED_SINGLE_PROFILE_TYPES[${x}]} )))${REQUIRED_SINGLE_PROFILE_TYPES[${x}]}: (missing)"
+			fi
+		done
+
+		# Print rest of profiles
+		for pro in ${profiles[@]} ; do
+			local pro_type=$(get_profile_type ${pro})
+			if [[ -n "${pro_type}" ]] ; then
+				echo -e "$(space $(( spaceme -  ${#pro_type} )))${pro_type}: ${pro}"
+			else
+				echo -e "$(space $(( spaceme -  ${#no_type} )))${no_type}: ${pro}"
+			fi
+		done
+
+	else
+		# Using either old style or mixed profile(s) or user force-added extra profiles of same type, just print list.
+		for pro in ${profiles[@]} ; do
+			local pro_type=$(get_profile_type ${pro})
+			if [[ -n "${pro_type}" ]] ; then
+				echo -e "$(space $(( spaceme -  ${#pro_type} )))${pro_type}: ${pro}"
+			else
+				echo -e "$(space $(( spaceme -  ${#no_type} )))${no_type}: ${pro}"
+			fi
+		done
+	fi
 	echo
 }
 
 # PUBLIC
 # Description of show action
 describe_show() {
-	echo "Displays list of profiles that are currently set. Usage eselect profile show [-q]"
+	echo "Displays list of profiles that are currently set."
 }
 
 # PUBLIC
 # Called by eselect when passed show as action
 do_show() {
-	QUIET=""
-	while getopts ":q" option ; do
-		case ${option} in
-			q)
-				QUIET="True"
-				;;
-			*)
-				echo "Unrecognized option, use -q for quiet"
-				;;
-		esac
-	done
-	# Remove option args
-	shift $(($OPTIND - 1))
-
 	show_profiles
-	if [[ -z "${QUIET}" ]] ; then
-		validate_parent_file "print_warn"
-	fi
 }
