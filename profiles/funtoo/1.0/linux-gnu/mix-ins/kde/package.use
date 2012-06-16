@@ -16,3 +16,5 @@ x11-libs/qt-sql qt3support
 # Leave until virtual/fortran is properly implemented
 sys-devel/gcc fortran
 
+# Needed by dev-lang/R , pulled in by kde-base/cantor
+sys-libs/zlib minizip
