@@ -1,5 +1,0 @@
-Funtoo 1.0 Release-specific stuff
-
-NOTE: all stuff has been migrated into the "linux-gnu" subdirectory, and
-everything else in this directory will eventually be deleted once the new
-"linux-gnu" subdirectory is working OK.

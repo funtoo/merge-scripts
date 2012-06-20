@@ -1,0 +1,2 @@
+# Inherit gentoo's base profile. Overrides go in funtoo/1.0/linux-gnu.
+:base
