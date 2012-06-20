@@ -849,7 +849,7 @@ show_profiles() {
 				unset profiles["${profile_count}"]}
 				profile_count=$(( ${profile_count} + 1 ))
 			else
-				echo -e "$(space $(( spaceme -  ${#REQUIRED_SINGLE_PROFILE_TYPES[${x}]} )))${REQUIRED_SINGLE_PROFILE_TYPES[${x}]}: (missing)"
+				echo -e "$(space $(( spaceme -  ${#REQUIRED_SINGLE_PROFILE_TYPES[${x}]} )))${REQUIRED_SINGLE_PROFILE_TYPES[${x}]}: ${COLOUR_WARN}(missing)${COLOUR_NORMAL}"
 			fi
 		done
 
