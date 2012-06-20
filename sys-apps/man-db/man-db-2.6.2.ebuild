@@ -12,7 +12,7 @@ SRC_URI="http://download.savannah.nongnu.org/releases/man-db/${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="*"
+KEYWORDS="~*"
 IUSE="berkdb +gdbm nls zlib"
 
 RDEPEND="dev-libs/libpipeline
@@ -29,10 +29,6 @@ DEPEND="
 pkg_setup() {
 	enewgroup man 15
 	enewuser man 13 -1 /usr/share/man man
-}
-
-src_prepare() {
-	epatch "${FILESDIR}"/${PN}-2.6.0.2-flock.h.patch
 }
 
 src_configure() {
