@@ -23,6 +23,12 @@ steps = [
 	SyncDir(funtoo_overlay.root,"licenses"),
 	SyncDir(funtoo_overlay.root,"eclass"),
 	SyncDir(funtoo_overlay.root,"metadata"),
+	SyncFiles(gentoo_src.root, {
+		"profiles/arch/amd64/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/package.use.mask/01-gentoo",
+		"profiles/arch/amd64/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/use.mask/01-gentoo",
+		"profiles/arch/x86/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-32bit/package.use.mask/01-gentoo",
+		"profiles/arch/x86/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-32bit/use.mask/01-gentoo"
+	}),
 	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(foo_overlay, select="all", skip=None, replace=["app-shells/rssh","net-misc/unison"]),
 	InsertEbuilds(bar_overlay, select="all", skip=None, replace=True),
