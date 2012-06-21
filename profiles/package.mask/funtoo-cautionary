@@ -1,3 +1,8 @@
+# Ryan Harris (20 June 2012)
+# mask automake-1.12.1 due to multiple failures 
+# Ref b.g.o.# 421465
+=sys-devel/automake-1.12.1
+
 # Oleg Vinichenko (8 June 2012)
 # mask udisks, pulls udev-182 too
 >=sys-fs/udisks-1.98.0
