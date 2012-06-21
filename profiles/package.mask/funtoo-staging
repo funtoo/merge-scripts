@@ -1,6 +1,10 @@
 # Keeep the most recent masks in a reverse chrono order
 # newest on top
 
+# Ryan Harris (21 Jun 2012)
+# Mask new boot-update. Needs testing
+>=sys-boot/boot-update-1.6.0
+
 # Martin Scholz (15 Jun 2012)
 # masking nginx 1.3.1 for testing, 1.3.0 is still included
 # if no errors are repoted till 21 Jun 2012 nginx 1.3.1 will hit current
