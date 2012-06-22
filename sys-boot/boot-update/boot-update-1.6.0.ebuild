@@ -9,11 +9,18 @@ LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~*"
 RESTRICT="mirror"
-GIT_TAG="${PVR}"
-SRC_URI="http://git.funtoo.org/boot-update/snapshot/boot-update-${GIT_TAG}.tar.gz"
+GITHUB_REPO="boot-update"
+GITHUB_USER="funtoo"
+GITHUB_TAG="${PVR}"
+SRC_URI="https://www.github.com/${GITHUB_USER}/${GITHUB_REPO}/tarball/${GITHUB_TAG} -> boot-update-${GITHUB_TAG}.tar.gz"
 
 DEPEND=""
 RDEPEND="dev-lang/python >=sys-boot/grub-1.98-r2"
+
+src_unpack() {
+	unpack ${A}
+	mv "${WORKDIR}/${GITHUB_USER}-${PN}"-??????? "${S}" || die
+}
 
 src_install() {
 	insinto /usr/lib/`eselect python show --python2`/site-packages
