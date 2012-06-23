@@ -5,7 +5,6 @@ EAPI="4-python"
 
 PYTHON_MULTIPLE_ABIS="1"
 PYTHON_RESTRICTED_ABIS="2.5 3.1 *-jython *-pypy-*"
-
 inherit multilib python
 
 DESCRIPTION="Funtoo Core Boot Framework for global boot loader configuration"
@@ -29,12 +28,14 @@ src_unpack() {
 	mv "${WORKDIR}/${GITHUB_USER}-${PN}"-??????? "${S}" || die
 }
 
-src_install() {
-	insinto /usr/$(get_libdir)/`eselect python show --python2`/site-packages
-	cd ${S}/python/modules
-	doins -r .
+install_into_site_packages() {
+        insinto $(python_get_sitedir)
+        cd ${S}/python/modules
+        doins -r .
+}
 
-	cd ${S}
+src_install() {
+        python_execute_function install_into_site_packages
 
 	dodoc doc/*.rst
 
