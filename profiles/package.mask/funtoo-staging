@@ -8,14 +8,6 @@
 # Mask new boot-update. Needs testing
 >=sys-boot/boot-update-1.6.0
 
-# Daniel Robbins (09 Jan 2012)
-# Masked for testin
->=sys-apps/baselayout-2.2.0
-
-# Daniel Robbins (09 Jun 2012)
-# Masked for testing
->=sys-apps/openrc-0.10.2
-
 # Oleg Vinichenko (6 Jun 2012)
 # Mask latest openvz stable kernels, due to unresolved udev bug
 # boot hang
