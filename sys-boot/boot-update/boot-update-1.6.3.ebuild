@@ -49,6 +49,7 @@ src_install() {
 	insinto /etc
 	doins etc/boot.conf
 	doins etc/boot.conf.defaults
+	doins etc/boot.conf.example
 }
 
 src_compile() {
