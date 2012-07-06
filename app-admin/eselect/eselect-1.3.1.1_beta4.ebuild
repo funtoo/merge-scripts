@@ -68,4 +68,7 @@ pkg_postinst() {
 	[[ -z ${EROOT} ]] && local EROOT=${ROOT}
 	chgrp portage "${EROOT}/var/lib/gentoo/news" \
 		&& chmod g+w "${EROOT}/var/lib/gentoo/news"
+
+	ewarn "This version of eselect supports using /etc/portage/make.profile along with the new Funtoo 1.0 profiles."
+	ewarn "Please visit http://www.funtoo.org/wiki/Funtoo_1.0_Profile for instructions on how to switch"
 }
