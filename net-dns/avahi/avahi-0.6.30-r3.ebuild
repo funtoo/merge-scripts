@@ -7,8 +7,9 @@ EAPI="3"
 PYTHON_DEPEND="python? 2"
 PYTHON_USE_WITH="gdbm"
 PYTHON_USE_WITH_OPT="python"
+WANT_AUTOMAKE=1.11
 
-inherit autotools eutils mono python multilib flag-o-matic
+inherit autotools eutils mono python multilib flag-o-matic user
 
 DESCRIPTION="System which facilitates service discovery on a local network"
 HOMEPAGE="http://avahi.org/"
