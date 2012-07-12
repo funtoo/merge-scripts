@@ -6,10 +6,6 @@
 >sys-auth/polkit-0.104-r1
 >sys-fs/udisks-1.97.0-r1
 
-# Oleg Vinichenko ( 22 Jun 2012)
-# # masked portage-2.3.4-r5, only for testing funtoo-1.0 profile
->=sys-apps/portage-2.3.4-r6
-
 # Ryan Harris (21 Jun 2012)
 # Mask new boot-update. Needs testing
 >=sys-boot/boot-update-1.6.0
