@@ -14,10 +14,6 @@
 # Mask new boot-update. Needs testing
 >=sys-boot/boot-update-1.6.0
 
-# Martin Scholz (02 Jun 2012)
-# Masked for testing
->=net-libs/nodejs-0.6.18
-
 # Masking of libreoffice-bin > 3.5.* as needing toolchain upgrade
 >=app-office/libreoffice-bin-3.5
 
