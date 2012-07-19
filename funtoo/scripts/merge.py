@@ -13,6 +13,7 @@ foo_overlay = Tree("foo-overlay", "master", "https://github.com/slashbeast/foo-o
 bar_overlay = Tree("bar-overlay", "master", "git://github.com/adessemond/bar-overlay.git", pull=True)
 flora_overlay = Tree("flora", "master", "repos@git.funtoo.org:flora.git", pull=True)
 progress_overlay = SvnTree("progress", "https://gentoo-progress.googlecode.com/svn/overlays/progress")
+lcdfiltering_overlay = Tree("lcd-filtering", "master", "git://gitorious.org/lcd-filtering/lcd-filtering.git", pull=True)
 
 steps = [
 	SyncTree(gentoo_src,exclude=["/metadata/cache/**","ChangeLog", "dev-util/metro"]),
@@ -33,6 +34,7 @@ steps = [
 	InsertEbuilds(foo_overlay, select="all", skip=None, replace=["app-shells/rssh","net-misc/unison"]),
 	InsertEbuilds(bar_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(flora_overlay, select="all", skip=None, replace=False),
+	InsertEbuilds(lcdfiltering_overlay, select="all", skip=["app-text/poppler"], replace=True),
 	SyncDir(progress_overlay.root, "eclass"),
 	SyncFiles(progress_overlay.root, {
 		"profiles/package.mask":"profiles/package.mask/progress",

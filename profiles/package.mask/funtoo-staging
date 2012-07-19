@@ -1,6 +1,10 @@
 # Keeep the most recent masks in a reverse chrono order
 # newest on top
 
+#  Oleg Vinichenko (16 Jul 2012)
+#  FL-46: remove unused net from openrc, masked for testing
+>=sys-apps/openrc-0.10.2-r3
+
 # Ole gVinichenko (13 Jul 2012)
 # FL-41, a new lvm2 ebuild, hardmasked for testing
 >=sys-fs/lvm2-2.02.95
