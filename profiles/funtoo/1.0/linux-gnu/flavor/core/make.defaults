@@ -4,7 +4,7 @@ USE="$USE nls iconv xml pcre" 									#core subsystems
 USE="$USE zlib bzip2"										#core compression
 USE="$USE berkdb gdbm"										#core databases
 USE="$USE readline ncurses"									#core gui/interactivity frameworks
-USE="$USE mudflap openmp python perl cxx"							#core languages
+USE="$USE mudflap openmp python cxx"								#core languages
 USE="$USE ipv6 tcpd"                                                                            #core networking 
 
 
