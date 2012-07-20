@@ -13,13 +13,13 @@ LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="*"
 
-IUSE="readline +static +static-libs clvm cman +lvm1 selinux"
+IUSE="readline +static +static-libs clvm cman +lvm1 selinux +udev"
 
 DEPEND_COMMON="!!sys-fs/device-mapper
 	readline? ( sys-libs/readline )
 	clvm? ( =sys-cluster/dlm-2*
 			cman? ( =sys-cluster/cman-2* ) )
-	>=sys-fs/udev-151-r4"
+	udev? ( >=sys-fs/udev-151-r4 )"
 
 RDEPEND="${DEPEND_COMMON}
 	!<sys-apps/openrc-0.4
@@ -142,9 +142,9 @@ src_configure() {
 		--with-staticdir="${EPREFIX}/sbin" \
 		--libdir="${EPREFIX}/$(get_libdir)" \
 		--with-usrlibdir="${EPREFIX}/usr/$(get_libdir)" \
-		--enable-udev_rules \
-		--enable-udev_sync \
-		--with-udevdir="${EPREFIX}/lib/udev/rules.d/" \
+		$(use_enable udev udev_rules) \
+		$(use_enable udev udev_sync) \
+		$(use_with udev udevdir "${EPREFIX}/lib/udev/rules.d/") \
 		${myconf} \
 		CLDFLAGS="${LDFLAGS}" || die
 }
