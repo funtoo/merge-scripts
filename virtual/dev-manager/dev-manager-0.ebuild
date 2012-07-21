@@ -12,4 +12,4 @@ KEYWORDS="*"
 IUSE=""
 
 DEPEND=""
-RDEPEND="sys-fs/udev"
+RDEPEND="|| ( sys-fs/udev sys-fs/mdev-bb )"
