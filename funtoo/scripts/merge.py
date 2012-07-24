@@ -41,11 +41,21 @@ steps = [
 		"profiles/use.mask":"profiles/use.mask/progress"
 	}),
 	InsertEbuilds(progress_overlay, select="all", skip=None, replace=True, merge=["dev-lang/python", "dev-libs/boost", "dev-python/psycopg", "dev-python/pysqlite", "dev-python/python-docs", "dev-python/simpletal", "dev-python/wxpython", "x11-libs/vte"]),
-	MergeUpdates(progress_overlay.root),
+	MergeUpdates(progress_overlay.root)
+]
+# Mythtv overlay
+if branch == "experimental":
+	mythtv_overlay = VarLocTree("mythtv", "master", "git://github.com/MythTV/packaging.git", pull=True)
+	steps.extend((
+		InsertEbuilds(mythtv_overlay, select='all', skip=["media-tv/miro"], replace=True, ebuildloc="Gentoo"),
+		SyncDir(mythtv_overlay.root, "eclass")
+		))
+
+steps.extend((
 	AutoGlobMask("dev-lang/python", "python*_pre*", "funtoo-python"),
 	Minify(),
 	GenCache()
-]
+	))
 
 # work tree is a non-git tree in tmpfs for enhanced performance - we do all the heavy lifting there:
 

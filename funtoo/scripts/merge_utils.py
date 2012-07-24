@@ -121,7 +121,7 @@ class SyncDir(MergeStep):
 		cmd += "%s %s" % ( src, dest )
 		runShell(cmd)
 
-class SyncFiles(MergeStep): 
+class SyncFiles(MergeStep):
 	def __init__(self, srcroot, files):
 		self.srcroot = srcroot
 		self.files = files
@@ -140,7 +140,7 @@ class SyncFiles(MergeStep):
 				os.makedirs(dest_dir)
 			shutil.copyfile(src, dest)
 
-class MergeUpdates(MergeStep): 
+class MergeUpdates(MergeStep):
 	def __init__(self, srcroot):
 		self.srcroot = srcroot
 
@@ -174,7 +174,7 @@ class SyncTree(SyncDir):
 	def __init__(self,srctree,exclude=[]):
 		self.srctree = srctree
 		SyncDir.__init__(self,srctree.root,srcdir=None,destdir=None,exclude=exclude,delete=True)
-		
+
 	def run(self,desttree):
 		SyncDir.run(self,desttree)
 		desttree.logTree(self.srctree)
@@ -192,6 +192,7 @@ class Tree(object):
 		else:
 			base = "/var/git/source-trees"
 			self.root = "%s/%s" % ( base, self.name )
+
 		if not os.path.exists(base):
 			os.makedirs(base)
 		if os.path.exists(self.root):
@@ -214,6 +215,10 @@ class Tree(object):
 			self.merged.extend(srctree.merged)
 		else:
 			# this tree has a name, so record the name of the tree and its SHA1 for reference
+			if hasattr(srctree, "origroot"):
+				self.merged.append([srctree.name, headSHA1(srctree.origroot)])
+				return
+
 			self.merged.append([srctree.name, headSHA1(srctree.root)])
 
 class SvnTree(object):
@@ -255,7 +260,7 @@ class UnifiedTree(Tree):
 			if sha1 != None:
 				cmd += "  %s: %s\n" % ( name, sha1 )
 		cmd += "EOF\n"
-		cmd += ")\n" 
+		cmd += ")\n"
 		print "running: %s" % cmd
 		# we use os.system because this multi-line command breaks runShell() - really, breaks commands.getstatusoutput().
 		retval = os.system(cmd)
@@ -263,18 +268,34 @@ class UnifiedTree(Tree):
 			print "Commit failed."
 			sys.exit(1)
 		if push != False:
-			runShell("(cd %s; git push %s)" % ( self.root, push )) 
-	
+			runShell("(cd %s; git push %s)" % ( self.root, push ))
+
+class VarLocTree(Tree):
+	# This class is for use with overlays where the ebuilds are not stored at the root of the tree.
+	# It allows self.root to be modified later and still remember original root location
+
+	def __init__(self,name,branch="master",url=None,pull=False, trylocal=None):
+		Tree.__init__(self, name, branch, url, pull, trylocal)
+		self.origroot = self.root
+
+	def head(self):
+		return headSHA1(self.origroot)
 
 class InsertEbuilds(MergeStep):
 
-	def __init__(self,srctree,select="all",skip=None,replace=False,merge=None,categories=None):
+	def __init__(self,srctree,select="all",skip=None,replace=False,merge=None,categories=None,ebuildloc=None):
 		self.select = select
 		self.skip = skip
 		self.srctree = srctree
 		self.replace = replace
 		self.merge = merge
 		self.categories = categories
+
+		# ebuildloc is the path to the tree relative to srctree.root.
+		# This is for overlays where the tree is not located at root of overlay
+		if ebuildloc != None:
+			self.srctree.root = os.path.join(self.srctree.root, ebuildloc)
+
 
 	def run(self,desttree):
 		desttree.logTree(self.srctree)
@@ -303,7 +324,7 @@ class InsertEbuilds(MergeStep):
 							a.append(cat)
 
 		# Our main loop:
-		print "# Merging in ebuilds from %s" % self.srctree.root 
+		print "# Merging in ebuilds from %s" % self.srctree.root
 		for cat in a:
 			catdir = os.path.join(self.srctree.root,cat)
 			if not os.path.isdir(catdir):
