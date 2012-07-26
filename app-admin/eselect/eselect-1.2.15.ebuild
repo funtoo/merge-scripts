@@ -1,6 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-admin/eselect/eselect-1.2.15.ebuild,v 1.7 2011/09/09 10:43:05 ulm Exp $
 
 inherit bash-completion-r1
 

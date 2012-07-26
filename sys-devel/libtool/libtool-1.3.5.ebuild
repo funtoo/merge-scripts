@@ -1,6 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-devel/libtool/libtool-1.3.5.ebuild,v 1.9 2011/02/06 11:36:46 leio Exp ${P}-r1.ebuild,v 1.8 2002/10/04 06:34:42 kloeri Exp $
 
 DESCRIPTION="A shared library tool for developers"
 HOMEPAGE="http://www.gnu.org/software/libtool/"

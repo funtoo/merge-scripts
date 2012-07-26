@@ -1,6 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-devel/libtool/libtool-2.4-r1.ebuild,v 1.4 2011/02/22 21:43:50 vapier Exp $
 
 EAPI="2" #356089
 

@@ -1,6 +1,4 @@
-# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-dns/openresolv/openresolv-3.3.4.ebuild,v 1.7 2010/09/30 21:30:23 ranger Exp $
 
 EAPI=2
 

@@ -1,6 +1,4 @@
-# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-auth/pambase/pambase-20101024.ebuild,v 1.6 2010/11/03 21:13:57 maekke Exp $
 
 EAPI=3
 

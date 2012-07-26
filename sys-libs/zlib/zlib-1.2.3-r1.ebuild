@@ -1,6 +1,4 @@
-# Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-libs/zlib/zlib-1.2.3-r1.ebuild,v 1.14 2009/10/10 17:01:04 vapier Exp $
 
 inherit eutils flag-o-matic toolchain-funcs
 

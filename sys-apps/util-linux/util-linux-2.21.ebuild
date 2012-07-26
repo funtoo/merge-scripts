@@ -1,6 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-apps/util-linux/util-linux-2.21.ebuild,v 1.1 2012/02/24 16:35:39 vapier Exp $
 
 EAPI="3"
 

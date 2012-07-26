@@ -1,6 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-lang/python/python-3.2.2.ebuild,v 1.5 2011/12/09 03:10:09 vapier Exp $
 
 EAPI="3"
 WANT_AUTOMAKE="none"

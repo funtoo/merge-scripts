@@ -1,6 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-lang/perl/perl-5.14.2.ebuild,v 1.3 2012/01/02 22:52:21 zmedico Exp $
 
 EAPI=4
 

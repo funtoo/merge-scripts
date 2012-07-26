@@ -1,6 +1,4 @@
-# Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-apps/texinfo/texinfo-4.13.ebuild,v 1.12 2009/09/08 17:50:31 vapier Exp $
 
 inherit flag-o-matic
 

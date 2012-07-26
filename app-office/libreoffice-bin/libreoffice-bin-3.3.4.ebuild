@@ -1,6 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-office/libreoffice-bin/Attic/libreoffice-bin-3.3.4.ebuild,v 1.5 2012/05/15 22:02:23 dilfridge dead $
 
 EAPI="3"
 

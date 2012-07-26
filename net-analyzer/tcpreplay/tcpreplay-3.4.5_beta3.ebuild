@@ -1,6 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-analyzer/tcpreplay/tcpreplay-3.4.5_beta3.ebuild,v 1.1 2012/01/22 17:53:01 jer Exp $
 
 EAPI=4
 

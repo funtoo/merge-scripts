@@ -1,4 +1,3 @@
-# Copyright 1999-2012 Gentoo Foundation, Funtoo Technologies
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=4-python

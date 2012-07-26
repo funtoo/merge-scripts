@@ -1,6 +1,4 @@
-# Copyright 2008-2011 Funtoo Technologies
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
 
 # NOTE: The comments in this file are for instruction and documentation.
 # They're not meant to appear with your final, production ebuild.  Please

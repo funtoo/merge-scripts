@@ -1,6 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-devel/bison/bison-2.5.ebuild,v 1.1 2011/05/16 19:37:21 vapier Exp $
 
 EAPI="2"
 

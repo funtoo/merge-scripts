@@ -1,6 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-admin/eselect/eselect-9999.ebuild,v 1.9 2011/09/09 10:43:05 ulm Exp $
 
 EAPI=4
 ESVN_REPO_URI="svn://anonsvn.gentoo.org/eselect/trunk"

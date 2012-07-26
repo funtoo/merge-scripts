@@ -1,6 +1,4 @@
-# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-libs/zlib/zlib-1.2.4.ebuild,v 1.4 2010/04/14 02:23:25 vapier Exp $
 
 inherit eutils toolchain-funcs
 
