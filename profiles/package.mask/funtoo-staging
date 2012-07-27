@@ -1,6 +1,10 @@
 # Keeep the most recent masks in a reverse chrono order
 # newest on top
 
+# Oleg Vinichenko ( 27 Jul 2012)
+# mask lateste mesa pre release
+>=media-libs/mesa-8.1
+
 # Oleg Vinichenko (22 Jul 2012)
 # mask libusbx, try to avoid pulling into stages
 >=dev-libs/libusbx-1.0.12
