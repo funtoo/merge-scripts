@@ -1,3 +1,8 @@
+# Oleg Vinichenko ( 28 Jul 2012)
+# mask cryptsetup above 1.4.1 version. It is unable to build with static flag,
+# requries udev-182 or higher
+>=sys-fs/cryptsetup-1.4.1-r1
+
 # Ryan Harris (20 June 2012)
 # mask automake-1.12.1 due to multiple failures 
 # Ref b.g.o.# 421465
