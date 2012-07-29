@@ -1,7 +1,24 @@
+# Ryan Harris (28 Jul 2012)
+# Masking of libreoffice-bin > 3.5.* as needing toolchain upgrade
+>=app-office/libreoffice-bin-3.5
+
+# Ryan Harris (28 Jul 2012)
+# Masked due to problems
+=app-backup/rsnapshot-1.3.1-r2
+
 # Oleg Vinichenko ( 28 Jul 2012)
 # mask cryptsetup above 1.4.1 version. It is unable to build with static flag,
 # requries udev-182 or higher
 >=sys-fs/cryptsetup-1.4.1-r1
+
+# Oleg Vinichenko (22 Jul 2012)
+# mask libusbx, try to avoid pulling into stages
+>=dev-libs/libusbx-1.0.12
+
+# Martin Scholz (03 Jul 2012)
+# masking polkit and udisks responsible for build failings
+>sys-auth/polkit-0.104-r1
+>sys-fs/udisks-1.97.0-r1
 
 # Ryan Harris (20 June 2012)
 # mask automake-1.12.1 due to multiple failures 
@@ -15,6 +32,26 @@
 # Jean-Francis Roy (22 May 2012)
 # Masking polkit version that depends on latest consolekit.
 >=sys-auth/polkit-0.105
+
+# Adrien Dessemond (09 May 2012)
+# Python 2.7.4-pre and 3.2.4-pre versions are problematic to fetch from upstrea$
+# and per their nature should not be in Funtoo stable anyway
+=dev-lang/python-2.7.4_pre*
+=dev-lang/python-3.2.4_pre*
+=dev-lang/python-3.3_pre*
+
+# Martin Scholz (03 May 2012)
+# masking newer versions of grub
+# included Daniel Robbins old mask
+>=sys-boot/grub-1.99
+
+# Oleg Vinichenko (2 Apr 2012)
+# mask a live hwids ebuild
+=sys-apps/hwids-99999999
+
+# Oleg Vinichenko (28 Mar 2012)
+# Segfaults with latest dhcpcd
+>=net-dns/openresolv-3.5.1
 
 # Jean-Francis Roy (20 Mar 2012)
 # udev-182 removed some feature that is now taken care of in consolekit.
