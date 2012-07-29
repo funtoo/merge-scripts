@@ -1,5 +1,9 @@
-# Keeep the most recent masks in a reverse chrono order
+# Keep the most recent masks in a reverse chrono order
 # newest on top
+
+# Ryan Harris ( 29 Jul 2012 )
+# test mask for debian-sources-3.2.23
+>=sys-kernel/debian-sources-3.2.23
 
 # Oleg Vinichenko ( 27 Jul 2012)
 # mask lateste mesa pre release
