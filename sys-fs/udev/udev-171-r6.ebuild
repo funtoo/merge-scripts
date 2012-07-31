@@ -16,11 +16,10 @@ fi
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="*"
-IUSE="acl selinux extras +hwdb +gudev introspection"
+IUSE="selinux extras +hwdb +gudev introspection"
 MIN_KERNEL="2.6.32"
 
 COMMON_DEPEND="selinux? ( sys-libs/libselinux )
-		acl? ( sys-apps/acl )
 		virtual/libusb:0
 		extras? ( sys-apps/acl dev-libs/gobject-introspection dev-libs/glib:2 )
 		gudev? ( dev-libs/glib:2 )
