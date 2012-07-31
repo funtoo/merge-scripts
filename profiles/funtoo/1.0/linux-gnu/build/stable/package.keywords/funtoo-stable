@@ -5,3 +5,6 @@
 =dev-libs/mpfr-3* amd64 x86
 =sys-apps/coreutils-8.16* amd64 x86
 ~sys-fs/device-mapper-1.02.28 amd64 x86
+=sys-apps/pciutils-3.1.9-r2
+=sys-apps/hwids-20120625
+=sys-apps/usbitils-005-r1

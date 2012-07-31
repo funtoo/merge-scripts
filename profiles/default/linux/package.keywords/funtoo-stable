@@ -1,19 +1,10 @@
-=dev-perl/XML-Parser-2.410.0 amd64 x86 sparc
-=dev-python/argparse-1.2.1* amd64 x86
-=dev-libs/libxml2-2.7.8* amd64 x86
-=dev-lang/python-3.2.3* amd64 x86
 =dev-python/setuptools-0.6.25* amd64 x86
 =dev-libs/expat-2.1.0* amd64 x86
-=dev-vcs/mercurial-2.1.1* amd64 x86
-=sys-libs/cracklib-2.8.18* amd64 x86
 =sys-apps/file-5.11 amd64 x86
-<dev-db/postgresql-base-8.3.15-r1 amd64 x86
-<dev-db/postgresql-docs-8.3.15-r1 amd64 x86
-<dev-db/postgresql-server-8.3.15-r1 amd64 x86
 =dev-libs/gmp-5* amd64 x86
 =dev-libs/mpfr-3* amd64 x86
-=dev-vcs/git-1.7* amd64 x86
-~net-misc/keychain-2.7.1 amd64 x86
 =sys-apps/coreutils-8.16* amd64 x86
 ~sys-fs/device-mapper-1.02.28 amd64 x86
-=sys-kernel/linux-headers-2.6.32 amd64 x86 sparc
+=sys-apps/pciutils-3.1.9-r2
+=sys-apps/hwids-20120625
+=sys-apps/usbitils-005-r1
