@@ -4,4 +4,4 @@
 # Richard Yao <ryao@funtoo.org> (29 Jul 2012)
 # Users of app-emulation/virtualbox-bin should switch to
 # app-emulation/virtualbox
-app-emulation/virtualbox-bin
+>=app-emulation/virtualbox-bin-4.1.18
