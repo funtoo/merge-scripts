@@ -104,7 +104,6 @@ src_compile() {
 		--with-pci-ids-path="${EPREFIX}/usr/share/misc/pci.ids" \
 		--with-usb-ids-path="${EPREFIX}/usr/share/misc/usb.ids" \
 		$(use_extras introspection) \
-		$(use_extras acl udev_acl) \
 		$(use_extras gudev) \
 		$(use_enable extras) \
 		$(use_with selinux)
