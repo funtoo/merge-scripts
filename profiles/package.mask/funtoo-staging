@@ -19,11 +19,6 @@
 # based on Ubuntu 12.04 LTS, hardmasked for testing
 >=sys-kernel/ubuntu-sources-3.2.0.23.36
 
-# Oleg Vinichenko (12 Mar 2012)
-# mask most recent net-tools due to binary move and 
-# openrc-0.9 dep
-=sys-apps/net-tools-1.60_p20120127084908
-
 # Oleg Vinichenko (23 Jan 2012)
 # postfix-2.10 update, masked for testing
 >=mail-mta/postfix-2.10
