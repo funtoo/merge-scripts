@@ -15,7 +15,7 @@ S2=$WORKDIR/realdev-1.0
 
 LICENSE="GPL-2 BSD-2"
 SLOT="0"
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="build"
 PDEPEND="sys-apps/openrc"
 
