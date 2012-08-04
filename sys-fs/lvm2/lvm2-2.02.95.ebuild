@@ -12,7 +12,7 @@ LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~*"
 
-IUSE="readline +static +static-libs clvm cman +lvm1 selinux +udev"
+IUSE="readline +static +static-libs clvm cman +lvm1 selinux udev"
 
 DEPEND_COMMON="!!sys-fs/device-mapper
 	readline? ( sys-libs/readline )
