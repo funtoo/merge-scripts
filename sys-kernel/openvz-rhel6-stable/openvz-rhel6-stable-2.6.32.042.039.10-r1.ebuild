@@ -17,9 +17,9 @@ KERNEL_URI="mirror://kernel/linux/kernel/v${KV_MAJOR}.${KV_MINOR}/${KERNEL_ARCHI
 RESTRICT="binchecks strip"
 
 LICENSE="GPL-2"
-KEYWORDS=""
+KEYWORDS="x86 amd64"
 IUSE="binary"
-DEPEND="binary? ( >=sys-kernel/genkernel-3.4.12.6-r4 )"
+DEPEND="binary? ( >=sys-kernel/genkernel-3.4.12.6-r4 ) =sys-devel/gcc-4.4.5*"
 RDEPEND="binary? ( >=sys-fs/udev-160 )"
 DESCRIPTION="Full Linux kernel sources - RHEL6 kernel with OpenVZ patchset"
 HOMEPAGE="http://www.openvz.org"
@@ -95,9 +95,8 @@ pkg_setup() {
 src_prepare() {
 	apply $DISTDIR/$MAINPATCH -p1
 	apply ${FILESDIR}/rhel5-openvz-sources-2.6.18.028.064.7-bridgemac.patch -p1
-	apply ${FILESDIR}/rhel6-openvz-sources-gcc-4.6.patch -p1
-	apply ${FILESDIR}/rhel6-openvz-sources-pmcraid-duplicate-sense-buffer.patch -p1
 	apply ${FILESDIR}/openvz-bug-2016-icmp-send-bridge.patch -p1
+	apply ${FILESDIR}/gcc-4.4.5.patch -p1
 	apply ${FILESDIR}/xen_do_hypervisor-asm-fix.patch -p1
 	# disable video4linux version 1 - deprecated as of linux-headers-2.6.38:
 	# http://forums.gentoo.org/viewtopic-t-872167.html?sid=60f2e6e08cf1f2e99b3e61772a1dc276
@@ -163,6 +162,10 @@ src_install() {
 	local moddir="$(ls -d 2*)"
 	ln -s /usr/src/linux-${P} ${D}/lib/modules/${moddir}/source || die
 	ln -s /usr/src/linux-${P} ${D}/lib/modules/${moddir}/build || die
+
+	# Fixes FL-14
+	cp "${WORKDIR}/build/System.map" "${D}/usr/src/linux-${P}/" || die
+	cp "${WORKDIR}/build/Module.symvers" "${D}/usr/src/linux-${P}/" || die
 }
 
 pkg_postinst() {
