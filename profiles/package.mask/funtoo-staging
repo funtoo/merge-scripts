@@ -1,6 +1,11 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
+# Oleg Vinichenko (7 Aug 2012)
+# new openvz stable kernel, various fixes
+# masked for testing
+=sys-kernel/openvz-rhel6-stable-2.6.32.042.059.7
+
 # Ryan Harris ( 29 Jul 2012 )
 # test mask for debian-sources-3.2.23
 >=sys-kernel/debian-sources-3.2.23
