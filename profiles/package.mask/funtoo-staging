@@ -6,10 +6,6 @@
 # masked for testing
 =sys-kernel/openvz-rhel6-stable-2.6.32.042.059.7
 
-# Ryan Harris ( 29 Jul 2012 )
-# test mask for debian-sources-3.2.23
->=sys-kernel/debian-sources-3.2.23
-
 # Oleg Vinichenko ( 27 Jul 2012)
 # mask lateste mesa pre release
 >=media-libs/mesa-8.1
