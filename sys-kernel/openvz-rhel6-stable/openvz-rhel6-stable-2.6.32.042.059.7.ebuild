@@ -17,7 +17,7 @@ KERNEL_URI="mirror://kernel/linux/kernel/v${KV_MAJOR}.${KV_MINOR}/${KERNEL_ARCHI
 RESTRICT="binchecks strip"
 
 LICENSE="GPL-2"
-KEYWORDS=""
+KEYWORDS="*"
 IUSE="binary"
 DEPEND="binary? ( >=sys-kernel/genkernel-3.4.12.6-r4 )"
 RDEPEND="binary? ( >=sys-fs/udev-160 )"
@@ -95,8 +95,6 @@ pkg_setup() {
 src_prepare() {
 	apply $DISTDIR/$MAINPATCH -p1
 	apply ${FILESDIR}/rhel5-openvz-sources-2.6.18.028.064.7-bridgemac.patch -p1
-	apply ${FILESDIR}/rhel6-openvz-sources-gcc-4.6.patch -p1
-	apply ${FILESDIR}/rhel6-openvz-sources-fix-build-without-xen.patch -p1
 	apply ${FILESDIR}/rhel6-openvz-sources-pmcraid-duplicate-sense-buffer.patch -p1
 	apply ${FILESDIR}/openvz-bug-2016-icmp-send-bridge.patch -p1
 	# disable video4linux version 1 - deprecated as of linux-headers-2.6.38:
