@@ -1,3 +1,8 @@
+# Oleg Vinichenko (9 Aug 2012)
+# mask xorg-server pre releases, no one need
+# broken boxes
+>=x11-base/xorg-server-1.12.99 
+
 # Ryan Harris (28 Jul 2012)
 # Masking of libreoffice-bin > 3.5.* as needing toolchain upgrade
 >=app-office/libreoffice-bin-3.5
