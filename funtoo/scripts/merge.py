@@ -14,6 +14,7 @@ bar_overlay = Tree("bar-overlay", "master", "git://github.com/adessemond/bar-ove
 flora_overlay = Tree("flora", "master", "repos@git.funtoo.org:flora.git", pull=True)
 progress_overlay = SvnTree("progress", "https://gentoo-progress.googlecode.com/svn/overlays/progress")
 lcdfiltering_overlay = Tree("lcd-filtering", "master", "git://gitorious.org/lcd-filtering/lcd-filtering.git", pull=True)
+mythtv_overlay = VarLocTree("mythtv", "master", "git://github.com/MythTV/packaging.git", pull=True)
 
 steps = [
 	SyncTree(gentoo_src,exclude=["/metadata/cache/**","ChangeLog", "dev-util/metro"]),
@@ -36,27 +37,19 @@ steps = [
 	InsertEbuilds(bar_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(flora_overlay, select="all", skip=None, replace=False),
 	InsertEbuilds(lcdfiltering_overlay, select="all", skip=["app-text/poppler"], replace=True),
+	InsertEbuilds(mythtv_overlay, select='all', skip=["media-tv/miro"], replace=True, ebuildloc="Gentoo"),
+	SyncDir(mythtv_overlay.root, "eclass"),
 	SyncDir(progress_overlay.root, "eclass"),
 	SyncFiles(progress_overlay.root, {
 		"profiles/package.mask":"profiles/package.mask/progress",
 		"profiles/use.mask":"profiles/use.mask/progress"
 	}),
 	InsertEbuilds(progress_overlay, select="all", skip=None, replace=True, merge=["dev-java/guava", "dev-lang/python", "dev-libs/boost", "dev-python/psycopg", "dev-python/pysqlite", "dev-python/python-docs", "dev-python/simpletal", "dev-python/wxpython", "x11-libs/vte"]),
-	MergeUpdates(progress_overlay.root)
-]
-# Mythtv overlay
-if branch == "experimental":
-	mythtv_overlay = VarLocTree("mythtv", "master", "git://github.com/MythTV/packaging.git", pull=True)
-	steps.extend((
-		InsertEbuilds(mythtv_overlay, select='all', skip=["media-tv/miro"], replace=True, ebuildloc="Gentoo"),
-		SyncDir(mythtv_overlay.root, "eclass")
-		))
-
-steps.extend((
+	MergeUpdates(progress_overlay.root),
 	AutoGlobMask("dev-lang/python", "python*_pre*", "funtoo-python"),
 	Minify(),
 	GenCache()
-	))
+]
 
 # work tree is a non-git tree in tmpfs for enhanced performance - we do all the heavy lifting there:
 
