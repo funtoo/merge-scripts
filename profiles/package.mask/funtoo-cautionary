@@ -1,3 +1,7 @@
+# Oleg Vinichenko (11 Aug 2012)
+# mask latest iproute2 per bug #430320
+>=sys-apps/iproute2-3.5.0
+
 # Oleg Vinichenko (9 Aug 2012)
 # mask xorg-server pre releases, no one need
 # broken boxes
