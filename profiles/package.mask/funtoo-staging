@@ -1,11 +1,6 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
-# Oleg Vinichenko (7 Aug 2012)
-# new openvz stable kernel, various fixes
-# masked for testing
-=sys-kernel/openvz-rhel6-stable-2.6.32.042.059.7
-
 # Oleg Vinichenko ( 27 Jul 2012)
 # mask lateste mesa pre release
 >=media-libs/mesa-8.1
