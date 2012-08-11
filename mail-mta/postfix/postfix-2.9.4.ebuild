@@ -1,14 +1,16 @@
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/mail-mta/postfix/postfix-2.9.4.ebuild,v 1.1 2012/08/02 14:02:39 eras Exp $
 
 EAPI=4
 
-inherit eutils user multilib ssl-cert toolchain-funcs flag-o-matic pam
+inherit eutils multilib ssl-cert toolchain-funcs flag-o-matic pam user versionator
 
 MY_PV="${PV/_rc/-RC}"
 MY_SRC="${PN}-${MY_PV}"
 MY_URI="ftp://ftp.porcupine.org/mirrors/postfix-release/official"
-VDA_PV="2.8.5"
-VDA_P="${PN}-vda-v10-${VDA_PV}"
+VDA_PV="2.9.1"
+VDA_P="${PN}-vda-v11-${VDA_PV}"
 RC_VER="2.7"
 
 DESCRIPTION="A fast and secure drop-in replacement for sendmail."
@@ -18,12 +20,13 @@ SRC_URI="${MY_URI}/${MY_SRC}.tar.gz
 
 LICENSE="IBM"
 SLOT="0"
-KEYWORDS="*"
-IUSE="cdb doc dovecot-sasl hardened ipv6 ldap ldap-bind mbox mysql nis pam postgres sasl selinux sqlite ssl vda"
+KEYWORDS="~*"
+IUSE="+berkdb cdb doc dovecot-sasl hardened ldap ldap-bind memcached mbox mysql nis pam postgres sasl selinux sqlite ssl vda"
 
-DEPEND=">=sys-libs/db-3.2
-	>=dev-libs/libpcre-3.4
+DEPEND=">=dev-libs/libpcre-3.4
 	dev-lang/perl
+	net-mail/mailbase
+	berkdb? ( >=sys-libs/db-3.2 )
 	cdb? ( || ( >=dev-db/tinycdb-0.76 >=dev-db/cdb-0.75-r1 ) )
 	ldap? ( net-nds/openldap )
 	ldap-bind? ( net-nds/openldap[sasl] )
@@ -36,7 +39,7 @@ DEPEND=">=sys-libs/db-3.2
 
 RDEPEND="${DEPEND}
 	dovecot-sasl? ( net-mail/dovecot )
-	net-mail/mailbase
+	memcached? ( net-misc/memcached )
 	selinux? ( sec-policy/selinux-postfix )
 	!mail-mta/courier
 	!mail-mta/esmtp
@@ -56,23 +59,20 @@ REQUIRED_USE="ldap-bind? ( ldap sasl )"
 
 S="${WORKDIR}/${MY_SRC}"
 
-group_user_check() {
-	einfo "Checking for postfix group ..."
+pkg_setup() {
+	# Add postfix, postdrop user/group (bug #77565)
 	enewgroup postfix 207
-	einfo "Checking for postdrop group ..."
 	enewgroup postdrop 208
-	einfo "Checking for postfix user ..."
 	enewuser postfix 207 -1 /var/spool/postfix postfix,mail
 }
 
-pkg_setup() {
-	# Add postfix, postdrop user/group (bug #77565)
-	group_user_check || die "Failed to check/add needed user/group"
-}
-
 src_prepare() {
-	if use vda ; then
+	if use vda; then
 		epatch "${DISTDIR}"/${VDA_P}.patch
+	fi
+
+	if ! use berkdb; then
+		epatch "${FILESDIR}/${PN}_no-berkdb.patch"
 	fi
 
 	sed -i -e "/^#define ALIAS_DB_MAP/s|:/etc/aliases|:/etc/mail/aliases|" \
@@ -80,7 +80,7 @@ src_prepare() {
 
 	# change default paths to better comply with portage standard paths
 	sed -i -e "s:/usr/local/:/usr/:g" conf/master.cf || die "sed failed"
-	# change to unix and run chrooted daemon
+	# change to unix and run as chrooted daemon 
 	epatch "${FILESDIR}"/${PN}-funtoo.patch
 }
 
@@ -90,54 +90,67 @@ src_configure() {
 
 	use pam && mylibs="${mylibs} -lpam"
 
-	if use ldap ; then
+	if use ldap; then
 		mycc="${mycc} -DHAS_LDAP"
 		mylibs="${mylibs} -lldap -llber"
 	fi
 
-	if use mysql ; then
+	if use mysql; then
 		mycc="${mycc} -DHAS_MYSQL $(mysql_config --include)"
 		mylibs="${mylibs} $(mysql_config --libs)"
 	fi
 
-	if use postgres ; then
+	if use postgres; then
 		mycc="${mycc} -DHAS_PGSQL -I$(pg_config --includedir)"
 		mylibs="${mylibs} -lpq -L$(pg_config --libdir)"
 	fi
 
-	if use sqlite ; then
+	if use sqlite; then
 		mycc="${mycc} -DHAS_SQLITE"
 		mylibs="${mylibs} -lsqlite3"
 	fi
 
-	if use ssl ; then
+	if use ssl; then
 		mycc="${mycc} -DUSE_TLS"
 		mylibs="${mylibs} -lssl -lcrypto"
 	fi
 
-	if use sasl ; then
-		if use dovecot-sasl ; then
+	# broken. and "in other words, not supported" by upstream.
+	# Use inet_protocols setting in main.cf
+	#if ! use ipv6; then
+	#	mycc="${mycc} -DNO_IPV6"
+	#fi
+
+	if use sasl; then
+		if use dovecot-sasl; then
 			# Set dovecot as default.
 			mycc="${mycc} -DDEF_SASL_SERVER=\\\"dovecot\\\""
 		fi
-		if use ldap-bind ; then
+		if use ldap-bind; then
 			mycc="${mycc} -DUSE_LDAP_SASL"
 		fi
 		mycc="${mycc} -DUSE_SASL_AUTH -DUSE_CYRUS_SASL -I/usr/include/sasl"
 		mylibs="${mylibs} -lsasl2"
-	elif use dovecot-sasl ; then
+	elif use dovecot-sasl; then
 		mycc="${mycc} -DUSE_SASL_AUTH -DDEF_SERVER_SASL_TYPE=\\\"dovecot\\\""
 	fi
 
-	if ! use nis ; then
+	if ! use nis; then
 		sed -i -e "s|#define HAS_NIS|//#define HAS_NIS|g" \
 			src/util/sys_defs.h || die "sed failed"
 	fi
 
-	if use cdb ; then
+	if ! use berkdb; then
+		mycc="${mycc} -DNO_DB"
+		if use cdb; then
+			# change default hash format from Berkeley DB to cdb
+			sed -i -e "s/hash/cdb/" src/util/sys_defs.h || die
+		fi
+	fi
+
+	if use cdb; then
 		mycc="${mycc} -DHAS_CDB -I/usr/include/cdb"
 		CDB_LIBS=""
-
 		# Tinycdb is preferred.
 		if has_version dev-db/tinycdb ; then
 			einfo "Building with dev-db/tinycdb"
@@ -149,23 +162,8 @@ src_configure() {
 				CDB_LIBS="${CDB_LIBS} ${CDB_PATH}/${i}"
 			done
 		fi
-
 		mylibs="${mylibs} ${CDB_LIBS}"
 	fi
-
-	mycc="${mycc} -DDEF_DAEMON_DIR=\\\"/usr/$(get_libdir)/postfix\\\""
-	mycc="${mycc} -DDEF_CONFIG_DIR=\\\"/etc/postfix\\\""
-	mycc="${mycc} -DDEF_COMMAND_DIR=\\\"/usr/sbin\\\""
-	mycc="${mycc} -DDEF_SENDMAIL_PATH=\\\"/usr/sbin/sendmail\\\""
-	mycc="${mycc} -DDEF_NEWALIS_PATH=\\\"/usr/bin/newaliases\\\""
-	mycc="${mycc} -DDEF_MAILQ_PATH=\\\"/usr/bin/mailq\\\""
-	mycc="${mycc} -DDEF_MANPAGE_DIR=\\\"/usr/share/man\\\""
-	mycc="${mycc} -DDEF_README_DIR=\\\"/usr/share/doc/${PF}/readme\\\""
-	mycc="${mycc} -DDEF_HTML_DIR=\\\"/usr/share/doc/${PF}/html\\\""
-	mycc="${mycc} -DDEF_QUEUE_DIR=\\\"/var/spool/postfix\\\""
-	mycc="${mycc} -DDEF_DATA_DIR=\\\"/var/lib/postfix\\\""
-	mycc="${mycc} -DDEF_MAIL_OWNER=\\\"postfix\\\""
-	mycc="${mycc} -DDEF_SGID_GROUP=\\\"postdrop\\\""
 
 	# Robin H. Johnson <robbat2@gentoo.org> 17/Nov/2006
 	# Fix because infra boxes hit 2Gb .db files that fail a 32-bit fstat signed check.
@@ -173,26 +171,31 @@ src_configure() {
 	filter-lfs-flags
 
 	# Workaround for bug #76512
-	if use hardened ; then
+	if use hardened; then
 		[[ "$(gcc-version)" == "3.4" ]] && replace-flags -O? -Os
 	fi
+
+	# Remove annoying C++ comment style warnings - bug #378099
+	append-flags -Wno-comment
 
 	emake DEBUG="" CC="$(tc-getCC)" OPT="${CFLAGS}" CCARGS="${mycc}" AUXLIBS="${mylibs}" makefiles
 }
 
 src_install () {
+	local myconf
+	use doc && myconf="readme_directory=\"/usr/share/doc/${PF}/readme\" \
+		html_directory=\"/usr/share/doc/${PF}/html\""
+
 	/bin/sh postfix-install \
 		-non-interactive \
 		install_root="${D}" \
 		config_directory="/etc/postfix" \
 		manpage_directory="/usr/share/man" \
-		readme_directory="/usr/share/doc/${PF}/readme" \
-		html_directory="/usr/share/doc/${PF}/html" \
 		command_directory="/usr/sbin" \
-		daemon_directory="/usr/$(get_libdir)/postfix" \
 		mailq_path="/usr/bin/mailq" \
 		newaliases_path="/usr/bin/newaliases" \
 		sendmail_path="/usr/sbin/sendmail" \
+		${myconf} \
 		|| die "postfix-install failed"
 
 	# Fix spool removal on upgrade
@@ -216,14 +219,13 @@ src_install () {
 	# Set proper permissions on required files/directories
 	dodir /var/lib/postfix
 	keepdir /var/lib/postfix
-	fowners postfix:postfix /var/lib/postfix
-	fowners postfix:postfix /var/lib/postfix/.keep_${CATEGORY}_${PN}-${SLOT}
+	fowners -R postfix:postfix /var/lib/postfix
 	fperms 0750 /var/lib/postfix
 	fowners root:postdrop /usr/sbin/post{drop,queue}
 	fperms 02711 /usr/sbin/post{drop,queue}
 
 	keepdir /etc/postfix
-	if use mbox ; then
+	if use mbox; then
 		mypostconf="mail_spool_directory=/var/spool/mail"
 	else
 		mypostconf="home_mailbox=.maildir/"
@@ -236,25 +238,47 @@ src_install () {
 	fperms 600 /etc/postfix/saslpass
 
 	newinitd "${FILESDIR}"/postfix.rc6.${RC_VER} postfix
-	# bug #359913
+	# do not start mysql/postgres unnecessarily - bug #359913
 	use mysql || sed -i -e "s/mysql //" "${D}/etc/init.d/postfix"
 	use postgres || sed -i -e "s/postgresql //" "${D}/etc/init.d/postfix"
 
 	dodoc *README COMPATIBILITY HISTORY PORTING RELEASE_NOTES*
-
-	mv "${S}"/examples "${D}"/usr/share/doc/${PF}/
 	mv "${D}"/etc/postfix/{*.default,makedefs.out} "${D}"/usr/share/doc/${PF}/
+	use doc && mv "${S}"/examples "${D}"/usr/share/doc/${PF}/
 
 	pamd_mimic_system smtp auth account
 
-	if use sasl ; then
+	if use sasl; then
 		insinto /etc/sasl2
 		newins "${FILESDIR}"/smtp.sasl smtpd.conf
 	fi
 
+	# header files
+	insinto /usr/include/postfix
+	doins include/*.h
+
 	# Remove unnecessary files
 	rm -f "${D}"/etc/postfix/{*LICENSE,access,aliases,canonical,generic}
 	rm -f "${D}"/etc/postfix/{header_checks,relocated,transport,virtual}
+}
+
+pkg_preinst() {
+	# default for inet_protocols changed from ipv4 to all in postfix-2.9.
+	# check inet_protocols setting in main.cf and modify if necessary to prevent
+	# performance loss with useless DNS lookups and useless connection attempts.
+	[[ -d ${ROOT}/etc/postfix ]] && {
+	if [[ "$(${D}/usr/sbin/postconf -dh inet_protocols)" != "ipv4" ]]; then
+		if [[ ! -n "$(${D}/usr/sbin/postconf -c ${ROOT}/etc/postfix -nh inet_protocols)" ]];
+		then
+			ewarn "\nCOMPATIBILITY: adding inet_protocols=ipv4 to main.cf."
+			ewarn "That will keep the same behaviour as previous postfix versions."
+			ewarn "Specify inet_protocols explicitly if you want to enable IPv6.\n"
+		else
+			# delete inet_protocols setting. there is already one in /etc/postfix
+			sed -i -e /inet_protocols/d "${D}"/etc/postfix/main.cf || die
+		fi
+	fi
+	}
 }
 
 pkg_postinst() {
@@ -266,6 +290,19 @@ pkg_postinst() {
 		chown postfix:mail "${ROOT}"/etc/ssl/postfix/server.{key,pem}
 	fi
 
-	elog "See the RELEASE_NOTES file in /usr/share/doc/${PF}"
-	elog "for incompatibilities and other major changes between releases."
+	if [[ $(get_version_component_range 2 ${REPLACING_VERSIONS}) -lt 9 ]]; then
+		elog "If you are using old style postfix instances by symlinking"
+		elog "startup scripts in ${ROOT}etc/init.d, please consider"
+		elog "upgrading your config for postmulti support. For more info:"
+		elog "http://www.postfix.org/MULTI_INSTANCE_README.html"
+		if ! use berkdb; then
+			ewarn "\nPostfix is installed without BerkeleyDB support."
+			ewarn "Please turn on berkdb USE flag for hash or btree table"
+			ewarn "lookup support.\n"
+		fi
+		ewarn "Postfix daemons now live under /usr/libexec/postfix"
+		ewarn "Please adjust your main.cf accordingly by running"
+		ewarn "etc-update/dispatch-conf or similar and accepting the new"
+		ewarn "daemon_directory setting."
+	fi
 }

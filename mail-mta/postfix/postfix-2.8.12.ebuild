@@ -1,13 +1,15 @@
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/mail-mta/postfix/postfix-2.8.12.ebuild,v 1.1 2012/08/02 14:02:39 eras Exp $
 
 EAPI=4
 
-inherit eutils user multilib ssl-cert toolchain-funcs flag-o-matic pam
+inherit eutils multilib ssl-cert toolchain-funcs flag-o-matic pam user
 
 MY_PV="${PV/_rc/-RC}"
 MY_SRC="${PN}-${MY_PV}"
 MY_URI="ftp://ftp.porcupine.org/mirrors/postfix-release/official"
-VDA_PV="2.8.5"
+VDA_PV="2.8.9"
 VDA_P="${PN}-vda-v10-${VDA_PV}"
 RC_VER="2.7"
 
@@ -23,6 +25,7 @@ IUSE="cdb doc dovecot-sasl hardened ipv6 ldap ldap-bind mbox mysql nis pam postg
 
 DEPEND=">=sys-libs/db-3.2
 	>=dev-libs/libpcre-3.4
+	net-mail/mailbase
 	dev-lang/perl
 	cdb? ( || ( >=dev-db/tinycdb-0.76 >=dev-db/cdb-0.75-r1 ) )
 	ldap? ( net-nds/openldap )
@@ -36,7 +39,6 @@ DEPEND=">=sys-libs/db-3.2
 
 RDEPEND="${DEPEND}
 	dovecot-sasl? ( net-mail/dovecot )
-	net-mail/mailbase
 	selinux? ( sec-policy/selinux-postfix )
 	!mail-mta/courier
 	!mail-mta/esmtp
@@ -80,8 +82,8 @@ src_prepare() {
 
 	# change default paths to better comply with portage standard paths
 	sed -i -e "s:/usr/local/:/usr/:g" conf/master.cf || die "sed failed"
-	# change to unix and run chrooted daemon
-	epatch "${FILESDIR}"/${PN}-funtoo.patch
+	# changeto unix socke and use chrooted deamon
+	epatch "$FILESDIR"/$PN-funtoo.patch
 }
 
 src_configure() {
@@ -265,7 +267,4 @@ pkg_postinst() {
 		install_cert /etc/ssl/postfix/server
 		chown postfix:mail "${ROOT}"/etc/ssl/postfix/server.{key,pem}
 	fi
-
-	elog "See the RELEASE_NOTES file in /usr/share/doc/${PF}"
-	elog "for incompatibilities and other major changes between releases."
 }
