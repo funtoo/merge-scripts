@@ -11,6 +11,7 @@
 app-arch/bzip2
 app-arch/gzip
 app-arch/tar
+app-arch/xz-utils
 app-shells/bash
 net-misc/rsync
 net-misc/wget
