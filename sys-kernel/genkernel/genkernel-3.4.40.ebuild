@@ -1,12 +1,11 @@
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/sys-kernel/genkernel/genkernel-3.4.40.ebuild,v 1.1 2012/07/27 23:41:01 sping Exp $
 
-# genkernel-9999        -> latest SVN
-# genkernel-9999.REV    -> use SVN REV
+# genkernel-9999        -> latest Git branch "master"
 # genkernel-VERSION     -> normal genkernel release
 
-EAPI="2"
-
-inherit bash-completion eutils
+EAPI="3"
 
 VERSION_BUSYBOX='1.20.1'
 VERSION_DMRAID='1.0.0.rc16-3'
@@ -26,7 +25,7 @@ COMMON_URI="${DM_HOME}/dmraid-${VERSION_DMRAID}.tar.bz2
 		${DM_HOME}/old/dmraid-${VERSION_DMRAID}.tar.bz2
 		mirror://kernel/linux/utils/raid/mdadm/mdadm-${VERSION_MDADM}.tar.bz2
 		${BB_HOME}/busybox-${VERSION_BUSYBOX}.tar.bz2
-		mirror://kernel/linux/kernel/people/mnc/open-iscsi/releases/open-iscsi-${VERSION_ISCSI}.tar.gz
+		http://www.open-iscsi.org/bits/open-iscsi-${VERSION_ISCSI}.tar.gz
 		mirror://sourceforge/e2fsprogs/e2fsprogs-${VERSION_E2FSPROGS}.tar.gz
 		mirror://sourceforge/fuse/fuse-${VERSION_FUSE}.tar.gz
 		http://podgorny.cz/unionfs-fuse/releases/unionfs-fuse-${VERSION_UNIONFS_FUSE}.tar.bz2
@@ -36,7 +35,20 @@ GITHUB_REPO="${PN}"
 GITHUB_USER="funtoo"
 GITHUB_TAG="v${PVR}-funtoo"
 
-SRC_URI="${COMMON_URI} https://www.github.com/${GITHUB_USER}/${GITHUB_REPO}/tarball/${GITHUB_TAG} -> ${PN}-${GITHUB_TAG}.tar.gz"
+if [[ ${PV} == 9999* ]]
+then
+	EGIT_REPO_URI="git://git.overlays.gentoo.org/proj/${PN}.git
+		http://git.overlays.gentoo.org/gitroot/proj/${PN}.git"
+	inherit git-2 bash-completion-r1 eutils
+	S="${WORKDIR}/${PN}"
+	SRC_URI="${COMMON_URI}"
+	KEYWORDS=""
+else
+	inherit bash-completion-r1 eutils
+	SRC_URI="https://www.github.com/${GITHUB_USER}/${GITHUB_REPO}/tarball/${GITHUB_TAG} -> ${PN}-${GITHUB_TAG}.tar.gz
+		${COMMON_URI}"
+	KEYWORDS="*"
+fi
 
 DESCRIPTION="Gentoo automatic kernel building scripts"
 HOMEPAGE="http://www.gentoo.org"
@@ -44,11 +56,29 @@ HOMEPAGE="http://www.gentoo.org"
 LICENSE="GPL-2"
 SLOT="0"
 RESTRICT=""
-KEYWORDS="*"
-IUSE="crypt cryptsetup ibm selinux"
+IUSE="+cryptsetup ibm selinux"
 
-DEPEND="sys-fs/e2fsprogs selinux? ( sys-libs/libselinux )"
-RDEPEND="${DEPEND} app-arch/cpio sys-fs/lvm2 cryptsetup? ( sys-fs/cryptsetup ) app-misc/pax-utils"
+DEPEND="sys-fs/e2fsprogs
+	selinux? ( sys-libs/libselinux )"
+RDEPEND="${DEPEND}
+		cryptsetup? ( sys-fs/cryptsetup )
+		sys-fs/lvm2
+		>=app-misc/pax-utils-0.2.1
+		!<sys-apps/openrc-0.9.9"
+# pax-utils is used for lddtree
+# cpio is part of Funtoo @system set
+
+if [[ ${PV} == 9999* ]]; then
+	DEPEND="${DEPEND} app-text/asciidoc"
+fi
+
+src_unpack() {
+	if [[ ${PV} == 9999* ]] ; then
+		git-2_src_unpack
+	else
+		default
+	fi
+}
 
 src_prepare() {
 	cd "${WORKDIR}"/${GITHUB_USER}-${PN}-*
@@ -58,6 +88,12 @@ src_prepare() {
 
 src_compile() {
 	return
+}
+
+src_compile() {
+	if [[ ${PV} == 9999* ]]; then
+		emake || die
+	fi
 }
 
 src_install() {
@@ -102,7 +138,7 @@ src_install() {
 		"${DISTDIR}"/open-iscsi-${VERSION_ISCSI}.tar.gz \
 		"${D}"/var/cache/genkernel/src || die "Copying distfiles..."
 
-	dobashcompletion "${FILESDIR}"/genkernel.bash
+	newbashcomp "${FILESDIR}"/genkernel.bash "${PN}"
 	insinto /etc
 	doins "${FILESDIR}"/initramfs.mounts
 }
@@ -123,6 +159,4 @@ pkg_postinst() {
 	ewarn "The LUKS support has changed from versions prior to 3.4.4.  Now,"
 	ewarn "you use crypt_root=/dev/blah instead of real_root=luks:/dev/blah."
 	echo
-
-	bash-completion_pkg_postinst
 }
