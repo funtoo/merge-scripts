@@ -1,12 +1,11 @@
-# profiles.desc.example - Example profiles.desc file
+# profiles.eselect.example - Example profiles.eselect.desc file
 
 # The 'Type' column specifies the type of profile.
-# Currently supported types are arch, build, flavor, mix-ins, and mono.
+# Currently supported types are arch, build, flavor, mix-ins, and 2008.
 
-# The 'Name' column contains the path to the profile relative to /<path_to_tree>/profiles/
+# The 'Name' column contains the path to the profile relative to "${PORTDIR}/profiles"
 
 # The 'Status' column is used to indicate the status of the profile.
-# Currently any flag besides "stable" causes profile to be highlighted in red when listed
 
 # The 'NoMix' column should contain a comma separated list profiles that should not be mixed with that profile
 # Must specify with path from type. Ex: 'flavor/desktop' , 'arch/x86-32bit' , ect ...
