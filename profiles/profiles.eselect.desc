@@ -1,0 +1,36 @@
+# profiles.eselect.desc - List of profiles for use with eselect
+
+# The 'Type' column specifies the type of profile.
+# Currently supported types are arch, build, flavor, mix-ins, and mono.
+
+# The 'Name' column contains the path to the profile relative to the profiles directory"
+
+# The 'Status' column is used to indicate the status of the profile.
+
+# The 'NoMix' column should contain a comma separated list profiles that should not be mixed with that profile
+# Must specify with path from type. Ex: 'flavor/desktop' , 'arch/x86-32bit' , ect ...
+
+
+# Type		Name							Status		NoMix
+
+arch		funtoo/1.0/linux-gnu/arch/x86-32bit			stable
+arch		funtoo/1.0/linux-gnu/arch/x86-64bit			stable
+
+build		funtoo/1.0/linux-gnu/build/stable			stable
+build		funtoo/1.0/linux-gnu/build/current			stable
+build		funtoo/1.0/linux-gnu/build/experimental			stable
+
+flavor		funtoo/1.0/linux-gnu/flavor/minimal			stable
+flavor		funtoo/1.0/linux-gnu/flavor/core			stable
+flavor		funtoo/1.0/linux-gnu/flavor/desktop			stable
+
+mix-ins		funtoo/1.0/linux-gnu/mix-ins/dvd			stable
+mix-ins		funtoo/1.0/linux-gnu/mix-ins/gnome			stable
+mix-ins		funtoo/1.0/linux-gnu/mix-ins/kde			stable
+mix-ins		funtoo/1.0/linux-gnu/mix-ins/media			stable
+mix-ins		funtoo/1.0/linux-gnu/mix-ins/rhel5-compat		stable
+mix-ins		funtoo/1.0/linux-gnu/mix-ins/server-db			stable
+mix-ins		funtoo/1.0/linux-gnu/mix-ins/server-mail		stable
+mix-ins		funtoo/1.0/linux-gnu/mix-ins/server-web			stable
+mix-ins		funtoo/1.0/linux-gnu/mix-ins/workstation            	stable
+mix-ins		funtoo/1.0/linux-gnu/mix-ins/workstation-minimal    	stable

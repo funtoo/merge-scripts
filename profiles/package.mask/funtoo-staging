@@ -1,14 +1,9 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
-# Oleg Vinichenko (11 Aug 2012)
-#  FL-6 masked for testing postfix updates, 2.8.12, 2.9.4
-# changed to unix socket, run daemon chrooted
-=mail-mta/postfix-2.8.12
-=mail-mta/postfix-2.9.4
 # Oleg Vinichenko ( 27 Jul 2012)
 # mask lateste mesa pre release
->=media-libs/mesa-8.1
+>=media-libs/mesa-8.1_rc0
 
 # Daniel Robbins (06 May 2012)
 # Ryan Harris' eselect code for testing

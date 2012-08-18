@@ -22,7 +22,7 @@ RDEPEND="ssl? ( dev-libs/openssl )
 		!pyside? ( dev-python/PyQt4 )
 		net-zope/zope-interface )"
 DEPEND="${RDEPEND}
-	dev-util/pkgconfig"
+	virtual/pkgconfig"
 
 CONFIG_CHECK="~NET_CLS_ACT ~NET_CLS_U32 ~NET_SCH_INGRESS ~NET_ACT_POLICE ~IPV6 ~TUN"
 

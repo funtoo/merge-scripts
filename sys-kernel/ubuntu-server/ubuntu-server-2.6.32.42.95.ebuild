@@ -6,12 +6,8 @@ inherit mount-boot
 
 SLOT=$PVR
 CKV=2.6.32
-OKV=$CKV
-OVZ_KERNEL="042stab059"
-OVZ_REV="7"
-OVZ_KV=${OVZ_KERNEL}.${OVZ_REV}
 KV_FULL=${PN}-${PVR}
-EXTRAVERSION=-${OVZ_KV}
+EXTRAVERSION=-42.95
 KERNEL_ARCHIVE="linux-${CKV}.tar.bz2"
 KERNEL_URI="mirror://kernel/linux/kernel/v${KV_MAJOR}.${KV_MINOR}/${KERNEL_ARCHIVE}"
 RESTRICT="binchecks strip"
@@ -21,36 +17,11 @@ KEYWORDS="*"
 IUSE="binary"
 DEPEND="binary? ( >=sys-kernel/genkernel-3.4.12.6-r4 ) =sys-devel/gcc-4.4.5*"
 RDEPEND="binary? ( >=sys-fs/udev-160 )"
-DESCRIPTION="Full Linux kernel sources - RHEL6 kernel with OpenVZ patchset"
+DESCRIPTION="Ubuntu Server sources (and optional binary kernel)"
 HOMEPAGE="http://www.openvz.org"
-MAINPATCH="patch-${OVZ_KV}-combined.gz"
-SRC_URI="${KERNEL_URI}
-	http://download.openvz.org/kernel/branches/rhel6-${CKV}/${OVZ_KV}/configs/config-${CKV}-${OVZ_KV}.i686
-	http://download.openvz.org/kernel/branches/rhel6-${CKV}/${OVZ_KV}/configs/config-${CKV}-${OVZ_KV}.x86_64
-	http://download.openvz.org/kernel/branches/rhel6-${CKV}/${OVZ_KV}/patches/$MAINPATCH"
+MAINPATCH="linux_${CKV}${EXTRAVERSION}.diff.gz"
+SRC_URI="${KERNEL_URI} http://archive.ubuntu.com/ubuntu/pool/main/l/linux/${MAINPATCH}"
 S="$WORKDIR/linux-${CKV}"
-
-K_EXTRAEINFO="
-This OpenVZ kernel uses RHEL6 (Red Hat Enterprise Linux 6) patch set.
-This patch set is maintained by Red Hat for enterprise use, and contains
-further modifications by the OpenVZ development team and the Funtoo
-Linux project.
-
-Red Hat typically only ensures that their kernels build using their
-own official kernel configurations. Significant variations from these
-configurations can result in build failures.
-
-For best results, always start with a .config provided by the OpenVZ 
-team from:
-
-http://wiki.openvz.org/Download/kernel/rhel6/${OVZ_KERNEL}.
-
-On amd64 and x86 arches, one of these configurations has automatically been
-enabled in the kernel source tree that was just installed for you.
-
-Slight modifications to the kernel configuration necessary for booting
-are usually fine. If you are using genkernel, the default configuration
-should be sufficient for your needs."
 
 src_unpack() {
 	unpack ${KERNEL_ARCHIVE}
@@ -73,41 +44,47 @@ apply() {
 			;;
 	esac
 	[ ! -e $p ] && die "patch $p not found"
-	echo "Applying patch $p"; $ca $p | patch -s $* || die "patch $p failed"
+	echo "Applying patch $p"; $ca $p | patch $* || die "patch $p failed"
 }
 
 pkg_setup() {
 	case $ARCH in
 		x86)
-			defconfig_src=i686
+			defconfig_src=i386-config.flavour.generic-pae-full
 			;;
 		amd64)
-			defconfig_src=x86_64
+			defconfig_src=amd64-config.flavour.server-full
 			;;
 		*)
 			die "unsupported ARCH: $ARCH"
 			;;
 	esac
-	defconfig_src="${DISTDIR}/config-${CKV}-${OVZ_KV}.${defconfig_src}"
+	defconfig_src="${S}/configs/${defconfig_src}"
 	unset ARCH; unset LDFLAGS #will interfere with Makefile if set
 }
 
 src_prepare() {
 	apply $DISTDIR/$MAINPATCH -p1
-	apply ${FILESDIR}/rhel5-openvz-sources-2.6.18.028.064.7-bridgemac.patch -p1
-	apply ${FILESDIR}/rhel6-openvz-sources-pmcraid-duplicate-sense-buffer.patch -p1
-	apply ${FILESDIR}/openvz-bug-2016-icmp-send-bridge.patch -p1
-	apply ${FILESDIR}/gcc-4.4.5.patch -p1
-	# disable video4linux version 1 - deprecated as of linux-headers-2.6.38:
-	# http://forums.gentoo.org/viewtopic-t-872167.html?sid=60f2e6e08cf1f2e99b3e61772a1dc276
-	sed -i -e "s:video4linux/::g" Documentation/Makefile || die
+	apply $FILESDIR/$PVR/gcc-4.4.5.patch -p1
+
 	sed -i -e "s:^\(EXTRAVERSION =\).*:\1 ${EXTRAVERSION}:" Makefile || die
 	sed	-i -e 's:#export\tINSTALL_PATH:export\tINSTALL_PATH:' Makefile || die
-	cp $DISTDIR/config-${CKV}-${OVZ_KV}.i686 arch/x86/configs/i386_defconfig || die
-	cp $DISTDIR/config-${CKV}-${OVZ_KV}.x86_64 arch/x86/configs/x86_64_defconfig || die
 	rm -f .config >/dev/null
+
+	# Ubuntu:
+
+	chmod +x debian/scripts/config-check || die
+	chmod +x debian/scripts/misc/splitconfig.pl || die
+	chmod +x debian/scripts/misc/kernelconfig || die
+	install -d ${TEMP}/configs || die
+	sed -i -e 's:^tmpdir=.*$:tmpdir=$TEMP/configs:' debian/scripts/misc/kernelconfig || die
+
+	DROOT="debian" debian/scripts/misc/kernelconfig defaultconfig || die
+
 	make -s mrproper || die "make mrproper failed"
 	make -s include/linux/version.h || die "make include/linux/version.h failed"
+
+	mv "${TEMP}/configs" "${S}" || die
 }
 
 src_compile() {
@@ -115,7 +92,7 @@ src_compile() {
 	install -d ${WORKDIR}/out/{lib,boot}
 	install -d ${T}/{cache,twork}
 	install -d $WORKDIR/build $WORKDIR/out/lib/firmware
-	DEFAULT_KERNEL_SOURCE="${S}" INSTALL_FW_PATH=${WORKDIR}/out/lib/firmware CMD_KERNEL_DIR="${S}" genkernel ${GKARGS} \
+	DEFAULT_KERNEL_SOURCE="${S}" CMD_KERNEL_DIR="${S}" genkernel ${GKARGS} \
 		--no-save-config \
 		--kernel-config="$defconfig_src" \
 		--kernname="${PN}" \
@@ -169,11 +146,6 @@ src_install() {
 }
 
 pkg_postinst() {
-	# if K_EXTRAEINFO is set then lets display it now
-	if [[ -n ${K_EXTRAEINFO} ]]; then
-		echo ${K_EXTRAEINFO} | fmt |
-		while read -s ELINE; do	einfo "${ELINE}"; done
-	fi
 	if [ ! -e ${ROOT}usr/src/linux ]
 	then
 		ln -s linux-${P} ${ROOT}usr/src/linux
