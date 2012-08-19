@@ -6,5 +6,5 @@ USE="$USE berkdb gdbm"										#core databases
 USE="$USE readline ncurses"									#core gui/interactivity frameworks
 USE="$USE mudflap openmp python cxx"								#core languages
 USE="$USE ipv6 tcpd"                                                                            #core networking 
-
+USE="$USE -alsa -cups -X"									# For FL-46
 
