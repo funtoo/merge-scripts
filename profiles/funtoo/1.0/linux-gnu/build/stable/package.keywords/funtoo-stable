@@ -8,4 +8,4 @@
 =sys-apps/pciutils-3.1.9-r2 amd64 x86
 =sys-apps/hwids-20120815 amd64 x86
 =sys-apps/usbutils-005-r1 amd64 x86
-
+=sys-fs/cryptsetup-1.4.3 amd64 x86
