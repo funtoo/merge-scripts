@@ -292,7 +292,7 @@ class InsertEbuilds(MergeStep):
 		self.categories = categories
 
 		# ebuildloc is the path to the tree relative to srctree.root.
-		# This is for overlays where the tree is not located at root of overlay
+		# This is for overlays where the tree is not located at root of overlay. Use wth VarLocTree
 		if ebuildloc != None:
 			self.srctree.root = os.path.join(self.srctree.root, ebuildloc)
 
