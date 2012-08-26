@@ -7,7 +7,7 @@ src=rsync://209.177.148.226/gentoo-portage/
 
 # This is the target directory for our updates...
 dst=/var/git/portage-gentoo/
-
+install -d $dst
 cd $dst || exit 1
 
 # Make sure the gentoo.org branch is active...
