@@ -7,11 +7,13 @@ src=rsync://209.177.148.226/gentoo-portage/
 
 # This is the target directory for our updates...
 dst=/var/git/portage-gentoo/
-install -d $dst
+if [ ! -e $dst ]; then
+	install -d /var/git/portage-gentoo || exit 1
+fi
 cd $dst || exit 1
 
 # Make sure the gentoo.org branch is active...
-git checkout gentoo.org || exit 1
+#git checkout gentoo.org || exit 1
 # Now, use rsync to write new changes directly on top of our working files. New files will be added, deprecated files will be deleted.
 rsync --recursive --links --safe-links --perms --times --compress --force --whole-file --delete --timeout=180 --exclude=/.git --exclude=/metadata/cache/ --exclude=/distfiles --exclude=/local --exclude=/packages $src $dst || exit 1
 # We want to make extra-sure that we don't grab any metadata, since we don't keep metadata for the gentoo.org tree (space reasons)
@@ -27,9 +29,9 @@ then
 	install -d profiles/package.mask || exit 4
 	mv profiles/package.mask.bak profiles/package.mask/gentoo || exit 4
 fi
-git add . || exit 1
+#git add . || exit 1
 # create a commit
-git commit -a -m "gentoo.org updates `date` update" || exit 1
+#git commit -a -m "gentoo.org updates `date` update" || exit 1
 # now, push these changes up.
-git push origin gentoo.org || exit 1
+#git push origin gentoo.org || exit 1
 exit 0
