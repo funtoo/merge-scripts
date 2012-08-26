@@ -7,7 +7,7 @@ if not os.path.exists("/usr/bin/svn"):
 	print("svn binary not found at /usr/bin/svn. Exiting.")
 	sys.exit(1)
 
-gentoo_src = Tree("gentoo","gentoo.org", "repos@git.funtoo.org:portage.git", pull=True, trylocal="/var/git/portage-gentoo")
+gentoo_src = DeadTree("gentoo","/var/git/portage-gentoo")
 funtoo_overlay = Tree("funtoo-overlay", branch, "repos@git.funtoo.org:funtoo-overlay.git", pull=True)
 foo_overlay = Tree("foo-overlay", "master", "https://github.com/slashbeast/foo-overlay.git", pull=True)
 bar_overlay = Tree("bar-overlay", "master", "git://github.com/adessemond/bar-overlay.git", pull=True)

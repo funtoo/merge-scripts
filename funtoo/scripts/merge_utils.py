@@ -178,7 +178,6 @@ class SyncTree(SyncDir):
 	def run(self,desttree):
 		SyncDir.run(self,desttree)
 		desttree.logTree(self.srctree)
-
 class Tree(object):
 	def __init__(self,name,branch="master",url=None,pull=False, trylocal=None):
 		self.name = name
@@ -220,6 +219,13 @@ class Tree(object):
 				return
 
 			self.merged.append([srctree.name, headSHA1(srctree.root)])
+
+class DeadTree(Tree):
+	def __init__(self,name,root):
+		self.name = name
+		self.root = root
+	def head(self):
+		return "None"
 
 class SvnTree(object):
 	def __init__(self, name, url=None, trylocal=None):
