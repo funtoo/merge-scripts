@@ -14,11 +14,6 @@
 >=app-admin/eselect-1.3.1.1_beta1
 =app-admin/eselect-1.3.1.1_beta2
 
-# Oleg Vinichenko ( 1 Jan 2012)
-# new baselayout with cleaned group/shadow
-# DO NOT use on production, only for testing purposes!!!
-=sys-apps/baselayout-2.1.9
-
 # Daniel Robbins (31 Aug 2011)
 # This ebuild had no keywords, replaced with keywords and this mask. Needs testing, review.
 =sys-devel/gcc-config-1.5.1*
