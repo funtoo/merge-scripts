@@ -1,5 +1,10 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
+# Oleg Vinichenko (29 Aug 2012)
+# FL-66, FL-74, added new openrc ebuild, masked fore testing
+# localmount openvz fix, additions to bridge, tap scripts
+=sys-apps/openrc-0.10.2-r4
+
 # Oleg Vinichenko (27 Aug 2012)
 # mask latest nano, breaks stages, until https://bugs.gentoo.org/show_bug.cgi?id=432958
 # resolved
