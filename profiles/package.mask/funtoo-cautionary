@@ -1,3 +1,8 @@
+# Oleg Vinichenko (27 Aug 2012)
+# mask latest nano, breaks stages, until https://bugs.gentoo.org/show_bug.cgi?id=432958
+# resolved
+=app-editors/nano-2.3.1-r2
+
 # Oleg Vinichenko (9 Aug 2012)
 # mask xorg-server pre releases, no one need
 # broken boxes
