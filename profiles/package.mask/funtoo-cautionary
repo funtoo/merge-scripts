@@ -70,3 +70,22 @@
 # See bug #359445
 =net-wireless/iwl5000-ucode-8.83.5.1
 
+#Daniel Robbins (13 Jul 2011)
+#pyxml is BAD - avoid if possible - see http://permalink.gmane.org/gmane.linux.gentoo.devel/71149
+dev-python/pyxml
+
+# Daniel Robbins <drobbins@funtoo.org> (02 Mar 2011)
+# mask sys-apps/man as part of a workaround to get
+# man-db to merge smoothly:
+sys-apps/man
+
+# Daniel Robbins <drobbins@funtoo.org> (28 Dec 2009)
+# Requested by slashbeast (Piotr Karbowski) in #funtoo due to /etc/cron.hourly
+# running up to 4 times per hour:
+=sys-process/cronbase-0.3.3*
+
+# Ryan Harris
+# Mask paludis and pkgcore. Not supported on funtoo at this time
+sys-apps/paludis
+sys-apps/pkgcore
+

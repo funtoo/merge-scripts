@@ -1,7 +1,0 @@
-# Mask binary packages that depend on versions of glibc greater than 2.13 until
-# Funtoo is ready to adopt glibc 2.14
-
-# Richard Yao <ryao@funtoo.org> (29 Jul 2012)
-# Users of app-emulation/virtualbox-bin should switch to
-# app-emulation/virtualbox
->=app-emulation/virtualbox-bin-4.1.18
