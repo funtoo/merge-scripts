@@ -1,3 +1,7 @@
+# Oleg Vinichenko (1 Sep 2012)
+# mask latest libnl, broken
+=dev-libs/libnl-3.2.12
+
 # Oleg Vinichenko (27 Aug 2012)
 # mask latest nano, breaks stages, until https://bugs.gentoo.org/show_bug.cgi?id=432958
 # resolved
