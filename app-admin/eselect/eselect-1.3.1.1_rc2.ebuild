@@ -10,7 +10,7 @@ SRC_URI="mirror://gentoo/eselect-1.3.1.tar.xz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="doc"
 S=$WORKDIR/$PN-1.3.1
 
