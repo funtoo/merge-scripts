@@ -9,3 +9,4 @@
 =sys-apps/hwids-20120815 amd64 x86
 =sys-apps/usbutils-005-r1 amd64 x86
 =sys-fs/cryptsetup-1.4.3 amd64 x86
+=x11-libs/cairo-1.10.2-r2 amd64 x86
