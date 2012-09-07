@@ -1,5 +1,9 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
+# Oleg Vinichenko (7 Sep 2012)
+# new vzctl ebuild with corrected vz init script
+# need test
+=sys-cluster/vzctl-3.3-r4
 
 # Oleg Vinichenko ( 27 Jul 2012)
 # mask lateste mesa pre release
