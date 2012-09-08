@@ -1,5 +1,9 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
+# Oleg Vinichenko (8 Sep 2012)
+# new openvz testing kernel, now works with newest toolchain.
+# binutils-2.22 required! masked for testing FL-43 compatibility
+=sys-kernel/openvz-rhel6-test-2.6.32.042.061.8
 
 # Oleg Vinichenko ( 27 Jul 2012)
 # mask lateste mesa pre release
