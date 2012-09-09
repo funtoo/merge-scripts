@@ -5,7 +5,7 @@ EAPI=3
 inherit autotools flag-o-matic toolchain-funcs
 
 BINFONT="unifont-1.0.pf2"
-SRC_URI="ftp://alpha.gnu.org/gnu/${PN}/${P}.tar.gz binfont? ( http://www.funtoo.org/archive/grub/${BINFONT}.xz )"
+SRC_URI="ftp://alpha.gnu.org/gnu/${PN}/${P}.tar.gz binfont? ( http://ftp.osuosl.org/pub/funtoo/distfiles/grub/${BINFONT}.xz )"
 
 DESCRIPTION="GNU GRUB 2 boot loader"
 HOMEPAGE="http://www.gnu.org/software/grub/"
@@ -19,6 +19,7 @@ DEPEND=">=sys-libs/ncurses-5.2-r5 dev-libs/lzo mkfont? ( >=media-libs/freetype-2
 RDEPEND="${RDEPEND}"
 PDEPEND="sys-boot/boot-update"
 PROVIDE="virtual/bootloader"
+RESTRICT="mirror"
 
 export STRIP_MASK="*/grub/*/*.mod"
 QA_EXECSTACK="sbin/grub-probe sbin/grub-setup sbin/grub-mkdevicemap bin/grub-script-check"
