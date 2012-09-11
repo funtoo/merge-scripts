@@ -24,7 +24,7 @@ DEPEND="${RDEPEND}"
 src_unpack() {
 	unpack ${A}
 	cd "${S}"
-	epatch "${FILESDIR}"/${P}-cp_al.patch
+	epatch "${FILESDIR}"/${P}-svn-fixes-1.398-1.430.patch
 }
 
 src_install() {
