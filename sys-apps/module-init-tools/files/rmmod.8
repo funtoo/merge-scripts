@@ -1,0 +1,105 @@
+.\" Copyright (c) 1994, 1995, 1999 Bjorn Ekwall <bj0rn@blox.se>
+.\" Copyright (c) 1996 Free Software Foundation, Inc. (via rth)
+.\" This program is distributed according to the Gnu General Public License.
+.\" See the file COPYING in the distribution source directory
+.\" $Id: rmmod.8 1.1 Fri, 05 Jan 2001 12:45:19 +1100 kaos $
+.\"
+.TH RMMOD 8 "November 12, 2000" Linux "Linux Module Support"
+.SH NAME
+rmmod \- unload loadable modules
+.SH SYNOPSIS
+.hy 0
+.B rmmod
+[ \-aehrsvV ] module ...
+.SH DESCRIPTION
+.B rmmod
+unloads loadable modules from the running kernel.
+.PP
+.B rmmod
+tries to unload a set of modules from the kernel, with the restriction
+that they are not in use and that they are not referred to by other modules.
+.PP
+If more than one module is named on the command line, the modules
+will be removed in the given order. This supports unloading of stacked modules.
+.PP
+With the option '-r' a recursive removal of modules will be attempted.
+This means that if a top module in a stack is named on the command line,
+all modules that are used by this module will be removed as well, if possible.
+.PP
+.SS OPTIONS
+.TP
+.I "-a --all"
+Remove all unused autocleanable modules.
+.TP
+.I "-e --persist"
+Save persistent data for the named modules, without unloading any
+modules.  If no module names are specified then data is saved for all
+modules that have persistent data.  Data is only saved if both the
+kernel and modutils support persistent data and /proc/ksyms contains an
+entry
+.br
+__insmod_\fImodulename\fP_P\fIpersistent_filename\fP
+.TP
+.I "-h --help"
+Print the help text.
+.TP
+.I "-r --stacks"
+Remove a module stack.
+.TP
+.I "-s --syslog"
+Output everything to \fBsyslog\fP(3) instead of the terminal.
+.TP
+.I "-v --verbose"
+Be verbose.
+.TP
+.I "-V --version"
+Print the version of modutils.
+.SH PERSISTENT DATA
+If a module contains persistent data (see
+.IR insmod (8)
+and
+.IR modules.conf (5))
+then removing the module always writes the persistent data to the
+filename in the __insmod _P symbol entry.  You can also save the
+persistent data at any time by rmmod\ -e, this will not unload any
+modules.
+.PP
+When the persistent data is written to file, it is preceded by a
+generated comment line,
+.br
+#% \fIkernel_version timestamp\fR
+.br
+Generated comment lines start with '#%', all generated comments are
+stripped from the existing file, other comments are preserved.  The
+saved data values are written to the file, preserving the existing
+order of comments and assignments.  New values are added at the end of
+the file.  If the file contains values that do not exist in the module
+then these values are preserved but are preceded by a generated comment
+warning that they are not being used.  The latter operation allows a
+user to switch between kernels without losing persistent data and
+without getting any error messages.
+.PP
+.B Note:
+Comments are only supported when the first non-space character on a
+line is '#'.  Any non-blank lines that do not start with '#' are module
+options, one per line.  The option lines have leading spaces removed,
+the remainder of the line is passed to insmod as an option, including
+any trailing characters.
+.SH SEE ALSO
+insmod(8), lsmod(8), ksyms(8), modprobe(8), modules(2)
+.SH HISTORY
+Module support was first conceived by Anonymous
+.br
+Initial Linux version by Bas Laarhoven <bas@vimec.nl>
+.br
+Version 0.99.14 by Jon Tombs <jon@gtex02.us.es>
+.br
+Extended by Bjorn Ekwall <bj0rn@blox.se>
+.br
+Updated for 2.1.17 by Richard Henderson <rth@tamu.edu>
+.br
+Updated for 2.2.2 by by Bjorn Ekwall <bj0rn@blox.se>
+.br
+Updated for modutils 2.3.20 by by Keith Owens <kaos@ocs.com.au>
+.br
+Persistent data for modutils 2.3.22 by by Keith Owens <kaos@ocs.com.au>

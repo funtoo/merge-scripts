@@ -1,0 +1,286 @@
+.\" Copyright (c) 1996 Free Software Foundation, Inc.
+.\" This program is distributed according to the Gnu General Public License.
+.\" See the file COPYING in the kernel source directory.
+.\" $Id: insmod.8 1.1 Fri, 05 Jan 2001 12:45:19 +1100 kaos $
+.\"
+.TH INSMOD 8 "November 10 2000" Linux "Linux Module Support"
+.SH NAME
+insmod \- install loadable kernel module
+.hy 0
+.SH SYNOPSIS
+.B insmod
+[\-fhkLmnpqrsSvVxXyY] [\-e\ persist_name] [\-o\ module_name]
+[\-O\ blob_name] [\-P\ prefix] module [\ symbol=value\ ...\ ]
+.SH DESCRIPTION
+.B insmod
+installs a loadable module in the running kernel.
+.PP
+.B insmod
+tries to link a module into the running kernel by resolving all symbols
+from the kernel's exported symbol table.
+.PP
+If the module file name is given without directories or extension,
+.B insmod
+will search for the module in some common default directories.
+The environment variable MODPATH can be used to override this default.
+If a module configuration file such as /etc/modules.conf exists,
+it will override the paths defined in MODPATH.
+.br
+The environment variable MODULECONF can also be used to select a
+different configuration file from the default /etc/modules.conf (or
+/etc/conf.modules (deprecated)).
+This environment variable will override all the definitions above.
+.SS OPTIONS
+.TP
+.I "-f --force"
+Attempt load the module even if the version of the running kernel and
+the version of the kernel for which the module was compiled do not match.
+This only overrides the kernel version check, it has no effect on
+symbol name checks.  If the symbol names in the module do not match the
+kernel then there is no way to force
+.I insmod
+to load the module.
+.TP
+.I "-h --help"
+Print the help text.
+.TP
+.I "-k --autoclean"
+Set the auto-clean flag on the module.  This flag will be used by
+\fBkerneld\fP(8) to remove modules that have not been used in some
+period of time \(em usually one minute.
+.TP
+.I "-L --lock"
+Use \fBflock\fR(2) to prevent simultaneous loads of the same module.
+.TP
+.I "-m --map"
+Output a load map on stdout, making it easier to debug the module in
+the event of a kernel panic.
+.TP
+.I "-n --noload"
+Dummy run, do everything except load the module into the kernel.  If
+requested by
+.I -m
+or
+.IR -O ,
+the run will produce a map or blob file.  Since the module is not
+loaded, the real kernel load address is unknown so the map and blob
+file are based on an arbitrary load address of 0x12340000.
+.TP
+.I "-p --probe"
+Probe the module to see if it could be successfully loaded.  This
+includes locating the object file in the module path, checking
+version numbers, and resolving symbols.  It does not check the
+relocations nor does it produce a map or blob file.
+.TP
+.I "-q --quiet"
+Do not print a list of any unresolved symbols.
+Do not complain about version mismatch.
+The problem will only be reflected in the exit status of
+.IR insmod .
+.TP
+.I "-r --root"
+Some users compile modules under a non-root userid then install the
+modules as root.  This process can leave the modules owned by the
+non-root userid, even though the modules directory is owned by root.
+If the non-root userid is compromised, an intruder can overwrite
+existing modules owned by that userid and use this exposure to
+bootstrap up to root access.
+.TP
+.I ""
+By default, modutils will reject attempts to use a module that is not
+owned by root.  Specifying -r will toggle the check and allow root to
+load modules that are not owned by root.
+.B Note:
+the default value for root check can be changed when modutils is
+configured.
+.TP
+.I ""
+.B Use of
+.I -r
+\fBto disable root checking or setting the default to "no root check"
+at configuration time is a major security exposure and is not
+recommended.\fR
+.TP
+.I "-s --syslog"
+Output everything to \fBsyslog\fP(3) instead of the terminal.
+.TP
+.I "-S --kallsyms"
+Force the loaded module to have kallsyms data, even if the kernel does
+not support it.  This option is for small systems where the kernel is
+loaded without kallsyms data but selected modules need kallsyms for
+debugging.
+.TP
+.I "-v --verbose"
+Be verbose.
+.TP
+.I "-X --export, -x --noexport"
+Do and do not export all of the module's external symbols, respectively.
+The default is for the symbols to be exported.  This option is only
+effective if the module does not explicitly export its own controlled
+symbol table, and thus is deprecated.
+.TP
+.I "-Y --ksymoops, -y --noksymoops"
+Do and do not add ksymoops symbols to ksyms.  These symbols are used by
+ksymoops to provide better debugging if there is an Oops in this
+module.  The default is for the ksymoops symbols to be defined.  This
+option is independent of the -X/-x options.
+.TP
+.I ""
+ksymoops symbols add approximately 260 bytes per loaded module.  Unless
+you are really short on kernel space and are trying to reduce ksyms to
+its minimum size, take the default and get more accurate Oops
+debugging.  ksymoops symbols are required to save persistent module
+data.
+.TP
+.I "-o \fRmodule_name\fI --name\fR=module_name\fI"
+Explicitly name the module, rather than deriving the name from the
+base name of the source object file.
+.TP
+.I "-O \fRblob_name\fI --blob\fR=blob_name\fI"
+Save the binary object in
+.IR blob_name .
+The result is a binary blob (no ELF headers) showing exactly what is
+loaded into the kernel, after section manipulation and relocation.
+Option
+.I -m
+is recommended to get a map of the object.
+.TP
+.I "-P \fRprefix\fI --prefix\fR=prefix\fI"
+This option can be used with versioned modules for an SMP or bigmem
+kernel, since such modules have an extra prefix added in their symbol
+names.
+If the kernel was built with symbol versions then
+.I insmod
+will automatically extract the prefix from the definition of
+"get_module_symbol" or "inter_module_get", one of which must exist in
+any kernel that supports modules.  If the kernel has no symbol versions
+but the module was built with symbol versions then the user must supply
+\-P.
+.TP
+.I "-e \fRpersist_name\fI --persist\fR=persist_name\fI"
+Specifies where any persistent data for the module is read from on load
+and written to when this instantiantion of the module is unloaded.
+This option is silently ignored if the module has no persistent data.
+Persistent data is only read by
+.I insmod
+if this option is present, by default
+.I insmod
+does not process persistent data.
+As a shorthand form,
+.I -e
+"" (an empty string) is interpreted by
+.I insmod
+as the value of
+.I persistdir
+(see
+.BR modules.conf (5))
+followed by the filename of the module, relative to the module search
+path it was found in, minus any trailing \'.gz', \'.o' and \'.mod'.  If
+you specify
+.IR persistdir =
+(i.e. persistdir is an empty field) then this shorthand form is
+silently ignored.
+.SS "MODULE PARAMETERS"
+Some modules accept load-time parameters to customize their operation.
+These parameters are often I/O port and IRQ numbers that vary from
+machine to machine and cannot be determined from the hardware.
+.PP
+In modules built for 2.0 series kernels, any integer or character pointer
+symbol may be treated as a parameter and modified.  Beginning in the
+2.1 series kernels, symbols are explicitly marked as parameters so that
+only specific values may be changed.  Furthermore type information is
+provided for checking the values provided at load time.
+.PP
+In the case of integers, all values may be in decimal, octal or
+hexadecimal a la C: 17, 021 or 0x11.  Array elements are specified
+sequence separated by commas; elements can be skipped by omitting
+the value.
+.PP
+In 2.0 series modules, values that do not begin with a number are
+considered strings.  Beginning in 2.1, the parameter's type information
+indicates whether to interpret the value as a string.  If the value
+begins with double-quotes (\fI"\fP), the string is interpreted as
+in C, escape sequences and all.  Do note that from the shell prompt,
+the quotes themselves may need to be protected from shell interpretation.
+.SS "KSYMOOPS ASSISTANCE"
+To assist with debugging of kernel Oops when using modules, insmod
+defaults to adding some symbols to ksyms, see the \fB-Y\fP option.
+These symbols start with \fB__insmod_\fP\fImodulename\fP\fB_\fP.  The
+\fImodulename\fP is required to make the symbols unique, it is legal to
+load the same object more than once under different module names.
+Currently defined symbols are
+.PP
+__insmod_\fImodulename\fP_O\fIobjectfile\fP_M\fImtime\fP_V\fIversion\fP
+.PP
+\fIobjectfile\fP is the name of the file that the object was loaded
+from.  This ensures that ksymoops can match the code to the correct
+object.  \fImtime\fP is the last modified timestamp on that file in
+hex, zero if stat failed.  \fIversion\fP is the kernel version that
+the module was compiled for, -1 if no version is available.  The
+_O symbol has the same start address as the module header.
+.PP
+__insmod_\fImodulename\fP_S\fIsectionname\fP_L\fIlength\fP
+.PP
+This symbol appears at the start of selected ELF sections,
+currently .text, .rodata, .data and .bss.  It only appears if the
+section has a non-zero size.  \fIsectionname\fP is the name of the ELF
+section, \fIlength\fP is the length of the section in decimal.  These
+symbols help ksymoops map addresses to sections when no symbols are
+available.
+.PP
+__insmod_\fImodulename\fP_P\fIpersistent_filename\fP
+.PP
+Only created by insmod if the module has one or more parameters that
+are marked as persistent data and a filename to save persistent data
+(see
+.I -e
+above) is available.
+.PP
+The other problem with debugging kernel Oops in modules is that the
+contents of /proc/ksyms and /proc/modules can change between the Oops
+and when you process the log file.  To help overcome this problem, if
+directory /var/log/ksymoops exists then insmod and rmmod will
+automatically copy /proc/ksyms and /proc/modules to /var/log/ksymoops
+with a prefix of `date\ +%Y%m%d%H%M%S`.
+The system administrator can tell ksymoops which snapshot files to use
+when debugging an Oops.  There is no switch to disable this automatic
+copy, if you do not want it to occur, do not create /var/log/ksymoops.
+If that directory exists, it should be owned by root and be mode 644 or
+600 and you should run this script every day or so.  The script below
+is installed as insmod_ksymoops_clean.
+.PP
+.ne 8
+.nf
+  #!/bin/sh
+  # Delete saved ksyms and modules not accessed in 2 days
+  if [ -d /var/log/ksymoops ]
+  then
+	  set -e
+	  # Make sure there is always at least one version
+	  d=`date +%Y%m%d%H%M%S`
+	  cp -a /proc/ksyms /var/log/ksymoops/${d}.ksyms
+	  cp -a /proc/modules /var/log/ksymoops/${d}.modules
+	  find /var/log/ksymoops -type f -atime +2 -exec rm {} \\;
+  fi
+.SH SEE ALSO
+\fBrmmod\fP(8), \fBmodprobe\fP(8), \fBdepmod\fP(8), \fBlsmod\fP(8),
+\fBksyms\fP(8), \fBmodules\fP(2), \fBgenksyms\fP(8), \fBkerneld\fP(8),
+\fBksymoops\fP(kernel).
+.SH HISTORY
+Module support was first conceived by Anonymous
+.br
+Initial Linux version by Bas Laarhoven <bas@vimec.nl>
+.br
+Version 0.99.14 by Jon Tombs <jon@gtex02.us.es>
+.br
+Extended by Bjorn Ekwall <bj0rn@blox.se>
+.br
+Original ELF help from Eric Youngdale <eric@aib.com>
+.br
+Rewritten for 2.1.17 by Richard Henderson <rth@tamu.edu>
+.br
+Extended by Bjorn Ekwall <bj0rn@blox.se> for modutils-2.2.*, March 1999
+.br
+Assistance for ksymoops by Keith Owens <kaos@ocs.com.au>, May 1999
+.br
+Maintainer: Keith Owens <kaos@ocs.com.au>.

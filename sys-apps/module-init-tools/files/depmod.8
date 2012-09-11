@@ -1,0 +1,201 @@
+.\" Copyright (c) 1994, 1995 Jacques Gelinas (jacques@solucorp.qc.ca)
+.\" Copyright (c) 1995, 1999 Bjorn Ekwall (bj0rn@blox.se)
+.\" This program is distributed according to the Gnu General Public License.
+.\" See the file COPYING in the base distribution directory
+.\" $Id: depmod.8 1.1 Fri, 05 Jan 2001 12:45:19 +1100 kaos $
+.\"
+.TH DEPMOD 8 "October 12, 1999" Linux "Linux Module Support"
+.SH NAME
+depmod \- handle dependency descriptions for loadable kernel modules
+.SH SYNOPSIS
+.B depmod
+\-[aA] [\-enqsvVr]
+[\-C\ configfile] [\-F\ kernelsyms] [\-b\ basedirectory] [forced_version]
+.br
+.B depmod
+[\-enqsv] [\-F\ kernelsyms] module1.o module2.o ...
+.SH OPTIONS
+.TP
+.I \-a
+Search for modules in all directories specified in the (optional)
+configuration file
+.I /etc/modules.conf\fR.
+.TP
+.I \-A
+Compare file timestamps and, if necessary, act like
+.B depmod
+\-a.  This option only updates the dependency file if anything has changed.
+.TP
+.I \-e
+Show all the unresolved symbol for each module.
+.TP
+.I \-n
+Write the dependency file on stdout instead of in the
+.B /lib/modules
+tree.
+.TP
+.I \-s
+Write all error messages via the syslog daemon instead of stderr.
+.TP
+.I \-v
+Show the name of each module as it is being processed.
+.TP
+.I \-q
+Tell depmod to keep quiet and not to complain about missing symbols.
+.TP
+.I \-V
+Show the release version name of
+.B depmod
+.TP
+.I \-r
+Some users compile modules under a non-root userid then install the
+modules as root.  This process can leave the modules owned by the
+non-root userid, even though the modules directory is owned by root.
+If the non-root userid is compromised, an intruder can overwrite
+existing modules owned by that userid and use this exposure to
+bootstrap up to root access.
+.TP
+.I ""
+By default, modutils will reject attempts to use a module that is not
+owned by root.  Specifying -r will suppress the error and allow root to
+load modules that are not owned by root.
+.TP
+.I ""
+.B Use of
+.I -r
+.B is a major security exposure and is not recommended.
+.PP
+The following options are useful for people managing distributions;
+.TP
+.I "\-b basedirectory"
+If the directory tree
+.B /lib/modules
+containing the sub-trees of modules is moved somewhere else in order to
+handle modules for a different environment, the
+.I basedirectory
+option tells depmod where to find the moved image of the
+.B /lib/modules
+tree.
+The file references in the depmod output file that is built,
+.I modules.dep,
+will not contain the
+.I basedirectory
+path.
+This means that when the file tree is moved back from
+.B basedirectory/lib/modules
+into
+.B /lib/modules
+in the final distribution, all references will be correct.
+.TP
+.I "\-C configfile"
+Use the file
+.I configfile
+instead of /etc/modules.conf.
+.br
+The environment variable
+.B MODULECONF
+can also be used to select a different
+configuration file from the default /etc/modules.conf (or
+/etc/conf.modules (deprecated)).
+.TP
+.I "\-F kernelsyms"
+When building dependency files for a different kernel than the currently
+running kernel, it is important that
+.B depmod
+uses the correct set of kernel symbols to resolve the kernel references
+in each module.
+These symbols can either be a copy of
+.I System.map
+from the other kernel,
+or a copy of the output from
+.I /proc/ksyms.
+If your kernel uses versioned symbols, you
+.B must
+use a copy of the
+.I /proc/ksyms
+output, since that file contains the symbol versions of the kernel symbols.
+.SH DESCRIPTION
+The
+.B depmod
+and
+.B modprobe
+utilities are intended
+to make a Linux modular kernel manageable for all users,
+administrators and distribution maintainers.
+.PP
+.B Depmod
+creates a "Makefile"-like dependency file, based on the symbols it finds
+in the set of modules mentioned on the command line
+or from the directories specified in the configuration file.
+This dependency file is later used by
+.B modprobe
+to automatically load the correct module or stack of modules.
+.PP
+The normal use of
+.B depmod
+is to include the line
+.I "/sbin/depmod \-a"
+somewhere in the rc-files
+in /etc/rc.d, so that the correct module dependencies will be available
+immediately after booting the system.
+.br
+Note that the option
+.I \-a
+now is optional.
+For boot-up purposes, the option
+.I \-q
+might be more appropriate since that make depmod silent about
+unresolved symbols.
+.PP
+It is also possible to create the dependency file immediately
+after compiling a new kernel.
+If you do "depmod -a 2.2.99" when you have compiled kernel 2.2.99 and
+its modules the first time, while still running e.g. 2.2.98, the file will
+be created in the correct place.
+.br
+In this case however,
+the dependencies on the kernel will not be guaranteed to be correct.
+See the options
+.I \-F, \-C and \-b
+above for more information on handling this.
+.SH CONFIGURATION
+The behavior of
+.B depmod
+and
+.B modprobe
+can be adjusted by the (optional) configuration file
+.B /etc/modules.conf
+.br
+See
+.I modprobe(8)
+and
+.I modules.conf(5)
+for a complete description.
+.PP
+.SH STRATEGY
+Each time you compile a new kernel, the command
+.B "make modules_install"
+will create a new directory, but won't change the default.
+.PP
+When you get a module unrelated to the kernel distribution
+you should place it in one of the version-independent directories
+under /lib/modules.
+.PP
+This is the default strategy, which can be overridden in /etc/modules.conf.
+.SH FILES
+.nf
+/etc/modules.conf (alternatively but deprecated /etc/modules.conf)
+/lib/modules/*/modules.dep,
+/lib/modules/*
+.fi
+.SH SEE ALSO
+modules.conf(5),
+modprobe(8),
+modinfo(8),
+lsmod(8),
+ksyms(8),
+modules(2),
+.SH AUTHOR
+Jacques Gelinas (jack@solucorp.qc.ca)
+.br
+Bjorn Ekwall (bj0rn@blox.se)
