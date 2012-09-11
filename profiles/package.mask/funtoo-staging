@@ -1,10 +1,5 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
-# Oleg Vinichenko (11 Sep 2012)
-# short-term mask for updated m-i-t, added missing man-pages
-# works fine
-=sys-apps/module-init-tools-3.16-r1
-
 # Oleg Vinichenko ( 27 Jul 2012)
 # mask lateste mesa pre release
 >=media-libs/mesa-8.1_rc0
