@@ -1,0 +1,287 @@
+.\" Copyright (c) 1994, 1995 Jacques Gelinas (jacques@solucorp.qc.ca)
+.\" Copyright (c) 1995, 1999 Bjorn Ekwall (bj0rn@blox.se)
+.\" This program is distributed according to the Gnu General Public License.
+.\" See the file COPYING in the base distribution directory
+.\" $Id: modprobe.8 1.1 Fri, 05 Jan 2001 12:45:19 +1100 kaos $
+.\"
+.TH MODPROBE 8 "March 15, 1999" Linux "Linux Module Support"
+.SH NAME
+modprobe \- high level handling of loadable modules
+.SH SYNOPSIS
+.hy 0
+.B modprobe
+[ \-adnqv ] [ \-C\ config ] module [ symbol=value ... ]
+.br
+.B modprobe
+[ \-adnqv ] [ \-C\ config ] [ \-t\ type ] pattern
+.br
+.B modprobe
+\-l [ \-C\ config ] [ \-t\ type ] pattern
+.br
+.B modprobe
+\-c [ \-C\ config ]
+.br
+.B modprobe
+\-r [ \-dnv ] [ \-C\ config ] [ module ...]
+.br
+.B modprobe
+-V
+.SH OPTIONS
+.TP
+.I "\-a, \-\-all"
+Load
+.B all
+matching modules instead of stopping after the first successful loading.
+.TP
+.I "\-c, \-\-showconfig"
+Show the currently used configuration.
+.TP
+.I "\-d, \-\-debug"
+Show information about the internal representation of the stack of modules.
+.TP
+.I "\-k, \-\-autoclean"
+Set 'autoclean' on loaded modules.  Used by the kernel when it calls on
+.B modprobe
+to satisfy a missing feature (supplied as a module).
+The
+.I \-q
+option is implied by
+.I \-k.
+These options will automatically be sent to insmod.
+.TP
+.I "\-l, \-\-list"
+List matching modules.
+.TP
+.I "\-n, \-\-show"
+Don't actually perform the action, just show what would be done.
+.TP
+.I "\-q, \-\-quiet"
+Do not complain about insmod failing to install a module.
+Continue as normal, but silently, with other possibilities for modprobe to test.
+This option will automatically be sent to insmod.
+.TP
+.I "\-r, \-\-remove"
+Remove module (stacks) or do autoclean, depending on whether there are
+any modules mentioned on the command line.
+.TP
+.I "\-s, \-\-syslog"
+Report via syslog instead of stderr.
+This options will automatically be sent to insmod.
+.TP
+.I "\-t, \-\-type\ moduletype"
+Only consider modules of this type.  modprobe will only look at modules
+whose directory path includes exactly "/\fImoduletype\fR/".
+.I moduletype
+can include more than one directory name, e.g.
+.I "\-t\ drivers/net"
+would list modules in xxx/drivers/net/ and its subdirectories.
+.TP
+.I "\-v, \-\-verbose"
+Print all commands as they are executed.
+.TP
+.I "\-V, \-\-version"
+Show the release version of modprobe.
+.TP
+.I "\-C, \-\-config configfile"
+Use the file
+.I configfile
+instead of (the optional)
+.B /etc/modules.conf
+to specify the configuration.
+The environment variable
+.B MODULECONF
+can also be used to select
+(and override)
+a different
+configuration file from the default /etc/modules.conf (or
+/etc/conf.modules (deprecated)).
+.SH DESCRIPTION
+The
+.B modprobe
+and
+.B depmod
+utilities are intended
+to make a Linux modular kernel more manageable for all users,
+administrators and distribution maintainers.
+.PP
+.B Modprobe
+uses a "Makefile"-like dependency file, created by
+.B depmod,
+to automatically load the relevant module(s) from the set of modules
+available in predefined directory trees.
+.PP
+.B Modprobe
+is used to load a set of modules, either a single module,
+a stack of dependent modules,
+or all modules that are marked with a specified tag.
+.PP
+.B Modprobe
+will automatically load all base modules needed in a module stack,
+as described by the dependency file modules.dep.
+If the loading of one of these modules fails, the whole current stack
+of modules loaded in the current session will be unloaded automatically.
+.PP
+.B Modprobe
+has two ways of loading modules. One way (the probe mode) will
+try to load a module out of a list (defined by
+.I pattern
+).
+.B Modprobe
+stops loading as soon as one module loads successfully.
+This could be used to autoload one Ethernet driver out of a list.
+.br
+The other way
+.B modprobe
+can be used is to load
+.B all
+modules from a list.
+See
+.B EXAMPLES
+below.
+.PP
+With the option
+.B \-r,
+modprobe will automatically unload a stack of modules,
+similar to the way
+.B "rmmod \-r"
+does. Note that using just
+.B "modprobe \-r"
+will clean up unused autoloaded modules and also perform the
+pre- and post-remove commands in the configuration file /etc/modules.conf.
+.PP
+With the option
+.I \-l
+combined with the option
+.I \-t
+a list all available modules
+of a certain type will be shown.
+.PP
+Option
+.I \-c
+will print the currently used configuration (default + configuration file).
+.SH CONFIGURATION
+The behavior of
+.B modprobe
+(and
+.B depmod
+)
+can be modified by the (optional) configuration file
+.B /etc/modules.conf
+.br
+For a more detailed description of what this file can contain,
+as well as the default configuration used by
+.B depmod
+and
+.B modprobe,
+see
+.I modules.conf(5).
+.PP
+Note that the pre- and post-remove commands will \fBnot\fR be executed
+if a module is "autocleaned" by kerneld!
+Look for the up-coming support for persistent module storage instead.
+.br
+If you want to use the pre- and post-install features, you will have to
+turn off autoclean for kerneld and instead put something like the following
+line in your crontab (this is used for kmod systems as well)
+to do autoclean every 2 minutes:
+.br
+ */2 * * * * test \-f /proc/modules && /sbin/modprobe \-r
+.SH STRATEGY
+The idea is that
+.B modprobe
+will look first in the directory containing
+modules compiled for the current release of the kernel.
+If the module is not found there,
+.B modprobe
+will look in the directory common to the kernel version (e.g. 2.0, 2.2).
+If the module is still found,
+.B modprobe
+will look in the directory containing modules for a default release,
+and so on.
+.PP
+When you install a new linux, the modules should be moved to a directory
+related to the release (and version) of the kernel you are installing.
+Then you should do a symlink from this directory to the "default" directory.
+.PP
+Each time you compile a new kernel, the command
+.B "make modules_install"
+will create a new directory, but won't change the \"default\" link.
+.PP
+When you get a module unrelated to the kernel distribution
+you should place it in one of the version-independent directories
+under /lib/modules.
+.PP
+This is the default strategy, which can be overridden in /etc/modules.conf.
+.SH EXAMPLES
+.TP
+modprobe \-t net
+Load one of the modules that are stored in the directory tagged "net".
+Each module are tried until one succeeds.
+.TP
+modprobe \-a \-t boot
+All modules that are stored in directories tagged
+.B "boot"
+will be loaded.
+.TP
+modprobe slip
+This will attempt to load the module slhc.o if it was not previously loaded,
+since the slip module needs the functionality in the slhc module.
+This dependency will be described in the file "modules.dep" that was
+created automatically by
+.B depmod
+.TP
+modprobe \-r slip
+will unload the slip module.
+It will also unload the slhc module automatically,
+unless it is used by some other module as well (like e.g. ppp).
+.SH FILES
+.nf
+/etc/modules.conf, (alternatively but deprecated: /etc/conf.modules)
+/lib/modules/*/modules.dep,
+/lib/modules/*
+.fi
+.SH SEE ALSO
+depmod(8),
+lsmod(8),
+kerneld(8),
+ksyms(8),
+rmmod(8),
+modules(2)
+.SH SAFE MODE
+If the effective uid is not equal to the real uid then modprobe treats
+its input with extreme suspicion.  The last parameter is always treated
+as a module name, even if it starts with '-'.  There can only be one
+module name and options of the form "variable=value" are forbidden.
+The module name is always treated as a string, no meta expansion is
+performed in safe mode.  However meta expansion is still applied to
+data read from the config file.
+.PP
+euid may not be equal to uid when modprobe is invoked from the kernel,
+this is true for kernels >= 2.4.0-test11.  In an ideal world modprobe
+could trust the kernel to only pass valid parameters to modprobe.
+However at least one local root exploit has occurred because high level
+kernel code passed unverified parameters direct from the user to
+modprobe.  So modprobe no longer trusts kernel input.
+.PP
+.ne 8
+.B modprobe
+automatically sets safe mode when the environment consists only of these
+strings
+.nf
+ HOME=/
+ TERM=linux
+ PATH=/sbin:/usr/sbin:/bin:/usr/bin
+.fi
+This detects modprobe execution from the kernel on kernels 2.2 though
+2.4.0-test11, even if uid == euid, which it does on the earlier
+kernels.
+.SH REQUIRED UTILITIES
+depmod(8),
+insmod(8)
+.SH NOTES
+Patterns supplied to modprobe will often need to be escaped to ensure
+that it is evaluated in the proper context.
+.SH AUTHOR
+Jacques Gelinas (jack@solucorp.qc.ca)
+.br
+Bjorn Ekwall (bj0rn@blox.se)
