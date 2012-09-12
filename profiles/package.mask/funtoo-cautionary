@@ -59,11 +59,6 @@
 # mask a live hwids ebuild
 =sys-apps/hwids-99999999
 
-# Oleg Vinichenko (28 Mar 2012)
-# Segfaults with latest dhcpcd
->=net-dns/openresolv-3.5.1
-
-
 # Oleg Vinichenko (19 Jan 2012)
 # udev-177 is not ready for daily usage
 # for adventurous ones!

@@ -20,7 +20,7 @@ RDEPEND=""
 src_configure() {
 	econf \
 		--prefix= \
-		--libexecdir=/$(get_libdir)
+		--libexecdir=/$(get_libdir)/openresolv
 }
 
 pkg_config() {
