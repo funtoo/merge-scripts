@@ -33,7 +33,7 @@ src_install() {
 	dosbin "${FILESDIR}"/consolelog.sh || die
 	dosbin "${FILESDIR}/metalog-postrotate-compress.sh" || die
 
-	newinitd "${FILESDIR}"/metalog.initd metalog
+	newinitd "${FILESDIR}"/metalog.initd-r1 metalog
 	newconfd "${FILESDIR}"/metalog.confd metalog
 }
 
