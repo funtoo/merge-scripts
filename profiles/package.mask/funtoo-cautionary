@@ -1,3 +1,7 @@
+# Oleg Vinichenko (14 Sep 2012)
+# mask latest sys-devel/patch, breaks stages
+=sys-devel/patch-2.7
+
 # Oleg Vinichenko (7 Sep 2012)
 # mask latest dev-libs/mpc, breaks stages
 >=dev-libs/mpc-1.0
