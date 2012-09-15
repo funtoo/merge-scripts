@@ -62,9 +62,8 @@
 # Oleg Vinichenko (19 Jan 2012)
 # udev-177 is not ready for daily usage
 # for adventurous ones!
-# Jean-Francis Roy (21 May 2012)
-# Update mask for >171-r6 as new udev versions are about to be added for testing.
->sys-fs/udev-171-r6
+# Daniel Robbins (15 Sep 2012) - new udev version to fix /run persistent issues:
+>sys-fs/udev-171-r7
 
 # DO NOT USE this one the ebuild does not include kernel revision dependencies (>= 2.6.38 REQUIRED) and it can affect many of our users 
 # See bug #359445
