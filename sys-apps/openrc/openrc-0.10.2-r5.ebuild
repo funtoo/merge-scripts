@@ -224,7 +224,7 @@ pkg_postinst() {
 	# ===========
 
 	# update the dependency tree bug #224171
-	[[ "${ROOT}" = "/" ]] && "${ROOT}/libexec"/rc/bin/rc-depend -u
+	[[ "${ROOT}" = "/" ]] && "${ROOT}/$(get_libdir)"/rc/bin/rc-depend -u
 
 	elog "You should now update all files in /etc, using etc-update"
 	elog "or equivalent before rebooting."
