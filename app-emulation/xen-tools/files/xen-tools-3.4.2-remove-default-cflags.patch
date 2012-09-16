@@ -1,0 +1,257 @@
+Only in xen-3.4.2/: cflags.sh
+diff -ur xen-3.4.2.orig//config/StdGNU.mk xen-3.4.2//config/StdGNU.mk
+--- xen-3.4.2.orig//config/StdGNU.mk	2009-11-10 23:12:55.000000000 +0800
++++ xen-3.4.2//config/StdGNU.mk	2011-09-26 02:18:14.630771549 +0800
+@@ -48,7 +48,7 @@
+ SHLIB_CFLAGS = -shared
+ 
+ ifneq ($(debug),y)
+-CFLAGS += -O2 -fomit-frame-pointer
++CFLAGS += -fomit-frame-pointer
+ else
+ # Less than -O1 produces bad code and large stack frames
+ CFLAGS += -O1 -fno-omit-frame-pointer -fno-optimize-sibling-calls
+diff -ur xen-3.4.2.orig//config/SunOS.mk xen-3.4.2//config/SunOS.mk
+--- xen-3.4.2.orig//config/SunOS.mk	2009-11-10 23:12:55.000000000 +0800
++++ xen-3.4.2//config/SunOS.mk	2011-09-26 02:18:14.640771549 +0800
+@@ -45,7 +45,7 @@
+ SHLIB_CFLAGS = -R $(SunOS_LIBDIR) -shared
+ 
+ ifneq ($(debug),y)
+-CFLAGS += -O2 -fno-omit-frame-pointer
++CFLAGS += -fno-omit-frame-pointer
+ else
+ # Less than -O1 produces bad code and large stack frames
+ CFLAGS += -O1 -fno-omit-frame-pointer
+diff -ur xen-3.4.2.orig//Config.mk xen-3.4.2//Config.mk
+--- xen-3.4.2.orig//Config.mk	2011-09-26 02:17:29.221771569 +0800
++++ xen-3.4.2//Config.mk	2011-09-26 02:18:14.686771549 +0800
+@@ -14,7 +14,7 @@
+ 
+ # Tools to run on system hosting the build
+ HOSTCC      = gcc
+-HOSTCFLAGS  = -Wall  -Wstrict-prototypes -O2 -fomit-frame-pointer
++HOSTCFLAGS  = -Wall  -Wstrict-prototypes -fomit-frame-pointer
+ HOSTCFLAGS += -fno-strict-aliasing
+ 
+ DISTDIR     ?= $(XEN_ROOT)/dist
+diff -ur xen-3.4.2.orig//extras/mini-os/arch/ia64/arch.mk xen-3.4.2//extras/mini-os/arch/ia64/arch.mk
+--- xen-3.4.2.orig//extras/mini-os/arch/ia64/arch.mk	2009-11-10 23:12:55.000000000 +0800
++++ xen-3.4.2//extras/mini-os/arch/ia64/arch.mk	2011-09-26 02:18:14.689771549 +0800
+@@ -1,8 +1,8 @@
+ 
+ ARCH_CFLAGS := -mfixed-range=f2-f5,f12-f15,f32-f127 -mconstant-gp
+-ARCH_CFLAGS += -O2
++#ARCH_CFLAGS += -O2
+ ARCH_ASFLAGS := -x assembler-with-cpp
+-ARCH_ASFLAGS += -mfixed-range=f2-f5,f12-f15,f32-f127 -fomit-frame-pointer
++ARCH_ASFLAGS += -mfixed-range=f2-f5,f12-f15,f32-f127
+ ARCH_ASFLAGS += -fno-builtin -fno-common -fno-strict-aliasing -mconstant-gp
+ 
+ ARCH_LDFLAGS = -warn-common
+diff -ur xen-3.4.2.orig//stubdom/grub.patches/00cvs xen-3.4.2//stubdom/grub.patches/00cvs
+--- xen-3.4.2.orig//stubdom/grub.patches/00cvs	2009-11-10 23:12:55.000000000 +0800
++++ xen-3.4.2//stubdom/grub.patches/00cvs	2011-09-26 02:18:14.549771549 +0800
+@@ -223,8 +223,8 @@
+ +++ grub/configure.ac	2008-04-10 23:26:50.000000000 +0100
+ @@ -86,13 +86,13 @@ if test "x$ac_cv_prog_gcc" = xyes; then
+      fi
+-     STAGE1_CFLAGS="-O2"
+-     GRUB_CFLAGS="-O2"
++     STAGE1_CFLAGS=""
++     GRUB_CFLAGSS=""
+ -    AC_CACHE_CHECK([whether optimization for size works], size_flag, [
+ +    AC_CACHE_CHECK([whether optimization for size works], grub_cv_cc_Os, [
+        saved_CFLAGS=$CFLAGS
+@@ -237,7 +237,7 @@
+ +    if test "x$grub_cv_cc_Os" = xyes; then
+        STAGE2_CFLAGS="-Os"
+      else
+-       STAGE2_CFLAGS="-O2 -fno-strength-reduce -fno-unroll-loops"
++       STAGE2_CFLAGS=" -fno-strength-reduce -fno-unroll-loops"
+ @@ -100,16 +100,16 @@ if test "x$ac_cv_prog_gcc" = xyes; then
+      # OpenBSD has a GCC extension for protecting applications from
+      # stack smashing attacks, but GRUB doesn't want this feature.
+diff -ur xen-3.4.2.orig//tools/debugger/gdb/gdb-6.2.1-xen-sparse/gdb/gdbserver/configure xen-3.4.2//tools/debugger/gdb/gdb-6.2.1-xen-sparse/gdb/gdbserver/configure
+--- xen-3.4.2.orig//tools/debugger/gdb/gdb-6.2.1-xen-sparse/gdb/gdbserver/configure	2009-11-10 23:12:55.000000000 +0800
++++ xen-3.4.2//tools/debugger/gdb/gdb-6.2.1-xen-sparse/gdb/gdbserver/configure	2011-09-26 02:24:37.261771380 +0800
+@@ -1849,7 +1849,7 @@
+ GCC=`test $ac_compiler_gnu = yes && echo yes`
+ ac_test_CFLAGS=${CFLAGS+set}
+ ac_save_CFLAGS=$CFLAGS
+-CFLAGS="-g"
++CFLAGS=""
+ echo "$as_me:$LINENO: checking whether $CC accepts -g" >&5
+ echo $ECHO_N "checking whether $CC accepts -g... $ECHO_C" >&6
+ if test "${ac_cv_prog_cc_g+set}" = set; then
+@@ -1898,15 +1898,15 @@
+   CFLAGS=$ac_save_CFLAGS
+ elif test $ac_cv_prog_cc_g = yes; then
+   if test "$GCC" = yes; then
+-    CFLAGS="-g -O2"
++    CFLAGS=""
+   else
+-    CFLAGS="-g"
++    CFLAGS=""
+   fi
+ else
+   if test "$GCC" = yes; then
+-    CFLAGS="-O2"
++#    CFLAGS="-O2"
+   else
+-    CFLAGS=
++    CFLAGS=""
+   fi
+ fi
+ echo "$as_me:$LINENO: checking for $CC option to accept ANSI C" >&5
+Only in xen-3.4.2//tools/debugger/gdb/gdb-6.2.1-xen-sparse/gdb/gdbserver: configure~
+diff -ur xen-3.4.2.orig//tools/ioemu-qemu-xen/configure xen-3.4.2//tools/ioemu-qemu-xen/configure
+--- xen-3.4.2.orig//tools/ioemu-qemu-xen/configure	2011-09-26 02:17:29.223771569 +0800
++++ xen-3.4.2//tools/ioemu-qemu-xen/configure	2011-09-26 02:22:14.583771444 +0800
+@@ -464,7 +464,7 @@
+ 
+ 
+ # default flags for all hosts
+-CFLAGS="$CFLAGS -O2 -g -fno-strict-aliasing"
++CFLAGS="$CFLAGS -g -fno-strict-aliasing"
+ CFLAGS="$CFLAGS -Wall -Wundef -Wendif-labels -Wwrite-strings -Wmissing-prototypes -Wstrict-prototypes -Wredundant-decls"
+ LDFLAGS="$LDFLAGS -g"
+ if test "$werror" = "yes" ; then
+diff -ur xen-3.4.2.orig//tools/ioemu-qemu-xen/tests/cris/Makefile xen-3.4.2//tools/ioemu-qemu-xen/tests/cris/Makefile
+--- xen-3.4.2.orig//tools/ioemu-qemu-xen/tests/cris/Makefile	2009-11-05 19:44:56.000000000 +0800
++++ xen-3.4.2//tools/ioemu-qemu-xen/tests/cris/Makefile	2011-09-26 02:18:14.264771549 +0800
+@@ -12,7 +12,7 @@
+ OBJCOPY = $(CROSS)objcopy
+ 
+ # we rely on GCC inline:ing the stuff we tell it to in many places here.
+-CFLAGS  = -Winline -Wall -g -O2 -static
++CFLAGS  = -Winline -Wall -g -static
+ NOSTDFLAGS = -nostartfiles -nostdlib
+ ASFLAGS += -g -Wa,-I,$(SRC_PATH)/tests/cris/
+ LDLIBS  =
+diff -ur xen-3.4.2.orig//tools/ioemu-qemu-xen/tests/hello-mips.c xen-3.4.2//tools/ioemu-qemu-xen/tests/hello-mips.c
+--- xen-3.4.2.orig//tools/ioemu-qemu-xen/tests/hello-mips.c	2009-11-05 19:44:56.000000000 +0800
++++ xen-3.4.2//tools/ioemu-qemu-xen/tests/hello-mips.c	2011-09-26 02:18:14.669771549 +0800
+@@ -6,7 +6,7 @@
+ * http://www.linux.com/howtos/Assembly-HOWTO/mips.shtml
+ *
+ * mipsel-linux-gcc -nostdlib -mno-abicalls -fno-PIC -mabi=32 \
+-*                  -O2 -static -o hello-mips hello-mips.c
++*                  -static -o hello-mips hello-mips.c
+ *
+ */
+ #define __NR_SYSCALL_BASE	4000
+diff -ur xen-3.4.2.orig//tools/ioemu-qemu-xen/tests/Makefile xen-3.4.2//tools/ioemu-qemu-xen/tests/Makefile
+--- xen-3.4.2.orig//tools/ioemu-qemu-xen/tests/Makefile	2009-11-05 19:44:56.000000000 +0800
++++ xen-3.4.2//tools/ioemu-qemu-xen/tests/Makefile	2011-09-26 02:18:14.262771549 +0800
+@@ -2,7 +2,7 @@
+ -include ../config-host.mak
+ VPATH=$(SRC_PATH)/tests
+ 
+-CFLAGS=-Wall -O2 -g -fno-strict-aliasing
++CFLAGS=-Wall -g -fno-strict-aliasing
+ #CFLAGS+=-msse2
+ LDFLAGS=
+ 
+@@ -52,7 +52,7 @@
+ 
+ .PHONY: test-mmap
+ test-mmap: test-mmap.c
+-	$(CC) $(CFLAGS) -Wall -static -O2 $(LDFLAGS) -o $@ $<
++	$(CC) $(CFLAGS) -Wall -static $(LDFLAGS) -o $@ $<
+ 	-./test-mmap
+ 	-$(QEMU) ./test-mmap
+ 	-$(QEMU) -p 8192 ./test-mmap 8192
+@@ -88,17 +88,17 @@
+ 	arm-linux-ld -o $@ $<
+ 
+ hello-arm.o: hello-arm.c
+-	arm-linux-gcc -Wall -g -O2 -c -o $@ $<
++	arm-linux-gcc -Wall -g -c -o $@ $<
+ 
+ test-arm-iwmmxt: test-arm-iwmmxt.s
+ 	cpp < $< | arm-linux-gnu-gcc -Wall -static -march=iwmmxt -mabi=aapcs -x assembler - -o $@
+ 
+ # MIPS test
+ hello-mips: hello-mips.c
+-	mips-linux-gnu-gcc -nostdlib -static -mno-abicalls -fno-PIC -mabi=32 -Wall -Wextra -g -O2 -o $@ $<
++	mips-linux-gnu-gcc -nostdlib -static -mno-abicalls -fno-PIC -mabi=32 -Wall -Wextra -g -o $@ $<
+ 
+ hello-mipsel: hello-mips.c
+-	mipsel-linux-gnu-gcc -nostdlib -static -mno-abicalls -fno-PIC -mabi=32 -Wall -Wextra -g -O2 -o $@ $<
++	mipsel-linux-gnu-gcc -nostdlib -static -mno-abicalls -fno-PIC -mabi=32 -Wall -Wextra -g -o $@ $<
+ 
+ # testsuite for the CRIS port.
+ test-cris:
+diff -ur xen-3.4.2.orig//tools/libaio/src/Makefile xen-3.4.2//tools/libaio/src/Makefile
+--- xen-3.4.2.orig//tools/libaio/src/Makefile	2009-11-10 23:12:56.000000000 +0800
++++ xen-3.4.2//tools/libaio/src/Makefile	2011-09-26 02:18:14.288771549 +0800
+@@ -6,7 +6,7 @@
+ libdir=$(prefix)/lib
+ 
+ ARCH := $(shell uname -m | sed -e s/i.86/i386/)
+-CFLAGS = -nostdlib -nostartfiles -Wall -I. -g -fomit-frame-pointer -O2 -fPIC
++CFLAGS = -nostdlib -nostartfiles -Wall -I. -g -fomit-frame-pointer -fPIC
+ SO_CFLAGS=-shared $(CFLAGS)
+ L_CFLAGS=$(CFLAGS)
+ LINK_FLAGS=
+diff -ur xen-3.4.2.orig//tools/libxen/Makefile.dist xen-3.4.2//tools/libxen/Makefile.dist
+--- xen-3.4.2.orig//tools/libxen/Makefile.dist	2011-09-26 02:17:29.223771569 +0800
++++ xen-3.4.2//tools/libxen/Makefile.dist	2011-09-26 02:18:14.553771549 +0800
+@@ -22,7 +22,7 @@
+ CFLAGS = -Iinclude                     \
+          $(shell xml2-config --cflags) \
+          $(shell curl-config --cflags) \
+-         -W -Wall -Wmissing-prototypes  -std=c99 -O2 -fPIC
++         -W -Wall -Wmissing-prototypes  -std=c99 -fPIC
+ 
+ LDFLAGS = $(shell xml2-config --libs) \
+           $(shell curl-config --libs)
+diff -ur xen-3.4.2.orig//tools/vnet/vnet-module/Makefile-2.4 xen-3.4.2//tools/vnet/vnet-module/Makefile-2.4
+--- xen-3.4.2.orig//tools/vnet/vnet-module/Makefile-2.4	2009-11-10 23:12:57.000000000 +0800
++++ xen-3.4.2//tools/vnet/vnet-module/Makefile-2.4	2011-09-26 02:18:14.659771549 +0800
+@@ -62,7 +62,7 @@
+ CFLAGS += -Wno-unused-parameter 
+ 
+ CFLAGS += -g
+-CFLAGS += -O2
++#CFLAGS += -O2
+ CFLAGS += -fno-strict-aliasing 
+ CFLAGS += -fno-common 
+ #CFLAGS += -fomit-frame-pointer
+diff -ur xen-3.4.2.orig//extras/mini-os/minios.mk xen-3.4.2//extras/mini-os/minios.mk
+--- xen-3.4.2.orig//extras/mini-os/minios.mk	2011-09-26 02:29:41.869771248 +0800
++++ xen-3.4.2//extras/mini-os/minios.mk	2011-09-26 02:33:55.708771108 +0800
+@@ -23,7 +23,7 @@
+ DEF_CFLAGS += -DGNT_DEBUG
+ DEF_CFLAGS += -DGNTMAP_DEBUG
+ else
+-DEF_CFLAGS += -O3
++#DEF_CFLAGS += -O3
+ endif
+ 
+ # Make the headers define our internal stuff
+diff -ur xen-3.4.2.orig//tools/vnet/libxutil/Makefile xen-3.4.2//tools/vnet/libxutil/Makefile
+--- xen-3.4.2.orig//tools/vnet/libxutil/Makefile	2011-09-26 02:29:41.872771248 +0800
++++ xen-3.4.2//tools/vnet/libxutil/Makefile	2011-09-26 02:37:59.835771029 +0800
+@@ -26,7 +26,7 @@
+ 
+ $(call cc-option-add,CFLAGS,CC,-fgnu89-inline)
+ CFLAGS   +=  -fno-strict-aliasing
+-CFLAGS   += -O3
++#CFLAGS   += -O3
+ #CFLAGS   += -g
+ 
+ MAJOR    := 3.0
+diff -ur xen-3.4.2.orig//tools/vnet/vnetd/Makefile xen-3.4.2//tools/vnet/vnetd/Makefile
+--- xen-3.4.2.orig//tools/vnet/vnetd/Makefile	2009-11-10 23:12:57.000000000 +0800
++++ xen-3.4.2//tools/vnet/vnetd/Makefile	2011-09-26 02:37:59.834771029 +0800
+@@ -44,7 +44,7 @@
+ CPPFLAGS += -D __ARCH_I386_ATOMIC__
+ 
+ #----------------------------------------------------------------------------
+-CFLAGS += -O3
++#CFLAGS += -O3
+ CFLAGS += $(INCLUDES) $(LIBS)
+ 
+ LDFLAGS += $(LIBS)

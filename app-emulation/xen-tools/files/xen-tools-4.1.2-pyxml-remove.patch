@@ -1,0 +1,13 @@
+diff -urN xen-4.1.2/tools/python/xen/xm/create.py xen-4.1.2-fixed/tools/python/xen/xm/create.py
+--- xen-4.1.2/tools/python/xen/xm/create.py	2011-10-20 17:05:45.000000000 +0000
++++ xen-4.1.2-fixed/tools/python/xen/xm/create.py	2012-09-16 19:41:35.066917727 +0000
+@@ -1538,8 +1538,7 @@
+             SXPPrettyPrint.prettyprint(config)
+ 
+         if opts.vals.xmldryrun and serverType == SERVER_XEN_API:
+-            from xml.dom.ext import PrettyPrint as XMLPrettyPrint
+-            XMLPrettyPrint(doc)
++            print doc.toprettyxml()
+ 
+     if opts.vals.dryrun or opts.vals.xmldryrun:
+         return                                               
