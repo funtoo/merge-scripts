@@ -1,9 +1,5 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
-# Oleg Vinichenko (16 Sep 2012)
-# temp. masked gcc-config-1.5-r1
-# FL-101, attempt to fix /etc/init.d//functions.sh
-=sys-devel/gcc-config-1.5-r1
 
 # Oleg Vinichenko ( 27 Jul 2012)
 # mask lateste mesa pre release
@@ -12,10 +8,6 @@
 #Daniel Robbins (19 Dec 2011)
 #I am working on this ebuild - not yet ready for prime time.
 >=net-analyzer/net-snmp-5.7
-
-# Daniel Robbins (31 Aug 2011)
-# This ebuild had no keywords, replaced with keywords and this mask. Needs testing, review.
-=sys-devel/gcc-config-1.5.1*
 
 # Martin Scholz <golodhrim@funtoo.org> (24 Aug 2011)
 # Testing Mask for linode sources
