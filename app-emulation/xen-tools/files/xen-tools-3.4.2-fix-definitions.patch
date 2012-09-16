@@ -1,0 +1,16 @@
+--- tools/blktap/lib/blktaplib.h.orig	2011-09-21 19:29:30.240868534 +0800
++++ tools/blktap/lib/blktaplib.h	2011-09-21 19:34:21.184868372 +0800
+@@ -195,8 +195,13 @@
+ 	pid_t     pid;
+ } msg_pid_t;
+ 
++#ifndef READ
+ #define READ 0
++#endif
++
++#ifndef WRITE
+ #define WRITE 1
++#endif
+ 
+ /*Control Messages between manager and tapdev*/
+ #define CTLMSG_PARAMS      1
