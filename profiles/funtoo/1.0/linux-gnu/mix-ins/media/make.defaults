@@ -1,7 +1,5 @@
 # Media: desktop or server-based media USE flags and settings. For servers, these are useful
 # for media servers. Do not include any desktop-related USE flags such as dri, etc.
 
-USE="$USE alsa flac lame mad mp3 mpeg ogg vorbis wavpack win32codecs"			 	#core media features
+USE="flac lame mad mp3 mpeg ogg vorbis wavpack win32codecs"				 	#core media features
 USE="$USE gif jpeg png tiff truetype"								#core graphics
-ALSA_CARDS="ali5451 als4000 atiixp atiixp-modem bt87x ca0106 cmipci emu10k1x ens1370 ens1371 es1938 es1968 fm801 hda-intel intel8x0 intel8x0m maestro3 trident usb-audio via82xx via82xx-modem ymfpci"
-ALSA_PCM_PLUGINS="adpcm alaw asym copy dmix dshare dsnoop empty extplug file hooks iec958 ioplug ladspa lfloat linear meter mmap_emul mulaw multi null plug rate route share shm softvol"
