@@ -23,14 +23,18 @@ build		funtoo/1.0/linux-gnu/build/experimental			stable
 flavor		funtoo/1.0/linux-gnu/flavor/minimal			stable
 flavor		funtoo/1.0/linux-gnu/flavor/core			stable
 flavor		funtoo/1.0/linux-gnu/flavor/desktop			stable
+flavor		funtoo/1.0/linux-gnu/flavor/workstation			stable
 
+mix-ins		funtoo/1.0/linux-gnu/mix-ins/audio		    	stable
+mix-ins		funtoo/1.0/linux-gnu/mix-ins/console-extras	    	stable
 mix-ins		funtoo/1.0/linux-gnu/mix-ins/dvd			stable
 mix-ins		funtoo/1.0/linux-gnu/mix-ins/gnome			stable
 mix-ins		funtoo/1.0/linux-gnu/mix-ins/kde			stable
 mix-ins		funtoo/1.0/linux-gnu/mix-ins/media			stable
+mix-ins		funtoo/1.0/linux-gnu/mix-ins/print		    	stable
 mix-ins		funtoo/1.0/linux-gnu/mix-ins/rhel5-compat		stable
 mix-ins		funtoo/1.0/linux-gnu/mix-ins/server-db			stable
 mix-ins		funtoo/1.0/linux-gnu/mix-ins/server-mail		stable
 mix-ins		funtoo/1.0/linux-gnu/mix-ins/server-web			stable
-mix-ins		funtoo/1.0/linux-gnu/mix-ins/workstation            	stable
-mix-ins		funtoo/1.0/linux-gnu/mix-ins/workstation-minimal    	stable
+mix-ins		funtoo/1.0/linux-gnu/mix-ins/X			    	stable
+

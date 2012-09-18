@@ -1,0 +1,31 @@
+--- ./tools/fs-back/Makefile	2011-09-26 23:14:30.454759297 +0800
++++ ./tools/fs-back/Makefile	2011-09-27 16:37:57.445748680 +0800
+@@ -23,7 +23,7 @@ 
+ all: $(IBIN)
+ 
+ fs-backend: $(OBJS) fs-backend.c
+-	$(CC) $(CFLAGS) -o fs-backend $(OBJS) $(LIBS) fs-backend.c
++	$(CC) $(CFLAGS) $(LDFLAGS) -o fs-backend $(OBJS) $(LIBS) fs-backend.c
+ 
+ install: all
+ 	$(INSTALL_PROG) $(IBIN) $(DESTDIR)$(SBINDIR)
+--- ./tools/libfsimage/common/Makefile	2009-11-10 23:12:56.000000000 +0800
++++ ./tools/libfsimage/common/Makefile	2011-09-27 16:41:16.516748626 +0800
+@@ -6,7 +6,7 @@ 
+ 
+ LDFLAGS-$(CONFIG_SunOS) = -Wl,-M -Wl,mapfile-SunOS
+ LDFLAGS-$(CONFIG_Linux) = -Wl,mapfile-GNU
+-LDFLAGS = $(LDFLAGS-y)
++#LDFLAGS = $(LDFLAGS-y)
+ 
+ LIB_SRCS-y = fsimage.c fsimage_plugin.c fsimage_grub.c
+ 
+--- ./tools/misc/lomount/Makefile	2011-09-27 14:23:26.596752233 +0800
++++ ./tools/misc/lomount/Makefile	2011-09-27 16:37:57.445748680 +0800
+@@ -23,5 +23,5 @@ 
+ 	$(RM) *.a *.so *.o *.rpm $(BIN)
+ 
+ %: %.c $(HDRS) Makefile
+-	$(CC) $(CFLAGS) -o $@ $< 
++	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< 
+ 

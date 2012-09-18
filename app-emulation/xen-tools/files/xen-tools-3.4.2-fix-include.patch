@@ -1,0 +1,28 @@
+--- ./tools/blktap/drivers/blktapctrl.c	2011-09-20 00:27:01.846896986 +0800
++++ ./tools/blktap/drivers/blktapctrl.c	2011-09-20 00:29:09.910897067 +0800
+@@ -40,6 +40,7 @@
+ #include <err.h>
+ #include <errno.h>
+ #include <sys/types.h>
++#include <sys/stat.h>
+ #include <sys/wait.h>
+ #include <signal.h>
+ #include <fcntl.h>
+--- ./tools/blktap/drivers/block-qcow2.c     2011-09-22 04:15:49.339854677 +0800
++++ ./tools/blktap/drivers/block-qcow2.c  2009-11-10 23:12:55.000000000 +0800
+@@ -26,6 +26,7 @@
+ #include "aes.h"
+ #include <assert.h>
+ #include <stdint.h>
++#include <sys/stat.h>
+ #include <fcntl.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+--- ./tools/ioemu-qemu-xen/block-qcow2.c	2011-09-19 23:43:40.005898352 +0800
++++ ./tools/ioemu-qemu-xen/block-qcow2.c	2011-09-19 23:26:53.979898723 +0800
+@@ -26,6 +26,7 @@
+ #include <zlib.h>
+ #include "aes.h"
+ #include <assert.h>
++#include <sys/stat.h>
+
