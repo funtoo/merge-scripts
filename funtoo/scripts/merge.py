@@ -37,7 +37,7 @@ steps = [
 	InsertEbuilds(foo_overlay, select="all", skip=None, replace=["app-shells/rssh","net-misc/unison"]),
 	InsertEbuilds(bar_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(flora_overlay, select="all", skip=None, replace=False),
-	InsertEbuilds(lcdfiltering_overlay, select="all", skip=["app-text/poppler","media-fonts/terminus-font"], replace=True),
+	InsertEbuilds(lcdfiltering_overlay, select="all", skip=["app-text/poppler"], replace=True),
 	InsertEbuilds(mythtv_overlay, select='all', skip=["media-tv/miro"], replace=True, merge=["dev-libs/libcec", "media-tv/mythtv", "www-apps/mythweb"], ebuildloc="Gentoo"),
 	SyncDir(mythtv_overlay.root, "eclass"),
 	SyncDir(progress_overlay.root, "eclass"),
