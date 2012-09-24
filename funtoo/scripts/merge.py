@@ -13,7 +13,6 @@ foo_overlay = Tree("foo-overlay", "master", "https://github.com/slashbeast/foo-o
 bar_overlay = Tree("bar-overlay", "master", "git://github.com/adessemond/bar-overlay.git", pull=True)
 flora_overlay = Tree("flora", "master", "repos@git.funtoo.org:flora.git", pull=True)
 progress_overlay = SvnTree("progress", "https://gentoo-progress.googlecode.com/svn/overlays/progress")
-lcdfiltering_overlay = Tree("lcd-filtering", "master", "git://gitorious.org/lcd-filtering/lcd-filtering.git", pull=True)
 mythtv_overlay = VarLocTree("mythtv", "master", "git://github.com/MythTV/packaging.git", pull=True)
 
 steps = [
@@ -37,7 +36,6 @@ steps = [
 	InsertEbuilds(foo_overlay, select="all", skip=None, replace=["app-shells/rssh","net-misc/unison"]),
 	InsertEbuilds(bar_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(flora_overlay, select="all", skip=None, replace=False),
-	InsertEbuilds(lcdfiltering_overlay, select="all", skip=["app-text/poppler"], replace=True),
 	InsertEbuilds(mythtv_overlay, select='all', skip=["media-tv/miro"], replace=True, merge=["dev-libs/libcec", "media-tv/mythtv", "www-apps/mythweb"], ebuildloc="Gentoo"),
 	SyncDir(mythtv_overlay.root, "eclass"),
 	SyncDir(progress_overlay.root, "eclass"),

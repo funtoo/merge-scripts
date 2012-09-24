@@ -9,3 +9,5 @@
 =sys-apps/hwids-201* amd64 x86
 =sys-apps/usbutils-005-r1 amd64 x86
 =sys-fs/cryptsetup-1.4.3 amd64 x86
+=media-libs/freetype-2.4.1* amd64 x86
+=media-libs/fontconfig-infinality-20120619 amd64 x86
