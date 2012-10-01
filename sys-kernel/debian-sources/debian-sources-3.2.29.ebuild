@@ -1,26 +1,27 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=2
+EAPI=3
 
-inherit mount-boot
+inherit eutils mount-boot
 
 SLOT=$PVR
-CKV=3.2.12
+CKV=3.2.29
 KV_FULL=${PN}-${PVR}
 EXTRAVERSION=-1
-KERNEL_ARCHIVE="linux-2.6_${PV}.orig.tar.gz"
+KERNEL_ARCHIVE="linux_${PV}.orig.tar.xz"
+PATCH_ARCHIVE="linux_${PV}${EXTRAVERSION}.debian.tar.xz"
 RESTRICT="binchecks strip"
 # based on : http://packages.ubuntu.com/maverick/linux-image-2.6.35-22-server
 LICENSE="GPL-2"
-KEYWORDS="*"
-IUSE="openvz binary"
+KEYWORDS="~*"
+IUSE="binary rt"
 DEPEND="binary? ( >=sys-kernel/genkernel-3.4.12.6-r4 )"
 RDEPEND="binary? ( >=sys-fs/udev-160 )"
 DESCRIPTION="Debian Sources (and optional binary kernel)"
 HOMEPAGE="http://www.debian.org"
 MAINPATCH="linux-2.6_${PV}${EXTRAVERSION}.diff.gz"
-SRC_URI="http://ftp.bg.debian.org/debian/pool/main/l/linux-2.6/${KERNEL_ARCHIVE}
-	 http://ftp.bg.debian.org/debian/pool/main/l/linux-2.6/${MAINPATCH}"
+SRC_URI="http://ftp.bg.debian.org/debian/pool/main/l/linux/${KERNEL_ARCHIVE}
+	http://ftp.bg.debian.org/debian/pool/main/l/linux/${PATCH_ARCHIVE}"
 S="$WORKDIR/linux-${CKV}"
 
 apply() {
@@ -43,32 +44,31 @@ apply() {
 	echo "Applying patch $p"; $ca $p | patch $* || die "patch $p failed"
 }
 
+get_patch_list() {
+	[[ -z "${1}" ]] && die "No patch series file specified"
+	local patch_series="${1}"
+	while read line ; do
+		if [[ "${line:0:1}" != "#" ]] ; then
+			echo "${line}"
+		fi
+	done < "${patch_series}"
+}
+
 pkg_setup() {
 	unset ARCH; unset LDFLAGS #will interfere with Makefile if set
 }
 
-src_unpack() {
-	cd ${WORKDIR}
-	unpack ${KERNEL_ARCHIVE}
-}
-
 src_prepare() {
-	cd ${WORKDIR}
-	apply $DISTDIR/$MAINPATCH -p1
 
-	# debian-specific stuff....
-
-	mv linux-* ${S##*/} || die
-	mv debian ${S##*/}/ || die
 	cd ${S}
-	sed -i \
-		-e 's/^sys.path.append.*$/sys.path.append(".\/debian\/lib\/python")/' \
-		-e 's/^_default_home =.*$/_default_home = ".\/debian\/patches"/' \
-		debian/bin/patch.apply || die
-	python2 debian/bin/patch.apply $KV_DEB || die
-	if use openvz
-	then
-		python2 debian/bin/patch.apply -a $ARCH -f openvz || die
+	for debpatch in $( get_patch_list "${WORKDIR}/debian/patches/series" ); do
+		epatch -p1 "${WORKDIR}/debian/patches/${debpatch}"
+	done
+
+	if use rt ; then
+		for rtpatch in $( get_patch_list "${WORKDIR}/debian/patches/series-rt" ) ; do
+			epatch -p1 "${WORKDIR}/debian/patches/${rtpatch}"
+		done
 	fi
 
 	# end of debian-specific stuff...
@@ -76,14 +76,13 @@ src_prepare() {
 	sed -i -e "s:^\(EXTRAVERSION =\).*:\1 ${EXTRAVERSION}:" Makefile || die
 	sed	-i -e 's:#export\tINSTALL_PATH:export\tINSTALL_PATH:' Makefile || die
 	rm -f .config >/dev/null
-	cp -a debian ${T} || die "couldn't back up debian dir (will be wiped by mrproper)"
+	cp -a "${WORKDIR}"/debian "${T}"
 	make -s mrproper || die "make mrproper failed"
-	cp -a ${T}/debian . || die "couldn't restore debian directory"
 	make -s include/linux/version.h || die "make include/linux/version.h failed"
-	#mv "${TEMP}/configs" "${S}" || die
 	cd ${S}
+	cp -aR "${WORKDIR}"/debian "${S}"/debian
 	local opts
-	use openvz && opts="openvz"
+	use rt && opts="rt"
 	local myarch="amd64"
 	[ "$ARCH" = "x86" ] && myarch="i386"
 	cp ${FILESDIR}/config-extract . || die
@@ -147,6 +146,11 @@ src_install() {
 	local moddir="$(ls -d [23]*)"
 	ln -s /usr/src/linux-${P} ${D}/lib/modules/${moddir}/source || die
 	ln -s /usr/src/linux-${P} ${D}/lib/modules/${moddir}/build || die
+
+	# Fixes FL-14
+		cp "${WORKDIR}/build/System.map" "${D}/usr/src/linux-${P}/" || die
+		cp "${WORKDIR}/build/Module.symvers" "${D}/usr/src/linux-${P}/" || die
+
 }
 
 pkg_postinst() {
