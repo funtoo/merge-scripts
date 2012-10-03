@@ -1,4 +1,4 @@
-USE="$USE unicode nptl modules"									#core kernel and userland
+USE="unicode nptl modules"									#core kernel and userland
 USE="$USE acl pam ssl crypt cracklib" 								#core security
 USE="$USE nls iconv xml pcre" 									#core subsystems
 USE="$USE zlib bzip2"										#core compression

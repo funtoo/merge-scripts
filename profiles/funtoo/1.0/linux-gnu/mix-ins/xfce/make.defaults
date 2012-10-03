@@ -1,2 +1,2 @@
-USE="${USE} policykit"
+USE="policykit"
 
