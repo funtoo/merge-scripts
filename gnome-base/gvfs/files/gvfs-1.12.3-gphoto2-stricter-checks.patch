@@ -1,0 +1,48 @@
+From 7d0127ee181c0b282b8f99f461d26fce1c3a27b0 Mon Sep 17 00:00:00 2001
+From: Arun Raghavan <arun@accosted.net>
+Date: Mon, 30 Apr 2012 11:15:49 +0100
+Subject: [PATCH] build: Bail if gphoto support is requested but not available
+
+https://bugzilla.gnome.org/show_bug.cgi?id=578027
+---
+ configure.ac | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index e55ab58..91621a9 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -402,7 +402,7 @@ GPHOTO2_LIBS=
+ GPHOTO2_CFLAGS=
+ 
+ if test "x$enable_gphoto2" != "xno" -a \( "x$msg_hal" = "xyes" -o "x$msg_gudev" = "xyes" \); then
+-  PKG_CHECK_EXISTS(libgphoto2, msg_gphoto2=yes)
++  PKG_CHECK_MODULES(GPHOTO2, libgphoto2 >= 2.4.0, [msg_gphoto2=yes])
+ 
+   # Need OS tweaks in hal volume monitor backend
+   case "$host" in
+@@ -414,12 +414,19 @@ if test "x$enable_gphoto2" != "xno" -a \( "x$msg_hal" = "xyes" -o "x$msg_gudev"
+       ;;
+   esac
+ 
++  if test "x$enable_gphoto2" = "xyes" -a "x$msg_gphoto2" != "xyes"; then
++    AC_MSG_ERROR([gphoto2 support requested but not available])
++  fi
++
+   if test "x$msg_gphoto2" = "xyes"; then
+     if test "x$use_gphoto2" = "xyes"; then
+-      PKG_CHECK_MODULES(GPHOTO2, libgphoto2 >= 2.4.0)
+       AC_DEFINE(HAVE_GPHOTO2, 1, [Define to 1 if gphoto2 is available])
+     else
+-      AC_MSG_WARN([Not building with gphoto2 support. Need OS tweaks in hal volume monitor.])
++      if test "x$enable_gphoto2" = "xyes"; then
++        AC_MSG_ERROR([Cannot build with gphoto2 support. Need OS tweaks in hal volume monitor.])
++      else
++        AC_MSG_WARN([Not building with gphoto2 support. Need OS tweaks in hal volume monitor.])
++      fi
+       msg_gphoto2=no
+     fi
+   fi
+-- 
+1.7.12
+
