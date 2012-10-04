@@ -34,7 +34,7 @@ steps = [
 	}),
 	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(foo_overlay, select="all", skip=None, replace=["app-shells/rssh","net-misc/unison"]),
-	InsertEbuilds(bar_overlay, select="all", skip=None, replace=True),
+	InsertEbuilds(bar_overlay, select="all", skip=["app-emulation/qemu"], replace=True),
 	InsertEbuilds(flora_overlay, select="all", skip=None, replace=False),
 	InsertEbuilds(mythtv_overlay, select='all', skip=["media-tv/miro"], replace=True, merge=["dev-libs/libcec", "media-tv/mythtv", "www-apps/mythweb"], ebuildloc="Gentoo"),
 	SyncDir(mythtv_overlay.root, "eclass"),
