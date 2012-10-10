@@ -11,7 +11,7 @@ RESTRICT="mirror"
 
 LICENSE="BSD-2"
 SLOT="0"
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="debug elibc_glibc ncurses pam selinux static-libs unicode kernel_linux kernel_FreeBSD"
 
 RDEPEND="kernel_linux? ( >=sys-apps/sysvinit-2.86-r11 )
@@ -26,9 +26,9 @@ DEPEND="ncurses? ( sys-libs/ncurses ) pam? ( virtual/pam ) virtual/os-headers"
 
 GITHUB_REPO="${PN}"
 GITHUB_USER="funtoo"
-GITHUB_TAG="funtoo-openrc-0.10"
+GITHUB_TAG="funtoo-openrc-0.10.2-r4"
 
-NETV="1.3-r2"
+NETV="1.3.1-r1"
 GITHUB_REPO_CN="corenetwork"
 GITHUB_TAG_CN="$NETV"
 
@@ -145,10 +145,10 @@ src_install() {
 
 	# Remove upstream networking parts:
 
-	for pat in ${D}/etc/init.d/{net.lo,network,staticroute} \
+	for pat in ${D}/lib64/rc/net/ ${D}/etc/init.d/{net.lo,network,staticroute} \
 	${D}/usr/share/openrc/runlevels/boot/{net.lo,network,staticroute} \
 	${D}/etc/conf.d/{net,network,staticroute}; do
-		rm -f "$pat" || die "Couldn't remove upstream $pat from source."
+		rm -rf "$pat" || die "Couldn't remove upstream $pat from source."
 	done
 
 	# Install funtoo networking parts:
@@ -159,9 +159,9 @@ src_install() {
 	doexe init.d/{netif.tmpl,netif.lo} || die
 	cp -a netif.d ${D}/etc || die
 	chown -R root:root ${D}/etc/netif.d || die
-	chmod -R 0644 ${D}/etc/netif.d || die
+	chmod 0755 ${D}/etc/netif.d || die
+	chmod -R 0644 ${D}/etc/netif.d/* || die
 	ln -s /etc/init.d/netif.lo ${D}/usr/share/openrc/runlevels/sysinit/netif.lo || die
-
 }
 
 add_init() {
@@ -220,11 +220,13 @@ pkg_postinst() {
 		done
 	done
 
+	chmod +x ${ROOT}/etc/netif.d
+
 	# OTHER STUFF
 	# ===========
 
 	# update the dependency tree bug #224171
-	[[ "${ROOT}" = "/" ]] && "${ROOT}/libexec"/rc/bin/rc-depend -u
+	[[ "${ROOT}" = "/" ]] && "${ROOT}/$(get_libdir)"/rc/bin/rc-depend -u
 
 	elog "You should now update all files in /etc, using etc-update"
 	elog "or equivalent before rebooting."
