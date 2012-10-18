@@ -314,7 +314,7 @@ src_install() {
 
 	# can't be in docs array as we use default_src_install in different builddir
 	dodoc AUTHORS ChangeLog NEWS README THANKS TODO
-	for delme in /etc /sbin/grub-update /sbin/grub-mkconfig
+	for delme in /etc /sbin/grub-update /sbin/grub2-mkconfig
 	do
 		rm -rf ${D}/$delme || die "couldn't remove upstream stuff"
 	done
