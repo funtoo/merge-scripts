@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer>
+		<email>blueness@gentoo.org</email>
+		<name>Anthony G. Basile</name>
+	</maintainer>
+	<maintainer>
+		<email>luke-jr+gentoobugs@utopios.org</email>
+		<name>Luke Dashjr</name>
+	</maintainer>
+	<use>
+		<flag name='adl'>Enable support for controlling fans and overclocking on AMD cards with AMD Display Library</flag>
+		<flag name='bitforce'>Enable support for mining with ButterFly Labs BitFORCE FPGAs</flag>
+		<flag name='cpumining'>Enable support for mining with CPUs</flag>
+		<flag name='icarus'>Enable support for mining with Icarus FPGAs</flag>
+		<flag name='modminer'>Enable support for ModMiner FPGAs</flag>
+		<flag name='opencl'>Enable support for mining with OpenCL-capable devices (GPUs)</flag>
+		<flag name='padlock'>Enable support for mining with VIA Padlock CPUs</flag>
+		<flag name='scrypt'>Enable support for scrypt mining algorithm</flag>
+		<flag name='sse2_4way'>Enable support for CPU SSE2 4way mining algorithm</flag>
+		<flag name='sse4'>Enable support for CPU SSE4 mining algorithm</flag>
+		<flag name='ztex'>Enable support for mining with Ztex FPGAs</flag>
+	</use>
+</pkgmetadata>
