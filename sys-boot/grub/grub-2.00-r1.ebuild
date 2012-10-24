@@ -180,8 +180,6 @@ grub_src_configure() {
 		--htmldir="${EPREFIX}/usr/share/doc/${PF}/html" \
 		--disable-werror \
 		--program-prefix= \
-		--program-transform-name="s,grub,grub2," \
-		--with-grubdir=grub2 \
 		${with_platform} \
 		$(use_enable debug mm-debug) \
 		$(use_enable debug grub-emu-usb) \
