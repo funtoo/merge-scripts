@@ -5,6 +5,6 @@ USE="$USE zlib bzip2"										#core compression
 USE="$USE berkdb gdbm"										#core databases
 USE="$USE readline ncurses"									#core gui/interactivity frameworks
 USE="$USE mudflap openmp python cxx"								#core languages
-USE="$USE ipv6 tcpd"                                                                            #core networking 
+USE="$USE ipv6 tcpd resolvconf"                                                                            #core networking 
 USE="$USE -alsa -cups -X -gtk -kde -introspection"						# For FL-46, FL-124, do not enable GUI flags
 INPUT_DEVICES="evdev synaptics"  #FL-159
