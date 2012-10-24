@@ -15,7 +15,7 @@ LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="x86 amd64"
 
-IUSE="+adl altivec bitforce +cpumining examples hardened icarus modminer ncurses +opencl padlock scrypt sse2 sse2_4way sse4 +udev ztex"
+IUSE="+adl altivec bitforce +cpumining examples hardened icarus modminer ncurses +opencl padlock +scrypt sse2 sse2_4way sse4 +udev ztex"
 REQUIRED_USE="
 	|| ( bitforce cpumining icarus modminer opencl ztex )
 	adl? ( opencl )
