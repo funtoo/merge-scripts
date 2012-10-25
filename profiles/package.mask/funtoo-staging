@@ -1,3 +1,8 @@
+# Oleg Vinichenko (25 Oct 2012)
+# FL-168, adjust lvm script to start after mdadm
+# masked for testing.
+=sys-fs/lvm2-2.02.95-r1.ebuild
+
 # Daniel Robbins (24 Oct 2012)
 # masked for testing (minor update for grub2)
 =sys-boot/boot-update-1.6.5
