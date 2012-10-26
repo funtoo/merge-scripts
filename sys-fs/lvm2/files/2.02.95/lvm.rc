@@ -8,7 +8,7 @@ depend() {
 		# on baselayout-1 this causes
 		# dependency-cycles with checkroot (before *)
 		before checkfs fsck
-		after modules device-mapper
+		after mdraid mdadm modules device-mapper
 	fi
 	# As of .67-r1, we call ALL lvm start/stop scripts with --sysinit, that
 	# means dmeventd is NOT notified, as it cannot be safely running
