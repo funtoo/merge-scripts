@@ -90,6 +90,7 @@ if [[ -n ${DO_AUTORECONF} ]] ; then
 else
 	DEPEND+=" app-arch/xz-utils"
 fi
+PDEPEND=">=sys-boot/boot-update-1.6.5"
 
 export STRIP_MASK="*/grub/*/*.{mod,img}"
 
