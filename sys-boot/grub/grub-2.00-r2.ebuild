@@ -30,7 +30,7 @@ HOMEPAGE="http://www.gnu.org/software/grub/"
 
 LICENSE="GPL-3"
 SLOT="2"
-IUSE="custom-cflags debug device-mapper doc efiemu mount nls static sdl truetype libzfs +binfont"
+IUSE="custom-cflags debug device-mapper doc efiemu mount nls static sdl mkfont libzfs +binfont"
 
 GRUB_PLATFORMS=(
 	# everywhere:
@@ -46,7 +46,7 @@ GRUB_PLATFORMS=(
 )
 IUSE+=" ${GRUB_PLATFORMS[@]/#/grub_platforms_}"
 
-REQUIRED_USE="grub_platforms_qemu? ( truetype )"
+REQUIRED_USE="grub_platforms_qemu? ( binfont mkfont ) ^^ ( binfont mkfont )"
 
 # os-prober: Used on runtime to detect other OSes
 # xorriso (dev-libs/libisoburn): Used on runtime for mkrescue
@@ -59,7 +59,7 @@ RDEPEND="
 	device-mapper? ( >=sys-fs/lvm2-2.02.45 )
 	libzfs? ( sys-fs/zfs )
 	mount? ( sys-fs/fuse )
-	truetype? (
+	mkfont? (
 		media-libs/freetype
 		media-fonts/dejavu
 		>=media-fonts/unifont-5
@@ -74,7 +74,7 @@ DEPEND="${RDEPEND}
 	sys-apps/help2man
 	sys-apps/texinfo
 	static? (
-		truetype? (
+		mkfont? (
 			app-arch/bzip2[static-libs(+)]
 			media-libs/freetype[static-libs(+)]
 			sys-libs/zlib[static-libs(+)]
@@ -188,7 +188,7 @@ grub_src_configure() {
 		${enable_efiemu} \
 		$(use_enable mount grub-mount) \
 		$(use_enable nls) \
-		$(use_enable truetype grub-mkfont) \
+		$(use_enable mkfont grub-mkfont) \
 		$(use_enable libzfs) \
 		$(use sdl && use_enable debug grub-emu-sdl)
 
@@ -288,7 +288,7 @@ src_compile() {
 		grub-sparc64-setup
 	)
 	use mount && grub_binaries+=( grub-mount )
-	use truetype && grub_binaries+=( grub-mkfont )
+	use mkfont && grub_binaries+=( grub-mkfont )
 
 	local i
 
