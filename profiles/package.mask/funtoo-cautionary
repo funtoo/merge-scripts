@@ -1,3 +1,7 @@
+# Oleg Vinichenko (30 Oct 2012 )
+# mask back nano-2.3.1-r2, stage build  issues
+>=app-editors/nano-2.3.1-r2
+
 # Oleg Vinichenko (24 Oct 2012)
 # less-452 breaks man pages
 >=sys-apps/less-452
