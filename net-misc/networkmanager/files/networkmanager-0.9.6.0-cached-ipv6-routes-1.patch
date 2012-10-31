@@ -1,0 +1,36 @@
+From 3ca3120e4a01ea4a86fd052311c977e7ec136365 Mon Sep 17 00:00:00 2001
+From: Ben Jencks <ben@bjencks.net>
+Date: Thu, 30 Aug 2012 13:55:36 -0500
+Subject: [PATCH] ip6: ignore cached/cloned route notifications from the
+ kernel (lp:1038541) (bgo #671767)
+
+The kernel periodically adds routes for specific operations, including
+when pinging any host.  These are temporary routes and aren't part of
+the interface's permanent routing configuration, so we should ignore
+them.
+---
+ src/ip6-manager/nm-ip6-manager.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/src/ip6-manager/nm-ip6-manager.c b/src/ip6-manager/nm-ip6-manager.c
+index e452c18..3dc8616 100644
+--- a/src/ip6-manager/nm-ip6-manager.c
++++ b/src/ip6-manager/nm-ip6-manager.c
+@@ -921,6 +921,14 @@ process_route_change (NMIP6Manager *manager, struct nl_msg *msg)
+ 		return NULL;
+ 	}
+ 
++	/* Cached/cloned routes are created by the kernel for specific operations
++	 * and aren't part of the interface's permanent routing configuration.
++	 */
++	if (rtnl_route_get_flags (rtnlroute) & RTM_F_CLONED) {
++		rtnl_route_put (rtnlroute);
++		return NULL;
++	}
++
+ 	device = nm_ip6_manager_get_device (manager, rtnl_route_get_oif (rtnlroute));
+ 
+ 	old_size = nl_cache_nitems (priv->route_cache);
+-- 
+1.7.12
+

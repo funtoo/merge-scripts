@@ -1,0 +1,232 @@
+From 00b5c3785f7f5ce8da6db5da3fab814680ff82bc Mon Sep 17 00:00:00 2001
+From: Alexandre Rostovtsev <tetromino@gentoo.org>
+Date: Mon, 20 Feb 2012 02:14:26 -0500
+Subject: [PATCH] Implement "pre-sleep" action dispatch
+
+Based on work by Christian Becke <christianbecke@gmail.com> in
+https://bugzilla.gnome.org/show_bug.cgi?id=387832
+
+Adds a nm_utils_call_dispatcher_with_notify variant of the dispatcher
+call, and uses it to dispatch a "pre-sleep" action before sleeping.
+---
+ callouts/nm-dispatcher-utils.c |    3 +-
+ src/NetworkManagerUtils.c      |   70 ++++++++++++++++++++++++++++++++++------
+ src/NetworkManagerUtils.h      |   12 +++++++
+ src/nm-manager.c               |   28 ++++++++++++----
+ 4 files changed, 95 insertions(+), 18 deletions(-)
+
+diff --git a/callouts/nm-dispatcher-utils.c b/callouts/nm-dispatcher-utils.c
+index 887e80d..db66b61 100644
+--- a/callouts/nm-dispatcher-utils.c
++++ b/callouts/nm-dispatcher-utils.c
+@@ -407,7 +407,8 @@ nm_dispatcher_utils_construct_envp (const char *action,
+ 	g_return_val_if_fail (*out_iface == NULL, NULL);
+ 
+ 	/* Hostname changes don't require a device nor contain a connection */
+-	if (!strcmp (action, "hostname"))
++	if (!strcmp (action, "hostname") ||
++	    !strcmp (action, "pre-sleep"))
+ 		return g_new0 (char *, 1);
+ 
+ 	/* Canonicalize the VPN interface name; "" is used when passing it through
+diff --git a/src/NetworkManagerUtils.c b/src/NetworkManagerUtils.c
+index 451de6d..008b94e 100644
+--- a/src/NetworkManagerUtils.c
++++ b/src/NetworkManagerUtils.c
+@@ -44,6 +44,13 @@
+ #include "nm-setting-wireless-security.h"
+ #include "nm-manager-auth.h"
+ 
++typedef struct
++{
++	NMDBusManager *dbus_mgr;
++	NMUtilsDispatcherDoneCallback notify;
++	gpointer user_data;
++} NMUtilsCallDispatcherNotifyData;
++
+ /*
+  * nm_ethernet_address_is_valid
+  *
+@@ -475,18 +482,36 @@ fill_vpn_props (NMIP4Config *ip4_config,
+ static void
+ dispatcher_done_cb (DBusGProxy *proxy, DBusGProxyCall *call, gpointer user_data)
+ {
++	NMUtilsCallDispatcherNotifyData *notify_data = (NMUtilsCallDispatcherNotifyData *) user_data;
++
+ 	dbus_g_proxy_end_call (proxy, call, NULL, G_TYPE_INVALID);
+ 	g_object_unref (proxy);
++	if (notify_data->notify != NULL)
++		notify_data->notify (notify_data->user_data);
++}
++
++static void
++nm_utils_call_dispatcher_notify_data_free (NMUtilsCallDispatcherNotifyData *data)
++{
++	if (data == NULL)
++		return;
++
++	if (data->dbus_mgr != NULL)
++		g_object_unref (data->dbus_mgr);
++	g_free (data);
+ }
+ 
+ void
+-nm_utils_call_dispatcher (const char *action,
+-                          NMConnection *connection,
+-                          NMDevice *device,
+-                          const char *vpn_iface,
+-                          NMIP4Config *vpn_ip4_config,
+-                          NMIP6Config *vpn_ip6_config)
++nm_utils_call_dispatcher_with_notify (const char *action,
++                                      NMConnection *connection,
++                                      NMDevice *device,
++                                      const char *vpn_iface,
++                                      NMIP4Config *vpn_ip4_config,
++                                      NMIP6Config *vpn_ip6_config,
++                                      NMUtilsDispatcherDoneCallback notify,
++                                      gpointer user_data)
+ {
++	NMUtilsCallDispatcherNotifyData *notify_data;
+ 	NMDBusManager *dbus_mgr;
+ 	DBusGProxy *proxy;
+ 	DBusGConnection *g_connection;
+@@ -503,7 +528,8 @@ nm_utils_call_dispatcher (const char *action,
+ 	g_return_if_fail (action != NULL);
+ 
+ 	/* All actions except 'hostname' require a device */
+-	if (strcmp (action, "hostname") != 0)
++	if (strcmp (action, "hostname") != 0 &&
++	    strcmp (action, "pre-sleep") != 0)
+ 		g_return_if_fail (NM_IS_DEVICE (device));
+ 	/* VPN actions require at least an IPv4 config (for now) */
+ 	if (strcmp (action, "vpn-up") == 0)
+@@ -544,7 +570,8 @@ nm_utils_call_dispatcher (const char *action,
+ 	vpn_ip6_props = value_hash_create ();
+ 
+ 	/* hostname actions only send the hostname */
+-	if (strcmp (action, "hostname") != 0) {
++	if (strcmp (action, "hostname") != 0 &&
++	    strcmp (action, "pre-sleep") != 0) {
+ 		fill_device_props (device,
+ 			               device_props,
+ 			               device_ip4_props,
+@@ -555,6 +582,11 @@ nm_utils_call_dispatcher (const char *action,
+ 			fill_vpn_props (vpn_ip4_config, NULL, vpn_ip4_props, vpn_ip6_props);
+ 	}
+ 
++	notify_data = g_new0 (NMUtilsCallDispatcherNotifyData, 1);
++	notify_data->dbus_mgr = dbus_mgr;
++	notify_data->notify = notify;
++	notify_data->user_data = user_data;
++
+ 	/* Do a non-blocking call, but wait for the reply, because dbus-glib
+ 	 * sometimes needs time to complete internal housekeeping.  If we use
+ 	 * dbus_g_proxy_call_no_reply(), that housekeeping (specifically the
+@@ -563,8 +595,8 @@ nm_utils_call_dispatcher (const char *action,
+ 	 */
+ 	dbus_g_proxy_begin_call_with_timeout (proxy, "Action",
+ 	                                      dispatcher_done_cb,
+-	                                      dbus_mgr,       /* automatically unref the dbus mgr when call is done */
+-	                                      g_object_unref,
++	                                      notify_data,       /* automatically unref the dbus mgr when call is done */
++	                                      (GDestroyNotify) nm_utils_call_dispatcher_notify_data_free,
+ 	                                      5000,
+ 	                                      G_TYPE_STRING, action,
+ 	                                      DBUS_TYPE_G_MAP_OF_MAP_OF_VARIANT, connection_hash,
+@@ -589,6 +621,24 @@ nm_utils_call_dispatcher (const char *action,
+ 	g_hash_table_destroy (vpn_ip6_props);
+ }
+ 
++void
++nm_utils_call_dispatcher (const char *action,
++                          NMConnection *connection,
++                          NMDevice *device,
++                          const char *vpn_iface,
++                          NMIP4Config *vpn_ip4_config,
++                          NMIP6Config *vpn_ip6_config)
++{
++	nm_utils_call_dispatcher_with_notify (action,
++	                                      connection,
++	                                      device,
++	                                      vpn_iface,
++	                                      vpn_ip4_config,
++	                                      vpn_ip6_config,
++	                                      NULL,
++	                                      NULL);
++}
++
+ gboolean
+ nm_match_spec_hwaddr (const GSList *specs, const char *hwaddr)
+ {
+diff --git a/src/NetworkManagerUtils.h b/src/NetworkManagerUtils.h
+index 1bf741e..bdc0fef 100644
+--- a/src/NetworkManagerUtils.h
++++ b/src/NetworkManagerUtils.h
+@@ -49,6 +49,18 @@ void nm_utils_call_dispatcher (const char *action,
+                                NMIP4Config *vpn_ip4_config,
+                                NMIP6Config *vpn_ip6_config);
+ 
++typedef void (*NMUtilsDispatcherDoneCallback) (gpointer user_data);
++
++void
++nm_utils_call_dispatcher_with_notify (const char *action,
++                                      NMConnection *connection,
++                                      NMDevice *device,
++                                      const char *vpn_iface,
++                                      NMIP4Config *vpn_ip4_config,
++                                      NMIP6Config *vpn_ip6_config,
++                                      NMUtilsDispatcherDoneCallback notify,
++                                      gpointer user_data);
++
+ gboolean nm_match_spec_hwaddr (const GSList *specs, const char *hwaddr);
+ gboolean nm_match_spec_s390_subchannels (const GSList *specs, const char *subchannels);
+ 
+diff --git a/src/nm-manager.c b/src/nm-manager.c
+index 7205c7a..9e70071 100644
+--- a/src/nm-manager.c
++++ b/src/nm-manager.c
+@@ -2433,6 +2433,23 @@ impl_manager_deactivate_connection (NMManager *self,
+ }
+ 
+ static void
++pre_sleep_dispatcher_done (gpointer user_data)
++{
++	NMManager *self = (NMManager *) user_data;
++	NMManagerPrivate *priv = NM_MANAGER_GET_PRIVATE (self);
++	GSList *iter;
++
++	/* Just deactivate and down all devices from the device list,
++	 * to keep things fast the device list will get resynced when
++	 * the manager wakes up.
++	 */
++	for (iter = priv->devices; iter; iter = iter->next)
++		nm_device_set_managed (NM_DEVICE (iter->data), FALSE, NM_DEVICE_STATE_REASON_SLEEPING);
++
++	nm_manager_update_state (self);
++}
++
++static void
+ do_sleep_wake (NMManager *self)
+ {
+ 	NMManagerPrivate *priv = NM_MANAGER_GET_PRIVATE (self);
+@@ -2442,13 +2459,10 @@ do_sleep_wake (NMManager *self)
+ 	if (manager_sleeping (self)) {
+ 		nm_log_info (LOGD_SUSPEND, "sleeping or disabling...");
+ 
+-		/* Just deactivate and down all devices from the device list,
+-		 * to keep things fast the device list will get resynced when
+-		 * the manager wakes up.
+-		 */
+-		for (iter = priv->devices; iter; iter = iter->next)
+-			nm_device_set_managed (NM_DEVICE (iter->data), FALSE, NM_DEVICE_STATE_REASON_SLEEPING);
+-
++		nm_utils_call_dispatcher_with_notify ("pre-sleep",
++		                                      NULL, NULL, NULL, NULL, NULL,
++		                                      pre_sleep_dispatcher_done, self);
++		return;
+ 	} else {
+ 		nm_log_info (LOGD_SUSPEND, "waking up and re-enabling...");
+ 
+-- 
+1.7.8.4
+

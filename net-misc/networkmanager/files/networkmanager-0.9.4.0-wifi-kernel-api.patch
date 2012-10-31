@@ -1,0 +1,81 @@
+From 50435e1d5deff17233f1de73ee030a5982e9fd05 Mon Sep 17 00:00:00 2001
+From: Dan Williams <dcbw@redhat.com>
+Date: Fri, 4 May 2012 14:26:10 -0500
+Subject: [PATCH] wifi: attempt to use same kernel API wpa_supplicant does
+ (bgo #675017)
+
+Some drivers (ipw2x00) support capabilities reporting via nl80211 but
+absolutely nothing else.  NM was only checking for capabilities
+when deciding whether or not to use nl80211 to communicate with the
+driver for associated AP, signal strength, and channel info, and that
+clearly fails with half-implementations of nl80211 in the kernel.
+
+Instead, match the logic that wpa_supplicant uses to determine whether
+to stick with nl80211 or fall back to WEXT.  For these drivers
+NM will now fall back to WEXT and should return to the behavior we
+had with 0.9.2 for these devices.
+---
+ src/wifi/wifi-utils-nl80211.c |   32 +++++++++++++++++++++++++++-----
+ 1 files changed, 27 insertions(+), 5 deletions(-)
+
+diff --git a/src/wifi/wifi-utils-nl80211.c b/src/wifi/wifi-utils-nl80211.c
+index 048d9d2..663cbc2 100644
+--- a/src/wifi/wifi-utils-nl80211.c
++++ b/src/wifi/wifi-utils-nl80211.c
+@@ -535,7 +535,9 @@ struct nl80211_device_info {
+ 	guint32 *freqs;
+ 	int num_freqs;
+ 	guint32 caps;
+-	gboolean can_scan, can_scan_ssid;
++	gboolean can_scan;
++	gboolean can_scan_ssid;
++	gboolean supported;
+ 	gboolean success;
+ };
+ 
+@@ -579,11 +581,24 @@ static int nl80211_wiphy_info_handler (struct nl_msg *msg, void *arg)
+ 		struct nlattr *nl_cmd;
+ 		int i;
+ 
+-		nla_for_each_nested (nl_cmd,
+-				     tb[NL80211_ATTR_SUPPORTED_COMMANDS], i) {
+-			guint32 cmd = nla_get_u32 (nl_cmd);
+-			if (cmd == NL80211_CMD_TRIGGER_SCAN)
++		nla_for_each_nested (nl_cmd, tb[NL80211_ATTR_SUPPORTED_COMMANDS], i) {
++			switch (nla_get_u32 (nl_cmd)) {
++			case NL80211_CMD_TRIGGER_SCAN:
+ 				info->can_scan = TRUE;
++				break;
++			case NL80211_CMD_CONNECT:
++			case NL80211_CMD_AUTHENTICATE:
++				/* Only devices that support CONNECT or AUTH actually support
++				 * 802.11, unlike say ipw2x00 (up to at least kernel 3.4) which
++				 * has minimal info support, but no actual command support.
++				 * This check mirrors what wpa_supplicant does to determine
++				 * whether or not to use the nl80211 driver.
++				 */
++				info->supported = TRUE;
++				break;
++			default:
++				break;
++			}
+ 		}
+ 	}
+ 
+@@ -724,6 +739,13 @@ wifi_nl80211_init (const char *iface, int ifindex)
+ 		goto error;
+ 	}
+ 
++	if (!device_info.supported) {
++		nm_log_dbg (LOGD_HW | LOGD_WIFI,
++				    "(%s): driver does not fully support nl80211, falling back to WEXT",
++				    nl80211->parent.iface);
++		goto error;
++	}
++
+ 	if (!device_info.can_scan_ssid) {
+ 		nm_log_err (LOGD_HW | LOGD_WIFI,
+ 		            "(%s): driver does not support SSID scans",
+-- 
+1.7.8.6
+

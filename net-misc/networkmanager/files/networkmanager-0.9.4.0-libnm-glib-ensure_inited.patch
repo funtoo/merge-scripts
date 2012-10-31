@@ -1,0 +1,297 @@
+From a4f450aa0bf087453a8d605db81a83368cbe3b0a Mon Sep 17 00:00:00 2001
+From: Dan Winship <danw@gnome.org>
+Date: Wed, 28 Mar 2012 09:06:12 -0400
+Subject: [PATCH] libnm-glib: more ensure_inited() fixing
+
+We need to do _nm_object_ensure_inited() /
+_nm_remote_settings_ensure_inited() from the get_property()
+implementations; in most cases, get_property() just calls another
+accessor method (which will call _nm_object_ensure_inited()), but in a
+few places, it reads priv->whatever directly, so we need to make sure
+that it's valid.
+---
+ libnm-glib/nm-access-point.c      |    2 ++
+ libnm-glib/nm-active-connection.c |    2 ++
+ libnm-glib/nm-client.c            |    2 ++
+ libnm-glib/nm-device-bond.c       |    2 ++
+ libnm-glib/nm-device-bt.c         |    2 ++
+ libnm-glib/nm-device-ethernet.c   |    2 ++
+ libnm-glib/nm-device-infiniband.c |    2 ++
+ libnm-glib/nm-device-modem.c      |    2 ++
+ libnm-glib/nm-device-olpc-mesh.c  |    2 ++
+ libnm-glib/nm-device-vlan.c       |    2 ++
+ libnm-glib/nm-device-wifi.c       |    2 ++
+ libnm-glib/nm-device-wimax.c      |    2 ++
+ libnm-glib/nm-device.c            |    2 ++
+ libnm-glib/nm-dhcp4-config.c      |    2 ++
+ libnm-glib/nm-dhcp6-config.c      |    2 ++
+ libnm-glib/nm-ip4-config.c        |    2 ++
+ libnm-glib/nm-ip6-config.c        |    2 ++
+ libnm-glib/nm-remote-settings.c   |    2 ++
+ libnm-glib/nm-vpn-connection.c    |    2 ++
+ libnm-glib/nm-wimax-nsp.c         |    2 ++
+ 20 files changed, 40 insertions(+), 0 deletions(-)
+
+diff --git a/libnm-glib/nm-access-point.c b/libnm-glib/nm-access-point.c
+index 53993b0..a6218ed 100644
+--- a/libnm-glib/nm-access-point.c
++++ b/libnm-glib/nm-access-point.c
+@@ -464,6 +464,8 @@ get_property (GObject *object,
+ {
+ 	NMAccessPoint *ap = NM_ACCESS_POINT (object);
+ 
++	_nm_object_ensure_inited (NM_OBJECT (object));
++
+ 	switch (prop_id) {
+ 	case PROP_FLAGS:
+ 		g_value_set_uint (value, nm_access_point_get_flags (ap));
+diff --git a/libnm-glib/nm-active-connection.c b/libnm-glib/nm-active-connection.c
+index 59d8a6a..81b1f01 100644
+--- a/libnm-glib/nm-active-connection.c
++++ b/libnm-glib/nm-active-connection.c
+@@ -394,6 +394,8 @@ get_property (GObject *object,
+ {
+ 	NMActiveConnection *self = NM_ACTIVE_CONNECTION (object);
+ 
++	_nm_object_ensure_inited (NM_OBJECT (object));
++
+ 	switch (prop_id) {
+ 	case PROP_CONNECTION:
+ 		g_value_set_string (value, nm_active_connection_get_connection (self));
+diff --git a/libnm-glib/nm-client.c b/libnm-glib/nm-client.c
+index b879206..3949b6d 100644
+--- a/libnm-glib/nm-client.c
++++ b/libnm-glib/nm-client.c
+@@ -1600,6 +1600,8 @@ get_property (GObject *object,
+ 	NMClient *self = NM_CLIENT (object);
+ 	NMClientPrivate *priv = NM_CLIENT_GET_PRIVATE (self);
+ 
++	_nm_object_ensure_inited (NM_OBJECT (object));
++
+ 	switch (prop_id) {
+ 	case PROP_VERSION:
+ 		g_value_set_string (value, nm_client_get_version (self));
+diff --git a/libnm-glib/nm-device-bond.c b/libnm-glib/nm-device-bond.c
+index 034b7b3..7d8bf57 100644
+--- a/libnm-glib/nm-device-bond.c
++++ b/libnm-glib/nm-device-bond.c
+@@ -241,6 +241,8 @@ get_property (GObject *object,
+ {
+ 	NMDeviceBond *device = NM_DEVICE_BOND (object);
+ 
++	_nm_object_ensure_inited (NM_OBJECT (object));
++
+ 	switch (prop_id) {
+ 	case PROP_HW_ADDRESS:
+ 		g_value_set_string (value, nm_device_bond_get_hw_address (device));
+diff --git a/libnm-glib/nm-device-bt.c b/libnm-glib/nm-device-bt.c
+index 8e0ff20..bd8ccd2 100644
+--- a/libnm-glib/nm-device-bt.c
++++ b/libnm-glib/nm-device-bt.c
+@@ -303,6 +303,8 @@ get_property (GObject *object,
+ {
+ 	NMDeviceBt *device = NM_DEVICE_BT (object);
+ 
++	_nm_object_ensure_inited (NM_OBJECT (object));
++
+ 	switch (prop_id) {
+ 	case PROP_HW_ADDRESS:
+ 		g_value_set_string (value, nm_device_bt_get_hw_address (device));
+diff --git a/libnm-glib/nm-device-ethernet.c b/libnm-glib/nm-device-ethernet.c
+index 62aedbb..2c35a97 100644
+--- a/libnm-glib/nm-device-ethernet.c
++++ b/libnm-glib/nm-device-ethernet.c
+@@ -311,6 +311,8 @@ get_property (GObject *object,
+ {
+ 	NMDeviceEthernet *device = NM_DEVICE_ETHERNET (object);
+ 
++	_nm_object_ensure_inited (NM_OBJECT (object));
++
+ 	switch (prop_id) {
+ 	case PROP_HW_ADDRESS:
+ 		g_value_set_string (value, nm_device_ethernet_get_hw_address (device));
+diff --git a/libnm-glib/nm-device-infiniband.c b/libnm-glib/nm-device-infiniband.c
+index ec5f4a8..4f28823 100644
+--- a/libnm-glib/nm-device-infiniband.c
++++ b/libnm-glib/nm-device-infiniband.c
+@@ -250,6 +250,8 @@ get_property (GObject *object,
+ {
+ 	NMDeviceInfiniband *device = NM_DEVICE_INFINIBAND (object);
+ 
++	_nm_object_ensure_inited (NM_OBJECT (object));
++
+ 	switch (prop_id) {
+ 	case PROP_HW_ADDRESS:
+ 		g_value_set_string (value, nm_device_infiniband_get_hw_address (device));
+diff --git a/libnm-glib/nm-device-modem.c b/libnm-glib/nm-device-modem.c
+index f1d1389..09b6df1 100644
+--- a/libnm-glib/nm-device-modem.c
++++ b/libnm-glib/nm-device-modem.c
+@@ -205,6 +205,8 @@ get_property (GObject *object,
+ {
+ 	NMDeviceModem *self = NM_DEVICE_MODEM (object);
+ 
++	_nm_object_ensure_inited (NM_OBJECT (object));
++
+ 	switch (prop_id) {
+ 	case PROP_MODEM_CAPS:
+ 		g_value_set_uint (value, nm_device_modem_get_modem_capabilities (self));
+diff --git a/libnm-glib/nm-device-olpc-mesh.c b/libnm-glib/nm-device-olpc-mesh.c
+index ed48ecb..96e1c36 100644
+--- a/libnm-glib/nm-device-olpc-mesh.c
++++ b/libnm-glib/nm-device-olpc-mesh.c
+@@ -257,6 +257,8 @@ get_property (GObject *object,
+ {
+ 	NMDeviceOlpcMesh *device = NM_DEVICE_OLPC_MESH (object);
+ 
++	_nm_object_ensure_inited (NM_OBJECT (object));
++
+ 	switch (prop_id) {
+ 	case PROP_HW_ADDRESS:
+ 		g_value_set_string (value, nm_device_olpc_mesh_get_hw_address (device));
+diff --git a/libnm-glib/nm-device-vlan.c b/libnm-glib/nm-device-vlan.c
+index 08b1142..7ebc8dd 100644
+--- a/libnm-glib/nm-device-vlan.c
++++ b/libnm-glib/nm-device-vlan.c
+@@ -264,6 +264,8 @@ get_property (GObject *object,
+ {
+ 	NMDeviceVlan *device = NM_DEVICE_VLAN (object);
+ 
++	_nm_object_ensure_inited (NM_OBJECT (object));
++
+ 	switch (prop_id) {
+ 	case PROP_HW_ADDRESS:
+ 		g_value_set_string (value, nm_device_vlan_get_hw_address (device));
+diff --git a/libnm-glib/nm-device-wifi.c b/libnm-glib/nm-device-wifi.c
+index 6975898..aba43f9 100644
+--- a/libnm-glib/nm-device-wifi.c
++++ b/libnm-glib/nm-device-wifi.c
+@@ -501,6 +501,8 @@ get_property (GObject *object,
+ {
+ 	NMDeviceWifi *self = NM_DEVICE_WIFI (object);
+ 
++	_nm_object_ensure_inited (NM_OBJECT (object));
++
+ 	switch (prop_id) {
+ 	case PROP_HW_ADDRESS:
+ 		g_value_set_string (value, nm_device_wifi_get_hw_address (self));
+diff --git a/libnm-glib/nm-device-wimax.c b/libnm-glib/nm-device-wimax.c
+index 48a518d..e49b4f3 100644
+--- a/libnm-glib/nm-device-wimax.c
++++ b/libnm-glib/nm-device-wimax.c
+@@ -444,6 +444,8 @@ get_property (GObject *object,
+ {
+ 	NMDeviceWimax *self = NM_DEVICE_WIMAX (object);
+ 
++	_nm_object_ensure_inited (NM_OBJECT (object));
++
+ 	switch (prop_id) {
+ 	case PROP_HW_ADDRESS:
+ 		g_value_set_string (value, nm_device_wimax_get_hw_address (self));
+diff --git a/libnm-glib/nm-device.c b/libnm-glib/nm-device.c
+index 96a037d..a8a6338 100644
+--- a/libnm-glib/nm-device.c
++++ b/libnm-glib/nm-device.c
+@@ -313,6 +313,8 @@ get_property (GObject *object,
+ 	NMDevice *device = NM_DEVICE (object);
+ 	NMDevicePrivate *priv = NM_DEVICE_GET_PRIVATE (device);
+ 
++	_nm_object_ensure_inited (NM_OBJECT (object));
++
+ 	switch (prop_id) {
+ 	case PROP_DEVICE_TYPE:
+ 		g_value_set_uint (value, nm_device_get_device_type (device));
+diff --git a/libnm-glib/nm-dhcp4-config.c b/libnm-glib/nm-dhcp4-config.c
+index 2074e6d..89ccf25 100644
+--- a/libnm-glib/nm-dhcp4-config.c
++++ b/libnm-glib/nm-dhcp4-config.c
+@@ -132,6 +132,8 @@ get_property (GObject *object,
+ {
+ 	NMDHCP4Config *self = NM_DHCP4_CONFIG (object);
+ 
++	_nm_object_ensure_inited (NM_OBJECT (object));
++
+ 	switch (prop_id) {
+ 	case PROP_OPTIONS:
+ 		g_value_set_boxed (value, nm_dhcp4_config_get_options (self));
+diff --git a/libnm-glib/nm-dhcp6-config.c b/libnm-glib/nm-dhcp6-config.c
+index 3764cbf..88b3b10 100644
+--- a/libnm-glib/nm-dhcp6-config.c
++++ b/libnm-glib/nm-dhcp6-config.c
+@@ -132,6 +132,8 @@ get_property (GObject *object,
+ {
+ 	NMDHCP6Config *self = NM_DHCP6_CONFIG (object);
+ 
++	_nm_object_ensure_inited (NM_OBJECT (object));
++
+ 	switch (prop_id) {
+ 	case PROP_OPTIONS:
+ 		g_value_set_boxed (value, nm_dhcp6_config_get_options (self));
+diff --git a/libnm-glib/nm-ip4-config.c b/libnm-glib/nm-ip4-config.c
+index 5667854..862e7a0 100644
+--- a/libnm-glib/nm-ip4-config.c
++++ b/libnm-glib/nm-ip4-config.c
+@@ -187,6 +187,8 @@ get_property (GObject *object,
+ 	NMIP4Config *self = NM_IP4_CONFIG (object);
+ 	NMIP4ConfigPrivate *priv = NM_IP4_CONFIG_GET_PRIVATE (self);
+ 
++	_nm_object_ensure_inited (NM_OBJECT (object));
++
+ 	switch (prop_id) {
+ 	case PROP_ADDRESSES:
+ 		nm_utils_ip4_addresses_to_gvalue (priv->addresses, value);
+diff --git a/libnm-glib/nm-ip6-config.c b/libnm-glib/nm-ip6-config.c
+index c9a2627..988dcd3 100644
+--- a/libnm-glib/nm-ip6-config.c
++++ b/libnm-glib/nm-ip6-config.c
+@@ -268,6 +268,8 @@ get_property (GObject *object,
+ 	NMIP6Config *self = NM_IP6_CONFIG (object);
+ 	NMIP6ConfigPrivate *priv = NM_IP6_CONFIG_GET_PRIVATE (self);
+ 
++	_nm_object_ensure_inited (NM_OBJECT (object));
++
+ 	switch (prop_id) {
+ 	case PROP_ADDRESSES:
+ 		nm_utils_ip6_addresses_to_gvalue (priv->addresses, value);
+diff --git a/libnm-glib/nm-remote-settings.c b/libnm-glib/nm-remote-settings.c
+index b6b6c18..70285f1 100644
+--- a/libnm-glib/nm-remote-settings.c
++++ b/libnm-glib/nm-remote-settings.c
+@@ -1066,6 +1066,8 @@ get_property (GObject *object, guint prop_id,
+ {
+ 	NMRemoteSettingsPrivate *priv = NM_REMOTE_SETTINGS_GET_PRIVATE (object);
+ 
++	_nm_remote_settings_ensure_inited (NM_REMOTE_SETTINGS (object));
++
+ 	switch (prop_id) {
+ 	case PROP_BUS:
+ 		g_value_set_boxed (value, priv->bus);
+diff --git a/libnm-glib/nm-vpn-connection.c b/libnm-glib/nm-vpn-connection.c
+index 5393421..1fe59e5 100644
+--- a/libnm-glib/nm-vpn-connection.c
++++ b/libnm-glib/nm-vpn-connection.c
+@@ -211,6 +211,8 @@ get_property (GObject *object,
+ {
+ 	NMVPNConnection *self = NM_VPN_CONNECTION (object);
+ 
++	_nm_object_ensure_inited (NM_OBJECT (object));
++
+ 	switch (prop_id) {
+ 	case PROP_VPN_STATE:
+ 		g_value_set_uint (value, nm_vpn_connection_get_vpn_state (self));
+diff --git a/libnm-glib/nm-wimax-nsp.c b/libnm-glib/nm-wimax-nsp.c
+index c3b222d..39553ce 100644
+--- a/libnm-glib/nm-wimax-nsp.c
++++ b/libnm-glib/nm-wimax-nsp.c
+@@ -247,6 +247,8 @@ get_property (GObject *object,
+ {
+ 	NMWimaxNsp *nsp = NM_WIMAX_NSP (object);
+ 
++	_nm_object_ensure_inited (NM_OBJECT (object));
++
+ 	switch (prop_id) {
+ 	case PROP_NAME:
+ 		g_value_set_string (value, nm_wimax_nsp_get_name (nsp));
+-- 
+1.7.8.5
+
