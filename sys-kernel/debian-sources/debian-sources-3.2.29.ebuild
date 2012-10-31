@@ -10,7 +10,7 @@ KV_FULL=${PN}-${PVR}
 EXTRAVERSION=-1
 KERNEL_ARCHIVE="linux_${PV}.orig.tar.xz"
 PATCH_ARCHIVE="linux_${PV}${EXTRAVERSION}.debian.tar.xz"
-RESTRICT="binchecks strip"
+RESTRICT="binchecks strip mirror"
 # based on : http://packages.ubuntu.com/maverick/linux-image-2.6.35-22-server
 LICENSE="GPL-2"
 KEYWORDS="~*"
