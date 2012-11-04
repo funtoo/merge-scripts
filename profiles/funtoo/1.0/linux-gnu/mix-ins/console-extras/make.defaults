@@ -1,1 +1,1 @@
-USE="pppd cups gpm"
+USE="pppd gpm"
