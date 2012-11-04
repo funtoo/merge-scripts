@@ -1,6 +1,11 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
+# Martin Scholz <golodhrim@funtoo.org> (03 Nov 2012)
+# testmask of nginx 1.3.8 for current/stable will be finally removed
+# on 17th Nov 2012
+>=www-servers/nginx-1.3.8
+
 # Daniel Robbins (30 Oct 2012)
 # making consolekit and policykit optional. Masked for testing.
 >=net-misc/networkmanager-0.9.6.4-r1
