@@ -1,3 +1,7 @@
+# Oleg Vinichenko (4 Nov 2012)
+# mask dangerous baselayout-2.2.0-r2
+=sys-apps/baselayout-2.2.0-r2
+
 # Oleg Vinichenko (30 Oct 2012 )
 # mask back nano-2.3.1-r2, stage build  issues
 >=app-editors/nano-2.3.1-r2
