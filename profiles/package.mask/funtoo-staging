@@ -1,6 +1,10 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
+# Oleg Vinichenko (5 Nov 2012)
+# FL-213: avx fixes to glibc, test mask
+>=sys-libs/glibc-2.15-r4
+
 # Martin Scholz <golodhrim@funtoo.org> (03 Nov 2012)
 # testmask of nginx 1.3.8 for current/stable will be finally removed
 # on 17th Nov 2012
