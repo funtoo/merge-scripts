@@ -1,1 +1,1 @@
-USE="colord eds evo gnome gnome-keyring gstreamer nautilus policykit pulseaudio gtk"
+USE="colord eds evo gnome gnome-keyring gstreamer introspection nautilus policykit pulseaudio gtk"
