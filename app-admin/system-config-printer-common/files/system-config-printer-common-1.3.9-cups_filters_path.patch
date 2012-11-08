@@ -1,0 +1,26 @@
+From a3479278f12ddc905f81050b11c769d74f581aee Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Tiziano=20M=C3=BCller?= <tm@dev-zero.ch>
+Date: Sat, 16 Jun 2012 08:43:30 +0200
+Subject: [PATCH] add /usr/libexec/cups/filter to the filter search paths
+
+---
+ cupshelpers/cupshelpers.py |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+diff --git a/cupshelpers/cupshelpers.py b/cupshelpers/cupshelpers.py
+index 3fc138b..d1d32f1 100755
+--- a/cupshelpers/cupshelpers.py
++++ b/cupshelpers/cupshelpers.py
+@@ -812,7 +812,8 @@ def missingExecutables(ppd):
+ 
+                 exepath = pathcheck (exe,
+                                      "/usr/lib/cups/filter:"
+-                                     "/usr/lib64/cups/filter")
++                                     "/usr/lib64/cups/filter:"
++                                     "/usr/libexec/cups/filter")
+                 if not exepath:
+                     add_missing ("/usr/lib/cups/filter/" + exe)
+ 
+-- 
+1.7.8.6
+
