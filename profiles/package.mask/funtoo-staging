@@ -6,10 +6,6 @@
 >=sys-libs/glibc-2.15-r4
 
 # Daniel Robbins (30 Oct 2012)
-# making consolekit and policykit optional. Masked for testing.
->=net-misc/networkmanager-0.9.6.4-r1
-
-# Daniel Robbins (30 Oct 2012)
 # masked for testing (minor update for grub2)
 =sys-boot/boot-update-1.6.6
 
