@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python
 import portage, os, sys
 kw=portage.settings["ACCEPT_KEYWORDS"].split()
 root=portage.settings["ROOT"]

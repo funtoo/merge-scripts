@@ -9,10 +9,6 @@
 # masked for testing (minor update for grub2)
 =sys-boot/boot-update-1.6.6
 
-# New portage, EAPI=5 support, emerge --sync fix
-# temp. mask for testing
->=sys-apps/portage-2.3.5
-
 # Oleg Vinichenko (8 Sep 2012)
 # new openvz testing kernel, now works with newest toolchain.
 # binutils-2.22 required! masked for testing FL-43 compatibility
