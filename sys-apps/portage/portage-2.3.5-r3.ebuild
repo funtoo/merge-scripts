@@ -13,7 +13,7 @@ SLOT="0"
 IUSE="build doc epydoc +ipc linguas_pl pypy1_9 python2 python3 selinux xattr"
 GITHUB_REPO="portage-funtoo"
 GITHUB_USER="funtoo"
-GITHUB_TAG="funtoo-${PVR}"
+GITHUB_TAG="funtoo-${PV}-r2"
 RESTRICT="mirror"
 
 # Import of the io module in python-2.6 raises ImportError for the
@@ -334,6 +334,17 @@ pkg_postinst() {
 				done < "${cpv}/NEEDED"
 			fi
 		done
+	fi
+	# make.conf magick. We rather prefer to have make.conf in one place and set the symlink to
+	# have compatibility
+	if [[ -e ${EROOT}etc/make.conf && ! -L ${EROOT}etc/make.conf ]]; then
+	    if [[ -e ${EROOT}etc/portage/make.conf ]]; then
+			mv "${EROOT}etc/make.conf" "${EROOT}etc/make.conf.backup"
+	        ewarn "Redundant '${EROOT}etc/make.conf' has been renamed to '${EROOT}etc/make.conf.backup'."
+	    else
+	        mv "${EROOT}etc/make.conf" "${EROOT}etc/portage/make.conf"
+	    fi
+		ln -s portage/make.conf "${EROOT}etc/make.conf"
 	fi
 }
 
