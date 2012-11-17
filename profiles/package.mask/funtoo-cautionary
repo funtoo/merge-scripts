@@ -19,11 +19,6 @@
 # mask latest dev-libs/mpc, breaks stages
 >=dev-libs/mpc-1.0
 
-# Oleg Vinichenko (9 Aug 2012)
-# mask xorg-server pre releases, no one need
-# broken boxes
->=x11-base/xorg-server-1.12.99 
-
 # Oleg Vinichenko (22 Jul 2012)
 # mask libusbx, try to avoid pulling into stages
 >=dev-libs/libusbx-1.0.12
