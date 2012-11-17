@@ -15,14 +15,6 @@
 # less-452 breaks man pages
 >=sys-apps/less-452
 
-# Oleg Vinichenko (19 Aug 2012)
-# mask latest portage, some regressions
-=sys-apps/portage-2.3.4-r11
-
-# Oleg Vinichenko (14 Sep 2012)
-# mask latest sys-devel/patch, breaks stages
-=sys-devel/patch-2.7
-
 # Oleg Vinichenko (7 Sep 2012)
 # mask latest dev-libs/mpc, breaks stages
 >=dev-libs/mpc-1.0
