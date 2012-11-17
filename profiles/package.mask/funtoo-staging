@@ -14,10 +14,6 @@
 # binutils-2.22 required! masked for testing FL-43 compatibility
 =sys-kernel/openvz-rhel6-test-2.6.32.042.061.8
 
-# Oleg Vinichenko ( 27 Jul 2012)
-# mask lateste mesa pre release
->=media-libs/mesa-8.1_rc0
-
 #Daniel Robbins (19 Dec 2011)
 #I am working on this ebuild - not yet ready for prime time.
 >=net-analyzer/net-snmp-5.7
