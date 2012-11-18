@@ -337,13 +337,15 @@ pkg_postinst() {
 	fi
 	# make.conf magick. We rather prefer to have make.conf in one place and set the symlink to
 	# have compatibility
-	if [[ -e ${EROOT}etc/make.conf && ! -L ${EROOT}etc/make.conf ]]; then
-	    if [[ -e ${EROOT}etc/portage/make.conf ]]; then
-			mv "${EROOT}etc/make.conf" "${EROOT}etc/make.conf.backup"
-	        ewarn "Redundant '${EROOT}etc/make.conf' has been renamed to '${EROOT}etc/make.conf.backup'."
-	    else
-	        mv "${EROOT}etc/make.conf" "${EROOT}etc/portage/make.conf"
-	    fi
+	if [[ ! -L ${EROOT}etc/make.conf ]]; then
+		if [[ -e ${EROOT}etc/make.conf ]]
+			if [[ -e ${EROOT}etc/portage/make.conf ]]; then
+				mv "${EROOT}etc/make.conf" "${EROOT}etc/make.conf.backup"
+				ewarn "Redundant '${EROOT}etc/make.conf' has been renamed to '${EROOT}etc/make.conf.backup'."
+			else
+				mv "${EROOT}etc/make.conf" "${EROOT}etc/portage/make.conf"
+			fi
+		fi
 		ln -s portage/make.conf "${EROOT}etc/make.conf"
 	fi
 }
