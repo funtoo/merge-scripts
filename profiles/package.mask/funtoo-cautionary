@@ -23,11 +23,6 @@
 # mask libusbx, try to avoid pulling into stages
 >=dev-libs/libusbx-1.0.12
 
-# Martin Scholz (03 Jul 2012)
-# masking polkit and udisks responsible for build failings
->sys-auth/polkit-0.104-r1
->sys-fs/udisks-1.97.0-r1
-
 # Ryan Harris (20 June 2012)
 # mask automake-1.12.1 due to multiple failures 
 # Ref b.g.o.# 421465
