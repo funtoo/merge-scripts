@@ -62,7 +62,7 @@ SRC_URI="http://nginx.org/download/${P}.tar.gz
 
 LICENSE="as-is BSD BSD-2 GPL-2 MIT"
 SLOT="0"
-KEYWORDS="~*"
+KEYWORDS="*"
 
 NGINX_MODULES_STD="access auth_basic autoindex browser charset empty_gif fastcgi
 geo gzip limit_req limit_zone map memcached proxy referer rewrite scgi ssi
