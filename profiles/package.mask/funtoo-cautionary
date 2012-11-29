@@ -48,7 +48,9 @@
 # udev-177 is not ready for daily usage
 # for adventurous ones!
 # Daniel Robbins (15 Sep 2012) - new udev version to fix /run persistent issues:
->sys-fs/udev-171-r7
+# Jean-Francis Roy (28 Nov 2012) - new udev version to add keymap USE flag + virtual/udev mask:
+>sys-fs/udev-171-r8
+>virtual/udev-171
 
 # DO NOT USE this one the ebuild does not include kernel revision dependencies (>= 2.6.38 REQUIRED) and it can affect many of our users 
 # See bug #359445
