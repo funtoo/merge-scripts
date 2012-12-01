@@ -1,2 +1,0 @@
-DROP DATABASE __DATABASE__;
-DROP USER '__DBUSER__'@'localhost';

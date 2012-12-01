@@ -1,3 +1,12 @@
+# Jean-Francis Roy (8 Nov 2012)
+# FL-215: dependency on >udev-172. See FL-34.
+=app-admin/system-config-printer-common-1.3.12
+=app-admin/system-config-printer-gnome-1.3.12
+
+# Oleg Vinichenko (4 Nov 2012)
+# mask dangerous baselayout-2.2.0-r2
+=sys-apps/baselayout-2.2.0-r2
+
 # Oleg Vinichenko (30 Oct 2012 )
 # mask back nano-2.3.1-r2, stage build  issues
 >=app-editors/nano-2.3.1-r2
@@ -6,31 +15,13 @@
 # less-452 breaks man pages
 >=sys-apps/less-452
 
-# Oleg Vinichenko (19 Aug 2012)
-# mask latest portage, some regressions
-=sys-apps/portage-2.3.4-r11
-
-# Oleg Vinichenko (14 Sep 2012)
-# mask latest sys-devel/patch, breaks stages
-=sys-devel/patch-2.7
-
 # Oleg Vinichenko (7 Sep 2012)
 # mask latest dev-libs/mpc, breaks stages
 >=dev-libs/mpc-1.0
 
-# Oleg Vinichenko (9 Aug 2012)
-# mask xorg-server pre releases, no one need
-# broken boxes
->=x11-base/xorg-server-1.12.99 
-
 # Oleg Vinichenko (22 Jul 2012)
 # mask libusbx, try to avoid pulling into stages
 >=dev-libs/libusbx-1.0.12
-
-# Martin Scholz (03 Jul 2012)
-# masking polkit and udisks responsible for build failings
->sys-auth/polkit-0.104-r1
->sys-fs/udisks-1.97.0-r1
 
 # Ryan Harris (20 June 2012)
 # mask automake-1.12.1 due to multiple failures 
@@ -57,7 +48,9 @@
 # udev-177 is not ready for daily usage
 # for adventurous ones!
 # Daniel Robbins (15 Sep 2012) - new udev version to fix /run persistent issues:
->sys-fs/udev-171-r7
+# Jean-Francis Roy (28 Nov 2012) - new udev version to add keymap USE flag + virtual/udev mask:
+>sys-fs/udev-171-r8
+>virtual/udev-171
 
 # DO NOT USE this one the ebuild does not include kernel revision dependencies (>= 2.6.38 REQUIRED) and it can affect many of our users 
 # See bug #359445

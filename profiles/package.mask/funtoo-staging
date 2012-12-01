@@ -1,31 +1,26 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
-# Daniel Robbins (30 Oct 2012)
-# making consolekit and policykit optional. Masked for testing.
->=net-misc/networkmanager-0.9.6.4-r1
+# Patrick Creech (27 Nov 2012)
+# FL-182, FL-183 eselect fix, masked for testing
+=app-admin/eselect-1.3.1.1_rc3
+
+# Daniel Robbins
+# FL-225, FL-227
+=sys-apps/openrc-0.10.2-r7
+
+# Oleg Vinichenko (5 Nov 2012)
+# FL-213: avx fixes to glibc, test mask
+>=sys-libs/glibc-2.15-r4
 
 # Daniel Robbins (30 Oct 2012)
 # masked for testing (minor update for grub2)
 =sys-boot/boot-update-1.6.6
 
-# Oleg Vinichenko (25 Oct 2012)
-# FL-168, adjust lvm script to start after mdadm
-# masked for testing.
-=sys-fs/lvm2-2.02.95-r1
-
-# New portage, EAPI=5 support, emerge --sync fix
-# temp. mask for testing
->=sys-apps/portage-2.3.5
-
 # Oleg Vinichenko (8 Sep 2012)
 # new openvz testing kernel, now works with newest toolchain.
 # binutils-2.22 required! masked for testing FL-43 compatibility
 =sys-kernel/openvz-rhel6-test-2.6.32.042.061.8
-
-# Oleg Vinichenko ( 27 Jul 2012)
-# mask lateste mesa pre release
->=media-libs/mesa-8.1_rc0
 
 #Daniel Robbins (19 Dec 2011)
 #I am working on this ebuild - not yet ready for prime time.
