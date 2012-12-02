@@ -82,9 +82,9 @@ src_prepare() {
 	cd ${S}
 	cp -aR "${WORKDIR}"/debian "${S}"/debian
 	local opts
-	use rt && opts="rt"
+	use rt && opts="rt" || opts="standard"
 	local myarch="amd64"
-	[ "$ARCH" = "x86" ] && myarch="i386"
+	[ "$ARCH" = "x86" ] && myarch="i386" && opts="$opts 686-pae"
 	cp ${FILESDIR}/config-extract . || die
 	chmod +x config-extract || die
 	./config-extract ${myarch} ${opts} || die
