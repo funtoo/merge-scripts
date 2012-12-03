@@ -96,5 +96,6 @@ src_install() {
 }
 
 pkg_postinst() {
+	ln -s /bin/ifconfig /sbin/ifconfig
 	einfo "etherwake and such have been split into net-misc/ethercard-diag"
 }
