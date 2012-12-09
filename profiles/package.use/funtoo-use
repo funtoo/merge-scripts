@@ -4,3 +4,8 @@ dev-lang/php gd intl
 # New version of net-tools (still 1.60) have new syntax which may break scripts and more.
 # Current wicd (net-misc/wicd-1.7.1_beta2-r7) is also affected.
 sys-apps/net-tools old-output
+
+# FL-261. sqlalchemy need virtual/python-sqlite external. Move package.use from unused default/linux/ profile.
+dev-lang/php gd
+dev-lang/python sqlite
+virtual/python-sqlite external

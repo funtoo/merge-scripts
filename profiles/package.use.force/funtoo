@@ -1,0 +1,3 @@
+# Move from unused default/linux profile
+# to fix issue with stage1 builds. We need threads.
+dev-lang/python threads

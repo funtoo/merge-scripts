@@ -33,7 +33,7 @@ steps = [
 		"profiles/default/linux/package.use.mask":"profiles/funtoo/1.0/linux-gnu/package.use.mask/01-gentoo"
 	}),
 	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
-	InsertEbuilds(foo_overlay, select="all", skip=["sys-fs/mdev-bb"], replace=["app-shells/rssh","net-misc/unison"]),
+	InsertEbuilds(foo_overlay, select="all", skip=["sys-fs/mdev-bb", "media-video/handbrake"], replace=["app-shells/rssh","net-misc/unison"]),
 	InsertEbuilds(bar_overlay, select="all", skip=["app-emulation/qemu"], replace=True),
 	InsertEbuilds(flora_overlay, select="all", skip=None, replace=False),
 	InsertEbuilds(mythtv_overlay, select='all', skip=["media-tv/miro", "media-tv/mythtv-bindings"], replace=True, merge=["dev-libs/libcec", "media-tv/mythtv", "www-apps/mythweb"], ebuildloc="Gentoo"),

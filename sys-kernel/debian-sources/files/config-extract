@@ -82,7 +82,7 @@ usage: %s [options] arch [featureset] [subarch]
   -l  --list        list all available kernel configurations
   -o  --outfile     specify kernel config outfile --
                     defaults to .config in current directory
-  [featureset]      defaults to "none" if not specified
+  [featureset]      defaults to "standard" if not specified
   [subarch]         defaults to the only one available; otherwise required
 
 This program was written by Daniel Robbins for Funtoo Linux, for the purpose of
@@ -94,7 +94,7 @@ format, such as: "amd64_openvz_amd64". The featureset typically describes an
 optional kernel configuration such as "xen" or "openvz", while the flavor in
 Debian terminology typically refers to the sub-architecture of the CPU.
 
-When using this command, you must specify an arch. A featureset of "none" is
+When using this command, you must specify an arch. A featureset of "standard" is
 assumed unless you specify one, and by default this program will pick the only
 available subarch if there is only one to choose from. If not, you will need to
 pick one (and the program will remind you to do this.)
@@ -139,6 +139,8 @@ if mode == "run":
 		subarch = args[2]
 	elif len(args) == 2:
 		featureset = args[1]
+	if featureset == "standard":
+		featureset = None
 
 # print out optimized list of available kernel configurations:
 
@@ -166,6 +168,7 @@ if mode=="list":
 
 if featureset not in archdict[arch]:
 	print "Error: There is no '%s' featureset kernel config for arch '%s'. Exiting." % ( featureset, arch )
+	print archdict[arch]
 	sys.exit(2)
 
 # If a subarch is not specified (None), then we will auto-pick the subarch if only one is available.
@@ -176,7 +179,7 @@ if subarch == None:
 		subarch = archdict[arch][featureset][0]
 	else:
 		print "Error: there is more than one 'sub-architecture' for this arch."
-		print "Please specify one of the following subarches as a secondary argument:"
+		print "Please specify [arch] [featureset] [subarch], with one of these subarches:"
 		print ", ".join(archdict[arch][featureset])
 		sys.exit(2)
 else:
