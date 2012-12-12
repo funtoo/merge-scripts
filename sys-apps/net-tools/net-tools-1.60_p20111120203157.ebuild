@@ -93,9 +93,9 @@ src_configure() {
 src_install() {
 	emake DESTDIR="${ED}" install || die
 	dodoc README README.ipv6 TODO
+	dosym /bin/ifconfig /sbin/ifconfig
 }
 
 pkg_postinst() {
-	ln -s /bin/ifconfig /sbin/ifconfig
 	einfo "etherwake and such have been split into net-misc/ethercard-diag"
 }
