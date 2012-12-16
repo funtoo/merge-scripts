@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+<description>
+FL-272:  Forking iproute2 from upstream to revert the moving of /sbin/ip to /bin/ip
+</description>
+<herd>base-system</herd>
+<use>
+	<flag name='iptables'>include support for iptables filtering</flag>
+</use>
+</pkgmetadata>
