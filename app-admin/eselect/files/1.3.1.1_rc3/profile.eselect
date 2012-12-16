@@ -1016,3 +1016,42 @@ describe_show() {
 do_show() {
 	show_profiles
 }
+
+#FL-184
+#Adding a set-flavor function to allow an easier workflow
+#to replace system flavors.
+describe_set-flavor() {
+	echo "Changes flaver profile"
+}
+
+do_set-flavor() {
+	local pro_to_add="${1}"
+	#this code below is being used in 3 functions
+	#to be dry could proably put in it's own function
+	if $(is_number "${pro_to_add}")
+	then
+		pro_to_add="$(convert_list_number ${pro_to_add})"
+	else
+		pro_to_add="$(validate_profile_string ${pro_to_add})"
+	fi
+	local profile_type="$(get_profile_type ${pro_to_add})"
+	if [[ "${profile_type}" == "flavor" ]]
+	then
+		#this is where the work to swap out the flavors happen.
+		#get current flavor
+		local profiles=( $(get_currently_set_profiles) )
+		for i in "${profiles[@]}"
+		do
+			
+			if [[ "$(get_profile_type ${i})" == "flavor" ]]
+			then
+				do_remove "${i}"
+				break
+			fi
+		done
+		#enable flavor
+		do_add "${1}"
+	else
+		die -q "Selection is not a flavor"
+	fi
+}
