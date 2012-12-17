@@ -1,3 +1,7 @@
+# Oleg Vinichenko (17 Dec 2012)
+# mask >dev-perl/Net-DNS-0.680.0 due to FL-275
+>dev-perl/Net-DNS-0.680.0
+
 # Jean-Francis Roy (8 Nov 2012)
 # FL-215: dependency on >udev-172. See FL-34.
 =app-admin/system-config-printer-common-1.3.12
