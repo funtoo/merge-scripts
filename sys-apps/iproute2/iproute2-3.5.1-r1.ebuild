@@ -6,13 +6,15 @@ EAPI="4"
 
 inherit eutils toolchain-funcs flag-o-matic multilib
 
+RESTRICT="mirror"
+
 if [[ ${PV} == "9999" ]] ; then
 	EGIT_REPO_URI="git://git.kernel.org/pub/scm/linux/kernel/git/shemminger/iproute2.git"
 	inherit git-2
 	SRC_URI=""
 	#KEYWORDS=""
 else
-	SRC_URI="mirror://kernel/linux/utils/net/${PN}/${P}.tar.xz"
+	SRC_URI="http://ftp.osuosl.org/pub/funtoo/distfiles/${P}.tar.xz"
 	KEYWORDS="*"
 fi
 
