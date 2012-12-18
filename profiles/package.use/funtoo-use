@@ -9,3 +9,4 @@ sys-apps/net-tools old-output
 dev-lang/php gd
 dev-lang/python sqlite
 virtual/python-sqlite external
+sys-fs/mdadm static
