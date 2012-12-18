@@ -1,14 +1,6 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
-# Alexander 'shiin' Reitzel (3 Dec 2012)
-# FL-256, masked for testing
-=sys-apps/net-tools-1.60_p20120127084908-r1
-
-# Patrick Creech (27 Nov 2012)
-# FL-182, FL-183 eselect fix, masked for testing
-=app-admin/eselect-1.3.1.1_rc3
-
 # Daniel Robbins
 # FL-225, FL-227
 =sys-apps/openrc-0.10.2-r7
