@@ -1,10 +1,6 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
-# Daniel Robbins
-# FL-225, FL-227
-=sys-apps/openrc-0.10.2-r7
-
 # Oleg Vinichenko (5 Nov 2012)
 # FL-213: avx fixes to glibc, test mask
 >=sys-libs/glibc-2.15-r4
