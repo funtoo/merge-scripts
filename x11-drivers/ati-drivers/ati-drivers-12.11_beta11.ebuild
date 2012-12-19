@@ -8,12 +8,12 @@ DESCRIPTION="Ati precompiled drivers for Radeon Evergreen (HD5000 Series) and ne
 HOMEPAGE="http://www.amd.com"
 MY_V=( $(get_version_components) )
 #RUN="${WORKDIR}/amd-driver-installer-9.00-x86.x86_64.run"
-SRC_URI="http://www2.ati.com/drivers/beta/amd-driver-installer-catalyst-12.11-beta-x86.x86_64.zip http://developer.amd.com.php53-23.ord1-1.websitetestlink.com/wordpress/media/2012/10/xvba-sdk-0.74-404001.tar.gz"
+SRC_URI="http://www2.ati.com/drivers/beta/amd-driver-installer-catalyst-12.11-beta11-x86.x86_64.zip http://developer.amd.com.php53-23.ord1-1.websitetestlink.com/wordpress/media/2012/10/xvba-sdk-0.74-404001.tar.gz"
 FOLDER_PREFIX="common/"
 IUSE="debug +modules multilib qt4 static-libs disable-watermark"
 
 LICENSE="AMD GPL-2 QPL-1.0 as-is"
-KEYWORDS=""
+KEYWORDS="-* ~amd64 ~x86"
 SLOT="1"
 
 RESTRICT="bindist"
@@ -278,18 +278,9 @@ pkg_setup() {
 }
 
 src_unpack() {
-	if [[ ${A} =~ .*\.tar\.gz ]]; then
-		unpack ${A}
-	else
-		#please note, RUN may be insanely assigned at top near SRC_URI
-		if [[ ${A} =~ .*\.zip ]]; then
-			unpack ${A}
-			[[ -z "$RUN" ]] && RUN="${S}/${A/%.zip/.run}"
-		else
-			RUN="${DISTDIR}/${A}"
-		fi
-		sh ${RUN} --extract "${S}" 2>&1 > /dev/null || die
-	fi
+	unpack ${A}
+	local RUN="$(ls amd-driver*)"
+	sh ${RUN} --extract "${S}" || die
 }
 
 src_prepare() {
@@ -336,6 +327,9 @@ src_prepare() {
 	# compile fix for linux-3.7
 	# https://bugs.gentoo.org/show_bug.cgi?id=438516
 	epatch "${FILESDIR}/ati-drivers-vm-reserverd.patch"
+
+	# compile fix for AGP-less kernel, bug #435322
+	epatch "${FILESDIR}"/ati-drivers-12.9-KCL_AGP_FindCapsRegisters-stub.patch
 
 	cd "${MODULE_DIR}"
 
@@ -592,6 +586,10 @@ src_install-libs() {
 		dosym ${soname} /usr/$(get_libdir)/$(scanelf -qF "#f%S" ${so})
 	done
 
+	# See https://bugs.gentoo.org/show_bug.cgi?id=443466
+	dodir /etc/revdep-rebuild/
+	echo "SEARCH_DIRS_MASK=\"/opt/bin/clinfo\"" > "${ED}/etc/revdep-rebuild/62-ati-drivers"
+
 	#remove static libs if not wanted
 	use static-libs || rm -rf "${D}"/usr/$(get_libdir)/libfglrx_dm.a
 }
@@ -615,6 +613,13 @@ pkg_postinst() {
 	use modules && linux-mod_pkg_postinst
 	"${ROOT}"/usr/bin/eselect opengl set --use-old ati
 	"${ROOT}"/usr/bin/eselect opencl set --use-old amd
+
+	if has_version ">=x11-drivers/xf86-video-intel-2.20.3"; then
+		ewarn "It is reported that xf86-video-intel-2.20.3 and later cause the X server"
+		ewarn "to crash on systems that use hybrid AMD/Intel graphics. If you experience"
+		ewarn "this crash, downgrade to xf86-video-intel-2.20.2 or earlier."
+		ewarn "For details, see https://bugs.gentoo.org/show_bug.cgi?id=430000"
+	fi
 }
 
 pkg_preinst() {
