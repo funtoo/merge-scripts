@@ -21,7 +21,7 @@ COMMON_DEPEND=">=dev-libs/dbus-glib-0.98
 	>=sys-apps/dbus-1.4.20
 	>=sys-apps/sg3_utils-1.27.20090411
 	>=sys-block/parted-3
-	|| ( >=sys-fs/udev-171-r5[gudev,hwdb] <sys-fs/udev-171[extras] )
+	virtual/udev[gudev,hwdb]
 	>=sys-fs/lvm2-2.02.66"
 # util-linux -> mount, umount, swapon, swapoff (see also #403073)
 RDEPEND="${COMMON_DEPEND}

@@ -10,4 +10,4 @@ KEYWORDS="*"
 IUSE=""
 
 DEPEND=""
-RDEPEND="|| ( sys-fs/udev sys-fs/mdev-bb )"
+RDEPEND="|| ( virtual/udev sys-fs/mdev-bb )"

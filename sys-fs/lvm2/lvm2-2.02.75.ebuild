@@ -14,7 +14,8 @@ KEYWORDS="*"
 
 IUSE="rc_enable"
 
-RDEPEND=">=sys-fs/udev-151-r4 !<sys-fs/cryptsetup-1.1.2"
+RDEPEND="|| ( >=sys-fs/udev-151-r4 >virtual/udev-0 )
+		 !<sys-fs/cryptsetup-1.1.2"
 DEPEND="${RDEPEND} dev-util/pkgconfig"
 MYDIR="$FILESDIR/2.02.70"
 

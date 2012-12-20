@@ -14,7 +14,8 @@ KEYWORDS="alpha amd64 arm hppa ia64 mips ppc ppc64 s390 sh sparc x86"
 
 IUSE="rc_enable"
 
-RDEPEND=">=sys-fs/udev-151-r4 !<sys-fs/cryptsetup-1.1.2"
+RDEPEND="|| ( >=sys-fs/udev-151-r4 >virtual/udev-0 )
+		 !<sys-fs/cryptsetup-1.1.2"
 DEPEND="${RDEPEND} dev-util/pkgconfig"
 MYDIR="$FILESDIR/2.02.70"
 

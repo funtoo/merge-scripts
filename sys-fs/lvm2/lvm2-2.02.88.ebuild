@@ -18,7 +18,7 @@ DEPEND_COMMON="!!sys-fs/device-mapper
 	readline? ( sys-libs/readline )
 	clvm? ( =sys-cluster/dlm-2*
 			cman? ( =sys-cluster/cman-2* ) )
-	>=sys-fs/udev-151-r4"
+	|| ( >=sys-fs/udev-151-r4 >virtual/udev-0 )"
 
 RDEPEND="${DEPEND_COMMON}
 	!<sys-apps/openrc-0.4

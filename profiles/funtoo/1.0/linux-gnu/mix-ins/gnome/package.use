@@ -1,5 +1,6 @@
 # Required by gnom-base/gvfs and sys-fs/udisks
 sys-fs/udev extras gudev
+virtual/udev extras gudev
 gnome-base/gvfs gdu
 sys-block/parted device-mapper 
 
