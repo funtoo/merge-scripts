@@ -1,5 +1,11 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
+
+# Patrick Creech (20 Dec 2012)
+# FL-279, eselect version bump upstream
+# masked for testing
+=app-admin/eselect-1.3.3
+
 # Oleg Vinichenko (18 Dec 2012)
 # FL-194, add mdadm support to binary kernels
 # maksed for testing genkernel and debians-ources, openvz-rhel6-stable kernels
