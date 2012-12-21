@@ -1,4 +1,3 @@
-app-vim/gentoo-syntax funtoo
 dev-lang/php gd intl
 
 # New version of net-tools (still 1.60) have new syntax which may break scripts and more.
@@ -9,4 +8,9 @@ sys-apps/net-tools old-output
 dev-lang/php gd
 dev-lang/python sqlite
 virtual/python-sqlite external
+
+# FL-194, build static mdadm binary
 sys-fs/mdadm static
+
+#FL-282, set libkms flag as it explicitly required
+x11-libs/libdrm libkms
