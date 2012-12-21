@@ -581,9 +581,10 @@ src_install-libs() {
 	for so in $(find "${D}"/usr/$(get_libdir) -maxdepth 1 -name *.so.[0-9].[0-9])
 	do
 		local soname=${so##*/}
-		## let's keep also this alternative way ;)
-		#dosym ${soname} /usr/$(get_libdir)/${soname%.[0-9]}
-		dosym ${soname} /usr/$(get_libdir)/$(scanelf -qF "#f%S" ${so})
+		local soname_one=${soname%.[0-9]}
+		local soname_zero=${soname_one%.[0-9]}
+		dosym ${soname} /usr/$(get_libdir)/${soname_one}
+		dosym ${soname_one} /usr/$(get_libdir)/${soname_zero}
 	done
 
 	# See https://bugs.gentoo.org/show_bug.cgi?id=443466
@@ -592,6 +593,7 @@ src_install-libs() {
 
 	#remove static libs if not wanted
 	use static-libs || rm -rf "${D}"/usr/$(get_libdir)/libfglrx_dm.a
+
 }
 
 pkg_postinst() {
