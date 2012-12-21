@@ -29,7 +29,7 @@ REQUIRED_USE="
 # TODO: Qt support?
 COMMON_DEPEND=">=sys-apps/dbus-1.2
 	>=dev-libs/dbus-glib-0.94
-	|| ( >=sys-fs/udev-171[gudev] >=sys-fs/udev-147[extras] )
+	virtual/udev[gudev]
 	>=dev-libs/glib-2.26
 	policykit? ( >=sys-auth/polkit-0.97 )
 	>=net-libs/libsoup-2.26:2.4

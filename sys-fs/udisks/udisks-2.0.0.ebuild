@@ -17,7 +17,7 @@ IUSE="debug crypt +gptfdisk +introspection systemd"
 COMMON_DEPEND=">=dev-libs/glib-2.32
 	>=sys-auth/polkit-0.107
 	>=dev-libs/libatasmart-0.19
-	>=sys-fs/udev-171[gudev,hwdb]
+	>=virtual/udev-171[gudev,hwdb]
 	virtual/acl
 	introspection? ( >=dev-libs/gobject-introspection-1.30 )
 	systemd? ( >=sys-apps/systemd-44 )"
