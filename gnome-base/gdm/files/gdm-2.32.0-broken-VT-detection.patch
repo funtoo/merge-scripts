@@ -1,0 +1,98 @@
+From 75b80587960b4cee6bd849a34d9e84dd46b91abc Mon Sep 17 00:00:00 2001
+From: Gilles Dartiguelongue <eva@gentoo.org>
+Date: Tue, 2 Nov 2010 23:18:21 +0100
+Subject: [PATCH 3/6] Fix VT grab problem causing GDM to grab VT2 instead of 7
+
+Gentoo bug: #261339
+
+---
+ common/gdm-settings-keys.h |    1 +
+ daemon/gdm-server.c        |   15 ++++++++++++---
+ data/gdm.schemas.in.in     |    5 +++++
+ 3 files changed, 18 insertions(+), 3 deletions(-)
+
+diff --git a/common/gdm-settings-keys.h b/common/gdm-settings-keys.h
+index 65a1628..e64eba0 100644
+--- a/common/gdm-settings-keys.h
++++ b/common/gdm-settings-keys.h
+@@ -27,6 +27,7 @@ G_BEGIN_DECLS
+ 
+ #define GDM_KEY_USER "daemon/User"
+ #define GDM_KEY_GROUP "daemon/Group"
++#define GDM_KEY_VT "daemon/VT"
+ #define GDM_KEY_AUTO_LOGIN_ENABLE "daemon/AutomaticLoginEnable"
+ #define GDM_KEY_AUTO_LOGIN_USER "daemon/AutomaticLogin"
+ #define GDM_KEY_TIMED_LOGIN_ENABLE "daemon/TimedLoginEnable"
+diff --git a/daemon/gdm-server.c b/daemon/gdm-server.c
+index 339f3cc..f25d6f1 100644
+--- a/daemon/gdm-server.c
++++ b/daemon/gdm-server.c
+@@ -47,7 +47,9 @@
+ 
+ #include "gdm-common.h"
+ #include "gdm-signal-handler.h"
+-
++#include "gdm-settings.h"
++#include "gdm-settings-direct.h"
++#include "gdm-settings-keys.h"
+ #include "gdm-server.h"
+ 
+ extern char **environ;
+@@ -83,7 +85,7 @@ struct GdmServerPrivate
+         char    *parent_display_name;
+         char    *parent_auth_file;
+         char    *chosen_hostname;
+-
++        char    *vt;
+         guint    child_watch_id;
+ };
+ 
+@@ -686,7 +688,7 @@ gdm_server_start (GdmServer *server)
+         gboolean res;
+ 
+         /* fork X server process */
+-        res = gdm_server_spawn (server, NULL);
++        res = gdm_server_spawn (server, server->priv->vt);
+ 
+         return res;
+ }
+@@ -937,6 +939,8 @@ gdm_server_class_init (GdmServerClass *klass)
+ static void
+ gdm_server_init (GdmServer *server)
+ {
++        int vt;
++        gboolean has_vt;
+ 
+         server->priv = GDM_SERVER_GET_PRIVATE (server);
+ 
+@@ -944,6 +948,11 @@ gdm_server_init (GdmServer *server)
+         server->priv->command = g_strdup (X_SERVER " -br -verbose");
+         server->priv->log_dir = g_strdup (LOGDIR);
+ 
++        has_vt =  gdm_settings_direct_get_int (GDM_KEY_VT, &vt);
++        if (has_vt) {
++                server->priv->vt = g_strdup_printf ("vt %d", vt);
++        }
++
+         add_ready_handler (server);
+ }
+ 
+diff --git a/data/gdm.schemas.in.in b/data/gdm.schemas.in.in
+index 514117d..948e403 100644
+--- a/data/gdm.schemas.in.in
++++ b/data/gdm.schemas.in.in
+@@ -23,6 +23,11 @@
+       <default>@GDM_GROUPNAME@</default>
+     </schema>
+     <schema>
++      <key>daemon/VT</key>
++      <signature>i</signature>
++      <default>7</default>
++    </schema>
++    <schema>
+       <key>daemon/AutomaticLoginEnable</key>
+       <signature>b</signature>
+       <default>false</default>
+-- 
+1.7.3.1
+
