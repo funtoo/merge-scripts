@@ -25,7 +25,7 @@ RDEPEND="
 	sys-apps/ed
 	sys-apps/iproute2
 	sys-fs/vzquota
-	sys-cluster/ploop"
+	<sys-cluster/ploop-1.5"
 
 DEPEND=""
 
