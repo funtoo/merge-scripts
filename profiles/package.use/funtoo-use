@@ -14,3 +14,7 @@ sys-fs/mdadm static
 
 #FL-282, set libkms flag as it explicitly required
 x11-libs/libdrm libkms
+
+# FL-278, wpa_supplicant needs dbus for clean networkmanager emerge, let's set it here
+net-wireless/wpa_supplicant dbus 
+ 
