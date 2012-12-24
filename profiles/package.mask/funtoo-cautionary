@@ -1,3 +1,7 @@
+# Oleg Vinichenko (25 Dec 2012)
+# FL-288 mask latests syslinux
+>=sys-boot-syslinux-5.00
+
 # Oleg Vinichenko (17 Dec 2012)
 # mask >dev-perl/Net-DNS-0.680.0 due to FL-275
 >dev-perl/Net-DNS-0.680.0
