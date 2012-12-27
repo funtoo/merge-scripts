@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+  <maintainer>
+    <email>stuart@hickinbottom.com</email>
+    <name>Stuart Hickinbottom</name>
+  </maintainer>
+  <longdescription lang="en">
+	This package provides the Logitech Media Server audio server
+	(binary version). Logitech Media Server will allow access to
+	your audio collection over local and wide-area networks, as
+	well as serving content to the Logitech Squeezebox and
+	Transporter streaming media players. In addition to local
+	content, Logitech Media Sever will also provide access to
+	internet radio and audio podcasts.
+  </longdescription>
+</pkgmetadata>

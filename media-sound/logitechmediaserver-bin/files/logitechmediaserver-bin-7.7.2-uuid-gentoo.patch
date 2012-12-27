@@ -1,0 +1,14 @@
+--- slimserver.pl.old	2012-04-01 22:00:00.111597353 +0100
++++ slimserver.pl	2012-04-01 22:00:00.111597353 +0100
+@@ -440,8 +440,9 @@
+ 	
+ 	# Generate a UUID for this SC instance on first-run
+ 	if ( !$prefs->get('server_uuid') ) {
+-		require UUID::Tiny;
+-		$prefs->set( server_uuid => UUID::Tiny::create_UUID_as_string( UUID::Tiny::UUID_V4() ) );
++		require Data::UUID;
++		my $ug = new Data::UUID;
++		$prefs->set( server_uuid => lc $ug->create_str() );
+ 	}
+ 
+ 	main::INFOLOG && $log->info("Server binary search path init...");
