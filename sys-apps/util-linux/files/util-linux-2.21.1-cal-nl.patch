@@ -1,0 +1,28 @@
+From 69cabd7204e39c5e6055b6a53cf882b9f48f3c60 Mon Sep 17 00:00:00 2001
+From: James Le Cuirot <chewi@aura-online.co.uk>
+Date: Mon, 16 Apr 2012 11:05:27 +0100
+Subject: [PATCH] cal: Fix building under uClibc.
+
+Commit fbc333fec09394bf4e47707de08a65e8c0e9c288 broke building under uClibc because HAVE_DECL macros are set to 0, not undefined.
+
+Signed-off-by: James Le Cuirot <chewi@aura-online.co.uk>
+---
+ misc-utils/cal.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/misc-utils/cal.c b/misc-utils/cal.c
+index 918cbab..2de7164 100644
+--- a/misc-utils/cal.c
++++ b/misc-utils/cal.c
+@@ -299,7 +299,7 @@ main(int argc, char **argv) {
+  * the locale database, which can be overridden with the
+  * -s (Sunday) or -m (Monday) options.
+  */
+-#ifdef HAVE_DECL__NL_TIME_WEEK_1STDAY
++#if HAVE_DECL__NL_TIME_WEEK_1STDAY
+ 	/*
+ 	 * You need to use 2 locale variables to get the first day of the week.
+ 	 * This is needed to support first_weekday=2 and first_workday=1 for
+-- 
+1.7.8.5
+
