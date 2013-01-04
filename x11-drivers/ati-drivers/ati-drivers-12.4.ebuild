@@ -56,6 +56,7 @@ DEPEND="${RDEPEND}
 	x11-libs/libXtst
 	sys-apps/findutils
 	app-misc/pax-utils
+	virtual/glu
 "
 
 EMULTILIB_PKG="true"
