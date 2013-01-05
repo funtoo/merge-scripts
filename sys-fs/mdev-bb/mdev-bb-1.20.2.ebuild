@@ -21,6 +21,7 @@ DEPEND="${RDEPEND}
 	>=sys-kernel/linux-headers-2.6.39"
 
 S=${WORKDIR}/${MY_P}
+QA_PRESTRIPPED="/sbin/mdev"
 
 src_configure() {
 	cat >"${S}/tmp.config" <<-END_OF_CONFIG
@@ -68,6 +69,6 @@ src_install() {
 	exeinto /etc/mdev
 	doexe "${FILESDIR}"/catch-all || die
 	doexe "${FILESDIR}"/settle-nics || die
-	doexe "${FILESDIR}"/device-mapper || die
+	doexe "${FILESDIR}"/storage-device || die
 	newinitd "${FILESDIR}"/mdev.init mdev || die
 }
