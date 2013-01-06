@@ -1,14 +1,9 @@
-# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
 
-EAPI="4"
+EAPI="5"
 GNOME2_LA_PUNT="yes"
 
 inherit autotools eutils gnome2 pam user
-if [[ ${PV} = 9999 ]]; then
-	inherit gnome2-live
-fi
 
 G_PV="2012.09.25"
 G_P="gdm-gentoo-${G_PV}"
@@ -20,35 +15,30 @@ SRC_URI="${SRC_URI}
 LICENSE="GPL-2+"
 SLOT="0"
 IUSE="accessibility audit +consolekit +fallback fprint +gnome-shell +introspection ipv6 ldap plymouth selinux smartcard tcpd test xinerama"
-if [[ ${PV} = 9999 ]]; then
-	KEYWORDS=""
-else
-	KEYWORDS="~amd64 ~sh ~x86"
-fi
+KEYWORDS="~*"
 
 # NOTE: x11-base/xorg-server dep is for X_SERVER_PATH etc, bug #295686
 # nspr used by smartcard extension
 # dconf, dbus and g-s-d are needed at install time for dconf update
 # libdaemon needed for our fix-daemonize-regression.patch
 COMMON_DEPEND="
+	app-text/iso-codes
 	>=dev-libs/glib-2.33.2:2
 	>=x11-libs/gtk+-2.91.1:3
+	dev-libs/libdaemon
 	>=x11-libs/pango-1.3
 	dev-libs/nspr
 	>=dev-libs/nss-3.11.1
-	>=media-libs/fontconfig-2.5.0
-	>=media-libs/libcanberra-0.4[gtk3]
-	>=x11-misc/xdg-utils-1.0.2-r3
-	>=sys-power/upower-0.9
-	>=sys-apps/accountsservice-0.6.12
-
 	>=gnome-base/dconf-0.11.6
 	>=gnome-base/gnome-settings-daemon-3.1.4
 	gnome-base/gsettings-desktop-schemas
+	>=media-libs/fontconfig-2.5.0
+	>=media-libs/libcanberra-0.4[gtk3]
 	sys-apps/dbus
+	>=sys-apps/accountsservice-0.6.12
+	>=sys-power/upower-0.9
 
-	app-text/iso-codes
-
+	x11-apps/sessreg
 	x11-base/xorg-server
 	x11-libs/libXi
 	x11-libs/libXau
@@ -57,12 +47,10 @@ COMMON_DEPEND="
 	x11-libs/libXext
 	x11-libs/libXft
 	x11-libs/libXrandr
-	x11-apps/sessreg
+	>=x11-misc/xdg-utils-1.0.2-r3
 
 	virtual/pam
 	sys-auth/pambase[consolekit?]
-
-	dev-libs/libdaemon
 
 	accessibility? ( x11-libs/libXevie )
 	audit? ( sys-process/audit )
@@ -71,7 +59,8 @@ COMMON_DEPEND="
 	plymouth? ( sys-boot/plymouth )
 	selinux? ( sys-libs/libselinux )
 	tcpd? ( >=sys-apps/tcp-wrappers-7.6 )
-	xinerama? ( x11-libs/libXinerama )"
+	xinerama? ( x11-libs/libXinerama )
+"
 # XXX: These deps are from session and desktop files in data/ directory
 # at-spi:1 is needed for at-spi-registryd (spawned by simple-chooser)
 # fprintd is used via dbus by gdm-fingerprint-extension
@@ -97,21 +86,18 @@ RDEPEND="${COMMON_DEPEND}
 		app-crypt/coolkey
 		sys-auth/pam_pkcs11 )
 
-	!gnome-extra/fast-user-switch-applet"
+	!gnome-extra/fast-user-switch-applet
+"
 DEPEND="${COMMON_DEPEND}
-	test? ( >=dev-libs/check-0.9.4 )
-	xinerama? ( x11-proto/xineramaproto )
 	app-text/docbook-xml-dtd:4.1.2
+	>=dev-util/intltool-0.40.0
 	>=sys-devel/gettext-0.17
+	virtual/pkgconfig
 	x11-proto/inputproto
 	x11-proto/randrproto
-	>=dev-util/intltool-0.40.0
-	virtual/pkgconfig"
-
-if [[ ${PV} = 9999 ]]; then
-	DEPEND="${DEPEND}
-		app-text/yelp-tools"
-fi
+	test? ( >=dev-libs/check-0.9.4 )
+	xinerama? ( x11-proto/xineramaproto )
+"
 
 pkg_setup() {
 	enewgroup gdm
@@ -131,6 +117,42 @@ pkg_setup() {
 }
 
 src_prepare() {
+	# GDM grabs VT2 instead of VT7, bug 261339, bug 284053, bug 288852
+	# XXX: We can now pass a hard-coded initial value; temporary fix
+	#epatch "${FILESDIR}/${PN}-2.32.0-fix-vt-problems.patch"
+
+	# daemonize so that the boot process can continue, bug #236701
+	epatch "${FILESDIR}/${PN}-3.6.0-fix-daemonize-regression.patch"
+
+	# make custom session work, bug #216984
+	epatch "${FILESDIR}/${PN}-3.2.1.1-custom-session.patch"
+
+	# ssh-agent handling must be done at xinitrc.d, bug #220603
+	epatch "${FILESDIR}/${PN}-2.32.0-xinitrc-ssh-agent.patch"
+
+	# automagic selinux :/
+	epatch "${FILESDIR}/${PN}-3.6.0-selinux-automagic.patch"
+
+	# spurious unicode characters causing build failure, bug #449062
+	# https://bugzilla.gnome.org/show_bug.cgi?id=690842
+	LC_ALL=C epatch "${FILESDIR}/${PN}-3.6.2-gdm-slave.xml-unicode.patch"
+
+	# don't load accessibility support at runtime when USE=-accessibility
+	use accessibility || epatch "${FILESDIR}/${PN}-3.3.92.1-disable-accessibility.patch"
+
+	# make gdm-fallback session the default if USE=-gnome-shell
+	if ! use gnome-shell; then
+		sed -e "s:'gdm-shell':'gdm-fallback':" \
+			-i data/00-upstream-settings || die "sed failed"
+	fi
+
+	mkdir -p "${S}"/m4
+	eautoreconf
+
+	gnome2_src_prepare
+}
+
+src_configure() {
 	DOCS="AUTHORS ChangeLog NEWS README TODO"
 
 	# PAM is the only auth scheme supported
@@ -154,40 +176,9 @@ src_prepare() {
 		$(use_with plymouth)
 		$(use_with selinux)
 		$(use_with tcpd tcp-wrappers)
-		$(use_with xinerama)"
-	[[ ${PV} != 9999 ]] && G2CONF="${G2CONF} ITSTOOL=$(type -P true)"
-
-	# GDM grabs VT2 instead of VT7, bug 261339, bug 284053, bug 288852
-	# XXX: We can now pass a hard-coded initial value; temporary fix
-	#epatch "${FILESDIR}/${PN}-2.32.0-fix-vt-problems.patch"
-
-	# daemonize so that the boot process can continue, bug #236701
-	epatch "${FILESDIR}/${PN}-3.6.0-fix-daemonize-regression.patch"
-
-	# make custom session work, bug #216984
-	epatch "${FILESDIR}/${PN}-3.2.1.1-custom-session.patch"
-
-	# ssh-agent handling must be done at xinitrc.d, bug #220603
-	epatch "${FILESDIR}/${PN}-2.32.0-xinitrc-ssh-agent.patch"
-
-	# automagic selinux :/
-	epatch "${FILESDIR}/${PN}-3.6.0-selinux-automagic.patch"
-
-	# don't load accessibility support at runtime when USE=-accessibility
-	use accessibility || epatch "${FILESDIR}/${PN}-3.3.92.1-disable-accessibility.patch"
-
-	# make gdm-fallback session the default if USE=-gnome-shell
-	if ! use gnome-shell; then
-		sed -e "s:'gdm-shell':'gdm-fallback':" \
-			-i data/00-upstream-settings || die "sed failed"
-	fi
-
-	if [[ ${PV} != 9999 ]]; then
-		mkdir -p "${S}"/m4
-		eautoreconf
-	fi
-
-	gnome2_src_prepare
+		$(use_with xinerama)
+		ITSTOOL=$(type -P true)"
+	gnome2_src_configure
 }
 
 src_install() {
@@ -254,23 +245,6 @@ pkg_postinst() {
 		elog "file.  It has been moved to /etc/X11/gdm/gdm-pre-gnome-2.16"
 		mv /etc/X11/gdm/gdm.conf /etc/X11/gdm/gdm-pre-gnome-2.16
 	fi
-
-	# https://bugzilla.redhat.com/show_bug.cgi?id=513579
-	# Lennart says this problem is fixed, but users are still reporting problems
-	# XXX: Do we want this elog?
-#	if has_version "media-libs/libcanberra[pulseaudio]" ; then
-#		elog
-#		elog "You have media-libs/libcanberra with the pulseaudio USE flag"
-#		elog "enabled. GDM will start a pulseaudio process to play sounds. This"
-#		elog "process should automatically terminate when a user logs into a"
-#		elog "desktop session. If GDM's pulseaudio fails to terminate and"
-#		elog "causes problems for users' audio, you can prevent GDM from"
-#		elog "starting pulseaudio by editing /var/lib/gdm/.pulse/client.conf"
-#		elog "so it contains the following two lines:"
-#		elog
-#		elog "autospawn = no"
-#		elog "daemon-binary = /bin/true"
-#	fi
 }
 
 pkg_postrm() {
