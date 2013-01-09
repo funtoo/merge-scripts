@@ -1,0 +1,22 @@
+--- ip/ipxfrm.c.old	2012-12-28 04:41:22.051444689 -0500
++++ ip/ipxfrm.c	2012-12-28 04:48:05.563945367 -0500
+@@ -557,7 +557,8 @@
+ {
+ 	struct {
+ 		struct xfrm_algo algo;
+-		char key[algo->alg_key_len / 8];
++		// Define a static size equal to the maximum int from limits.h
++		char key[25];
+ 	} base;
+ 
+ 	memcpy(base.algo.alg_name, algo->alg_name, sizeof(base.algo.alg_name));
+@@ -576,7 +577,8 @@
+ {
+ 	struct {
+ 		struct xfrm_algo algo;
+-		char key[algo->alg_key_len / 8];
++		// Need a max size again
++		char key[25];
+ 	} base;
+ 
+ 	memcpy(base.algo.alg_name, algo->alg_name, sizeof(base.algo.alg_name));
