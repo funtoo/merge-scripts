@@ -6,9 +6,8 @@ EAPI=5
 
 KDE_REQUIRED="optional"
 CMAKE_REQUIRED="never"
-
-BASE_AMD64_URI="mirror://gentoo/amd64-bin-"
-BASE_X86_URI="mirror://gentoo/x86-bin-"
+BASE_AMD64_URI="http://ftp.osuosl.org/pub/funtoo/distfiles/amd64-bin-"
+BASE_X86_URI="http://ftp.osuosl.org/pub/funtoo/distfiles/x86-bin-"
 
 inherit kde4-base java-pkg-opt-2 pax-utils prefix versionator
 
@@ -56,7 +55,7 @@ KEYWORDS="-* amd64 x86"
 BIN_COMMON_DEPEND="
 	=app-text/libexttextcat-3.3*
 	=dev-cpp/libcmis-0.2*
-	=dev-libs/icu-49*
+	=dev-libs/icu-50.1*
 	=media-gfx/graphite2-1.2*
 	>=sys-libs/glibc-2.15-r3
 	kde? ( >=kde-base/kdelibs-4.9.3:4 >=x11-libs/qt-core-4.8.2:4 )
@@ -130,7 +129,7 @@ DEPEND=""
 # only one flavor at a time
 REQUIRED_USE="kde? ( !gnome ) gnome? ( !kde )"
 
-RESTRICT="test strip"
+RESTRICT="test strip mirror"
 
 S="${WORKDIR}"
 
