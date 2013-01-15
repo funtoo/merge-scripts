@@ -1,12 +1,17 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=1
+EAPI=4
 
-inherit eutils
+inherit eutils systemd
+
+MY_P="${P/_alpha/-alpha}"
+MY_P="${MY_P/_beta/-beta}"
+MY_P="${MY_P/_rc/-rc}"
+S="${WORKDIR}/${MY_P}"
 
 DESCRIPTION="A fully featured, yet light weight RFC2131 compliant DHCP client"
 HOMEPAGE="http://roy.marples.name/projects/dhcpcd/"
-SRC_URI="http://roy.marples.name/downloads/${PN}/${P}.tar.bz2"
+SRC_URI="http://roy.marples.name/downloads/${PN}/${MY_P}.tar.bz2"
 LICENSE="BSD-2"
 
 KEYWORDS="*"
@@ -14,14 +19,14 @@ KEYWORDS="*"
 SLOT="0"
 IUSE="+zeroconf elibc_glibc"
 
-DEPEND=">sys-apps/openrc-0.6.0"
-RDEPEND=""
-PROVIDE="virtual/dhcpc"
+DEPEND=""
+RDEPEND="!<sys-apps/openrc-0.6.0"
 
-src_unpack() {
-	unpack ${A}
-	cd "${S}"
+pkg_setup() {
+	unset PREFIX #358167
+}
 
+src_prepare() {
 	if ! use zeroconf; then
 		elog "Disabling zeroconf support"
 		{
@@ -32,18 +37,26 @@ src_unpack() {
 	fi
 }
 
-src_compile() {
+src_configure() {
 	local hooks="--with-hook=ntp.conf"
 	use elibc_glibc && hooks="${hooks} --with-hook=yp.conf"
-	econf --prefix= --libexecdir=/$(get_libdir)/dhcpcd --dbdir=/var/lib/dhcpcd \
-		--localstatedir=/var ${hooks}
-	emake || die
+	econf \
+		--prefix="${EPREFIX}" \
+		--libexecdir="${EPREFIX}/$(get_libdir)/dhcpcd" \
+		--dbdir="${EPREFIX}/var/lib/dhcpcd" \
+		--localstatedir="${EPREFIX}/var" \
+		${hooks}
+}
+
+src_compile() {
+	emake
 }
 
 src_install() {
-	emake DESTDIR="${D}" install || die
-	dodoc README || die
+	emake DESTDIR="${D}" install
+	dodoc README
 	newinitd "${FILESDIR}"/${PN}.initd-r3 ${PN}
+	systemd_dounit "${FILESDIR}"/${PN}.service || die
 }
 
 pkg_postinst() {
@@ -68,9 +81,13 @@ pkg_postinst() {
 		elog "See the dhcpcd man page for more details."
 	fi
 
-	elog "Please note that this version of dhcpcd's initscript does not provide"
-	elog "'net'. This means that if you would like dhcpcd to start at boot, you"
-	elog "need to add it to the proper runlevel by typing something like:"
-	elog
-	elog "rc-update add dhcpcd default"
+	# Mea culpa, feel free to remove that after some time --mgorny.
+	if [[ -e "${ROOT}"/etc/systemd/system/network.target.wants/${PN}.service ]]
+	then
+		ebegin "Moving ${PN}.service to multi-user.target"
+		mv "${ROOT}"/etc/systemd/system/network.target.wants/${PN}.service \
+			"${ROOT}"/etc/systemd/system/multi-user.target.wants/
+		eend ${?} \
+			"Please try to re-enable dhcpcd.service"
+	fi
 }
