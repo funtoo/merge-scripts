@@ -11,7 +11,7 @@ SRC_URI=""
 LICENSE=""
 SLOT="0"
 KEYWORDS="~*"
-IUSE="+gudev hwdb keymap selinux static-libs"
+IUSE="+gudev +hwdb keymap selinux static-libs"
 
 DEPEND=""
 RDEPEND="gudev? ( <sys-fs/udev-171[extras] )

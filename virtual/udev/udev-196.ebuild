@@ -11,7 +11,7 @@ SRC_URI=""
 LICENSE=""
 SLOT="0"
 KEYWORDS="~*"
-IUSE="+gudev hwdb introspection keymap selinux static-libs"
+IUSE="+gudev +hwdb introspection keymap selinux static-libs"
 
 DEPEND=""
 RDEPEND="|| ( >=sys-fs/udev-196-r1[gudev?,hwdb?,introspection?,keymap?,selinux?,static-libs?]
