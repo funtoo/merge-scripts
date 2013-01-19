@@ -1,6 +1,11 @@
-# Required by gnom-base/gvfs and sys-fs/udisks
+# Required by gnome, for FL-343
+media-libs/gst-plugins-base theora
+dev-libs/folks vala
+gnome-extra/evolution-data-server vala
+
+# Required by gnome-base/gvfs and sys-fs/udisks
 sys-fs/udev extras gudev
-virtual/udev extras gudev
+virtual/udev extras gudev hwdb
 gnome-base/gvfs gdu
 sys-block/parted device-mapper 
 
@@ -34,7 +39,7 @@ x11-libs/gdk-pixbuf jpeg
 app-accessibility/speech-dispatcher python
 
 # gtk3 input method plugins required for gnome3
-app-i18n/ibus gtk3
+app-i18n/ibus gtk3 dconf
 app-i18n/uim gtk3
 
 # Pulled in by net-im/telepathy-connection-managers[msn] (via dev-python/papyon
