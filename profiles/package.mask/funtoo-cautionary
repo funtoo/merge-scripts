@@ -43,11 +43,6 @@
 =dev-lang/python-3.2.4_pre*
 =dev-lang/python-3.3_pre*
 
-# Martin Scholz (03 May 2012)
-# masking newer versions of grub
-# included Daniel Robbins old mask
->=sys-boot/grub-1.99
-
 # Oleg Vinichenko (2 Apr 2012)
 # mask a live hwids ebuild
 =sys-apps/hwids-99999999

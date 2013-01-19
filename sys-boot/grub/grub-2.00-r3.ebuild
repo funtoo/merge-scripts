@@ -90,7 +90,7 @@ if [[ -n ${DO_AUTORECONF} ]] ; then
 else
 	DEPEND+=" app-arch/xz-utils"
 fi
-PDEPEND=">=sys-boot/boot-update-1.6.5"
+PDEPEND=">=sys-boot/boot-update-1.6.7"
 
 export STRIP_MASK="*/grub/*/*.{mod,img}"
 
@@ -317,4 +317,11 @@ src_install() {
 	do
 		rm -rf ${D}/$delme || die "couldn't remove upstream stuff"
 	done
+
+	if use binfont
+	then
+		insinto /usr/share/grub/fonts
+		cd ${T}; xz -dc ${DISTDIR}/${BINFONT}.xz > unifont.pf2 || die
+		doins unifont.pf2 || die
+	fi
 }
