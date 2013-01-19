@@ -3,7 +3,6 @@
 EAPI=4
 
 BINFONT="unifont-1.0.pf2"
-SRC_URI="binfont? ( http://www.funtoo.org/distfiles/grub/${BINFONT}.xz )"
 
 if [[ ${PV} == "9999" ]] ; then
 	EBZR_REPO_URI="http://bzr.savannah.gnu.org/r/grub/trunk/grub/"
@@ -15,7 +14,7 @@ else
 		SRC_URI="mirror://gnu-alpha/${PN}/${MY_P}.tar.xz"
 	else
 		SRC_URI="mirror://gnu/${PN}/${MY_P}.tar.xz
-		mirror://gentoo/${MY_P}.tar.xz"
+		mirror://gentoo/${MY_P}.tar.xz http://ftp.osuosl.org/pub/funtoo/distfiles/grub/${BINFONT}.xz"
 	fi
 	KEYWORDS="amd64 x86"
 	S=${WORKDIR}/${MY_P}
