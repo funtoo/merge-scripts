@@ -1,3 +1,7 @@
+# eds is a problematic flag, causing many package to fail. It does allow
+# to build gnome clean but leading to pidgin failures. FL-347
+net-im/pidgin -eds
+
 # Required by gnome, for FL-343
 media-libs/gst-plugins-base theora
 dev-libs/folks vala
