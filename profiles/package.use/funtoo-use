@@ -1,3 +1,7 @@
+# set mta flag to gnupg, do not remove postfix from stages
+# FL-354
+app-crypt/gnupg mta
+
 dev-lang/php gd intl
 
 # New version of net-tools (still 1.60) have new syntax which may break scripts and more.
