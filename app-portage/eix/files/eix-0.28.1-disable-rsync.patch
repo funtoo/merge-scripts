@@ -1,6 +1,6 @@
-diff -Nuar eix-0.25.3/src/eix-sync.in eix-0.25.3-fixed/src/eix-sync.in
---- eix-0.25.3/src/eix-sync.in	2012-03-12 20:21:33.000000000 +0200
-+++ eix-0.25.3-fixed/src/eix-sync.in	2012-03-17 09:06:51.000000000 +0200
+diff -Nuar eix-0.26.1/src/eix-sync.in eix-0.26.1-fixed/src/eix-sync.in
+--- eix-0.26.1/src/eix-sync.in	2012-05-17 15:39:18.000000000 +0300
++++ eix-0.26.1-fixed/src/eix-sync.in	2012-08-17 21:31:13.000000000 +0300
 @@ -40,13 +40,7 @@
  The following options are available:
  
@@ -9,7 +9,7 @@ diff -Nuar eix-0.25.3/src/eix-sync.in eix-0.25.3-fixed/src/eix-sync.in
 -     USER defaults to current user and DIR defaults to PORTDIR.
 -     An empty SERVER cancels this option. This option implies -0
  -0   No eix --sync
---2 [USER@]CLIENT[:DIR] Sync via rsync *to* CLIENT after successfull syncing;
+--2 [USER@]CLIENT[:DIR] Sync via rsync *to* CLIENT after successful syncing;
 -     you should later call eix-sync -u locally on CLIENT.
 -     If you already have synced you might want to combine this option with -uU.
  -U   Do not touch the database and omit the hooks after eix-update (@ entries)
@@ -28,11 +28,11 @@ diff -Nuar eix-0.25.3/src/eix-sync.in eix-0.25.3-fixed/src/eix-sync.in
  	measure_time=:
  	metadata=false
  	skip_sync=false
--	server=''
--	client=''
+-	server=
+-	client=
  	doupdate=:
  	synchooks=:
- 	FATAL_HOOKS=''
+ 	FATAL_HOOKS=
 @@ -220,14 +210,10 @@
  while getopts 'is:02:UuFl@SMNtTqwWL:c:C:o:rRHh?' opt
  do	case ${opt} in
@@ -43,22 +43,13 @@ diff -Nuar eix-0.25.3/src/eix-sync.in eix-0.25.3-fixed/src/eix-sync.in
  	U)	doupdate=false;;
  	u)	nolayman=:
 -		nohooks=:
-+		nohooks=:;;
 -		skip_sync=:
--		server='';;
+-		server=;;
++		nohooks=:;;
  	F)	FATAL_HOOKS=':';;
  	l)	nolayman=:;;
  	'@')	nohooks=:;;
-@@ -251,8 +237,6 @@
- 	esac
- done
- opt=''
--[ -z "${server}" ] || skip_sync=:
--
- ${measure_time} || time_begin=''
- measure_time=false
- 
-@@ -367,38 +351,6 @@
+@@ -367,38 +353,6 @@
  	trap ExitAll EXIT HUP INT TERM
  }
  
@@ -66,12 +57,12 @@ diff -Nuar eix-0.25.3/src/eix-sync.in eix-0.25.3-fixed/src/eix-sync.in
 -PrepRsync() {
 -	GetPortdir
 -	hostdir=${1#*:}
--	if [ -n "${hostdir}" ] && [ "${hostdir}" != "${1}" ]
+-	if [ -n "${hostdir:++}" ] && [ "${hostdir}" != "${1}" ]
 -	then	hostdir=${1}
 -	else	hostdir="${1%%:*}:${local_portdir}"
 -	fi
 -	hostdir="${hostdir%/}/"
--	${preprsync} || [ -n "${rsync_opts}" ] && return
+-	${preprsync} || [ -n "${rsync_opts:++}" ] && return
 -	ReadVar portage_rsync_opts PORTAGE_RSYNC_OPTS || \
 -		portage_rsync_opts='--recursive --links --safe-links --perms --times --compress --force --whole-file --delete --stats --timeout=180 --exclude=/distfiles --exclude=/local --exclude=/packages'
 -	ReadVar portage_rsync_extra_opts PORTAGE_RSYNC_EXTRA_OPTS
@@ -97,11 +88,11 @@ diff -Nuar eix-0.25.3/src/eix-sync.in eix-0.25.3-fixed/src/eix-sync.in
  ClearCache() {
  	${clearcache} || return 0
  	# Cleaning old cache
-@@ -418,25 +370,10 @@
+@@ -418,25 +372,10 @@
  }
  
  CallEmergeSync() {
--	if [ -n "${server}" ]
+-	if [ -n "${server:++}" ]
 -	then	PrepRsync "${server}"
 -		MyRunCommand "rsyncing from ${hostdir}" -t sync \
 -		rsync ${rsync_opts} -- "${hostdir}" "${local_portdir}" || \
@@ -113,7 +104,7 @@ diff -Nuar eix-0.25.3/src/eix-sync.in eix-0.25.3-fixed/src/eix-sync.in
  }
  
 -CallSyncClient() {
--	[ -z "${client}" ] && return
+-	[ -z "${client:++}" ] && return
 -	PrepRsync "${client}"
 -	MyRunCommand "`eval_gettext 'rsyncing to ${hostdir}'`" -t client \
 -		rsync ${rsync_opts} -- "${local_portdir}" "${hostdir}" || \
@@ -123,7 +114,7 @@ diff -Nuar eix-0.25.3/src/eix-sync.in eix-0.25.3-fixed/src/eix-sync.in
  CallEmergeMetadata() {
  	${doupdate} && ${metadata} || return 0
  	MyVarCommand 'emerge --metadata' -t metadata
-@@ -502,7 +439,6 @@
+@@ -502,7 +441,6 @@
  	ExecuteConfig 'sync'
  	CallEmergeSync
  	${synchooks} && DoHook "${after_sync}"
