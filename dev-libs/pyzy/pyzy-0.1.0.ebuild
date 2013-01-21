@@ -1,4 +1,3 @@
-# Copyright (c) 2013 Funtoo Linux. All rights reserved.
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="4"
@@ -16,7 +15,7 @@ IUSE=""
 RDEPEND=">=dev-db/sqlite-3.6.18
 	>=dev-libs/glib-2.24"
 DEPEND="${RDEPEND}
-	dev-util/pkgconfig
+	virtual/pkgconfig
 	>=sys-devel/gettext-0.16.1"
 
 src_unpack() {
