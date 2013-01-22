@@ -1,6 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-i18n/ibus/ibus-1.4.1.ebuild,v 1.12 2012/10/08 01:05:22 naota Exp $
 
 EAPI=4
 PYTHON_DEPEND="python? 2:2.5"
