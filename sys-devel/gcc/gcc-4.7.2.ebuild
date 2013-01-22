@@ -24,7 +24,7 @@ DESCRIPTION="The GNU Compiler Collection"
 
 LICENSE="GPL-3 LGPL-3 || ( GPL-3 libgcc libstdc++ gcc-runtime-library-exception-3.1 ) FDL-1.2"
 
-KEYWORDS=""
+KEYWORDS="~*"
 
 RDEPEND=""
 DEPEND="${RDEPEND}
