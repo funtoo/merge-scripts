@@ -24,7 +24,6 @@ DESCRIPTION="GNU GRUB boot loader"
 HOMEPAGE="http://www.gnu.org/software/grub/"
 
 LICENSE="GPL-3"
-#SLOT="2"
 SLOT="0"
 IUSE="custom-cflags debug device-mapper efiemu nls static sdl truetype"
 
