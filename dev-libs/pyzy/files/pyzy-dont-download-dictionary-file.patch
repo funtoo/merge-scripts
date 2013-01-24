@@ -5,7 +5,7 @@
  $(DBTAR):
  	$(AM_V_GEN) \
 -	wget http://pyzy.googlecode.com/files/$(DBTAR) || \
-+	ln -s ${PORTDIR}/distfiles/$(DBTAR) || \
++	ln -s ${DISTDIR}/$(DBTAR) || \
  	( $(RM) $@; exit 1)
  
  stamp-db: $(DBTAR)
@@ -16,7 +16,7 @@
  @PYZY_BUILD_DB_OPEN_PHRASE_TRUE@$(DBTAR):
  @PYZY_BUILD_DB_OPEN_PHRASE_TRUE@	$(AM_V_GEN) \
 -@PYZY_BUILD_DB_OPEN_PHRASE_TRUE@	wget http://pyzy.googlecode.com/files/$(DBTAR) || \
-+@PYZY_BUILD_DB_OPEN_PHRASE_TRUE@	ln -s ${PORTDIR}/distfiles/$(DBTAR) || \
++@PYZY_BUILD_DB_OPEN_PHRASE_TRUE@	ln -s ${DISTDIR}/$(DBTAR) || \
  @PYZY_BUILD_DB_OPEN_PHRASE_TRUE@	( $(RM) $@; exit 1)
  
  @PYZY_BUILD_DB_OPEN_PHRASE_TRUE@stamp-db: $(DBTAR)

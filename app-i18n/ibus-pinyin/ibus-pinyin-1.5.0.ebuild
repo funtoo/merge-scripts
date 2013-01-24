@@ -1,6 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-i18n/ibus-pinyin/ibus-pinyin-1.4.0.ebuild,v 1.2 2012/05/03 19:24:26 jdhore Exp $
 
 EAPI=4
 
@@ -12,8 +10,7 @@ inherit python
 PYDB_TAR="pinyin-database-1.2.99.tar.bz2"
 DESCRIPTION="Chinese PinYin IMEngine for IBus Framework"
 HOMEPAGE="http://code.google.com/p/ibus/"
-SRC_URI="http://ibus.googlecode.com/files/${P}.tar.gz
-	http://ibus.googlecode.com/files/${PYDB_TAR}"
+SRC_URI="http://ibus.googlecode.com/files/${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -29,19 +26,13 @@ RDEPEND=">=app-i18n/ibus-1.4
 DEPEND="${RDEPEND}
 	virtual/pkgconfig
 	nls? ( >=sys-devel/gettext-0.16.1 )
-	>=dev-libs/pyzy-0.1.0"
-
-DOCS="AUTHORS ChangeLog NEWS README"
+	boost? ( dev-libs/pyzy[boost] )
+	opencc? ( dev-libs/pyzy[opencc] )"
 
 pkg_setup() {
 	python_set_active_version 2
 	python_pkg_setup
 }
-
-#src_prepare() {
-#	cp "${DISTDIR}"/${PYDB_TAR} data/db/open-phrase/ || die
-#	>py-compile
-#}
 
 src_configure() {
 	econf \
@@ -50,7 +41,7 @@ src_configure() {
 		$(use_enable nls) \
 		$(use_enable opencc) \
 		--enable-db-open-phrase
-		#--disable-db-android \
+		--disable-db-android \
 		#--disable-english-input-mode \
 }
 
