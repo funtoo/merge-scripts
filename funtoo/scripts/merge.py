@@ -38,7 +38,7 @@ steps = [
 	InsertEbuilds(bar_overlay, select="all", skip=["app-emulation/qemu"], replace=True),
 	InsertEbuilds(flora_overlay, select="all", skip=["sys-fs/spl", "sys-fs/zfs"], replace=False),
 	InsertEbuilds(mythtv_overlay, select='all', skip=["media-tv/miro", "media-tv/mythtv-bindings"], replace=True, merge=["dev-libs/libcec", "media-tv/mythtv", "www-apps/mythweb"], ebuildloc="Gentoo"),
-	InsertEbuilds(sabayon_for_gentoo, select=["app-admin/equo", "app-admin/matter", "sys-apps/entropy", "sys-apps/entropy-server", "sys-apps/entropy-client-services","app-admin/rigo", "sys-apps/rigo-daemon", "sys-apps/magneto-core" ], replace=True),
+	InsertEbuilds(sabayon_for_gentoo, select=["app-admin/equo", "app-admin/matter", "sys-apps/entropy", "sys-apps/entropy-server", "sys-apps/entropy-client-services","app-admin/rigo", "sys-apps/rigo-daemon", "sys-apps/magneto-core", "x11-misc/magneto-gtk", "x11-misc/magneto-gtk3", "kde-misc/magneto-kde", "app-misc/magneto-loader"], replace=True),
 	SyncDir(mythtv_overlay.root, "eclass"),
 	SyncDir(progress_overlay.root, "eclass"),
 	SyncFiles(progress_overlay.root, {
