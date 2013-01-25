@@ -27,7 +27,9 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 	nls? ( >=sys-devel/gettext-0.16.1 )
 	boost? ( dev-libs/pyzy[boost] )
-	opencc? ( dev-libs/pyzy[opencc] )"
+	opencc? ( dev-libs/pyzy[opencc] )
+	dev-libs/pyzy
+	"
 
 pkg_setup() {
 	python_set_active_version 2
