@@ -1,6 +1,10 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
+# Oleg Vinichenko (26 Jan 2013)
+# adding app-admin/salt for testing
+>=app-admin/salt-0.12.1
+
 # Daniel Robbins (25 Jan 2013)
 =sys-kernel/genkernel-3.4.40.1
 
