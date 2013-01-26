@@ -5,20 +5,9 @@
 # adding app-admin/salt for testing
 >=app-admin/salt-0.12.1
 
-# Daniel Robbins (25 Jan 2013)
-=sys-kernel/genkernel-3.4.40.1
-
-# Scott/anak1n (29 Dec 2012)
-# FL-237, FL-233 test boot-update ebuild
-=sys-boot/boot-update-1.6.8
-
 # Oleg Vinichenko (5 Nov 2012)
 # FL-213: avx fixes to glibc, test mask
 >=sys-libs/glibc-2.15-r4
-
-# Daniel Robbins (30 Oct 2012)
-# masked for testing (minor update for grub2)
-=sys-boot/boot-update-1.6.6
 
 # Oleg Vinichenko (8 Sep 2012)
 # new openvz testing kernel, now works with newest toolchain.
