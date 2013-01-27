@@ -35,7 +35,7 @@ steps = [
 	}),
 	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(foo_overlay, select="all", skip=["sys-fs/mdev-bb", "media-video/handbrake"], replace=["app-shells/rssh","net-misc/unison"]),
-	InsertEbuilds(bar_overlay, select="all", skip=["app-emulation/qemu"], replace=True),
+	InsertEbuilds(bar_overlay, select="all", skip=["app-emulation/qemu"], replace=False),
 	InsertEbuilds(flora_overlay, select="all", skip=["sys-fs/spl", "sys-fs/zfs"], replace=False),
 	InsertEbuilds(mythtv_overlay, select='all', skip=["media-tv/miro", "media-tv/mythtv-bindings"], replace=True, merge=["dev-libs/libcec", "media-tv/mythtv", "www-apps/mythweb"], ebuildloc="Gentoo"),
 	InsertEbuilds(sabayon_for_gentoo, select=["app-admin/equo", "app-admin/matter", "sys-apps/entropy", "sys-apps/entropy-server", "sys-apps/entropy-client-services","app-admin/rigo", "sys-apps/rigo-daemon", "sys-apps/magneto-core", "x11-misc/magneto-gtk", "x11-misc/magneto-gtk3", "kde-misc/magneto-kde", "app-misc/magneto-loader"], replace=True),
