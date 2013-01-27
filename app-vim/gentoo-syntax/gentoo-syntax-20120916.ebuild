@@ -22,6 +22,9 @@ src_unpack() {
 	mv "${WORKDIR}/${GITHUB_USER}"-* "${S}" || die
 	cd "${S}"
 
+	# do not install .gitignore, which may cause file conflicts
+	find . -name .gitignore -exec rm {} \;
+
 	if use ignore-glep31 ; then
 		for f in ftplugin/*.vim ; do
 			ebegin "Removing UTF-8 rules from ${f} ..."
