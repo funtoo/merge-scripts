@@ -7,8 +7,8 @@ inherit mount-boot
 SLOT=$PVR
 CKV=2.6.32
 OKV=$CKV
-OVZ_KERNEL="042stab059"
-OVZ_REV="7"
+OVZ_KERNEL="042stab072"
+OVZ_REV="10"
 OVZ_KV=${OVZ_KERNEL}.${OVZ_REV}
 KV_FULL=${PN}-${PVR}
 EXTRAVERSION=-${OVZ_KV}
@@ -19,7 +19,7 @@ RESTRICT="binchecks strip"
 LICENSE="GPL-2"
 KEYWORDS="*"
 IUSE="binary"
-DEPEND="binary? ( >=sys-kernel/genkernel-3.4.40-r2 )"
+DEPEND="binary? ( >=sys-kernel/genkernel-3.4.40.1 )"
 RDEPEND="binary? ( >=sys-fs/udev-160 )"
 DESCRIPTION="Full Linux kernel sources - RHEL6 kernel with OpenVZ patchset"
 HOMEPAGE="http://www.openvz.org"
