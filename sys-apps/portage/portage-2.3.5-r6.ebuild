@@ -10,7 +10,7 @@ HOMEPAGE="http://www.gentoo.org/proj/en/portage/index.xml"
 LICENSE="GPL-2"
 KEYWORDS="*"
 SLOT="0"
-IUSE="build doc epydoc +ipc linguas_pl pypy1_9 python2 python3 selinux xattr"
+IUSE="build doc epydoc +ipc linguas_pl linguas_ru pypy2_0 python2 python3 selinux xattr"
 GITHUB_REPO="portage-funtoo"
 GITHUB_USER="funtoo"
 GITHUB_TAG="funtoo-${PVR}"
@@ -19,10 +19,10 @@ RESTRICT="mirror"
 # Import of the io module in python-2.6 raises ImportError for the
 # thread module if threading is disabled.
 python_dep_ssl="python3? ( =dev-lang/python-3*[ssl] )
-	!pypy1_9? ( !python2? ( !python3? (
+	!pypy2_0? ( !python2? ( !python3? (
 		|| ( >=dev-lang/python-2.7[ssl] dev-lang/python:2.6[threads,ssl] )
 	) ) )
-	pypy1_9? ( !python2? ( !python3? ( dev-python/pypy:1.9[bzip2,ssl] ) ) )
+	pypy2_0? ( !python2? ( !python3? ( dev-python/pypy:2.0[bzip2,ssl] ) ) )
 	python2? ( !python3? ( || ( dev-lang/python:2.7[ssl] dev-lang/python:2.6[ssl,threads] ) ) )"
 python_dep="${python_dep_ssl//\[ssl\]}"
 python_dep="${python_dep//,ssl}"
@@ -39,9 +39,10 @@ DEPEND="${python_dep}
 # to python-3.3 / pyxattr. Also, xattr support is only tested with Linux, so
 # for now, don't pull in xattr deps for other kernels.
 # For whirlpool hash, require python[ssl] or python-mhash (bug #425046).
+# For compgen, require bash[readline] (bug #445576).
 RDEPEND="${python_dep}
 	!build? ( >=sys-apps/sed-4.0.5
-		>=app-shells/bash-3.2_p17
+		|| ( >=app-shells/bash-4.2_p37[readline] ( <app-shells/bash-4.2_p37 >=app-shells/bash-3.2_p17 ) )
 		>=app-admin/eselect-1.2
 		|| ( ${python_dep_ssl} dev-python/python-mhash )
 	)
@@ -59,7 +60,7 @@ PDEPEND="
 		userland_GNU? ( >=sys-apps/coreutils-6.4 )
 	)"
 # coreutils-6.4 rdep is for date format in emerge-webrsync #164532
-# NOTE: FEATURES=install-sources requires debugedit and rsync
+# NOTE: FEATURES=installsources requires debugedit and rsync
 
 SRC_ARCHIVES="http://dev.gentoo.org/~zmedico/portage/archives"
 
@@ -93,15 +94,15 @@ pkg_setup() {
 		ewarn "Both python2 and python3 USE flags are enabled, but only one"
 		ewarn "can be in the shebangs. Using python3."
 	fi
-	if use pypy1_9 && use python3 ; then
-		ewarn "Both pypy1_9 and python3 USE flags are enabled, but only one"
+	if use pypy2_0 && use python3 ; then
+		ewarn "Both pypy2_0 and python3 USE flags are enabled, but only one"
 		ewarn "can be in the shebangs. Using python3."
 	fi
-	if use pypy1_9 && use python2 ; then
-		ewarn "Both pypy1_9 and python2 USE flags are enabled, but only one"
+	if use pypy2_0 && use python2 ; then
+		ewarn "Both pypy2_0 and python2 USE flags are enabled, but only one"
 		ewarn "can be in the shebangs. Using python2"
 	fi
-	if ! use pypy1_9 && ! use python2 && ! use python3 && \
+	if ! use pypy2_0 && ! use python2 && ! use python3 && \
 		! compatible_python_is_selected ; then
 		ewarn "Attempting to select a compatible default python interpreter"
 		local x success=0
@@ -126,8 +127,8 @@ pkg_setup() {
 		python_set_active_version 3
 	elif use python2; then
 		python_set_active_version 2
-	elif use pypy1_9; then
-		python_set_active_version 2.7-pypy-1.9
+	elif use pypy2_0; then
+		python_set_active_version 2.7-pypy-2.0
 	fi
 }
 
@@ -171,9 +172,9 @@ src_prepare() {
 	elif use python2; then
 		einfo "Converting shebangs for python2..."
 		python_convert_shebangs -r 2 .
-	elif use pypy1_9; then
-		einfo "Converting shebangs for pypy-c1.9..."
-		python_convert_shebangs -r 2.7-pypy-1.9 .
+	elif use pypy2_0; then
+		einfo "Converting shebangs for pypy-c2.0..."
+		python_convert_shebangs -r 2.7-pypy-2.0 .
 	fi
 
 	if [[ -n ${EPREFIX} ]] ; then
@@ -280,15 +281,6 @@ pkg_preinst() {
 		ewarn "For optimal performance in xattr handling, install"
 		ewarn "dev-python/pyxattr, or install >=dev-lang/python-3.3 and"
 		ewarn "enable USE=python3 for $CATEGORY/$PN."
-	fi
-
-	if ! use build && ! has_version dev-python/pycrypto && \
-		! has_version '>=dev-lang/python-2.6[ssl]' ; then
-		ewarn "If you are an ebuild developer and you plan to commit ebuilds"
-		ewarn "with this system then please install dev-python/pycrypto or"
-		ewarn "enable the ssl USE flag for >=dev-lang/python-2.6 in order"
-		ewarn "to enable RMD160 hash support."
-		ewarn "See bug #198398 for more information."
 	fi
 
 	has_version "<=${CATEGORY}/${PN}-2.2_pre5" \
