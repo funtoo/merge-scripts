@@ -1,0 +1,9 @@
+# Copyright 1999-2011 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/dev-lang/php/files/eblits/pkg_setup-v3.eblit,v 1.1 2011/07/02 15:14:41 olemarkus Exp $
+
+eblit-php-pkg_setup() {
+	depend.apache_pkg_setup
+}
+
+
