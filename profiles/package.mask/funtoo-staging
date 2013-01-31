@@ -1,5 +1,8 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
+# Oleg Vinichenko (31 Jan 2013)
+# quick mask for portage ebuild, fixes to FL-384
+=sys-apps/portage-2.3.5-r6
 
 # Jean-Francis Roy (30 Jan 2012)
 # add a python 3 fix for x11-libs/xvba-video, masked for testing. FL-383
