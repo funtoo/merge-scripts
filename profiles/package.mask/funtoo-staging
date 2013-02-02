@@ -1,10 +1,6 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
-# Jean-Francis Roy (30 Jan 2012)
-# add a python 3 fix for x11-libs/xvba-video, masked for testing. FL-383
-=x11-libs/xvba-video-0.8.0-r3
-
 # Oleg Vinichenko (29 Jan 2012)
 # add newest openvz kernel, masked fo testing, FL-379
 =sys-kernel/openvz-rhel6-stable-2.6.32.042.072.10 
