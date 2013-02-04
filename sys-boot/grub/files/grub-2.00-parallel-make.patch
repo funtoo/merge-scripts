@@ -1,16 +1,38 @@
 Fix parallel make problems.
-Upstream changesets 4547, 4552.
+Upstream changesets 4547, 4552, 4578.
 --- gentpl.py
 +++ gentpl.py
-@@ -487,7 +487,7 @@
- def manpage():
+@@ -484,10 +484,10 @@
+ def installdir(default="bin"):
+     return "[+ IF installdir +][+ installdir +][+ ELSE +]" + default + "[+ ENDIF +]"
+ 
+-def manpage():
++def manpage(adddeps):
      r  = "if COND_MAN_PAGES\n"
      r += gvar_add("man_MANS", "[+ name +].[+ mansection +]\n")
 -    r += rule("[+ name +].[+ mansection +]", "[+ name +]", """
-+    r += rule("[+ name +].[+ mansection +]", "[+ name +] grub-mkconfig_lib", """
++    r += rule("[+ name +].[+ mansection +]", "[+ name +] " + adddeps, """
  chmod a+x [+ name +]
  PATH=$(builddir):$$PATH pkgdatadir=$(builddir) $(HELP2MAN) --section=[+ mansection +] -i $(top_srcdir)/docs/man/[+ name +].h2m -o $@ [+ name +]
  """)
+@@ -503,7 +503,7 @@
+     r += gvar_add("TESTS", "[+ name +]")
+     r += "[+ ELSE +]"
+     r += var_add(installdir() + "_PROGRAMS", "[+ name +]")
+-    r += "[+ IF mansection +]" + manpage() + "[+ ENDIF +]"
++    r += "[+ IF mansection +]" + manpage("") + "[+ ENDIF +]"
+     r += "[+ ENDIF +]"
+ 
+     r += var_set(cname() + "_SOURCES", platform_sources(platform))
+@@ -532,7 +532,7 @@
+     r += gvar_add ("TESTS", "[+ name +]")
+     r += "[+ ELSE +]"
+     r += var_add(installdir() + "_SCRIPTS", "[+ name +]")
+-    r += "[+ IF mansection +]" + manpage() + "[+ ENDIF +]"
++    r += "[+ IF mansection +]" + manpage("grub-mkconfig_lib") + "[+ ENDIF +]"
+     r += "[+ ENDIF +]"
+ 
+     r += rule("[+ name +]", platform_sources(platform) + " $(top_builddir)/config.status", """
 --- grub-core/Makefile.am
 +++ grub-core/Makefile.am
 @@ -63,7 +63,7 @@
