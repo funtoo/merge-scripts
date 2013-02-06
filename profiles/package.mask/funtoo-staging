@@ -1,6 +1,10 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
+# Daniel Molik ( 6 Feb 2013 )
+# FL-382, bison-2.7 for testing
+=sys-devel/bison-2.7
+
 # Oleg Vinichenko (29 Jan 2012)
 # add newest openvz kernel, masked fo testing, FL-379
 =sys-kernel/openvz-rhel6-stable-2.6.32.042.072.10 
