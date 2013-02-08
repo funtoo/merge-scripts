@@ -1,0 +1,52 @@
+http://cvs.openssl.org/chngview?cn=22455
+
+fix from upstream for building on non-x86 arches
+
+e_rc4_hmac_md5.c: last commit was inappropriate for non-x86[_64] platforms [from HEAD]. PR: 2792
+
+Index: crypto/evp/e_rc4_hmac_md5.c
+===================================================================
+RCS file: /usr/local/src/openssl/CVSROOT/openssl/crypto/evp/e_rc4_hmac_md5.c,v
+retrieving revision 1.1.2.5
+retrieving revision 1.1.2.6
+diff -u -p -r1.1.2.5 -r1.1.2.6
+--- crypto/evp/e_rc4_hmac_md5.c	18 Apr 2012 17:51:33 -0000	1.1.2.5
++++ crypto/evp/e_rc4_hmac_md5.c	19 Apr 2012 20:43:02 -0000	1.1.2.6
+@@ -121,6 +121,7 @@ static int rc4_hmac_md5_cipher(EVP_CIPHE
+ 		md5_off = MD5_CBLOCK-key->md.num,
+ 		blocks;
+ 	unsigned int l;
++	extern unsigned int OPENSSL_ia32cap_P[];
+ #endif
+ 	size_t	plen = key->payload_length;
+ 
+@@ -132,7 +133,8 @@ static int rc4_hmac_md5_cipher(EVP_CIPHE
+ 		/* cipher has to "fall behind" */
+ 		if (rc4_off>md5_off) md5_off+=MD5_CBLOCK;
+ 
+-		if (plen>md5_off && (blocks=(plen-md5_off)/MD5_CBLOCK)) {
++		if (plen>md5_off && (blocks=(plen-md5_off)/MD5_CBLOCK) &&
++		    (OPENSSL_ia32cap_P[0]&(1<<20))==0) {
+ 			MD5_Update(&key->md,in,md5_off);
+ 			RC4(&key->ks,rc4_off,in,out);
+ 
+@@ -172,7 +174,8 @@ static int rc4_hmac_md5_cipher(EVP_CIPHE
+ 		if (md5_off>rc4_off)	rc4_off += 2*MD5_CBLOCK;
+ 		else			rc4_off += MD5_CBLOCK;
+ 
+-		if (len>rc4_off && (blocks=(len-rc4_off)/MD5_CBLOCK)) {
++		if (len>rc4_off && (blocks=(len-rc4_off)/MD5_CBLOCK) &&
++		    (OPENSSL_ia32cap_P[0]&(1<<20))==0) {
+ 			RC4(&key->ks,rc4_off,in,out);
+ 			MD5_Update(&key->md,out,md5_off);
+ 
+@@ -289,8 +292,6 @@ static EVP_CIPHER r4_hmac_md5_cipher=
+ 
+ const EVP_CIPHER *EVP_rc4_hmac_md5(void)
+ 	{
+-	extern unsigned int OPENSSL_ia32cap_P[];
+-	/* RC4_CHAR flag ------------vvvvv */
+-	return(OPENSSL_ia32cap_P[0]&(1<<20) ? NULL : &r4_hmac_md5_cipher);
++	return(&r4_hmac_md5_cipher);
+ 	}
+ #endif
