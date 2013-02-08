@@ -1,6 +1,10 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
+# Oleg Vinichenko (8 Feb 2013)
+# add masked openssl-1.0.1d with patch, FL-396, openvpn
+>=dev-libs/openssl-1.0.1d-r1
+ 
 # Daniel Molik ( 6 Feb 2013 )
 # FL-382, bison-2.7 for testing
 =sys-devel/bison-2.7
