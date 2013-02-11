@@ -1,4 +1,7 @@
 # Oleg Vinichenko (20 Jan 2012)
+# FL-406, mask latest hwids
+>=sys-apps/hwids-201302*
+
 # mask latest pax-utils, it has some issues, ldtree (#452178),
 # breaks genkernels binaries (FL-345, #450688)
 >=app-misc/pax-utils-0.6
