@@ -1,5 +1,5 @@
 app-text/poppler qt4
-dev-python/PyQt4 declarative sql svg webkit
+dev-python/PyQt4 declarative script sql svg webkit
 kde-base/kdelibs opengl
 kde-base/kwin opengl
 media-libs/gd png
