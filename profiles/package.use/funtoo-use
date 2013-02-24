@@ -1,5 +1,5 @@
 # FL-370, set sasl USE flag to openldap
-net-dns/openldap sasl
+net-nds/openldap sasl
 
 # set mta flag to gnupg, do not remove postfix from stages
 # FL-354
