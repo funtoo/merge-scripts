@@ -1,6 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-util/pkgconf/pkgconf-0.8.9.ebuild,v 1.1 2012/10/17 15:51:49 ryao Exp $
 
 EAPI="4"
 
