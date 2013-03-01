@@ -2,6 +2,10 @@
 # newest on top
  
 # Oleg Vinichenko (1 Mar 2013)
+# FL-431 salt update, masked for testing
+>=app-admin/salt-0.13.1
+
+# Oleg Vinichenko (1 Mar 2013)
 # adding new pkgconf, quick mask for testing
 # FL-429
 >=dev-util/pkgconf-0.8.12
