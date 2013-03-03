@@ -58,7 +58,7 @@ BIN_COMMON_DEPEND="
 	=dev-libs/icu-50.1*
 	=media-gfx/graphite2-1.2*
 	>=sys-libs/glibc-2.15-r3
-	kde? ( >=kde-base/kdelibs-4.9.3:4 >=x11-libs/qt-core-4.8.2:4 )
+	kde? ( >=kde-base/kdelibs-4.9.3:4 >=dev-qt/qtcore-4.8.2:4 )
 "
 
 COMMON_DEPEND="
