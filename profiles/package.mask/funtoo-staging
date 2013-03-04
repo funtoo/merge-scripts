@@ -6,11 +6,6 @@
 # FL-429
 >=dev-util/pkgconf-0.8.12
 
-# Oleg Vinichenko (27 Feb 2013)
-# add latest debian-sources, attempt to debug on Asus 990 motherboard,
-# FL-390
->=sys-kernel/debian-sources-3.2.39
-
 # Daniel Molik ( 6 Feb 2013 )
 # FL-382, bison-2.7 for testing
 =sys-devel/bison-2.7
