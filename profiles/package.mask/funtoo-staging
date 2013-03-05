@@ -1,6 +1,10 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
+# Jean-Francis Roy (5 March 2013)
+# FL-444, masked for testing
+=media-libs/mesa-9.1
+
 # Daniel Molik ( 6 Feb 2013 )
 # FL-382, bison-2.7 for testing
 =sys-devel/bison-2.7
