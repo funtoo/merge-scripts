@@ -1,11 +1,6 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
-# Oleg Vinichenko (1 Mar 2013)
-# adding new pkgconf, quick mask for testing
-# FL-429
->=dev-util/pkgconf-0.8.12
-
 # Daniel Molik ( 6 Feb 2013 )
 # FL-382, bison-2.7 for testing
 =sys-devel/bison-2.7
