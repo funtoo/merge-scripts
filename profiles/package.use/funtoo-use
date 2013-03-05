@@ -1,3 +1,6 @@
+# FL-426, set introspection flag to gupnp-igd, it's a hard dep
+net-libs/gupnp-igd introspection
+
 # FL-370, set sasl USE flag to openldap
 net-nds/openldap sasl
 
