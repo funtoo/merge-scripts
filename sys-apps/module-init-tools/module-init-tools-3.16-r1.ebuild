@@ -6,7 +6,8 @@ inherit eutils flag-o-matic
 
 DESCRIPTION="tools for managing linux kernel modules"
 HOMEPAGE="http://kerneltools.org/"
-SRC_URI="mirror://kernel/linux/utils/kernel/module-init-tools/${P}.tar.bz2"
+RESTRICT="mirror"
+SRC_URI="http://ftp.osuosl.org/pub/funtoo/distfiles/${P}.tar.bz2"
 
 LICENSE="GPL-2"
 SLOT="0"
