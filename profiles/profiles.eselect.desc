@@ -15,6 +15,7 @@
 
 arch		funtoo/1.0/linux-gnu/arch/x86-32bit			stable
 arch		funtoo/1.0/linux-gnu/arch/x86-64bit			stable
+arch		funtoo/1.0/linux-gnu/arch/x86-64bit/no-multilib		exp	
 arch            funtoo/1.0/linux-gnu/arch/arm-32bit/armv7a_hardfp       exp
 arch            funtoo/1.0/linux-gnu/arch/arm-32bit/armv6j_hardfp       exp
 

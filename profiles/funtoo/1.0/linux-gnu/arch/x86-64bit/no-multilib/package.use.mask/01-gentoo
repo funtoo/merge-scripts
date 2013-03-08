@@ -1,0 +1,14 @@
+# Copyright 1999-2012 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/amd64/no-multilib/package.use.mask,v 1.15 2012/12/19 10:17:57 pinkbyte Exp $
+
+# Alexandre Rostovtsev <tetromino@gentoo.org> (24 Jun 2012)
+# Disable 32-bit parts of wine, bug #351436
+app-emulation/wine mono win32
+
+# Apr 28, 2008 Sébastien Fabbro <bicatali@gentoo.org>
+# ifc masked
+sci-libs/acml ifc
+
+# Intel Integrated Primitive (sci-libs/ipp) support
+media-libs/opencv ipp
