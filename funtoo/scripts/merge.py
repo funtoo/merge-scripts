@@ -42,6 +42,7 @@ steps = [
 	InsertEbuilds(flora_overlay, select="all", skip=["sys-fs/spl", "sys-fs/zfs"], replace=False),
 	InsertEbuilds(sabayon_for_gentoo, select=["app-admin/equo", "app-admin/matter", "sys-apps/entropy", "sys-apps/entropy-server", "sys-apps/entropy-client-services","app-admin/rigo", "sys-apps/rigo-daemon", "sys-apps/magneto-core", "x11-misc/magneto-gtk", "x11-misc/magneto-gtk3", "kde-misc/magneto-kde", "app-misc/magneto-loader"], replace=True),
 	SyncDir(progress_overlay.root, "eclass"),
+	SyncDir(progress_overlay.root, "profiles/unpack_dependencies"),
 	SyncFiles(progress_overlay.root, {
 		"profiles/package.mask":"profiles/package.mask/progress",
 		"profiles/use.aliases":"profiles/use.aliases/progress",
