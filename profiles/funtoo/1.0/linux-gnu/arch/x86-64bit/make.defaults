@@ -52,3 +52,6 @@ LIBDIR_sparc32="lib32"
 # kvm defaults
 QEMU_SOFTMMU_TARGETS="i386 x86_64"
 QEMU_USER_TARGETS="i386 x86_64"
+
+# Add new abi's FL-452
+USE_EXPAND_HIDDEN="-ABI_X86"
