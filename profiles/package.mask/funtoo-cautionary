@@ -1,4 +1,7 @@
-# Oleg Vinichenko (20 Jan 2012)
+# Oleg Vinichenko (15 Mar 2013) 
+# mask xorg-server-1.14, driver incompatibility, FL-449
+>x11-base/xorg-server-1.13.3
+
 # FL-406, mask latest hwids
 # Jean-Francis Roy (11 Feb 2013)
 # FL-406, correct mask typo
