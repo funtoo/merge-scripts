@@ -16,7 +16,7 @@ LICENSE="GPL-2+ MIT"
 SLOT="0"
 # newline is needed for broken ekeyword
 [[ ${PV} = 9999 ]] || \
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="*"
 IUSE="debug opengl"
 
 RDEPEND="
