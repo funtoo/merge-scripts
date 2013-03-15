@@ -1,6 +1,10 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
+# OLeg Vinichenko (15 Mar 2013)
+# FL-427, FL-66, new openrc, masked for testing
+=sys-apps/openrc-0.10.2-r8
+
 # Daniel Molik ( 6 Feb 2013 )
 # FL-382, bison-2.7 for testing
 =sys-devel/bison-2.7
