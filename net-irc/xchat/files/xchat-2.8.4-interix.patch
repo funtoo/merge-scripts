@@ -1,0 +1,18 @@
+diff -ru xchat-2.8.4.orig/src/common/text.c xchat-2.8.4/src/common/text.c
+--- xchat-2.8.4.orig/src/common/text.c	2008-03-12 14:45:26 +0100
++++ xchat-2.8.4/src/common/text.c	2008-03-12 15:04:35 +0100
+@@ -271,10 +271,14 @@
+ 	{
+ 		if (buf[0] == 'T')
+ 		{
++#ifdef HAVE_STRTOULL
+ 			if (sizeof (time_t) == 4)
+ 				stamp = strtoul (buf + 2, NULL, 10);
+ 			else
+ 				stamp = strtoull (buf + 2, NULL, 10); /* just incase time_t is 64 bits */
++#else
++			stamp = strtoul (buf + 2, NULL, 10);
++#endif
+ 			text = strchr (buf + 3, ' ');
+ 			if (text)
+ 			{

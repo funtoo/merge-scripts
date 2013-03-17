@@ -1,0 +1,17 @@
+--- xchat-2.8.8/configure.in
++++ xchat-2.8.8/configure.in
+@@ -628,14 +628,6 @@
+ 	if test -z "`echo "$CFLAGS" | grep "\-Wall" 2> /dev/null`" ; then
+ 		CFLAGS="$CFLAGS -Wall"
+ 	fi
+-	if test "$system" = "Linux" -o "$system" = "FreeBSD"; then
+-		if test -z "`echo "$CFLAGS" | grep "\-pipe" 2> /dev/null`" ; then
+-			CFLAGS="$CFLAGS -pipe"
+-		fi
+-	fi
+-	if test -z "`echo "$CFLAGS" | grep "\-g " 2> /dev/null`" ; then
+-		CFLAGS="$CFLAGS -g"
+-	fi
+ fi
+ 
+ dnl does this compiler support -Wno-pointer-sign ?
