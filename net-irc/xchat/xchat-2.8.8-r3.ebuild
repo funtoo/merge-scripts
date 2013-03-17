@@ -14,7 +14,7 @@ HOMEPAGE="http://www.xchat.org/"
 
 LICENSE="GPL-2 hires-icons? ( GPL-3 )"
 SLOT="2"
-KEYWORDS="* ~*"
+KEYWORDS="*"
 IUSE="dbus fastscroll +gtk hires-icons ipv6 libnotify mmx nls ntlm perl python spell ssl tcl xchatdccserver"
 
 RDEPEND=">=dev-libs/glib-2.6.0:2
