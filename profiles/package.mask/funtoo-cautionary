@@ -1,3 +1,8 @@
+# Oleg Vinichenko (26 Mar 2013)
+# FL-469 mask alpha/beta releases of php, if someone needs bleeding edge
+# ebuilds can unmask manually
+>=dev-lang/php-5.5.0
+ 
 # Oleg Vinichenko (15 Mar 2013) 
 # mask xorg-server-1.14, driver incompatibility, FL-449
 >x11-base/xorg-server-1.13.3
