@@ -2,18 +2,19 @@
 
 EAPI="4"
 
-inherit versionator
-
-MY_PV="$(replace_version_separator 3 -)"
-S="${WORKDIR}/${PN}-${MY_PV}"
+inherit autotools
 
 DESCRIPTION="Bitcoin CPU/GPU/FPGA miner in C"
 HOMEPAGE="https://bitcointalk.org/index.php?topic=28402.0"
-SRC_URI="http://ck.kolivas.org/apps/${PN}/${PN}-${MY_PV}.tar.bz2"
 
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="x86 amd64"
+
+GITHUB_REPO="cgminer"
+GITHUB_USER="ckolivas"
+GITHUB_TAG="v${PV}"
+SRC_URI="https://www.github.com/${GITHUB_USER}/${GITHUB_REPO}/tarball/${GITHUB_TAG} -> ${PN}-${PV}.tar.gz"
 
 IUSE="+adl altivec bitforce +cpumining examples hardened icarus modminer ncurses +opencl padlock +scrypt sse2 sse2_4way sse4 +udev ztex"
 REQUIRED_USE="
@@ -57,10 +58,14 @@ DEPEND="${DEPEND}
 		>=dev-lang/yasm-1.0.1
 	)
 "
-
+src_unpack() {
+	unpack ${A}
+	mv "${WORKDIR}/${GITHUB_USER}-${PN}"-??????? "${S}" || die
+}
 src_prepare() {
 	sed -i 's/\(^\#define WANT_.*\(SSE\|PADLOCK\|ALTIVEC\)\)/\/\/ \1/' miner.h
-	ln -s /usr/include/ADL/* ADL_SDK/
+	ln -s /usr/include/ADL/* ADL_SDK/ || die
+	eautoreconf || die
 }
 
 src_configure() {
