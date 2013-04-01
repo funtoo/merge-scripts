@@ -1,6 +1,10 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
+# Jean-Francis Roy (1 april 2013)
+# FL-477: new networkmanager, masked for testing
+=net-misc/networkmanager-0.9.8
+
 # OLeg Vinichenko (15 Mar 2013)
 # FL-427, FL-66, new openrc, masked for testing
 =sys-apps/openrc-0.10.2-r8
