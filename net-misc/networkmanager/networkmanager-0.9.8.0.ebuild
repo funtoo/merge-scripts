@@ -143,7 +143,7 @@ src_configure() {
 		$(use_with dhcpcd) \
 		$(use_with doc docs) \
 		$(use_with modemmanager modem-manager-1) \
-        $(use_enable policykit polkit)
+		$(use_enable policykit polkit)
 		$(use_with resolvconf) \
 		$(use_enable test tests) \
 		$(use_enable vala) \
