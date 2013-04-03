@@ -178,9 +178,6 @@ src_install() {
 		newexe "${FILESDIR}/10-openrc-status-r3" 10-openrc-status
 		sed -e "s:@EPREFIX@:${EPREFIX}:g" \
 			-i "${ED}/etc/NetworkManager/dispatcher.d/10-openrc-status" || die
-
-		# Default conf.d file
-		newconfd "${FILESDIR}/conf.d.NetworkManager" NetworkManager
 	fi
 
 	# Add keyfile plugin support
