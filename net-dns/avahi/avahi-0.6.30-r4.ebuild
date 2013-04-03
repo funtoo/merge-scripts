@@ -54,7 +54,7 @@ DEPEND="${COMMON_DEPEND}
 		mono? ( >=virtual/monodoc-1.1.8 )
 	)"
 RDEPEND="${COMMON_DEPEND}
-	dev-perl/XML-parser
+	dev-perl/XML-Parser
 	howl-compat? ( !net-misc/howl )
 	mdnsresponder-compat? ( !net-misc/mDNSResponder )"
 
