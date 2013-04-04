@@ -1,3 +1,6 @@
+03 Apr 2013; Daniel Robbins <drobbins@funtoo.org:
+dev-perl/XML-Parser added as RDEPEND and DEPEND.
+
 23 Jan 2012; Jean-Francis Roy <jeanfrancis@funtoo.org>:
 I've enabled +autoipd as it is a core feature that may be needed when following
 http://www.funtoo.org/wiki/Zero_Configuration_Networking
