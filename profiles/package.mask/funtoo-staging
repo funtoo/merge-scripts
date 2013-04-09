@@ -5,10 +5,6 @@
 # FL-477: new networkmanager, masked for testing
 >=net-misc/networkmanager-0.9.8
 
-# OLeg Vinichenko (15 Mar 2013)
-# FL-427, FL-66, new openrc, masked for testing
-=sys-apps/openrc-0.10.2-r8
-
 # Oleg Vinichenko (5 Nov 2012)
 # FL-213: avx fixes to glibc, test mask
 >=sys-libs/glibc-2.15-r4
