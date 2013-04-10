@@ -33,6 +33,7 @@ sys-devel
 sys-fs
 sys-kernel
 sys-libs
+sys-monitor
 virtual
 www-servers
 x11-apps
