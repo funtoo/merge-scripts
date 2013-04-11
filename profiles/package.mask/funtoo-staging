@@ -5,10 +5,6 @@
 # FL-487: staging zenoss, as it is a work in progress.
 sys-monitor/zenoss
 
-# Jean-Francis Roy (1 april 2013)
-# FL-477: new networkmanager, masked for testing
->=net-misc/networkmanager-0.9.8
-
 # Oleg Vinichenko (5 Nov 2012)
 # FL-213: avx fixes to glibc, test mask
 >=sys-libs/glibc-2.15-r4
