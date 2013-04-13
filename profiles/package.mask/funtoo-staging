@@ -1,6 +1,10 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
+# Oleg Vinichenko (13 Apr 2013)
+# initial addtion of kmod, unkeyworded, masked
+>=sys-apps/kmod-13
+
 # Daniel Robbins (10 Apr 2013)
 # FL-487: staging zenoss, as it is a work in progress.
 sys-monitor/zenoss
