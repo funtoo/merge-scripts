@@ -15,10 +15,9 @@ SLOT="0"
 IUSE="static"
 RESTRICT="test"
 
-RDEPEND="!sys-apps/busybox[mdev]"
+DEPEND=">=sys-kernel/linux-headers-2.6.39"
 
-DEPEND="${RDEPEND}
-	>=sys-kernel/linux-headers-2.6.39"
+RDEPEND="!sys-apps/busybox[mdev]"
 
 S=${WORKDIR}/${MY_P}
 QA_PRESTRIPPED="/sbin/mdev"
@@ -71,4 +70,22 @@ src_install() {
 	doexe "${FILESDIR}"/settle-nics || die
 	doexe "${FILESDIR}"/storage-device || die
 	newinitd "${FILESDIR}"/mdev.init mdev || die
+}
+add_init() {
+	local runl=$1
+	if [ ! -e ${ROOT}/etc/runlevels/${runl} ]
+	then
+		install -d -m0755 ${ROOT}/etc/runlevels/${runl}
+	fi
+	for initd in $*
+	do
+		# if the initscript is not going to be installed and  is not currently installed, return
+		[[ -e ${D}/etc/init.d/${initd} || -e ${ROOT}/etc/init.d/${initd} ]] || continue
+		[[ -e ${ROOT}/etc/runlevels/${runl}/${initd} ]] && continue
+		elog "Auto-adding '${initd}' service to your ${runl} runlevel"
+		ln -snf /etc/init.d/${initd} "${ROOT}"/etc/runlevels/${runl}/${initd}
+	done
+}
+pkg_postinst() {
+	add_init sysinit mdev
 }
