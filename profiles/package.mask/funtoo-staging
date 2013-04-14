@@ -1,6 +1,10 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
+# Dan Molik (14 Apr 2013)
+# Adding mask for openssl-1.0.1e, clang update
+>=dev-libs/openssl-1.0.1e
+
 # Oleg Vinichenko (13 Apr 2013)
 # initial addtion of kmod, unkeyworded, masked
 >=sys-apps/kmod-13
