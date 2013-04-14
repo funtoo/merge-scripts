@@ -11,7 +11,7 @@ SRC_URI="http://udisks.freedesktop.org/releases/${P}.tar.bz2"
 
 LICENSE="GPL-2"
 SLOT="2"
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="debug crypt +gptfdisk +introspection systemd"
 
 COMMON_DEPEND=">=dev-libs/glib-2.32
