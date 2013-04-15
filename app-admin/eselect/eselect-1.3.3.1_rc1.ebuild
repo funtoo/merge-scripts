@@ -6,13 +6,13 @@ inherit bash-completion-r1
 
 DESCRIPTION="Gentoo's multi-purpose configuration and management tool"
 HOMEPAGE="http://www.gentoo.org/proj/en/eselect/"
-SRC_URI="mirror://gentoo/${P}.tar.xz"
+SRC_URI="mirror://gentoo/eselect-1.3.3.tar.xz"
 
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~*"
 IUSE="doc"
-S=$WORKDIR/$PN-$PV
+S=$WORKDIR/eselect-1.3.3
 
 RDEPEND="sys-apps/sed
 	|| (
