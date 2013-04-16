@@ -1,3 +1,10 @@
+# Ryan Harris (20 June 2012)
+# mask automake-1.12.1 due to multiple failures 
+# Ref b.g.o.# 421465
+# Oleg Vinichenko (16 Apr 2013)
+# 1.12 now pretty safe to use, we will keep 1.13 masked FL-499
+>=sys-devel/automake-1.13
+
 # Oleg Vinichenko (15 Mar 2013) 
 # mask xorg-server-1.14, driver incompatibility, FL-449
 >x11-base/xorg-server-1.13.3
@@ -40,10 +47,6 @@
 # mask libusbx, try to avoid pulling into stages
 >=dev-libs/libusbx-1.0.12
 
-# Ryan Harris (20 June 2012)
-# mask automake-1.12.1 due to multiple failures 
-# Ref b.g.o.# 421465
->=sys-devel/automake-1.12.1
 
 # Adrien Dessemond (09 May 2012)
 # Python 2.7.4-pre and 3.2.4-pre versions are problematic to fetch from upstrea$
