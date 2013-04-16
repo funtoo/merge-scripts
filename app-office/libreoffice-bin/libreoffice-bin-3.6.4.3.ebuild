@@ -86,7 +86,7 @@ COMMON_DEPEND="
 	>=media-libs/fontconfig-2.8.0
 	media-libs/freetype:2
 	media-libs/lcms:2
-	>=media-libs/libpng-1.4
+	=media-libs/libpng-1.5*
 	>=media-libs/libcdr-0.0.5
 	media-libs/libvisio
 	>=net-misc/curl-7.21.4
