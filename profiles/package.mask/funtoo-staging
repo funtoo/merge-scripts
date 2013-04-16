@@ -18,10 +18,6 @@
 # FL-487: staging zenoss, as it is a work in progress.
 sys-monitor/zenoss
 
-# Oleg Vinichenko (5 Nov 2012)
-# FL-213: avx fixes to glibc, test mask
->=sys-libs/glibc-2.15-r4
-
 #Daniel Robbins (19 Dec 2011)
 #I am working on this ebuild - not yet ready for prime time.
 >=net-analyzer/net-snmp-5.7
