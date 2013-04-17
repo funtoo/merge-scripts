@@ -1,3 +1,8 @@
+# Adrien Dessemond (17 Apr 2013)
+# Not currently maintained, last commit near 1 yr ago
+# ZFSOnLinux is a muche more viable and mature replacement 
+sys-fs/zfs-fuse
+
 # Ryan Harris (20 June 2012)
 # mask automake-1.12.1 due to multiple failures 
 # Ref b.g.o.# 421465
