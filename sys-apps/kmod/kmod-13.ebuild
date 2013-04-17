@@ -76,7 +76,7 @@ src_install()
 	prune_libtool_files
 
 	if use tools; then
-		local bincmd sbincmd
+		local sbincmd
 		for sbincmd in depmod insmod lsmod modinfo modprobe rmmod; do
 			dosym /sbin/kmod /sbin/${sbincmd}
 		done
