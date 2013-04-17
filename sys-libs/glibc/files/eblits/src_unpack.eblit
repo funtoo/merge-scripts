@@ -1,6 +1,6 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-libs/glibc/files/eblits/src_unpack.eblit,v 1.16 2012/02/16 00:27:08 vapier Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-libs/glibc/files/eblits/src_unpack.eblit,v 1.22 2013/04/05 00:25:16 vapier Exp $
 
 int_to_KV() {
 	local version=$1 major minor micro
@@ -122,21 +122,12 @@ toolchain-glibc_src_unpack() {
 		sed -i -e "s:\(#define RELEASE\).*:\1 \"${BRANCH_UPDATE}\":" version.h
 	fi
 
-	if [[ -n ${MANPAGE_VER} ]] ; then
-		cd "${WORKDIR}"
-		unpack glibc-manpages-${MANPAGE_VER}.tar.bz2
-	fi
-
-	if [[ -n ${INFOPAGE_VER} ]] ; then
-		cd "${S}"
-		unpack glibc-infopages-${INFOPAGE_VER}.tar.bz2
-	fi
-
 	# tag, glibc is it
 	cd "${S}"
-	[[ -e csu/Banner ]] && die "need new banner location"
-	[[ -n ${SNAP_VER} ]] && echo "Gentoo snapshot ${SNAP_VER}" >> csu/Banner
-	[[ -n ${BRANCH_UPDATE} ]] && echo "Gentoo branch ${BRANCH_UPDATE}" >> csu/Banner
+	if ! version_is_at_least 2.17 ; then
+		[[ -e csu/Banner ]] && die "need new banner location"
+		glibc_banner > csu/Banner
+	fi
 	if [[ -n ${PATCH_VER} ]] && ! use vanilla ; then
 		cd "${S}"
 		EPATCH_MULTI_MSG="Applying Gentoo Glibc Patchset ${RELEASE_VER}-${PATCH_VER} ..." \
@@ -144,7 +135,6 @@ toolchain-glibc_src_unpack() {
 		EPATCH_SUFFIX="patch" \
 		ARCH=$(tc-arch) \
 		epatch "${WORKDIR}"/patches
-		echo "Gentoo patchset ${PATCH_VER}" >> csu/Banner
 	fi
 
 	if just_headers ; then
@@ -169,11 +159,15 @@ eblit-glibc-src_unpack() {
 
 	# Glibc is stupid sometimes, and doesn't realize that with a
 	# static C-Only gcc, -lgcc_eh doesn't exist.
-	# http://sources.redhat.com/ml/libc-alpha/2003-09/msg00100.html
+	# http://sourceware.org/ml/libc-alpha/2003-09/msg00100.html
 	# http://sourceware.org/ml/libc-alpha/2005-02/msg00042.html
-	echo 'int main(){}' > "${T}"/gcc_eh_test.c
-	if ! $(tc-getCC ${CTARGET}) "${T}"/gcc_eh_test.c -lgcc_eh 2>/dev/null ; then
-		sed -i -e 's:-lgcc_eh::' Makeconfig || die "sed gcc_eh"
+	# But! Finally fixed in recent versions:
+	# http://sourceware.org/ml/libc-alpha/2012-05/msg01865.html
+	if ! version_is_at_least 2.16 ; then
+		echo 'int main(){}' > "${T}"/gcc_eh_test.c
+		if ! $(tc-getCC ${CTARGET}) "${T}"/gcc_eh_test.c -lgcc_eh 2>/dev/null ; then
+			sed -i -e 's:-lgcc_eh::' Makeconfig || die "sed gcc_eh"
+		fi
 	fi
 
 	cd "${WORKDIR}"
