@@ -39,10 +39,6 @@
 # less-452 breaks man pages
 >=sys-apps/less-452
 
-# Oleg Vinichenko (7 Sep 2012)
-# mask latest dev-libs/mpc, breaks stages
->=dev-libs/mpc-1.0
-
 # Oleg Vinichenko (22 Jul 2012)
 # mask libusbx, try to avoid pulling into stages
 >=dev-libs/libusbx-1.0.12
