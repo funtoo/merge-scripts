@@ -2,7 +2,7 @@
 
 EAPI="3"
 
-inherit flag-o-matic eutils
+inherit flag-o-matic eutils autotools
 
 DESCRIPTION="Use this to make tarballs :)"
 HOMEPAGE="http://www.gnu.org/software/tar/"
@@ -11,15 +11,18 @@ SRC_URI="mirror://gnu/tar/${P}.tar.bz2
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="*"
-IUSE="nls static userland_GNU"
+KEYWORDS="~*"
+IUSE="minimal nls static userland_GNU xattr"
 
-RDEPEND=""
+RDEPEND="xattr? ( sys-apps/attr )"
 DEPEND="${RDEPEND}
 	nls? ( >=sys-devel/gettext-0.10.35 )"
 
 src_prepare() {
+	epatch "${FILESDIR}"/${P}-xattr.patch #382067
 	epatch "${FILESDIR}"/${P}-no-gets.patch
+	eautoreconf
+
 	if ! use userland_GNU ; then
 		sed -i \
 			-e 's:/backup\.sh:/gbackup.sh:' \
@@ -29,26 +32,21 @@ src_prepare() {
 }
 
 src_configure() {
-	local myconf
 	use static && append-ldflags -static
-	use userland_GNU || myconf="--program-prefix=g"
-	# Work around bug in sandbox #67051
-	gl_cv_func_chown_follows_symlink=yes \
 	FORCE_UNSAFE_CONFIGURE=1 \
 	econf \
 		--enable-backup-scripts \
 		--bindir="${EPREFIX}"/bin \
 		--libexecdir="${EPREFIX}"/usr/sbin \
+		$(usex userland_GNU "" "--program-prefix=g") \
 		$(use_enable nls) \
-		${myconf}
+		$(use_enable xattr)
 }
 
 src_install() {
-	local p=""
-	use userland_GNU || p=g
-
 	emake DESTDIR="${D}" install || die
 
+	local p=$(usex userland_GNU "" "g")
 	if [[ -z ${p} ]] ; then
 		# a nasty yet required piece of baggage
 		exeinto /etc
@@ -67,4 +65,10 @@ src_install() {
 	newman "${FILESDIR}"/tar.1 ${p}tar.1
 	mv "${ED}"/usr/sbin/${p}backup{,-tar}
 	mv "${ED}"/usr/sbin/${p}restore{,-tar}
+
+	if use minimal ; then
+		find "${ED}"/etc "${ED}"/*bin/ "${ED}"/usr/*bin/ \
+			-type f -a '!' '(' -name tar -o -name ${p}tar ')' \
+			-delete
+	fi
 }
