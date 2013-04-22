@@ -1,0 +1,21 @@
+Title: Funtoo kmod migration 
+Author: Oleg Vinichenko <oleg@funtoo.org>
+Content-Type: text/plain
+Posted: 2013-04-22
+Revision: 1
+News-Item-Format: 1.0
+Display-If-Installed: >=sys-apps/portage-2.3.4-r8
+
+Starting from April 25, 2013, Funtoo will migrate to kmod
+as fully-featured drop-in replacemenet of module-init-tools.
+During update, warning about unmerging system package expected,
+This is normal and is part of automatic emerge installation. No manual
+involvment required. 
+
+package version:
+=sys-apps/kmod-13
+
+bug reports:
+
+http://bugs.funtoo.org/browse/FL-434
+
