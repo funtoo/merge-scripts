@@ -1,4 +1,8 @@
-# Oleg Vinichenko (21 Apr 2013)
+# Oleg Vinichenko (23 Apr 2013)
+# mask xorg-server-1.14, driver incompatibility, FL-449, FL-522,
+# security update for xorg-server
+>x11-base/xorg-server-1.13.4
+
 # FL-484, mask broken libXft and freetype
 >=media-libs/freetype-2.4.11-r1
 >=x11-libs/libXft-2.3.1-r1
@@ -19,10 +23,6 @@ sys-fs/zfs-fuse
 # Oleg Vinichenko (16 Apr 2013)
 # 1.12 now pretty safe to use, we will keep 1.13 masked FL-499
 >=sys-devel/automake-1.13
-
-# Oleg Vinichenko (15 Mar 2013) 
-# mask xorg-server-1.14, driver incompatibility, FL-449
->x11-base/xorg-server-1.13.3
 
 # FL-406, mask latest hwids
 # Jean-Francis Roy (11 Feb 2013)
