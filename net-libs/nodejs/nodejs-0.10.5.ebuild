@@ -14,10 +14,9 @@ SRC_URI="http://nodejs.org/dist/v${PV}/node-v${PV}.tar.gz"
 LICENSE="Apache-1.1 Apache-2.0 BSD BSD-2 MIT"
 SLOT="0"
 KEYWORDS="~*"
-IUSE="-v8"
+IUSE=""
 
-RDEPEND="dev-libs/openssl
-		v8? ( <=dev-lang/v8-3.15.11.15 )"
+RDEPEND="dev-libs/openssl"
 DEPEND="${RDEPEND}
 	$(python_abi_depend virtual/python-json)"
 
@@ -36,12 +35,7 @@ src_prepare() {
 }
 
 src_configure() {
-	if use v8 ; then
-		./configure --shared-v8 --shared-v8-libpath="${EPREFIX}"/usr/lib --shared-v8-includes="${EPREFIX}"/usr/include \
-			--prefix="${EPREFIX}"/usr --openssl-use-sys --shared-zlib || die
-	else
 		./configure --prefix="${EPREFIX}"/usr --openssl-use-sys --shared-zlib || die
-	fi
 }
 
 src_compile() {
