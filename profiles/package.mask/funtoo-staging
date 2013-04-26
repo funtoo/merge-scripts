@@ -1,17 +1,9 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
-# Oleg Vinichenko (22 Apr 2013)
-# test mask for pciutils-3.2.0
-# works fine, need test, required for kmod migration, FL-518, FL-434
-=sys-apps/pciutils-3.2.0
 
 # Dan Molik (14 Apr 2013)
 # Adding mask for openssl-1.0.1e, clang update
 >=dev-libs/openssl-1.0.1e
-
-# Oleg Vinichenko (13 Apr 2013)
-# initial addtion of kmod, unkeyworded, masked
->=sys-apps/kmod-13
 
 # Daniel Robbins (10 Apr 2013)
 # FL-487: staging zenoss, as it is a work in progress.
