@@ -1,3 +1,6 @@
+#  FL-520 set upcall USE flag, required for clean cifs-utils emerge
+net-fs/cifs-utils upcall
+
 # FL-426, set introspection flag to gupnp-igd, it's a hard dep
 net-libs/gupnp-igd introspection
 

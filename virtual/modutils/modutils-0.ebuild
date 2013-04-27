@@ -12,4 +12,4 @@ KEYWORDS="*"
 IUSE=""
 
 DEPEND=""
-RDEPEND="|| ( >=sys-apps/module-init-tools-3.2 sys-apps/kmod[tools] sys-apps/modutils )"
+RDEPEND="|| ( sys-apps/kmod[tools] sys-apps/modutils )"
