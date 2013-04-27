@@ -14,6 +14,7 @@ bar_overlay = Tree("bar-overlay", "master", "git://github.com/adessemond/bar-ove
 flora_overlay = Tree("flora", "master", "repos@git.funtoo.org:flora.git", pull=True)
 progress_overlay = SvnTree("progress", "https://gentoo-progress.googlecode.com/svn/overlays/progress")
 sabayon_for_gentoo = Tree("for-gentoo", "master", "git://git.sabayon.org/projects/overlays/for-gentoo.git", pull=True)
+mate_overlay = Tree("mate", "master", "git://github.com/Sabayon/mate-overlay.git", pull=True)
 
 steps = [
 	SyncTree(gentoo_src,exclude=["/metadata/cache/**","ChangeLog", "dev-util/metro"]),
@@ -41,6 +42,7 @@ steps = [
 	InsertEbuilds(foo_overlay, select="all", skip=["sys-fs/mdev-bb", "media-video/handbrake"], replace=["app-shells/rssh","net-misc/unison"]),
 	InsertEbuilds(bar_overlay, select="all", skip=["app-emulation/qemu"], replace=False),
 	InsertEbuilds(flora_overlay, select="all", skip=["sys-fs/spl", "sys-fs/zfs"], replace=False),
+	InsertEbuilds(mate_overlay, select="all", skip=None, replace=False),
 	InsertEbuilds(sabayon_for_gentoo, select=["app-admin/equo", "app-admin/matter", "sys-apps/entropy", "sys-apps/entropy-server", "sys-apps/entropy-client-services","app-admin/rigo", "sys-apps/rigo-daemon", "sys-apps/magneto-core", "x11-misc/magneto-gtk", "x11-misc/magneto-gtk3", "kde-misc/magneto-kde", "app-misc/magneto-loader"], replace=True),
 	SyncDir(progress_overlay.root, "eclass"),
 	SyncDir(progress_overlay.root, "profiles/unpack_dependencies"),
