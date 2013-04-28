@@ -44,6 +44,7 @@ steps = [
 	InsertEbuilds(flora_overlay, select="all", skip=["sys-fs/spl", "sys-fs/zfs"], replace=False),
 	InsertEbuilds(mate_overlay, select="all", skip=None, replace=False),
 	SyncDir(mate_overlay.root, "eclass"),
+	SyncDir(mate_overlay.root, "sets"),
 	SyncFiles(mate_overlay.root, { 
 		"profiles/package.mask":"profiles/package.mask/mate",
 		"profiles/use.mask":"profiles/funtoo/1.0/linux-gnu/mix-ins/mate/use.mask"
