@@ -33,6 +33,7 @@ mix-ins		funtoo/1.0/linux-gnu/mix-ins/console-extras	    	stable
 mix-ins		funtoo/1.0/linux-gnu/mix-ins/dvd			stable
 mix-ins		funtoo/1.0/linux-gnu/mix-ins/gnome			stable
 mix-ins		funtoo/1.0/linux-gnu/mix-ins/kde			stable
+mix-ins		funtoo/1.0/linux-gnu/mix-ins/mate			stable
 mix-ins		funtoo/1.0/linux-gnu/mix-ins/media			stable
 mix-ins		funtoo/1.0/linux-gnu/mix-ins/print		    	stable
 mix-ins		funtoo/1.0/linux-gnu/mix-ins/python3-only	    	exp
