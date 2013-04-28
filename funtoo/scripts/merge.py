@@ -43,7 +43,7 @@ steps = [
 	InsertEbuilds(bar_overlay, select="all", skip=["app-emulation/qemu"], replace=False),
 	InsertEbuilds(flora_overlay, select="all", skip=["sys-fs/spl", "sys-fs/zfs"], replace=False),
 	InsertEbuilds(mate_overlay, select="all", skip=None, replace=False),
-	SyncFiles(mate_overlay.root, "eclass"),
+	SyncDir(mate_overlay.root, "eclass"),
 	SyncFiles(mate_overlay.root, { 
 		"profiles/package.mask":"profiles/package.mask/mate",
 		"profiles/use.mask":"profiles/funtoo/1.0/linux-gnu/mix-ins/mate/use.mask"
