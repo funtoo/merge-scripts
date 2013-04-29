@@ -80,7 +80,10 @@ src_prepare() {
 	chmod a+rx gentoo.config
 
 	append-flags -fno-strict-aliasing
-	append-flags $(test-flags-CC -Wa,--noexecstack)
+	# Don't do this step if clang is being used
+	if [ "${CC}" != "clang" ] ; then 
+		append-flags $(test-flags-CC -Wa,--noexecstack)
+	fi
 
 	sed -i '1s,^:$,#!'${EPREFIX}'/usr/bin/perl,' Configure #141906
 	./config --test-sanity || die "I AM NOT SANE"
@@ -105,6 +108,16 @@ src_configure() {
 
 	local krb5=$(has_version app-crypt/mit-krb5 && echo "MIT" || echo "Heimdal")
 
+	# See if our toolchain supports __uint128_t.  If so, it's 64bit
+	# friendly and can use the nicely optimized code paths. #460790
+	local ec_nistp_64_gcc_128
+	if ! use bindist ; then
+		echo "__uint128_t i;" > "${T}"/128.c
+		if ${CC} ${CFLAGS} -c "${T}"/128.c -o /dev/null >&/dev/null ; then
+			ec_nistp_64_gcc_128="enable-ec_nistp_64_gcc_128"
+		fi
+	fi
+
 	local sslout=$(./gentoo.config)
 	einfo "Use configuration ${sslout:-(openssl knows best)}"
 	local config="Configure"
@@ -115,6 +128,7 @@ src_configure() {
 		$(use sse2 || echo "no-sse2") \
 		enable-camellia \
 		$(use_ssl !bindist ec) \
+		${ec_nistp_64_gcc_128} \
 		enable-idea \
 		enable-mdc2 \
 		$(use_ssl !bindist rc5) \
@@ -138,12 +152,17 @@ src_configure() {
 		-e 's:-mcpu=[-a-z0-9]* ::g' \
 		-e 's:-m[a-z0-9]* ::g' \
 	)
+	sed -i \
+		-e "/^CFLAG/s|=.*|=${CFLAG} ${CFLAGS}|" \
+		-e "/^SHARED_LDFLAGS=/s|$| ${LDFLAGS}|" \
+		Makefile || die
+
 }
 
 src_compile() {
 	# depend is needed to use $confopts; it also doesn't matter
 	# that it's -j1 as the code itself serializes subdirs
-	emake depend
+	emake -j1 depend
 	emake all
 	# rehash is needed to prep the certs/ dir; do this
 	# separately to avoid parallel build issues.
