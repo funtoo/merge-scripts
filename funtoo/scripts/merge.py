@@ -13,7 +13,7 @@ foo_overlay = Tree("foo-overlay", "master", "https://github.com/slashbeast/foo-o
 bar_overlay = Tree("bar-overlay", "master", "git://github.com/adessemond/bar-overlay.git", pull=True)
 flora_overlay = Tree("flora", "master", "repos@git.funtoo.org:flora.git", pull=True)
 progress_overlay = SvnTree("progress", "https://gentoo-progress.googlecode.com/svn/overlays/progress")
-sabayon_for_gentoo = Tree("for-gentoo", "master", "git://github.com/Sabayon/for-gentoo.git", pull=True)
+sabayon_for_gentoo = Tree("sabayon-for-gentoo", "master", "git://github.com/Sabayon/for-gentoo.git", pull=True)
 mate_overlay = Tree("mate", "master", "git://github.com/Sabayon/mate-overlay.git", pull=True)
 
 steps = [
