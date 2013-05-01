@@ -306,31 +306,32 @@ class InsertEbuilds(MergeStep):
 	def run(self,desttree):
 		desttree.logTree(self.srctree)
 		# Figure out what categories to process:
-		src_cat_path = os.path.join(self.srctree.root, "profiles/categories")
-		dest_cat_path = os.path.join(self.desttree.root, "profiles/categories")
+		catpath = os.path.join(self.srctree.root,"profiles/categories")
 		if self.categories != None:
 			# categories specified in __init__:
-			src_cat_set = set(self.categories)
+			a = self.categories
 		else:
-			src_cat_set = set()
-			if os.path.exists(src_cat_path):
+			a = []
+			if os.path.exists(catpath):
 				# categories defined in profile:
-				with open(src_cat_path, "r") as f:
-					src_cat_set.update(f.read().splitlines())
+				f = open(os.path.join(self.srctree.root,"profiles/categories"),"r")
+				for cat in f.readlines():
+					cat = cat.strip()
+					if cat not in a:
+						a.append(cat)
+				f.close()
 			# auto-detect additional categories:
 			cats = os.listdir(self.srctree.root)
 			for cat in cats:
 				# All categories have a "-" in them and are directories:
 				if os.path.isdir(os.path.join(self.srctree.root,cat)):
-					if "-" in cat or cat == "virtuals":
-						src_cat_set.add(cat)
-
-		with open(dest_cat_path, "r") as f:
-			dest_cat_set = set(f.read().splitlines())
+					if (cat.find("-") != -1) or cat == "virtuals":
+						if cat not in a:
+							a.append(cat)
 
 		# Our main loop:
 		print "# Merging in ebuilds from %s" % self.srctree.root
-		for cat in src_cat_set:
+		for cat in a:
 			catdir = os.path.join(self.srctree.root,cat)
 			if not os.path.isdir(catdir):
 				# not a valid category in source overlay, so skip it
@@ -348,7 +349,6 @@ class InsertEbuilds(MergeStep):
 				if type(self.skip) == types.ListType and catpkg in self.skip:
 					# we have a list of pkgs to skip, and this catpkg is on the list, so skip:
 					continue
-				dest_cat_set.add(cat)
 				tcatdir = os.path.join(desttree.root,cat)
 				tpkgdir = os.path.join(tcatdir,pkg)
 				copy = False
@@ -393,9 +393,6 @@ class InsertEbuilds(MergeStep):
 					# log here.
 					cpv = "/".join(tpkgdir.split("/")[-2:])
 					mergeLog.write("%s\n" % cpv)
-
-		with open(dest_cat_path, "w") as f:
-			f.write("\n".join(sorted(dest_cat_set)))
 
 class ProfileDepFix(MergeStep):
 
