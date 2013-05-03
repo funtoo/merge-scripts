@@ -45,6 +45,8 @@ pkg_setup() {
 
 src_prepare()
 {
+	epatch ${FILESDIR}/${P}-dont-call-syscall.patch
+
 	if [ ! -e configure ]; then
 		if use doc; then
 			gtkdocize --copy --docdir libkmod/docs || die
