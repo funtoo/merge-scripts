@@ -1,1 +1,1 @@
-USE="cairo introspection gtk"
+USE="cairo consolekit introspection gtk policykit"
