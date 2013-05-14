@@ -1,3 +1,6 @@
+# FL-548 alpine need c-client built with chappa use flag, fixing it for painless install
+net-libs/c-client chappa
+
 #  FL-520 set upcall USE flag, required for clean cifs-utils emerge
 net-fs/cifs-utils upcall
 
