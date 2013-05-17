@@ -81,7 +81,7 @@ src_compile() {
 		utilities/bugtool/ovs-bugtool \
 		ovsdb/ovsdbmonitor/ovsdbmonitor
 
-	if kern_is -lt 3 9 ; then
+	if kernel_is -lt 3 9 ; then
 		use modules && linux-mod_src_compile
 	fi
 }
@@ -96,7 +96,7 @@ src_install() {
 	fi
 	# not working without the brcompat_mod kernel module which did not get
 	# included in the kernel and we can't build it anymore
-	# rm "${D}/usr/sbin/ovs-brcompatd" "${D}/usr/share/man/man8/ovs-brcompatd.8"
+	rm "${D}/usr/sbin/ovs-brcompatd" "${D}/usr/share/man/man8/ovs-brcompatd.8"
 
 	keepdir /var/{lib,log}/openvswitch
 	keepdir /etc/ssl/openvswitch

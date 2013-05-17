@@ -81,7 +81,7 @@ src_compile() {
 		utilities/bugtool/ovs-bugtool \
 		ovsdb/ovsdbmonitor/ovsdbmonitor
 
-	if kern_is -lt 3 9 ; then
+	if kernel_is -lt 3 9 ; then
 		use modules && linux-mod_src_compile
 	fi
 }
