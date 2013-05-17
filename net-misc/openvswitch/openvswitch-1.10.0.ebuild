@@ -30,7 +30,7 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
 CONFIG_CHECK="~NET_CLS_ACT ~NET_CLS_U32 ~NET_SCH_INGRESS ~NET_ACT_POLICE ~IPV6 ~TUN"
-MODULE_NAMES="brcompat(net:${S}/datapath/linux) openvswitch(net:${S}/datapath/linux)"
+MODULE_NAMES="openvswitch(net:${S}/datapath/linux)"
 BUILD_TARGETS="all"
 
 pkg_setup() {
@@ -94,9 +94,6 @@ src_install() {
 		rm -r "${ED}/usr/share/openvswitch/python"
 		python_optimize "${ED}/usr/share/ovsdbmonitor"
 	fi
-	# not working without the brcompat_mod kernel module which did not get
-	# included in the kernel and we can't build it anymore
-	rm "${D}/usr/sbin/ovs-brcompatd" "${D}/usr/share/man/man8/ovs-brcompatd.8"
 
 	keepdir /var/{lib,log}/openvswitch
 	keepdir /etc/ssl/openvswitch
