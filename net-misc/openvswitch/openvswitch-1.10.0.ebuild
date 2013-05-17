@@ -116,6 +116,7 @@ src_install() {
 	insinto /etc/logrotate.d
 	newins rhel/etc_logrotate.d_openvswitch openvswitch
 
+
 	if kernel_is -lt 3 9 ; then
 		use modules && linux-mod_src_install
 	fi
@@ -125,7 +126,6 @@ pkg_postinst() {
 	if kernel_is -lt 3 9 ; then
 		use modules && linux-mod_pkg_postinst
 	fi
-
 	for pv in ${REPLACING_VERSIONS}; do
 		if ! version_is_at_least 1.9.0 ${pv} ; then
 			ewarn "The configuration database for Open vSwitch got moved in version 1.9.0 from"
@@ -137,6 +137,8 @@ pkg_postinst() {
 		fi
 	done
 
+	elog "${PN} built against kernels 3.9 and greater must have kernel built modules"
+	elog "   instead of portage built kernel modules"
 	elog "Use the following command to create an initial database for ovsdb-server:"
 	elog "   emerge --config =${CATEGORY}/${PF}"
 	elog "(will create a database in /var/lib/openvswitch/conf.db)"
