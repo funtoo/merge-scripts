@@ -38,7 +38,7 @@
 
 umask 077
 
-storage_dir="/dev/.mdev-like-a-boss"
+storage_dir="/dev/.mdev"
 [ -d "${storage_dir}" ] || mkdir "${storage_dir}"
 
 [ "${MDEV}" ] || exit 2
