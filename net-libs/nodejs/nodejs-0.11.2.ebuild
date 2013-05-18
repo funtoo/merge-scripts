@@ -14,10 +14,10 @@ SRC_URI="http://nodejs.org/dist/v${PV}/node-v${PV}.tar.gz"
 LICENSE="Apache-1.1 Apache-2.0 BSD BSD-2 MIT"
 SLOT="0"
 KEYWORDS="~*"
-IUSE="+v8"
+IUSE="v8"
 
 RDEPEND="dev-libs/openssl
-		v8? ( dev-lang/v8 )"
+		v8? ( >=dev-lang/v8-3.18.5.1 )"
 DEPEND="${RDEPEND}
 	$(python_abi_depend virtual/python-json)"
 
@@ -66,4 +66,12 @@ src_install() {
 
 src_test() {
 	./tools/test.py --mode=release simple message || die
+}
+
+pkg_postinst() {
+	if ! use v8 ; then
+		elog "${PN} has been compiled against internal v8"
+		elog "to use system v8 you will need to emerge a"
+		elog "version >=dev-lag/v8-3.18"
+	fi
 }
