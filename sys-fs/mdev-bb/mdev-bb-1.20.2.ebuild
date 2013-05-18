@@ -69,6 +69,7 @@ src_install() {
 	doexe "${FILESDIR}"/catch-all || die
 	doexe "${FILESDIR}"/settle-nics || die
 	doexe "${FILESDIR}"/storage-device || die
+	doexe "${FILESDIR}"/proc-bus-usb || die
 	newinitd "${FILESDIR}"/mdev.init mdev || die
 }
 add_init() {
