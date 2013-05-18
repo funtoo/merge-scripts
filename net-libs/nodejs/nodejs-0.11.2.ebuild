@@ -14,7 +14,7 @@ SRC_URI="http://nodejs.org/dist/v${PV}/node-v${PV}.tar.gz"
 LICENSE="Apache-1.1 Apache-2.0 BSD BSD-2 MIT"
 SLOT="0"
 KEYWORDS="~*"
-IUSE="+v8"
+IUSE="v8"
 
 RDEPEND="dev-libs/openssl
 		v8? ( dev-lang/v8 )"
@@ -33,15 +33,18 @@ src_prepare() {
 
 	# less verbose install output (stating the same as portage, basically)
 	sed -i -e "/print/d" tools/install.py || die
+	sed -i -e "s~/usr/local~/usr~" tools/install.py || die
 }
 
 src_configure() {
 	if use v8 ; then
 		./configure --shared-v8 --shared-v8-libpath="${EPREFIX}"/usr/lib --shared-v8-includes="${EPREFIX}"/usr/include \
-			--prefix="${EPREFIX}"/usr --openssl-use-sys --shared-zlib || die
+			--prefix="${EPREFIX}"/usr --shared-openssl --shared-zlib || die
 	else
-		./configure --prefix="${EPREFIX}"/usr --openssl-use-sys --shared-zlib || die
+		./configure --prefix="${EPREFIX}"/usr --shared-openssl --shared-zlib || die
 	fi
+	sed -i -e "s~/usr/local~/usr~g" out/Makefile || die
+	sed -i -e "s~/usr/local~/usr~g" Makefile || die
 }
 
 src_compile() {
