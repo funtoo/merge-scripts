@@ -11,7 +11,7 @@ SLOT="0"
 KEYWORDS="*"
 IUSE=""
 
-RDEPEND="dev-lang/erlang"
+RDEPEND="=dev-lang/erlang-15*"
 DEPEND="${RDEPEND}
 	app-arch/zip
 	app-arch/unzip
