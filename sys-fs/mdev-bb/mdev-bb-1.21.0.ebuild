@@ -22,6 +22,10 @@ RDEPEND="!sys-apps/busybox[mdev]"
 S=${WORKDIR}/${MY_P}
 QA_PRESTRIPPED="/sbin/mdev"
 
+src_prepare(){
+	epatch "${FILESDIR}/busybox-1.21.0-mdev.patch"
+}
+
 src_configure() {
 	cat >"${S}/tmp.config" <<-END_OF_CONFIG
 		CONFIG_HAVE_DOT_CONFIG=y
