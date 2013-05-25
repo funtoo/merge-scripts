@@ -1,10 +1,6 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
-# Dan Molik (14 Apr 2013)
-# Adding mask for openssl-1.0.1e, clang update
->=dev-libs/openssl-1.0.1e
-
 # Daniel Robbins (10 Apr 2013)
 # FL-487: staging zenoss, as it is a work in progress.
 sys-monitor/zenoss
