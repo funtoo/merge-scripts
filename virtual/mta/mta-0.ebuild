@@ -28,6 +28,7 @@ RDEPEND="|| (	mail-mta/postfix
 				mail-mta/nbsmtp
 				mail-mta/netqmail
 				mail-mta/nullmailer
+				mail-mta/opensmtpd
 				mail-mta/qmail-ldap
 				mail-mta/sendmail
 				mail-mta/citadel[-postfix] )"

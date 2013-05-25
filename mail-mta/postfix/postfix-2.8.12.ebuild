@@ -1,6 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/mail-mta/postfix/postfix-2.8.12.ebuild,v 1.1 2012/08/02 14:02:39 eras Exp $
 
 EAPI=4
 
@@ -48,6 +46,7 @@ RDEPEND="${DEPEND}
 	!mail-mta/nbsmtp
 	!mail-mta/netqmail
 	!mail-mta/nullmailer
+	!mail-mta/opensmtpd
 	!mail-mta/qmail-ldap
 	!mail-mta/sendmail
 	!<mail-mta/ssmtp-2.64-r2

@@ -1,6 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/mail-mta/postfix/postfix-2.9.4.ebuild,v 1.1 2012/08/02 14:02:39 eras Exp $
 
 EAPI=4
 
@@ -20,7 +18,7 @@ SRC_URI="${MY_URI}/${MY_SRC}.tar.gz
 
 LICENSE="IBM"
 SLOT="0"
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="+berkdb cdb doc dovecot-sasl hardened ldap ldap-bind memcached mbox mysql nis pam postgres sasl selinux sqlite ssl vda"
 
 DEPEND=">=dev-libs/libpcre-3.4
@@ -49,6 +47,7 @@ RDEPEND="${DEPEND}
 	!mail-mta/nbsmtp
 	!mail-mta/netqmail
 	!mail-mta/nullmailer
+	!mail-mta/opensmtpd
 	!mail-mta/qmail-ldap
 	!mail-mta/sendmail
 	!<mail-mta/ssmtp-2.64-r2
