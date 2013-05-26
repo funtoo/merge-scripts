@@ -1,0 +1,188 @@
+http://sourceforge.net/tracker/?func=detail&aid=3548642&group_id=341051&atid=1427791
+http://mcomix.svn.sourceforge.net/viewvc/mcomix?view=revision&revision=781	
+
+  Add option for auto-rotating images based on size.
+
+  This doesn't work for double-page mode, as it would kind of defeat
+  the purpose of placing two images next to each other.
+
+
+--- mcomix/preferences.py
++++ mcomix/preferences.py
+@@ -63,6 +63,7 @@
+     'show thumbnails': True,
+     'rotation': 0,
+     'auto rotate from exif': True,
++    'auto rotate depending on size': constants.AUTOROTATE_NEVER,
+     'vertical flip': False,
+     'horizontal flip': False,
+     'keep transformation': False,
+--- mcomix/constants.py
++++ mcomix/constants.py
+@@ -31,6 +31,8 @@
+ ZIP, RAR, TAR, GZIP, BZIP2, PDF, SEVENZIP, LHA = range(8)
+ NORMAL_CURSOR, GRAB_CURSOR, WAIT_CURSOR, NO_CURSOR = range(4)
+ LIBRARY_DRAG_EXTERNAL_ID, LIBRARY_DRAG_BOOK_ID, LIBRARY_DRAG_COLLECTION_ID = range(3)
++AUTOROTATE_NEVER, AUTOROTATE_WIDTH_90, AUTOROTATE_WIDTH_270, \
++    AUTOROTATE_HEIGHT_90, AUTOROTATE_HEIGHT_270 = range(5)
+ 
+ RESPONSE_REVERT_TO_DEFAULT = 3
+ RESPONSE_REMOVE = 4
+--- mcomix/ui.py
++++ mcomix/ui.py
+@@ -13,6 +13,7 @@
+ from mcomix import constants
+ from mcomix import status
+ from mcomix import file_chooser_main_dialog
++from mcomix.preferences import prefs
+ from mcomix.library import main_dialog as library_main_dialog
+ 
+ class MainUI(gtk.UIManager):
+@@ -97,6 +98,9 @@
+             ('menu_tools', None, _('_Tools')),
+             ('menu_help', None, _('_Help')),
+             ('menu_transform', 'mcomix-transform', _('_Transform image')),
++            ('menu_autorotate', None, _('_Auto-rotate image')),
++            ('menu_autorotate_width', None, _('...when width exceeds height')),
++            ('menu_autorotate_height', None, _('...when height exceeds width')),
+             ('expander', None, None, None, None, None)])
+ 
+         self._actiongroup.add_toggle_actions([
+@@ -146,6 +150,20 @@
+                 'a', _('Manual zoom mode'), constants.ZOOM_MODE_MANUAL)],
+             3, window.change_zoom_mode)
+ 
++        # Automatically rotate image if width>height or height>width
++        self._actiongroup.add_radio_actions([
++            ('no_autorotation', None, _('Never'),
++             None, None, constants.AUTOROTATE_NEVER),
++            ('rotate_90_width', 'mcomix-rotate-90', _('_Rotate 90 degrees CW'),
++             None, None, constants.AUTOROTATE_WIDTH_90),
++            ('rotate_270_width', 'mcomix-rotate-270', _('Rotat_e 90 degrees CCW'),
++             None, None, constants.AUTOROTATE_WIDTH_270),
++            ('rotate_90_height', 'mcomix-rotate-90', _('_Rotate 90 degrees CW'),
++             None, None, constants.AUTOROTATE_HEIGHT_90),
++            ('rotate_270_height', 'mcomix-rotate-270', _('Rotat_e 90 degrees CCW'),
++             None, None, constants.AUTOROTATE_HEIGHT_270)],
++            prefs['auto rotate depending on size'], window.change_autorotation)
++
+         self._actiongroup.add_actions([
+             ('about', gtk.STOCK_ABOUT, _('_About'),
+              None, None, dialog_handler.open_dialog)], (window, 'about-dialog'))
+@@ -280,6 +298,20 @@
+                         <menuitem action="rotate_270" />
+                         <menuitem action="rotate_180" />
+                         <separator />
++                        <menu action="menu_autorotate">
++                            <menuitem action="no_autorotation" />
++                            <separator />
++                            <menuitem action="menu_autorotate_height" />
++                            <separator />
++                            <menuitem action="rotate_90_height" />
++                            <menuitem action="rotate_270_height" />
++                            <separator />
++                            <menuitem action="menu_autorotate_width" />
++                            <separator />
++                            <menuitem action="rotate_90_width" />
++                            <menuitem action="rotate_270_width" />
++                        </menu>
++                        <separator />
+                         <menuitem action="flip_horiz" />
+                         <menuitem action="flip_vert" />
+                         <separator />
+--- mcomix/main.py
++++ mcomix/main.py
+@@ -203,6 +203,9 @@
+             prefs['vertical flip'] = False
+             prefs['horizontal flip'] = False
+ 
++        self.actiongroup.get_action('menu_autorotate_width').set_sensitive(False)
++        self.actiongroup.get_action('menu_autorotate_height').set_sensitive(False)
++
+         self.add(table)
+         table.show()
+         self._main_layout.show()
+@@ -305,15 +308,9 @@
+             right_unscaled_x = right_pixbuf.get_width()
+             right_unscaled_y = right_pixbuf.get_height()
+ 
+-            left_rotation = prefs['rotation']
+-            right_rotation = prefs['rotation']
++            left_rotation = self._get_pixbuf_rotation(left_pixbuf, True)
++            right_rotation = self._get_pixbuf_rotation(right_pixbuf, True)
+ 
+-            if prefs['auto rotate from exif']:
+-                left_rotation += image_tools.get_implied_rotation(left_pixbuf)
+-                left_rotation = left_rotation % 360
+-                right_rotation += image_tools.get_implied_rotation(right_pixbuf)
+-                right_rotation = right_rotation % 360
+-
+             if left_rotation in (90, 270):
+                 total_width = left_unscaled_y
+                 total_height = left_unscaled_x
+@@ -385,11 +382,7 @@
+             pixbuf = self.imagehandler.get_pixbufs(single=True)[ 0 ]
+             width, height = pixbuf.get_width(), pixbuf.get_height()
+ 
+-            rotation = prefs['rotation']
+-            if prefs['auto rotate from exif']:
+-                rotation += image_tools.get_implied_rotation(pixbuf)
+-                rotation = rotation % 360
+-
++            rotation = self._get_pixbuf_rotation(pixbuf)
+             if rotation in (90, 270):
+                 width, height = height, width
+ 
+@@ -502,6 +495,37 @@
+         self.statusbar.update()
+         self.update_title()
+ 
++    def _get_pixbuf_rotation(self, pixbuf, no_autorotation=False):
++        """ Determines if a pixbuf must be rotated before being displayed.
++        Returns the degree of rotation (0, 90, 180, 270). """
++        
++        width, height = pixbuf.get_width(), pixbuf.get_height()
++        rotation = prefs['rotation']
++        if prefs['auto rotate from exif']:
++            rotation += image_tools.get_implied_rotation(pixbuf)
++            rotation = rotation % 360
++
++        if (height > width and
++            not no_autorotation and
++            prefs['auto rotate depending on size'] in
++                (constants.AUTOROTATE_HEIGHT_90, constants.AUTOROTATE_HEIGHT_270)):
++
++            if prefs['auto rotate depending on size'] == constants.AUTOROTATE_HEIGHT_90:
++                rotation = 90
++            else:
++                rotation = 270
++        elif (width > height and
++              not no_autorotation and
++              prefs['auto rotate depending on size'] in
++                (constants.AUTOROTATE_WIDTH_90, constants.AUTOROTATE_WIDTH_270)):
++
++            if prefs['auto rotate depending on size'] == constants.AUTOROTATE_WIDTH_90:
++                rotation = 90
++            else:
++                rotation = 270
++
++        return rotation
++
+     def _page_available(self, page):
+         """ Called whenever a new page is ready for displaying. """
+         # Refresh display when currently opened page becomes available.
+@@ -623,6 +647,14 @@
+         fitmode.set_scale_up(prefs['stretch'])
+         self.zoom.set_fit_mode(fitmode)
+ 
++    def change_autorotation(self, radioaction=None, *args):
++        """ Switches between automatic rotation modes, depending on which
++        radiobutton is currently activated. """
++        if radioaction:
++            prefs['auto rotate depending on size'] = radioaction.get_current_value()
++
++        self.draw_image()
++
+     def change_stretch(self, toggleaction, *args):
+         """ Toggles stretching small images. """
+         prefs['stretch'] = toggleaction.get_active()
