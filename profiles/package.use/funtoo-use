@@ -1,3 +1,6 @@
+# FL-562 set webkit USe flag turned on for app-misc/recoll as it required for successfull package build
+app-misc/recoll webkit
+
 # FL-548 alpine need c-client built with chappa use flag, fixing it for painless install
 net-libs/c-client chappa
 
