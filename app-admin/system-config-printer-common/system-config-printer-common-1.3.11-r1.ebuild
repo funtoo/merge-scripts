@@ -1,4 +1,6 @@
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/app-admin/system-config-printer-common/system-config-printer-common-1.3.11-r1.ebuild,v 1.6 2012/12/02 22:56:02 ssuominen Exp $
 
 EAPI=4
 
@@ -30,7 +32,7 @@ COMMON_DEPEND="
 	dev-python/pycurl
 	>=dev-python/pygobject-2.21.5:2
 	net-print/cups[dbus]
-	>=virtual/udev-172
+	>=virtual/udev-171
 	virtual/libusb:1
 "
 DEPEND="${COMMON_DEPEND}
@@ -52,7 +54,7 @@ pkg_setup() {
 
 src_prepare() {
 	epatch \
-		"${FILESDIR}"/${PN}-1.3.12-split.patch
+		"${FILESDIR}"/${PN}-1.3.9-split.patch
 	eautoreconf
 }
 
