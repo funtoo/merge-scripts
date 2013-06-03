@@ -10,7 +10,7 @@ HOMEPAGE="http://wiki.zenoss.org"
 RESTRICT="mirror"
 GITHUB_REPO="VirtualEnvBuild"
 GITHUB_USER="zenoss"
-GITHUB_TAG="1.2"
+GITHUB_TAG="1.2.10"
 ZENOSS_A="zenoss-dev-20130125.tar.xz"
 ZENOSS_PIP_A="zenoss-pip-distfiles-20130125.tar"
 SRC_URI="http://www.github.com/${GITHUB_USER}/${GITHUB_REPO}/tarball/${GITHUB_TAG} -> zenoss-build-${GITHUB_TAG}.tar.gz http://www.funtoo.org/distfiles/zenoss/$ZENOSS_A http://www.funtoo.org/distfiles/zenoss/$ZENOSS_PIP_A"
@@ -33,7 +33,7 @@ COMMON_DEPEND="
 	>=net-misc/rabbitmq-server-2.8.7
 	dev-libs/libxslt[python]"
 DEPEND="${COMMON_DEPEND} app-arch/unzip"
-RDEPEND="${COMMON_DEPEND}"
+RDEPEND="${COMMON_DEPEND} net-misc/memcached"
 
 pkg_setup() {
 	enewgroup zenoss
