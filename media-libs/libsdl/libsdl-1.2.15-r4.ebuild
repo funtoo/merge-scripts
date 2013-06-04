@@ -1,7 +1,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=5
-inherit autotools base flag-o-matic multilib toolchain-funcs eutils
+inherit autotools flag-o-matic multilib toolchain-funcs eutils
 
 DESCRIPTION="Simple Direct Media Layer"
 HOMEPAGE="http://www.libsdl.org/"
@@ -50,13 +50,6 @@ DEPEND="${RDEPEND}
 	x86? ( || ( >=dev-lang/yasm-0.6.0 >=dev-lang/nasm-0.98.39-r3 ) )"
 
 S=${WORKDIR}/SDL-${PV}
-PATCHES=(
-		"${FILESDIR}"/${P}-sdl-config.patch
-		"${FILESDIR}"/${P}-resizing.patch
-		"${FILESDIR}"/${P}-joystick.patch
-		"${FILESDIR}"/${P}-gamma.patch
-		"${FILESDIR}"/${P}-const-xdata32.patch
-)
 
 pkg_setup() {
 	if use custom-cflags ; then
@@ -68,8 +61,13 @@ pkg_setup() {
 }
 
 src_prepare() {
-	base_src_prepare
-	AT_M4DIR="/usr/share/aclocal acinclude" eautoreconf
+		epatch \
+		"${FILESDIR}"/${P}-sdl-config.patch \
+		"${FILESDIR}"/${P}-resizing.patch \
+		"${FILESDIR}"/${P}-joystick.patch \
+		"${FILESDIR}"/${P}-gamma.patch \
+		"${FILESDIR}"/${P}-const-xdata32.patch
+		AT_M4DIR="/usr/share/aclocal acinclude" eautoreconf
 }
 
 src_configure() {
