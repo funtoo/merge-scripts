@@ -1,1 +1,1 @@
-PYTHON_ABIS="3.2"
+USE="-python_abis_2.7"
