@@ -1,5 +1,1 @@
 ACCEPT_KEYWORDS="${ARCH}"
-
-# Python support:
-USE_EXPAND="PYTHON_ABIS"
-PYTHON_ABIS="2.7 3.2"

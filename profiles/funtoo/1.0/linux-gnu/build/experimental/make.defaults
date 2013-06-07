@@ -2,10 +2,6 @@
 
 ACCEPT_KEYWORDS="~${ARCH} ${ARCH}"
 
-# Python support:
-USE_EXPAND="PYTHON_ABIS"
-PYTHON_ABIS="2.7 3.2"
-
 # Use experimental tree
 SYNC="git://github.com/funtoo/experimental-mini-2011.git"
 
