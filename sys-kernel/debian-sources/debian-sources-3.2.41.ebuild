@@ -13,7 +13,7 @@ PATCH_ARCHIVE="linux_${PV}${EXTRAVERSION}+deb7u2.debian.tar.xz"
 RESTRICT="binchecks strip mirror"
 # based on : http://packages.ubuntu.com/maverick/linux-image-2.6.35-22-server
 LICENSE="GPL-2"
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="binary rt"
 DEPEND="binary? ( >=sys-kernel/genkernel-3.4.40-r2 )"
 RDEPEND="binary? ( || ( >=sys-fs/udev-160 >=virtual/udev-171 ) )"
