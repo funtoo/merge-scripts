@@ -1,8 +1,9 @@
 # Distributed under the terms of the GNU General Public License v2
 
-# Require EAPI 2 since we now require at least python-2.6 (for python 3
-# syntax support) which also requires EAPI 2.
-EAPI=3
+EAPI="4-python"
+PYTHON_MULTIPLE_ABIS="1"
+PYTHON_RESTRICTED_ABIS="2.5 *-jython 2.7-pypy-1.9"
+
 inherit eutils python
 
 DESCRIPTION="Portage is the package management and distribution system for Gentoo"
@@ -10,26 +11,28 @@ HOMEPAGE="http://www.gentoo.org/proj/en/portage/index.xml"
 LICENSE="GPL-2"
 KEYWORDS="*"
 SLOT="0"
-IUSE="build doc epydoc +ipc linguas_pl pypy1_9 python2 python3 selinux xattr"
+IUSE="build doc epydoc +ipc linguas_pl linguas_ru pypy2_0 python2 python3 selinux xattr"
 GITHUB_REPO="portage-funtoo"
 GITHUB_USER="funtoo"
-GITHUB_TAG="funtoo-${PV}-r2"
+GITHUB_TAG="funtoo-${PVR}"
 RESTRICT="mirror"
 
 # Import of the io module in python-2.6 raises ImportError for the
 # thread module if threading is disabled.
 python_dep_ssl="python3? ( =dev-lang/python-3*[ssl] )
-	!pypy1_9? ( !python2? ( !python3? (
+	!pypy2_0? ( !python2? ( !python3? (
 		|| ( >=dev-lang/python-2.7[ssl] dev-lang/python:2.6[threads,ssl] )
 	) ) )
-	pypy1_9? ( !python2? ( !python3? ( dev-python/pypy:1.9[bzip2,ssl] ) ) )
+	pypy2_0? ( !python2? ( !python3? ( dev-python/pypy:2.0[bzip2,ssl] ) ) )
 	python2? ( !python3? ( || ( dev-lang/python:2.7[ssl] dev-lang/python:2.6[ssl,threads] ) ) )"
 python_dep="${python_dep_ssl//\[ssl\]}"
 python_dep="${python_dep//,ssl}"
 python_dep="${python_dep//ssl,}"
 
 # The pysqlite blocker is for bug #282760.
+# make-3.82 is for bug #455858
 DEPEND="${python_dep}
+	>=sys-devel/make-3.82
 	>=sys-apps/sed-4.0.5 sys-devel/patch
 	doc? ( app-text/xmlto ~app-text/docbook-xml-dtd-4.4 )
 	epydoc? ( >=dev-python/epydoc-2.0 !<=dev-python/pysqlite-2.4.1 )"
@@ -39,9 +42,10 @@ DEPEND="${python_dep}
 # to python-3.3 / pyxattr. Also, xattr support is only tested with Linux, so
 # for now, don't pull in xattr deps for other kernels.
 # For whirlpool hash, require python[ssl] or python-mhash (bug #425046).
+# For compgen, require bash[readline] (bug #445576).
 RDEPEND="${python_dep}
 	!build? ( >=sys-apps/sed-4.0.5
-		>=app-shells/bash-3.2_p17
+		|| ( >=app-shells/bash-4.2_p37[readline] ( <app-shells/bash-4.2_p37 >=app-shells/bash-3.2_p17 ) )
 		>=app-admin/eselect-1.2
 		|| ( ${python_dep_ssl} dev-python/python-mhash )
 	)
@@ -49,7 +53,8 @@ RDEPEND="${python_dep}
 	elibc_glibc? ( >=sys-apps/sandbox-2.2 )
 	elibc_uclibc? ( >=sys-apps/sandbox-2.2 )
 	>=app-misc/pax-utils-0.1.17
-	xattr? ( kernel_linux? ( || ( >=dev-lang/python-3.3_pre20110902 dev-python/pyxattr ) ) )
+	xattr? ( kernel_linux? ( $(python_abi_depend dev-python/pyxattr) ) )
+	xattr? ( kernel_linux? ( $(python_abi_depend -e "3.[3-9]" dev-python/pyxattr) ) )
 	selinux? ( || ( >=sys-libs/libselinux-2.0.94[python] <sys-libs/libselinux-2.0.94 ) )
 	!<app-shells/bash-3.2_p17
 	!<app-admin/logrotate-3.8.0"
@@ -59,7 +64,7 @@ PDEPEND="
 		userland_GNU? ( >=sys-apps/coreutils-6.4 )
 	)"
 # coreutils-6.4 rdep is for date format in emerge-webrsync #164532
-# NOTE: FEATURES=install-sources requires debugedit and rsync
+# NOTE: FEATURES=installsources requires debugedit and rsync
 
 SRC_ARCHIVES="http://dev.gentoo.org/~zmedico/portage/archives"
 
@@ -83,30 +88,25 @@ compatible_python_is_selected() {
 	[[ $("${EPREFIX}/usr/bin/python" -c 'import sys ; sys.stdout.write(sys.hexversion >= 0x2060000 and "good" or "bad")') = good ]]
 }
 
-current_python_has_xattr() {
-	[[ $("${EPREFIX}/usr/bin/python" -c 'import sys ; sys.stdout.write(sys.hexversion >= 0x3030000 and "yes" or "no")') = yes ]] || \
-	"${EPREFIX}/usr/bin/python" -c 'import xattr' 2>/dev/null
-}
-
 pkg_setup() {
 	if use python2 && use python3 ; then
 		ewarn "Both python2 and python3 USE flags are enabled, but only one"
 		ewarn "can be in the shebangs. Using python3."
 	fi
-	if use pypy1_9 && use python3 ; then
-		ewarn "Both pypy1_9 and python3 USE flags are enabled, but only one"
+	if use pypy2_0 && use python3 ; then
+		ewarn "Both pypy2_0 and python3 USE flags are enabled, but only one"
 		ewarn "can be in the shebangs. Using python3."
 	fi
-	if use pypy1_9 && use python2 ; then
-		ewarn "Both pypy1_9 and python2 USE flags are enabled, but only one"
+	if use pypy2_0 && use python2 ; then
+		ewarn "Both pypy2_0 and python2 USE flags are enabled, but only one"
 		ewarn "can be in the shebangs. Using python2"
 	fi
-	if ! use pypy1_9 && ! use python2 && ! use python3 && \
+	if ! use pypy2_0 && ! use python2 && ! use python3 && \
 		! compatible_python_is_selected ; then
 		ewarn "Attempting to select a compatible default python interpreter"
 		local x success=0
-		for x in /usr/bin/python2.* ; do
-			x=${x#/usr/bin/python2.}
+		for x in "${EPREFIX}"/usr/bin/python2.* ; do
+			x=${x#${EPREFIX}/usr/bin/python2.}
 			if [[ $x -ge 6 ]] 2>/dev/null ; then
 				eselect python set python2.$x
 				if compatible_python_is_selected ; then
@@ -122,12 +122,15 @@ pkg_setup() {
 		fi
 	fi
 
+	python_pkg_setup
+
+	ACTIVE_PYTHON=python
 	if use python3; then
-		python_set_active_version 3
+		ACTIVE_PYTHON=python3
 	elif use python2; then
-		python_set_active_version 2
-	elif use pypy1_9; then
-		python_set_active_version 2.7-pypy-1.9
+		ACTIVE_PYTHON=python2
+	elif use pypy2_0; then
+		ACTIVE_PYTHON=pypy-c2.0
 	fi
 }
 
@@ -149,7 +152,7 @@ src_prepare() {
 		die "Failed to patch portage.VERSION"
 	sed -e "1s/VERSION/${PVR}/" -i doc/fragment/version || \
 		die "Failed to patch VERSION in doc/fragment/version"
-	sed -e "1s/VERSION/${PVR}/" -i man/* || \
+	sed -e "1s/VERSION/${PVR}/" -i $(find man -type f) || \
 		die "Failed to patch VERSION in man page headers"
 
 	if ! use ipc ; then
@@ -171,9 +174,9 @@ src_prepare() {
 	elif use python2; then
 		einfo "Converting shebangs for python2..."
 		python_convert_shebangs -r 2 .
-	elif use pypy1_9; then
-		einfo "Converting shebangs for pypy-c1.9..."
-		python_convert_shebangs -r 2.7-pypy-1.9 .
+	elif use pypy2_0; then
+		einfo "Converting shebangs for pypy-c2.0..."
+		python_convert_shebangs -r 2.7-pypy-2.0 .
 	fi
 
 	if [[ -n ${EPREFIX} ]] ; then
@@ -188,14 +191,13 @@ src_prepare() {
 			die "Failed to patch portage.const.EPREFIX"
 
 		einfo "Prefixing shebangs ..."
-		find . -type f -print0 | \
 		while read -r -d $'\0' ; do
 			local shebang=$(head -n1 "$REPLY")
 			if [[ ${shebang} == "#!"* && ! ${shebang} == "#!${EPREFIX}/"* ]] ; then
 				sed -i -e "1s:.*:#!${EPREFIX}${shebang:2}:" "$REPLY" || \
 					die "sed failed"
 			fi
-		done
+		done < <(find . -type f -print0)
 
 		einfo "Adjusting make.globals ..."
 		sed -e 's|^SYNC=.*|SYNC="rsync://rsync.prefix.freens.org/gentoo-portage-prefix"|' \
@@ -207,9 +209,6 @@ src_prepare() {
 		echo -e '\nFEATURES="${FEATURES} force-prefix"' >> cnf/make.globals \
 			|| die "failed to append to make.globals"
 	fi
-
-	echo -e '\nFEATURES="${FEATURES} preserve-libs"' >> cnf/make.globals \
-		|| die "failed to append to make.globals"
 
 	cd "${S}/cnf" || die
 	if [ -f "make.conf.${ARCH}".diff ]; then
@@ -237,6 +236,7 @@ src_compile() {
 src_test() {
 	# make files executable, in case they were created by patch
 	find bin -type f | xargs chmod +x
+	EPYTHON="${ACTIVE_PYTHON}" \
 	emake test || die
 }
 
@@ -255,12 +255,37 @@ src_install() {
 		doman -i18n=pl_PL.UTF-8 "${S_PL}"/man/pl_PL.UTF-8/*.[0-9] || die
 	fi
 
-	# Set PYTHONPATH for portage API consumers. This way we don't have
-	# to rely on patched python having the correct path, since it has
-	# been known to incorrectly add /usr/libx32/portage/pym to sys.path.
-	echo "PYTHONPATH=\"${EPREFIX}/usr/lib/portage/pym\"" > \
-		"${T}/05portage" || die
-	doenvd "${T}/05portage" || die
+	create_symlinks() {
+		local files mod_dir dest_mod_dir python relative_path x
+		if use build && [[ ${ROOT} == / &&
+			! -x $(PYTHON -a) ]] ; then
+			# Tolerate --nodeps at beginning of stage1 for catalyst
+			ewarn "skipping python_abis_${PYTHON_ABI}, interpreter not found"
+			continue
+		fi
+		while read -r mod_dir ; do
+			cd "${ED}/usr/lib/portage/pym/${mod_dir}" || die
+			files=$(echo *.py)
+			if [ -z "${files}" ] || [ "${files}" = "*.py" ]; then
+				# __pycache__ directories contain no py files
+				continue
+			fi
+			dest_mod_dir=$(python_get_sitedir)/${mod_dir}
+			dodir "${dest_mod_dir}" || die
+			relative_path=../../../lib/portage/pym/${mod_dir}
+			x=/${mod_dir}
+			while [ -n "${x}" ] ; do
+				relative_path=../${relative_path}
+				x=${x%/*}
+			done
+			for x in ${files} ; do
+				dosym "${relative_path}/${x}" \
+					"${dest_mod_dir}/${x}" || die
+			done
+		done < <(cd "${ED}"/usr/lib/portage/pym || die ; find * -type d ! -path "portage/tests*")
+		cd "${S}" || die
+	}
+	python_execute_function -q create_symlinks
 
 	exeinto /usr/lib/portage/bin
 	doexe "${FILESDIR}/pygrade.py"
@@ -269,26 +294,20 @@ src_install() {
 pkg_preinst() {
 	if [[ $ROOT == / ]] ; then
 		# Run some minimal tests as a sanity check.
-		local test_runner=$(find "$ED" -name runTests)
+		local test_runner=$(find "${ED}" -name runTests)
 		if [[ -n $test_runner && -x $test_runner ]] ; then
 			einfo "Running preinst sanity tests..."
 			"$test_runner" || die "preinst sanity tests failed"
 		fi
 	fi
 
-	if use xattr && ! current_python_has_xattr ; then
-		ewarn "For optimal performance in xattr handling, install"
-		ewarn "dev-python/pyxattr, or install >=dev-lang/python-3.3 and"
-		ewarn "enable USE=python3 for $CATEGORY/$PN."
-	fi
-
-	if ! use build && ! has_version dev-python/pycrypto && \
-		! has_version '>=dev-lang/python-2.6[ssl]' ; then
-		ewarn "If you are an ebuild developer and you plan to commit ebuilds"
-		ewarn "with this system then please install dev-python/pycrypto or"
-		ewarn "enable the ssl USE flag for >=dev-lang/python-2.6 in order"
-		ewarn "to enable RMD160 hash support."
-		ewarn "See bug #198398 for more information."
+	# elog dir must exist to avoid logrotate error for bug #415911.
+	# This code runs in preinst in order to bypass the mapping of
+	# portage:portage to root:root which happens after src_install.
+	keepdir /var/log/portage/elog
+	# This is allowed to fail if the user/group are invalid for prefix users.
+	if chown portage:portage "${ED}"var/log/portage{,/elog} 2>/dev/null ; then
+		chmod g+s,ug+rwx "${ED}"var/log/portage{,/elog}
 	fi
 
 	has_version "<=${CATEGORY}/${PN}-2.2_pre5" \
@@ -297,15 +316,21 @@ pkg_preinst() {
 	# If portage-2.1.6 is installed and the preserved_libs_registry exists,
 	# assume that the NEEDED.ELF.2 files have already been generated.
 	has_version "<=${CATEGORY}/${PN}-2.2_pre7" && \
-		! ( [ -e "${EROOT}"var/lib/portage/preserved_libs_registry ] && \
-		has_version ">=${CATEGORY}/${PN}-2.1.6_rc" ) \
+		! { [ -e "${EROOT}"var/lib/portage/preserved_libs_registry ] && \
+		has_version ">=${CATEGORY}/${PN}-2.1.6_rc" ; } \
 		&& NEEDED_REBUILD_UPGRADE=true || NEEDED_REBUILD_UPGRADE=false
 }
 
 pkg_postinst() {
-	# Compile all source files recursively. Any orphans
-	# will be identified and removed in postrm.
-	python_mod_optimize /usr/lib/portage/pym
+	python_mod_optimize _emerge portage repoman
+	bytecompile_main_dir() {
+		local EPYTHON
+		"${ACTIVE_PYTHON}" -m compileall -f -q "${EROOT}usr/lib/portage/pym"
+		if [[ ${ACTIVE_PYTHON} != pypy* ]]; then
+			"${ACTIVE_PYTHON}" -O -m compileall -f -q "${EROOT}/usr/lib/portage/pym"
+		fi
+	}
+	bytecompile_main_dir
 
 	"${EROOT}usr/lib/portage/bin/pygrade.py"
 
@@ -317,22 +342,18 @@ pkg_postinst() {
 		sed -i -e '/^@/d' world
 	fi
 
-	if $NEEDED_REBUILD_UPGRADE ; then
+	if ${NEEDED_REBUILD_UPGRADE} ; then
 		einfo "rebuilding NEEDED.ELF.2 files"
+		local cpv filename line newline
 		for cpv in "${EROOT}/var/db/pkg"/*/*; do
-			if [ -f "${cpv}/NEEDED" ]; then
-				rm -f "${cpv}/NEEDED.ELF.2"
-				while read line; do
-					filename=${line% *}
-					needed=${line#* }
-					needed=${needed//+/++}
-					needed=${needed//#/##}
-					needed=${needed//%/%%}
-					newline=$(scanelf -BF "%a;%F;%S;%r;${needed}" $filename)
-					newline=${newline//  -  }
-					echo "${newline:3}" >> "${cpv}/NEEDED.ELF.2"
-				done < "${cpv}/NEEDED"
-			fi
+			[[ -f "${cpv}/NEEDED" && ! -f "${cpv}/NEEDED.ELF.2" ]] || continue
+			while read -r line; do
+				filename=${line% *}
+				newline=$(scanelf -BF "%a;%F;%S;%r;%n" "${ROOT%/}${filename}")
+				newline=${newline//  -  }
+				[[ ${#ROOT} -gt 1 ]] && newline=${newline/${ROOT%/}}
+				echo "${newline:3}" >> "${cpv}/NEEDED.ELF.2"
+			done < "${cpv}/NEEDED"
 		done
 	fi
 	# make.conf magick. We rather prefer to have make.conf in one place and set the symlink to
@@ -351,5 +372,5 @@ pkg_postinst() {
 }
 
 pkg_postrm() {
-	python_mod_cleanup /usr/lib/portage/pym
+	python_mod_cleanup --allow-evaluated-non-sitedir-paths '/usr/lib/portage/pym$()' _emerge portage repoman
 }

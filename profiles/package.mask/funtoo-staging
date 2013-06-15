@@ -1,5 +1,10 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
+# Oleg Vinichenko (15 Jun 2013)
+# update portage ebuild, now utlizing progress overlay format,
+# thx Arferver for patch. This should fix FL-523 and FL-542
+=sys-apps/portage-2.3.6-r1
+
 # Oleg Vinichenko (8 Jun 2013)
 # rsyncable patch to resolve vzdump issues, required gzip fork, masked for testing
 =app-arch/gzip-1.5-r1
