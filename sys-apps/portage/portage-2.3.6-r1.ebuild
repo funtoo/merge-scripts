@@ -53,7 +53,6 @@ RDEPEND="${python_dep}
 	elibc_glibc? ( >=sys-apps/sandbox-2.2 )
 	elibc_uclibc? ( >=sys-apps/sandbox-2.2 )
 	>=app-misc/pax-utils-0.1.17
-	xattr? ( kernel_linux? ( $(python_abi_depend dev-python/pyxattr) ) )
 	xattr? ( kernel_linux? ( $(python_abi_depend -e "3.[3-9]" dev-python/pyxattr) ) )
 	selinux? ( || ( >=sys-libs/libselinux-2.0.94[python] <sys-libs/libselinux-2.0.94 ) )
 	!<app-shells/bash-3.2_p17
