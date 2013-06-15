@@ -321,15 +321,8 @@ pkg_preinst() {
 }
 
 pkg_postinst() {
+	PYTHON_ABIS="$(EPYTHON="${ACTIVE_PYTHON}" "${EPREFIX}/usr/bin/python" -c "${_PYTHON_ABI_EXTRACTION_COMMAND}")" python_mod_optimize --allow-evaluated-non-sitedir-paths '/usr/lib/portage/pym$()'
 	python_mod_optimize _emerge portage repoman
-	bytecompile_main_dir() {
-		local EPYTHON
-		"${ACTIVE_PYTHON}" -m compileall -f -q "${EROOT}usr/lib/portage/pym"
-		if [[ ${ACTIVE_PYTHON} != pypy* ]]; then
-			"${ACTIVE_PYTHON}" -O -m compileall -f -q "${EROOT}/usr/lib/portage/pym"
-		fi
-	}
-	bytecompile_main_dir
 
 	"${EROOT}usr/lib/portage/bin/pygrade.py"
 
