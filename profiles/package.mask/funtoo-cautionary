@@ -1,3 +1,7 @@
+#  Oleg Vinichenko (16 Jun 2013)
+#  mask broken hexchat ebuild FL-584
+>=net-irc/hexchat-2.9.5_p20130525 
+
 # Oleg Vinichenk (16 Jun 2013)
 # cautionary mask latest icu-51.2, breaks expected
 >=dev-libs/icu-51.2-r1000
