@@ -1,3 +1,7 @@
+# Oleg Vinichenk (16 Jun 2013)
+# cautionary mask latest icu-51.2, breaks expected
+>=dev-libs/icu-51.2-r1000
+
 # Oleg Vinichenko (12 Jun 2013)
 # mask openmpi-1.6.4 due to sandbox issues, FL-578, https://bugs.gentoo.org/show_bug.cgi?id=462602
 =sys-cluster/openmpi-1.6.4
