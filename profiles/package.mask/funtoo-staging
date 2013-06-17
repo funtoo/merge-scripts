@@ -5,10 +5,6 @@
 # thx Arferver for patch. This should fix FL-523 and FL-542
 =sys-apps/portage-2.3.6-r1
 
-# Oleg Vinichenko (8 Jun 2013)
-# rsyncable patch to resolve vzdump issues, required gzip fork, masked for testing
-=app-arch/gzip-1.5-r1
-
 # Daniel Robbins (10 Apr 2013)
 # FL-487: staging zenoss, as it is a work in progress.
 sys-monitor/zenoss
