@@ -1,6 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-office/libreoffice/libreoffice-4.0.3.3.ebuild,v 1.2 2013/05/11 11:23:23 scarabeus Exp $
 
 EAPI=5
 
