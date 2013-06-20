@@ -1,3 +1,6 @@
+# FL-408 blender requires dev-cpp/glog built with gflags USE flag
+dev-cpp/glog gflags
+ 
 # FL-562 set webkit USe flag turned on for app-misc/recoll as it required for successfull package build
 app-misc/recoll webkit
 
