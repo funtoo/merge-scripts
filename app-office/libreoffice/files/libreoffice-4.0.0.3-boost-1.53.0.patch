@@ -1,0 +1,146 @@
+--- libreoffice-4.0.0.3-orig/comphelper/inc/comphelper/scoped_disposing_ptr.hxx	2013-01-31 21:54:53.000000000 +1100
++++ libreoffice-4.0.0.3/comphelper/inc/comphelper/scoped_disposing_ptr.hxx	2013-02-16 00:09:02.325443592 +1100
+@@ -78,7 +78,7 @@
+ 
+     operator bool () const
+     {
+-        return m_aItem;
++        return static_cast< bool >(m_aItem);
+     }
+ 
+     virtual ~scoped_disposing_ptr()
+--- libreoffice-4.0.0.3-orig/slideshow/source/engine/animatedsprite.cxx	2013-01-31 21:54:53.000000000 +1100
++++ libreoffice-4.0.0.3/slideshow/source/engine/animatedsprite.cxx	2013-02-16 00:09:02.356444129 +1100
+@@ -151,7 +151,7 @@
+                 }
+             }
+ 
+-            return mpSprite;
++            return static_cast< bool >(mpSprite);
+         }
+ 
+         void AnimatedSprite::setPixelOffset( const ::basegfx::B2DSize& rPixelOffset )
+--- libreoffice-4.0.0.3-orig/slideshow/source/inc/shapeattributelayer.hxx	2013-01-31 21:54:53.000000000 +1100
++++ libreoffice-4.0.0.3/slideshow/source/inc/shapeattributelayer.hxx	2013-02-16 00:09:02.372444407 +1100
+@@ -467,7 +467,7 @@
+             // ShapeAttributeLayer(const ShapeAttributeLayer&);
+             // ShapeAttributeLayer& operator=( const ShapeAttributeLayer& );
+ 
+-            bool haveChild() const { return mpChild; }
++            bool haveChild() const { return static_cast< bool >(mpChild); }
+             void updateStateIds();
+ 
+             template< typename T > T calcValue( const T&                   rCurrValue,
+--- libreoffice-4.0.0.3-orig/slideshow/source/inc/shapeattributelayerholder.hxx	2013-01-31 21:54:53.000000000 +1100
++++ libreoffice-4.0.0.3/slideshow/source/inc/shapeattributelayerholder.hxx	2013-02-16 00:09:02.374444442 +1100
+@@ -83,7 +83,7 @@
+                 if( mpShape )
+                     mpAttributeLayer = mpShape->createAttributeLayer();
+ 
+-                return mpAttributeLayer;
++                return static_cast< bool >(mpAttributeLayer);
+             }
+ 
+             ShapeAttributeLayerSharedPtr get() const
+--- libreoffice-4.0.0.3-orig/slideshow/source/engine/shapesubset.cxx	2013-01-31 21:54:53.000000000 +1100
++++ libreoffice-4.0.0.3/slideshow/source/engine/shapesubset.cxx	2013-02-16 00:09:02.366444303 +1100
+@@ -104,7 +104,7 @@
+                     maTreeNode );
+             }
+ 
+-            return mpSubsetShape;
++            return static_cast< bool >(mpSubsetShape);
+         }
+ 
+         void ShapeSubset::disableSubsetShape()
+--- libreoffice-4.0.0.3-orig/slideshow/source/engine/shapes/viewshape.cxx	2013-01-31 21:54:53.000000000 +1100
++++ libreoffice-4.0.0.3/slideshow/source/engine/shapes/viewshape.cxx	2013-02-16 00:09:02.363444251 +1100
+@@ -178,7 +178,7 @@
+                 }
+             }
+ 
+-            return io_rCacheEntry.mpRenderer;
++            return static_cast< bool >(io_rCacheEntry.mpRenderer);
+         }
+ 
+         bool ViewShape::draw( const ::cppcanvas::CanvasSharedPtr&   rDestinationCanvas,
+--- libreoffice-4.0.0.3-orig/slideshow/source/engine/slide/slideanimations.cxx	2013-01-31 21:54:53.000000000 +1100
++++ libreoffice-4.0.0.3/slideshow/source/engine/slide/slideanimations.cxx	2013-02-16 00:09:02.369444355 +1100
+@@ -74,7 +74,7 @@
+ 
+             SHOW_NODE_TREE( mpRootNode );
+ 
+-            return mpRootNode;
++            return static_cast< bool >(mpRootNode);
+         }
+ 
+         bool SlideAnimations::isAnimated() const
+--- libreoffice-4.0.0.3-orig/sw/source/core/inc/bookmrk.hxx	2013-01-31 21:54:53.000000000 +1100
++++ libreoffice-4.0.0.3/sw/source/core/inc/bookmrk.hxx	2013-02-16 00:09:02.377444493 +1100
+@@ -75,7 +75,7 @@
+ 
+             virtual bool IsCoveringPosition(const SwPosition& rPos) const;
+             virtual bool IsExpanded() const
+-                { return m_pPos2; }
++                { return static_cast< bool >(m_pPos2); }
+ 
+             virtual void SetName(const ::rtl::OUString& rName)
+                 { m_aName = rName; }
+--- libreoffice-4.0.0.3-orig/sc/source/filter/excel/xechart.cxx	2013-01-31 21:54:53.000000000 +1100
++++ libreoffice-4.0.0.3/sc/source/filter/excel/xechart.cxx	2013-02-16 00:09:02.336443783 +1100
+@@ -682,7 +682,7 @@
+ 
+ bool XclExpChEscherFormat::IsValid() const
+ {
+-    return maData.mxEscherSet;
++    return static_cast< bool >(maData.mxEscherSet);
+ }
+ 
+ void XclExpChEscherFormat::Save( XclExpStream& rStrm )
+--- libreoffice-4.0.0.3-orig/sc/source/filter/excel/xehelper.cxx	2013-01-31 21:54:53.000000000 +1100
++++ libreoffice-4.0.0.3/sc/source/filter/excel/xehelper.cxx	2013-02-16 00:09:02.341443869 +1100
+@@ -303,7 +303,7 @@
+     if( GetBiff() == EXC_BIFF8 )    // no HLINK records in BIFF2-BIFF7
+     {
+         // there was/is already a HLINK record
+-        mbMultipleUrls = mxLinkRec;
++        mbMultipleUrls = static_cast< bool >(mxLinkRec);
+ 
+         mxLinkRec.reset( new XclExpHyperlink( GetRoot(), rUrlField, maScPos ) );
+ 
+--- libreoffice-4.0.0.3-orig/sc/source/filter/excel/xichart.cxx	2013-01-31 21:54:53.000000000 +1100
++++ libreoffice-4.0.0.3/sc/source/filter/excel/xichart.cxx	2013-02-16 00:09:02.348443991 +1100
+@@ -2688,7 +2688,7 @@
+     maType.Finalize( bStockChart );
+ 
+     // extended type info
+-    maTypeInfo.Set( maType.GetTypeInfo(), mxChart3d, false );
++    maTypeInfo.Set( maType.GetTypeInfo(), static_cast< bool >(mxChart3d), false );
+ 
+     // reverse series order for some unstacked 2D chart types
+     if( maTypeInfo.mbReverseSeries && !Is3dChart() && !maType.IsStacked() && !maType.IsPercent() )
+--- libreoffice-4.0.0.3-orig/sc/source/filter/inc/xichart.hxx	2013-01-31 21:54:53.000000000 +1100
++++ libreoffice-4.0.0.3/sc/source/filter/inc/xichart.hxx	2013-02-16 00:09:02.353444077 +1100
+@@ -1230,9 +1230,9 @@
+     /** Returns true, if the axis contains caption labels. */
+     inline bool         HasLabels() const { return !mxTick || mxTick->HasLabels(); }
+     /** Returns true, if the axis shows its major grid lines. */
+-    inline bool         HasMajorGrid() const { return mxMajorGrid; }
++    inline bool         HasMajorGrid() const { return static_cast< bool >(mxMajorGrid); }
+     /** Returns true, if the axis shows its minor grid lines. */
+-    inline bool         HasMinorGrid() const { return mxMinorGrid; }
++    inline bool         HasMinorGrid() const { return static_cast< bool >(mxMinorGrid); }
+ 
+     /** Creates an API axis object. */
+     XAxisRef            CreateAxis( const XclImpChTypeGroup& rTypeGroup, const XclImpChAxis* pCrossingAxis ) const;
+--- libreoffice-4.0.0.3-orig/vcl/source/gdi/svgdata.cxx	2013-01-31 21:54:53.000000000 +1100
++++ libreoffice-4.0.0.3/vcl/source/gdi/svgdata.cxx	2013-02-16 00:07:00.382345866 +1100
+@@ -166,7 +166,7 @@
+ 
+ //////////////////////////////////////////////////////////////////////////////
+ SvgData::SvgData(const OUString& rPath):
+-    maSvgDataArray(NULL),
++    maSvgDataArray(static_cast< unsigned char * >(NULL)),
+     mnSvgDataArrayLength(0),
+     maPath(rPath),
+     maRange(),
