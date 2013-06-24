@@ -1,6 +1,10 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
+# Ryan Harris
+# Testing mask, updated eselect to support pure64 profile
+>=app-admin/eselect-1.3.5
+
 # Daniel Robbins (10 Apr 2013)
 # FL-487: staging zenoss, as it is a work in progress.
 sys-monitor/zenoss
