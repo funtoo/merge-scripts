@@ -1,3 +1,7 @@
+#  Oleg Vinichenko ( 26 jun 2013)
+#  mask beta version of postgresql, FL-591
+>=dev-db/postgresql-base-9.3
+
 #  Oleg Vinichenko (16 Jun 2013)
 #  mask broken hexchat ebuild FL-584
 >=net-irc/hexchat-2.9.5_p20130525 
