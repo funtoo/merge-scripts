@@ -37,4 +37,5 @@ RDEPEND="|| (
 		>=sys-kernel/xen-sources-2.6
 		>=sys-kernel/zen-sources-2.6
 		>=sys-kernel/aufs-sources-2.6
+		>=sys-kernel/bliss-kernel-2.6
 	)"
