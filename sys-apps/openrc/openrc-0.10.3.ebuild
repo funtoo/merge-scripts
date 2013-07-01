@@ -12,7 +12,7 @@ RESTRICT="mirror"
 LICENSE="BSD-2"
 SLOT="0"
 KEYWORDS="*"
-IUSE="debug elibc_glibc ncurses +nonet pam selinux static-libs unicode kernel_linux kernel_FreeBSD"
+IUSE="debug elibc_glibc ncurses pam selinux static-libs unicode kernel_linux kernel_FreeBSD"
 
 RDEPEND="kernel_linux? ( >=sys-apps/sysvinit-2.86-r11 )
 	kernel_FreeBSD? ( virtual/init sys-process/fuser-bsd )
@@ -39,7 +39,7 @@ SRC_URI="
 make_args() {
 	unset LIBDIR #266688
 
-	MAKE_ARGS="${MAKE_ARGS} LIBNAME=$(get_libdir) LIBEXECDIR=/$(get_libdir)/rc"
+	MAKE_ARGS="${MAKE_ARGS} LIBNAME=$(get_libdir) LIBEXECDIR=/$(get_libdir)/rc MKNET=no"
 
 	local brand="Unknown"
 	if use kernel_linux ; then
@@ -55,9 +55,6 @@ make_args() {
 	export BRANDING="Funtoo ${brand}"
 	if ! use static-libs; then
 			MAKE_ARGS="${MAKE_ARGS} MKSTATICLIBS=no"
-	fi
-	if use nonet; then
-			MAKE_ARGS="${MAKE_ARGS} MKNET=no"
 	fi
 }
 
