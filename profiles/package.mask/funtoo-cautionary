@@ -1,3 +1,8 @@
+# Ryan Harris (30 Jun 2013)
+# Mask app-emulation/xen-tools-4.2.2-r1
+# depends on sys-app/texinfo-5
+=app-emulation/xen-tools-4.2.2-r1
+
 #  Oleg Vinichenko (27 Jun 2013)
 #  openrc, FL-34, removed udev dep, set MKNET=no
 #  for internal tests only
