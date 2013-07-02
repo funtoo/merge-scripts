@@ -81,7 +81,7 @@ src_prepare() {
 		local ver="git-${EGIT_VERSION:0:6}"
 		sed -i "/^GITVER[[:space:]]*=/s:=.*:=${ver}:" mk/git.mk || die
 	fi
-	epatch "${FILESDIR}/openrc-nodevfs.patch"
+	##epatch "${FILESDIR}/openrc-nodevfs.patch"
 }
 src_compile() {
 	make_args
