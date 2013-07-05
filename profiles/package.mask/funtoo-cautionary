@@ -1,3 +1,10 @@
+# Oleg Vinichenko (5 Jul 2013)
+# masking sys-kernel/bliss-* kernels as they need more testing
+sys-kernel/bliss-kernel
+sys-kernel/bliss-blacklist
+sys-kernel/bliss-headers
+sys-kernel/bliss-modules
+
 # Ryan Harris (30 Jun 2013)
 # Mask app-emulation/xen-tools-4.2.2-r1
 # depends on sys-app/texinfo-5
