@@ -1,0 +1,96 @@
+diff -Nuar apcupsd-3.14.10/examples/hid-ups.c apcupsd-3.14.10-fixed/examples/hid-ups.c
+--- apcupsd-3.14.10/examples/hid-ups.c	2007-07-17 22:54:25.000000000 +0000
++++ apcupsd-3.14.10-fixed/examples/hid-ups.c	2013-07-05 01:24:59.624237143 +0000
+@@ -223,7 +223,7 @@
+ #ifndef TESTING
+     char buf[256];
+     printf("[Log message \"%s\"]\n", msg);
+-    sprintf(buf, "/bin/echo %s | /bin/mail -s \"UPS System\" %s", msg, MADDR);
++    sprintf(buf, "/bin/echo %s | /bin/mail \"UPS System\" %s", msg, MADDR);
+     system(buf);
+ #else
+     printf("[Log message \"%s\"]\n", msg);
+diff -Nuar apcupsd-3.14.10/examples/offbattery.cpufreq apcupsd-3.14.10-fixed/examples/offbattery.cpufreq
+--- apcupsd-3.14.10/examples/offbattery.cpufreq	2005-09-18 05:25:28.000000000 +0000
++++ apcupsd-3.14.10-fixed/examples/offbattery.cpufreq	2013-07-05 01:21:45.420205861 +0000
+@@ -37,6 +37,6 @@
+    done
+    echo " "
+    /sbin/apcaccess status
+-) | $APCUPSD_MAIL -s "$MSG" $SYSADMIN
++) | $APCUPSD_MAIL "$MSG" $SYSADMIN
+ exit 0
+ 
+diff -Nuar apcupsd-3.14.10/examples/onbattery.cpufreq apcupsd-3.14.10-fixed/examples/onbattery.cpufreq
+--- apcupsd-3.14.10/examples/onbattery.cpufreq	2005-09-18 05:25:28.000000000 +0000
++++ apcupsd-3.14.10-fixed/examples/onbattery.cpufreq	2013-07-05 01:22:15.196428585 +0000
+@@ -50,6 +50,6 @@
+    done
+    echo " "
+    /sbin/apcaccess status
+-) | $APCUPSD_MAIL -s "$MSG" $SYSADMIN
++) | $APCUPSD_MAIL "$MSG" $SYSADMIN
+ exit 0
+ 
+diff -Nuar apcupsd-3.14.10/platforms/etc/changeme.in apcupsd-3.14.10-fixed/platforms/etc/changeme.in
+--- apcupsd-3.14.10/platforms/etc/changeme.in	2003-09-02 07:55:35.000000000 +0000
++++ apcupsd-3.14.10-fixed/platforms/etc/changeme.in	2013-07-05 01:22:41.513419107 +0000
+@@ -17,5 +17,5 @@
+    echo "$MSG"
+    echo " "
+    @sbindir@/apcaccess status
+-) | $APCUPSD_MAIL -s "$MSG" $SYSADMIN
++) | $APCUPSD_MAIL "$MSG" $SYSADMIN
+ exit 0
+diff -Nuar apcupsd-3.14.10/platforms/etc/commfailure.in apcupsd-3.14.10-fixed/platforms/etc/commfailure.in
+--- apcupsd-3.14.10/platforms/etc/commfailure.in	2005-08-30 18:06:02.000000000 +0000
++++ apcupsd-3.14.10-fixed/platforms/etc/commfailure.in	2013-07-05 01:23:05.255348086 +0000
+@@ -17,5 +17,5 @@
+    echo "$MSG"
+    echo " "
+    @sbindir@/apcaccess status
+-) | $APCUPSD_MAIL -s "$MSG" $SYSADMIN
++) | $APCUPSD_MAIL "$MSG" $SYSADMIN
+ exit 0
+diff -Nuar apcupsd-3.14.10/platforms/etc/commok.in apcupsd-3.14.10-fixed/platforms/etc/commok.in
+--- apcupsd-3.14.10/platforms/etc/commok.in	2005-08-30 18:06:02.000000000 +0000
++++ apcupsd-3.14.10-fixed/platforms/etc/commok.in	2013-07-05 01:23:23.958239863 +0000
+@@ -17,5 +17,5 @@
+    echo "$MSG"
+    echo " "
+    @sbindir@/apcaccess status
+-) | $APCUPSD_MAIL -s "$MSG" $SYSADMIN
++) | $APCUPSD_MAIL "$MSG" $SYSADMIN
+ exit 0
+diff -Nuar apcupsd-3.14.10/platforms/etc/offbattery.in apcupsd-3.14.10-fixed/platforms/etc/offbattery.in
+--- apcupsd-3.14.10/platforms/etc/offbattery.in	2005-06-07 22:44:58.000000000 +0000
++++ apcupsd-3.14.10-fixed/platforms/etc/offbattery.in	2013-07-05 01:23:41.349458577 +0000
+@@ -17,5 +17,5 @@
+    echo "$MSG"
+    echo " "
+    @sbindir@/apcaccess status
+-) | $APCUPSD_MAIL -s "$MSG" $SYSADMIN
++) | $APCUPSD_MAIL "$MSG" $SYSADMIN
+ exit 0
+diff -Nuar apcupsd-3.14.10/platforms/etc/onbattery.in apcupsd-3.14.10-fixed/platforms/etc/onbattery.in
+--- apcupsd-3.14.10/platforms/etc/onbattery.in	2003-09-02 07:55:35.000000000 +0000
++++ apcupsd-3.14.10-fixed/platforms/etc/onbattery.in	2013-07-05 01:23:59.152365488 +0000
+@@ -17,5 +17,5 @@
+    echo "$MSG"
+    echo " "
+    @sbindir@/apcaccess status
+-) | $APCUPSD_MAIL -s "$MSG" $SYSADMIN
++) | $APCUPSD_MAIL "$MSG" $SYSADMIN
+ exit 0
+diff -Nuar apcupsd-3.14.10/src/win32/email.c apcupsd-3.14.10-fixed/src/win32/email.c
+--- apcupsd-3.14.10/src/win32/email.c	2007-06-17 12:54:10.000000000 +0000
++++ apcupsd-3.14.10-fixed/src/win32/email.c	2013-07-05 01:25:50.292333727 +0000
+@@ -2,7 +2,7 @@
+  * Dumb program to send an email message
+  *
+  * Called:
+- *   email -s "Subject" address@somewhere.com -m "Body of text"
++ *   email "Subject" address@somewhere.com -m "Body of text"
+  *
+  *   Kern Sibbald, October MM 
+  */
