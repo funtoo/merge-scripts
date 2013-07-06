@@ -4,9 +4,11 @@ EAPI=5
 
 inherit eutils multilib linux-info linux-mod toolchain-funcs versionator
 SILLY_PV=${PV//[!0-9a-z]/-}
+[ "${PV/beta/}" == "${PV}" ] && SILLY_PV=${SILLY_PV}-linux
+DRIVERS_URI="http://www2.ati.com/drivers/linux/amd-driver-installer-catalyst-${SILLY_PV}-x86.x86_64.zip"
+[ "${PV/beta/}" != "${PV}" ] && DRIVERS_URI="${DRIVERS_URI/linux/beta}"
 DESCRIPTION="Ati precompiled drivers for Radeon Evergreen (HD5000 Series) and newer chipsets"
 HOMEPAGE="http://www.amd.com"
-DRIVERS_URI="http://www2.ati.com/drivers/linux/amd-driver-installer-catalyst-${SILLY_PV}-linux-x86.x86_64.zip"
 XVBA_SDK_URI="http://developer.amd.com/wordpress/media/2012/10/xvba-sdk-0.74-404001.tar.gz"
 SRC_URI="${DRIVERS_URI} ${XVBA_SDK_URI}"
 FOLDER_PREFIX="common/"
@@ -19,7 +21,7 @@ SLOT="1"
 RESTRICT="bindist test"
 
 RDEPEND="
-	<=x11-base/xorg-server-1.13.49[-minimal]
+	<=x11-base/xorg-server-1.14.49[-minimal]
 	>=app-admin/eselect-opengl-1.0.7
 	app-admin/eselect-opencl
 	sys-power/acpid
@@ -132,7 +134,7 @@ QA_DT_HASH="
 	usr/lib\(32\|64\)\?/OpenCL/vendors/amd/libamdocl\(32\|64\)\?.so
 	usr/lib\(32\|64\)\?/OpenCL/vendors/amd/libOpenCL.so.1
 "
-CONFIG_CHECK="~MTRR ~!DRM ACPI PCI_MSI !LOCKDEP COMPAT"
+CONFIG_CHECK="~MTRR ~!DRM ACPI PCI_MSI !LOCKDEP"
 ERROR_MTRR="CONFIG_MTRR required for direct rendering."
 ERROR_DRM="CONFIG_DRM must be disabled or compiled as a module for direct rendering."
 ERROR_LOCKDEP="CONFIG_LOCKDEP (lock tracking) exports the symbol lock_acquire\n
@@ -156,14 +158,9 @@ _check_kernel_config() {
 		eerror "CONFIG_BKL must be enabled for kernels 2.6.37-2.6.38."
 		die
 	fi
-}
 
-pkg_pretend() {
-	# workaround until bug 365543 is solved
-	if use modules; then
-		linux-info_pkg_setup
-		require_configured_kernel
-		_check_kernel_config
+	if use amd64 && ! linux_chkconfig_present COMPAT; then
+		die "CONFIG_COMPAT must be enabled for amd64 kernels."
 	fi
 }
 
@@ -244,23 +241,15 @@ src_prepare() {
 		|| die "Replacing 'finger' with 'who' failed."
 	# Adjust paths in the script from /usr/X11R6/bin/ to /opt/bin/ and
 	# add function to detect default state.
-	epatch "${FILESDIR}"/ati-powermode-opt-path-3.patch
+	epatch "${FILESDIR}/ati-powermode-opt-path-3.patch"
 
-	# see http://ati.cchtml.com/show_bug.cgi?id=495
-	#epatch "${FILESDIR}"/ati-drivers-old_rsp.patch
 	# first hunk applied upstream second (x32 related) was not
-	epatch "${FILESDIR}"/ati-drivers-x32_something_something.patch
-
-	# compile fix for linux-3.7
-	# https://bugs.gentoo.org/show_bug.cgi?id=438516
-	epatch "${FILESDIR}/ati-drivers-vm-reserverd.patch"
+	epatch "${FILESDIR}/ati-drivers-x32_something_something.patch"
 
 	# compile fix for AGP-less kernel, bug #435322
-	epatch "${FILESDIR}"/ati-drivers-12.9-KCL_AGP_FindCapsRegisters-stub.patch
-
-	# Use ACPI_DEVICE_HANDLE wrapper to make driver build on linux-3.8
-	# see https://bugs.gentoo.org/show_bug.cgi?id=448216
-	epatch "${FILESDIR}/ati-drivers-kernel-3.8-acpihandle.patch"
+	epatch "${FILESDIR}/ati-drivers-12.9-KCL_AGP_FindCapsRegisters-stub.patch"
+	epatch "${FILESDIR}/typesafe-kuid.diff"
+	epatch "${FILESDIR}/ati-drivers-13.6-linux-3.10-proc.diff"
 
 	cd "${MODULE_DIR}"
 
