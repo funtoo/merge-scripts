@@ -2,7 +2,7 @@
 
 EAPI=2
 
-inherit mount-boot
+inherit mount-boot check-reqs
 
 SLOT=$PVR
 CKV=2.6.32
@@ -90,6 +90,11 @@ pkg_setup() {
 	esac
 	defconfig_src="${DISTDIR}/config-${CKV}-${OVZ_KV}.${defconfig_src}"
 	unset ARCH; unset LDFLAGS #will interfere with Makefile if set
+
+	if use binary ; then
+	CHECKREQS_DISK_BUILD="15G"
+	fi
+	check-reqs_pkg_setup
 }
 
 src_prepare() {
