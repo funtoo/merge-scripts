@@ -122,6 +122,10 @@ src_install() {
 }
 
 pkg_postinst() {
+	if [[ ! -e /usr/bin/jython ]] ; then
+		cd /usr/bin && ln -s ${PN}${SLOT} jython
+	fi
+
 	if use readline; then
 		elog "To use readline you need to add the following to your registry"
 		elog

@@ -18,7 +18,8 @@ IUSE="readline source doc"
 CDEPEND="=dev-java/jakarta-oro-2.0*
 	readline? ( >=dev-java/libreadline-java-0.8.0 )"
 #	servlet? ( >=www-servers/tomcat-5.0 )
-RDEPEND=">=virtual/jre-1.4
+RDEPEND=">=app-admin/eselect-jython-20130709
+	>=virtual/jre-1.4
 	${CDEPEND}"
 DEPEND=">=virtual/jdk-1.4
 	source? ( app-arch/zip )
@@ -94,6 +95,10 @@ src_install() {
 }
 
 pkg_postinst() {
+	if [[ ! -e /usr/bin/jython ]] ; then
+		cd /usr/bin && ln -s ${PN}${SLOT} jython
+	fi
+
 	if use readline; then
 		elog "To use readline you need to add the following to your registry"
 		elog

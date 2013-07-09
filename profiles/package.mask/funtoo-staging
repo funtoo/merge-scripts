@@ -2,6 +2,11 @@
 # newest on top
 
 # Ryan Harris (09 Jul 2013)
+# FL-50 app-admin/eselect-jython added. 
+# Masked for testing
+app-admin/eselect-jython
+
+# Ryan Harris (09 Jul 2013)
 # Added slot support to jython-2.1 and 2.2 for FL-50
 # Masked for testing
 =dev-java/jython-2.1-r12
