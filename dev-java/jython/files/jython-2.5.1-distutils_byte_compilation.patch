@@ -1,0 +1,48 @@
+--- Lib/distutils/tests/test_build_py.py
++++ Lib/distutils/tests/test_build_py.py
+@@ -92,6 +92,25 @@
+             os.chdir(cwd)
+             sys.stdout = sys.__stdout__
+ 
++    def test_dont_write_bytecode(self):
++        # makes sure byte_compile is not used
++        pkg_dir, dist = self.create_dist()
++        cmd = build_py(dist)
++        cmd.compile = 1
++        cmd.optimize = 1
++
++        old_dont_write_bytecode = os.environ.get("PYTHONDONTWRITEBYTECODE")
++        os.environ["PYTHONDONTWRITEBYTECODE"] = "1"
++        try:
++            cmd.byte_compile([])
++        finally:
++            if old_dont_write_bytecode is None:
++                del os.environ["PYTHONDONTWRITEBYTECODE"]
++            else:
++                os.environ["PYTHONDONTWRITEBYTECODE"] = old_dont_write_bytecode
++
++        self.assertTrue('byte-compiling is disabled' in self.logs[0][1])
++
+ def test_suite():
+     return unittest.makeSuite(BuildPyTestCase)
+ 
+--- Lib/distutils/util.py
++++ Lib/distutils/util.py
+@@ -11,6 +11,7 @@
+ from distutils.dep_util import newer
+ from distutils.spawn import spawn
+ from distutils import log
++from distutils.errors import DistutilsByteCompileError
+ 
+ def get_platform ():
+     """Return a string that identifies the current platform.  This is used
+@@ -397,6 +398,9 @@
+     generated in indirect mode; unless you know what you're doing, leave
+     it set to None.
+     """
++    # nothing is done if PYTHONDONTWRITEBYTECODE environment variable is set
++    if os.environ.get("PYTHONDONTWRITEBYTECODE") is not None:
++        raise DistutilsByteCompileError('byte-compiling is disabled.')
+ 
+     # First, if the caller didn't force us into direct or indirect mode,
+     # figure out which mode we should be in.  We take a conservative
