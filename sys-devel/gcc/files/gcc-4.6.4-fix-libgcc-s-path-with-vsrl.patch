@@ -1,0 +1,21 @@
+diff -urN gcc-4.6.4/libgcc/Makefile.in gcc-4.6.4-fixed/libgcc/Makefile.in
+--- gcc-4.6.4/libgcc/Makefile.in	2013-04-24 00:12:29.213242770 +0000
++++ gcc-4.6.4-fixed/libgcc/Makefile.in	2013-04-24 01:19:14.909313041 +0000
+@@ -945,7 +945,7 @@
+ 
+ 	$(subst @multilib_dir@,$(MULTIDIR),$(subst \
+ 		@shlib_base_name@,libunwind,$(subst \
+-		@shlib_slibdir_qual@,$(MULTIOSSUBDIR),$(SHLIBUNWIND_INSTALL))))
++		@shlib_slibdir_qual@,$(MULTISUBDIR),$(SHLIBUNWIND_INSTALL))))
+ 
+ install-shared:
+ 	$(mkinstalldirs) $(DESTDIR)$(inst_libdir)
+@@ -956,7 +956,7 @@
+ 
+ 	$(subst @multilib_dir@,$(MULTIDIR),$(subst \
+ 		@shlib_base_name@,libgcc_s,$(subst \
+-		@shlib_slibdir_qual@,$(MULTIOSSUBDIR),$(SHLIB_INSTALL))))
++		@shlib_slibdir_qual@,$(MULTISUBDIR),$(SHLIB_INSTALL))))
+ 
+ install-leaf: $(install-shared) $(install-libunwind)
+ 	$(mkinstalldirs) $(DESTDIR)$(inst_libdir)
