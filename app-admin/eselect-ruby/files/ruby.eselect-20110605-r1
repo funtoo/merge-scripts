@@ -41,7 +41,7 @@ check_target() {
 
 remove_symlinks() {
 	rm -f ${ROOT}${bindir}/{ruby,gem,irb,erb,ri,rdoc,testrb} && \
-	rm -f ${ROOT}${man1dir}/ruby.{1,1.gz,1.bz2,1.lzma}
+	rm -f ${ROOT}${man1dir}/ruby.{1,1.gz,1.bz2,1.lzma,1.xz}
 	for x in ${ROOT}${bindir}/ruby[0-9].[0-9]; do
 		# remove ruby1.9 -> ruby19 symlink if it exists:
 		if [ -L "$x" ]; then
@@ -53,7 +53,7 @@ remove_symlinks() {
 create_man_symlinks() {
 	local version=${1} 
 
-	for m in ${ROOT}${man1dir}/ruby${version}.{1,1.gz,1.bz2,1.lzma}
+	for m in ${ROOT}${man1dir}/ruby${version}.{1,1.gz,1.bz2,1.lzma,1.xz}
 	do
 		if [[ -e ${m} ]] ; then
 			break
