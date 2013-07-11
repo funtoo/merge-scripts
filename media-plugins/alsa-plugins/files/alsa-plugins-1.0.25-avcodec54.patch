@@ -1,0 +1,31 @@
+Index: alsa-plugins-1.0.25/a52/pcm_a52.c
+===================================================================
+--- alsa-plugins-1.0.25.orig/a52/pcm_a52.c
++++ alsa-plugins-1.0.25/a52/pcm_a52.c
+@@ -444,13 +444,13 @@ static int a52_prepare(snd_pcm_ioplug_t
+ #if LIBAVCODEC_VERSION_MAJOR > 52 || (LIBAVCODEC_VERSION_MAJOR == 52 && LIBAVCODEC_VERSION_MINOR >= 3)
+ 	switch (io->channels) {
+ 	case 2:
+-		rec->avctx->channel_layout = CH_LAYOUT_STEREO;
++		rec->avctx->channel_layout = AV_CH_LAYOUT_STEREO;
+ 		break;
+ 	case 4:
+-		rec->avctx->channel_layout = CH_LAYOUT_QUAD;
++		rec->avctx->channel_layout = AV_CH_LAYOUT_QUAD;
+ 		break;
+ 	case 6:
+-		rec->avctx->channel_layout = CH_LAYOUT_5POINT1;
++		rec->avctx->channel_layout = AV_CH_LAYOUT_5POINT1;
+ 		break;
+ 	default:
+ 		break;
+@@ -702,7 +702,9 @@ SND_PCM_PLUGIN_DEFINE_FUNC(a52)
+ 	rec->channels = channels;
+ 	rec->format = format;
+ 
++#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(54,0,0)
+ 	avcodec_init();
++#endif
+ 	avcodec_register_all();
+ 
+ 	rec->codec = avcodec_find_encoder_by_name("ac3_fixed");
