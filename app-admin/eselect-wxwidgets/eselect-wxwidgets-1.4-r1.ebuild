@@ -42,7 +42,7 @@ src_install() {
 pkg_postinst() {
 	if use symlink ; then
 		if [[ -e "${ROOT}"/usr/lib/wx/config ]] ; then
-			local wxwidgets=( $(find "${ROOT}"/usr/lib/wx/config/* -printf "%f " 2> /dev/null) )
+			local wxwidgets=( $(find -H "${ROOT}"/usr/lib/wx/config/* -printf "%f " 2> /dev/null) )
 			if [[ ! -z "${wxwidgets[@]}" && "${#wxwidgets[@]}" == 1 ]] ; then
 				eselect wxwidgets set  "${wxwidgets[0]}"
 				echo
