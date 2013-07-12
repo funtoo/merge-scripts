@@ -13,7 +13,7 @@ HOMEPAGE="http://projects.gnome.org/NetworkManager/"
 LICENSE="GPL-2+"
 SLOT="0" # add subslot if libnm-util.so.2 or libnm-glib.so.4 bumps soname version
 IUSE="avahi bluetooth connection-sharing +consolekit dhclient +dhcpcd gnutls
-+introspection kernel_linux +nss modemmanager +ppp resolvconf systemd test vala
++introspection kernel_linux +nss modemmanager policykit +ppp resolvconf systemd test vala
 +wext" # wimax
 KEYWORDS="~*"
 
@@ -32,7 +32,7 @@ COMMON_DEPEND="
 	>=dev-libs/dbus-glib-0.94
 	>=dev-libs/glib-2.30
 	>=dev-libs/libnl-3.2.7:3=
-	>=sys-auth/polkit-0.106
+	policykit? ( >=sys-auth/polkit-0.106 )
 	>=net-libs/libsoup-2.26:2.4=
 	>=net-wireless/wpa_supplicant-0.7.3-r3[dbus]
 	>=virtual/udev-165[gudev]
