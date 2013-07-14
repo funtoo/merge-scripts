@@ -6,20 +6,6 @@
 # Masked for testing
 >=app-admin/eselect-wxwidgets-1.4-r1
 
-# Ryan Harris (09 Jul 2013)
-# FL-50 app-admin/eselect-jython added. 
-# Masked for testing
-app-admin/eselect-jython
-
-# Ryan Harris (09 Jul 2013)
-# Added slot support to jython-2.1 and 2.2 for FL-50
-# Masking all new revisions which depend on
-# app-admin/eselect-jython until it is unmasked
-=dev-java/jython-2.1-r12
-=dev-java/jython-2.2.1-r3
-=dev-java/jython-2.5.3-r3
-=dev-java/jython-2.7_beta1-r1
-
 # Ryan Harris (06ul 2013)
 # New portage version to fix FL-589. Masked for testing
 >=sys-apps/portage-2.3.6-r2
