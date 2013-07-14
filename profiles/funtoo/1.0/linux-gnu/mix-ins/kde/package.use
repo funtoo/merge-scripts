@@ -10,7 +10,7 @@ dev-qt/qtcore qt3support
 dev-qt/qtdeclarative qt3support
 dev-qt/qtgui mng qt3support
 dev-qt/qtopengl qt3support
-dev-qt/qtsql qt3support
+dev-qt/qtsql mysql qt3support
 
 # Needed by blas which is pulled in when emerging kde-meta
 # Leave until virtual/fortran is properly implemented
