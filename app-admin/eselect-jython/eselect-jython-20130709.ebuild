@@ -4,7 +4,7 @@ DESCRIPTION="Manages multiple Jython  versions"
 HOMEPAGE="http://www.funtoo.org"
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE=""
 
 RDEPEND=">=app-admin/eselect-1.3.5"
