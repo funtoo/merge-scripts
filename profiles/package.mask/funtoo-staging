@@ -6,10 +6,6 @@
 # Masked for testing
 >=app-admin/eselect-wxwidgets-1.4-r1
 
-# Ryan Harris (06ul 2013)
-# New portage version to fix FL-589. Masked for testing
->=sys-apps/portage-2.3.6-r2
-
 # Oleg Vinichenko (25 Jun 2013)
 # new networkmanager ebuild, masked for testing, policykit
 # use flag removed, in favor of explicit polkit dep. FL-595
