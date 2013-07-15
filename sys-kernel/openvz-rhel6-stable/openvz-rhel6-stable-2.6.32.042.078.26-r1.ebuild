@@ -4,6 +4,8 @@ EAPI=2
 
 inherit mount-boot check-reqs
 
+CHECKREQS_DISK_BUILD="15G"
+
 SLOT=$PVR
 CKV=2.6.32
 OKV=$CKV
@@ -92,9 +94,8 @@ pkg_setup() {
 	unset ARCH; unset LDFLAGS #will interfere with Makefile if set
 
 	if use binary ; then
-	CHECKREQS_DISK_BUILD="15G"
+		check-reqs_pkg_setup
 	fi
-	check-reqs_pkg_setup
 }
 
 src_prepare() {
