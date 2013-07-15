@@ -141,8 +141,8 @@ src_compile() {
 src_install() {
 	# copy sources into place:
 	dodir /usr/src
-	cp -a ${S} ${D}/usr/src/linux-${P} || die
-	cd ${D}/usr/src/linux-${P}
+	cp -a ${S} ${D}/usr/src/linux-${PVR} || die
+	cd ${D}/usr/src/linux-${PVR}
 	# prepare for real-world use and 3rd-party module building:
 	make mrproper || die
 	cp $defconfig_src .config || die
@@ -164,12 +164,12 @@ src_install() {
 	find -iname *.ko -exec strip --strip-debug {} \;
 	# back to the symlink fixup:
 	local moddir="$(ls -d 2*)"
-	ln -s /usr/src/linux-${P} ${D}/lib/modules/${moddir}/source || die
-	ln -s /usr/src/linux-${P} ${D}/lib/modules/${moddir}/build || die
+	ln -s /usr/src/linux-${PVR} ${D}/lib/modules/${moddir}/source || die
+	ln -s /usr/src/linux-${PVR} ${D}/lib/modules/${moddir}/build || die
 
 	# Fixes FL-14
-	cp "${WORKDIR}/build/System.map" "${D}/usr/src/linux-${P}/" || die
-	cp "${WORKDIR}/build/Module.symvers" "${D}/usr/src/linux-${P}/" || die
+	cp "${WORKDIR}/build/System.map" "${D}/usr/src/linux-${PVR}/" || die
+	cp "${WORKDIR}/build/Module.symvers" "${D}/usr/src/linux-${PVR}/" || die
 }
 
 pkg_postinst() {
@@ -180,6 +180,6 @@ pkg_postinst() {
 	fi
 	if [ ! -e ${ROOT}usr/src/linux ]
 	then
-		ln -s linux-${P} ${ROOT}usr/src/linux
+		ln -s linux-${PVR} ${ROOT}usr/src/linux
 	fi
 }
