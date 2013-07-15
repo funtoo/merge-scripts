@@ -19,7 +19,7 @@ KEYWORDS="*"
 IUSE=""
 
 COMMON_DEP="
-	>=dev-java/jython-2.2
+	dev-java/jython:2.2
 	java-virtuals/servlet-api:2.3
 	java-virtuals/servlet-api:2.4
 	java-virtuals/servlet-api:2.5
@@ -51,7 +51,7 @@ src_compile() {
 	java-pkg_jar-from --virtual --into jsp-2.0 servlet-api-2.4
 	java-pkg_jar-from --virtual --into jsp-2.1 servlet-api-2.5
 	java-pkg_jar-from jaxen-1.1
-	java-pkg_jar-from jython
+	java-pkg_jar-from jython-2.2
 	java-pkg_jar-from --build-only javacc
 	java-pkg_jar-from juel
 	popd >/dev/null
