@@ -116,7 +116,7 @@ src_configure() {
 	if use objc; then
 		GCC_LANG+=",objc"
 		confgcc+=" --enable-objc-gc"
-		use objcxx && GCC_LANG+=",obj-c++"
+		use objc++ && GCC_LANG+=",obj-c++"
 	fi
 	use fortran && GCC_LANG+=",fortran" || confgcc+=" --disable-libquadmath"
 	use f77 && GCC_LANG+=",f77"
