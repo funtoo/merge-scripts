@@ -18,7 +18,7 @@ DESCRIPTION="OpenVZ Containers control utility"
 HOMEPAGE="http://openvz.org/"
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~*"
+KEYWORDS="*"
 
 RDEPEND="
 	net-firewall/iptables
