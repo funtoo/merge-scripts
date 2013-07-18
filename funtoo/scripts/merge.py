@@ -48,7 +48,8 @@ steps = [
 	SyncDir(mate_overlay.root, "eclass"),
 	SyncDir(mate_overlay.root, "sets"),
 	SyncFiles(mate_overlay.root, { 
-		"profiles/package.mask":"profiles/funtoo/1.0/linux-gnu/mix-ins/mate/package.mask/01-mate"
+		"profiles/package.mask":"profiles/funtoo/1.0/linux-gnu/mix-ins/mate/package.mask/01-mate",
+		"profiles/package.use.mask:"profiles/funtoo/1.0/linux-gnu/mix-ins/mate/package.use.mask/01-mate"
 	}),
 	InsertEbuilds(sabayon_for_gentoo, select=["app-admin/equo", "app-admin/matter", "sys-apps/entropy", "sys-apps/entropy-server", "sys-apps/entropy-client-services","app-admin/rigo", "sys-apps/rigo-daemon", "sys-apps/magneto-core", "x11-misc/magneto-gtk", "x11-misc/magneto-gtk3", "kde-misc/magneto-kde", "app-misc/magneto-loader"], replace=True),
 	SyncDir(progress_overlay.root, "eclass"),
