@@ -1,11 +1,6 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
-# Ryan Harris (16 Jul 2013)
-# FL-589 New version to fix proxy support
-# Masked for testing
->=sys-apps/portage-2.3.6-r5
-
 # Ryan Harris (11 Jul 2013)
 # FL-209 New revision of eselect-wxwidgets
 # Masked for testing
