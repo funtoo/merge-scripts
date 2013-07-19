@@ -42,7 +42,7 @@ steps = [
 	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(foo_overlay, select="all", skip=["sys-fs/mdev-bb", "media-video/handbrake"], replace=["app-shells/rssh","net-misc/unison"]),
 	InsertEbuilds(bar_overlay, select="all", skip=["app-emulation/qemu"], replace=False),
-	InsertEbuilds(flora_overlay, select="all", skip=["sys-fs/spl", "sys-fs/zfs", "media-sound/oss"], replace=False),
+	InsertEbuilds(flora_overlay, select="all", skip=["sys-fs/spl", "sys-fs/zfs", "media-sound/oss", "x11-wm/qtile"], replace=False),
 	InsertEbuilds(mate_overlay, select="all", skip=None, replace=False),
 	InsertEbuilds(bliss_overlay, select="all", skip=None, replace=False),
 	SyncDir(mate_overlay.root, "eclass"),
