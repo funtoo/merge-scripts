@@ -433,7 +433,7 @@ pkg_postinst() {
 	elog "         http://www.gentoo.org/doc/en/udev-guide.xml"
 
 	# Update hwdb database in case the format is changed by udev version.
-	if use hwdbv; then
+	if use hwdb; then
 		udevadm hwdb --update --root="${ROOT%/}"
 	fi
 }
