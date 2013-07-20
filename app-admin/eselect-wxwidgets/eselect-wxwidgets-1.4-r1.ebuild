@@ -14,7 +14,7 @@ SRC_URI="mirror://gentoo/wxwidgets.eselect-${WXESELECT_VER}.bz2"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="*"
-IUSE="+symlink"
+IUSE=""
 
 DEPEND="!<=x11-libs/wxGTK-2.6.4.0-r2"
 RDEPEND=">=app-admin/eselect-1.2.3"
@@ -36,20 +36,4 @@ src_install() {
 
 	keepdir /var/lib/wxwidgets
 	keepdir /usr/share/bakefile/presets
-}
-
-
-pkg_postinst() {
-	if use symlink ; then
-		if [[ -e "${ROOT}"/usr/lib/wx/config ]] ; then
-			local wxwidgets=( $(find -H "${ROOT}"/usr/lib/wx/config/* -printf "%f " 2> /dev/null) )
-			if [[ ! -z "${wxwidgets[@]}" && "${#wxwidgets[@]}" == 1 ]] ; then
-				eselect wxwidgets set  "${wxwidgets[0]}"
-				echo
-				elog "Portage detected that your system has only one wxWidgets profile."
-				elog "Your systems wxWidgets profile is now set to ${wxwidgets[0]}"
-				echo
-			fi
-		fi
-	fi
 }
