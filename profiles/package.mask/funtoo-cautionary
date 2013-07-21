@@ -1,3 +1,7 @@
+# Ryan Harris (21 Jul 2013)
+# Mask consolekit >=0.4.6 as it depends on >=udev-200
+>=sys-auth/consolekit-0.4.6
+
 # Oleg Vinichenko (5 Jul 2013)
 # masking sys-kernel/bliss-* kernels as they need more testing
 sys-kernel/bliss-kernel
