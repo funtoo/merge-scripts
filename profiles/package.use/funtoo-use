@@ -1,3 +1,7 @@
+# FL-634 add openvg flag to mesa and cairo
+media-libs/mesa openvg
+x11-libs/cairo openvg
+
 # FL-597: set external USE flag to virtual/python-json
 virtual/python-json external
 
