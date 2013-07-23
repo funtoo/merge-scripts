@@ -1,3 +1,7 @@
+# FL-635
+# force vala use to libvirt-glib
+app-emulation/libvirt-glib vala
+
 # force python single targets in blender,
 # FL-408
 >=media-gfx/blender-2.66 python_single_target_python3_3
