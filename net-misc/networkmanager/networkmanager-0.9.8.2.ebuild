@@ -178,12 +178,6 @@ src_install() {
 		# Our init.d script requires running a dispatcher script that annoys
 		# systemd users; bug #434692
 		rm -rv "${ED}/etc/init.d" || die "rm failed"
-	else
-		# Provide openrc net dependency only when nm is connected
-		exeinto /etc/NetworkManager/dispatcher.d
-		newexe "${FILESDIR}/10-openrc-status-r3" 10-openrc-status
-		sed -e "s:@EPREFIX@:${EPREFIX}:g" \
-			-i "${ED}/etc/NetworkManager/dispatcher.d/10-openrc-status" || die
 	fi
 
 	# Add keyfile plugin support
