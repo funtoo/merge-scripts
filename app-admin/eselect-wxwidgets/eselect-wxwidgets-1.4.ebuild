@@ -1,6 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-admin/eselect-wxwidgets/eselect-wxwidgets-1.4.ebuild,v 1.8 2012/05/29 14:26:28 aballier Exp $
 
 WXWRAP_VER=1.3
 WXESELECT_VER=1.4
