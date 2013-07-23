@@ -106,6 +106,11 @@ src_prepare() {
 	# So, we apply a small patch to get this working:
 
 	cat "${FILESDIR}"/gcc-4.6.4-fix-libgcc-s-path-with-vsrl.patch | patch -p1 || die "patch fail"
+
+	# gcc-4.6.4 seems to have trouble building libgfortran - it can't find the gfortran compiler it built.
+	# Here is hack #1 to make that happen - hard-code the configure script with the full path to gfortran:
+
+	sed -i -e "s:^FC=.*:FC=${WORKDIR}/objdir/gcc/gfortran:" ${WORKDIR}/gcc-${PV}/libgfortran/configure || die libgfortran prep
 }
 
 src_configure() {
@@ -164,7 +169,12 @@ src_configure() {
 src_compile() {
 	cd $WORKDIR/objdir
 	unset ABI
-	emake LIBPATH="${LIBPATH}" || die "compile fail"
+
+	# gcc-4.6.4 seems to have trouble building libgfortran - it can't find the gfortran compiler it built.
+	# Here is hack #2 to make that happen: expand PATH so that gfortran can find other tools it needs:
+
+	export PATH="$WORKDIR/objdir/gcc:$PATH"
+	emake LIBPATH="${LIBPATH}"  || die "compile fail"
 }
 
 create_gcc_env_entry() {
