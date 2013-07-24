@@ -15,7 +15,7 @@ FOLDER_PREFIX="common/"
 IUSE="+vaapi debug +modules multilib qt4 static-libs disable-watermark"
 
 LICENSE="AMD GPL-2 QPL-1.0"
-KEYWORDS="-*"
+KEYWORDS="~*"
 SLOT="1"
 
 RESTRICT="bindist test"
