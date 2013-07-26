@@ -5,7 +5,7 @@ GNOME_ORG_MODULE="NetworkManager"
 VALA_MIN_API_VERSION="0.18"
 VALA_USE_DEPEND="vapigen"
 
-inherit eutils gnome.org linux-info systemd user readme.gentoo toolchain-funcs vala virtualx udev
+inherit bash-completion-r1 eutils gnome.org linux-info systemd user readme.gentoo toolchain-funcs vala virtualx udev
 
 DESCRIPTION="Universal network configuration daemon for laptops, desktops, servers and virtualization hosts"
 HOMEPAGE="http://projects.gnome.org/NetworkManager/"
@@ -114,8 +114,8 @@ src_prepare() {
 		-i */tests/*.py || die
 
 	# Fix completiondir, avoid eautoreconf, bug #465100
-	sed -i 's|^completiondir =.*|completiondir = $(datadir)/bash-completion|' \
-		cli/completion/Makefile.in || die "sed completiondir failed"
+	sed -i "s|^completiondir =.*|completiondir = $(get_bashcompdir)|" \
+	        cli/completion/Makefile.am || die "sed completiondir failed"
 
 	epatch_user
 
