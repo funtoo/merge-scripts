@@ -1,3 +1,10 @@
+#  Oleg Vinichenko (26 Jul 2013)
+#  FL-645, mask latest gdm, gnome-shell, gnome-settings-daemon
+#  as they explicitly require systemd
+>=gnome-base/gdm-3.8.3
+>=gnome-base/gnome-shell-3.8.3
+>=gnome-base/gnome-settings-daemon-3.8.3
+
 # Oleg Vinichenko (24 Jul 2013)
 # mask >media-player-info-18, we are not yet ready for udev-200
 # FL-641
