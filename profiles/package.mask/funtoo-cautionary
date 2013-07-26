@@ -4,6 +4,7 @@
 >=gnome-base/gdm-3.8.3
 >=gnome-base/gnome-shell-3.8.3
 >=gnome-base/gnome-settings-daemon-3.8.3
+>=gnome-base/gnome-control-center-3.8
 
 # Oleg Vinichenko (24 Jul 2013)
 # mask >media-player-info-18, we are not yet ready for udev-200
