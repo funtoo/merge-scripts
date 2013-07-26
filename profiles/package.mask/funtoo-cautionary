@@ -51,10 +51,6 @@ app-benchmarks/phoronix-test-suite
 # security update for xorg-server
 >x11-base/xorg-server-1.13.4
 
-# FL-484, mask broken libXft and freetype
->=media-libs/freetype-2.4.11-r1
->=x11-libs/libXft-2.3.1-r1
-#
 # Oleg Vinichenko (19 Apr 2013)
 # mask back mpc-1.0.1, ebuild itself is fine and usable
 # the mask required for metro stages successfully built until 
