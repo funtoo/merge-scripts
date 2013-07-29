@@ -1,11 +1,6 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
-# Oleg Vinichenko (24 Jul 2013)
-# new genkernel, mquick test mask
-# FL-622, USB3.0 support in default config
->=sys-kernel/genkernel-3.4.40.5
-
 # Oleg Vinichenko (25 Jun 2013)
 # new networkmanager ebuild, masked for testing, policykit
 # use flag removed, in favor of explicit polkit dep. FL-595
