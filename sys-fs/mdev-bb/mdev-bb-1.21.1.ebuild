@@ -66,10 +66,7 @@ src_install() {
 	cp -a "${FILESDIR}"/mdev.conf "${D}/etc" || die
 	dodir /etc/mdev
 	exeinto /etc/mdev
-	doexe "${FILESDIR}"/catch-all || die
-	doexe "${FILESDIR}"/settle-nics || die
-	doexe "${FILESDIR}"/storage-device || die
-	doexe "${FILESDIR}"/proc-bus-usb || die
+	doexe "${FILESDIR}"/mdev/* || die
 	newinitd "${FILESDIR}"/mdev.init mdev || die
 }
 add_init() {
