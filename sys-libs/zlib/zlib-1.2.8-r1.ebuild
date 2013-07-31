@@ -1,7 +1,9 @@
 # Distributed under the terms of the GNU General Public License v2
 
+EAPI=4
 AUTOTOOLS_AUTO_DEPEND="no"
-inherit autotools toolchain-funcs multilib
+
+inherit autotools toolchain-funcs multilib multilib-minimal
 
 DESCRIPTION="Standard (de)compression library"
 HOMEPAGE="http://www.zlib.net/"
@@ -16,28 +18,49 @@ IUSE="minizip static-libs"
 
 DEPEND="minizip? ( ${AUTOTOOLS_DEPEND} )"
 RDEPEND="abi_x86_32? (
-	!<=app-emulation/emul-linux-x86-baselibs-20130224
-	!app-emulation/emul-linux-x86-baselibs[-abi_x86_32(-)]
+		!<=app-emulation/emul-linux-x86-baselibs-20130224
+		!app-emulation/emul-linux-x86-baselibs[-abi_x86_32(-)]
 	)
 	!<dev-libs/libxml2-2.7.7" #309623
 
-src_unpack() {
-	unpack ${A}
-	cd "${S}"
-
+src_prepare() {
 	if use minizip ; then
-		cd contrib/minizip
+		cd contrib/minizip || die
 		eautoreconf
 	fi
+
+	multilib_copy_sources
 }
 
 echoit() { echo "$@"; "$@"; }
-src_compile() {
+
+multilib_src_configure() {
 	case ${CHOST} in
 	*-mingw*|mingw*)
-		emake -f win32/Makefile.gcc STRIP=true PREFIX=${CHOST}- || die
+		;;
+	*)      # not an autoconf script, so can't use econf
+		local uname=$("${EPREFIX}"/usr/share/gnuconfig/config.sub "${CHOST}" | cut -d- -f3) #347167
+		echoit ./configure \
+			--shared \
+			--prefix="${EPREFIX}/usr" \
+			--libdir="${EPREFIX}/usr/$(get_libdir)" \
+			${uname:+--uname=${uname}} \
+			|| die
+		;;
+	esac
+
+	if use minizip ; then
+		cd contrib/minizip || die
+		econf $(use_enable static-libs static)
+	fi
+}
+
+multilib_src_compile() {
+	case ${CHOST} in
+	*-mingw*|mingw*)
+		emake -f win32/Makefile.gcc STRIP=true PREFIX=${CHOST}-
 		sed \
-			-e 's|@prefix@|/usr|g' \
+			-e 's|@prefix@|${EPREFIX}/usr|g' \
 			-e 's|@exec_prefix@|${prefix}|g' \
 			-e 's|@libdir@|${exec_prefix}/'$(get_libdir)'|g' \
 			-e 's|@sharedlibdir@|${exec_prefix}/'$(get_libdir)'|g' \
@@ -45,22 +68,11 @@ src_compile() {
 			-e 's|@VERSION@|'${PV}'|g' \
 			zlib.pc.in > zlib.pc || die
 		;;
-	*)	# not an autoconf script, so can't use econf
-		local uname=$(/usr/share/gnuconfig/config.sub "${CHOST}" | cut -d- -f3) #347167
-		echoit ./configure \
-			--shared \
-			--prefix=/usr \
-			--libdir=/usr/$(get_libdir) \
-			${uname:+--uname=${uname}} \
-			|| die
-		emake || die
+	*)
+		emake
 		;;
 	esac
-	if use minizip ; then
-		cd contrib/minizip
-		econf $(use_enable static-libs static)
-		emake || die
-	fi
+	use minizip && emake -C contrib/minizip
 }
 
 sed_macros() {
@@ -68,34 +80,35 @@ sed_macros() {
 	# we do it here so we only have to tweak 2 files
 	sed -i -r 's:\<(O[FN])\>:_Z_\1:g' "$@" || die
 }
-src_install() {
+
+multilib_src_install() {
 	case ${CHOST} in
 	*-mingw*|mingw*)
 		emake -f win32/Makefile.gcc install \
-			BINARY_PATH="${D}/usr/bin" \
-			LIBRARY_PATH="${D}/usr/$(get_libdir)" \
-			INCLUDE_PATH="${D}/usr/include" \
-			SHARED_MODE=1 \
-			|| die
+			BINARY_PATH="${ED}/usr/bin" \
+			LIBRARY_PATH="${ED}/usr/$(get_libdir)" \
+			INCLUDE_PATH="${ED}/usr/include" \
+			SHARED_MODE=1
 		insinto /usr/share/pkgconfig
-		doins zlib.pc || die
+		doins zlib.pc
 		;;
 
 	*)
-		emake install DESTDIR="${D}" LDCONFIG=: || die
+		emake install DESTDIR="${D}" LDCONFIG=:
 		gen_usr_ldscript -a z
 		;;
 	esac
-	sed_macros "${D}"/usr/include/*.h
-
-	dodoc FAQ README ChangeLog doc/*.txt
+	sed_macros "${ED}"/usr/include/*.h
 
 	if use minizip ; then
-		cd contrib/minizip
-		emake install DESTDIR="${D}" || die
-		sed_macros "${D}"/usr/include/minizip/*.h
-		dodoc *.txt
+		emake -C contrib/minizip install DESTDIR="${D}"
+		sed_macros "${ED}"/usr/include/minizip/*.h
 	fi
 
-	use static-libs || rm -f "${D}"/usr/$(get_libdir)/lib{z,minizip}.{a,la} #419645
+	use static-libs || rm -f "${ED}"/usr/$(get_libdir)/lib{z,minizip}.{a,la} #419645
+}
+
+multilib_src_install_all() {
+	dodoc FAQ README ChangeLog doc/*.txt
+	use minizip && dodoc contrib/minizip/*.txt
 }
