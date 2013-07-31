@@ -18,6 +18,7 @@ DEPEND="minizip? ( ${AUTOTOOLS_DEPEND} )"
 RDEPEND="abi_x86_32? (
 	!<=app-emulation/emul-linux-x86-baselibs-20130224
 	!app-emulation/emul-linux-x86-baselibs[-abi_x86_32(-)]
+	)
 	!<dev-libs/libxml2-2.7.7" #309623
 
 src_unpack() {
