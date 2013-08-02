@@ -8,6 +8,8 @@ SRC_URI="http://ftp.debian.org/debian/pool/main/d/${MY_P}/${DEB}"
 HOMEPAGE="http://www.dcs.shef.ac.uk/research/ilash/Moby/ http://packages.debian.org/unstable/text/dict-moby-thesaurus"
 DESCRIPTION="Grady Ward's Moby Thesaurus; 35000 root words and 2.5 million synonyms"
 
+KEYWORDS="*"
+
 RDEPEND="app-text/dictd"
 
 SLOT="0"
