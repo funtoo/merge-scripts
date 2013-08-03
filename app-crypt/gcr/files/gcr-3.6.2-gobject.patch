@@ -1,0 +1,136 @@
+From 0b889388a7f45258fa2291dd577b2ea7ca8d42c0 Mon Sep 17 00:00:00 2001
+From: Stef Walter <stefw@gnome.org>
+Date: Mon, 11 Feb 2013 16:43:54 +0000
+Subject: Use GObject.Object instead of GLib.Object in introspection annotations
+
+A gobject-introspection change broke the former.
+
+Bug: https://bugzilla.gnome.org/show_bug.cgi?id=693440
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/1163786
+
+Index: gcr-3.6.2/gck/gck-misc.c
+===================================================================
+--- gcr-3.6.2.orig/gck/gck-misc.c	2012-10-27 15:03:06.000000000 +0200
++++ gcr-3.6.2/gck/gck-misc.c	2013-04-03 11:15:51.006103179 +0200
+@@ -261,7 +261,7 @@
+ 
+ /**
+  * gck_list_unref_free: (skip)
+- * @reflist: (element-type GLib.Object): list of Gobject reference counted pointers
++ * @reflist: (element-type GObject.Object): list of Gobject reference counted pointers
+  *
+  * Free a list of GObject based pointers. All objects in the list
+  * will be unreffed and then the list itself will be freed.
+@@ -279,13 +279,13 @@
+ 
+ /**
+  * gck_list_ref_copy: (skip)
+- * @reflist: (element-type GLib.Object): list of GObject reference counted
++ * @reflist: (element-type GObject.Object): list of GObject reference counted
+  *           objects
+  *
+  * Copy a list of GObject based pointers. All objects
+  * in the list will be reffed and the list will be copied.
+  *
+- * Return value: (transfer full) (element-type GLib.Object): the copied and
++ * Return value: (transfer full) (element-type GObject.Object): the copied and
+  *               reffed list, when done, free it with gck_list_unref_free ()
+  **/
+ GList *
+Index: gcr-3.6.2/gcr/gcr-collection-model.c
+===================================================================
+--- gcr-3.6.2.orig/gcr/gcr-collection-model.c	2012-09-19 11:01:28.000000000 +0200
++++ gcr-3.6.2/gcr/gcr-collection-model.c	2013-04-03 11:15:50.838103171 +0200
+@@ -1587,7 +1587,7 @@
+  *
+  * Get a list of checked/selected objects.
+  *
+- * Returns: (transfer container) (element-type GLib.Object): a list of selected
++ * Returns: (transfer container) (element-type GObject.Object): a list of selected
+  *          objects, which should be freed with g_list_free()
+  */
+ GList *
+@@ -1611,7 +1611,7 @@
+ /**
+  * gcr_collection_model_set_selected_objects:
+  * @self: the collection model
+- * @selected: (element-type GLib.Object): a list of objects to select
++ * @selected: (element-type GObject.Object): a list of objects to select
+  *
+  * Set the checked/selected objects.
+  */
+Index: gcr-3.6.2/gcr/gcr-collection.c
+===================================================================
+--- gcr-3.6.2.orig/gcr/gcr-collection.c	2012-10-27 15:03:44.000000000 +0200
++++ gcr-3.6.2/gcr/gcr-collection.c	2013-04-03 11:15:50.814103170 +0200
+@@ -65,7 +65,7 @@
+ 		/**
+ 		 * GcrCollection::added:
+ 		 * @self: the collection
+-		 * @object: (type GLib.Object): object that was added
++		 * @object: (type GObject.Object): object that was added
+ 		 *
+ 		 * This signal is emitted when an object is added to the collection.
+ 		 */
+@@ -77,7 +77,7 @@
+ 		/**
+ 		 * GcrCollection::removed:
+ 		 * @self: the collection
+-		 * @object: (type GLib.Object): object that was removed
++		 * @object: (type GObject.Object): object that was removed
+ 		 *
+ 		 * This signal is emitted when an object is removed from the collection.
+ 		 */
+@@ -117,7 +117,7 @@
+  *
+  * Get a list of the objects in this collection.
+  *
+- * Returns: (transfer container) (element-type GLib.Object): a list of the objects
++ * Returns: (transfer container) (element-type GObject.Object): a list of the objects
+  *          in this collection, which should be freed with g_list_free()
+  */
+ GList*
+Index: gcr-3.6.2/gcr/gcr-list-selector.c
+===================================================================
+--- gcr-3.6.2.orig/gcr/gcr-list-selector.c	2012-09-19 11:01:28.000000000 +0200
++++ gcr-3.6.2/gcr/gcr-list-selector.c	2013-04-03 11:15:50.878103173 +0200
+@@ -396,7 +396,7 @@
+  *
+  * Get a list of selected objects.
+  *
+- * Returns: (transfer container) (element-type GLib.Object): the list of
++ * Returns: (transfer container) (element-type GObject.Object): the list of
+  *          selected objects, to be released with g_list_free()
+  */
+ GList*
+@@ -409,7 +409,7 @@
+ /**
+  * gcr_list_selector_set_selected:
+  * @self: The selector
+- * @selected: (element-type GLib.Object): the list of objects to select
++ * @selected: (element-type GObject.Object): the list of objects to select
+  *
+  * Select certain objects in the selector.
+  */
+Index: gcr-3.6.2/gcr/gcr-tree-selector.c
+===================================================================
+--- gcr-3.6.2.orig/gcr/gcr-tree-selector.c	2012-09-19 11:01:28.000000000 +0200
++++ gcr-3.6.2/gcr/gcr-tree-selector.c	2013-04-03 11:15:50.922103175 +0200
+@@ -337,7 +337,7 @@
+  *
+  * Get a list of selected objects.
+  *
+- * Returns: (transfer container) (element-type GLib.Object): the list of selected
++ * Returns: (transfer container) (element-type GObject.Object): the list of selected
+  *          objects, to be released with g_list_free()
+  */
+ GList*
+@@ -350,7 +350,7 @@
+ /**
+  * gcr_tree_selector_set_selected:
+  * @self: The selector
+- * @selected: (element-type GLib.Object): The list of objects to select.
++ * @selected: (element-type GObject.Object): The list of objects to select.
+  *
+  * Select certain objects in the selector.
+  */
