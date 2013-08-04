@@ -27,11 +27,6 @@ app-benchmarks/phoronix-test-suite
 # depends on sys-app/texinfo-5
 =app-emulation/xen-tools-4.2.2-r1
 
-#  Oleg Vinichenko (27 Jun 2013)
-#  openrc, FL-34, removed udev dep, set MKNET=no
-#  for internal tests only
-=sys-apps/openrc-0.10.3
-
 #  Oleg Vinichenko ( 26 jun 2013)
 #  mask beta version of postgresql, FL-591
 >dev-db/postgresql-base-9.2.4
