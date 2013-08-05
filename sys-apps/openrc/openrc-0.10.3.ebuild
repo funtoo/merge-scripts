@@ -20,11 +20,11 @@ RDEPEND="kernel_linux? ( >=sys-apps/sysvinit-2.86-r11 )
 	>=sys-apps/baselayout-2.2
 	sys-apps/iproute2"
 
-DEPEND="ncurses? ( sys-libs/ncurses[-tinfo] ) pam? ( virtual/pam ) virtual/os-headers"
+DEPEND="ncurses? ( sys-libs/ncurses ) pam? ( virtual/pam ) virtual/os-headers"
 
 GITHUB_REPO="${PN}"
 GITHUB_USER="funtoo"
-GITHUB_TAG="funtoo-openrc-0.10.2-r7"
+GITHUB_TAG="funtoo-openrc-0.10.3"
 
 NETV="1.3.5"
 GITHUB_REPO_CN="corenetwork"
