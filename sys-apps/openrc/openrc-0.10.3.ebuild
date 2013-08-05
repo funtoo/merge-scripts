@@ -16,12 +16,11 @@ IUSE="debug elibc_glibc ncurses pam selinux static-libs unicode kernel_linux ker
 
 RDEPEND="kernel_linux? ( >=sys-apps/sysvinit-2.86-r11 )
 	kernel_FreeBSD? ( virtual/init sys-process/fuser-bsd )
-	ncurses? ( sys-libs/ncurses )
 	pam? ( virtual/pam )
 	>=sys-apps/baselayout-2.2
 	sys-apps/iproute2"
 
-DEPEND="ncurses? ( sys-libs/ncurses ) pam? ( virtual/pam ) virtual/os-headers"
+DEPEND="ncurses? ( sys-libs/ncurses[-tinfo] ) pam? ( virtual/pam ) virtual/os-headers"
 
 GITHUB_REPO="${PN}"
 GITHUB_USER="funtoo"
