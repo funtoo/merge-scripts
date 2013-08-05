@@ -1,3 +1,6 @@
+# FL-660 munin require rrdtool compiled with perl flag, let's add it
+net-analyzer/rrdtool perl
+
 # FL-597: set external USE flag to virtual/python-json
 virtual/python-json external
 
