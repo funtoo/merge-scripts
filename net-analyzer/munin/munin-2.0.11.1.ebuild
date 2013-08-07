@@ -49,6 +49,7 @@ DEPEND_COM="dev-lang/perl[berkdb]
 			dev-perl/List-MoreUtils
 			dev-perl/Log-Log4perl
 			dev-perl/Net-CIDR
+			dev-perl/Net-DNS
 			dev-perl/Net-Netmask
 			dev-perl/Net-SNMP
 			dev-perl/net-server[ipv6(-)?]
