@@ -1,5 +1,9 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
+# Oleg Vinichenko (8 Aug 213)
+# genkernel with dmraid tweaks
+# masked for testing
+>=sys-kernel/genkernel-3.4.40.6
 
 # Oleg Vinichenko (25 Jun 2013)
 # new networkmanager ebuild, masked for testing, policykit
