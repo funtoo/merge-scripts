@@ -1,7 +1,5 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
-# Oleg Vinichenko (9 Aug 2013) FL-666
->=sys-kernel/openvz-rhel6-stable-2.6.32.042.079.5 
 
 # Oleg Vinichenko (8 Aug 213)
 # genkernel with dmraid tweaks
