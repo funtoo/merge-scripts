@@ -1,7 +1,12 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
-# Oleg Vinichenko (8 Aug 213)
+# Ryan Harris (14 Aug 2013)
+# FL-258 Add man2html to man-db ebuild
+# Masked for testing
+>=sys-apps/man-db-2.6.2-r1
+
+# Oleg Vinichenko (8 Aug 2013)
 # genkernel with dmraid tweaks
 # masked for testing
 >=sys-kernel/genkernel-3.4.40.6
