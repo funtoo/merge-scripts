@@ -6,11 +6,6 @@
 # Masked for testing
 >=sys-apps/man-db-2.6.2-r1
 
-# Oleg Vinichenko (8 Aug 2013)
-# genkernel with dmraid tweaks
-# masked for testing
->=sys-kernel/genkernel-3.4.40.6
-
 # Oleg Vinichenko (25 Jun 2013)
 # new networkmanager ebuild, masked for testing, policykit
 # use flag removed, in favor of explicit polkit dep. FL-595
