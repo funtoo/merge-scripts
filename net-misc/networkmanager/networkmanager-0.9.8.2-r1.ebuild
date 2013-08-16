@@ -15,7 +15,7 @@ SLOT="0" # add subslot if libnm-util.so.2 or libnm-glib.so.4 bumps soname versio
 IUSE="avahi bluetooth connection-sharing +consolekit dhclient +dhcpcd gnutls
 +introspection kernel_linux +nss modemmanager policykit +ppp resolvconf systemd test vala
 +wext" # wimax
-KEYWORDS="~*"
+KEYWORDS="*"
 
 REQUIRED_USE="
 	modemmanager? ( ppp )
@@ -192,7 +192,7 @@ src_install() {
 
 	# Remove useless .la files
 	prune_libtool_files --modules
-	dosbin ${FILESDIR}/addwifi
+	newsbin ${FILESDIR}/addwifi-with-delay addwifi
 }
 
 pkg_postinst() {

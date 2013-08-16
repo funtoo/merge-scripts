@@ -1,11 +1,6 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
-# Oleg Vinichenko (25 Jun 2013)
-# new networkmanager ebuild, masked for testing, policykit
-# use flag removed, in favor of explicit polkit dep. FL-595
->=net-misc/networkmanager-0.9.8.2
-
 # Daniel Robbins (10 Apr 2013)
 # FL-487: staging zenoss, as it is a work in progress.
 sys-monitor/zenoss
