@@ -14,7 +14,7 @@ SRC_URI="http://download.savannah.nongnu.org/releases/man-db/${P}.tar.xz
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="berkdb +gdbm nls static-libs zlib"
 
 RDEPEND="dev-libs/libpipeline
