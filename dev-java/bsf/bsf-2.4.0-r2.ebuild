@@ -8,7 +8,7 @@ DESCRIPTION="Bean Script Framework"
 HOMEPAGE="http://commons.apache.org/bsf/"
 SRC_URI="mirror://apache/jakarta/bsf/source/${PN}-src-${PV}.tar.gz"
 LICENSE="Apache-2.0"
-SLOT="2.3"
+SLOT="2.4"
 KEYWORDS="*"
 # If you add new ones, add them to ant-apache-bsf too for use dependencies
 IUSE="javascript python tcl"
