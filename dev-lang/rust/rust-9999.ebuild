@@ -29,10 +29,3 @@ src_configure() {
 	|| die
 }
  
-src_compile() {
-	emake || die
-}
- 
-src_install() {
-	emake DESTDIR="${D}" install || die
-}
