@@ -8,14 +8,14 @@ DESCRIPTION="Bean Script Framework"
 HOMEPAGE="http://commons.apache.org/bsf/"
 SRC_URI="mirror://apache/jakarta/bsf/source/${PN}-src-${PV}.tar.gz"
 LICENSE="Apache-2.0"
-SLOT="2.4"
+SLOT="2.3"
 KEYWORDS="*"
 # If you add new ones, add them to ant-apache-bsf too for use dependencies
 IUSE="javascript python tcl"
 
 COMMON_DEP="dev-java/commons-logging:0
 	dev-java/xalan:0
-	python? ( >=dev-java/jython-2.1-r5 )
+	python? ( || ( dev-java/jython:2.2 dev-java/jython:2.1 ) )
 	javascript? ( dev-java/rhino:1.6 )
 	tcl? ( dev-java/jacl:0 )"
 RDEPEND=">=virtual/jre-1.4
@@ -41,8 +41,14 @@ src_compile() {
 	local pkgs="commons-logging,xalan"
 	local antflags="-Dxalan.present=true"
 	if use python; then
+		local jython_version
+		if has_version dev-java/jython:2.2 ; then
+			jython_version="2.2"
+		else
+			jython_version="2.1"
+		fi
 		antflags="${antflags} -Djython.present=true"
-		pkgs="${pkgs},jython"
+		pkgs="${pkgs},jython-${jython_version}"
 	fi
 	if use javascript; then
 		antflags="${antflags} -Drhino.present=true"

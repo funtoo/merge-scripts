@@ -34,7 +34,7 @@ COMMON_DEP="
 	java-virtuals/servlet-api:2.5
 	readline? ( >=dev-java/libreadline-java-0.8.0:0 )"
 RDEPEND="${COMMON_DEP}
-	>=app-admin/jython-20130709
+	>=app-admin/eselect-jython-20130709
 	>=virtual/jre-1.5"
 DEPEND="${COMMON_DEP}
 	>=virtual/jdk-1.5
@@ -154,7 +154,9 @@ src_install() {
 
 pkg_postinst() {
 	if [[ ! -e /usr/bin/jython ]] ; then
-		cd /usr/bin && ln -s ${PN}${SLOT} jython
+		cd /usr/bin
+		rm jython > /dev/null 2>&1
+		ln -s ${PN}${SLOT} jython
 	fi
 
 	if ! has_version dev-java/jython ; then
