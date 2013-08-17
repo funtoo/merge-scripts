@@ -148,7 +148,9 @@ _EOF_
 
 pkg_postinst() {
 	if [[ ! -e /usr/bin/jython ]] ; then
-		cd /usr/bin && ln -s ${PN}${SLOT} jython
+		cd /usr/bin
+		rm jython > /dev/null 2>&1
+		ln -s ${PN}${SLOT} jython
 	fi
 }
 
