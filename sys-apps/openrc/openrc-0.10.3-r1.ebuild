@@ -15,7 +15,7 @@ KEYWORDS="*"
 IUSE="debug elibc_glibc ncurses pam selinux static-libs unicode kernel_linux kernel_FreeBSD"
 
 RDEPEND="kernel_linux? ( >=sys-apps/sysvinit-2.86-r11 )
-	kernel_FreeBSD? ( virtual/init sys-process/fuser-bsd )
+	kernel_FreeBSD? ( sys-process/fuser-bsd )
 	pam? ( virtual/pam )
 	>=sys-apps/baselayout-2.2
 	sys-apps/iproute2"
