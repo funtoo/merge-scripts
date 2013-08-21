@@ -15,7 +15,6 @@ flora_overlay = Tree("flora", "master", "repos@git.funtoo.org:flora.git", pull=T
 progress_overlay = SvnTree("progress", "https://gentoo-progress.googlecode.com/svn/overlays/progress")
 sabayon_for_gentoo = Tree("sabayon-for-gentoo", "master", "git://github.com/Sabayon/for-gentoo.git", pull=True)
 mate_overlay = Tree("mate", "master", "git://github.com/Sabayon/mate-overlay.git", pull=True)
-bliss_overlay = Tree("bliss", "master", "git://github.com/fearedbliss/bliss-overlay.git", pull=True)
 
 steps = [
 	SyncTree(gentoo_src,exclude=["/metadata/cache/**","ChangeLog", "dev-util/metro"]),
@@ -44,7 +43,6 @@ steps = [
 	InsertEbuilds(bar_overlay, select="all", skip=["app-emulation/qemu"], replace=False),
 	InsertEbuilds(flora_overlay, select="all", skip=["sys-fs/spl", "sys-fs/zfs", "media-sound/oss", "x11-wm/qtile"], replace=False),
 	InsertEbuilds(mate_overlay, select="all", skip=None, replace=False),
-	InsertEbuilds(bliss_overlay, select="all", skip=None, replace=False),
 	SyncDir(mate_overlay.root, "eclass"),
 	SyncDir(mate_overlay.root, "sets"),
 	SyncFiles(mate_overlay.root, { 
