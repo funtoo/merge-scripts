@@ -1,0 +1,38 @@
+#!/sbin/runscript
+# Copyright (C) 2013 Jonathan Vasquez <jvasquez1011@gmail.com>
+# Distributed under the terms of the Simplified BSD License.
+
+NAME="BitTorrent Sync"
+SYNC_NAME="btsync"
+SYNC_PATH="/opt/${SYNC_NAME}/"
+SYNC_BINARY="${SYNC_PATH}/${SYNC_NAME}"
+SYNC_OPTS="--nodaemon --config /etc/${SYNC_NAME}/config"
+SYNC_PIDFILE="/var/run/${SYNC_NAME}.pid"
+
+start() {
+	ebegin "Starting ${NAME}"
+
+	start-stop-daemon --start --exec "${SYNC_BINARY}" \
+	   --pidfile "${SYNC_PIDFILE}" --background \
+	   -- ${SYNC_OPTS}
+
+	eend $?
+}
+
+stop() {
+	ebegin "Stopping ${NAME}"
+
+	start-stop-daemon --stop --exec "${SYNC_BINARY}" \
+	    --pidfile "${SYNC_PIDFILE}"
+
+	eend $?
+}
+
+reload() {
+	ebegin "Reloading ${NAME}"
+
+	start-stop-daemon --signal HUP --exec "${SYNC_BINARY}" \
+	    --pidfile "${SYNC_PIDFILE}"
+
+	eend $?
+}
