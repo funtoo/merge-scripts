@@ -1,3 +1,8 @@
+#  Oleg Vinichenko (26 Aug 2013)
+#  mask latest icedtea-bin ebuild, multiple failures with dev-java/* packages.
+#  see bug #477972 at b.g.o, this doesn't allow clean emerge of jython, forked in Funtoo
+>dev-java/icedtea-bin-7.2.3.9
+
 #  Oleg Vinichenko (26 Jul 2013)
 #  FL-645, mask latest gdm, gnome-shell, gnome-settings-daemon
 #  as they explicitly require systemd
