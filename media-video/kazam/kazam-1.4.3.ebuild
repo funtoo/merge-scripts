@@ -17,6 +17,7 @@ IUSE="pulseaudio"
 
 DEPEND="$(python_abi_depend dev-python/python-distutils-extra)"
 RDEPEND="x11-libs/gtk+:3[introspection]
+	x11-libs/libwnck[introspection]
 	$(python_abi_depend dev-python/pycairo dev-python/pyxdg dev-python/pygobject:3 dev-python/dbus-python) 
 	media-libs/gstreamer[introspection]
 	media-libs/gst-plugins-good:0.10
