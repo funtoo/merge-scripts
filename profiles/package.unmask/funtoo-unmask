@@ -1,3 +1,7 @@
+# no bug commit, gentoo masked eselect-1.3.7
+# we maintain our own version, which works fine so far
+>=app-admin/eselect-1.3.7
+
 ## FL-525
 net-libs/nodejs
 
