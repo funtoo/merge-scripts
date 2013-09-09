@@ -2,7 +2,7 @@
 
 EAPI=5
 
-inherit multilib
+inherit multilib eutils
 
 # Ebuild notes:
 #
@@ -18,11 +18,65 @@ inherit multilib
 
 # Note: multi-stage bootstrapping is currently not being performed.
 
+# Parse information from CBUILD/CHOST/CTARGET rather than
+# use external variables from the profile.
+tc-ninja_magic_to_arch() {
+ninj() { [[ ${type} == "kern" ]] && echo $1 || echo $2 ; }
+
+	local type=$1
+	local host=$2
+	[[ -z ${host} ]] && host=${CTARGET:-${CHOST}}
+
+	case ${host} in
+		alpha*)		echo alpha;;
+		arm*)		echo arm;;
+		avr*)		ninj avr32 avr;;
+		bfin*)		ninj blackfin bfin;;
+		cris*)		echo cris;;
+		hppa*)		ninj parisc hppa;;
+		i?86*)		echo x86;;
+		ia64*)		echo ia64;;
+		m68*)		echo m68k;;
+		mips*)		echo mips;;
+		nios2*)		echo nios2;;
+		nios*)		echo nios;;
+		powerpc*)
+			if [[ ${host} == powerpc64* ]] ; then
+				echo ppc64
+			elif [[ ${PROFILE_ARCH} == "ppc64" ]] ; then
+				ninj ppc64 ppc
+			else
+				echo ppc
+			fi
+			;;
+		s390*)		echo s390;;
+		sh64*)		ninj sh64 sh;;
+		sh*)		echo sh;;
+		sparc64*)	ninj sparc64 sparc;;
+		sparc*)		[[ ${PROFILE_ARCH} == "sparc64" ]] \
+						&& ninj sparc64 sparc \
+						|| echo sparc
+					;;
+		vax*)		echo vax;;
+		x86_64*freebsd*) echo amd64;;
+		x86_64*)
+				ninj x86_64 amd64;;
+		*)			echo unknown;;
+	esac
+}
+
+# @FUNCTION: tc-arch
+# @USAGE: [toolchain prefix]
+# @RETURN: name of the portage arch according to the compiler target
+tc-arch() {
+	tc-ninja_magic_to_arch portage "$@"
+}
+
 RESTRICT="strip"
 FEATURES=${FEATURES/multilib-strict/}
 
 IUSE="ada cxx fortran f77 f95 objc objc++ openmp" # languages
-IUSE="$IUSE multislot nls nptl vanilla doc multilib altivec libssp" # other stuff
+IUSE="$IUSE multislot nls nptl vanilla doc multilib altivec libssp hardened" # other stuff
 
 # USE Notes:
 #
@@ -32,7 +86,6 @@ IUSE="$IUSE multislot nls nptl vanilla doc multilib altivec libssp" # other stuf
 # test is not currently supported.
 # objc-gc is enabled by default when objc is enabled.
 # gcj is not currently supported by this ebuild.
-# hardened is not currently supported by this ebuild.
 # graphite is not currently supported by this ebuild.
 # multislot is a good USE flag to set when testing this ebuild.
 # It allows this gcc to co-exist along identical x.y versions.
@@ -43,16 +96,36 @@ else
 	SLOT="${PV%.*}"
 fi
 
-PATCH_VER="1.6"
+#Not used:
+#PATCH_VER="1.6"
+
+#Hardened Support:
+#
+# PIE_VER specifies the version of the PIE patches that will be downloaded and applied.
+#
+# SPECS_VER and SPECS_GCC_VER specifies the version of the "minispecs" files that will
+# be used. Minispecs are compiler definitions that are installed that can be used to 
+# select various permutations of the hardened compiler, as well as a non-hardened
+# compiler, and are typically selected via Gentoo's gcc-config tool.
+
+PIE_VER="0.5.2"
+SPECS_VER="0.2.0"
+SPECS_GCC_VER="4.4.3"
+SPECS_A="gcc-${SPECS_GCC_VER}-specs-${SPECS_VER}.tar.bz2"
+PIE_A="gcc-${PV}-piepatches-v${PIE_VER}.tar.bz2"
+
 GMP_VER="5.1.1"
 MPFR_VER="3.1.2"
 MPC_VER="1.0.1"
-GCC_A="gcc-${PV}.tar.bz2"
 
+GCC_A="gcc-${PV}.tar.bz2"
 SRC_URI="mirror://gnu/gcc/gcc-${PV}/${GCC_A}"
 SRC_URI="$SRC_URI http://www.multiprecision.org/mpc/download/mpc-${MPC_VER}.tar.gz"
 SRC_URI="$SRC_URI http://www.mpfr.org/mpfr-${MPFR_VER}/mpfr-${MPFR_VER}.tar.xz"
 SRC_URI="$SRC_URI mirror://gnu/gmp/gmp-${GMP_VER}.tar.xz"
+
+#Hardened Support:
+SRC_URI="$SRC_URI hardened? ( mirror://gentoo/${SPECS_A} mirror://gentoo/${PIE_A} )"
 
 DESCRIPTION="The GNU Compiler Collection"
 
@@ -81,12 +154,18 @@ src_unpack() {
 	( unpack mpc-${MPC_VER}.tar.gz && mv ${WORKDIR}/mpc-${MPC_VER} ${S}/mpc ) || die "mpc setup fail"
 	( unpack mpfr-${MPFR_VER}.tar.xz && mv ${WORKDIR}/mpfr-${MPFR_VER} ${S}/mpfr ) || die "mpfr setup fail"
 	( unpack gmp-${GMP_VER}.tar.xz && mv ${WORKDIR}/gmp-${GMP_VER} ${S}/gmp ) || die "gmp setup fail"
+	unpack $PIE_A || die "pie unpack fail"
+	unpack $SPECS_A || die "specs unpack fail"
 	cd $S
 
 	mkdir ${WORKDIR}/objdir
 }
 
 src_prepare() {
+
+	# TODO - APPLY PIE PATCHES
+	# TODO - ALL_CFLAGS vs HARD_CFLAGS (see do_gcc_PIE_patches() in toolchain.eclass)
+
 	# For some reason, when upgrading gcc, the gcc Makefile will install stuff
 	# like crtbegin.o into a subdirectory based on the name of the currently-installed
 	# gcc version, rather than *our* gcc version. Manually fix this:
@@ -111,9 +190,17 @@ src_prepare() {
 	# Here is hack #1 to make that happen - hard-code the configure script with the full path to gfortran:
 
 	sed -i -e "s:^FC=.*:FC=${WORKDIR}/objdir/gcc/gfortran:" ${WORKDIR}/gcc-${PV}/libgfortran/configure || die libgfortran prep
+
+	if use hardened; then
+		local gcc_hard_flags="-DEFAULT_RELRO -DEFAULT_BIND_NOW -DEFAULT_PIE_SSP"
+		sed -i -e "/^HARD_CFLAGS = /s|=|= ${gcc_hard_flags} |" "${S}"/gcc/Makefile.in || die
+		einfo "Applying PIE patches..."
+		epatch "${WORKDIR}"/piepatch/
+	fi
 }
 
 src_configure() {
+
 	# Determine language support:
 	local confgcc
 	local GCC_LANG="c"
@@ -129,8 +216,12 @@ src_configure() {
 	use ada && GCC_LANG+=",ada"
 	confgcc+=" $(use_enable openmp libgomp)"
 	confgcc+=" --enable-languages=${GCC_LANG} --disable-libgcj"
+	confgcc+=" $(use_enable hardened esp)"
 
 	use libssp || export gcc_cv_libc_provides_ssp=yes
+
+	local branding="Funtoo"
+	use hardened && branding="$branding Hardened, pie=${PIE_VER}"
 
 	cd ${WORKDIR}/objdir && ../gcc-${PV}/configure \
 		$(use_enable libssp) \
@@ -154,7 +245,7 @@ src_configure() {
 		--enable-secureplt \
 		--disable-lto \
 		--with-bugurl=http://bugs.funtoo.org \
-		--with-pkgversion="Funtoo ${PVR}" \
+		--with-pkgversion="$branding ${PVR}" \
 		--with-mpfr-include=${S}/mpfr/src \
 		--with-mpfr-lib=${WORKDIR}/objdir/mpfr/src/.libs \
 		$confgcc \
@@ -270,6 +361,15 @@ src_install() {
 
 	dodir /etc/env.d/gcc
 	create_gcc_env_entry
+
+	if use hardened; then
+		create_gcc_env_entry hardenednopiessp
+		create_gcc_env_entry hardenednopie
+		create_gcc_env_entry hardenednossp
+		create_gcc_env_entry vanilla
+		insinto ${LIBPATH}
+		doins "${WORKDIR}"/specs/*.specs
+	fi
 
 # CLEANUPS:
 
