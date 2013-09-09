@@ -1,3 +1,10 @@
+#  Oleg Vinichenko (6 Sep 2013)
+#  mask perl modules that explicitly require newer perl-5.18
+#  until we get perl-5.18 to tree.
+>virtual/perl-ExtUtils-CBuilder-0.280.205
+>virtual/perl-Perl-OSType-1.2.0-r1
+>virtual/perl-IO-1.25
+
 #  Oleg Vinichenko (26 Aug 2013)
 #  mask latest icedtea-bin ebuild, multiple failures with dev-java/* packages.
 #  see bug #477972 at b.g.o, this doesn't allow clean emerge of jython, forked in Funtoo
@@ -74,7 +81,8 @@ sys-fs/zfs-fuse
 # Ref b.g.o.# 421465
 # Oleg Vinichenko (16 Apr 2013)
 # 1.12 now pretty safe to use, we will keep 1.13 masked FL-499
->=sys-devel/automake-1.13
+# Oleg Vinichenko (8 Sep 2013) FL-710, stabilize automake-1.13.4
+>sys-devel/automake-1.13.4
 
 # FL-406, mask latest hwids
 # Jean-Francis Roy (11 Feb 2013)
