@@ -18,60 +18,6 @@ inherit multilib eutils
 
 # Note: multi-stage bootstrapping is currently not being performed.
 
-# Parse information from CBUILD/CHOST/CTARGET rather than
-# use external variables from the profile.
-tc-ninja_magic_to_arch() {
-ninj() { [[ ${type} == "kern" ]] && echo $1 || echo $2 ; }
-
-	local type=$1
-	local host=$2
-	[[ -z ${host} ]] && host=${CTARGET:-${CHOST}}
-
-	case ${host} in
-		alpha*)		echo alpha;;
-		arm*)		echo arm;;
-		avr*)		ninj avr32 avr;;
-		bfin*)		ninj blackfin bfin;;
-		cris*)		echo cris;;
-		hppa*)		ninj parisc hppa;;
-		i?86*)		echo x86;;
-		ia64*)		echo ia64;;
-		m68*)		echo m68k;;
-		mips*)		echo mips;;
-		nios2*)		echo nios2;;
-		nios*)		echo nios;;
-		powerpc*)
-			if [[ ${host} == powerpc64* ]] ; then
-				echo ppc64
-			elif [[ ${PROFILE_ARCH} == "ppc64" ]] ; then
-				ninj ppc64 ppc
-			else
-				echo ppc
-			fi
-			;;
-		s390*)		echo s390;;
-		sh64*)		ninj sh64 sh;;
-		sh*)		echo sh;;
-		sparc64*)	ninj sparc64 sparc;;
-		sparc*)		[[ ${PROFILE_ARCH} == "sparc64" ]] \
-						&& ninj sparc64 sparc \
-						|| echo sparc
-					;;
-		vax*)		echo vax;;
-		x86_64*freebsd*) echo amd64;;
-		x86_64*)
-				ninj x86_64 amd64;;
-		*)			echo unknown;;
-	esac
-}
-
-# @FUNCTION: tc-arch
-# @USAGE: [toolchain prefix]
-# @RETURN: name of the portage arch according to the compiler target
-tc-arch() {
-	tc-ninja_magic_to_arch portage "$@"
-}
-
 RESTRICT="strip"
 FEATURES=${FEATURES/multilib-strict/}
 
