@@ -12,4 +12,4 @@ KEYWORDS="*"
 IUSE=""
 
 DEPEND=""
-RDEPEND="|| ( sys-apps/kmod[tools] sys-apps/modutils )"
+RDEPEND="sys-apps/kmod[tools]"
