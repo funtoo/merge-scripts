@@ -1,6 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation.
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/hardened/linux/package.mask,v 1.38 2012/02/11 10:42:34 slyfox Exp $
 
 # Hardened versions of gcc-4.0* through gcc-4.2* are not available.
 =sys-devel/gcc-4.0*
@@ -9,9 +7,6 @@
 
 # Hardened >=sys-devel/gcc-4.4.3-r3 >=gcc-4.4.4-r1 available.
 =sys-devel/gcc-4.4.2*
-
-# Funtoo's new GCC ebuild does not support hardened at the moment
-=sys-devel/gcc-4.6.4*
 
 # =sys-devel/gdb-7.0 is not hardened-ready according to xake & Zorry.
 # sys-devel/gdb-7.1 works fine
