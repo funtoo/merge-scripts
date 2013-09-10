@@ -1,0 +1,33 @@
+From 60330e8a42e80c4dd647c55a4b99c44d67cedfc0 Mon Sep 17 00:00:00 2001
+From: Philip Withnall <philip@tecnocode.co.uk>
+Date: Mon, 15 Aug 2011 22:15:57 +0100
+Subject: [PATCH] core: Add missing symbols to symbols file
+
+Closes: bgo#656529
+---
+ gdata/gdata.symbols |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/gdata/gdata.symbols b/gdata/gdata.symbols
+index 1220ce9..a2d0590 100644
+--- a/gdata/gdata.symbols
++++ b/gdata/gdata.symbols
+@@ -94,6 +94,7 @@ gdata_query_get_etag
+ gdata_query_set_etag
+ gdata_youtube_standard_feed_type_get_type
+ gdata_youtube_service_error_get_type
++gdata_youtube_service_error_quark
+ gdata_youtube_service_get_type
+ gdata_youtube_service_new
+ gdata_youtube_service_query_standard_feed
+@@ -646,6 +647,7 @@ gdata_documents_query_get_reader_addresses
+ gdata_documents_query_add_reader
+ gdata_documents_query_add_collaborator
+ gdata_documents_service_error_get_type
++gdata_documents_service_error_quark
+ gdata_download_stream_get_type
+ gdata_download_stream_new
+ gdata_download_stream_get_service
+-- 
+1.7.8.rc1
+

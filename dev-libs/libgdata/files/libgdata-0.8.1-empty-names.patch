@@ -1,0 +1,102 @@
+From 400a4e74f5a506ddff07605a93aa7412262fea38 Mon Sep 17 00:00:00 2001
+From: Philip Withnall <philip@tecnocode.co.uk>
+Date: Tue, 19 Apr 2011 08:13:01 +0000
+Subject: Bug 648058 — Doesn't allow empty names for user defined fields
+
+Allow Google Contacts' user defined fields to have empty names. Test cases
+updated. Closes: bgo#648058
+---
+diff --git a/gdata/services/contacts/gdata-contacts-contact.c b/gdata/services/contacts/gdata-contacts-contact.c
+index bedb2c8..33b20c6 100644
+--- a/gdata/services/contacts/gdata-contacts-contact.c
++++ b/gdata/services/contacts/gdata-contacts-contact.c
+@@ -896,8 +896,9 @@ parse_xml (GDataParsable *parsable, xmlDoc *doc, xmlNode *node, gpointer user_da
+ 			/* gContact:userDefinedField */
+ 			xmlChar *name, *value;
+ 
++			/* Note that while we require the property to be present, we don't require it to be non-empty. See bgo#648058 */
+ 			name = xmlGetProp (node, (xmlChar*) "key");
+-			if (name == NULL || *name == '\0') {
++			if (name == NULL) {
+ 				xmlFree (name);
+ 				return gdata_parser_error_required_property_missing (node, "key", error);
+ 			}
+@@ -2843,6 +2844,8 @@ gdata_contacts_contact_set_extended_property (GDataContactsContact *self, const
+  * Gets the value of a user-defined field of the contact. User-defined fields are settable by the user through the Google Contacts web interface,
+  * in contrast to extended properties, which are visible and settable only through the GData interface.
+  *
++ * The @name of the field may not be %NULL, but may be an empty string.
++ *
+  * Return value: the field's value, or %NULL
+  *
+  * Since: 0.7.0
+@@ -2851,7 +2854,7 @@ const gchar *
+ gdata_contacts_contact_get_user_defined_field (GDataContactsContact *self, const gchar *name)
+ {
+ 	g_return_val_if_fail (GDATA_IS_CONTACTS_CONTACT (self), NULL);
+-	g_return_val_if_fail (name != NULL && *name != '\0', NULL);
++	g_return_val_if_fail (name != NULL, NULL);
+ 	return g_hash_table_lookup (self->priv->user_defined_fields, name);
+ }
+ 
+@@ -2881,6 +2884,8 @@ gdata_contacts_contact_get_user_defined_fields (GDataContactsContact *self)
+  * Sets the value of a contact's user-defined field. User-defined field names are unique (but of the client's choosing),
+  * and reusing the same field name will result in the old value of that field being overwritten.
+  *
++ * The @name of the field may not be %NULL, but may be an empty string.
++ *
+  * To unset a field, set @value to %NULL.
+  *
+  * Since: 0.7.0
+@@ -2889,7 +2894,7 @@ void
+ gdata_contacts_contact_set_user_defined_field (GDataContactsContact *self, const gchar *name, const gchar *value)
+ {
+ 	g_return_if_fail (GDATA_IS_CONTACTS_CONTACT (self));
+-	g_return_if_fail (name != NULL && *name != '\0');
++	g_return_if_fail (name != NULL);
+ 
+ 	if (value == NULL) {
+ 		/* Removing a field */
+diff --git a/gdata/tests/contacts.c b/gdata/tests/contacts.c
+index e22184f..37c0a68 100644
+--- a/gdata/tests/contacts.c
++++ b/gdata/tests/contacts.c
+@@ -276,6 +276,7 @@ test_insert_simple (gconstpointer service)
+ 	gdata_contacts_contact_set_user_defined_field (contact, "Favourite colour", "Blue");
+ 	gdata_contacts_contact_set_user_defined_field (contact, "Owes me", "£10");
+ 	gdata_contacts_contact_set_user_defined_field (contact, "My notes", "");
++	gdata_contacts_contact_set_user_defined_field (contact, "", "Foo"); /* bgo#648058 */
+ 
+ 	/* Check the properties of the object */
+ 	g_object_get (G_OBJECT (contact),
+@@ -374,6 +375,7 @@ test_insert_simple (gconstpointer service)
+ 				"<gContact:userDefinedField key='Favourite colour' value='Blue'/>"
+ 				"<gContact:userDefinedField key='Owes me' value='£10'/>"
+ 				"<gContact:userDefinedField key='My notes' value=''/>"
++				"<gContact:userDefinedField key='' value='Foo'/>" /* bgo#648058 */
+ 				"<gContact:hobby>Rowing</gContact:hobby>"
+ 				"<gContact:nickname>Big J</gContact:nickname>"
+ 				"<gContact:birthday when='--01-01'/>"
+@@ -510,10 +512,11 @@ test_insert_simple (gconstpointer service)
+ 	g_assert_cmpstr (gdata_contacts_contact_get_user_defined_field (new_contact, "Favourite colour"), ==, "Blue");
+ 	g_assert_cmpstr (gdata_contacts_contact_get_user_defined_field (new_contact, "Owes me"), ==, "£10");
+ 	g_assert_cmpstr (gdata_contacts_contact_get_user_defined_field (new_contact, "My notes"), ==, "");
++	g_assert_cmpstr (gdata_contacts_contact_get_user_defined_field (new_contact, ""), ==, "Foo");
+ 
+ 	properties = gdata_contacts_contact_get_user_defined_fields (new_contact);
+ 	g_assert (properties != NULL);
+-	g_assert_cmpuint (g_hash_table_size (properties), ==, 3);
++	g_assert_cmpuint (g_hash_table_size (properties), ==, 4);
+ 
+ 	/* Groups */
+ 	list = gdata_contacts_contact_get_groups (new_contact);
+@@ -1298,7 +1301,6 @@ test_parser_error_handling (void)
+ 	TEST_XML_ERROR_HANDLING ("<gContact:userDefinedField/>"); /* no key or value */
+ 	TEST_XML_ERROR_HANDLING ("<gContact:userDefinedField key='foo'/>"); /* no value */
+ 	TEST_XML_ERROR_HANDLING ("<gContact:userDefinedField value='bar'/>"); /* no key */
+-	TEST_XML_ERROR_HANDLING ("<gContact:userDefinedField key='' value='bar'/>"); /* empty key */
+ 
+ 	/* gContact:groupMembershipInfo */
+ 	TEST_XML_ERROR_HANDLING ("<gContact:groupMembershipInfo/>");
+--
+cgit v0.9

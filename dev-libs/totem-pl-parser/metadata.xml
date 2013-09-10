@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+<herd>gnome</herd>
+<use>
+    <flag name='archive'>Enables support for accessing media files in archives
+		transparently via <pkg>app-arch/libarchive</pkg></flag>
+	<flag name="introspection">Use <pkg>dev-libs/gobject-introspection</pkg> for
+		introspection</flag>
+	<flag name="quvi">Use <pkg>media-libs/quvi</pkg> for parsing video
+		links</flag>
+</use>
+</pkgmetadata>

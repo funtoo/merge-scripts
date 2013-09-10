@@ -1,0 +1,49 @@
+From 3c6753513bfafd59f87c192f39a1f1caf7fce47f Mon Sep 17 00:00:00 2001
+From: Ignacio Casal Quinteiro <icq@gnome.org>
+Date: Tue, 29 Jun 2010 14:58:30 +0000
+Subject: Do not fail if remote mounting is not supported. Fixes bug #621764.
+
+---
+diff --git a/tests/document-saver.c b/tests/document-saver.c
+index ef97fe6..c99b678 100644
+--- a/tests/document-saver.c
++++ b/tests/document-saver.c
+@@ -151,6 +151,10 @@ mount_ready_callback (GObject      *object,
+ 		mount_success = TRUE;
+ 		g_error_free (error);
+ 	}
++	else if (error && error->code == G_IO_ERROR_NOT_SUPPORTED)
++	{
++		g_error_free (error);
++	}
+ 	else
+ 	{
+ 		g_assert_no_error (error);
+@@ -220,7 +224,11 @@ test_saver (const gchar              *filename_or_uri,
+ 	file = g_file_new_for_commandline_arg (filename_or_uri);
+ 	existed = g_file_query_exists (file, NULL);
+ 
+-	ensure_mounted (file);
++	if (!ensure_mounted (file))
++	{
++		saver_test_data_free (data);
++		return;
++	}
+ 
+ 	gedit_document_save_as (document, file, gedit_encoding_get_utf8 (),
+ 			        newline_type, 0, save_flags);
+@@ -409,6 +417,12 @@ test_permissions (const gchar *uri,
+ 	g_file_delete (file, NULL, NULL);
+ 	stream = g_file_create (file, 0, NULL, &error);
+ 
++	if (error && error->code == G_IO_ERROR_NOT_SUPPORTED)
++	{
++		g_error_free (error);
++		return;
++	}
++
+ 	g_assert_no_error (error);
+ 
+ 	g_output_stream_close (G_OUTPUT_STREAM (stream), NULL, NULL);
+--
+cgit v0.8.3.1
