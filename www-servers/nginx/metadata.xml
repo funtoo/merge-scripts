@@ -3,12 +3,8 @@
 <pkgmetadata>
 	<herd>no-herd</herd>
 	<maintainer>
-		<email>golodhrim@funtoo.org</email>
-		<name>Martin Scholz</name>
-	</maintainer>
-	<maintainer>
 		<email>funtoo-dev@googlegroups.com</email>
-		<name>Funtoo Mailinglist</name>
+		<name>Funtoo Mailing List</name>
 	</maintainer>
 	<use>
 		<flag name='addition'>Enables HTTP addition filter module</flag>
