@@ -1,7 +1,3 @@
-# Daniel Robbins (10 Sep 2013)
-# This new PHP ebuild from Gentoo needs testing.
-=dev-lang/php-5.5.3-r1
-
 #  Oleg Vinichenko (6 Sep 2013)
 #  mask perl modules that explicitly require newer perl-5.18
 #  until we get perl-5.18 to tree.
