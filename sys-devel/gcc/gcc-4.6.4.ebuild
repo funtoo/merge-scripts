@@ -140,8 +140,8 @@ src_prepare() {
 	if use hardened; then
 		local gcc_hard_flags="-DEFAULT_RELRO -DEFAULT_BIND_NOW -DEFAULT_PIE_SSP"
 		sed -i -e "/^HARD_CFLAGS = /s|=|= ${gcc_hard_flags} |" "${S}"/gcc/Makefile.in || die
-		einfo "Applying PIE patches..."
-		epatch "${WORKDIR}"/piepatch/
+		EPATCH_MULTI_MSG="Applying PIE patches..." \
+		epatch "${WORKDIR}"/piepatch/*.patch
 	fi
 }
 
