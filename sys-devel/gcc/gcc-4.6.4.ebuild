@@ -15,16 +15,8 @@ inherit multilib eutils
 # of the ebuild itself as it is less complex.
 #
 # -- Daniel Robbins, Apr 19, 2013.
-
-# Note: multi-stage bootstrapping is currently not being performed.
-
-RESTRICT="strip"
-FEATURES=${FEATURES/multilib-strict/}
-
-IUSE="ada cxx fortran f77 f95 objc objc++ openmp" # languages
-IUSE="$IUSE multislot nls nptl vanilla doc multilib altivec libssp hardened" # other stuff
-
-# USE Notes:
+#
+# Other important notes on this ebuild:
 #
 # x86/amd64 architecture support only (for now).
 # mudflap is enabled by default.
@@ -33,8 +25,18 @@ IUSE="$IUSE multislot nls nptl vanilla doc multilib altivec libssp hardened" # o
 # objc-gc is enabled by default when objc is enabled.
 # gcj is not currently supported by this ebuild.
 # graphite is not currently supported by this ebuild.
-# multislot is a good USE flag to set when testing this ebuild.
-# It allows this gcc to co-exist along identical x.y versions.
+# multislot is a good USE flag to set when testing this ebuild;
+#  (It allows this gcc to co-exist along identical x.y versions.)
+# hardened is now supported, but we have deprecated the nopie and
+#  nossp USE flags from gentoo.
+
+# Note: multi-stage bootstrapping is currently not being performed.
+
+RESTRICT="strip"
+FEATURES=${FEATURES/multilib-strict/}
+
+IUSE="ada cxx fortran f77 f95 objc objc++ openmp" # languages
+IUSE="$IUSE multislot nls nptl vanilla doc multilib altivec libssp hardened" # other stuff
 
 if use multislot; then
 	SLOT="${PV}"
