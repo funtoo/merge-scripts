@@ -102,10 +102,11 @@ src_unpack() {
 	( unpack mpc-${MPC_VER}.tar.gz && mv ${WORKDIR}/mpc-${MPC_VER} ${S}/mpc ) || die "mpc setup fail"
 	( unpack mpfr-${MPFR_VER}.tar.xz && mv ${WORKDIR}/mpfr-${MPFR_VER} ${S}/mpfr ) || die "mpfr setup fail"
 	( unpack gmp-${GMP_VER}.tar.xz && mv ${WORKDIR}/gmp-${GMP_VER} ${S}/gmp ) || die "gmp setup fail"
-	unpack $PIE_A || die "pie unpack fail"
-	unpack $SPECS_A || die "specs unpack fail"
+	if use hardened; then
+		unpack $PIE_A || die "pie unpack fail"
+		unpack $SPECS_A || die "specs unpack fail"
+	fi
 	cd $S
-
 	mkdir ${WORKDIR}/objdir
 }
 
