@@ -1,0 +1,20 @@
+From 890044b0b9d601e6701126bb354fe4f229e4240c Mon May 20 14:36:54 2013
+From: Balló György <ballogyor@gmail.com>
+Date: Mon, 20 May 2013 10:34:32 -0400
+Subject: [gnome-applets] Disable gweather applet with libgweather 3.8
+
+---
+diff --git a/configure.in b/configure.in
+index 3e13732..aad9fb5 100644
+--- a/configure.in
++++ b/configure.in
+@@ -276,7 +276,7 @@ AC_SUBST(XML2_LIBS)
+ 
+  dnl -- check for libgweather (required for gweather applet) ------------------
+ build_libgweather_applets=false
+-PKG_CHECK_MODULES(LIBGWEATHER, gweather-3.0 >= $GWEATHER_REQUIRED,
++PKG_CHECK_MODULES(LIBGWEATHER, gweather-3.0 >= $GWEATHER_REQUIRED gweather-3.0 <= 3.7,
+	          build_libgweather_applets=true,
+		  AC_MSG_WARN([libgweather not found. Not building the weather applet.]))
+ AC_SUBST(LIBGWEATHER_CFLAGS)
+--

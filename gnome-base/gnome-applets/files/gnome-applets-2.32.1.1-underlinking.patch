@@ -1,0 +1,117 @@
+ geyes/Makefile.am           |    2 +-
+ geyes/Makefile.in           |    2 +-
+ multiload/Makefile.am       |    3 ++-
+ multiload/Makefile.in       |    1 +
+ stickynotes/Makefile.am     |    3 ++-
+ stickynotes/Makefile.in     |    3 ++-
+ trashapplet/src/Makefile.am |    3 ++-
+ trashapplet/src/Makefile.in |    3 ++-
+ 8 files changed, 13 insertions(+), 7 deletions(-)
+
+diff --git a/geyes/Makefile.am b/geyes/Makefile.am
+index 7668b4c..18cd851 100644
+--- a/geyes/Makefile.am
++++ b/geyes/Makefile.am
+@@ -16,7 +16,7 @@ geyes_applet2_SOURCES =	\
+ 	geyes.h
+ 
+ geyes_applet2_LDADD = 		\
+-	$(GNOME_APPLETS3_LIBS)
++	$(GNOME_APPLETS3_LIBS) -lm
+ 
+ appletdir       = $(datadir)/gnome-panel/applets
+ applet_in_files = org.gnome.applets.GeyesApplet.panel-applet.in
+diff --git a/geyes/Makefile.in b/geyes/Makefile.in
+index cfededa..afe87e2 100644
+--- a/geyes/Makefile.in
++++ b/geyes/Makefile.in
+@@ -384,7 +384,7 @@ geyes_applet2_SOURCES = \
+ 	geyes.h
+ 
+ geyes_applet2_LDADD = \
+-	$(GNOME_APPLETS3_LIBS)
++	$(GNOME_APPLETS3_LIBS) -lm
+ 
+ appletdir = $(datadir)/gnome-panel/applets
+ applet_in_files = org.gnome.applets.GeyesApplet.panel-applet.in
+diff --git a/multiload/Makefile.am b/multiload/Makefile.am
+index 53b3147..8fe2b9f 100644
+--- a/multiload/Makefile.am
++++ b/multiload/Makefile.am
+@@ -24,7 +24,8 @@ multiload_applet_2_SOURCES = \
+ multiload_applet_2_LDADD = \
+ 				$(GNOME_APPLETS3_LIBS) 	\
+ 				$(GTOP_APPLETS_LIBS)	\
+-				$(GNOMEDESKTOP_LIBS)
++				$(GNOMEDESKTOP_LIBS)	\
++				-lm
+ 
+ schemasdir   = @GCONF_SCHEMA_FILE_DIR@
+ schemas_in_files = multiload.schemas.in
+diff --git a/multiload/Makefile.in b/multiload/Makefile.in
+index b86d621..bf13bd8 100644
+--- a/multiload/Makefile.in
++++ b/multiload/Makefile.in
+@@ -395,6 +395,7 @@ multiload_applet_2_LDADD = \
+ 				$(GNOME_APPLETS3_LIBS) 	\
+ 				$(GTOP_APPLETS_LIBS)	\
+ 				$(GNOMEDESKTOP_LIBS)
++				-lm
+ 
+ schemasdir = @GCONF_SCHEMA_FILE_DIR@
+ schemas_in_files = multiload.schemas.in
+diff --git a/stickynotes/Makefile.am b/stickynotes/Makefile.am
+index c279952..65f5502 100644
+--- a/stickynotes/Makefile.am
++++ b/stickynotes/Makefile.am
+@@ -35,7 +35,8 @@ stickynotes_applet_SOURCES = \
+ stickynotes_applet_LDADD =	\
+ 	$(GNOME_APPLETS3_LIBS)	\
+ 	$(LIBWNCK_LIBS)		\
+-	$(XML2_LIBS)
++	$(XML2_LIBS)	\
++	$(X_LIBS)
+ 
+ builder_DATA = $(builder_files)
+ 
+diff --git a/stickynotes/Makefile.in b/stickynotes/Makefile.in
+index 5442614..2e8167b 100644
+--- a/stickynotes/Makefile.in
++++ b/stickynotes/Makefile.in
+@@ -413,7 +413,8 @@ schemas_in_files = stickynotes.schemas.in
+ @BUILD_STICKYNOTES_APPLET_TRUE@stickynotes_applet_LDADD = \
+ @BUILD_STICKYNOTES_APPLET_TRUE@	$(GNOME_APPLETS3_LIBS)	\
+ @BUILD_STICKYNOTES_APPLET_TRUE@	$(LIBWNCK_LIBS)		\
+-@BUILD_STICKYNOTES_APPLET_TRUE@	$(XML2_LIBS)
++@BUILD_STICKYNOTES_APPLET_TRUE@	$(XML2_LIBS)	\
++@BUILD_STICKYNOTES_APPLET_TRUE@	$(X_LIBS)
+ 
+ @BUILD_STICKYNOTES_APPLET_TRUE@builder_DATA = $(builder_files)
+ @BUILD_STICKYNOTES_APPLET_TRUE@uidir = $(datadir)/gnome-2.0/ui
+diff --git a/trashapplet/src/Makefile.am b/trashapplet/src/Makefile.am
+index 52da653..05ba024 100644
+--- a/trashapplet/src/Makefile.am
++++ b/trashapplet/src/Makefile.am
+@@ -14,6 +14,7 @@ trashapplet_SOURCES = \
+ 
+ trashapplet_LDADD = 		\
+ 	$(GNOME_APPLETS3_LIBS) 	\
+-	$(GIO_LIBS)
++	$(GIO_LIBS)	\
++	$(X_LIBS)
+ 
+ -include $(top_srcdir)/git.mk
+diff --git a/trashapplet/src/Makefile.in b/trashapplet/src/Makefile.in
+index f006b80..a6ee115 100644
+--- a/trashapplet/src/Makefile.in
++++ b/trashapplet/src/Makefile.in
+@@ -320,7 +320,8 @@ trashapplet_SOURCES = \
+ 
+ trashapplet_LDADD = \
+ 	$(GNOME_APPLETS3_LIBS) 	\
+-	$(GIO_LIBS)
++	$(GIO_LIBS)	\
++	$(X_LIBS)
+ 
+ all: all-am
+ 
