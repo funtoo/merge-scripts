@@ -167,7 +167,11 @@ src_configure() {
 	use libssp || export gcc_cv_libc_provides_ssp=yes
 
 	local branding="Funtoo"
-	use hardened && branding="$branding Hardened, pie=${PIE_VER}"
+	if use hardened; then
+		branding="$branding Hardened ${PVR}, pie-${PIE_VER}"
+	else
+		branding="$branding ${PVR}"
+	fi
 
 	cd ${WORKDIR}/objdir && ../gcc-${PV}/configure \
 		$(use_enable libssp) \
@@ -191,7 +195,7 @@ src_configure() {
 		--enable-secureplt \
 		--disable-lto \
 		--with-bugurl=http://bugs.funtoo.org \
-		--with-pkgversion="$branding ${PVR}" \
+		--with-pkgversion="$branding" \
 		--with-mpfr-include=${S}/mpfr/src \
 		--with-mpfr-lib=${WORKDIR}/objdir/mpfr/src/.libs \
 		$confgcc \
