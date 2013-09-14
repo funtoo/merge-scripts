@@ -1,14 +1,12 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
-# Daniel Robbins (10 Apr 2013)
-# FL-487: staging zenoss, as it is a work in progress.
-sys-monitor/zenoss
+#Daniel Robbins (14 Sep 2013)
+#Masked for testing
+=sys-apps/sysvinit-2.88-r6
+=sys-apps/util-linux-2.32.2-r1
 
 #Daniel Robbins (19 Dec 2011)
 #I am working on this ebuild - not yet ready for prime time.
 >=net-analyzer/net-snmp-5.7
 
-# Martin Scholz <golodhrim@funtoo.org> (24 Aug 2011)
-# Testing Mask for linode sources
-=sys-kernel/linode-sources-3.0.1
