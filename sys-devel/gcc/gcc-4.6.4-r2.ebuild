@@ -112,9 +112,6 @@ src_unpack() {
 
 src_prepare() {
 
-	# TODO - APPLY PIE PATCHES
-	# TODO - ALL_CFLAGS vs HARD_CFLAGS (see do_gcc_PIE_patches() in toolchain.eclass)
-
 	# For some reason, when upgrading gcc, the gcc Makefile will install stuff
 	# like crtbegin.o into a subdirectory based on the name of the currently-installed
 	# gcc version, rather than *our* gcc version. Manually fix this:
@@ -142,9 +139,19 @@ src_prepare() {
 
 	if use hardened; then
 		local gcc_hard_flags="-DEFAULT_RELRO -DEFAULT_BIND_NOW -DEFAULT_PIE_SSP"
-		sed -i -e "/^HARD_CFLAGS = /s|=|= ${gcc_hard_flags} |" "${S}"/gcc/Makefile.in || die
+
 		EPATCH_MULTI_MSG="Applying PIE patches..." \
-		epatch "${WORKDIR}"/piepatch/*.patch
+			epatch "${WORKDIR}"/piepatch/*.patch
+
+		sed -e '/^ALL_CFLAGS/iHARD_CFLAGS = ' \
+			-e 's|^ALL_CFLAGS = |ALL_CFLAGS = $(HARD_CFLAGS) |' \
+			-i "${S}"/gcc/Makefile.in
+
+		sed -e '/^ALL_CXXFLAGS/iHARD_CFLAGS = ' \
+			-e 's|^ALL_CXXFLAGS = |ALL_CXXFLAGS = $(HARD_CFLAGS) |' \
+			-i "${S}"/gcc/Makefile.in
+
+		sed -i -e "/^HARD_CFLAGS = /s|=|= ${gcc_hard_flags} |" "${S}"/gcc/Makefile.in || die
 	fi
 }
 

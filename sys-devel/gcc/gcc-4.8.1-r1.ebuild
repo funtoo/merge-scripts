@@ -44,9 +44,6 @@ else
 	SLOT="${PV%.*}"
 fi
 
-#Not used:
-#PATCH_VER="1.6"
-
 #Hardened Support:
 #
 # PIE_VER specifies the version of the PIE patches that will be downloaded and applied.
@@ -112,9 +109,6 @@ src_unpack() {
 
 src_prepare() {
 
-	# TODO - APPLY PIE PATCHES
-	# TODO - ALL_CFLAGS vs HARD_CFLAGS (see do_gcc_PIE_patches() in toolchain.eclass)
-
 	# For some reason, when upgrading gcc, the gcc Makefile will install stuff
 	# like crtbegin.o into a subdirectory based on the name of the currently-installed
 	# gcc version, rather than *our* gcc version. Manually fix this:
@@ -124,7 +118,7 @@ src_prepare() {
 	# The following patch allows pie/ssp specs to be changed via environment
 	# variable, which is needed for gcc-config to allow switching of compilers:
 
-	[[ ${CHOST} == ${CTARGET} ]] && cat "${FILESDIR}"/gcc-spec-env.patch | patch -p1 || die "patch fail"
+	[[ ${CHOST} == ${CTARGET} ]] && cat "${FILESDIR}"/gcc-spec-env-r1.patch | patch -p1 || die "patch fail"
 
 	# We use --enable-version-specific-libs with ./configure. This
 	# option is designed to place all our libraries into a sub-directory
@@ -142,9 +136,19 @@ src_prepare() {
 
 	if use hardened; then
 		local gcc_hard_flags="-DEFAULT_RELRO -DEFAULT_BIND_NOW -DEFAULT_PIE_SSP"
-		sed -i -e "/^HARD_CFLAGS = /s|=|= ${gcc_hard_flags} |" "${S}"/gcc/Makefile.in || die
+
 		EPATCH_MULTI_MSG="Applying PIE patches..." \
-		epatch "${WORKDIR}"/piepatch/*.patch
+			epatch "${WORKDIR}"/piepatch/*.patch
+
+		sed -e '/^ALL_CFLAGS/iHARD_CFLAGS = ' \
+			-e 's|^ALL_CFLAGS = |ALL_CFLAGS = $(HARD_CFLAGS) |' \
+			-i "${S}"/gcc/Makefile.in
+
+		sed -e '/^ALL_CXXFLAGS/iHARD_CFLAGS = ' \
+			-e 's|^ALL_CXXFLAGS = |ALL_CXXFLAGS = $(HARD_CFLAGS) |' \
+			-i "${S}"/gcc/Makefile.in
+
+		sed -i -e "/^HARD_CFLAGS = /s|=|= ${gcc_hard_flags} |" "${S}"/gcc/Makefile.in || die
 	fi
 }
 
