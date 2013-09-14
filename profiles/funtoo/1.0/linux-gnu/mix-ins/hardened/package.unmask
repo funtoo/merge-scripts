@@ -1,0 +1,8 @@
+# Funtoo starts supporting hardened builds with versions unmasked on
+# this file. When this packages got unmasked on non-hardened builds,
+# they must be removed from here.
+#
+# vroman - 15/09/2013
+=sys-kernel/linux-headers-3.7
+=sys-libs/glibc-2.18
+=sys-devel/gcc-4.8.1-r1
