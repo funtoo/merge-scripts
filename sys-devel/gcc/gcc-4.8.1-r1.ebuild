@@ -103,6 +103,7 @@ src_unpack() {
 		unpack $PIE_A || die "pie unpack fail"
 		unpack $SPECS_A || die "specs unpack fail"
 	fi
+
 	cd $S
 	mkdir ${WORKDIR}/objdir
 }
