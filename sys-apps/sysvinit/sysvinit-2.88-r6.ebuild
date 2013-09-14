@@ -14,7 +14,7 @@ KEYWORDS="*"
 IUSE="selinux ibm static kernel_FreeBSD"
 
 # sysvinit-2.88-r6 is "required" to avoid conflicts with earlier versions:
-RDEPEND="selinux? ( >=sys-libs/libselinux-1.28 ) >=sys-apps/sysvinit-2.88-r6"
+RDEPEND="selinux? ( >=sys-libs/libselinux-1.28 )"
 DEPEND="${RDEPEND}
 	virtual/os-headers"
 
