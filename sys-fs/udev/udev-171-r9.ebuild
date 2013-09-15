@@ -40,7 +40,7 @@ pkg_setup() {
 	local k2="${kv%.*}"
 	local kmin="${kv##*.}"
 	echo $USE
-	if ! use bindist && [ "$k2" == "2.6" ] && [ "$kmin" -lt ${MIN_KERNEL##*.} ] && [ "${FEATURES/safetydance/}" = "${FEATURES}" ]
+	if [ "$k2" == "2.6" ] && [ "$kmin" -lt ${MIN_KERNEL##*.} ] && [ "${FEATURES/safetydance/}" = "${FEATURES}" ]
 	then
 		eerror
 		eerror "Current kernel version: $kv"
@@ -78,7 +78,7 @@ src_unpack() {
 	then
 		EPATCH_SOURCE="${WORKDIR}/${PATCHSET}" EPATCH_SUFFIX="patch" EPATCH_FORCE="yes" epatch
 	fi
-	epatch ${FILESDIR}/patches/devnode.patch	
+	epatch ${FILESDIR}/patches/devnode.patch
 	# change rules back to group uucp instead of dialout for now - eventually
 	# fix baselayout -
 
@@ -134,11 +134,6 @@ src_install() {
 	# udev starts.
 
 	$ROOT/sbin/realdev ${D}${udev_libexec_dir}/devices || die
-
-	# create symlinks for these utilities to /sbin
-	# where multipath-tools expect them to be (Bug #168588)
-	dosym "..${udev_libexec_dir}/vol_id" /sbin/vol_id
-	dosym "..${udev_libexec_dir}/scsi_id" /sbin/scsi_id
 
 	# Add gentoo stuff to udev.conf
 	echo "# If you need to change mount-options, do it in /etc/fstab" >> "${D}"/etc/udev/udev.conf
