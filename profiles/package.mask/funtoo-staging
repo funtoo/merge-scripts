@@ -1,5 +1,8 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
+# Oleg VInichenko (15 Sep 2013)
+# perl-5.18.1, masked for testing, FL-709
+>=dev-lang/perl-5.18.1 
 
 #Daniel Robbins (19 Dec 2011)
 #I am working on this ebuild - not yet ready for prime time.

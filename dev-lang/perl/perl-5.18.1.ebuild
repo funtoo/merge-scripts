@@ -1,12 +1,12 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=4
+EAPI=5
 
 inherit eutils alternatives flag-o-matic toolchain-funcs multilib multiprocessing
 
 PATCH_VER=1
 
-PERL_OLDVERSEN="5.16.0"
+PERL_OLDVERSEN="5.18.0"
 MODULE_AUTHOR=RJBS
 
 SHORT_PV="${PV%.*}"
@@ -16,15 +16,15 @@ MY_PV="${PV%_rc*}"
 DESCRIPTION="Larry Wall's Practical Extraction and Report Language"
 
 SRC_URI="
-	mirror://cpan/src/${MY_P}.tar.bz2
+$(true	mirror://cpan/src/${MY_P}.tar.bz2)
 	mirror://cpan/authors/id/${MODULE_AUTHOR:0:1}/${MODULE_AUTHOR:0:2}/${MODULE_AUTHOR}/${MY_P}.tar.bz2
-	mirror://gentoo/${MY_P}-${PATCH_VER}.tar.bz2
-	http://dev.gentoo.org/~tove/distfiles/${CATEGORY}/${PN}/${MY_P}-${PATCH_VER}.tar.bz2
+$(true	mirror://gentoo/${MY_P}-${PATCH_VER}.tar.bz2)
+$(true	http://dev.gentoo.org/~tove/distfiles/${CATEGORY}/${PN}/${MY_P}-${PATCH_VER}.tar.bz2)
 "
 HOMEPAGE="http://www.perl.org/"
 
-LICENSE="|| ( Artistic GPL-1 GPL-2 GPL-3 )"
-SLOT="0"
+LICENSE="|| ( Artistic GPL-1+ )"
+SLOT="0/${SHORT_PV}"
 KEYWORDS="~*"
 IUSE="berkdb debug doc gdbm ithreads"
 
@@ -39,6 +39,7 @@ DEPEND="${RDEPEND}
 "
 PDEPEND=">=app-admin/perl-cleaner-2.5"
 PROVIDE="sys-devel/libperl"
+
 S="${WORKDIR}/${MY_P}"
 
 dual_scripts() {
@@ -53,8 +54,9 @@ dual_scripts() {
 	src_remove_dual      perl-core/IO-Compress        2.48.0       zipdetails
 	src_remove_dual      perl-core/JSON-PP            2.272.0      json_pp
 	src_remove_dual      perl-core/Module-Build       0.390.100_rc config_data
-	src_remove_dual      perl-core/Module-CoreList    2.700.0      corelist
+	src_remove_dual      perl-core/Module-CoreList    2.840.0      corelist
 	src_remove_dual      perl-core/PodParser          1.510.0      pod2usage podchecker podselect
+	src_remove_dual      perl-core/Pod-Perldoc        1.170.0      perldoc
 	src_remove_dual      perl-core/Test-Harness       3.230.0      prove
 	src_remove_dual      perl-core/podlators          2.4.0        pod2man pod2text
 	src_remove_dual_man  perl-core/podlators          2.4.0        /usr/share/man/man1/perlpodstyle.1
