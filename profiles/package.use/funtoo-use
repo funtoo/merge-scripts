@@ -1,3 +1,6 @@
+# FL-730 extent layman to support subversion, mercurial and git by default
+app-portage/layman git mercurial subversion
+
 # FL-660 munin require rrdtool compiled with perl flag, let's add it
 net-analyzer/rrdtool perl
 
