@@ -15,7 +15,7 @@ IUSE=""
 
 RDEPEND=">=dev-lang/lua-5.1[deprecated]
 		dev-lua/luasocket
-		dev-libs/openssli[-bindist]"
+		dev-libs/openssl[-bindist]"
 DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
