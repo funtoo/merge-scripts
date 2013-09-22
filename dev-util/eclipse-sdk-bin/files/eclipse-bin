@@ -9,12 +9,12 @@
 # Licensed under the GNU General Public License, version 2
 #
 
-SLOT="4.2"
+SLOT="4.3"
 
 [ -f "/etc/eclipserc-bin-${SLOT}" ] && . "/etc/eclipserc-bin-${SLOT}"
 [ -f "$HOME/gentoo/.eclipserc" ] && . "$HOME/gentoo/.eclipserc"
 
-ECLIPSE_HOME=${ECLIPSE_HOME:="/opt/eclipse-sdk-bin-4.2"}
+ECLIPSE_HOME=${ECLIPSE_HOME:="/opt/eclipse-sdk-bin-4.3"}
 ECLIPSE_BIN="${ECLIPSE_HOME}/eclipse"
 
 if [ ! -x "${ECLIPSE_BIN}" ] ; then
