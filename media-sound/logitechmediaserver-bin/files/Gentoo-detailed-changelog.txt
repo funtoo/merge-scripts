@@ -1,3 +1,0 @@
----- logitechmediaserver-bin-7.7.2
-
-Initial version.

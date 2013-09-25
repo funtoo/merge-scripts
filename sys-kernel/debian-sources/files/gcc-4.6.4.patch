@@ -1,0 +1,23 @@
+diff -urN linux-2.6.32/Makefile linux-2.6.32.gcc//Makefile
+--- linux-2.6.32/Makefile	2011-12-27 01:41:29.616918384 +0000
++++ linux-2.6.32.gcc//Makefile	2011-12-27 01:42:29.460762412 +0000
+@@ -228,8 +228,8 @@
+ 	  else if [ -x /bin/bash ]; then echo /bin/bash; \
+ 	  else echo sh; fi ; fi)
+ 
+-HOSTCC       = gcc
+-HOSTCXX      = g++
++HOSTCC       = gcc-4.4.5
++HOSTCXX      = g++-4.4.5
+ HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer
+ HOSTCXXFLAGS = -O2
+ 
+@@ -315,7 +315,7 @@
+ 
+ AS		= $(CROSS_COMPILE)as
+ LD		= $(CROSS_COMPILE)ld
+-CC		= $(CROSS_COMPILE)gcc
++CC		= $(CROSS_COMPILE)gcc-4.4.5
+ CPP		= $(CC) -E
+ AR		= $(CROSS_COMPILE)ar
+ NM		= $(CROSS_COMPILE)nm
