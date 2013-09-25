@@ -1,3 +1,6 @@
+# FL-776, stabilize systemtap-2.2 with unfork
+=dev-util/systemtap-2.2
+
 ## FL-408, an attempt to stabilize blender, this require certain packages
 ## keywording
 dev-cpp/gflags amd64 x86
