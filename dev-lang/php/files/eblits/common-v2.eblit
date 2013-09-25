@@ -1,9 +1,0 @@
-# Copyright 1999-2012 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-lang/php/files/eblits/common-v2.eblit,v 1.4 2012/09/11 01:38:31 ottxor Exp $
-
-php_set_ini_dir() {
-	PHP_INI_DIR="${EPREFIX}/etc/php/${1}-php${SLOT}"
-	PHP_EXT_INI_DIR="${PHP_INI_DIR}/ext"
-	PHP_EXT_INI_DIR_ACTIVE="${PHP_INI_DIR}/ext-active"
-}
