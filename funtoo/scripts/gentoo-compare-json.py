@@ -12,8 +12,12 @@ import os,sys
 import commands
 import json
 
+from merge_utils import *
+# this causes the funtoo overlay to be updated
+funtoo_overlay = Tree("funtoo-overlay", branch, "repos@git.funtoo.org:funtoo-overlay.git", pull=True)
+
 dirpath = os.path.dirname(os.path.realpath(__file__))
-portdir = os.path.normpath(os.path.join(dirpath,"../.."))
+portdir = os.path.normpath("/var/git/source-trees/funtoo-overlay")
 
 print("List of differences between funtoo-overlay and gentoo")
 print("=====================================================")
