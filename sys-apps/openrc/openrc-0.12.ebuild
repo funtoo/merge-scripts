@@ -6,7 +6,6 @@ inherit eutils flag-o-matic multilib pam toolchain-funcs
 
 DESCRIPTION="OpenRC manages the services, startup and shutdown of a host"
 HOMEPAGE="http://roy.marples.name/openrc"
-PROVIDE="virtual/baselayout"
 RESTRICT="mirror"
 
 LICENSE="BSD-2"
@@ -24,7 +23,7 @@ DEPEND="ncurses? ( sys-libs/ncurses ) pam? ( virtual/pam ) virtual/os-headers vi
 
 GITHUB_REPO="${PN}"
 GITHUB_USER="funtoo"
-GITHUB_TAG="funtoo-openrc-0.12-r0"
+GITHUB_TAG="funtoo-openrc-0.12-r1"
 NETV="1.3.5"
 GITHUB_REPO_CN="corenetwork"
 GITHUB_TAG_CN="$NETV"
