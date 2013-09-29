@@ -19,11 +19,6 @@
 # use at own risk. buge reports: http://bugs.funtoo.org/browse/FL-786
 =sys-apps/openrc-0.12
  
-# Oleg Vinichenko (24 Sep 2013)
-# FL-759 new debian kernel to test. 3.10.11 added
-=sys-kernel/debian-sources-3.2.51
-=sys-kernel/debian-sources-3.10.11
-
 # Oleg VInichenko (15 Sep 2013)
 # perl-5.18.1, masked for testing, FL-709
 >=dev-lang/perl-5.18.1 
