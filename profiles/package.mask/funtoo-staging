@@ -3,6 +3,10 @@
 
 # Daniel Robbins (28 Sep 2013)
 # masked for testing
+=sys-apps/nginx-1.4.2*
+
+# Daniel Robbins (28 Sep 2013)
+# masked for testing
 =sys-apps/coreutils-8.21*
 
 # Daniel Robbins (28 Sep 2013)
