@@ -27,7 +27,3 @@
 # perl-5.18.1, masked for testing, FL-709
 >=dev-lang/perl-5.18.1 
 
-#Daniel Robbins (19 Dec 2011)
-#I am working on this ebuild - not yet ready for prime time.
->=net-analyzer/net-snmp-5.7
-
