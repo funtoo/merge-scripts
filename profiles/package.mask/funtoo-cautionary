@@ -1,3 +1,7 @@
+#  Oleg Vinichenko (2 Oct 2013)
+#  FL-791, mask python-exec-2.0, revealed portage slot bug
+>=dev-python/python-exec-2.0  
+  
 #  Oleg Vinichenko (6 Sep 2013)
 #  mask perl modules that explicitly require newer perl-5.18
 #  until we get perl-5.18 to tree.
