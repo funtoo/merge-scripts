@@ -1,10 +1,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=5
-
-VIRTUAL_MODUTILS=1
-
-inherit autotools eutils libtool multilib linux-mod
+inherit autotools eutils libtool multilib toolchain-funcs versionator
 
 if [[ ${PV} == 9999 ]]; then
 	EGIT_REPO_URI="git://git.kernel.org/pub/scm/utils/kernel/${PN}/${PN}.git"
@@ -30,6 +27,7 @@ RESTRICT="test"
 RDEPEND="!sys-apps/module-init-tools
 	!sys-apps/modutils
 	lzma? ( >=app-arch/xz-utils-5.0.4-r1 )
+	>=sys-apps/openrc-0.12
 	zlib? ( >=sys-libs/zlib-1.2.6 )" #427130
 DEPEND="${RDEPEND}
 	dev-libs/libxslt
@@ -38,15 +36,11 @@ DEPEND="${RDEPEND}
 	zlib? ( virtual/pkgconfig )"
 
 pkg_setup() {
-	CONFIG_CHECK="~MODULES ~MODULE_UNLOAD"
-
-	linux-info_pkg_setup
+	version_is_at_least 4.6 $(gcc-version) || \
+		die "At least sys-devel/gcc >= 4.6 is required to build ${CATEGORY}/${PN}." #481020
 }
 
-src_prepare()
-{
-	epatch ${FILESDIR}/${P}-dont-call-syscall.patch
-
+src_prepare() {
 	if [ ! -e configure ]; then
 		if use doc; then
 			gtkdocize --copy --docdir libkmod/docs || die
@@ -57,13 +51,18 @@ src_prepare()
 	else
 		elibtoolize
 	fi
+
+	# Restore possibility of running --enable-static wrt #472608
+	sed -i \
+		-e '/--enable-static is not supported by kmod/s:as_fn_error:echo:' \
+		configure || die
 }
 
-src_configure()
-{
+src_configure() {
 	econf \
 		--bindir=/sbin \
 		--with-rootlibdir=/$(get_libdir) \
+		--enable-shared \
 		$(use_enable static-libs static) \
 		$(use_enable tools) \
 		$(use_enable debug) \
@@ -72,8 +71,7 @@ src_configure()
 		$(use_with zlib)
 }
 
-src_install()
-{
+src_install() {
 	default
 	prune_libtool_files
 
@@ -82,7 +80,6 @@ src_install()
 		for sbincmd in depmod insmod lsmod modinfo modprobe rmmod; do
 			dosym /sbin/kmod /sbin/${sbincmd}
 		done
-
 	fi
 
 	cat <<-EOF > "${T}"/usb-load-ehci-first.conf
@@ -92,13 +89,14 @@ src_install()
 
 	insinto /lib/modprobe.d
 	doins "${T}"/usb-load-ehci-first.conf #260139
+	doinitd "${FILESDIR}"/kmod-static-nodes
+
 }
 
 pkg_postinst() {
-	# Upgrade path from sys-apps/module-init-tools
-	if [[ -d ${ROOT}/lib/modules/${KV_FULL} ]]; then
-		if [[ -z ${REPLACING_VERSIONS} ]]; then
-			update_depmod
-		fi
+
+	# Add kmod to the runlevel automatically if this is the first install of this package.
+	if [[ -x ${ROOT}etc/init.d/kmod-static-nodes && -d ${ROOT}etc/runlevels/sysinit ]]; then
+		ln -s /etc/init.d/kmod-static-nodes "${ROOT}"/etc/runlevels/sysinit/kmod-static-nodes
 	fi
 }
