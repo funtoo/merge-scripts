@@ -11,10 +11,6 @@
 
 # Daniel Robbins (28 Sep 2013)
 # masked for testing
-=sys-apps/coreutils-8.21*
-
-# Daniel Robbins (28 Sep 2013)
-# masked for testing
 =sys-cluster/vzctl-4.5.1*
 
 # Oleg Vinichenko (26 Sep 2013)
