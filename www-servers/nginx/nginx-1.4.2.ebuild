@@ -119,7 +119,7 @@ HTTP_SECURITY_MODULE_P="modsecurity-apache_${HTTP_SECURITY_MODULE_PV}"
 HTTP_SECURITY_MODULE_URI="https://www.modsecurity.org/tarball/${HTTP_SECURITY_MODULE_PV}/${HTTP_SECURITY_MODULE_P}.tar.gz"
 HTTP_SECURITY_MODULE_WD="${WORKDIR}/${HTTP_SECURITY_MODULE_P}"
 
-inherit eutils ssl-cert toolchain-funcs perl-module flag-o-matic user systemd versionator
+inherit eutils ssl-cert toolchain-funcs perl-module flag-o-matic user versionator
 
 DESCRIPTION="Robust, small and high performance http and reverse proxy server"
 HOMEPAGE="http://nginx.org"
@@ -461,8 +461,6 @@ src_install() {
 	cp "${FILESDIR}"/${PVR}/nginx.conf "${ED}"/etc/nginx/nginx.conf || die
 
 	newinitd "${FILESDIR}"/${PVR}/nginx.initd nginx
-
-	systemd_newunit "${FILESDIR}"/nginx.service-r1 nginx.service
 
 	dodir /etc/${PN}/sites-{available,enabled}
 	insinto /etc/${PN}/sites-available
