@@ -58,7 +58,7 @@ src_configure()
 src_install()
 {
 	default
-	newinitd "${FILESDIR}"/${PN}.initd ${PN}
+	newinitd "${FILESDIR}"/${PN}.initd-r3 ${PN}
 }
 
 pkg_postinst()
