@@ -106,7 +106,7 @@ HTTP_DAV_EXT_MODULE_P="ngx_dav_ext-${HTTP_DAV_EXT_MODULE_PV}"
 HTTP_DAV_EXT_MODULE_URI="http://github.com/arut/nginx-dav-ext-module/archive/v${HTTP_DAV_EXT_MODULE_PV}.tar.gz"
 HTTP_DAV_EXT_MODULE_WD="${WORKDIR}/nginx-dav-ext-module-${HTTP_DAV_EXT_MODULE_PV}"
 
-inherit eutils ssl-cert toolchain-funcs perl-module flag-o-matic user systemd versionator
+inherit eutils ssl-cert toolchain-funcs perl-module flag-o-matic user versionator
 
 DESCRIPTION="Robust, small and high performance http and reverse proxy server"
 HOMEPAGE="http://nginx.org"
@@ -129,7 +129,7 @@ SRC_URI="http://nginx.org/download/${P}.tar.gz
 
 LICENSE="BSD-2 BSD SSLeay MIT GPL-2 GPL-2+"
 SLOT="0"
-KEYWORDS="amd64 ~arm ~ppc ~x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~x86-linux"
+KEYWORDS="*"
 
 NGINX_MODULES_STD="access auth_basic autoindex browser charset empty_gif fastcgi
 geo gzip limit_req limit_conn map memcached proxy referer rewrite scgi ssi
@@ -418,8 +418,6 @@ src_install() {
 	cp "${FILESDIR}"/${PVR}/nginx.conf "${ED}"/etc/nginx/nginx.conf || die
 
 	newinitd "${FILESDIR}"/${PVR}/nginx.initd nginx
-
-	systemd_newunit "${FILESDIR}"/nginx.service-r1 nginx.service
 
 	dodir /etc/${PN}/sites-{available,enabled}
 	insinto /etc/${PN}/sites-available
