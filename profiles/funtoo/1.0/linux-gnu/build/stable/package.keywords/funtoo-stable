@@ -1,5 +1,9 @@
+# stabilize dev-libs/libgpg-error, fix stable stages builds
+
+=dev-libs/libgpg-error-1.12 amd64 x86
+
 # FL-776, stabilize systemtap-2.2 with unfork
-=dev-util/systemtap-2.2
+=dev-util/systemtap-2.2 amd64 x86
 
 ## FL-408, an attempt to stabilize blender, this require certain packages
 ## keywording
