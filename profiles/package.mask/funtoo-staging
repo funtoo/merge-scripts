@@ -17,7 +17,7 @@
 # update to openrc. upstream 0.12 version+Funtoo tweaks on top
 # masked for testing. Additional work required to investigate tmpfiles support, update to kmod and static nodes. Ebuild added as WIP,
 # use at own risk. buge reports: http://bugs.funtoo.org/browse/FL-786
-=sys-apps/openrc-0.12
+>=sys-apps/openrc-0.12
  
 # Oleg VInichenko (15 Sep 2013)
 # perl-5.18.1, masked for testing, FL-709
