@@ -1,0 +1,196 @@
+diff -uNr ipxe-936134e/src/arch/i386/drivers/net/undiload.c ipxe-936134e-funtoo/src/arch/i386/drivers/net/undiload.c
+--- ipxe-936134e/src/arch/i386/drivers/net/undiload.c	2013-06-24 17:14:36.000000000 +0200
++++ ipxe-936134e-funtoo/src/arch/i386/drivers/net/undiload.c	2013-10-10 17:12:58.931054861 +0200
+@@ -103,13 +103,16 @@
+ 
+ 	/* Call loader */
+ 	undi_loader_entry = undirom->loader_entry;
+-	__asm__ __volatile__ ( REAL_CODE ( "pushw %%ds\n\t"
++	__asm__ __volatile__ ( REAL_CODE ( "pushl %%ebp\n\t" /* gcc bug */
++					   "pushw %%ds\n\t"
+ 					   "pushw %%ax\n\t"
+ 					   "lcall *undi_loader_entry\n\t"
+-					   "addw $4, %%sp\n\t" )
++					   "addw $4, %%sp\n\t"
++					   "popl %%ebp\n\t" /* discard */
++					   "popl %%ebp\n\t" /* gcc bug */ )
+ 			       : "=a" ( exit )
+ 			       : "a" ( __from_data16 ( &undi_loader ) )
+-			       : "ebx", "ecx", "edx", "esi", "edi", "ebp" );
++			       : "ebx", "ecx", "edx", "esi", "edi" );
+ 
+ 	if ( exit != PXENV_EXIT_SUCCESS ) {
+ 		/* Clear entry point */
+diff -uNr ipxe-936134e/src/arch/i386/firmware/pcbios/bios_console.c ipxe-936134e-funtoo/src/arch/i386/firmware/pcbios/bios_console.c
+--- ipxe-936134e/src/arch/i386/firmware/pcbios/bios_console.c	2013-06-24 17:14:36.000000000 +0200
++++ ipxe-936134e-funtoo/src/arch/i386/firmware/pcbios/bios_console.c	2013-10-10 17:12:58.931054861 +0200
+@@ -167,7 +167,8 @@
+ 		return;
+ 
+ 	/* Print character with attribute */
+-	__asm__ __volatile__ ( REAL_CODE ( "sti\n\t"
++	__asm__ __volatile__ ( REAL_CODE ( "pushl %%ebp\n\t" /* gcc bug */
++					   "sti\n\t"
+ 					   /* Skip non-printable characters */
+ 					   "cmpb $0x20, %%al\n\t"
+ 					   "jb 1f\n\t"
+@@ -188,11 +189,13 @@
+ 					   "xorw %%bx, %%bx\n\t"
+ 					   "movb $0x0e, %%ah\n\t"
+ 					   "int $0x10\n\t"
+-					   "cli\n\t" )
++					   "cli\n\t"
++					   "popl %%ebp\n\t" /* discard */
++					   "popl %%ebp\n\t" /* gcc bug */ )
+ 			       : "=a" ( discard_a ), "=b" ( discard_b ),
+ 			         "=c" ( discard_c )
+ 			       : "a" ( character ), "b" ( bios_attr )
+-			       : "ebp" );
++			       :  );
+ }
+ 
+ /**
+diff -uNr ipxe-936134e/src/arch/i386/image/bootsector.c ipxe-936134e-funtoo/src/arch/i386/image/bootsector.c
+--- ipxe-936134e/src/arch/i386/image/bootsector.c	2013-06-24 17:14:36.000000000 +0200
++++ ipxe-936134e-funtoo/src/arch/i386/image/bootsector.c	2013-10-10 17:15:33.471801049 +0200
+@@ -74,7 +74,8 @@
+ 	 * real-mode stack, so we preserve everything we need in
+ 	 * static storage.
+ 	 */
+-	__asm__ __volatile__ ( REAL_CODE ( /* Save return address off-stack */
++	__asm__ __volatile__ ( REAL_CODE ( "pushl %%ebp\n\t" /* gcc bug */
++					   /* Save return address off-stack */
+ 					   "popw %%cs:saved_retaddr\n\t"
+ 					   /* Save stack pointer */
+ 					   "movw %%ss, %%ax\n\t"
+@@ -99,22 +100,27 @@
+ 					   "sti\n\t"
+ 					   "lret\n\t"
+ 					   /* Preserved variables */
++					   "\nsaved_ebp: .long 0\n\t"
+ 					   "\nsaved_ss: .word 0\n\t"
+ 					   "\nsaved_sp: .word 0\n\t"
+ 					   "\nsaved_retaddr: .word 0\n\t"
+ 					   /* Boot failure return point */
+ 					   "\nbootsector_exec_fail:\n\t"
++					   /* Restore frame pointer (gcc bug) */
++					   "\nmovl %%cs:saved_ebp, %%ebp\n\t"
+ 					   /* Restore stack pointer */
+ 					   "movw %%cs:saved_ss, %%ax\n\t"
+ 					   "movw %%ax, %%ss\n\t"
+ 					   "movw %%cs:saved_sp, %%sp\n\t"
+ 					   /* Return via saved address */
+-					   "jmp *%%cs:saved_retaddr\n\t" )
++					   "jmp *%%cs:saved_retaddr\n\t"
++					   "popl %%ebp\n\t" /* discard */
++					   "popl %%ebp\n\t" /* gcc bug */ )
+ 			       : "=b" ( discard_b ), "=D" ( discard_D ),
+ 			         "=d" ( discard_d )
+ 			       : "b" ( segment ), "D" ( offset ),
+ 			         "d" ( drive )
+-			       : "eax", "ecx", "esi", "ebp" );
++			       : "eax", "ecx", "esi"  );
+ 
+ 	DBG ( "Booted disk returned via INT 18 or 19\n" );
+ 
+diff -uNr ipxe-936134e/src/arch/i386/image/elfboot.c ipxe-936134e-funtoo/src/arch/i386/image/elfboot.c
+--- ipxe-936134e/src/arch/i386/image/elfboot.c	2013-06-24 17:14:36.000000000 +0200
++++ ipxe-936134e-funtoo/src/arch/i386/image/elfboot.c	2013-10-10 17:12:58.931054861 +0200
+@@ -60,9 +60,12 @@
+ 
+ 	/* Jump to OS with flat physical addressing */
+ 	DBGC ( image, "ELF %p starting execution at %lx\n", image, entry );
+-	__asm__ __volatile__ ( PHYS_CODE ( "call *%%edi\n\t" )
++	__asm__ __volatile__ ( PHYS_CODE ( "pushl %%ebp\n\t" /* gcc bug */
++			       		 "call *%%edi\n\t"
++					 "popl %%ebp\n\t" /* discard */
++					 "popl %%ebp\n\t" /* gcc bug */)
+ 			       : : "D" ( entry )
+-			       : "eax", "ebx", "ecx", "edx", "esi", "ebp",
++			       : "eax", "ebx", "ecx", "edx", "esi",
+ 			         "memory" );
+ 
+ 	DBGC ( image, "ELF %p returned\n", image );
+diff -uNr ipxe-936134e/src/arch/i386/image/nbi.c ipxe-936134e-funtoo/src/arch/i386/image/nbi.c
+--- ipxe-936134e/src/arch/i386/image/nbi.c	2013-06-24 17:14:36.000000000 +0200
++++ ipxe-936134e-funtoo/src/arch/i386/image/nbi.c	2013-10-10 17:12:58.931054861 +0200
+@@ -248,7 +248,8 @@
+ 	       imgheader->execaddr.segoff.offset );
+ 
+ 	__asm__ __volatile__ (
+-		REAL_CODE ( "pushw %%ds\n\t"	/* far pointer to bootp data */
++		REAL_CODE ( "pushl %%ebp\n\t" /* gcc bug */
++			    "pushw %%ds\n\t"	/* far pointer to bootp data */
+ 			    "pushw %%bx\n\t"
+ 			    "pushl %%esi\n\t"	/* location */
+ 			    "pushw %%cs\n\t"	/* lcall execaddr */
+@@ -258,13 +259,15 @@
+ 			    "pushl %%edi\n\t"
+ 			    "lret\n\t"
+ 			    "\n2:\n\t"
+-			    "addw $8,%%sp\n\t"	/* clean up stack */ )
++			    "addw $8,%%sp\n\t"	/* clean up stack */ 
++			    "popl %%ebp\n\t" /* discard */
++			    "popl %%ebp\n\t" /* gcc bug */ )
+ 		: "=a" ( rc ), "=D" ( discard_D ), "=S" ( discard_S ),
+ 		  "=b" ( discard_b )
+ 		: "D" ( imgheader->execaddr.segoff ),
+ 		  "S" ( imgheader->location ),
+ 		  "b" ( __from_data16 ( basemem_packet ) )
+-		: "ecx", "edx", "ebp" );
++		: "ecx", "edx" );
+ 
+ 	return rc;
+ }
+@@ -288,11 +291,14 @@
+ 
+ 	/* Jump to OS with flat physical addressing */
+ 	__asm__ __volatile__ (
+-		PHYS_CODE ( "pushl %%ebx\n\t" /* bootp data */
++		PHYS_CODE ( "pushl %%ebp\n\t" /* gcc bug */
++			    "pushl %%ebx\n\t" /* bootp data */
+ 			    "pushl %%esi\n\t" /* imgheader */
+ 			    "pushl %%eax\n\t" /* loaderinfo */
+ 			    "call *%%edi\n\t"
+-			    "addl $12, %%esp\n\t" /* clean up stack */ )
++			    "addl $12, %%esp\n\t" /* clean up stack */ 
++			    "popl %%ebp\n\t" /* discard */
++			    "popl %%ebp\n\t" /* gcc bug */ )
+ 		: "=a" ( rc ), "=D" ( discard_D ), "=S" ( discard_S ),
+ 		  "=b" ( discard_b )
+ 		: "D" ( imgheader->execaddr.linear ),
+@@ -300,7 +306,7 @@
+ 			imgheader->location.offset ),
+ 		  "b" ( virt_to_phys ( basemem_packet ) ),
+ 		  "a" ( virt_to_phys ( &loaderinfo ) )
+-		: "ecx", "edx", "ebp", "memory" );
++		: "ecx", "edx", "memory" );
+ 
+ 	return rc;
+ }
+diff -uNr ipxe-936134e/src/arch/i386/interface/pxeparent/pxeparent.c ipxe-936134e-funtoo/src/arch/i386/interface/pxeparent/pxeparent.c
+--- ipxe-936134e/src/arch/i386/interface/pxeparent/pxeparent.c	2013-06-24 17:14:36.000000000 +0200
++++ ipxe-936134e-funtoo/src/arch/i386/interface/pxeparent/pxeparent.c	2013-10-10 17:12:58.931054861 +0200
+@@ -143,16 +143,19 @@
+ 	/* Call real-mode entry point.  This calling convention will
+ 	 * work with both the !PXE and the PXENV+ entry points.
+ 	 */
+-	__asm__ __volatile__ ( REAL_CODE ( "pushw %%es\n\t"
++	__asm__ __volatile__ ( REAL_CODE ( "pushl %%ebp\n\t" /* gcc bug */
++					   "pushw %%es\n\t"
+ 					   "pushw %%di\n\t"
+ 					   "pushw %%bx\n\t"
+ 					   "lcall *pxeparent_entry_point\n\t"
+-					   "addw $6, %%sp\n\t" )
++					   "addw $6, %%sp\n\t"
++					   "popl %%ebp\n\t"
++					   "popl %%ebp\n\t" /* gcc bug */ )
+ 			       : "=a" ( exit ), "=b" ( discard_b ),
+ 			         "=D" ( discard_D )
+ 			       : "b" ( function ),
+ 			         "D" ( __from_data16 ( &pxeparent_params ) )
+-			       : "ecx", "edx", "esi", "ebp" );
++			       : "ecx", "edx", "esi" );
+ 
+ 	/* Determine return status code based on PXENV_EXIT and
+ 	 * PXENV_STATUS
