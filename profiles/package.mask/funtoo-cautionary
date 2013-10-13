@@ -1,10 +1,6 @@
 #  Oleg Vinichenko cautinoary mask to latest nvidia-drivers, FL-817
 #  (10 Oct 2013)
 >=x11-drivers/nvidia-drivers-331.13
-
-#  Oleg Vinichenko (2 Oct 2013)
-#  FL-791, mask python-exec-2.0, revealed portage slot bug
->=dev-python/python-exec-2.0  
   
 #  Oleg Vinichenko (6 Sep 2013)
 #  mask perl modules that explicitly require newer perl-5.18
