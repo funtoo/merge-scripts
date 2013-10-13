@@ -1,10 +1,6 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
-# Oleg Vinichenko (2 Oct 2013)
-# add support for static-nodes in kmod, masked for testing, supposed to use only with >=openrc-0.12
->=sys-apps/kmod-15-r1
-
 # Daniel Robbins (28 Sep 2013)
 # masked for testing
 =sys-apps/nginx-1.4.2*
@@ -12,12 +8,6 @@
 # Daniel Robbins (28 Sep 2013)
 # masked for testing
 =sys-cluster/vzctl-4.5.1*
-
-# Oleg Vinichenko (26 Sep 2013)
-# update to openrc. upstream 0.12 version+Funtoo tweaks on top
-# masked for testing. Additional work required to investigate tmpfiles support, update to kmod and static nodes. Ebuild added as WIP,
-# use at own risk. buge reports: http://bugs.funtoo.org/browse/FL-786
->=sys-apps/openrc-0.12
  
 # Oleg VInichenko (15 Sep 2013)
 # perl-5.18.1, masked for testing, FL-709
