@@ -11,10 +11,5 @@ SLOT="0"
 KEYWORDS="*"
 IUSE=""
 
-DEPEND="
-	|| ( dev-util/pkgconf[pkg-config]
-		>=dev-util/pkgconfig-0.26
-		dev-util/pkg-config-lite
-		dev-util/pkgconfig-openbsd[pkg-config]
-	)"
+DEPEND="dev-util/pkgconf[pkg-config]"
 RDEPEND="${DEPEND}"
