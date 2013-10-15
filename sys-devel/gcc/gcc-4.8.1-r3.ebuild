@@ -178,6 +178,47 @@ src_configure() {
 
 	use libssp || export gcc_cv_libc_provides_ssp=yes
 
+	# ARM
+	if use arm ; then
+		local a arm_arch=${CTARGET%%-*}
+		# Remove trailing endian variations first: eb el be bl b l
+		for a in e{b,l} {b,l}e b l ; do
+			if [[ ${arm_arch} == *${a} ]] ; then
+				arm_arch=${arm_arch%${a}}
+				break
+			fi
+		done
+
+		# Convert armv7{a,r,m} to armv7-{a,r,m}
+		local arm_arch_without_dash=${arm_arch}
+		[[ ${arm_arch} == armv7? ]] && arm_arch=${arm_arch/7/7-}
+		# See if this is a valid --with-arch flag
+		if (srcdir=${S}/gcc target=${CTARGET} with_arch=${arm_arch};
+			. "${srcdir}"/config.gcc) &>/dev/null
+		then
+			confgcc+=" --with-arch=${arm_arch}"
+		fi
+
+		# Enable hardvfp
+		tc-is-softfloat="no"
+		local CTARGET_TMP=${CTARGET:-${CHOST}}
+		if [[ ${CTARGET_TMP//_/-} == *-softfloat-* ]] ; then
+			tc-is-softfloat="yes"
+		elif [[ ${CTARGET_TMP//_/-} == *-softfp-* ]] ; then
+			tc-is-softfloat="softfp"
+		fi
+
+		if [[ $(tc-is-softfloat) == "no" ]] && [[ ${CTARGET} == armv[67]* ]]
+		then
+			# Follow the new arm hardfp distro standard by default
+			confgcc+=" --with-float=hard"
+			case ${CTARGET} in
+				armv6*) confgcc+=" --with-fpu=vfp" ;;
+				armv7*) confgcc+=" --with-fpu=vfpv3-d16" ;;
+			esac
+		fi
+	fi
+
 	local branding="Funtoo"
 	if use hardened; then
 		branding="$branding Hardened ${PVR}, pie-${PIE_VER}"
@@ -219,6 +260,16 @@ src_configure() {
 	# It can find 2.4.2 with no problem automatically but needs help with newer versions
 	# due to mpfr dir structure changes. We look for includes in the source directory,
 	# and libraries in the build (objdir) directory.
+
+	if use arm ; then
+		# Source : https://sourceware.org/bugzilla/attachment.cgi?id=6807
+		# Workaround for a problem introduced with GMP 5.1.0.
+		# If configured by gcc with the "none" host & target, it will result in undefined references 
+		# to '__gmpn_invert_limb' during linking.
+		# Should be fixed by next version of gcc.
+		sed -i "s/none-/${arm_arch_without_dash}-/" ${WORKDIR}/objdir/Makefile || die
+	fi
+
 }
 
 src_compile() {
