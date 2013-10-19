@@ -12,7 +12,7 @@ SRC_URI="http://openvswitch.org/releases/${P}.tar.gz"
 
 LICENSE="Apache-2.0 GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="~*"
 IUSE="debug modules monitor +pyside +ssl"
 
 RDEPEND=">=sys-apps/openrc-0.12.1
