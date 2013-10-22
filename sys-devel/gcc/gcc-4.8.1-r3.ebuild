@@ -35,7 +35,7 @@ inherit multilib eutils pax-utils
 RESTRICT="strip"
 FEATURES=${FEATURES/multilib-strict/}
 
-IUSE="ada cxx fortran f77 f95 objc objc++ openmp" # languages
+IUSE="ada cxx fortran objc objc++ openmp" # languages
 IUSE="$IUSE multislot nls nptl vanilla doc multilib altivec libssp hardened" # other stuff
 
 if use multislot; then
@@ -169,8 +169,6 @@ src_configure() {
 		use objc++ && GCC_LANG+=",obj-c++"
 	fi
 	use fortran && GCC_LANG+=",fortran" || confgcc+=" --disable-libquadmath"
-	use f77 && GCC_LANG+=",f77"
-	use f95 && GCC_LANG+=",f95"
 	use ada && GCC_LANG+=",ada"
 	confgcc+=" $(use_enable openmp libgomp)"
 	confgcc+=" --enable-languages=${GCC_LANG} --disable-libgcj"
