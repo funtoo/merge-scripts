@@ -19,8 +19,8 @@ DEPEND="binary? ( >=sys-kernel/genkernel-3.4.40.7-r1 )"
 RDEPEND="binary? ( || ( >=sys-fs/udev-160 >=virtual/udev-171 ) )"
 DESCRIPTION="Debian Sources (and optional binary kernel)"
 HOMEPAGE="http://www.debian.org"
-SRC_URI="http://www.funtoo.org/distfiles/${KERNEL_ARCHIVE}
-	http://www.funtoo.org/distfiles/${PATCH_ARCHIVE}"
+SRC_URI="http://ftp.osuosl.org/pub/funtoo/distfiles/${KERNEL_ARCHIVE}
+	http://ftp.osuosl.org//pub/funtoo/distfiles/${PATCH_ARCHIVE}"
 S="$WORKDIR/linux-${CKV}"
 
 apply() {
