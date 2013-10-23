@@ -1,0 +1,3 @@
+#FL-848
+net-fs/samba -acl
+net-fs/cifs-utils -acl
