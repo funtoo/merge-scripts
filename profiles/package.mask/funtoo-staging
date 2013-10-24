@@ -1,5 +1,8 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
+# Oleg Vinichenko (24 Oct)
+# debian-sources-3.11.5, masked for testing, XFS issue FL-823
+=sys-kernel/debian-sources-3.11.5
 
 # Daniel Robbins (22 Oct 2013)
 # masked for testing
