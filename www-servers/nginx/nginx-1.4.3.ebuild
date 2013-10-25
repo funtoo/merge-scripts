@@ -16,14 +16,14 @@ EAPI="5"
 GENTOO_DEPEND_ON_PERL="no"
 
 # syslog
-SYSLOG_MODULE_PV="0.25"
-SYSLOG_MODULE_NGINX_PV="1.3.14"
+SYSLOG_MODULE_PV="165affd9741f0e30c4c8225da5e487d33832aca3"
+SYSLOG_MODULE_NGINX_PV="1.4.0"
 SYSLOG_MODULE_P="ngx_syslog-${SYSLOG_MODULE_PV}"
-SYSLOG_MODULE_URI="https://github.com/yaoweibin/nginx_syslog_patch/archive/v${SYSLOG_MODULE_PV}.tar.gz"
+SYSLOG_MODULE_URI="https://github.com/yaoweibin/nginx_syslog_patch/archive/${SYSLOG_MODULE_PV}.tar.gz"
 SYSLOG_MODULE_WD="${WORKDIR}/nginx_syslog_patch-${SYSLOG_MODULE_PV}"
 
 # devel_kit (https://github.com/simpl/ngx_devel_kit, BSD license)
-DEVEL_KIT_MODULE_PV="0.2.18"
+DEVEL_KIT_MODULE_PV="0.2.19"
 DEVEL_KIT_MODULE_P="ngx_devel_kit-${DEVEL_KIT_MODULE_PV}-r1"
 DEVEL_KIT_MODULE_URI="https://github.com/simpl/ngx_devel_kit/archive/v${DEVEL_KIT_MODULE_PV}.tar.gz"
 DEVEL_KIT_MODULE_WD="${WORKDIR}/ngx_devel_kit-${DEVEL_KIT_MODULE_PV}"
@@ -65,7 +65,7 @@ HTTP_FANCYINDEX_MODULE_URI="https://github.com/aperezdc/ngx-fancyindex/archive/v
 HTTP_FANCYINDEX_MODULE_WD="${WORKDIR}/ngx-fancyindex-${HTTP_FANCYINDEX_MODULE_PV}"
 
 # http_lua (https://github.com/chaoslawful/lua-nginx-module, BSD license)
-HTTP_LUA_MODULE_PV="0.8.10"
+HTTP_LUA_MODULE_PV="0.9.0"
 HTTP_LUA_MODULE_P="ngx_http_lua-${HTTP_LUA_MODULE_PV}"
 HTTP_LUA_MODULE_URI="https://github.com/chaoslawful/lua-nginx-module/archive/v${HTTP_LUA_MODULE_PV}.tar.gz"
 HTTP_LUA_MODULE_WD="${WORKDIR}/lua-nginx-module-${HTTP_LUA_MODULE_PV}"
@@ -95,7 +95,7 @@ HTTP_NAXSI_MODULE_URI="https://github.com/nbs-system/naxsi/archive/${HTTP_NAXSI_
 HTTP_NAXSI_MODULE_WD="${WORKDIR}/naxsi-${HTTP_NAXSI_MODULE_PV}/naxsi_src"
 
 # nginx-rtmp-module (http://github.com/arut/nginx-rtmp-module, BSD license)
-RTMP_MODULE_PV="1.0.4"
+RTMP_MODULE_PV="1.0.5"
 RTMP_MODULE_P="ngx_rtmp-${RTMP_MODULE_PV}"
 RTMP_MODULE_URI="http://github.com/arut/nginx-rtmp-module/archive/v${RTMP_MODULE_PV}.tar.gz"
 RTMP_MODULE_WD="${WORKDIR}/nginx-rtmp-module-${RTMP_MODULE_PV}"
@@ -112,12 +112,18 @@ HTTP_ECHO_MODULE_P="ngx_http_echo-${HTTP_ECHO_MODULE_PV}"
 HTTP_ECHO_MODULE_URI="https://github.com/agentzh/echo-nginx-module/archive/v${HTTP_ECHO_MODULE_PV}.tar.gz"
 HTTP_ECHO_MODULE_WD="${WORKDIR}/echo-nginx-module-${HTTP_ECHO_MODULE_PV}"
 
-# mod_security for nginx, keep the MODULE_P here consistent with upstream to
-# avoid tarball duplication
+# mod_security for nginx (https://modsecurity.org/, Apache-2.0)
+# keep the MODULE_P here consistent with upstream to avoid tarball duplication
 HTTP_SECURITY_MODULE_PV="2.7.5"
 HTTP_SECURITY_MODULE_P="modsecurity-apache_${HTTP_SECURITY_MODULE_PV}"
 HTTP_SECURITY_MODULE_URI="https://www.modsecurity.org/tarball/${HTTP_SECURITY_MODULE_PV}/${HTTP_SECURITY_MODULE_P}.tar.gz"
 HTTP_SECURITY_MODULE_WD="${WORKDIR}/${HTTP_SECURITY_MODULE_P}"
+
+# push-stream-module (https://github.com/wandenberg/nginx-push-stream-module, GPL-3)
+HTTP_PUSH_STREAM_MODULE_PV="0.3.5"
+HTTP_PUSH_STREAM_MODULE_P="ngx_http_push_stream-${HTTP_PUSH_STREAM_MODULE_PV}"
+HTTP_PUSH_STREAM_MODULE_URI="https://github.com/wandenberg/nginx-push-stream-module/archive/${HTTP_PUSH_STREAM_MODULE_PV}.tar.gz"
+HTTP_PUSH_STREAM_MODULE_WD="${WORKDIR}/nginx-push-stream-module-${HTTP_PUSH_STREAM_MODULE_PV}"
 
 inherit eutils ssl-cert toolchain-funcs perl-module flag-o-matic user versionator
 
@@ -140,9 +146,13 @@ SRC_URI="http://nginx.org/download/${P}.tar.gz
 	rtmp? ( ${RTMP_MODULE_URI} -> ${RTMP_MODULE_P}.tar.gz )
 	nginx_modules_http_dav_ext? ( ${HTTP_DAV_EXT_MODULE_URI} -> ${HTTP_DAV_EXT_MODULE_P}.tar.gz )
 	nginx_modules_http_echo? ( ${HTTP_ECHO_MODULE_URI} -> ${HTTP_ECHO_MODULE_P}.tar.gz )
-	nginx_modules_http_security? ( ${HTTP_SECURITY_MODULE_URI} -> ${HTTP_SECURITY_MODULE_P}.tar.gz )"
+	nginx_modules_http_security? ( ${HTTP_SECURITY_MODULE_URI} -> ${HTTP_SECURITY_MODULE_P}.tar.gz )
+	nginx_modules_http_push_stream? ( ${HTTP_PUSH_STREAM_MODULE_URI} -> ${HTTP_PUSH_STREAM_MODULE_P}.tar.gz )"
 
-LICENSE="BSD-2 BSD SSLeay MIT GPL-2 GPL-2+"
+LICENSE="BSD-2 BSD SSLeay MIT GPL-2 GPL-2+
+	nginx_modules_http_security? ( Apache-2.0 )
+	nginx_modules_http_push_stream? ( GPL-3 )"
+
 SLOT="0"
 KEYWORDS="*"
 
@@ -166,7 +176,8 @@ NGINX_MODULES_3RD="
 	http_naxsi
 	http_dav_ext
 	http_echo
-	http_security"
+	http_security
+	http_push_stream"
 
 IUSE="aio debug +http +http-cache ipv6 libatomic +pcre pcre-jit rtmp selinux ssl
 syslog userland_GNU vim-syntax"
@@ -219,7 +230,8 @@ REQUIRED_USE="pcre-jit? ( pcre )
 	nginx_modules_http_naxsi? ( pcre )
 	nginx_modules_http_dav_ext? ( nginx_modules_http_dav )
 	nginx_modules_http_metrics? ( nginx_modules_http_stub_status )
-	nginx_modules_http_security? ( pcre )"
+	nginx_modules_http_security? ( pcre )
+	nginx_modules_http_push_stream? ( ssl )"
 
 pkg_setup() {
 	NGINX_HOME="/var/lib/nginx"
@@ -271,6 +283,14 @@ src_prepare() {
 	sed -i 's:.default::' auto/install || die
 	# remove useless files
 	sed -i -e '/koi-/d' -e '/win-/d' auto/install || die
+
+	# don't install to /etc/nginx/ if not in use
+	local module
+	for module in fastcgi scgi uwsgi ; do
+		if ! use nginx_modules_http_${module}; then
+			sed -i -e "/${module}/d" auto/install || die
+		fi
+	done
 
 	epatch_user
 }
@@ -387,6 +407,11 @@ src_configure() {
 		myconf+=" --add-module=${HTTP_SECURITY_MODULE_WD}/nginx/modsecurity"
 	fi
 
+	if use nginx_modules_http_push_stream ; then
+		http_enabled=1
+		myconf+=" --add-module=${HTTP_PUSH_STREAM_MODULE_WD}"
+	fi
+
 	if use http || use http-cache; then
 		http_enabled=1
 	fi
@@ -476,15 +501,22 @@ src_install() {
 
 	rm -rf "${D}"/usr/html || die
 
-	keepdir /var/log/nginx "${NGINX_HOME_TMP}"/{,client,proxy,fastcgi,scgi,uwsgi}
+	# set up a list of directories to keep
+	local keepdir_list="${NGINX_HOME_TMP}"/client
+	local module
+	for module in proxy fastcgi scgi uwsgi; do
+		use nginx_modules_http_${module} && keepdir_list+=" ${NGINX_HOME_TMP}/${module}"
+	done
+
+	keepdir /var/log/nginx ${keepdir_list}
 
 	# this solves a problem with SELinux where nginx doesn't see the directories
 	# as root and tries to create them as nginx
 	fperms 0750 "${NGINX_HOME_TMP}"
 	fowners ${PN}:0 "${NGINX_HOME_TMP}"
 
-	fperms 0700 /var/log/nginx "${NGINX_HOME_TMP}"/{client,proxy,fastcgi,scgi,uwsgi}
-	fowners ${PN}:${PN} /var/log/nginx "${NGINX_HOME_TMP}"/{client,proxy,fastcgi,scgi,uwsgi}
+	fperms 0700 /var/log/nginx ${keepdir_list}
+	fowners ${PN}:${PN} /var/log/nginx ${keepdir_list}
 
 	# logrotate
 	insinto /etc/logrotate.d
@@ -566,6 +598,11 @@ src_install() {
 		docinto ${HTTP_SECURITY_MODULE_P}
 		dodoc "${HTTP_SECURITY_MODULE_WD}"/{CHANGES,README.TXT,authors.txt}
 	fi
+
+	if use nginx_modules_http_push_stream; then
+		docinto ${HTTP_PUSH_STREAM_MODULE_P}
+		dodoc "${HTTP_PUSH_STREAM_MODULE_WD}"/{AUTHORS,CHANGELOG.textile,README.textile}
+	fi
 }
 
 pkg_preinst() {
@@ -611,10 +648,15 @@ pkg_postinst() {
 		ewarn "Check if this is correct for your setup before restarting nginx!"
 		ewarn "This is a one-time change and will not happen on subsequent updates."
 		ewarn "Furthermore nginx' temp directories got moved to ${NGINX_HOME_TMP}"
-		chmod o-rwx "${EPREFIX}"/var/log/nginx "${EPREFIX}/${NGINX_HOME_TMP}"/{,client,proxy,fastcgi,scgi,uwsgi}
+		chmod -f o-rwx "${EPREFIX}"/var/log/nginx "${EPREFIX}/${NGINX_HOME_TMP}"/{,client,proxy,fastcgi,scgi,uwsgi}
 	fi
 
-	ewarn "Please make sure that the nginx user or group has"
-	ewarn "'rx' permissions on /var/log/nginx (default on a fresh install)"
-	ewarn "Otherwise you end up with empty log files after a logrotate."
+	# If the nginx user can't change into or read the dir, display a warning.
+	# If su is not available we display the warning nevertheless since we can't check properly
+	su -s /bin/sh -c 'cd /var/log/nginx/ && ls' nginx >&/dev/null
+	if [ $? -ne 0 ] ; then
+		ewarn "Please make sure that the nginx user or group has at least"
+		ewarn "'rx' permissions on /var/log/nginx (default on a fresh install)"
+		ewarn "Otherwise you end up with empty log files after a logrotate."
+	fi
 }
