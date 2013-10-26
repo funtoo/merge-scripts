@@ -43,6 +43,25 @@ eblit-perl-pkg_postinst() {
 		#	cleaner_msg
 		#fi
 	fi
-	perl-cleaner --all
 }
 
+cleaner_msg() {
+	eerror "You have had multiple versions of perl. It is recommended"
+	eerror "that you run perl-cleaner now. perl-cleaner will"
+	eerror "assist with this transition. This script is capable"
+	eerror "of cleaning out old .ph files, rebuilding modules for "
+	eerror "your new version of perl, as well as re-emerging"
+	eerror "applications that compiled against your old libperl$(get_libname)"
+	eerror
+	eerror "PLEASE DO NOT INTERRUPT THE RUNNING OF THIS SCRIPT."
+	eerror "Part of the rebuilding of applications compiled against "
+	eerror "your old libperl involves temporarily unmerging"
+	eerror "them - interruptions could leave you with unmerged"
+	eerror "packages before they can be remerged."
+	eerror ""
+	eerror "If you have run perl-cleaner and a package still gives"
+	eerror "you trouble, and re-emerging it fails to correct"
+	eerror "the problem, please check http://bugs.gentoo.org/"
+	eerror "for more information or to report a bug."
+	eerror ""
+}
