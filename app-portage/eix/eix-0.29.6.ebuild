@@ -12,12 +12,13 @@ SRC_URI="mirror://berlios/${PN}/${P}.tar.xz"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="*"
-IUSE="clang debug +dep doc nls optimization security strong-optimization sqlite tools zsh-completion"
+IUSE="clang debug +dep doc nls optimization security strong-optimization strong-security sqlite swap-remote tools"
 
-RDEPEND="app-shells/push
-	sqlite? ( >=dev-db/sqlite-3 )
+BOTHDEPEND="sqlite? ( >=dev-db/sqlite-3 )
 	nls? ( virtual/libintl )"
-DEPEND="${RDEPEND}
+RDEPEND="${BOTHDEPEND}
+	app-shells/push"
+DEPEND="${BOTHDEPEND}
 	app-arch/xz-utils
 	clang? ( sys-devel/clang )
 	nls? ( sys-devel/gettext )"
@@ -32,18 +33,20 @@ pkg_setup() {
 
 src_prepare() {
 	epatch_user
-	epatch "${FILESDIR}/eix-0.28.1-disable-rsync.patch"
+	epatch "${FILESDIR}/${PN}-disable-rsync.patch"
 }
 
 src_configure() {
 	econf $(use_with sqlite) $(use_with doc extra-doc) \
-		$(use_with zsh-completion) \
 		$(use_enable nls) $(use_enable tools separate-tools) \
 		$(use_enable security) $(use_enable optimization) \
+		$(use_enable strong-security) \
 		$(use_enable strong-optimization) $(use_enable debug debugging) \
+		$(use_enable swap-remote) \
 		$(use_with prefix always-accept-keywords) \
 		$(use_with dep dep-default) \
 		$(use_with clang nongnu-cxx clang++) \
+		--with-zsh-completion \
 		--with-ebuild-sh-default="/usr/$(get_libdir)/portage/bin/ebuild.sh" \
 		--with-portage-rootpath="${ROOTPATH}" \
 		--with-eprefix-default="${EPREFIX}" \
