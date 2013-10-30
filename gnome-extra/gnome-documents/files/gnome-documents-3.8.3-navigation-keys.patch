@@ -1,0 +1,36 @@
+From 0ec5cf5b302497b6f51d6e741e9f640cdc4b48c7 Mon Sep 17 00:00:00 2001
+From: Alessandro Campagni <alessandro.campagni@gmail.com>
+Date: Mon, 29 Apr 2013 17:57:53 +0000
+Subject: preview: add prev/back navigation with Left and Right keys
+
+https://bugzilla.gnome.org/show_bug.cgi?id=696836
+---
+diff --git a/src/preview.js b/src/preview.js
+index 920f007..c4fd463 100644
+--- a/src/preview.js
++++ b/src/preview.js
+@@ -394,15 +394,18 @@ const PreviewView = new Lang.Class({
+     _onKeyPressEvent: function(widget, event) {
+         let keyval = event.get_keyval()[1];
+         let state = event.get_state()[1];
++        let def_mod_mask = Gtk.accelerator_get_default_mod_mask();
+ 
+-        if ((keyval == Gdk.KEY_Page_Up) &&
+-            ((state & Gdk.ModifierType.CONTROL_MASK) != 0)) {
++        if (((keyval == Gdk.KEY_Page_Up) &&
++            ((state & Gdk.ModifierType.CONTROL_MASK) != 0)) ||
++            ((keyval == Gdk.KEY_Left) && ((state & def_mod_mask) == 0))) {
+             this.view.previous_page();
+             return true;
+         }
+ 
+-        if ((keyval == Gdk.KEY_Page_Down) &&
+-            ((state & Gdk.ModifierType.CONTROL_MASK) != 0)) {
++        if (((keyval == Gdk.KEY_Page_Down) &&
++            ((state & Gdk.ModifierType.CONTROL_MASK) != 0)) ||
++            ((keyval == Gdk.KEY_Right) && ((state & def_mod_mask) == 0))) {
+             this.view.next_page();
+             return true;
+         }
+--
+cgit v0.9.2
