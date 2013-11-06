@@ -1,0 +1,26 @@
+From f2ad7820b3a6b197f8cfec9e2bec877e51671ec9 Mon Sep 17 00:00:00 2001
+From: Alexandre Rostovtsev <tetromino@gmail.com>
+Date: Thu, 18 Aug 2011 20:05:56 -0400
+Subject: [PATCH 2/2] Do not install anything other than the library
+
+---
+ Makefile.am |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 565ab87..65c059a 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,7 +1,7 @@
+-SUBDIRS = libmenu desktop-directories layout util po
++SUBDIRS = libmenu util po
+ 
+ if HAVE_PYTHON
+-SUBDIRS += python simple-editor
++SUBDIRS += python
+ endif
+ 
+ ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
+-- 
+1.7.6
+

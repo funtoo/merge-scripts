@@ -64,7 +64,7 @@ app-benchmarks/phoronix-test-suite
 # Oleg Vinichenko (23 Apr 2013)
 # mask xorg-server-1.14, driver incompatibility, FL-449, FL-522,
 # security update for xorg-server
->x11-base/xorg-server-1.13.4
+>x11-base/xorg-server-1.14.3-r2
 
 # Oleg Vinichenko (19 Apr 2013)
 # mask back mpc-1.0.1, ebuild itself is fine and usable

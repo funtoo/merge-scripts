@@ -1,0 +1,303 @@
+From 6e7790b5451bbb8a44b736ed402964d1bb432247 Mon Sep 17 00:00:00 2001
+From: Giovanni Campagna <gcampagn@redhat.com>
+Date: Mon, 26 Aug 2013 15:59:18 +0200
+Subject: [PATCH] layout: don't use OnlyUnallocated for sections different than
+ Other
+
+We used to have OnlyUnallocated on all non-folder sections, as
+a quick way to enforce the whitelist, but that broke the Other
+section.
+Instead, we need a whitelist in the two folders, and a blacklist
+in each category the application would normally be in (accessories
+or system tools usually).
+Ideally, apps in the Utilities category would expose the special
+X-GNOME-Utilities desktop category, which we now recognize, but
+the whitelist is kept to avoid patching all of them.
+For the sundry category, ideally it should not be there at all.
+
+In the process, a number of .desktop files were removed, as they're
+not provided by any packages (checked jhbuild and Fedora 19). They
+are:
+* caribou
+* fedora-im-chooser
+* fedora-abrt
+* gnome-orca
+* gnome-user-share-properties
+* ibus
+* ibus-daemon
+
+Distributions that are changing .desktop file names should take
+care of patching gnome-menus appropriately.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=706763
+---
+ layout/gnome-applications.menu | 137 ++++++++++++++++++++++++-----------------
+ 1 file changed, 82 insertions(+), 55 deletions(-)
+
+diff --git a/layout/gnome-applications.menu b/layout/gnome-applications.menu
+index 503f9ca..db56f71 100644
+--- a/layout/gnome-applications.menu
++++ b/layout/gnome-applications.menu
+@@ -21,44 +21,49 @@
+   <!-- Accessories submenu -->
+   <Menu>
+     <Name>Accessories</Name>
+-    <OnlyUnallocated/>
+     <Directory>Utility.directory</Directory>
+     <Include>
+       <And>
+         <Category>Utility</Category>
+-       <!-- Accessibility spec must have either the Utility or Settings
+-            category, and we display an accessibility submenu already for
+-            the ones that do not have Settings, so don't display accessibility
+-            applications here -->
++	<!-- Accessibility spec must have either the Utility or Settings
++             category, and we display an accessibility submenu already for
++             the ones that do not have Settings, so don't display accessibility
++             applications here -->
+         <Not><Category>Accessibility</Category></Not>
+         <Not><Category>System</Category></Not>
+-
+-        <!-- Also exclude everything we put in the X-GNOME-Utilities
+-             whitelist -->
+-        <Not><Filename>file-roller.desktop</Filename></Not>
+-        <Not><Filename>gnome-file-roller.desktop</Filename></Not>
+-        <Not><Filename>deja-dup-preferences.desktop</Filename></Not>
+-        <Not><Filename>gcalctool.desktop</Filename></Not>
+-        <Not><Filename>gucharmap.desktop</Filename></Not>
+-        <Not><Filename>gnome-gucharmap.desktop</Filename></Not>
+-        <Not><Filename>gnome-font-viewer.desktop</Filename></Not>
+-        <Not><Filename>seahorse.desktop</Filename></Not>
+-        <Not><Filename>gnome-terminal.desktop</Filename></Not>
+-        <Not><Filename>gnome-tweak-tool.desktop</Filename></Not>
+-        <Not><Filename>gnome-disks.desktop</Filename></Not>
+-        <Not><Filename>gnome-screenshot.desktop</Filename></Not>
+-        <Not><Filename>gnome-yelp.desktop</Filename></Not>
+-        <Not><Filename>yelp.desktop</Filename></Not>
+-        <Not><Filename>gnome-control-center.desktop</Filename></Not>
++        <Not><Category>X-GNOME-Utilities</Category></Not>
+       </And>
+     </Include>
++    <Exclude>
++      <!-- Exclude everything we put in the X-GNOME-Utilities whitelist.
++
++           Please keep the list alphabetically sorted! -->
++      <Filename>deja-dup-preferences.desktop</Filename>
++      <Filename>eog.desktop</Filename>
++      <Filename>evince.desktop</Filename>
++      <Filename>file-roller.desktop</Filename>
++      <Filename>gcalctool.desktop</Filename>
++      <Filename>gnome-control-center.desktop</Filename>
++      <Filename>gnome-dictionary.desktop</Filename>
++      <Filename>gnome-disks.desktop</Filename>
++      <Filename>gnome-font-viewer.desktop</Filename>
++      <Filename>gnome-screenshot.desktop</Filename>
++      <Filename>gnome-terminal.desktop</Filename>
++      <Filename>gnome-tweak-tool.desktop</Filename>
++      <Filename>gucharmap.desktop</Filename>
++      <Filename>seahorse.desktop</Filename>
++      <Filename>vinagre.desktop</Filename>
++      <Filename>yelp.desktop</Filename>
++
++      <!-- Exclude Sundry items -->
++      <Filename>alacarte.desktop</Filename>
++    </Exclude>
+   </Menu> <!-- End Accessories -->
+
+
+   <!-- Accessibility submenu -->
+   <Menu>
+     <Name>Universal Access</Name>
+-    <OnlyUnallocated/>
+     <Directory>Utility-Accessibility.directory</Directory>
+     <Include>
+       <And>
+@@ -66,12 +71,16 @@
+         <Not><Category>Settings</Category></Not>
+       </And>
+     </Include>
++
++    <Exclude>
++      <!-- Sundry exclusions -->
++      <Filename>orca.desktop</Filename>
++    </Exclude>
+   </Menu> <!-- End Accessibility -->
+
+   <!-- Development Tools -->
+   <Menu>
+     <Name>Development</Name>
+-    <OnlyUnallocated/>
+     <Directory>Development.directory</Directory>
+     <Include>
+       <And>
+@@ -79,6 +88,15 @@
+       </And>
+       <Filename>emacs.desktop</Filename>
+     </Include>
++
++    <Exclude>
++      <!-- Sundry exclusions -->
++      <Filename>jhbuild.desktop</Filename>
++      <Filename>java-1.7.0-openjdk-jconsole.desktop</Filename>
++      <Filename>java-1.7.0-openjdk-policytool.desktop</Filename>
++      <Filename>log4j-chainsaw.desktop</Filename>
++      <Filename>log4j-logfactor5.desktop</Filename>
++    </Exclude>
+   </Menu> <!-- End Development Tools -->
+
+   <!-- Education -->
+@@ -106,7 +124,6 @@
+   <!-- Graphics -->
+   <Menu>
+     <Name>Graphics</Name>
+-    <OnlyUnallocated/>
+     <Directory>Graphics.directory</Directory>
+     <Include>
+       <And>
+@@ -121,15 +138,21 @@
+   <!-- Internet -->
+   <Menu>
+     <Name>Internet</Name>
+-    <OnlyUnallocated/>
+     <Directory>Network.directory</Directory>
+     <Include>
+       <And>
+         <Category>Network</Category>
+ 	<Not><Category>X-GNOME-WebApplication</Category></Not>
+-        <Not><Filename>vinagre.desktop</Filename></Not>
+       </And>
+     </Include>
++
++    <Exclude>
++      <!-- Utilities exclusions -->
++      <Filename>vinagre.desktop</Filename>
++
++      <!-- Sundry exclusions -->
++      <Filename>javaws.desktop</Filename>
++    </Exclude>
+   </Menu>   <!-- End Internet -->
+
+   <!-- Web Applications -->
+@@ -147,7 +170,6 @@
+   <!-- Multimedia -->
+   <Menu>
+     <Name>Multimedia</Name>
+-    <OnlyUnallocated/>
+     <Directory>AudioVideo.directory</Directory>
+     <Include>
+       <And>
+@@ -159,7 +181,6 @@
+   <!-- Office -->
+   <Menu>
+     <Name>Office</Name>
+-    <OnlyUnallocated/>
+     <Directory>Office.directory</Directory>
+     <Include>
+       <And>
+@@ -176,20 +197,14 @@
+     <Directory>X-GNOME-Sundry.directory</Directory>
+     <Include>
+       <Filename>alacarte.desktop</Filename>
+-      <Filename>caribou.desktop</Filename>
++      <Filename>authconfig.desktop</Filename>
+       <Filename>dconf-editor.desktop</Filename>
+-      <Filename>fedora-im-chooser.desktop</Filename>
+       <Filename>fedora-release-notes.desktop</Filename>
+       <Filename>firewall-config.desktop</Filename>
+       <Filename>flash-player-properties.desktop</Filename>
+       <Filename>gconf-editor.desktop</Filename>
+       <Filename>gnome-abrt.desktop</Filename>
+-      <Filename>fedora-abrt.desktop</Filename>
+-      <Filename>gnome-orca.desktop</Filename>
+       <Filename>gnome-power-statistics.desktop</Filename>
+-      <Filename>gnome-user-share-properties.desktop</Filename>
+-      <Filename>ibus.desktop</Filename>
+-      <Filename>ibus-daemon.desktop</Filename>
+       <Filename>ibus-setup-anthy.desktop</Filename>
+       <Filename>ibus-setup.desktop</Filename>
+       <Filename>ibus-setup-hangul.desktop</Filename>
+@@ -208,7 +223,6 @@
+       <Filename>nm-connection-editor.desktop</Filename>
+       <Filename>orca.desktop</Filename>
+       <Filename>setroubleshoot.desktop</Filename>
+-      <Filename>authconfig.desktop</Filename>
+       <Filename>system-config-date.desktop</Filename>
+       <Filename>system-config-firewall.desktop</Filename>
+       <Filename>system-config-keyboard.desktop</Filename>
+@@ -222,17 +236,30 @@
+   <!-- System Tools-->
+   <Menu>
+     <Name>System</Name>
+-    <OnlyUnallocated/>
+     <Directory>System-Tools.directory</Directory>
+     <Include>
+       <And>
+         <Category>System</Category>
+         <Not><Category>Settings</Category></Not>
+-        <Not><Filename>baobab.desktop</Filename></Not>
+-        <Not><Filename>gnome-system-log.desktop</Filename></Not>
+-        <Not><Filename>gnome-system-monitor.desktop</Filename></Not>
++        <Not><Category>X-GNOME-Utilities</Category></Not>
+       </And>
+     </Include>
++
++    <Exclude>
++      <!-- Utilities exclusions -->
++      <Filename>baobab.desktop</Filename>
++      <Filename>gnome-system-log.desktop</Filename>
++      <Filename>gnome-system-monitor.desktop</Filename>
++
++      <!-- Sundry exclusions -->
++      <Filename>dconf-editor.desktop</Filename>
++      <Filename>fedora-release-notes.desktop</Filename>
++      <Filename>gconf-editor.desktop</Filename>
++      <Filename>gnome-abrt.desktop</Filename>
++      <Filename>gnome-power-statistics.desktop</Filename>
++      <Filename>dconf-editor.desktop</Filename>
++      <Filename>setroubleshoot.desktop</Filename>
++    </Exclude>
+   </Menu>   <!-- End System Tools -->
+
+   <!-- System Settings -->
+@@ -249,26 +276,26 @@
+     <Name>Utilities</Name>
+     <Directory>X-GNOME-Utilities.directory</Directory>
+     <Include>
++      <Category>X-GNOME-Utilities</Category>
++      <Filename>baobab.desktop</Filename>
++      <Filename>deja-dup-preferences.desktop</Filename>
++      <Filename>eog.desktop</Filename>
++      <Filename>evince.desktop</Filename>
+       <Filename>file-roller.desktop</Filename>
+       <Filename>gcalctool.desktop</Filename>
+-      <Filename>gnome-font-viewer.desktop</Filename>
+-      <Filename>gucharmap.desktop</Filename>
+-      <Filename>seahorse.desktop</Filename>
+-      <Filename>gnome-terminal.desktop</Filename>
+-      <Filename>deja-dup-preferences.desktop</Filename>
++      <Filename>gnome-control-center.desktop</Filename>
+       <Filename>gnome-dictionary.desktop</Filename>
+-      <Filename>evince.desktop</Filename>
+-      <Filename>eog.desktop</Filename>
+-      <Filename>baobab.desktop</Filename>
++      <Filename>gnome-disks.desktop</Filename>
++      <Filename>gnome-font-viewer.desktop</Filename>
++      <Filename>gnome-screenshot.desktop</Filename>
+       <Filename>gnome-system-log.desktop</Filename>
+       <Filename>gnome-system-monitor.desktop</Filename>
+-      <Filename>vinagre.desktop</Filename>
++      <Filename>gnome-terminal.desktop</Filename>
+       <Filename>gnome-tweak-tool.desktop</Filename>
+-      <Filename>gnome-disks.desktop</Filename>
+-      <Filename>gnome-screenshot.desktop</Filename>
+-      <Filename>gnome-yelp.desktop</Filename>
++      <Filename>gucharmap.desktop</Filename>
++      <Filename>seahorse.desktop</Filename>
++      <Filename>vinagre.desktop</Filename>
+       <Filename>yelp.desktop</Filename>
+-      <Filename>gnome-control-center.desktop</Filename>
+     </Include>
+   </Menu>
+
+--
+1.8.3.1

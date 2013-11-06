@@ -12,4 +12,4 @@ KEYWORDS="alpha amd64 arm hppa ia64 m68k ~mips ppc ppc64 s390 sh sparc x86 ~x86-
 IUSE=""
 
 DEPEND=""
-RDEPEND="|| ( >=dev-libs/libusb-1.0.9_rc:1 dev-libs/libusbx:1 )"
+RDEPEND=">=dev-libs/libusb-1.0.9_rc:1"
