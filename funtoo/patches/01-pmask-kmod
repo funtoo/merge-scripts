@@ -1,3 +1,0 @@
-#!/bin/sh
-# remove udev, systemd masks that change often
-sed -i -e "/# Masking this version/,/systemd-30/d" profiles/package.mask/gentoo || exit 1
