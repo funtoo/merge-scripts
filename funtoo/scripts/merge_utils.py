@@ -375,12 +375,18 @@ class InsertEbuilds(MergeStep):
 					if not os.path.exists(tcatdir):
 						os.makedirs(tcatdir)
 					if isinstance(self.merge, list) and "%s/%s" % (cat,pkg) in self.merge and os.path.isdir(tpkgdir):
-						pkgdir_manifest_file = open("%s/Manifest" % pkgdir)
-						tpkgdir_manifest_file = open("%s/Manifest" % tpkgdir)
-						pkgdir_manifest = pkgdir_manifest_file.readlines()
-						tpkgdir_manifest = tpkgdir_manifest_file.readlines()
-						pkgdir_manifest_file.close()
-						tpkgdir_manifest_file.close()
+						try:
+							pkgdir_manifest_file = open("%s/Manifest" % pkgdir)
+							pkgdir_manifest = pkgdir_manifest_file.readlines()
+							pkgdir_manifest_file.close()
+						except IOError:
+							pkgdir_manifest = []
+						try:
+							tpkgdir_manifest_file = open("%s/Manifest" % tpkgdir)
+							tpkgdir_manifest = tpkgdir_manifest_file.readlines()
+							tpkgdir_manifest_file.close()
+						except IOError:
+							tpkgdir_manifest = []
 						entries = {
 							"AUX": {},
 							"DIST": {},
