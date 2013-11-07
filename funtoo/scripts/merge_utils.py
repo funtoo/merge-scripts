@@ -245,6 +245,24 @@ class SvnTree(object):
 		else:
 			runShell("(cd %s; svn co %s %s)" % (base, self.url, self.name))
 
+class CvsTree(object):
+	def __init__(self, name, url=None, trylocal=None):
+		self.name = name
+		self.url = url
+		self.trylocal = trylocal
+		if self.trylocal and os.path.exists(self.trylocal):
+			base = os.path.basename(self.trylocal)
+			self.root = trylocal
+		else:
+			base = "/var/cvs/source-trees"
+			self.root = "%s/%s" % (base, self.name)
+		if not os.path.exists(base):
+			os.makedirs(base)
+		if os.path.exists(self.root):
+			runShell("(cd %s; cvs update)" % self.root)
+		else:
+			runShell("(cd %s; cvs --no-verify -d %s co %s)" % (base, self.url, self.name))
+
 class UnifiedTree(Tree):
 	def __init__(self,root,steps):
 		self.steps = steps
