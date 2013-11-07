@@ -27,6 +27,7 @@ steps = [
 	SyncDir(funtoo_overlay.root,"eclass"),
 	SyncDir(funtoo_overlay.root,"metadata"),
 	SyncFiles(gentoo_src.root, {
+		"profiles/package.mask":"profiles/package.mask/gentoo",
 		"profiles/arch/amd64/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/package.use.mask/01-gentoo",
 		"profiles/features/multilib/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/package.use.mask/02-gentoo",
 		"profiles/arch/amd64/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/use.mask/01-gentoo",
