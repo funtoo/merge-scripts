@@ -139,6 +139,11 @@ class SyncFiles(MergeStep):
 			# in case we are replacing the original file in a 
 			# sub-directory of the same name, move it to a temp name
 			# first so that we can create the necessary directories:
+			if os.path.exists(src_bak):
+				try:
+					os.unlink(src_bak)
+				except:
+					pass
 			os.link(src, src_bak)
 			os.unlink(src)
 			dest_dir = os.path.dirname(dest)
