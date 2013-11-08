@@ -105,11 +105,6 @@ sys-fs/zfs-fuse
 # less-452 breaks man pages
 >=sys-apps/less-452
 
-# Oleg Vinichenko (22 Jul 2012)
-# mask libusbx, try to avoid pulling into stages
->=dev-libs/libusbx-1.0.12
-
-
 # Adrien Dessemond (09 May 2012)
 # Python 2.7.4-pre and 3.2.4-pre versions are problematic to fetch from upstrea$
 # and per their nature should not be in Funtoo stable anyway
