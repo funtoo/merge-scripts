@@ -135,21 +135,19 @@ class SyncFiles(MergeStep):
 			else:
 				dest = os.path.join(tree.root, src)
 			src = os.path.join(self.srcroot, src)
-			src_bak = src+"_bak"
-			# in case we are replacing the original file in a 
-			# sub-directory of the same name, move it to a temp name
-			# first so that we can create the necessary directories:
-			if os.path.exists(src_bak):
+			if os.path.exists(dest):
+				print("%s exists, attempting to unlink..." % dest)
 				try:
-					os.unlink(src_bak)
+					os.unlink(dest)
 				except:
 					pass
-			os.link(src, src_bak)
-			os.unlink(src)
 			dest_dir = os.path.dirname(dest)
+			if os.path.exists(dest_dir) and os.path.isfile(dest_dir):
+				os.unlink(dest_dir)
 			if not os.path.exists(dest_dir):
 				os.makedirs(dest_dir)
-			shutil.copyfile(src_bak, dest)
+			print("copying %s to final location %s" % (src, dest))
+			shutil.copyfile(src, dest)
 
 class MergeUpdates(MergeStep):
 	def __init__(self, srcroot):
