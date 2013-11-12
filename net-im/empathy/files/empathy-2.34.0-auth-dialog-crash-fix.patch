@@ -1,0 +1,24 @@
+From 73d8a18c6def748d78e91f0dda1145771c620b53 Mon Sep 17 00:00:00 2001
+From: Guillaume Desmottes <guillaume.desmottes@collabora.co.uk>
+Date: Mon, 04 Apr 2011 08:23:53 +0000
+Subject: event_manager_add: don't crash if approval is NULL (#646555)
+
+When adding a "subscription request" event there is no EventManagerApproval
+associated with the event.
+---
+diff --git a/src/empathy-event-manager.c b/src/empathy-event-manager.c
+index 5b2174a..041d22a 100644
+--- a/src/empathy-event-manager.c
++++ b/src/empathy-event-manager.c
+@@ -233,7 +233,8 @@ event_manager_add (EmpathyEventManager *manager,
+   event->public.header = g_strdup (header);
+   event->public.message = g_strdup (message);
+   event->public.must_ack = (func != NULL);
+-  event->public.handler_instance = approval->handler_instance;
++  if (approval != NULL)
++    event->public.handler_instance = approval->handler_instance;
+   event->inhibit = FALSE;
+   event->func = func;
+   event->user_data = user_data;
+--
+cgit v0.9
