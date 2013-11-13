@@ -62,7 +62,8 @@ steps = [
 	MergeUpdates(progress_overlay.root),
 	AutoGlobMask("dev-lang/python", "python*_pre*", "funtoo-python"),
 	Minify(),
-	GenCache()
+	GenCache(),
+	GenUseLocalDesc()
 ]
 
 # work tree is a non-git tree in tmpfs for enhanced performance - we do all the heavy lifting there:

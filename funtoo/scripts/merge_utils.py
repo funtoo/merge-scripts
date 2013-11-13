@@ -448,6 +448,10 @@ class GenCache(MergeStep):
 	def run(self,tree):
 		runShell("egencache --update --portdir=%s --jobs=4" % tree.root, abortOnFail=False)
 
+class GenUseLocalDesc(MergeStep):
+	def run(self,tree):
+		runShell("egencache --update-use-local-desc --portdir=%s" % tree.root, abortOnFail=False)
+
 class GitPrep(MergeStep):
 	def __init__(self,branch):
 		self.branch = branch
