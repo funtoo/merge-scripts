@@ -1,0 +1,97 @@
+From 2cc8d6f3917b8480036a24db52f9717db5b31736 Mon Sep 17 00:00:00 2001
+From: Jiri Popelka <jpopelka@redhat.com>
+Date: Wed, 11 Jul 2012 18:17:12 +0200
+Subject: [PATCH] Use CUPS-1.6 IPP API getter/setter functions.
+
+CUPS 1.6 makes various structures private and
+introduces these ippGet and ippSet functions
+for all of the fields in these structures.
+http://www.cups.org/str.php?L3928
+
+We define our own accessors when
+building against CUPS < 1.6.
+---
+ .../gsd-print-notifications-manager.c                |   18 ++++++++++++++----
+ plugins/print-notifications/gsd-printer.c            |   10 +++++++++-
+ 2 files changed, 23 insertions(+), 5 deletions(-)
+
+diff --git a/plugins/print-notifications/gsd-print-notifications-manager.c b/plugins/print-notifications/gsd-print-notifications-manager.c
+index 0092865..482a528 100644
+--- a/plugins/print-notifications/gsd-print-notifications-manager.c
++++ b/plugins/print-notifications/gsd-print-notifications-manager.c
+@@ -53,6 +53,16 @@
+ #define REASON_TIMEOUT                   15000
+ #define CUPS_CONNECTION_TEST_INTERVAL    300
+ 
++#if (CUPS_VERSION_MAJOR > 1) || (CUPS_VERSION_MINOR > 5)
++#define HAVE_CUPS_1_6 1
++#endif
++
++#ifndef HAVE_CUPS_1_6
++#define ippGetStatusCode(ipp) ipp->request.status.status_code
++#define ippGetInteger(attr, element) attr->values[element].integer
++#define ippGetString(attr, element, language) attr->values[element].string.text
++#endif
++
+ struct GsdPrintNotificationsManagerPrivate
+ {
+         GDBusConnection              *cups_bus_connection;
+@@ -398,10 +408,10 @@ on_cups_notification (GDBusConnection *connection,
+                         response = cupsDoRequest (http, request, "/");
+ 
+                         if (response) {
+-                                if (response->request.status.status_code <= IPP_OK_CONFLICT &&
++                                if (ippGetStatusCode (response) <= IPP_OK_CONFLICT &&
+                                     (attr = ippFindAttribute(response, "job-originating-user-name",
+                                                              IPP_TAG_NAME))) {
+-                                        if (g_strcmp0 (attr->values[0].string.text, cupsUser ()) == 0)
++                                        if (g_strcmp0 (ippGetString (attr, 0, NULL), cupsUser ()) == 0)
+                                                 my_job = TRUE;
+                                 }
+                                 ippDelete(response);
+@@ -891,12 +901,12 @@ renew_subscription (gpointer data)
+                                        "notify-lease-duration", SUBSCRIPTION_DURATION);
+                         response = cupsDoRequest (http, request, "/");
+ 
+-                        if (response != NULL && response->request.status.status_code <= IPP_OK_CONFLICT) {
++                        if (response != NULL && ippGetStatusCode (response) <= IPP_OK_CONFLICT) {
+                                 if ((attr = ippFindAttribute (response, "notify-subscription-id",
+                                                               IPP_TAG_INTEGER)) == NULL)
+                                         g_debug ("No notify-subscription-id in response!\n");
+                                 else
+-                                        manager->priv->subscription_id = attr->values[0].integer;
++                                        manager->priv->subscription_id = ippGetInteger (attr, 0);
+                         }
+ 
+                         if (response)
+diff --git a/plugins/print-notifications/gsd-printer.c b/plugins/print-notifications/gsd-printer.c
+index 886f6ce..26dbb6d 100644
+--- a/plugins/print-notifications/gsd-printer.c
++++ b/plugins/print-notifications/gsd-printer.c
+@@ -63,6 +63,14 @@ static GDBusNodeInfo *pdi_introspection_data = NULL;
+ #define GNOME_SESSION_PRESENCE_DBUS_PATH  "/org/gnome/SessionManager/Presence"
+ #define GNOME_SESSION_PRESENCE_DBUS_IFACE "org.gnome.SessionManager.Presence"
+ 
++#if (CUPS_VERSION_MAJOR > 1) || (CUPS_VERSION_MINOR > 5)
++#define HAVE_CUPS_1_6 1
++#endif
++
++#ifndef HAVE_CUPS_1_6
++#define ippGetState(ipp) ipp->state
++#endif
++
+ enum {
+   PRESENCE_STATUS_AVAILABLE = 0,
+   PRESENCE_STATUS_INVISIBLE,
+@@ -725,7 +733,7 @@ printer_autoconfigure (gchar *printer_name)
+                                                         "AutoConfigure",
+                                                         ("Automatic configuration"));
+                 if (response) {
+-                        if (response->state == IPP_ERROR)
++                        if (ippGetState (response) == IPP_ERROR)
+                                 g_warning ("An error has occured during automatic configuration of new printer.");
+                         ippDelete (response);
+                 }
+-- 
+1.7.10.4
+

@@ -1,0 +1,41 @@
+From e46d34f5bd9b0260a204d5f8a9d23c747b61923f Mon Sep 17 00:00:00 2001
+From: Cosimo Cecchi <cosimoc@gnome.org>
+Date: Mon, 3 Oct 2011 10:02:34 -0400
+Subject: [PATCH] color: unbreak loading profiles at startup
+
+A recent commit broke color profile loading at startup if the profile
+directory exists already. Fix this.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=660790
+
+Signed-off-by: Richard Hughes <richard@hughsie.com>
+
+[Alexandre Rostovtsev <tetromino@gmail.com>: backported to 3.2]
+---
+ plugins/color/gcm-profile-store.c |    5 +++--
+ 1 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/plugins/color/gcm-profile-store.c b/plugins/color/gcm-profile-store.c
+index 3dde406..f8b0889 100644
+--- a/plugins/color/gcm-profile-store.c
++++ b/plugins/color/gcm-profile-store.c
+@@ -445,13 +445,14 @@ gcm_profile_store_search (GcmProfileStore *profile_store)
+         /* get Linux per-user profiles */
+         path = g_build_filename (g_get_user_data_dir (), "icc", NULL);
+         ret = gcm_profile_store_mkdir_with_parents (path, &error);
+-        if (!ret) {
++        if (!ret &&
++            !g_error_matches (error, G_IO_ERROR, G_IO_ERROR_EXISTS)) {
+                 g_warning ("failed to create directory on startup: %s", error->message);
+-                g_error_free (error);
+         } else {
+                 gcm_profile_store_search_path (profile_store, path, 0);
+         }
+         g_free (path);
++        g_clear_error (&error);
+ 
+         /* get per-user profiles from obsolete location */
+         path = g_build_filename (g_get_home_dir (), ".color", "icc", NULL);
+-- 
+1.7.7
+

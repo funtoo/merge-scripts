@@ -1,0 +1,34 @@
+From 6cf315249ab27d4396b0f5b5edb1e689a5cafc68 Mon Sep 17 00:00:00 2001
+From: Chris Coleman <chrsclmn@gmail.com>
+Date: Sat, 16 Oct 2010 00:44:12 +0000
+Subject: xsettings: Export Xft.lcdfilter for OO.o's benefit
+
+Export Xft.lcdfilter legacy setting for the benefit of OpenOffice.org
+which doesn't follow the other fontconfig settings.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=631924
+---
+diff --git a/plugins/xsettings/gsd-xsettings-manager.c b/plugins/xsettings/gsd-xsettings-manager.c
+index 0d9df70..8798a9e 100644
+--- a/plugins/xsettings/gsd-xsettings-manager.c
++++ b/plugins/xsettings/gsd-xsettings-manager.c
+@@ -357,6 +357,8 @@ xft_settings_set_xsettings (GnomeXSettingsManager *manager,
+                 xsettings_manager_set_string (manager->priv->managers [i], "Xft/HintStyle", settings->hintstyle);
+                 xsettings_manager_set_int (manager->priv->managers [i], "Xft/DPI", settings->dpi);
+                 xsettings_manager_set_string (manager->priv->managers [i], "Xft/RGBA", settings->rgba);
++                xsettings_manager_set_string (manager->priv->managers [i], "Xft/lcdfilter",
++                                              g_str_equal (settings->rgba, "rgb") ? "lcddefault" : "none");
+         }
+         gnome_settings_profile_end (NULL);
+ }
+@@ -416,6 +418,8 @@ xft_settings_set_xresources (GnomeXftSettings *settings)
+                                 settings->hintstyle);
+         update_property (add_string, "Xft.rgba",
+                                 settings->rgba);
++        update_property (add_string, "Xft.lcdfilter",
++                         g_str_equal (settings->rgba, "rgb") ? "lcddefault" : "none");
+ 
+         g_debug("xft_settings_set_xresources: new res '%s'", add_string->str);
+ 
+--
+cgit v0.8.3.1

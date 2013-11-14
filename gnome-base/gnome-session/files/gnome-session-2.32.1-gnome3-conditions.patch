@@ -1,0 +1,107 @@
+From d27c9dfb07e0d69ff37d029e5647bd68e7db7e95 Mon Sep 17 00:00:00 2001
+From: Nirbheek Chauhan <nirbheek@gentoo.org>
+Date: Mon, 4 Apr 2011 18:07:09 +0530
+Subject: [PATCH] Don't reject GNOME 3 session autostart conditions
+
+gnome-session-3.0 introduced a new AutostartCondition=GNOME3 directive.
+See commit 58ebdfac for details on that.
+
+This commit adds detection for that directive instead of disabling .desktop
+files with that. Now, apps are autostarted if they contain:
+
+ AutostartCondition=GNOME3 is-session gnome-fallback
+or
+ AutostartCondition=GNOME3 unless-session [something other than gnome-fallback]
+
+And are disabled for all other cases.
+---
+ gnome-session/gsm-autostart-app.c |   45 +++++++++++++++++++++++++++++++-----
+ 1 files changed, 38 insertions(+), 7 deletions(-)
+
+diff --git a/gnome-session/gsm-autostart-app.c b/gnome-session/gsm-autostart-app.c
+index 529a346..abc918f 100644
+--- a/gnome-session/gsm-autostart-app.c
++++ b/gnome-session/gsm-autostart-app.c
+@@ -40,11 +40,14 @@ enum {
+ };
+ 
+ enum {
+-        GSM_CONDITION_NONE          = 0,
+-        GSM_CONDITION_IF_EXISTS     = 1,
+-        GSM_CONDITION_UNLESS_EXISTS = 2,
+-        GSM_CONDITION_GNOME         = 3,
+-        GSM_CONDITION_UNKNOWN       = 4
++        GSM_CONDITION_NONE           = 0,
++        GSM_CONDITION_IF_EXISTS      = 1,
++        GSM_CONDITION_UNLESS_EXISTS  = 2,
++        GSM_CONDITION_GNOME          = 3,
++        GSM_CONDITION_GSETTINGS      = 4,
++        GSM_CONDITION_IF_SESSION     = 5,
++        GSM_CONDITION_UNLESS_SESSION = 6,
++        GSM_CONDITION_UNKNOWN        = 7
+ };
+ 
+ #define GSM_SESSION_CLIENT_DBUS_INTERFACE "org.gnome.SessionClient"
+@@ -153,15 +156,31 @@ parse_condition_string (const char *condition_string,
+                 key++;
+         }
+ 
++        kind = GSM_CONDITION_UNKNOWN;
++
+         if (!g_ascii_strncasecmp (condition_string, "if-exists", len) && key) {
+                 kind = GSM_CONDITION_IF_EXISTS;
+         } else if (!g_ascii_strncasecmp (condition_string, "unless-exists", len) && key) {
+                 kind = GSM_CONDITION_UNLESS_EXISTS;
+         } else if (!g_ascii_strncasecmp (condition_string, "GNOME", len)) {
+                 kind = GSM_CONDITION_GNOME;
+-        } else {
++        } else if (!g_ascii_strncasecmp (condition_string, "GNOME3", len)) {
++                condition_string = key;
++                space = condition_string + strcspn (condition_string, " ");
++                len = space - condition_string;
++                key = space;
++                while (isspace ((unsigned char)*key)) {
++                        key++;
++                }
++                if (!g_ascii_strncasecmp (condition_string, "if-session", len) && key) {
++                        kind = GSM_CONDITION_IF_SESSION;
++                } else if (!g_ascii_strncasecmp (condition_string, "unless-session", len) && key) {
++                        kind = GSM_CONDITION_UNLESS_SESSION;
++                }
++        }
++
++        if (kind == GSM_CONDITION_UNKNOWN) {
+                 key = NULL;
+-                kind = GSM_CONDITION_UNKNOWN;
+         }
+ 
+         if (keyp != NULL) {
+@@ -364,6 +383,12 @@ setup_condition_monitor (GsmAutostartApp *app)
+                                                                           gconf_condition_cb,
+                                                                           app, NULL, NULL);
+                 g_object_unref (client);
++        } else if (kind == GSM_CONDITION_IF_SESSION) {
++                /* We treat GNOME 2.32 as the same as gnome-fallback */
++                disabled = strcmp ("gnome-fallback", key) != 0;
++        } else if (kind == GSM_CONDITION_UNLESS_SESSION) {
++                /* We treat GNOME 2.32 as the same as gnome-fallback */
++                disabled = strcmp ("gnome-fallback", key) == 0;
+         } else {
+                 disabled = TRUE;
+         }
+@@ -647,6 +672,12 @@ is_conditionally_disabled (GsmApp *app)
+                 g_assert (GCONF_IS_CLIENT (client));
+                 disabled = !gconf_client_get_bool (client, key, NULL);
+                 g_object_unref (client);
++        } else if (kind == GSM_CONDITION_IF_SESSION) {
++                /* We treat GNOME 2.32 as the same as gnome-fallback */
++                disabled = strcmp ("gnome-fallback", key) != 0;
++        } else if (kind == GSM_CONDITION_UNLESS_SESSION) {
++                /* We treat GNOME 2.32 as the same as gnome-fallback */
++                disabled = strcmp ("gnome-fallback", key) == 0;
+         } else {
+                 disabled = TRUE;
+         }
+-- 
+1.7.3.4
+

@@ -1,0 +1,45 @@
+From b27f8c8b062e42aa89a7383fefba1833a6f63c4c Mon Sep 17 00:00:00 2001
+From: Martin Pitt <martinpitt@gnome.org>
+Date: Tue, 13 Nov 2012 11:02:35 +0100
+Subject: [PATCH] GsmConsoleKit: Properly initialize upower client
+
+Move UPower client initialization from gsm_consolekit_on_name_owner_changed()
+(which is not actually called for UPower usually) into
+gsm_consolekit_ensure_ck_connection().
+
+This makes the UPower calls actually work, otherwise they fail on trying to
+pass a NULL client.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=688229
+---
+ gnome-session/gsm-consolekit.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/gnome-session/gsm-consolekit.c b/gnome-session/gsm-consolekit.c
+index 4c0eca5..0c58f37 100644
+--- a/gnome-session/gsm-consolekit.c
++++ b/gnome-session/gsm-consolekit.c
+@@ -182,6 +182,9 @@ gsm_consolekit_ensure_ck_connection (GsmConsolekit  *manager,
+                 }
+         }
+ 
++        g_clear_object (&manager->priv->up_client);
++        manager->priv->up_client = up_client_new ();
++
+         is_connected = TRUE;
+ 
+  out:
+@@ -219,10 +222,8 @@ gsm_consolekit_on_name_owner_changed (DBusGProxy    *bus_proxy,
+         }
+ 
+         g_clear_object (&manager->priv->ck_proxy);
+-        g_clear_object (&manager->priv->up_client);
+ 
+         gsm_consolekit_ensure_ck_connection (manager, NULL);
+-        manager->priv->up_client = up_client_new ();
+ 
+ }
+ 
+-- 
+1.8.1.1
+
