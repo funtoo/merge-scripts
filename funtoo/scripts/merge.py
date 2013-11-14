@@ -7,7 +7,7 @@ if not os.path.exists("/usr/bin/svn"):
 	print("svn binary not found at /usr/bin/svn. Exiting.")
 	sys.exit(1)
 
-gentoo_src = DeadTree("gentoo","/var/git/portage-gentoo")
+gentoo_src = CvsTree("gentoo-x86",":pserver:anonymous@anoncvs.gentoo.org:/var/cvsroot")
 funtoo_overlay = Tree("funtoo-overlay", branch, "repos@git.funtoo.org:funtoo-overlay.git", pull=True)
 foo_overlay = Tree("foo-overlay", "master", "https://github.com/slashbeast/foo-overlay.git", pull=True)
 bar_overlay = Tree("bar-overlay", "master", "git://github.com/adessemond/bar-overlay.git", pull=True)
@@ -17,7 +17,7 @@ sabayon_for_gentoo = Tree("sabayon-for-gentoo", "master", "git://github.com/Saba
 mate_overlay = Tree("mate", "master", "git://github.com/Sabayon/mate-overlay.git", pull=True)
 
 steps = [
-	SyncTree(gentoo_src,exclude=["/metadata/cache/**","ChangeLog", "dev-util/metro"]),
+	SyncTree(gentoo_src,exclude=["/metadata/cache/**","CVS", "ChangeLog", "dev-util/metro"]),
 	ApplyPatchSeries("%s/funtoo/patches" % funtoo_overlay.root ),
 	ThirdPartyMirrors(),
 	SyncDir(funtoo_overlay.root, "profiles", "profiles", exclude=["categories", "repo_name", "updates"]),
@@ -27,6 +27,7 @@ steps = [
 	SyncDir(funtoo_overlay.root,"eclass"),
 	SyncDir(funtoo_overlay.root,"metadata"),
 	SyncFiles(gentoo_src.root, {
+		"profiles/package.mask":"profiles/package.mask/gentoo",
 		"profiles/arch/amd64/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/package.use.mask/01-gentoo",
 		"profiles/features/multilib/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/package.use.mask/02-gentoo",
 		"profiles/arch/amd64/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/use.mask/01-gentoo",
@@ -61,7 +62,8 @@ steps = [
 	MergeUpdates(progress_overlay.root),
 	AutoGlobMask("dev-lang/python", "python*_pre*", "funtoo-python"),
 	Minify(),
-	GenCache()
+	GenCache(),
+	GenUseLocalDesc()
 ]
 
 # work tree is a non-git tree in tmpfs for enhanced performance - we do all the heavy lifting there:

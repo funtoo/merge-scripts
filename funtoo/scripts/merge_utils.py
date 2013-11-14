@@ -135,9 +135,18 @@ class SyncFiles(MergeStep):
 			else:
 				dest = os.path.join(tree.root, src)
 			src = os.path.join(self.srcroot, src)
+			if os.path.exists(dest):
+				print("%s exists, attempting to unlink..." % dest)
+				try:
+					os.unlink(dest)
+				except:
+					pass
 			dest_dir = os.path.dirname(dest)
+			if os.path.exists(dest_dir) and os.path.isfile(dest_dir):
+				os.unlink(dest_dir)
 			if not os.path.exists(dest_dir):
 				os.makedirs(dest_dir)
+			print("copying %s to final location %s" % (src, dest))
 			shutil.copyfile(src, dest)
 
 class MergeUpdates(MergeStep):
@@ -244,6 +253,24 @@ class SvnTree(object):
 			runShell("(cd %s; svn up)" % self.root)
 		else:
 			runShell("(cd %s; svn co %s %s)" % (base, self.url, self.name))
+
+class CvsTree(object):
+	def __init__(self, name, url=None, trylocal=None):
+		self.name = name
+		self.url = url
+		self.trylocal = trylocal
+		if self.trylocal and os.path.exists(self.trylocal):
+			base = os.path.basename(self.trylocal)
+			self.root = trylocal
+		else:
+			base = "/var/cvs/source-trees"
+			self.root = "%s/%s" % (base, self.name)
+		if not os.path.exists(base):
+			os.makedirs(base)
+		if os.path.exists(self.root):
+			runShell("(cd %s; cvs --no-verify update)" % self.root)
+		else:
+			runShell("(cd %s; cvs --no-verify -d %s co %s)" % (base, self.url, self.name))
 
 class UnifiedTree(Tree):
 	def __init__(self,root,steps):
@@ -357,12 +384,18 @@ class InsertEbuilds(MergeStep):
 					if not os.path.exists(tcatdir):
 						os.makedirs(tcatdir)
 					if isinstance(self.merge, list) and "%s/%s" % (cat,pkg) in self.merge and os.path.isdir(tpkgdir):
-						pkgdir_manifest_file = open("%s/Manifest" % pkgdir)
-						tpkgdir_manifest_file = open("%s/Manifest" % tpkgdir)
-						pkgdir_manifest = pkgdir_manifest_file.readlines()
-						tpkgdir_manifest = tpkgdir_manifest_file.readlines()
-						pkgdir_manifest_file.close()
-						tpkgdir_manifest_file.close()
+						try:
+							pkgdir_manifest_file = open("%s/Manifest" % pkgdir)
+							pkgdir_manifest = pkgdir_manifest_file.readlines()
+							pkgdir_manifest_file.close()
+						except IOError:
+							pkgdir_manifest = []
+						try:
+							tpkgdir_manifest_file = open("%s/Manifest" % tpkgdir)
+							tpkgdir_manifest = tpkgdir_manifest_file.readlines()
+							tpkgdir_manifest_file.close()
+						except IOError:
+							tpkgdir_manifest = []
 						entries = {
 							"AUX": {},
 							"DIST": {},
@@ -414,6 +447,10 @@ class ProfileDepFix(MergeStep):
 class GenCache(MergeStep):
 	def run(self,tree):
 		runShell("egencache --update --portdir=%s --jobs=4" % tree.root, abortOnFail=False)
+
+class GenUseLocalDesc(MergeStep):
+	def run(self,tree):
+		runShell("egencache --update-use-local-desc --portdir=%s" % tree.root, abortOnFail=False)
 
 class GitPrep(MergeStep):
 	def __init__(self,branch):
