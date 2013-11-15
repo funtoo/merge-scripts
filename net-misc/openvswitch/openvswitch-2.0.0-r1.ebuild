@@ -2,8 +2,6 @@
 
 EAPI="5-progress"
 
-PYTHON_RESTRICTED_ABIS="2.6 3.* *-jython *-pypy-*"
-
 inherit eutils linux-info linux-mod python
 
 DESCRIPTION="Production quality, multilayer virtual switch."
