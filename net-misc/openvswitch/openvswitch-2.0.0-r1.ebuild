@@ -36,7 +36,7 @@ pkg_setup() {
 		linux-info_pkg_setup
 	fi
 	kernel_is ge 2 6 32 || die "Linux >=2.6.32 and <3.10 required"
-	kernel_is lt 3 12 || die "Linux >=2.6.18 and <3.12 required"
+	kernel_is lt 3 11 || die "Linux >=2.6.32 and <3.11 required"
 
 	if use monitor; then python_set_active_version 2.7; python_pkg_setup; fi
 
