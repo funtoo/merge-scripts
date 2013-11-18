@@ -1,1 +1,1 @@
-USE="cairo consolekit introspection gtk policykit"
+USE="cairo consolekit introspection gtk policykit udisks"
