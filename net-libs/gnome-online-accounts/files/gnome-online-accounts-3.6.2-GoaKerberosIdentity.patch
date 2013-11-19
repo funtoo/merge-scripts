@@ -1,0 +1,53 @@
+From 367fae608624cefdf029cc01dd85f71ca5bf1881 Mon Sep 17 00:00:00 2001
+From: Alexandre Rostovtsev <tetromino@gentoo.org>
+Date: Tue, 22 Jan 2013 00:06:58 -0500
+Subject: [PATCH] identity: define GoaKerberosIdentity only in one header
+
+https://bugzilla.gnome.org/show_bug.cgi?id=692251
+---
+ src/goaidentity/goakerberosidentity.h        | 2 +-
+ src/goaidentity/goakerberosidentityinquiry.h | 1 -
+ src/goaidentity/goakerberosidentitymanager.c | 2 +-
+ 3 files changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/src/goaidentity/goakerberosidentity.h b/src/goaidentity/goakerberosidentity.h
+index 73681b0..6e82835 100644
+--- a/src/goaidentity/goakerberosidentity.h
++++ b/src/goaidentity/goakerberosidentity.h
+@@ -27,7 +27,7 @@
+ #include <glib-object.h>
+ 
+ #include <krb5.h>
+-#include "goakerberosidentityinquiry.h"
++#include "goaidentityinquiry.h"
+ 
+ G_BEGIN_DECLS
+ #define GOA_TYPE_KERBEROS_IDENTITY             (goa_kerberos_identity_get_type ())
+diff --git a/src/goaidentity/goakerberosidentityinquiry.h b/src/goaidentity/goakerberosidentityinquiry.h
+index d6c7d7c..3d5501c 100644
+--- a/src/goaidentity/goakerberosidentityinquiry.h
++++ b/src/goaidentity/goakerberosidentityinquiry.h
+@@ -38,7 +38,6 @@ G_BEGIN_DECLS
+ #define GOA_IS_KERBEROS_IDENTITY_INQUIRY(obj)          (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GOA_TYPE_KERBEROS_IDENTITY_INQUIRY))
+ #define GOA_IS_KERBEROS_IDENTITY_INQUIRY_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), GOA_TYPE_KERBEROS_IDENTITY_INQUIRY))
+ #define GOA_KERBEROS_IDENTITY_INQUIRY_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS((obj), GOA_TYPE_KERBEROS_IDENTITY_INQUIRY, GoaKerberosIdentityInquiryClass))
+-typedef struct _GoaKerberosIdentity GoaKerberosIdentity;
+ typedef struct _GoaKerberosIdentityInquiry GoaKerberosIdentityInquiry;
+ typedef struct _GoaKerberosIdentityInquiryClass GoaKerberosIdentityInquiryClass;
+ typedef struct _GoaKerberosIdentityInquiryPrivate GoaKerberosIdentityInquiryPrivate;
+diff --git a/src/goaidentity/goakerberosidentitymanager.c b/src/goaidentity/goakerberosidentitymanager.c
+index 62c4a2a..1b1dcd1 100644
+--- a/src/goaidentity/goakerberosidentitymanager.c
++++ b/src/goaidentity/goakerberosidentitymanager.c
+@@ -25,7 +25,7 @@
+ #include "goakerberosidentitymanager.h"
+ #include "goaidentitymanager.h"
+ #include "goaidentitymanagerprivate.h"
+-#include "goakerberosidentity.h"
++#include "goakerberosidentityinquiry.h"
+ #include "goalogging.h"
+ 
+ #include <fcntl.h>
+-- 
+1.8.1.1
+
