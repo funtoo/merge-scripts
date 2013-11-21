@@ -1,0 +1,239 @@
+From 88e3f2146b0740161dc3b2095dcf05c538b67e36 Mon Sep 17 00:00:00 2001
+From: Priit Laes <plaes@plaes.org>
+Date: Mon, 10 Sep 2012 18:49:43 +0300
+Subject: [PATCH] Crappy patch to allow disabling kerberos requirement
+
+https://bugzilla.gnome.org/show_bug.cgi?id=686840
+---
+ configure.ac                             | 22 ++++++++++++++--------
+ panels/user-accounts/um-account-dialog.c | 30 ++++++++++++++++++++++++++----
+ panels/user-accounts/um-realm-manager.c  |  2 ++
+ 3 files changed, 42 insertions(+), 12 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index fa4b12f..c1e188f 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -321,16 +321,22 @@ AC_DEFINE_UNQUOTED([ISO_CODES_PREFIX],["`$PKG_CONFIG --variable=prefix iso-codes
+ ISO_CODES=iso-codes
+ 
+ # Kerberos kerberos support
+-AC_PATH_PROG(KRB5_CONFIG, krb5-config, no)
+-if test "$KRB5_CONFIG" = "no"; then
+-  AC_MSG_ERROR([krb5-config executable not found in your path - should be installed with the kerberos libraries])
+-fi
+ 
+-AC_MSG_CHECKING(for krb5 libraries and flags)
+-KRB5_CFLAGS="`$KRB5_CONFIG --cflags`"
+-KRB5_LIBS="`$KRB5_CONFIG --libs`"
+-AC_MSG_RESULT($KRB5_CFLAGS $KRB5_LIBS)
++AC_ARG_ENABLE([kerberos],
++              AS_HELP_STRING([--disable-kerberos], [disable kerberos support (default: enabled)]),,
++              [enable_kerberos=yes])
++
++if test x"$enable_kerberos" != x"no" ; then
++    AC_PATH_PROG(KRB5_CONFIG, krb5-config, no)
++    if test "$KRB5_CONFIG" = "no"; then
++      AC_MSG_ERROR([krb5-config executable not found in your path - should be installed with the kerberos libraries])
++    fi
+ 
++    AC_MSG_CHECKING(for krb5 libraries and flags)
++    KRB5_CFLAGS="`$KRB5_CONFIG --cflags`"
++    KRB5_LIBS="`$KRB5_CONFIG --libs`"
++    AC_MSG_RESULT($KRB5_CFLAGS $KRB5_LIBS)
++fi
+ AC_SUBST(KRB5_CFLAGS)
+ AC_SUBST(KRB5_LIBS)
+ 
+diff --git a/panels/user-accounts/um-account-dialog.c b/panels/user-accounts/um-account-dialog.c
+index 9dbda5c..6b82980 100644
+--- a/panels/user-accounts/um-account-dialog.c
++++ b/panels/user-accounts/um-account-dialog.c
+@@ -26,10 +26,13 @@
+ #include <gtk/gtk.h>
+ 
+ #include "um-account-dialog.h"
+-#include "um-realm-manager.h"
+ #include "um-user-manager.h"
+ #include "um-utils.h"
+ 
++#ifdef KERBEROS
++#include "um-realm-manager.h"
++#endif
++
+ typedef enum {
+         UM_LOCAL,
+         UM_ENTERPRISE,
+@@ -41,6 +44,7 @@ static void   mode_change          (UmAccountDialog *self,
+ 
+ static void   dialog_validate      (UmAccountDialog *self);
+ 
++#ifdef KERBEROS
+ static void   on_join_login        (GObject *source,
+                                     GAsyncResult *result,
+                                     gpointer user_data);
+@@ -48,6 +52,7 @@ static void   on_join_login        (GObject *source,
+ static void   on_realm_joined      (GObject *source,
+                                     GAsyncResult *result,
+                                     gpointer user_data);
++#endif
+ 
+ #define UM_ACCOUNT_DIALOG_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), UM_TYPE_ACCOUNT_DIALOG, \
+                                                                     UmAccountDialogClass))
+@@ -83,6 +88,7 @@ struct _UmAccountDialog {
+         gboolean enterprise_domain_chosen;
+         GtkEntry *enterprise_login;
+         GtkEntry *enterprise_password;
++#ifdef KERBEROS
+         UmRealmManager *realm_manager;
+         UmRealmObject *selected_realm;
+ 
+@@ -92,6 +98,7 @@ struct _UmAccountDialog {
+         GtkEntry *join_name;
+         GtkEntry *join_password;
+         gboolean join_prompted;
++#endif
+ };
+ 
+ struct _UmAccountDialogClass {
+@@ -292,6 +299,7 @@ local_prepare (UmAccountDialog *self)
+         gtk_combo_box_set_active (GTK_COMBO_BOX (self->local_account_type), 0);
+ }
+ 
++#ifdef KERBEROS
+ static gboolean
+ enterprise_validate (UmAccountDialog *self)
+ {
+@@ -461,7 +469,6 @@ on_join_response (GtkDialog *dialog,
+                         on_join_login,
+                         g_object_ref (self));
+ }
+-
+ static void
+ join_show_prompt (UmAccountDialog *self,
+                   GError *error)
+@@ -839,6 +846,7 @@ enterprise_prepare (UmAccountDialog *self)
+         gtk_entry_set_text (GTK_ENTRY (self->enterprise_login), "");
+         gtk_entry_set_text (GTK_ENTRY (self->enterprise_password), "");
+ }
++#endif
+ 
+ static void
+ dialog_validate (UmAccountDialog *self)
+@@ -849,9 +857,11 @@ dialog_validate (UmAccountDialog *self)
+         case UM_LOCAL:
+                 valid = local_validate (self);
+                 break;
++#ifdef KERBEROS
+         case UM_ENTERPRISE:
+                 valid = enterprise_validate (self);
+                 break;
++#endif
+         default:
+                 valid = FALSE;
+                 break;
+@@ -937,12 +947,14 @@ on_local_toggle (GtkToggleButton *toggle,
+         mode_toggled (UM_ACCOUNT_DIALOG (user_data), toggle, UM_LOCAL);
+ }
+ 
++#ifdef KERBEROS
+ static void
+ on_enterprise_toggle (GtkToggleButton *toggle,
+                       gpointer user_data)
+ {
+         mode_toggled (UM_ACCOUNT_DIALOG (user_data), toggle, UM_ENTERPRISE);
+ }
++#endif
+ 
+ static void
+ mode_init (UmAccountDialog *self,
+@@ -954,15 +966,18 @@ mode_init (UmAccountDialog *self,
+ 
+         widget = (GtkWidget *) gtk_builder_get_object (builder, "local-area");
+         self->mode_areas[UM_LOCAL] = widget;
++#ifdef KERBEROS
+         widget = (GtkWidget *) gtk_builder_get_object (builder, "enterprise-area");
+         self->mode_areas[UM_ENTERPRISE] = widget;
+-
++#endif
+         widget = (GtkWidget *) gtk_builder_get_object (builder, "local-button");
+         g_signal_connect (widget, "toggled", G_CALLBACK (on_local_toggle), self);
+         self->mode_buttons[UM_LOCAL] = widget;
++#ifdef KERBEROS
+         widget = (GtkWidget *) gtk_builder_get_object (builder, "enterprise-button");
+         g_signal_connect (widget, "toggled", G_CALLBACK (on_enterprise_toggle), self);
+         self->mode_buttons[UM_ENTERPRISE] = widget;
++#endif
+ }
+ 
+ static void
+@@ -1022,8 +1037,10 @@ um_account_dialog_init (UmAccountDialog *self)
+         self->container_widget = widget;
+ 
+         local_init (self, builder);
++#ifdef KERBEROS
+         enterprise_init (self, builder);
+         join_init (self, builder);
++#endif
+         mode_init (self, builder);
+ 
+         g_object_unref (builder);
+@@ -1041,9 +1058,11 @@ um_account_dialog_response (GtkDialog *dialog,
+                 case UM_LOCAL:
+                         local_create_user (self);
+                         break;
++#ifdef KERBEROS
+                 case UM_ENTERPRISE:
+                         enterprise_add_user (self);
+                         break;
++#endif
+                 default:
+                         g_assert_not_reached ();
+                 }
+@@ -1064,6 +1083,7 @@ um_account_dialog_dispose (GObject *obj)
+         if (self->cancellable)
+                 g_cancellable_cancel (self->cancellable);
+ 
++#ifdef KERBEROS
+         if (self->realmd_watch)
+                 g_bus_unwatch_name (self->realmd_watch);
+         self->realmd_watch = 0;
+@@ -1075,7 +1095,7 @@ um_account_dialog_dispose (GObject *obj)
+                 g_object_unref (self->realm_manager);
+                 self->realm_manager = NULL;
+         }
+-
++#endif
+         G_OBJECT_CLASS (um_account_dialog_parent_class)->dispose (obj);
+ }
+ 
+@@ -1128,7 +1148,9 @@ um_account_dialog_show (UmAccountDialog     *self,
+         self->cancellable = g_cancellable_new ();
+ 
+         local_prepare (self);
++#ifdef KERBEROS
+         enterprise_prepare (self);
++#endif
+         mode_change (self, UM_LOCAL);
+         dialog_validate (self);
+ 
+diff --git a/panels/user-accounts/um-realm-manager.c b/panels/user-accounts/um-realm-manager.c
+index 301c905..25c055c 100644
+--- a/panels/user-accounts/um-realm-manager.c
++++ b/panels/user-accounts/um-realm-manager.c
+@@ -22,6 +22,7 @@
+ 
+ #include "config.h"
+ 
++#ifdef KERBEROS
+ #include "um-realm-manager.h"
+ 
+ #include <krb5/krb5.h>
+@@ -826,3 +827,4 @@ um_realm_login_finish (GAsyncResult *result,
+ 
+         return TRUE;
+ }
++#endif
+-- 
+1.7.12
+
