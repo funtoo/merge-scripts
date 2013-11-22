@@ -1,3 +1,7 @@
+#  Oleg Vinichenko (22 Nov 2013)
+#  mask libnl-3.2.23, broken package
+>=dev-libs/libnl-3.2.23
+
 #  Oleg Vinichenko cautinoary mask to latest nvidia-drivers, FL-817
 #  (10 Oct 2013)
 >=x11-drivers/nvidia-drivers-331.13
