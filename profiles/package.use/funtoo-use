@@ -1,3 +1,7 @@
+# FL-897
+# force upnp and video USE flag in media-libs/mediatreamer, required for clean net-voip/linphone emerge
+media-libs/mediastreamer upnp video
+ 
 # FL-792, enable xattr USE flag in rsync, required for vzmigrate
 net-misc/rsync xattr
 
