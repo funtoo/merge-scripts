@@ -31,7 +31,7 @@ src_install() {
 
 	cp ${S}/btsync .
 	cp ${S}/LICENSE.TXT .
-	cp ${FILESDIR}/config ${D}/etc/${NAME}
+	./btsync --dump-sample-config > ${D}/etc/${NAME}/config
 	cp ${FILESDIR}/init.d/${NAME} ${D}/etc/init.d/
 
 	# Set more secure permissions
