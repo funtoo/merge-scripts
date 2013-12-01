@@ -186,6 +186,7 @@ eblit-src_unpack-pre() {
 
 eblit-src_unpack-post() {
 	epatch "${FILESDIR}"/glibc-nscd.patch
+	epatch "${FILESDIR}"/make-4.patch
 	if use hardened ; then
 		cd "${S}"
 		einfo "Patching to get working PIE binaries on PIE (hardened) platforms"
