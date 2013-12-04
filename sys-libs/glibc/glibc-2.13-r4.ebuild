@@ -202,6 +202,8 @@ pkg_setup() {
 }
 
 eblit-src_unpack-post() {
+	cd "${S}"
+	epatch "${FILESDIR}"/make-4.patch
 	if use hardened ; then
 		cd "${S}"
 		einfo "Patching to get working PIE binaries on PIE (hardened) platforms"
