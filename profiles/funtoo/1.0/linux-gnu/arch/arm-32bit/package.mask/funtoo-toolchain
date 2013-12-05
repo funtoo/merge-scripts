@@ -4,3 +4,6 @@
 
 >sys-libs/glibc-2.13-r4
 
+# binutils-2.23.2 has a regression for ARM
+# (see FL-907)
+=sys-libs/binutils-2.23.2
