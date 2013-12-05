@@ -6,4 +6,4 @@
 
 # binutils-2.23.2 has a regression for ARM
 # (see FL-907)
-=sys-libs/binutils-2.23.2
+=sys-devel/binutils-2.23.2
