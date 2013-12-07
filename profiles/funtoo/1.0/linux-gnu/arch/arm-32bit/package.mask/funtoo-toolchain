@@ -1,11 +1,9 @@
-# Jean-Francis Roy <jeanfrancis@funtoo.org> (16 Aug 2012)
-# Latest toolchain upgrade breaks ARM installations.
-# gcc-4.6.3 doesn't build, and glibc-2.15-r2 breaks everything.
+# Jean-Francis Roy <jeanfrancis@funtoo.org> (4 Dec 2013)
+# Latest glibc versions break ARM installations.
 # Still investigating...
 
-# For next toolchain upgrade 
 >sys-libs/glibc-2.13-r4
->sys-kernel/linux-headers-3.4-r2
->sys-devel/gcc-4.6.2-r1
->sys-devel/binutils-2.22-r1
 
+# binutils-2.23.2 has a regression for ARM
+# (see FL-907)
+=sys-devel/binutils-2.23.2
