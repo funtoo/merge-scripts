@@ -6,7 +6,7 @@
 
 # For next toolchain upgrade 
 >sys-libs/glibc-2.18
-<=sys-kernel/linux-headers-3.8
+>sys-kernel/linux-headers-3.7
 >sys-devel/gcc-4.8.1-r3
 >sys-devel/binutils-2.23.2
 
