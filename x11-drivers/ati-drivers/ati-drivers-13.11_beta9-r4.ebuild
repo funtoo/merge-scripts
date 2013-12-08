@@ -1,6 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-drivers/ati-drivers/ati-drivers-13.11_beta6.ebuild,v 1.1 2013/11/10 18:46:58 chithanh Exp $
 
 EAPI=5
 
@@ -8,9 +6,9 @@ inherit eutils multilib linux-info linux-mod toolchain-funcs versionator pax-uti
 
 DESCRIPTION="Ati precompiled drivers for Radeon Evergreen (HD5000 Series) and newer chipsets"
 HOMEPAGE="http://www.amd.com"
-#RUN="${WORKDIR}/amd-catalyst-13.11-beta1-linux-x86.x86_64.run"
+RUN="${WORKDIR}/amd-catalyst-13.11-beta V9.4-linux-x86.x86_64.run"
 SLOT="1"
-DRIVERS_URI="http://www2.ati.com/drivers/beta/amd-catalyst-13.11-beta-v9.4-linux-x86.x86_64.zip"
+DRIVERS_URI="http://www2.ati.com/drivers/beta/amd-catalyst-13.11-beta-v9.4-linux-x86.x86_64.run.zip"
 XVBA_SDK_URI="http://developer.amd.com/wordpress/media/2012/10/xvba-sdk-0.74-404001.tar.gz"
 SRC_URI="${DRIVERS_URI} ${XVBA_SDK_URI}"
 FOLDER_PREFIX="common/"
@@ -240,7 +238,7 @@ src_unpack() {
 		else
 			RUN="${DISTDIR}/${DRIVERS_DISTFILE}"
 		fi
-		sh ${RUN} --extract "${S}" 2>&1 > /dev/null || die
+		sh "${RUN}" --extract "${S}" 2>&1 > /dev/null || die
 	fi
 
 	mkdir xvba_sdk
