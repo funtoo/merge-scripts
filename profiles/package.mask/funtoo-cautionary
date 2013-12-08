@@ -1,3 +1,7 @@
+#  OLeg Vinichenko (8 Dec 2013)
+#  cautionary mask to freetype-2.5.1, broken
+=media-libs/freetype-2.5.1
+
 #  Oleg Vinichenko (3 Dec 2013)
 #  mask latest version of autogen, broken
 >=sys-devel/autogen-5.18
