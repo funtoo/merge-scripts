@@ -1,4 +1,7 @@
 #  OLeg Vinichenko (8 Dec 2013)
+# FL-916: dhcpcd-6.1.0 can't acquire IPV4 address
+>=net-misc/dhcpcd-6
+
 #  cautionary mask to freetype-2.5.1, broken
 =media-libs/freetype-2.5.1
 
