@@ -9,9 +9,3 @@
 >sys-kernel/linux-headers-3.7
 >sys-devel/gcc-4.8.1-r3
 >sys-devel/binutils-2.23.2
-
-# Jean-Francis Roy <jeanfrancis@funtoo.org> (15 Oct 2013)
-# Mask ARM-related glibc upgrade, will be unmasked
-# in the ARM profile. This mask will avoid any
-# unnecessary glibc bump for non-ARM users.
-=sys-libs/glibc-2.13-r5
