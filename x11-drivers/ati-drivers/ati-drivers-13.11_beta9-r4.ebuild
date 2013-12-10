@@ -8,10 +8,11 @@ DESCRIPTION="Ati precompiled drivers for Radeon Evergreen (HD5000 Series) and ne
 HOMEPAGE="http://www.amd.com"
 RUN="${WORKDIR}/amd-catalyst-13.11-beta V9.4-linux-x86.x86_64.run"
 SLOT="1"
-DRIVERS_URI="http://www2.ati.com/drivers/beta/amd-catalyst-13.11-beta-v9.4-linux-x86.x86_64.run.zip"
+DRIVERS_URI="http://ftp.osuosl.org/pub/funtoo/distfiles/amd-catalyst-13.11-beta-v9.4-linux-x86.x86_64.run.zip"
 XVBA_SDK_URI="http://developer.amd.com/wordpress/media/2012/10/xvba-sdk-0.74-404001.tar.gz"
 SRC_URI="${DRIVERS_URI} ${XVBA_SDK_URI}"
 FOLDER_PREFIX="common/"
+RESTRICT="mirror"
 IUSE="+vaapi debug +modules multilib qt4 static-libs pax_kernel"
 
 LICENSE="AMD GPL-2 QPL-1.0"
