@@ -5,9 +5,9 @@ EAPI=3
 inherit eutils mount-boot
 
 SLOT=$PVR
-CKV=3.2.51
+CKV=3.12.3
 KV_FULL=${PN}-${PVR}
-EXTRAVERSION=-1
+EXTRAVERSION=-1~exp1
 KERNEL_ARCHIVE="linux_${PV}.orig.tar.xz"
 PATCH_ARCHIVE="linux_${PV}${EXTRAVERSION}.debian.tar.xz"
 RESTRICT="binchecks strip mirror"
@@ -15,12 +15,11 @@ RESTRICT="binchecks strip mirror"
 LICENSE="GPL-2"
 KEYWORDS="*"
 IUSE="binary rt"
-DEPEND="binary? ( >=sys-kernel/genkernel-3.4.40.7-r1 )"
+DEPEND="binary? ( >=sys-kernel/genkernel-3.4.40.7-r2 )"
 RDEPEND="binary? ( || ( >=sys-fs/udev-160 >=virtual/udev-171 ) )"
 DESCRIPTION="Debian Sources (and optional binary kernel)"
 HOMEPAGE="http://www.debian.org"
-SRC_URI="http://ftp.osuosl.org/pub/funtoo/distfiles/${KERNEL_ARCHIVE}
-	http://ftp.osuosl.org//pub/funtoo/distfiles/${PATCH_ARCHIVE}"
+SRC_URI="http://debian.osuosl.org/debian/pool/main/l/linux/${KERNEL_ARCHIVE} http://debian.osuosl.org/debian/pool/main/l/linux/${PATCH_ARCHIVE}"
 S="$WORKDIR/linux-${CKV}"
 
 get_patch_list() {
@@ -58,9 +57,13 @@ src_prepare() {
 	rm -f .config >/dev/null
 	cp -a "${WORKDIR}"/debian "${T}"
 	make -s mrproper || die "make mrproper failed"
-	make -s include/linux/version.h || die "make include/linux/version.h failed"
+	#make -s include/linux/version.h || die "make include/linux/version.h failed"
 	cd ${S}
 	cp -aR "${WORKDIR}"/debian "${S}"/debian
+
+	## XFS LIBCRC kernel config fixes, FL-823
+	epatch ${FILESDIR}/debian-sources-3.12.3-xfs-libcrc32c-fix.patch
+
 	local opts
 	use rt && opts="rt" || opts="standard"
 	local myarch="amd64"
@@ -70,7 +73,7 @@ src_prepare() {
 	./config-extract ${myarch} ${opts} || die
 	cp .config ${T}/config || die
 	make -s mrproper || die "make mrproper failed"
-	make -s include/linux/version.h || die "make include/linux/version.h failed"
+	#make -s include/linux/version.h || die "make include/linux/version.h failed"
 }
 
 src_compile() {

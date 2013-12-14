@@ -1,0 +1,21 @@
+diff -Nuar -Nuar debian/config/config debian-fixed/config/config
+--- debian/config/config	2013-12-04 03:56:38.000000000 +0000
++++ debian-fixed/config/config	2013-12-14 06:58:11.457241516 +0000
+@@ -4329,7 +4329,7 @@
+ ##
+ ## file: fs/xfs/Kconfig
+ ##
+-CONFIG_XFS_FS=m
++CONFIG_XFS_FS=y
+ CONFIG_XFS_QUOTA=y
+ CONFIG_XFS_POSIX_ACL=y
+ CONFIG_XFS_RT=y
+@@ -4511,7 +4511,7 @@
+ CONFIG_CRC32=y
+ # CONFIG_CRC32_SELFTEST is not set
+ CONFIG_CRC7=m
+-CONFIG_LIBCRC32C=m
++CONFIG_LIBCRC32C=y
+ # CONFIG_DDR is not set
+ 
+ ##
