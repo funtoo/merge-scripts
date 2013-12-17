@@ -1,7 +1,3 @@
-## FL-525
-net-libs/nodejs
-
 ## F-447
 ~sys-fs/udev-171
 ~virtual/udev-171
-sys-apps/module-init-tools
