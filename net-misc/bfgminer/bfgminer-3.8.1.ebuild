@@ -1,4 +1,6 @@
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
+# $Header: $
 
 EAPI=4
 
@@ -10,28 +12,30 @@ SRC_URI="http://luke.dashjr.org/programs/bitcoin/files/${PN}/${PV}/${P}.tbz2"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="*"
-
-# Waiting for dev-libs/hidapi to be keyworded
-#KEYWORDS="~amd64 ~arm ~mips ~ppc ~ppc64 ~x86"
+KEYWORDS="~amd64 ~arm ~mips ~ppc ~ppc64 ~x86"
 
 # TODO: knc (needs i2c-tools header)
-IUSE="+adl avalon bitforce bfsb bigpic bitfury cpumining examples hardened hashbuster icarus littlefury lm_sensors metabank modminer nanofury ncurses +opencl proxy proxy_getwork proxy_stratum scrypt +udev unicode x6500 ztex"
+IUSE="+adl avalon bifury bitforce bfsb bigpic bitfury cpumining examples hardened hashbuster hashbuster2 icarus klondike +libusb littlefury lm_sensors metabank modminer nanofury ncurses +opencl proxy proxy_getwork proxy_stratum scrypt twinfury +udev unicode x6500 ztex"
 REQUIRED_USE='
 	|| ( avalon bitforce cpumining icarus modminer opencl proxy x6500 ztex )
 	adl? ( opencl )
 	bfsb? ( bitfury )
 	bigpic? ( bitfury )
 	hashbuster? ( bitfury )
+	hashbuster2? ( bitfury libusb )
+	klondike? ( libusb )
 	littlefury? ( bitfury )
 	lm_sensors? ( opencl )
 	metabank? ( bitfury )
 	nanofury? ( bitfury )
 	scrypt? ( || ( cpumining opencl ) )
+	twinfury? ( bitfury )
 	unicode? ( ncurses )
 	proxy? ( || ( proxy_getwork proxy_stratum ) )
 	proxy_getwork? ( proxy )
 	proxy_stratum? ( proxy )
+	x6500? ( libusb )
+	ztex? ( libusb )
 '
 
 DEPEND='
@@ -47,6 +51,9 @@ DEPEND='
 	hashbuster? (
 		dev-libs/hidapi
 	)
+	libusb? (
+		virtual/libusb:1
+	)
 	lm_sensors? (
 		sys-apps/lm_sensors
 	)
@@ -58,12 +65,6 @@ DEPEND='
 	)
 	proxy_stratum? (
 		dev-libs/libevent
-	)
-	x6500? (
-		virtual/libusb:1
-	)
-	ztex? (
-		virtual/libusb:1
 	)
 '
 RDEPEND="${DEPEND}
@@ -83,7 +84,7 @@ RDEPEND="${DEPEND}
 "
 DEPEND="${DEPEND}
 	virtual/pkgconfig
-	>=dev-libs/uthash-1.9.2
+	>=dev-libs/uthash-1.9.7
 	sys-apps/sed
 	cpumining? (
 		amd64? (
@@ -115,19 +116,23 @@ src_configure() {
 		--docdir="/usr/share/doc/${PF}" \
 		$(use_enable adl) \
 		$(use_enable avalon) \
+		$(use_enable bifury) \
 		$(use_enable bitforce) \
 		$(use_enable bfsb) \
 		$(use_enable bigpic) \
 		$(use_enable bitfury) \
 		$(use_enable cpumining) \
 		$(use_enable hashbuster) \
+		$(use_enable hashbuster2) \
 		$(use_enable icarus) \
+		$(use_enable klondike) \
 		$(use_enable littlefury) \
 		$(use_enable metabank) \
 		$(use_enable modminer) \
 		$(use_enable nanofury) \
 		$(use_enable opencl) \
 		$(use_enable scrypt) \
+		$(use_enable twinfury) \
 		--with-system-libblkmaker \
 		$with_curses \
 		$(use_with udev libudev) \
