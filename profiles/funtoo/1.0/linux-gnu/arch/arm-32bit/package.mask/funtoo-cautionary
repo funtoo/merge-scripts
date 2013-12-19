@@ -1,0 +1,4 @@
+# Jean-Francis Roy <jeanfrancis@funtoo.org> (19 Dec 2013)
+# ARM source files are missing from this package, see FL-940 and b.g.o #494668.
+=dev-libs/libgcrypt-1.6.0
+
