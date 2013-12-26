@@ -1,3 +1,6 @@
+# FL-934, force opengl USE flag to have clean emerge of xvba-video and x11-libs/libva
+x11-libs/libva opengl
+ 
 # FL-897
 # force upnp and video USE flag in media-libs/mediatreamer, required for clean net-voip/linphone emerge
 media-libs/mediastreamer upnp video

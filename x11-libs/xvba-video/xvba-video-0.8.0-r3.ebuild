@@ -17,7 +17,7 @@ SLOT="0"
 # newline is needed for broken ekeyword
 [[ ${PV} = 9999 ]] || \
 KEYWORDS="*"
-IUSE="debug opengl"
+IUSE="debug +opengl"
 
 RDEPEND="
 	>=x11-libs/libva-1.1.0[X,opengl?]
