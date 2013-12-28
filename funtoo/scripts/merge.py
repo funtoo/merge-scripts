@@ -40,7 +40,7 @@ steps = [
 		"profiles/arch/amd64/no-multilib/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/pure64/use.mask/01-gentoo"
 	}),
 	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
-	InsertEbuilds(foo_overlay, select="all", skip=["media-sound/deadbeef", "sys-fs/mdev-bb", "sys-fs/mdev-like-a-boss", "media-video/handbrake"], replace=["app-shells/rssh","net-misc/unison"]),
+	InsertEbuilds(foo_overlay, select="all", skip=["sys-fs/mdev-bb", "sys-fs/mdev-like-a-boss", "media-video/handbrake"], replace=["app-shells/rssh","net-misc/unison"]),
 	InsertEbuilds(bar_overlay, select="all", skip=["app-emulation/qemu"], replace=False),
 	InsertEbuilds(mate_overlay, select="all", skip=None, replace=False),
 	InsertEbuilds(squeezebox_overlay, select="all", skip=None, replace=False),
