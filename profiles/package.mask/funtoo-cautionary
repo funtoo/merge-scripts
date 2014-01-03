@@ -8,10 +8,6 @@
 #  Oleg Vinichenko (3 Dec 2013)
 #  mask latest version of autogen, broken
 >=sys-devel/autogen-5.18
-
-#  Oleg Vinichenko (22 Nov 2013)
-#  mask libnl-3.2.23, broken package
->=dev-libs/libnl-3.2.23
   
 #  Oleg Vinichenko (6 Sep 2013)
 #  mask perl modules that explicitly require newer perl-5.18
