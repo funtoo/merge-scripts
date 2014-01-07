@@ -1,4 +1,9 @@
-#  OLeg Vinichenko (8 Dec 2013)
+#  Oleg Vinichenko (7 Jan 2014)
+#  correct masks for postgresql, FL-959, masks requested, though package itself stable keyworded
+#  need tested
+dev-db/postgresql-base:9.3
+dev-db/postgresql-server:9.3
+
 # FL-916: dhcpcd-6.1.0 can't acquire IPV4 address
 >=net-misc/dhcpcd-6
 
@@ -49,10 +54,6 @@ app-benchmarks/phoronix-test-suite
 # Mask app-emulation/xen-tools-4.2.2-r1
 # depends on sys-app/texinfo-5
 =app-emulation/xen-tools-4.2.2-r1
-
-#  Oleg Vinichenko ( 26 jun 2013)
-#  mask beta version of postgresql, FL-591
->dev-db/postgresql-base-9.2.4
 
 #  Oleg Vinichenko (16 Jun 2013)
 #  mask broken hexchat ebuild FL-584
