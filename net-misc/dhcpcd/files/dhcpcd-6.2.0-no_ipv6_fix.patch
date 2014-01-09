@@ -1,0 +1,57 @@
+Index: dhcp-common.c
+==================================================================
+--- dhcp-common.c
++++ dhcp-common.c
+@@ -349,14 +349,20 @@
+ 	else
+ 		/* If we don't know the size, assume it's valid */
+ 		return dl;
+ 	return (dl < sz ? 0 : sz);
+ }
++
++#ifdef INET6
++#define PO_IFNAME
++#else
++#define PO_IFNAME __unused
++#endif
+ 
+ ssize_t
+ print_option(char *s, ssize_t len, int type, int dl, const uint8_t *data,
+-    const char *ifname)
++    PO_IFNAME const char *ifname)
+ {
+ 	const uint8_t *e, *t;
+ 	uint16_t u16;
+ 	int16_t s16;
+ 	uint32_t u32;
+
+Index: if-options.c
+==================================================================
+--- if-options.c
++++ if-options.c
+@@ -1550,10 +1550,11 @@
+ 	char *buf;
+ 	const char **e;
+ 	size_t buflen, ol;
+ #endif
+ #if !defined(INET) || !defined(INET6)
++	size_t i;
+ 	struct dhcp_opt *opt;
+ #endif
+ 
+ 	/* Seed our default options */
+ 	ifo = calloc(1, sizeof(*ifo));
+@@ -1667,11 +1668,11 @@
+ #ifdef INET6
+ 		dhcp6_opts = ifo->dhcp6_override;
+ 		dhcp6_opts_len = ifo->dhcp6_override_len;
+ #else
+ 		for (i = 0, opt = ifo->dhcp6_override;
+-		    i < ifo->dhcp_override6_len;
++		    i < ifo->dhcp6_override_len;
+ 		    i++, opt++)
+ 			free_dhcp_opt_embenc(opt);
+ 		free(ifo->dhcp6_override);
+ #endif
+ 		ifo->dhcp6_override = NULL;
+
