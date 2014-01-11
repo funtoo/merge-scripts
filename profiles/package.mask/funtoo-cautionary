@@ -126,7 +126,7 @@ sys-fs/zfs-fuse
 # for adventurous ones!
 # Daniel Robbins (15 Sep 2012) - new udev version to fix /run persistent issues:
 # Jean-Francis Roy (28 Nov 2012) - new udev version to add keymap USE flag + virtual/udev mask:
->sys-fs/udev-171-r8
+>sys-fs/udev-171-r10
 >sys-fs/eudev-0-r1
 >virtual/udev-171
 
