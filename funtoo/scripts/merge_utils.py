@@ -204,10 +204,10 @@ class Tree(object):
 		if not os.path.exists(base):
 			os.makedirs(base)
 		if os.path.exists(self.root):
-			runShell("(cd %s; git fetch origin)" % self.root )
+			runShell("(cd %s; git fetch origin)" % self.root, abortOnFail=False)
 			runShell("(cd %s; git checkout %s)" % ( self.root, self.branch ))
 			if pull:
-				runShell("(cd %s; git pull -f origin %s)" % ( self.root, self.branch ))
+				runShell("(cd %s; git pull -f origin %s)" % ( self.root, self.branch ), abortOnFail=False)
 		else:
 			runShell("(cd %s; git clone %s %s)" % ( base, self.url, self.name ))
 			runShell("(cd %s; git checkout %s)" % ( self.root, self.branch ))
@@ -250,7 +250,7 @@ class SvnTree(object):
 		if not os.path.exists(base):
 			os.makedirs(base)
 		if os.path.exists(self.root):
-			runShell("(cd %s; svn up)" % self.root)
+			runShell("(cd %s; svn up)" % self.root, abortOnFail=False)
 		else:
 			runShell("(cd %s; svn co %s %s)" % (base, self.url, self.name))
 
@@ -268,7 +268,7 @@ class CvsTree(object):
 		if not os.path.exists(base):
 			os.makedirs(base)
 		if os.path.exists(self.root):
-			runShell("(cd %s; cvs --no-verify update -dP)" % self.root)
+			runShell("(cd %s; cvs --no-verify update -dP)" % self.root, abortOnFail=False)
 		else:
 			runShell("(cd %s; cvs --no-verify -d %s co %s)" % (base, self.url, self.name))
 
