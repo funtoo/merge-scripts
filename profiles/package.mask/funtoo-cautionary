@@ -1,9 +1,3 @@
-#  Oleg Vinichenko (7 Jan 2014)
-#  correct masks for postgresql, FL-959, masks requested, though package itself stable keyworded
-#  need tested
-dev-db/postgresql-base:9.3
-dev-db/postgresql-server:9.3
-
 #  cautionary mask to freetype-2.5.1, broken
 =media-libs/freetype-2.5.1
 
