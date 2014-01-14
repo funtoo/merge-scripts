@@ -5,10 +5,6 @@
 # FL-969: lvm2 update, hard masked for testing. Ebuild needs some fixes with udev deps
 =sys-fs/lvm2-2.02.103 
 
-# Daniel Robbins (08 Dec 2013)
-# masked for testing
-=x11-drivers/ati-drivers-13.11_beta9-r4
-
 # Oleg Vinichenko (24 Oct)
 # debian-sources-3.11.5, masked for testing, XFS issue FL-823
 # FL-823, newer kernels to test
