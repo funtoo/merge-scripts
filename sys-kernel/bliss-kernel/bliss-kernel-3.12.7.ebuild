@@ -53,15 +53,15 @@ src_install()
 
 pkg_postinst()
 {
-	# Set the kernel symlink if /usr/src/linux doesn't exist
+	# Set a symlink to this kernel if /usr/src/linux doesn't exist
 
 	# Do not create symlink via 'symlink' use flag. This package will be re-emerged
 	# when an 'emerge @module-rebuild' is done. If a person does this and the symlink use flag
 	# is set, it will change the symlink to this ebuild, possibly not recompiling packages that
 	# are suppose to be recompiled for another kernel.
 
-	if [[ ! -h "/usr/src/linux" ]]; then
+	if [[ ! -e "/usr/src/linux" ]]; then
 		einfo "Creating symlink to ${_KD}"
-		eselect kernel set ${_KN}
+		cd /usr/src && ln -s ${_KN} linux
 	fi
 }
