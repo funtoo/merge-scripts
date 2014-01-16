@@ -14,7 +14,7 @@ KEYWORDS="*"
 RDEPEND=">=app-shells/zsh-4.3.5"
 
 src_prepare() {
-	epatch "${FILESDIR}/${PN}-eselect.patch"
+	epatch "${FILESDIR}/${PN}-eselect-20130926.patch"
 }
 
 src_install() {
