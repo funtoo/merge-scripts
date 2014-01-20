@@ -17,21 +17,44 @@ S=${WORKDIR}/${RP}
 
 HOMEPAGE="http://www.gnu.org/software/grub/"
 SRC_URI="mirror://gentoo/${RP}.tar.bz2"
+
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64 x86"
 IUSE=""
+
 DEPEND="!sys-boot/grub !sys-boot/grub-legacy"
+RDEPEND="${DEPEND}"
 
 pkg_setup() {
-	local arch="$(tc-arch)"
-	case ${arch} in
-		amd64) CONFIG_CHECK='~IA32_EMULATION' check_extra_config ;;
+	case $(tc-arch) in
+	amd64)
+		CONFIG_CHECK='~IA32_EMULATION'
+		WARNING_IA32_EMULATION="You will NOT be able to run grub unless you have IA32_EMULATION set!"
+		check_extra_config
+		;;
 	esac
 }
 
 src_install() {
 	cp -a "${WORKDIR}"/* "${D}"/
+	# Make sure the docs get compressed
+	dodoc usr/share/doc/${PF}/*
+
+	if [[ -z "${I_KNOW_WHAT_I_AM_DOING}" ]]; then
+		run_test_grub "${D}"/sbin/grub && einfo "New grub can run on your system, good!"
+	fi
+}
+
+run_test_grub() {
+	local grub="$1"
+	local version="$(${grub} \
+		--read-only --no-pager --no-floppy --no-curses \
+		--no-config-file --batch --version)"
+	local error="grub test-run failed"
+	use amd64 && error="${error} Is IA32_EMULATION set?"
+	[ "${version/${PV}}" != "${version}" ] || die "${error}"
+	return 0
 }
 
 #
@@ -43,11 +66,15 @@ setup_boot_dir() {
 	local boot_dir=$1
 	local dir=${boot_dir}
 
+	if [[ -z "${I_KNOW_WHAT_I_AM_DOING}" ]]; then
+		run_test_grub /sbin/grub
+	fi
+
 	mkdir -p "${dir}"
 	[[ ! -L ${dir}/boot ]] && ln -s . "${dir}/boot"
 	dir="${dir}/grub"
 	if [[ ! -e ${dir} ]] ; then
-		mkdir "${dir}" || die "${dir} does not exist!"
+		mkdir "${dir}" || die
 	fi
 
 	# change menu.lst to grub.conf
@@ -96,23 +123,30 @@ setup_boot_dir() {
 	grub_config=${dir}/grub.conf.install
 	[[ -e ${grub_config} ]] || grub_config=${dir}/grub.conf
 	if [[ -e ${grub_config} ]] ; then
+		local tmp="${TMPDIR}/${P}-setup_boot_dir-$$"
 		egrep \
 			-v '^[[:space:]]*(#|$|default|fallback|initrd|password|splashimage|timeout|title)' \
-			"${grub_config}" | \
+			"${grub_config}" >"${tmp}"
+		# Do NOT fail here, only warn.
 		/sbin/grub --batch \
 			--device-map="${dir}"/device.map \
-			> /dev/null
+			>/dev/null <"${tmp}"
+		rc=$?
+		[[ $rc -ne 0 ]] && ewarn "Grub failed to run!"
 	fi
 
 	# the grub default commands silently piss themselves if
 	# the default file does not exist ahead of time
 	if [[ ! -e ${dir}/default ]] ; then
+		# This may fail, don't worry about it.
 		grub-set-default --root-directory="${boot_dir}" default
 	fi
 	einfo "Grub has been installed to ${boot_dir} successfully."
 }
 
 pkg_postinst() {
+	mount-boot_mount_boot_partition
+
 	if [[ -n ${DONT_MOUNT_BOOT} ]]; then
 		elog "WARNING: you have DONT_MOUNT_BOOT in effect, so you must apply"
 		elog "the following instructions for your /boot!"
@@ -130,6 +164,8 @@ pkg_postinst() {
 	elog "Alternately, you can export GRUB_ALT_INSTALLDIR=/path/to/use to tell"
 	elog "grub where to install in a non-interactive way."
 
+	# needs to be after we call setup_boot_dir
+	mount-boot_pkg_postinst
 }
 
 pkg_config() {
