@@ -53,7 +53,7 @@ fi
 # select various permutations of the hardened compiler, as well as a non-hardened
 # compiler, and are typically selected via Gentoo's gcc-config tool.
 
-PIE_VER="0.5.8"
+PIE_VER="0.5.8r1"
 SPECS_VER="0.2.0"
 SPECS_GCC_VER="4.4.3"
 SPECS_A="gcc-${SPECS_GCC_VER}-specs-${SPECS_VER}.tar.bz2"
