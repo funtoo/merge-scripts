@@ -270,11 +270,6 @@ pkg_postinst()
 		fi
 	fi
 
-	ewarn
-	ewarn "You need to restart eudev as soon as possible to make the"
-	ewarn "upgrade go into effect:"
-	ewarn "\t/etc/init.d/udev --nodeps restart"
-
 	add_init default udev-postmount
 
 	elog
