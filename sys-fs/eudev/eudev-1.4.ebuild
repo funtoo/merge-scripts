@@ -202,6 +202,9 @@ multilib_src_install_all()
 
 	# drop distributed hwdb files, they override sys-apps/hwids
 	rm -f "${ED}"/etc/udev/hwdb.d/*.hwdb
+
+	insinto /lib/udev/rules.d
+	doins "${FILESDIR}"/40-gentoo.rules
 }
 
 pkg_preinst()
