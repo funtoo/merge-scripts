@@ -28,6 +28,9 @@ RDEPEND="${COMMON_DEPEND}"
 
 src_prepare()
 {
+	epatch "${FILESDIR}/${P}-no_ipv6_fix.patch" #497098
+	epatch "${FILESDIR}/${P}-wpa_supplicant.patch" #http://bugs.funtoo.org/browse/FL-971
+
 	if ! use zeroconf; then
 			elog "Disabling zeroconf support"
 			{
@@ -36,8 +39,6 @@ src_prepare()
 					echo "noipv4ll"
 			} >> dhcpcd.conf
 	fi
-	epatch "${FILESDIR}/${P}-no_ipv6_fix.patch" #497098
-	epatch "${FILESDIR}/${P}-wpa_supplicant.patch" #http://bugs.funtoo.org/browse/FL-971
 	epatch_user
 }
 
