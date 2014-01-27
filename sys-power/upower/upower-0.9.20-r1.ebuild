@@ -9,7 +9,7 @@ SRC_URI="http://${PN}.freedesktop.org/releases/${P}.tar.xz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="+deprecated doc +introspection ios kernel_FreeBSD kernel_linux systemd"
 
 COMMON_DEPEND=">=dev-libs/dbus-glib-0.100
