@@ -1,0 +1,27 @@
+From 889165af52ba694f72d4d1e333a1f9ba14a82fde Mon Sep 17 00:00:00 2001
+From: Emil Karlson <jekarlson@gmail.com>
+Date: Tue, 21 Jan 2014 23:25:26 +0200
+Subject: [PATCH] ati-drivers: linux-3.13 acpi handle
+
+---
+ common/lib/modules/fglrx/build_mod/kcl_acpi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/common/lib/modules/fglrx/build_mod/kcl_acpi.c b/common/lib/modules/fglrx/build_mod/kcl_acpi.c
+index d875bf9..e063057 100755
+--- a/common/lib/modules/fglrx/build_mod/kcl_acpi.c
++++ b/common/lib/modules/fglrx/build_mod/kcl_acpi.c
+@@ -792,7 +792,9 @@ static unsigned int KCL_ACPI_SearchHandles(KCL_ACPI_DevHandle handle, unsigned i
+ unsigned int ATI_API_CALL KCL_ACPI_GetHandles(kcl_match_info_t *pInfo)
+ {
+ #if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,12)
+-    #if LINUX_VERSION_CODE >= KERNEL_VERSION(3,8,0)
++    #if LINUX_VERSION_CODE >= KERNEL_VERSION(3,13,0)
++        pInfo->video_handle = (acpi_handle)ACPI_HANDLE(&pInfo->pcidev->dev);
++    #elif LINUX_VERSION_CODE >= KERNEL_VERSION(3,8,0)
+         pInfo->video_handle = pInfo->pcidev->dev.acpi_node.handle;
+     #elif LINUX_VERSION_CODE > KERNEL_VERSION(2,6,19)
+         pInfo->video_handle = pInfo->pcidev->dev.archdata.acpi_handle;
+-- 
+1.8.3.2
+
