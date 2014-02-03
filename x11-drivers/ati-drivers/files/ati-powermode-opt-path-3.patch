@@ -14,7 +14,7 @@
  
  #If PPLIB is enabled
 -su $user -c '/usr/bin/aticonfig --pplib-cmd="get version"' | grep PPLIB
-+su $user -c '$aticonfig --pplib-cmd="get version"' | grep PPLIB
++su $user -c "$aticonfig --pplib-cmd='get version'" | grep PPLIB
  if [ $? = 0 ]; then
     echo "Has PPLIB"
     has_pplib=1
@@ -23,7 +23,7 @@
      echo "Low power"
      if [ ${has_pplib} -eq 1 ]; then
 -        su $user -c '/usr/bin/aticonfig --pplib-cmd="notify psrc dc"'
-+        su $user -c '$aticonfig --pplib-cmd="notify psrc dc"'
++        su $user -c "$aticonfig --pplib-cmd='notify psrc dc'"
      else
 -        su $user -c "/usr/bin/aticonfig --set-powerstate=1 --effective=now"
 +        su $user -c "$aticonfig --set-powerstate=1 --effective=now"
@@ -32,7 +32,7 @@
      echo "high power"
      if [ ${has_pplib} -eq 1 ]; then
 -        su $user -c '/usr/bin/aticonfig --pplib-cmd="notify psrc ac"'
-+        su $user -c '$aticonfig --pplib-cmd="notify psrc ac"'
++        su $user -c "$aticonfig --pplib-cmd='notify psrc ac'"
      else
 -        su $user -c "/usr/bin/aticonfig --set-powerstate=3 --effective=now"
 +	su $user -c "$aticonfig --set-powerstate=3 --effective=now"
