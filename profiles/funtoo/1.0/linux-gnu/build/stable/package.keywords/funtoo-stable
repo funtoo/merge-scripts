@@ -1,5 +1,5 @@
 # FL-1074: stabilize libxcb-1.9.3-r1
-=x11-libs/libxcb-1.9.3-r1 amd64 x86
+=x11-libs/libxcb-1.10 amd64 x86
 
 # FL-942, mark procps-3.3.9 stable
 =sys-process/procps-3.3.9 amd64 x86
