@@ -33,7 +33,7 @@ inherit multilib eutils pax-utils
 RESTRICT="strip"
 FEATURES=${FEATURES/multilib-strict/}
 
-IUSE="go fortran objc objc++ openmp" # languages
+IUSE="go cxx fortran objc objc++ openmp" # languages
 IUSE="$IUSE multislot nls vanilla doc multilib altivec libssp hardened" # other stuff
 
 if use multislot; then
@@ -155,7 +155,8 @@ src_prepare() {
 src_configure() {
 	# Determine language support:
 	local confgcc
-	local GCC_LANG="c,c++"
+	local GCC_LANG="c"
+	use cxx && GCC_LANG+=",c++" && confgcc+=" --enable-libstdcxx-time"
 	if use objc; then
 		GCC_LANG+=",objc"
 		confgcc+=" --enable-objc-gc"
@@ -229,7 +230,6 @@ src_configure() {
 		--mandir=${DATAPATH}/man \
 		--infodir=${DATAPATH}/info \
 		--with-gxx-include-dir=${STDCXX_INCDIR} \
-		--enable-libstdcxx-time \
 		--enable-__cxa_atexit \
 		--enable-clocale=gnu \
 		--host=$CHOST \
