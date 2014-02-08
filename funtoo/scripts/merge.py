@@ -15,7 +15,7 @@ squeezebox_overlay = Tree("squeezebox", "master", "git://git.overlays.gentoo.org
 progress_overlay = SvnTree("progress", "https://gentoo-progress.googlecode.com/svn/overlays/progress")
 sabayon_for_gentoo = Tree("sabayon-for-gentoo", "master", "git://github.com/Sabayon/for-gentoo.git", pull=True)
 mate_overlay = Tree("mate", "master", "git://github.com/Sabayon/mate-overlay.git", pull=True)
-
+funtoo_gnome_overlay = Tree("funtoo-gnome", "master", "repos@git.funtoo.org:funtoo-gnome-overlay.git", pull=True)
 steps = [
 	SyncTree(gentoo_src,exclude=["/metadata/cache/**","CVS", "ChangeLog", "dev-util/metro"]),
 	ApplyPatchSeries("%s/funtoo/patches" % funtoo_overlay.root ),
@@ -44,6 +44,10 @@ steps = [
 	InsertEbuilds(bar_overlay, select="all", skip=["app-emulation/qemu"], replace=False),
 	InsertEbuilds(mate_overlay, select="all", skip=None, replace=False),
 	InsertEbuilds(squeezebox_overlay, select="all", skip=None, replace=False),
+	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=None, replace=True),
+	SyncFiles(funtoo_gnome_overlay.root, {
+		"profiles/packages.mask/funtoo-gnome-3.8":"profiles/funtoo/1.0/linux-gnu/mix-ins/gnome/package.mask/01-gnome"
+	}),
 	SyncDir(mate_overlay.root, "eclass"),
 	SyncDir(mate_overlay.root, "sets"),
 	SyncFiles(mate_overlay.root, { 
