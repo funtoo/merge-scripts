@@ -46,7 +46,7 @@ steps = [
 	InsertEbuilds(squeezebox_overlay, select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=None, replace=True),
 	SyncFiles(funtoo_gnome_overlay.root, {
-		"profiles/packages.mask/funtoo-gnome-3.8":"profiles/funtoo/1.0/linux-gnu/mix-ins/gnome/package.mask/01-gnome"
+		"profiles/packages.mask/funtoo-gnome3.8":"profiles/funtoo/1.0/linux-gnu/mix-ins/gnome/package.mask/01-gnome"
 	}),
 	SyncDir(mate_overlay.root, "eclass"),
 	SyncDir(mate_overlay.root, "sets"),
