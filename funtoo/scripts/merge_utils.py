@@ -383,7 +383,7 @@ class InsertEbuilds(MergeStep):
 				if self.replace == True or (type(self.replace) == types.ListType and "%s/%s" % (cat,pkg) in self.replace):
 					if not os.path.exists(tcatdir):
 						os.makedirs(tcatdir)
-					if isinstance(self.merge, list) and "%s/%s" % (cat,pkg) in self.merge and os.path.isdir(tpkgdir):
+					if self.merge is True or (isinstance(self.merge, list) and "%s/%s" % (cat,pkg) in self.merge and os.path.isdir(tpkgdir)):
 						try:
 							pkgdir_manifest_file = open("%s/Manifest" % pkgdir)
 							pkgdir_manifest = pkgdir_manifest_file.readlines()
