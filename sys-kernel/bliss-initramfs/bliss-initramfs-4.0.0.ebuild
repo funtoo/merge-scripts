@@ -1,4 +1,4 @@
-# Copyright (C) 2013 Jonathan Vasquez <jvasquez1011@gmail.com>
+# Copyright (C) 2013 Jonathan Vasquez <fearedbliss@funtoo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="4"
@@ -7,14 +7,14 @@ GITHUB_USER="fearedbliss"
 GITHUB_REPO="Bliss-Initramfs-Creator"
 GITHUB_TAG="${PV}"
 
-DESCRIPTION="Creates an initramfs for ZFS, LVM, RAID, LVM on RAID, Normal, and their Encrypted counterparts."
+DESCRIPTION="Allows you to create multiple types of initramfs"
 HOMEPAGE="https://github.com/${GITHUB_USER}/${GITHUB_REPO}"
 SRC_URI="https://github.com/${GITHUB_USER}/${GITHUB_REPO}/archive/${GITHUB_TAG}.tar.gz -> ${P}.tar.gz"
 
 RESTRICT="mirror strip"
 LICENSE="MPL-2.0"
 SLOT="0"
-KEYWORDS="amd64"
+KEYWORDS="~amd64"
 IUSE="zfs raid lvm luks"
 
 RDEPEND="
@@ -22,6 +22,8 @@ RDEPEND="
 	app-arch/cpio
 	app-shells/bash
 	sys-apps/kmod
+	sys-apps/grep
+	sys-apps/util-linux
 
 	zfs? ( sys-kernel/spl
 		   sys-fs/zfs
