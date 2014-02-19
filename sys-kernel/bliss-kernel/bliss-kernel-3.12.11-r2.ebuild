@@ -6,11 +6,12 @@ EAPI="4"
 inherit eutils mount-boot
 
 # Variables
-_LV="KS.01"						# Local Version
+_LV="KS.02"						# Local Version
 _PLV="${PV}-${_LV}"				# Package Version + Local Version (Module Dir)
 _KN="linux-${_PLV}"				# Kernel Directory Name
 _KD="/usr/src/${_KN}"			# Kernel Directory
 _CONF="stock.conf"				# Blacklisted Kernel Modules
+_BD="/boot/kernels/${_PLV}"		# Kernel /boot Directory
 
 # Main
 DESCRIPTION="Precompiled Vanilla Kernel (Kernel Ready-to-Eat [KRE])"
@@ -35,8 +36,10 @@ src_compile()
 src_install()
 {
 	# Install Kernel
-	mkdir ${D}/boot
-	cp ${S}/kernel/* ${D}/boot
+	mkdir -p ${D}/${_BD}
+	cp ${S}/kernel/System.map-${_PLV} ${D}/${_BD}/System.map
+	cp ${S}/kernel/vmlinuz-${_PLV} ${D}/${_BD}/vmlinuz
+	cp ${S}/kernel/config-${_PLV} ${D}/${_BD}/config
 
 	# Install Modules
 	mkdir -p ${D}/lib/modules/
