@@ -6,11 +6,11 @@ EAPI="4"
 inherit eutils mount-boot
 
 # Variables
-_LV="KS.02"						# Local Version
+_LV="KS.03"						# Local Version
 _PLV="${PV}-${_LV}"				# Package Version + Local Version (Module Dir)
 _KN="linux-${_PLV}"				# Kernel Directory Name
 _KD="/usr/src/${_KN}"			# Kernel Directory
-_CONF="stock.conf"				# Blacklisted Kernel Modules
+_CONF="chinchilla.conf"				# Blacklisted Kernel Modules
 _BD="/boot/kernels/${_PLV}"		# Kernel /boot Directory
 
 # Main
