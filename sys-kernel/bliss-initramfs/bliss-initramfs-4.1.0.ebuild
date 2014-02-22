@@ -39,6 +39,11 @@ RDEPEND="
 S="${WORKDIR}/${GITHUB_REPO}-${GITHUB_TAG}"
 
 src_install() {
+	# Copy the main files
 	mkdir -p ${D}/opt/${PN} && cd ${D}/opt/${PN}
 	cp -a ${S}/* .
+
+	# Make a symbolic link: /sbin/bliss-initramfs
+	mkdir -p ${D}/sbin && cd ${D}/sbin
+	ln -s ${D}opt/${PN}/mkinitrd ${PN}
 }
