@@ -1,3 +1,6 @@
+# FL-998, FL-1100, unmask gcc-4.8.2-r1, added here, to override gentoo upstream mask
+=sys-devel/gcc-4.8.2-r1
+
 ## F-447
 ~sys-fs/udev-171
 ~virtual/udev-171
