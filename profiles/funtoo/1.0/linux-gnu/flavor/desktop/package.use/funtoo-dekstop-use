@@ -1,0 +1,3 @@
+## do not force udev USE flag in dev-libs/libusb, temporary workaround.
+## set by Gentoo upstream. THis forcing newer udev unmask
+dev-libs/libusb -udev
