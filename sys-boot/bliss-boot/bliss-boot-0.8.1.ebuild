@@ -23,6 +23,11 @@ RDEPEND="
 	extlinux? ( sys-boot/syslinux )"
 
 src_install() {
+	# Copy the main files
 	mkdir -p ${D}/opt/${PN} && cd ${D}/opt/${PN}
 	cp -a ${S}/* .
+
+	# Make a symbolic link: /sbin/bliss-boot
+	mkdir -p ${D}/sbin && cd ${D}/sbin
+	ln -s ${D}opt/${PN}/${PN} ${PN}
 }
