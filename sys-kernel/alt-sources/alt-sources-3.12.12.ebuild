@@ -5,11 +5,11 @@ EAPI="4"
 
 inherit eutils
 
-# For System Rescue CD 3.8.1 (Alternate Kernel)
-TAIL="alt381-amd64"
+# For System Rescue CD 4.0.1 (Alternate Kernel)
+TAIL="alt401-amd64"
 KERNEL="linux-${PV}-${TAIL}"
 KERNEL_CONF="kernel-${PV}-${TAIL}.conf"
-KV="3.10"
+KV="3.12"
 KERNEL_FILE="linux-${KV}.tar.bz2"
 
 DESCRIPTION="Kernel Sources and Patches for the System Rescue CD Alternate Kernel"
@@ -31,10 +31,10 @@ src_unpack()
 
 src_prepare()
 {
-	epatch ${FILESDIR}/${PV}/${PN}-${KV}-01-stable-${PV}.patch.bz2 || die "alt-sources stable patch failed."
-	epatch ${FILESDIR}/${PV}/${PN}-${KV}-02-fc18.patch.bz2 || die "alt-sources fedora patch failed."
-	epatch ${FILESDIR}/${PV}/${PN}-${KV}-03-aufs.patch.bz2 || die "alt-sources aufs patch failed."
-	epatch ${FILESDIR}/${PV}/${PN}-${KV}-04-reiser4.patch.bz2 || die "alt-sources reiser4 patch failed."
+	epatch ${FILESDIR}/${PV}/${PN}-${KV}-01-stable-${PV}.patch.xz || die "alt-sources stable patch failed."
+	epatch ${FILESDIR}/${PV}/${PN}-${KV}-02-fc19.patch.xz || die "alt-sources fedora patch failed."
+	epatch ${FILESDIR}/${PV}/${PN}-${KV}-03-aufs.patch.xz || die "alt-sources aufs patch failed."
+	epatch ${FILESDIR}/${PV}/${PN}-${KV}-04-reiser4.patch.xz || die "alt-sources reiser4 patch failed."
 }
 
 src_compile() {
