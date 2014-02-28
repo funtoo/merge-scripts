@@ -42,7 +42,7 @@ steps = [
 	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(foo_overlay, select="all", skip=["sys-fs/mdev-bb", "sys-fs/mdev-like-a-boss", "media-video/handbrake"], replace=["app-shells/rssh","net-misc/unison"]),
 	InsertEbuilds(bar_overlay, select="all", skip=["app-emulation/qemu"], replace=False),
-	InsertEbuilds(mate_overlay, select="all", skip=None, replace=False),
+	InsertEbuilds(mate_overlay, select="all", skip=["x11-apps/fusion-icon"], replace=True),
 	InsertEbuilds(squeezebox_overlay, select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=None, replace=True, merge=True),
 	SyncFiles(funtoo_gnome_overlay.root, {
