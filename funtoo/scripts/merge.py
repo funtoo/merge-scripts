@@ -11,6 +11,7 @@ gentoo_src = CvsTree("gentoo-x86",":pserver:anonymous@anoncvs.gentoo.org:/var/cv
 funtoo_overlay = Tree("funtoo-overlay", branch, "repos@git.funtoo.org:funtoo-overlay.git", pull=True)
 foo_overlay = Tree("foo-overlay", "master", "https://github.com/slashbeast/foo-overlay.git", pull=True)
 bar_overlay = Tree("bar-overlay", "master", "git://github.com/adessemond/bar-overlay.git", pull=True)
+bliss_overlay = Tree("bliss-overlay", "master", "https://github.com/fearedbliss/bliss-overlay.git", pull=True)
 squeezebox_overlay = Tree("squeezebox", "master", "git://git.overlays.gentoo.org/user/squeezebox.git", pull=True)
 progress_overlay = SvnTree("progress", "https://gentoo-progress.googlecode.com/svn/overlays/progress")
 sabayon_for_gentoo = Tree("sabayon-for-gentoo", "master", "git://github.com/Sabayon/for-gentoo.git", pull=True)
@@ -42,6 +43,7 @@ steps = [
 	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(foo_overlay, select="all", skip=["sys-fs/mdev-bb", "sys-fs/mdev-like-a-boss", "media-video/handbrake"], replace=["app-shells/rssh","net-misc/unison"]),
 	InsertEbuilds(bar_overlay, select="all", skip=["app-emulation/qemu"], replace=False),
+        InsertEbuilds(bliss_overlay, select="all", skip=None, replace=False),
 	InsertEbuilds(mate_overlay, select="all", skip=["x11-apps/fusion-icon"], replace=True),
 	InsertEbuilds(squeezebox_overlay, select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=None, replace=True, merge=True),
