@@ -33,7 +33,7 @@ DOCS=( NEWS README AUTHORS )
 PATCHES=(
 	"${FILESDIR}"/${PN}-fix-mesa-gl.h.patch
 	"${FILESDIR}"/${PN}-fix-out-of-source-builds.patch
-	"${FILESDIR}"/${PN}-VAEncH264UIBufferType.patch
+	"${FILESDIR}"/${P}-VAEncH264UIBufferType.patch
 )
 
 S="${WORKDIR}/xvba-driver-${PV}"
