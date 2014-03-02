@@ -1,2 +1,7 @@
+## This is artificial way to by-pass gentoo-x86 masks, Gentoo porting MATE desktop ebuilds into tree and adjusting masks for all ebuilds. Funtoo
+## has all MATE ebuilds working fine for extented period, hence this file appeared
 =mate-base/mate-common-1.6.2
 =mate-base/mate-session-manager-1.6.1-r1
+=mate-base/mate-menus-1.6.0
+=app-text/mate-doc-utils-1.6.2
+=x11-libs/libmatewnck-1.6.1

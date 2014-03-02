@@ -42,7 +42,7 @@ steps = [
 	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(foo_overlay, select="all", skip=["sys-fs/mdev-bb", "sys-fs/mdev-like-a-boss", "media-video/handbrake"], replace=["app-shells/rssh","net-misc/unison"]),
 	InsertEbuilds(bar_overlay, select="all", skip=["app-emulation/qemu"], replace=False),
-	InsertEbuilds(mate_overlay, select="all", skip=None, replace=False),
+	InsertEbuilds(mate_overlay, select="all", skip=["x11-apps/fusion-icon"], replace=True),
 	InsertEbuilds(squeezebox_overlay, select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=None, replace=True, merge=True),
 	SyncFiles(funtoo_gnome_overlay.root, {
@@ -62,7 +62,7 @@ steps = [
 		"profiles/use.aliases":"profiles/use.aliases/progress",
 		"profiles/use.mask":"profiles/use.mask/progress"
 	}),
-	InsertEbuilds(progress_overlay, select="all", skip=None, replace=True, merge=["dev-java/guava", "dev-lang/python", "dev-python/psycopg", "dev-python/python-docs", "dev-python/simpletal", "dev-python/wxpython", "dev-util/gdbus-codegen", "x11-libs/vte"]),
+	InsertEbuilds(progress_overlay, select="all", skip=None, replace=True, merge=["dev-python/psycopg", "dev-python/python-docs", "dev-python/simpletal", "dev-python/wxpython", "x11-libs/vte"]),
 	MergeUpdates(progress_overlay.root),
 	AutoGlobMask("dev-lang/python", "python*_pre*", "funtoo-python"),
 	Minify(),
