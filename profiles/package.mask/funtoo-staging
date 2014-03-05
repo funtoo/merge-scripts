@@ -16,10 +16,6 @@
 # masked for testing
 =net-misc/dhcpcd-6.3.0
 
-# Daniel Robbins (25 Feb 2014)
-# FL-1110: masked for testing
-=sys-kernel/openvz-rhel6-stable-2.6.32.042.084.25
-
 # FL-999, update to ati-drivers-13.12 with newer kernel fixes, masked fo testing
 =x11-drivers/ati-drivers-13.12 
 
