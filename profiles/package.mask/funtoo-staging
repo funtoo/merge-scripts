@@ -1,6 +1,13 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
+
+# Oleg Vinichenko (26 Feb 2014)
+# FL-971, version 6.3.1 added
+# FL-971, dhcpcd-6.3.0 with ipv6, wpa_supplicant fixes
+# masked for testing
+>=net-misc/dhcpcd-6.3.0
+
 # Oleg Vinichenko (4 March 2014)
 # IGB ebuild, latest stable driver and kernel module for INtel
 # 82576 chips, masked for testing
@@ -10,11 +17,6 @@
 # quick mask for salt ebuilds, works but need tests
 =app-admin/salt-0.17.4
 =app-admin/salt-2014.1.0
-
-# Oleg Vinichenko (26 Feb 2014)
-# FL-971, dhcpcd-6.3.0 with ipv6, wpa_supplicant fixes
-# masked for testing
-=net-misc/dhcpcd-6.3.0
 
 # Oleg Vinichenko (13 Dec 2014)
 # FL-969: lvm2 update, hard masked for testing. Ebuild needs some fixes with udev deps
