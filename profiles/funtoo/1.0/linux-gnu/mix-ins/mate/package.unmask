@@ -11,3 +11,6 @@
 =mate-extra/mate-1.6.1
 =mate-base/libmatekbd-1.6.2
 =mate-extra/mate-polkit-1.6.1
+=x11-wm/mate-window-manager-1.6.2
+=mate-base/mate-settings-daemon-1.6.2
+=mate-base/mate-panel-1.6.1
