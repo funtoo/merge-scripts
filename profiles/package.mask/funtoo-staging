@@ -16,9 +16,6 @@
 # masked for testing
 =net-misc/dhcpcd-6.3.0
 
-# FL-999, update to ati-drivers-13.12 with newer kernel fixes, masked fo testing
-=x11-drivers/ati-drivers-13.12 
-
 # Oleg Vinichenko (13 Dec 2014)
 # FL-969: lvm2 update, hard masked for testing. Ebuild needs some fixes with udev deps
 =sys-fs/lvm2-2.02.103 
