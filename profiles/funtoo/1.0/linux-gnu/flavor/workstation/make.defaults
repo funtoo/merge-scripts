@@ -1,1 +1,2 @@
 USE="opengl"
+USE="$USE nsplugin" ## enable Java plugin. http://bugs.funtoo.org/browse/FL-1136
