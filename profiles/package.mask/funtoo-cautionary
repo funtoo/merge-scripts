@@ -1,3 +1,7 @@
+# Daniel Robbins (9 Mar 2014)
+# see FL-999
+=x11-drivers/ati-drivers-13.12*
+
 #  mask newer version of cryptsetup, breakage expected
 >sys-fs/cryptsetup-1.6.3
 
