@@ -1,6 +1,9 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
+# Daniel Robbins (9 Mar 2014)
+# FL-1068: masked for testing
+=www-servers/nginx-1.5.11*
 
 # Oleg Vinichenko (26 Feb 2014)
 # FL-971, version 6.3.1 added
