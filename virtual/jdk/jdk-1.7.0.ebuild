@@ -9,10 +9,5 @@ SLOT="1.7"
 KEYWORDS="*"
 IUSE=""
 
-RDEPEND="|| (
-		=dev-java/oracle-jdk-bin-1.7.0*
-		=dev-java/icedtea-bin-7*
-		=dev-java/icedtea-7*
-		=dev-java/soylatte-jdk-bin-7*
-	)"
+RDEPEND="=dev-java/oracle-jdk-bin-1.7.0*"
 DEPEND=""
