@@ -10,11 +10,6 @@
 # FL-971, dhcpcd-6.3.0 with ipv6, wpa_supplicant fixes
 # masked for testing
 >=net-misc/dhcpcd-6.3.0
- 
-# Oleg Vinichenko (1 March 2014)
-# quick mask for salt ebuilds, works but need tests
-=app-admin/salt-0.17.4
-=app-admin/salt-2014.1.0
 
 # Oleg Vinichenko (13 Dec 2014)
 # FL-969: lvm2 update, hard masked for testing. Ebuild needs some fixes with udev deps
