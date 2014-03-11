@@ -12,7 +12,7 @@ SRC_URI="mirror://gnupg/libgcrypt/${P}.tar.bz2
 
 LICENSE="LGPL-2.1 MIT"
 SLOT="0/20" # subslot = soname major version
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="static-libs"
 
 RDEPEND=">=dev-libs/libgpg-error-1.11"
