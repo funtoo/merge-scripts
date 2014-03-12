@@ -1,0 +1,21 @@
+--- gcc-4.7.0/libitm/config/x86/x86_avx.cc
++++ gcc-4.7.0/libitm/config/x86/x86_avx.cc
+@@ -29,7 +29,7 @@ 
+ 
+ extern "C" {
+ 
+-#ifndef HAVE_AS_AVX
++#if !defined(HAVE_AS_AVX) || !defined(__AVX__)
+ // If we don't have an AVX capable assembler, we didn't set -mavx on the
+ // command-line either, which means that libitm.h defined neither this type
+ // nor the functions in this file.  Define the type and unconditionally
+@@ -40,7 +40,7 @@ 
+ // Re-define the memcpy implementations so that we can frob the
+ // interface to deal with possibly missing AVX instruction set support.
+ 
+-#ifdef HAVE_AS_AVX
++#if defined(HAVE_AS_AVX) && defined(__AVX__)
+ #define RETURN(X)	return X
+ #define STORE(X,Y)	X = Y
+ #define OUTPUT(T)	_ITM_TYPE_##T
+
