@@ -28,6 +28,8 @@ RDEPEND="${COMMON_DEPEND}"
 
 src_prepare()
 {
+	epatch "${FILESDIR}"/${P}-fix-udev.patch
+
 	if ! use zeroconf; then
 			elog "Disabling zeroconf support"
 			{
