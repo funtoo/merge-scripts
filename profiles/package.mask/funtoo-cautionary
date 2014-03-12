@@ -24,7 +24,7 @@
 >=sys-libs/readline-6.3
 
 #  cautionary mask to freetype-2.5.1, broken
-=media-libs/freetype-2.5.1
+>=media-libs/freetype-2.5.1
 
 #  Oleg Vinichenko (3 Dec 2013)
 #  mask latest version of autogen, broken
