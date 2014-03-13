@@ -11,32 +11,26 @@ inherit readme.gentoo chromium eutils multilib pax-utils unpacker
 DESCRIPTION="The web browser from Google"
 HOMEPAGE="http://www.google.com/chrome"
 
-MY_PN=${PN}-beta
+if [[ ${PN} == google-chrome ]]; then
+	MY_PN=${PN}-stable
+else
+	MY_PN=${PN}
+fi
 
 MY_P="${MY_PN}_${PV/_p/-}"
 
-#SRC_URI="
-#	amd64? (
-#		http://dl.google.com/linux/chrome/deb/pool/main/g/${MY_PN}/${MY_P}_amd64.deb
-#	)
-#	x86? (
-#		http://dl.google.com/linux/chrome/deb/pool/main/g/${MY_PN}/${MY_P}_i386.deb
-#	)
-#"
-
 SRC_URI="
 	amd64? (
-		http://www.funtoo.org/distfiles/chrome/${MY_P}_amd64.deb
+		http://dl.google.com/linux/chrome/deb/pool/main/g/${MY_PN}/${MY_P}_amd64.deb
 	)
 	x86? (
-		http://www.funtoo.org/distfiles/chrome/${MY_P}_i386.deb
+		http://dl.google.com/linux/chrome/deb/pool/main/g/${MY_PN}/${MY_P}_i386.deb
 	)
 "
 
-
 LICENSE="google-chrome"
 SLOT="0"
-KEYWORDS="-* ~amd64 ~x86"
+KEYWORDS="-* amd64 x86"
 IUSE="+plugins"
 RESTRICT="bindist mirror strip"
 
@@ -128,7 +122,7 @@ pkg_setup() {
 }
 
 src_install() {
-	CHROME_HOME="opt/google/chrome${MY_PN#google-chrome}"
+	CHROME_HOME="opt/google/chrome${PN#google-chrome}"
 
 	rm -r usr/share/menu || die
 	rmdir usr/share/doc/google-chrome || die
