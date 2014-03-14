@@ -68,9 +68,4 @@ pkg_postinst()
 		fi
 	fi
 
-	if [[ -x $(type -P rc-update) ]] && rc-update show | grep udev-postmount | grep -qs 'boot\|default\|sysinit'; then
-		ewarn "The udev-postmount service has been removed because the reasons for"
-		ewarn "its existance have been removed upstream."
-		ewarn "Please remove it from your runlevels."
-	fi
 }
