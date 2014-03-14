@@ -50,11 +50,6 @@
 >=gnome-base/gnome-settings-daemon-3.8.3
 >=gnome-base/gnome-control-center-3.8
 
-# Oleg Vinichenko (24 Jul 2013)
-# mask >media-player-info-18, we are not yet ready for udev-200
-# FL-641
->=app-misc/media-player-info-19
-
 # Ryan Harris (23 Jul 2013)
 # Mask phoronix-test-suite due to security concerns
 # Packages should not try to run emerge on their own
