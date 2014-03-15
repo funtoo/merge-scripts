@@ -1,3 +1,7 @@
+# Oleg Vinichenko (15 March 2014)
+# mask latest ca-certificates
+>app-misc/ca-certificates-20130906
+
 # Oleg Vinichenko (15 March)
 # maks latest sys-devel/flex, due to several problems
 # FL-1165; http://comments.gmane.org/gmane.linux.lfs.devel/14740 https://bugs.gentoo.org/show_bug.cgi?id=503522
