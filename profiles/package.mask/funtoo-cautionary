@@ -1,3 +1,8 @@
+# Oleg Vinichenko (15 March)
+# maks latest sys-devel/flex, due to several problems
+# FL-1165; http://comments.gmane.org/gmane.linux.lfs.devel/14740 https://bugs.gentoo.org/show_bug.cgi?id=503522
+>sys-devel/flex-2.5.37
+
 # Daniel Robbins (9 Mar 2014)
 # see FL-1141 and FL-1130 - 3.12 is our "reliable" kernel version we test against right now
 =sys-kernel/pf-sources-3.13*
