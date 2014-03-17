@@ -1,6 +1,10 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
+# Daniel Robbins (16 Mar 2014)
+# FL-1170 - masked for testing
+=app-admin/eselect-ruby-20131227
+
 # Oleg Vinichenko (26 Feb 2014)
 # FL-971, version 6.3.1 added
 # FL-971, dhcpcd-6.3.0 with ipv6, wpa_supplicant fixes
