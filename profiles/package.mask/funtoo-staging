@@ -2,6 +2,10 @@
 # newest on top
 
 # Daniel Robbins (16 Mar 2014)
+# FL-1167 - masked for testing
+=dev-php/xcache-3.1.0
+
+# Daniel Robbins (16 Mar 2014)
 # FL-1170 - masked for testing
 =app-admin/eselect-ruby-20131227
 
