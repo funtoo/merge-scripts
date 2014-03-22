@@ -30,21 +30,21 @@ SYSLOG_MODULE_WD="${WORKDIR}/nginx_syslog_patch-${SYSLOG_MODULE_PV}"
 # devel_kit (https://github.com/simpl/ngx_devel_kit, BSD license)
 DEVEL_KIT_MODULE_PV="0.2.19"
 DEVEL_KIT_MODULE_P="ngx_devel_kit-v${DEVEL_KIT_MODULE_PV}"
-DEVEL_KIT_MODULE_URI="https://github.com/simpl/ngx_devel_kit/archive/${DEVEL_KIT_MODULE_PV}.tar.gz"
+DEVEL_KIT_MODULE_URI="https://github.com/simpl/ngx_devel_kit/archive/v${DEVEL_KIT_MODULE_PV}.tar.gz"
 DEVEL_KIT_MODULE_WD="${WORKDIR}/ngx_devel_kit-${DEVEL_KIT_MODULE_PV}"
 
 #FUNTOO LATEST
 # http_uploadprogress (https://github.com/masterzen/nginx-upload-progress-module, BSD-2 license)
 HTTP_UPLOAD_PROGRESS_MODULE_PV="0.9.0"
 HTTP_UPLOAD_PROGRESS_MODULE_P="ngx_http_upload_progress-v${HTTP_UPLOAD_PROGRESS_MODULE_PV}"
-HTTP_UPLOAD_PROGRESS_MODULE_URI="https://github.com/masterzen/nginx-upload-progress-module/archive/${HTTP_UPLOAD_PROGRESS_MODULE_PV}.tar.gz"
+HTTP_UPLOAD_PROGRESS_MODULE_URI="https://github.com/masterzen/nginx-upload-progress-module/archive/v${HTTP_UPLOAD_PROGRESS_MODULE_PV}.tar.gz"
 HTTP_UPLOAD_PROGRESS_MODULE_WD="${WORKDIR}/nginx-upload-progress-module-${HTTP_UPLOAD_PROGRESS_MODULE_PV}"
 
 #FUNTOO LATEST
 # http_headers_more (http://github.com/agentzh/headers-more-nginx-module, BSD license)
 HTTP_HEADERS_MORE_MODULE_PV="0.25"
 HTTP_HEADERS_MORE_MODULE_P="ngx_http_headers_more-v${HTTP_HEADERS_MORE_MODULE_PV}"
-HTTP_HEADERS_MORE_MODULE_URI="https://github.com/agentzh/headers-more-nginx-module/archive/${HTTP_HEADERS_MORE_MODULE_PV}.tar.gz"
+HTTP_HEADERS_MORE_MODULE_URI="https://github.com/agentzh/headers-more-nginx-module/archive/v${HTTP_HEADERS_MORE_MODULE_PV}.tar.gz"
 HTTP_HEADERS_MORE_MODULE_WD="${WORKDIR}/headers-more-nginx-module-${HTTP_HEADERS_MORE_MODULE_PV}"
 
 #FUNTOO LATEST
