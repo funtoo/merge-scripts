@@ -16,11 +16,13 @@ RESTRICT="mirror"
 IUSE="+vaapi debug +modules multilib qt4 static-libs pax_kernel"
 
 LICENSE="AMD GPL-2 QPL-1.0"
-KEYWORDS="-* ~amd64 ~x86"
+KEYWORDS="-* amd64 x86"
 
 RESTRICT="bindist test"
 
+# cogl blocker: see FL-1130
 RDEPEND="
+	!<=media-libs/cogl-1.12.2-r1
 	<=x11-base/xorg-server-1.14.49[-minimal]
 	>=app-admin/eselect-opengl-1.0.7
 	app-admin/eselect-opencl
