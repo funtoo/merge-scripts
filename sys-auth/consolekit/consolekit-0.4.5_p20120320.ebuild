@@ -27,7 +27,6 @@ COMMON_DEPEND=">=dev-libs/dbus-glib-0.98
 	acl? (
 		sys-apps/acl
 		virtual/udev
-		!<sys-fs/udev-171-r9999[extras]
 		)
 	pam? ( virtual/pam )
 	policykit? ( >=sys-auth/polkit-0.104-r1 )"
