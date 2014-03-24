@@ -21,9 +21,9 @@ GENTOO_DEPEND_ON_PERL="no"
 #FUNTOO LATEST
 # syslog (https://github.com/yaoweibin/nginx_syslog_patch, BSD license)
 SYSLOG_MODULE_PV="0.25"
-SYSLOG_MODULE_NGINX_PV="1.4.0"
+SYSLOG_MODULE_NGINX_PV="1.3.14"
 SYSLOG_MODULE_P="ngx_syslog-${SYSLOG_MODULE_PV}"
-SYSLOG_MODULE_URI="https://github.com/yaoweibin/nginx_syslog_patch/archive/${SYSLOG_MODULE_P}.tar.gz"
+SYSLOG_MODULE_URI="https://github.com/yaoweibin/nginx_syslog_patch/archive/v${SYSLOG_MODULE_PV}.tar.gz"
 SYSLOG_MODULE_WD="${WORKDIR}/nginx_syslog_patch-${SYSLOG_MODULE_PV}"
 
 #FUNTOO LATEST
@@ -112,9 +112,9 @@ HTTP_NAXSI_MODULE_WD="${WORKDIR}/naxsi-${HTTP_NAXSI_MODULE_PV}/naxsi_src"
 
 #FUNTOO LATEST
 # nginx-rtmp-module (https://github.com/arut/nginx-rtmp-module, BSD license)
-RTMP_MODULE_PV="v1.1.3"
+RTMP_MODULE_PV="1.1.3"
 RTMP_MODULE_P="ngx_rtmp-${RTMP_MODULE_PV}"
-RTMP_MODULE_URI="https://github.com/arut/nginx-rtmp-module/archive/${RTMP_MODULE_PV}.tar.gz"
+RTMP_MODULE_URI="https://github.com/arut/nginx-rtmp-module/archive/v${RTMP_MODULE_PV}.tar.gz"
 RTMP_MODULE_WD="${WORKDIR}/nginx-rtmp-module-${RTMP_MODULE_PV}"
 
 #FUNTOO LATEST
@@ -656,20 +656,9 @@ src_install() {
 		dodoc "${HTTP_UPSTREAM_CHECK_MODULE_WD}"/{README,CHANGES}
 	fi
 
-# README.md is still empty
-#	if use nginx_modules_http_metrics; then
-#		docinto ${HTTP_METRICS_MODULE_P}
-#		dodoc "${HTTP_METRICS_MODULE_WD}"/README.md
-#	fi
-
 	if use nginx_modules_http_naxsi; then
 		insinto /etc/nginx
 		doins "${HTTP_NAXSI_MODULE_WD}"/../naxsi_config/naxsi_core.rules
-	fi
-
-	if use rtmp; then
-		docinto ${RTMP_MODULE_P}
-		dodoc "${RTMP_MODULE_WD}"/{AUTHORS,README.md,TODO,stat.xsl}
 	fi
 
 	if use nginx_modules_http_fancyindex; then
@@ -704,13 +693,14 @@ src_install() {
 
 	if use rtmp; then
 			docinto ${RTMP_MODULE_P}
-			dodoc "${RTMP_MODULE_WD}"/{AUTHORS,README.md,TODO,stat.xsl}
+			dodoc "${RTMP_MODULE_WD}"/{AUTHORS,README.md,stat.xsl}
 	fi
 
 	if use nginx_modules_http_dav_ext; then
 			docinto ${HTTP_DAV_EXT_MODULE_P}
 			dodoc "${HTTP_DAV_EXT_MODULE_WD}"/README
 	fi
+
 	if use nginx_modules_http_echo; then
 		docinto ${HTTP_ECHO_MODULE_P}
 		dodoc "${HTTP_ECHO_MODULE_WD}"/{README.markdown,doc/HttpEchoModule.wiki}
@@ -763,8 +753,8 @@ pkg_postinst() {
 	done
 
 	if [[ $fix_perms -eq 1 ]] ; then
-		ewarn "To fix a security bug \(CVE-2013-0337, bug #458726\) had the following"
-		ewarn "directories the world-readable bit removed \(if set\):"
+		ewarn "To fix a security bug (CVE-2013-0337, bug #458726) had the following"
+		ewarn "directories the world-readable bit removed (if set):"
 		ewarn "  ${EPREFIX}/var/log/nginx/"
 		ewarn "  ${EPREFIX}${NGINX_HOME_TMP}/{,client,proxy,fastcgi,scgi,uwsgi}"
 		ewarn "Check if this is correct for your setup before restarting nginx!"

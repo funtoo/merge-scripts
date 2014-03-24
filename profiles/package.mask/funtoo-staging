@@ -1,10 +1,6 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
-# Daniel Robbins (20 Mar 2014)
-# FL-1172: masked for testing
-=www-servers/nginx-1.4.6-r1
-
 # Daniel Robbins (16 Mar 2014)
 # FL-845 - masked for testing
 =app-misc/screen-4.0.3-r10
