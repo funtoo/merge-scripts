@@ -13,21 +13,6 @@
 # FL-1165; http://comments.gmane.org/gmane.linux.lfs.devel/14740 https://bugs.gentoo.org/show_bug.cgi?id=503522
 >sys-devel/flex-2.5.37
 
-# Daniel Robbins (9 Mar 2014)
-# see FL-1141 and FL-1130 - 3.12 is our "reliable" kernel version we test against right now
-=sys-kernel/pf-sources-3.13*
-=sys-kernel/tuxonice-sources-3.13*
-=sys-kernel/vanilla-sources-3.13*
-=sys-kernel/hardened-sources-3.13*
-=sys-kernel/ck-sources-3.13*
-=sys-kernel/zen-sources-3.13*
-=sys-kernel/aufs-sources-3.13*
-=sys-kernel/gentoo-sources-3.13*
-
-# Daniel Robbins (9 Mar 2014)
-# see FL-999
->=x11-drivers/ati-drivers-13.10
-
 #  mask newer version of cryptsetup, breakage expected
 >sys-fs/cryptsetup-1.6.3
 
