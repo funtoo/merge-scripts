@@ -1,3 +1,7 @@
+# Oleg VInichenko (27 March, 2014)
+# mask higher libusb-1.0.18, until move to newer udev. FL-1101
+>dev-libs/libusb-1.0.9-r2
+
 # FL-1174 - this is an experimental, slotted lua, so putting in cautionary.
 # Daniel Robbins, (22 Mar 2014)
 =dev-lang/lua-5.1.5-r1
