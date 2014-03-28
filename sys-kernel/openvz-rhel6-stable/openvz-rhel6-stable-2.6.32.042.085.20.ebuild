@@ -2,24 +2,26 @@
 
 EAPI=2
 
-inherit mount-boot
+inherit mount-boot check-reqs
+
+CHECKREQS_DISK_BUILD="15G"
 
 SLOT=$PVR
 CKV=2.6.32
 OKV=$CKV
-OVZ_KERNEL="042stab049"
-OVZ_REV="6"
+OVZ_KERNEL="042stab085"
+OVZ_REV="20"
 OVZ_KV=${OVZ_KERNEL}.${OVZ_REV}
 KV_FULL=${PN}-${PVR}
 EXTRAVERSION=-${OVZ_KV}
 KERNEL_ARCHIVE="linux-${CKV}.tar.bz2"
-KERNEL_URI="mirror://kernel/linux/kernel/v${KV_MAJOR}.${KV_MINOR}/${KERNEL_ARCHIVE}"
-RESTRICT="binchecks strip"
+KERNEL_URI="http://ftp.osuosl.org/pub/funtoo/distfiles/${KERNEL_ARCHIVE}"
+RESTRICT="binchecks strip mirror"
 
 LICENSE="GPL-2"
-KEYWORDS="x86 amd64"
+KEYWORDS="*"
 IUSE="binary"
-DEPEND="binary? ( >=sys-kernel/genkernel-3.4.12.6-r4 ) =sys-devel/gcc-4.4.5*"
+DEPEND="binary? ( >=sys-kernel/genkernel-3.4.40.1 )"
 RDEPEND="binary? ( >=sys-fs/udev-160 )"
 DESCRIPTION="Full Linux kernel sources - RHEL6 kernel with OpenVZ patchset"
 HOMEPAGE="http://www.openvz.org"
@@ -90,13 +92,15 @@ pkg_setup() {
 	esac
 	defconfig_src="${DISTDIR}/config-${CKV}-${OVZ_KV}.${defconfig_src}"
 	unset ARCH; unset LDFLAGS #will interfere with Makefile if set
+
+	if use binary ; then
+		check-reqs_pkg_setup
+	fi
 }
 
 src_prepare() {
 	apply $DISTDIR/$MAINPATCH -p1
 	apply ${FILESDIR}/rhel5-openvz-sources-2.6.18.028.064.7-bridgemac.patch -p1
-	apply ${FILESDIR}/openvz-bug-2016-icmp-send-bridge.patch -p1
-	apply ${FILESDIR}/gcc-4.4.5.patch -p1
 	# disable video4linux version 1 - deprecated as of linux-headers-2.6.38:
 	# http://forums.gentoo.org/viewtopic-t-872167.html?sid=60f2e6e08cf1f2e99b3e61772a1dc276
 	sed -i -e "s:video4linux/::g" Documentation/Makefile || die
@@ -128,6 +132,7 @@ src_compile() {
 		--bootdir="${WORKDIR}/out/boot" \
 		--lvm \
 		--luks \
+		--mdadm \
 		--iscsi \
 		--module-prefix="${WORKDIR}/out" \
 		all || die "genkernel failed"
@@ -136,8 +141,8 @@ src_compile() {
 src_install() {
 	# copy sources into place:
 	dodir /usr/src
-	cp -a ${S} ${D}/usr/src/linux-${P} || die
-	cd ${D}/usr/src/linux-${P}
+	cp -a ${S} ${D}/usr/src/linux-${PF} || die
+	cd ${D}/usr/src/linux-${PF}
 	# prepare for real-world use and 3rd-party module building:
 	make mrproper || die
 	cp $defconfig_src .config || die
@@ -159,12 +164,12 @@ src_install() {
 	find -iname *.ko -exec strip --strip-debug {} \;
 	# back to the symlink fixup:
 	local moddir="$(ls -d 2*)"
-	ln -s /usr/src/linux-${P} ${D}/lib/modules/${moddir}/source || die
-	ln -s /usr/src/linux-${P} ${D}/lib/modules/${moddir}/build || die
+	ln -s /usr/src/linux-${PF} ${D}/lib/modules/${moddir}/source || die
+	ln -s /usr/src/linux-${PF} ${D}/lib/modules/${moddir}/build || die
 
 	# Fixes FL-14
-	cp "${WORKDIR}/build/System.map" "${D}/usr/src/linux-${P}/" || die
-	cp "${WORKDIR}/build/Module.symvers" "${D}/usr/src/linux-${P}/" || die
+	cp "${WORKDIR}/build/System.map" "${D}/usr/src/linux-${PF}/" || die
+	cp "${WORKDIR}/build/Module.symvers" "${D}/usr/src/linux-${PF}/" || die
 }
 
 pkg_postinst() {
@@ -175,6 +180,6 @@ pkg_postinst() {
 	fi
 	if [ ! -e ${ROOT}usr/src/linux ]
 	then
-		ln -s linux-${P} ${ROOT}usr/src/linux
+		ln -s linux-${PF} ${ROOT}usr/src/linux
 	fi
 }
