@@ -1,6 +1,16 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
+# Oleg Vinichenko (3 Apr 2014)
+# add s-s-d patch by WilliamH, attempt to fix scripts on OpenVZ
+# masked ebuild, test required
+=sys-apps/openrc-0.12.3-r2
+
+# Oleg VInichenko (27 March, 2014)
+# mask higher libusb-1.0.18, until move to newer udev. FL-1101
+>dev-libs/libusb-1.0.9-r2
+
+# 
 # Daniel Robbins (16 Mar 2014)
 # FL-845 - masked for testing
 =app-misc/screen-4.0.3-r10
