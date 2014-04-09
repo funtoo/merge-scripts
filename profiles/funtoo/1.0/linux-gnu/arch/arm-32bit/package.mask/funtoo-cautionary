@@ -2,3 +2,6 @@
 # ARM source files are missing from this package, see FL-940 and b.g.o #494668.
 =dev-libs/libgcrypt-1.6.0
 
+# Jean-Francis Roy <jeanfrancis@funtoo.org> (8 Apr 2014)
+# Depends on masked version of perl (5.18)
+=virtual/perl-File-Temp-0.230.100
