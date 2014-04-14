@@ -8,6 +8,7 @@ if not os.path.exists("/usr/bin/svn"):
 	sys.exit(1)
 
 gentoo_src = CvsTree("gentoo-x86",":pserver:anonymous@anoncvs.gentoo.org:/var/cvsroot")
+gentoo_glsa = CvsTree("gentoo-glsa",":pserver:anonymous@anoncvs.gentoo.org:/var/cvsroot", path="gentoo/xml/htdocs/security")
 funtoo_overlay = Tree("funtoo-overlay", branch, "repos@git.funtoo.org:funtoo-overlay.git", pull=True)
 foo_overlay = Tree("foo-overlay", "master", "https://github.com/slashbeast/foo-overlay.git", pull=True)
 bar_overlay = Tree("bar-overlay", "master", "git://github.com/adessemond/bar-overlay.git", pull=True)
@@ -21,6 +22,8 @@ mysql_overlay = Truee("mysql", "master", "git://git.overlays.gentoo.org/proj/mys
 
 steps = [
 	SyncTree(gentoo_src,exclude=["/metadata/cache/**","CVS", "ChangeLog", "dev-util/metro"]),
+        # Only include 2012 and up GLSA's:
+        SyncDir(gentoo_glsa.root + "/xml/htdocs/security/en", destdir="metadata/glsa", exclude=["glsa-200*.xml","glsa-2010*.xml", "glsa-2011*.xml"]),
 	ApplyPatchSeries("%s/funtoo/patches" % funtoo_overlay.root ),
 	ThirdPartyMirrors(),
 	SyncDir(funtoo_overlay.root, "profiles", "profiles", exclude=["categories", "repo_name", "updates"]),

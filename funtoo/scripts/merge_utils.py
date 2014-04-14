@@ -255,7 +255,7 @@ class SvnTree(object):
 			runShell("(cd %s; svn co %s %s)" % (base, self.url, self.name))
 
 class CvsTree(object):
-	def __init__(self, name, url=None, trylocal=None):
+	def __init__(self, name, url=None, path=None, trylocal=None):
 		self.name = name
 		self.url = url
 		self.trylocal = trylocal
@@ -270,7 +270,11 @@ class CvsTree(object):
 		if os.path.exists(self.root):
 			runShell("(cd %s; cvs --no-verify update -dP)" % self.root, abortOnFail=False)
 		else:
-			runShell("(cd %s; cvs --no-verify -d %s co %s)" % (base, self.url, self.name))
+                        if self.path == None:
+                            path = self.name
+                        else:
+                            path = self.path
+			runShell("(cd %s; cvs --no-verify -d %s co %s)" % (base, self.url, path))
 
 class UnifiedTree(Tree):
 	def __init__(self,root,steps):
