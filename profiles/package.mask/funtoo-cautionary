@@ -1,3 +1,10 @@
+# FL-1206: mask newest python-3.4.0, some incompatibilites, need Arfrever
+# to look.
+>=dev-lang/python-3.4.0-r1000
+ 
+# FL-1202 - cautionary mask libnm-qt-0.9.8.1 until networkmanager update
+>net-libs/libnm-qt-0.9.8.0
+
 # FL-1174 - this is an experimental, slotted lua, so putting in cautionary.
 # Daniel Robbins, (22 Mar 2014)
 =dev-lang/lua-5.1.5-r1

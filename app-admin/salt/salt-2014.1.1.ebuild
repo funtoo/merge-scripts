@@ -13,12 +13,13 @@ SRC_URI="mirror://pypi/${PN:0:1}/${PN}/${P}.tar.gz"
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="*"
-IUSE="+jinja ldap libvirt mako mongodb mysql openssl redis test timelib"
+IUSE="+jinja ldap +libcloud libvirt mako mongodb mysql openssl redis test timelib"
 
 RDEPEND="$(python_abi_depend dev-python/pyyaml dev-python/msgpack dev-python/pyzmq)
 		$(python_abi_depend dev-python/m2crypto dev-python/pycrypto)
 		jinja? ( $(python_abi_depend dev-python/jinja) ) 
 		ldap? ( $(python_abi_depend dev-python/python-ldap ) )
+		libcloud? ( $(python_abi_depend dev-python/libcloud ) )
 		libvirt? ( app-emulation/libvirt[python] )
 		mako? ( $(python_abi_depend dev-python/mako) )
 		mongodb? ( $(python_abi_depend dev-python/pymongo) )

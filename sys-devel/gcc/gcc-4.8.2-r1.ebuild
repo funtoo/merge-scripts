@@ -30,8 +30,6 @@ inherit multilib eutils pax-utils
 # hardened is now supported, but we have deprecated the nopie and
 #  nossp USE flags from gentoo.
 
-# Note: multi-stage bootstrapping is currently not being performed.
-
 RESTRICT="strip"
 FEATURES=${FEATURES/multilib-strict/}
 
@@ -75,7 +73,7 @@ SRC_URI="$SRC_URI hardened? ( mirror://gentoo/${SPECS_A} mirror://gentoo/${PIE_A
 DESCRIPTION="The GNU Compiler Collection"
 
 LICENSE="GPL-3+ LGPL-3+ || ( GPL-3+ libgcc libstdc++ gcc-runtime-library-exception-3.1 ) FDL-1.3+"
-KEYWORDS="~*"
+KEYWORDS="*"
 
 RDEPEND="sys-libs/zlib nls? ( sys-devel/gettext ) virtual/libiconv"
 DEPEND="${RDEPEND} >=sys-devel/bison-1.875 >=sys-devel/flex-2.5.4 elibc_glibc? ( >=sys-libs/glibc-2.8 ) >=sys-devel/binutils-2.18"

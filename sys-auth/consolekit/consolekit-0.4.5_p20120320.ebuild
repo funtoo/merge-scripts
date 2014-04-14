@@ -8,13 +8,11 @@ MY_P=${MY_PN}-${PV}
 
 DESCRIPTION="Framework for defining and tracking users, login sessions and seats."
 HOMEPAGE="http://www.freedesktop.org/wiki/Software/ConsoleKit"
-
 if [[ ${PV} = *p20* ]]; then
-	SRC_URI="http://dev.gentoo.org/~ssuominen/${MY_P}.tar.xz"
+	        SRC_URI="http://ftp.osuosl.org/pub/funtoo/distfiles/${MY_P}.tar.xz"
 else
-	SRC_URI="http://www.freedesktop.org/software/${MY_PN}/dist/${MY_P}.tar.bz2"
+	        SRC_URI="http://www.freedesktop.org/software/${MY_PN}/dist/${MY_P}.tar.bz2"
 fi
-
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="*"

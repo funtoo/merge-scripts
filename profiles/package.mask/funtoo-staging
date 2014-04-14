@@ -1,6 +1,14 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
+# mask latest basealyout until we sort branches
+=sys-apps/baselayout-2.2.0-r6
+
+# Oleg Vinichenko (3 Apr 2014)
+# add s-s-d patch by WilliamH, attempt to fix scripts on OpenVZ
+# masked ebuild, test required
+=sys-apps/openrc-0.12.3-r2
+
 # Daniel Robbins (16 Mar 2014)
 # FL-845 - masked for testing
 =app-misc/screen-4.0.3-r10
