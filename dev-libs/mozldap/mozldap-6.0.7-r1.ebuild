@@ -125,5 +125,14 @@ src_install () {
 		doins ${S}/ldap/include/$f
 	done
 
+	# fix conf files - FL-1216
+	cd ${D}/usr/share/mozldap
+	insinto /usr/share/mozldap
+	for f in *; do
+		[ ! -L $f ] && continue
+		# remove bad symlink
+		rm $f || die
+		doins ${S}/ldap/libraries/libldap/$f
+	done
 }
 
