@@ -270,10 +270,8 @@ class CvsTree(object):
 		if os.path.exists(self.root):
 			runShell("(cd %s; cvs --no-verify update -dP)" % self.root, abortOnFail=False)
 		else:
-                        if self.path == None:
+                        if path == None:
                             path = self.name
-                        else:
-                            path = self.path
 			runShell("(cd %s; cvs --no-verify -d %s co %s)" % (base, self.url, path))
 
 class UnifiedTree(Tree):
