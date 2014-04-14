@@ -267,7 +267,7 @@ class CvsTree(object):
                         if not path:
                             self.root = "%s/%s" % (base, self.name)
                         else:
-                            self.root = "%s/%s" % (base, path)
+                            self.root = "%s/%s" % (base, os.path.dirname(path))
 		if not os.path.exists(base):
 			os.makedirs(base)
 		if os.path.exists(self.root):
