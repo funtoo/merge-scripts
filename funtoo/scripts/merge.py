@@ -18,7 +18,7 @@ progress_overlay = SvnTree("progress", "https://gentoo-progress.googlecode.com/s
 sabayon_for_gentoo = Tree("sabayon-for-gentoo", "master", "git://github.com/Sabayon/for-gentoo.git", pull=True)
 mate_overlay = Tree("mate", "master", "git://github.com/Sabayon/mate-overlay.git", pull=True)
 funtoo_gnome_overlay = Tree("funtoo-gnome", "master", "repos@git.funtoo.org:funtoo-gnome-overlay.git", pull=True)
-mysql_overlay = Truee("mysql", "master", "git://git.overlays.gentoo.org/proj/mysql.git", pull=True)
+mysql_overlay = Tree("mysql", "master", "git://git.overlays.gentoo.org/proj/mysql.git", pull=True)
 
 steps = [
 	SyncTree(gentoo_src,exclude=["/metadata/cache/**","CVS", "ChangeLog", "dev-util/metro"]),
