@@ -117,7 +117,7 @@ class SyncDir(MergeStep):
 		for e in self.exclude:
 			cmd += "--exclude %s " % e
 		if self.delete:
-			cmd += "--delete "
+			cmd += "--delete --delete-excluded "
 		cmd += "%s %s" % ( src, dest )
 		runShell(cmd)
 

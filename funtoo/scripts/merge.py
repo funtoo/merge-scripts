@@ -23,7 +23,7 @@ mysql_overlay = Tree("mysql", "master", "git://git.overlays.gentoo.org/proj/mysq
 steps = [
 	SyncTree(gentoo_src, exclude=["/metadata/cache/**", "ChangeLog", "dev-util/metro"]),
 	# Only include 2012 and up GLSA's:
-	SyncDir(gentoo_glsa.root, "en/glsa", "metadata/glsa", exclude=["glsa-200*.xml","glsa-2010*.xml", "glsa-2011*.xml"], delete=True),
+	SyncDir(gentoo_glsa.root, "en/glsa", "metadata/glsa", exclude=["glsa-200*.xml","glsa-2010*.xml", "glsa-2011*.xml"]),
 	ApplyPatchSeries("%s/funtoo/patches" % funtoo_overlay.root ),
 	ThirdPartyMirrors(),
 	SyncDir(funtoo_overlay.root, "profiles", "profiles", exclude=["categories", "repo_name", "updates"]),
