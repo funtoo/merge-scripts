@@ -1,5 +1,5 @@
 diff --git a/src/librc/librc-daemon.c b/src/librc/librc-daemon.c
-index e98b02c..3f462bf 100644
+index e98b02c..aef91e1 100644
 --- a/src/librc/librc-daemon.c
 +++ b/src/librc/librc-daemon.c
 @@ -90,6 +90,10 @@ rc_find_pids(const char *exec, const char *const *argv, uid_t uid, pid_t pid)
@@ -23,7 +23,7 @@ index e98b02c..3f462bf 100644
 +			if (! fp)
 +				continue;
 +			while (! feof(fp) && host_process) {
-+				rc_getline(fp, &line, &len);
++				rc_getline(&line, &len, fp);
 +				if (strncmp(line, "envID:", 6) == 0)
 +					host_process = (strncmp(line, "envID:\t0", 8) == 0);
 +			}
