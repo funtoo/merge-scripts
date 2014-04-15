@@ -258,23 +258,20 @@ class CvsTree(object):
 	def __init__(self, name, url=None, path=None, trylocal=None):
 		self.name = name
 		self.url = url
+		if path is None:
+			path = self.name
 		self.trylocal = trylocal
 		if self.trylocal and os.path.exists(self.trylocal):
 			base = os.path.basename(self.trylocal)
 			self.root = trylocal
 		else:
 			base = "/var/cvs/source-trees"
-                        if not path:
-                            self.root = "%s/%s" % (base, self.name)
-                        else:
-                            self.root = "%s/%s" % (base, os.path.dirname(path))
+			self.root = "%s/%s" % (base, path)
 		if not os.path.exists(base):
 			os.makedirs(base)
 		if os.path.exists(self.root):
 			runShell("(cd %s; cvs --no-verify update -dP)" % self.root, abortOnFail=False)
 		else:
-                        if path == None:
-                            path = self.name
 			runShell("(cd %s; cvs --no-verify -d %s co %s)" % (base, self.url, path))
 
 class UnifiedTree(Tree):
