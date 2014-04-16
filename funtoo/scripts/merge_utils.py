@@ -113,11 +113,11 @@ class SyncDir(MergeStep):
 				dest = os.path.normpath(tree.root)+"/"
 		if not os.path.exists(dest):
 			os.makedirs(dest)
-		cmd = "rsync -a --exclude /.git --exclude .svn "
+		cmd = "rsync -a --exclude CVS --exclude .svn --filter=\"hide /.git\" --filter=\"protect /.git\" "
 		for e in self.exclude:
 			cmd += "--exclude %s " % e
 		if self.delete:
-			cmd += "--delete "
+			cmd += "--delete --delete-excluded "
 		cmd += "%s %s" % ( src, dest )
 		runShell(cmd)
 
