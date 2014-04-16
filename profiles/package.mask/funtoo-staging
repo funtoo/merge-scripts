@@ -1,12 +1,6 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
-# Oleg Vinichenko (14 Aprl 2014)
-# fork guile as a stopper for grub emerge
-# FL-919, https://bugs.gentoo.org/show_bug.cgi?id=464044
-# apply various debian patches for guile-1.8, including attempt to fix texinfo-5.2, ebuild masked for testing
->=dev-scheme/guile-1.8.8-r2
-
 # Oleg Vinichenko (14 Apr 2014)
 # newe portage ebuild with python-3.4 compatibility backports, masked
 # FL-1206
