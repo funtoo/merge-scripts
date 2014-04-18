@@ -18,10 +18,6 @@
 =sys-apps/openrc-0.12.3-r2
 
 # Daniel Robbins (16 Mar 2014)
-# FL-845 - masked for testing
-=app-misc/screen-4.0.3-r10
-
-# Daniel Robbins (16 Mar 2014)
 # FL-1167 - masked for testing
 =dev-php/xcache-3.1.0
 
