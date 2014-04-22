@@ -11,9 +11,6 @@
 # FL-1206
 =sys-apps/portage-2.3.6-r7 
 
-# mask latest basealyout until we sort branches
-=sys-apps/baselayout-2.2.0-r6
-
 # Oleg Vinichenko (3 Apr 2014)
 # add s-s-d patch by WilliamH, attempt to fix scripts on OpenVZ
 # masked ebuild, test required
