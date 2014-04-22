@@ -236,6 +236,16 @@ class DeadTree(Tree):
 	def head(self):
 		return "None"
 
+class RsyncTree(Tree):
+        def __init__(self,name,url="rsync://rsync.us.gentoo.org/gentoo-portage/"):
+                self.name = name
+                self.url = url 
+                base = "/var/rsync/source-trees"
+                self.root = "%s/%s" % (base, self.name)
+                if not os.path.exists(base):
+                    os.makedirs(base)
+                runShell("(rsync --recursive --links --safe-links --perms --times --compress --force --whole-file --delete --timeout=180 --exclude=/.git --exclude=/metadata/cache/ --exclude=/metadata/glsa/ --exclude=/metadata/md5-cache/  --exclude=/distfiles --exclude=/local --exclude=/packages %s %s/)" % (self.url, self.root))
+
 class SvnTree(object):
 	def __init__(self, name, url=None, trylocal=None):
 		self.name = name
@@ -270,9 +280,9 @@ class CvsTree(object):
 		if not os.path.exists(base):
 			os.makedirs(base)
 		if os.path.exists(self.root):
-			runShell("(cd %s; cvs --no-verify update -dP)" % self.root, abortOnFail=False)
+			runShell("(cd %s; cvs update -dP)" % self.root, abortOnFail=False)
 		else:
-			runShell("(cd %s; cvs --no-verify -d %s co %s)" % (base, self.url, path))
+			runShell("(cd %s; cvs -d %s co %s)" % (base, self.url, path))
 
 class UnifiedTree(Tree):
 	def __init__(self,root,steps):
