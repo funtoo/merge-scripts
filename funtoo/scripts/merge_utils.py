@@ -244,7 +244,7 @@ class RsyncTree(Tree):
                 self.root = "%s/%s" % (base, self.name)
                 if not os.path.exists(base):
                     os.makedirs(base)
-                runShell("(rsync --recursive --links --safe-links --perms --times --compress --force --whole-file --delete --timeout=180 --exclude=/.git --exclude=/metadata/cache/ --exclude=/metadata/glsa/ --exclude=/metadata/md5-cache/  --exclude=/distfiles --exclude=/local --exclude=/packages %s %s/)" % (self.url, self.root))
+                runShell("rsync --recursive --links --safe-links --perms --times --compress --force --whole-file --delete --timeout=180 --exclude=/.git --exclude=/metadata/cache/ --exclude=/metadata/glsa/ --exclude=/metadata/md5-cache/  --exclude=/distfiles --exclude=/local --exclude=/packages %s %s/" % (self.url, self.root))
 
 class SvnTree(object):
 	def __init__(self, name, url=None, trylocal=None):
