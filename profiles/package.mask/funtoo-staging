@@ -6,11 +6,6 @@
 # masked for testing
 =dev-java/oracle-jdk-bin-1.7.0.55
 
-# Oleg Vinichenko (14 Apr 2014)
-# newe portage ebuild with python-3.4 compatibility backports, masked
-# FL-1206
-=sys-apps/portage-2.3.6-r7 
-
 # Oleg Vinichenko (3 Apr 2014)
 # add s-s-d patch by WilliamH, attempt to fix scripts on OpenVZ
 # masked ebuild, test required
