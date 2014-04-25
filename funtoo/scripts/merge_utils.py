@@ -361,7 +361,7 @@ class InsertEbuilds(MergeStep):
 			for cat in cats:
 				# All categories have a "-" in them and are directories:
 				if os.path.isdir(os.path.join(self.srctree.root,cat)):
-					if "-" in cat or cat == "virtuals":
+					if "-" in cat or cat == "virtual":
 						src_cat_set.add(cat)
 
 		with open(dest_cat_path, "r") as f:
