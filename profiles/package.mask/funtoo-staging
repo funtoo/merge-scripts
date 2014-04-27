@@ -1,6 +1,8 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
-
+# Oleg Vinichenko (27 Apr 2014)
+# new debian-sources-3.13.10, masked for testing
+=sys-kernel/debian-sources-3.13.10 
 
 # Daniel Robbins (16 Apr 2014)
 # masked for testing
