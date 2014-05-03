@@ -11,10 +11,6 @@
 # FL-895: stabilize libxcb-1.9.3
 =x11-libs/libxcb-1.9.3 amd64 x86
 
-# stabilize dev-libs/libgpg-error, fix stable stages builds
-
-=dev-libs/libgpg-error-1.12 amd64 x86
-
 # FL-776, stabilize systemtap-2.2 with unfork
 =dev-util/systemtap-2.2 amd64 x86
 
