@@ -1,0 +1,40 @@
+From 078a9a026db2043718abca4207b93d73666bb907 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Diego=20Elio=20Petten=C3=B2?= <flameeyes@flameeyes.eu>
+Date: Thu, 22 Sep 2011 15:28:34 +0200
+Subject: [PATCH] gpg-error-config: handle /usr/lib64, /lib64 just like
+ /usr/lib and /lib
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Distributions such as Gentoo Linux use /usr/lib64 for system libraries on
+multilib setups, so in those cases, ignore the libraries as well.
+
+Signed-off-by: Diego Elio Pettenò <flameeyes@flameeyes.eu>
+---
+ src/gpg-error-config.in |    9 ++++++---
+ 1 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/src/gpg-error-config.in b/src/gpg-error-config.in
+index 14f0625..df27f0a 100644
+--- a/src/gpg-error-config.in
++++ b/src/gpg-error-config.in
+@@ -69,9 +69,12 @@ while test $# -gt 0; do
+ 	    output="$output @GPG_ERROR_CONFIG_CFLAGS@"
+ 	    ;;
+ 	--libs)
+-	    if test "x$libdir" != "x/usr/lib" -a "x$libdir" != "x/lib"; then
+-		output="$output -L$libdir"
+-	    fi
++	    case "$libdir" in
++		/usr/lib|/usr/lib64|/lib|/lib64) ;;
++		*)
++		    output="$output -L$libdir"
++		    ;;
++	    esac
+ 	    output="$output @GPG_ERROR_CONFIG_LIBS@"
+ 	    ;;
+         --host)
+-- 
+1.7.6.1
+
