@@ -1,4 +1,8 @@
-# mask openvz-rhel6 kernel higher than 084.25, build issues:
+# FL-1229: mask libSM-1.2.2-r1 as it required masked util-linux, ported to newer multilib eclass.
+# Oleg Vinichenko (13 May 2014)
+>x11-libs/libSM-1.2.2
+
+#mask openvz-rhel6 kernel higher than 084.25, build issues:
 
 >sys-kernel/openvz-rhel6-stable-2.6.32.042.084.25
 
