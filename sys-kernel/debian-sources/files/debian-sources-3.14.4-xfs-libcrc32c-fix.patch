@@ -1,0 +1,27 @@
+diff -Nuar debian/config/config debian-fix/config/config
+--- debian/config/config	2014-04-29 01:57:15.000000000 +0000
++++ debian-fix/config/config	2014-05-16 15:02:38.622819509 +0000
+@@ -1,4 +1,4 @@
+-##
++###
+ ## file: arch/Kconfig
+ ##
+ CONFIG_KPROBES=y
+@@ -4710,7 +4710,7 @@
+ ##
+ ## file: fs/xfs/Kconfig
+ ##
+-CONFIG_XFS_FS=m
++CONFIG_XFS_FS=y
+ CONFIG_XFS_QUOTA=y
+ CONFIG_XFS_POSIX_ACL=y
+ CONFIG_XFS_RT=y
+@@ -4909,7 +4909,7 @@
+ CONFIG_CRC32=y
+ # CONFIG_CRC32_SELFTEST is not set
+ CONFIG_CRC7=m
+-CONFIG_LIBCRC32C=m
++CONFIG_LIBCRC32C=y
+ # CONFIG_CRC8 is not set
+ # CONFIG_RANDOM32_SELFTEST is not set
+ CONFIG_CORDIC=m
