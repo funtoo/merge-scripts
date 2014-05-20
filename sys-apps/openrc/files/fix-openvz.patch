@@ -1,8 +1,7 @@
-diff --git a/src/librc/librc-daemon.c b/src/librc/librc-daemon.c
-index e98b02c..aef91e1 100644
---- a/src/librc/librc-daemon.c
-+++ b/src/librc/librc-daemon.c
-@@ -90,6 +90,10 @@ rc_find_pids(const char *exec, const char *const *argv, uid_t uid, pid_t pid)
+diff -urN openrc-0.12.3/src/librc/librc-daemon.c openrc-0.12.3-fixed/src/librc/librc-daemon.c
+--- openrc-0.12.3/src/librc/librc-daemon.c	2013-10-22 20:59:16.000000000 -0600
++++ openrc-0.12.3-fixed/src/librc/librc-daemon.c	2014-05-20 13:38:17.399787235 -0600
+@@ -90,6 +90,10 @@
  {
  	DIR *procdir;
  	struct dirent *entry;
@@ -13,7 +12,7 @@ index e98b02c..aef91e1 100644
  	pid_t p;
  	char buffer[PATH_MAX];
  	struct stat sb;
-@@ -134,6 +138,21 @@ rc_find_pids(const char *exec, const char *const *argv, uid_t uid, pid_t pid)
+@@ -134,6 +138,22 @@
  		if (argv &&
  		    !pid_is_argv(p, (const char *const *)argv))
  			continue;
@@ -22,12 +21,13 @@ index e98b02c..aef91e1 100644
 +			fp = fopen(buffer, "r");
 +			if (! fp)
 +				continue;
-+			while (! feof(fp) && host_process) {
++			while (! feof(fp)) {
 +				rc_getline(&line, &len, fp);
-+				if (strncmp(line, "envID:", 6) == 0)
++				if (strncmp(line, "envID:", 6) == 0) {
 +					host_process = (strncmp(line, "envID:\t0", 8) == 0);
++					break;
++				}
 +			}
-+			free(line);
 +			fclose(fp);
 +		}
 +		if (! host_process)
@@ -35,3 +35,12 @@ index e98b02c..aef91e1 100644
  		if (!pids) {
  			pids = xmalloc(sizeof(*pids));
  			LIST_INIT(pids);
+@@ -142,6 +162,8 @@
+ 		pi->pid = p;
+ 		LIST_INSERT_HEAD(pids, pi, entries);
+ 	}
++	if (line != NULL)
++		free(line);
+ 	closedir(procdir);
+ 	return pids;
+ }
