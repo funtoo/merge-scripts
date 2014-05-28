@@ -1,3 +1,8 @@
+# Oleg Vinichenko (28 May 2014)
+# mask recent update of libffi, FL-1255
+>dev-libs/libffi-3.0.13-r1 
+
+ 
 # FL-1229: mask libSM-1.2.2-r1 as it required masked util-linux, ported to newer multilib eclass.
 # Oleg Vinichenko (13 May 2014)
 >x11-libs/libSM-1.2.2
