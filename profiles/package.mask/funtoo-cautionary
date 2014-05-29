@@ -1,6 +1,4 @@
 # Oleg Vinichenko (29 May 2014)
-# mask openrc-0.12.3-r2, OpenVZ fixes are incomlete and not working preperly
-=sys-apps/openrc-0.12.3-r2
 
 # Oleg Vinichenko (28 May 2014)
 # mask recent update of libffi, FL-1255
