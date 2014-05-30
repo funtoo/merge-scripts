@@ -14,10 +14,6 @@
 #mask openvz-rhel6 kernel higher than 084.25, build issues:
 
 >sys-kernel/openvz-rhel6-stable-2.6.32.042.084.25
-
-# FL-1206: mask newest python-3.4.0, some incompatibilites, need Arfrever
-# to look.
->=dev-lang/python-3.4.0-r1000
  
 # FL-1202 - cautionary mask libnm-qt-0.9.8.1 until networkmanager update
 >net-libs/libnm-qt-0.9.8.0
