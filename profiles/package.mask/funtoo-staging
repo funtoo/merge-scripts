@@ -1,6 +1,11 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
+# Oleg Vinichenko (2 June 2014), add beta and unstable versions of google-chrome as requested in FL-1258 and FL-1254
+# ebuilds are masked
+=www-client/google-chrome-unstable-37.0.2017.2_p1
+=www-client/google-chrome-beta-36.0.1985.32_p1
+
 # Oleg Vinichenko (28 May 2014)
 # stable release update for google-chrome, masked for testing
 =www-client/google-chrome-35.0.1916.114_p1 
