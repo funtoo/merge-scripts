@@ -8,11 +8,11 @@ REV="1.7"
 DESCRIPTION="full-strength general purpose cryptography library (including SSL v2/v3 and TLS v1)"
 HOMEPAGE="http://www.openssl.org/"
 SRC_URI="mirror://openssl/source/${P}.tar.gz
-	http://cvs.pld-linux.org/cgi-bin/cvsweb.cgi/~checkout~/packages/${PN}/${PN}-c_rehash.sh?rev=${REV} -> ${PN}-c_rehash.sh.${REV}"
+	http://cvs.pld-linux.org/cgi-bin/cvsweb.cgi/packages/${PN}/${PN}-c_rehash.sh?rev=${REV} -> ${PN}-c_rehash.sh.${REV}"
 
 LICENSE="openssl"
 SLOT="0"
-KEYWORDS="*"
+KEYWORDS="~*"
 IUSE="bindist gmp kerberos rfc3779 sse2 static-libs test zlib"
 
 # Have the sub-libs in RDEPEND with [static-libs] since, logically,
@@ -43,7 +43,7 @@ src_prepare() {
 	rm -f Makefile
 
 	epatch "${FILESDIR}"/${PN}-1.0.0a-ldflags.patch #327421
-	epatch "${FILESDIR}"/${PN}-1.0.0d-fbsd-amd64.patch #363089
+	#epatch "${FILESDIR}"/${PN}-1.0.0d-fbsd-amd64.patch #363089
 	epatch "${FILESDIR}"/${PN}-1.0.0d-windres.patch #373743
 	epatch "${FILESDIR}"/${PN}-1.0.0h-pkg-config.patch
 	epatch "${FILESDIR}"/${PN}-1.0.0e-parallel-build.patch
