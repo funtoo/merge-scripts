@@ -1,6 +1,10 @@
 # Oleg Vinichenko (29 May 2014)
 
  
+# Oleg Vinichenko (6 June 2014)_
+# maks latest gettext-0.19, breaks lot of packages
+>sys-devel/gettext-0.18.3.2
+
 # FL-1229: mask libSM-1.2.2-r1 as it required masked util-linux, ported to newer multilib eclass.
 # Oleg Vinichenko (13 May 2014)
 >x11-libs/libSM-1.2.2
