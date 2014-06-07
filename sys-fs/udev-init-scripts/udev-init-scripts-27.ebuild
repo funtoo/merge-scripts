@@ -35,18 +35,18 @@ pkg_postinst()
 		if [[ -x "${ROOT}"etc/init.d/udev \
 			&& -d "${ROOT}"etc/runlevels/sysinit ]]
 		then
-			ln -s /etc/init.d/udev "${ROOT}"/etc/runlevels/sysinit/udev
+			ln -fs /etc/init.d/udev "${ROOT}"/etc/runlevels/sysinit/udev
 		fi
 		if [[ -x "${ROOT}"etc/init.d/udev-mount \
 			&& -d "${ROOT}"etc/runlevels/sysinit ]]
 		then
-			ln -s /etc/init.d/udev-mount \
+			ln -fs /etc/init.d/udev-mount \
 				"${ROOT}"etc/runlevels/sysinit/udev-mount
 		fi
 		if [[ -x "${ROOT}"etc/init.d/udev-postmount \
 		    && -d "${ROOT}"etc/runlevels/boot ]]
 		then
-		    ln -s /etc/init.d/udev-postmount \
+		    ln -fs /etc/init.d/udev-postmount \
 				"${ROOT}"etc/runlevels/boot/udev-postmount
 		fi
 
