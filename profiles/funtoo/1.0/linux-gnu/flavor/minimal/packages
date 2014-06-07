@@ -52,6 +52,7 @@
 *sys-libs/readline
 *sys-libs/zlib
 *virtual/baselayout
+*virtual/dev-manager
 *virtual/libc
 *virtual/man
 *virtual/modutils
