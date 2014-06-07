@@ -20,10 +20,6 @@
 # masked for testing
 >=net-misc/dhcpcd-6.3.0
 
-# Oleg Vinichenko (13 Dec 2014)
-# FL-969: lvm2 update, hard masked for testing. Ebuild needs some fixes with udev deps
-=sys-fs/lvm2-2.02.103 
-
 # Oleg Vinichenko (24 Oct)
 # debian-sources-3.11.5, masked for testing, XFS issue FL-823
 # FL-823, newer kernels to test
