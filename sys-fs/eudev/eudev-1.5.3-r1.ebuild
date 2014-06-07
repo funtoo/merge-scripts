@@ -54,7 +54,7 @@ RDEPEND="${COMMON_DEPEND}
 
 PDEPEND="hwdb? ( >=sys-apps/hwids-20130717-r1[udev] )
 	keymap? ( >=sys-apps/hwids-20130717-r1[udev] )
-	openrc? ( >=sys-fs/udev-init-scripts-18 )"
+	openrc? ( >=sys-fs/udev-init-scripts-27 )"
 
 REQUIRED_USE="keymap? ( hwdb )"
 
@@ -226,21 +226,7 @@ pkg_preinst()
 		fi
 	done
 }
-add_init() {
-	local runl=$1
-		if [ ! -e ${ROOT}/etc/runlevels/${runl} ]
-	    then
-	        install -d -m0755 ${ROOT}/etc/runlevels/${runl}
-	    fi
-	    for initd in $*
-	    do
-	        # if the initscript is not going to be installed and  is not currently installed, return
-		    [[ -e ${D}/etc/init.d/${initd} || -e ${ROOT}/etc/init.d/${initd} ]] || continue
-		    [[ -e ${ROOT}/etc/runlevels/${runl}/${initd} ]] && continue
-			elog "Auto-adding '${initd}' service to your ${runl} runlevel"
-			ln -snf /etc/init.d/${initd} "${ROOT}"/etc/runlevels/${runl}/${initd}
-		done
-}
+
 pkg_postinst()
 {
 	mkdir -p "${EROOT}"run
@@ -274,8 +260,6 @@ pkg_postinst()
 			udevadm control --reload
 		fi
 	fi
-
-	add_init boot udev-postmount
 
 	ewarn
 	ewarn "You need to restart eudev as soon as possible to make the"
