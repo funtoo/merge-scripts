@@ -7,7 +7,7 @@
 
 inherit eutils mount-boot toolchain-funcs linux-info
 
-PATCHVER="1.9" # Not used, just for tracking with main grub
+PATCHVER="1.14" # Not used, just for tracking with main grub
 
 DESCRIPTION="GNU GRUB Legacy boot loader (static build)"
 
@@ -19,10 +19,9 @@ HOMEPAGE="http://www.gnu.org/software/grub/"
 SRC_URI="mirror://gentoo/${RP}.tar.bz2"
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="-* amd64 x86"
+KEYWORDS="amd64 x86"
 IUSE=""
-DEPEND="!sys-boot/grub"
-PROVIDE="virtual/bootloader"
+DEPEND="!sys-boot/grub !sys-boot/grub-legacy"
 
 pkg_setup() {
 	local arch="$(tc-arch)"

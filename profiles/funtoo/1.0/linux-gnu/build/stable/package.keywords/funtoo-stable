@@ -1,6 +1,15 @@
-# stabilize dev-libs/libgpg-error, fix stable stages builds
+# FL-1083:
+# unfork and stabilize tcp-wrappers
+=sys-apps/tcp-wrappers-7.6.22-r1 amd64 x86 
+ 
+# FL-1074: stabilize libxcb-1.9.3-r1
+=x11-libs/libxcb-1.10 amd64 x86
 
-=dev-libs/libgpg-error-1.12 amd64 x86
+# FL-942, mark procps-3.3.9 stable
+=sys-process/procps-3.3.9 amd64 x86
+
+# FL-895: stabilize libxcb-1.9.3
+=x11-libs/libxcb-1.9.3 amd64 x86
 
 # FL-776, stabilize systemtap-2.2 with unfork
 =dev-util/systemtap-2.2 amd64 x86

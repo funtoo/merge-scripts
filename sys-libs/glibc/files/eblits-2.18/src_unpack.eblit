@@ -137,6 +137,10 @@ toolchain-glibc_src_unpack() {
 		epatch "${WORKDIR}"/patches
 	fi
 
+	if ! use vanilla ; then
+		epatch "${FILESDIR}"/2.18/glibc-2.18-strstr-hackfix.patch
+	fi
+
 	if just_headers ; then
 		if [[ -e ports/sysdeps/mips/preconfigure ]] ; then
 			# mips peeps like to screw with us.  if building headers,

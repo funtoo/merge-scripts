@@ -1,1 +1,4 @@
 media-libs/libcanberra gtk3 gtk
+mate-base/mate-settings-daemon libnotify
+mate-extra/mate-dialogs libnotify
+mate-extra/mate-screensaver libnotify

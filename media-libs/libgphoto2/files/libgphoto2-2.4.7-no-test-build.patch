@@ -1,0 +1,34 @@
+# Do not build tests if not running make check
+# Gentoo: https://bugs.gentoo.org/show_bug.cgi?id=226241
+--- a/libgphoto2_port/test/Makefile.am	2010-01-07 01:04:40.000000000 +0100
++++ b/libgphoto2_port/test/Makefile.am	2010-01-07 01:04:57.000000000 +0100
+@@ -1,4 +1,4 @@
+-noinst_PROGRAMS = test-gp-port
++check_PROGRAMS = test-gp-port
+ 
+ test_gp_port_CPPFLAGS = \
+ 	$(AM_CPPFLAGS) $(CPPFLAGS) \
+--- a/tests/Makefile.am	2010-01-07 00:56:14.000000000 +0100
++++ b/tests/Makefile.am	2010-01-07 00:56:40.000000000 +0100
+@@ -2,7 +2,9 @@
+ 
+ check_PROGRAMS = \
+ 	test-camera-list \
+-	test-pedantic-c
++	test-pedantic-c \
++	test-gphoto2	\
++	test-filesys
+ 
+ if HAVE_CXX
+ check_PROGRAMS += test-pedantic-cxx
+@@ -22,10 +24,6 @@
+ 
+ CLEANFILES = $(check_SCRIPTS)
+ 
+-noinst_PROGRAMS =	\
+-	test-gphoto2	\
+-	test-filesys
+-
+ test_gphoto2_SOURCE = test-gphoto2.c
+ test_gphoto2_LDADD = \
+ 	$(top_builddir)/libgphoto2/libgphoto2.la \

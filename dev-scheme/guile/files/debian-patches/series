@@ -1,0 +1,11 @@
+0001-Change-guile-tut-to-guile-tut-1.8.patch
+0002-Handle-the-DFSG-package-split.patch
+0003-Fix-the-SRFI-60-copy-bit-documentation.patch
+0004-Define-_GNU_SOURCE-to-fix-the-GNU-kFreeBSD-build.patch
+0005-Don-t-access-uninitialised-memory-in-scm_to_sockaddr.patch
+0006-Make-sockets.test-more-robust.patch
+0007-Mark-Unused-modules-are-removed-gc-test-as-unresolve.patch
+0008-Fix-problems-in-guile-tut.texi-that-cause-makeinfo-t.patch
+0009-Fix-r5rs.texi-makeinfo-failure-by-applying-changes-f.patch
+0010-Fix-test-suite-failure-caused-by-formfeed-difference.patch
+0011-Fix-incompatibility-with-automake-1.13-specify-seria.patch

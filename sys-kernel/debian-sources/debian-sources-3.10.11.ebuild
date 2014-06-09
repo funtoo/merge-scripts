@@ -15,32 +15,12 @@ RESTRICT="binchecks strip mirror"
 LICENSE="GPL-2"
 KEYWORDS="*"
 IUSE="binary rt"
-DEPEND="binary? ( >=sys-kernel/genkernel-3.4.40.7-r1 )"
+DEPEND="binary? ( >=sys-kernel/genkernel-3.4.40.7 )"
 RDEPEND="binary? ( || ( >=sys-fs/udev-160 >=virtual/udev-171 ) )"
 DESCRIPTION="Debian Sources (and optional binary kernel)"
 HOMEPAGE="http://www.debian.org"
-SRC_URI="http://debian.osuosl.org/debian/pool/main/l/linux/${KERNEL_ARCHIVE} http://debian.osuosl.org/debian/pool/main/l/linux/${PATCH_ARCHIVE}"
+SRC_URI="http://ftp.osuosl.org/pub/funtoo/distfiles/${KERNEL_ARCHIVE} http://ftp.osuosl.org/pub/funtoo/distfiles/${PATCH_ARCHIVE}"
 S="$WORKDIR/linux-${CKV}"
-
-apply() {
-	p=$1; shift
-	case "${p##*.}" in
-		gz)
-			ca="gzip -dc"
-			;;
-		bz2)
-			ca="bzip2 -dc"
-			;;
-		xz)
-			ca="xz -dc"
-			;;
-		*)
-			ca="cat"
-			;;
-	esac
-	[ ! -e $p ] && die "patch $p not found"
-	echo "Applying patch $p"; $ca $p | patch $* || die "patch $p failed"
-}
 
 get_patch_list() {
 	[[ -z "${1}" ]] && die "No patch series file specified"
@@ -79,7 +59,11 @@ src_prepare() {
 	make -s mrproper || die "make mrproper failed"
 	#make -s include/linux/version.h || die "make include/linux/version.h failed"
 	cd ${S}
+
 	cp -aR "${WORKDIR}"/debian "${S}"/debian
+	# xfs fix for 3.10.11, see FL-823:
+	epatch ${FILESDIR}/debian-sources-3.10.11-xfs-libcrc32c-fix.patch
+
 	local opts
 	use rt && opts="rt" || opts="standard"
 	local myarch="amd64"

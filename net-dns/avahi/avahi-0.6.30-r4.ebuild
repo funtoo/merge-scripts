@@ -43,7 +43,7 @@ COMMON_DEPEND=">=dev-libs/libdaemon-0.14
 		gtk? ( >=dev-python/pygtk-2 )
 	)
 	bookmarks? (
-		dev-python/twisted
+		dev-python/twisted-core
 		dev-python/twisted-web
 	)
 	kernel_linux? ( sys-libs/libcap )"

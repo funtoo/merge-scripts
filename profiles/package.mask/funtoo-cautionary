@@ -1,6 +1,52 @@
-#  Oleg Vinichenko cautinoary mask to latest nvidia-drivers, FL-817
-#  (10 Oct 2013)
->=x11-drivers/nvidia-drivers-331.13
+# Oleg Vinichenko (29 May 2014)
+
+ 
+# Oleg Vinichenko (6 June 2014)_
+# maks latest gettext-0.19, breaks lot of packages
+>sys-devel/gettext-0.18.3.2
+
+# FL-1229: mask libSM-1.2.2-r1 as it required masked util-linux, ported to newer multilib eclass.
+# Oleg Vinichenko (13 May 2014)
+>x11-libs/libSM-1.2.2
+
+#mask openvz-rhel6 kernel higher than 084.25, build issues:
+
+>sys-kernel/openvz-rhel6-stable-2.6.32.042.084.25
+ 
+# FL-1202 - cautionary mask libnm-qt-0.9.8.1 until networkmanager update
+>net-libs/libnm-qt-0.9.8.0
+
+# FL-1174 - this is an experimental, slotted lua, so putting in cautionary.
+# Daniel Robbins, (22 Mar 2014)
+=dev-lang/lua-5.1.5-r1
+
+# Non bug commit. New gentoo-functions ebuild pulled into update list because of newer python-updater.
+# gentoo-funtions ebuild is a replacement of base shell functions, provided by OpenRC's /etc/init.d/functions.sh
+# this is core package changes, that require at least news item and shouldn't be done via dependency of other package. Masking
+# latest python-updater to avoid mess.
+>app-admin/python-updater-0.11
+
+# Oleg Vinichenko (15 March)
+# maks latest sys-devel/flex, due to several problems
+# FL-1165; http://comments.gmane.org/gmane.linux.lfs.devel/14740 https://bugs.gentoo.org/show_bug.cgi?id=503522
+>sys-devel/flex-2.5.37
+
+#  mask newer version of cryptsetup, breakage expected
+>sys-fs/cryptsetup-1.6.3
+
+#  cautionary mask libvoribs due to ogg breakage
+>media-libs/libvorbis-1.3.3
+
+#  Cautionary mask latest bash and readline, until it's time to update
+>=app-shells/bash-4.3
+>=sys-libs/readline-6.3
+
+#  cautionary mask to freetype-2.5.1, broken
+>=media-libs/freetype-2.5.1
+
+#  Oleg Vinichenko (3 Dec 2013)
+#  mask latest version of autogen, broken
+>=sys-devel/autogen-5.18
   
 #  Oleg Vinichenko (6 Sep 2013)
 #  mask perl modules that explicitly require newer perl-5.18
@@ -22,11 +68,6 @@
 >=gnome-base/gnome-settings-daemon-3.8.3
 >=gnome-base/gnome-control-center-3.8
 
-# Oleg Vinichenko (24 Jul 2013)
-# mask >media-player-info-18, we are not yet ready for udev-200
-# FL-641
->=app-misc/media-player-info-19
-
 # Ryan Harris (23 Jul 2013)
 # Mask phoronix-test-suite due to security concerns
 # Packages should not try to run emerge on their own
@@ -42,10 +83,6 @@ app-benchmarks/phoronix-test-suite
 # Mask app-emulation/xen-tools-4.2.2-r1
 # depends on sys-app/texinfo-5
 =app-emulation/xen-tools-4.2.2-r1
-
-#  Oleg Vinichenko ( 26 jun 2013)
-#  mask beta version of postgresql, FL-591
->dev-db/postgresql-base-9.2.4
 
 #  Oleg Vinichenko (16 Jun 2013)
 #  mask broken hexchat ebuild FL-584
@@ -84,11 +121,6 @@ sys-fs/zfs-fuse
 # Oleg Vinichenko (8 Sep 2013) FL-710, stabilize automake-1.13.4
 >sys-devel/automake-1.13.4
 
-# FL-406, mask latest hwids
-# Jean-Francis Roy (11 Feb 2013)
-# FL-406, correct mask typo
->sys-apps/hwids-20130131
-
 # Oleg Vinichenko (17 Dec 2012)
 # mask >dev-perl/Net-DNS-0.680.0 due to FL-275
 >dev-perl/Net-DNS-0.680.0
@@ -97,33 +129,12 @@ sys-fs/zfs-fuse
 # mask dangerous baselayout-2.2.0-r2
 =sys-apps/baselayout-2.2.0-r2
 
-# Oleg Vinichenko (30 Oct 2012 )
-# mask back nano-2.3.1-r2, stage build  issues
->=app-editors/nano-2.3.1-r2
-
-# Oleg Vinichenko (24 Oct 2012)
-# less-452 breaks man pages
->=sys-apps/less-452
-
 # Adrien Dessemond (09 May 2012)
 # Python 2.7.4-pre and 3.2.4-pre versions are problematic to fetch from upstrea$
 # and per their nature should not be in Funtoo stable anyway
 =dev-lang/python-3.4_pre*
 =dev-lang/python-2.7.6_pre*
 =dev-lang/python-3.3.3_pre*
-
-# Oleg Vinichenko (2 Apr 2012)
-# mask a live hwids ebuild
-=sys-apps/hwids-99999999
-
-# Oleg Vinichenko (19 Jan 2012)
-# udev-177 is not ready for daily usage
-# for adventurous ones!
-# Daniel Robbins (15 Sep 2012) - new udev version to fix /run persistent issues:
-# Jean-Francis Roy (28 Nov 2012) - new udev version to add keymap USE flag + virtual/udev mask:
->sys-fs/udev-171-r8
->sys-fs/eudev-0-r1
->virtual/udev-171
 
 # DO NOT USE this one the ebuild does not include kernel revision dependencies (>= 2.6.38 REQUIRED) and it can affect many of our users 
 # See bug #359445

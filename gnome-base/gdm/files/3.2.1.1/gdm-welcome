@@ -1,9 +1,0 @@
-#%PAM-1.0
-auth       required    pam_env.so
-auth       required    pam_permit.so
-account    required    pam_nologin.so
-account    include     system-services
-password   include     system-services
-session    required    pam_loginuid.so
-session    optional    pam_keyinit.so force revoke
-session    include     system-services

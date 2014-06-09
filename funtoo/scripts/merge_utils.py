@@ -113,11 +113,11 @@ class SyncDir(MergeStep):
 				dest = os.path.normpath(tree.root)+"/"
 		if not os.path.exists(dest):
 			os.makedirs(dest)
-		cmd = "rsync -a --exclude /.git --exclude .svn "
+		cmd = "rsync -a --exclude CVS --exclude .svn --filter=\"hide /.git\" --filter=\"protect /.git\" "
 		for e in self.exclude:
 			cmd += "--exclude %s " % e
 		if self.delete:
-			cmd += "--delete "
+			cmd += "--delete --delete-excluded "
 		cmd += "%s %s" % ( src, dest )
 		runShell(cmd)
 
@@ -204,10 +204,10 @@ class Tree(object):
 		if not os.path.exists(base):
 			os.makedirs(base)
 		if os.path.exists(self.root):
-			runShell("(cd %s; git fetch origin)" % self.root )
+			runShell("(cd %s; git fetch origin)" % self.root, abortOnFail=False)
 			runShell("(cd %s; git checkout %s)" % ( self.root, self.branch ))
 			if pull:
-				runShell("(cd %s; git pull -f origin %s)" % ( self.root, self.branch ))
+				runShell("(cd %s; git pull -f origin %s)" % ( self.root, self.branch ), abortOnFail=False)
 		else:
 			runShell("(cd %s; git clone %s %s)" % ( base, self.url, self.name ))
 			runShell("(cd %s; git checkout %s)" % ( self.root, self.branch ))
@@ -236,6 +236,16 @@ class DeadTree(Tree):
 	def head(self):
 		return "None"
 
+class RsyncTree(Tree):
+        def __init__(self,name,url="rsync://rsync.us.gentoo.org/gentoo-portage/"):
+                self.name = name
+                self.url = url 
+                base = "/var/rsync/source-trees"
+                self.root = "%s/%s" % (base, self.name)
+                if not os.path.exists(base):
+                    os.makedirs(base)
+                runShell("rsync --recursive --delete-excluded --links --safe-links --perms --times --compress --force --whole-file --delete --timeout=180 --exclude=/.git --exclude=/metadata/cache/ --exclude=/metadata/glsa/glsa-200*.xml --exclude=/metadata/glsa/glsa-2010*.xml --exclude=/metadata/glsa/glsa-2011*.xml --exclude=/metadata/md5-cache/  --exclude=/distfiles --exclude=/local --exclude=/packages %s %s/" % (self.url, self.root))
+
 class SvnTree(object):
 	def __init__(self, name, url=None, trylocal=None):
 		self.name = name
@@ -250,27 +260,29 @@ class SvnTree(object):
 		if not os.path.exists(base):
 			os.makedirs(base)
 		if os.path.exists(self.root):
-			runShell("(cd %s; svn up)" % self.root)
+			runShell("(cd %s; svn up)" % self.root, abortOnFail=False)
 		else:
 			runShell("(cd %s; svn co %s %s)" % (base, self.url, self.name))
 
 class CvsTree(object):
-	def __init__(self, name, url=None, trylocal=None):
+	def __init__(self, name, url=None, path=None, trylocal=None):
 		self.name = name
 		self.url = url
+		if path is None:
+			path = self.name
 		self.trylocal = trylocal
 		if self.trylocal and os.path.exists(self.trylocal):
 			base = os.path.basename(self.trylocal)
 			self.root = trylocal
 		else:
 			base = "/var/cvs/source-trees"
-			self.root = "%s/%s" % (base, self.name)
+			self.root = "%s/%s" % (base, path)
 		if not os.path.exists(base):
 			os.makedirs(base)
 		if os.path.exists(self.root):
-			runShell("(cd %s; cvs --no-verify update)" % self.root)
+			runShell("(cd %s; cvs update -dP)" % self.root, abortOnFail=False)
 		else:
-			runShell("(cd %s; cvs --no-verify -d %s co %s)" % (base, self.url, self.name))
+			runShell("(cd %s; cvs -d %s co %s)" % (base, self.url, path))
 
 class UnifiedTree(Tree):
 	def __init__(self,root,steps):
@@ -349,7 +361,7 @@ class InsertEbuilds(MergeStep):
 			for cat in cats:
 				# All categories have a "-" in them and are directories:
 				if os.path.isdir(os.path.join(self.srctree.root,cat)):
-					if "-" in cat or cat == "virtuals":
+					if "-" in cat or cat == "virtual":
 						src_cat_set.add(cat)
 
 		with open(dest_cat_path, "r") as f:
@@ -383,7 +395,7 @@ class InsertEbuilds(MergeStep):
 				if self.replace == True or (type(self.replace) == types.ListType and "%s/%s" % (cat,pkg) in self.replace):
 					if not os.path.exists(tcatdir):
 						os.makedirs(tcatdir)
-					if isinstance(self.merge, list) and "%s/%s" % (cat,pkg) in self.merge and os.path.isdir(tpkgdir):
+					if self.merge is True or (isinstance(self.merge, list) and "%s/%s" % (cat,pkg) in self.merge and os.path.isdir(tpkgdir)):
 						try:
 							pkgdir_manifest_file = open("%s/Manifest" % pkgdir)
 							pkgdir_manifest = pkgdir_manifest_file.readlines()

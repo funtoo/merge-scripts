@@ -1,0 +1,26 @@
+--- cmake/base.cmake.orig	2013-01-11 11:03:33.030754571 +0400
++++ cmake/base.cmake	2013-01-11 11:06:14.695764652 +0400
+@@ -53,11 +53,11 @@
+ 	     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindCompiz.cmake
+ 	     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindOpenGLES2.cmake
+ 	     DESTINATION
+-	     ${CMAKE_INSTALL_PREFIX}/share/cmake-${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}/)
++	     ${D}/${CMAKE_INSTALL_PREFIX}/share/cmake/)
+     add_custom_target (findcompiz_install
+ 	${CMAKE_COMMAND} -E make_directory ${CMAKE_ROOT}/Modules &&
+-	${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/cmake/FindCompiz.cmake ${CMAKE_ROOT}/Modules &&
+-	${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/cmake/FindOpenGLES2.cmake ${CMAKE_ROOT}/Modules
++	${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/cmake/FindCompiz.cmake ${D}/${CMAKE_ROOT}/Modules &&
++	${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/cmake/FindOpenGLES2.cmake ${D}/${CMAKE_ROOT}/Modules
+     )
+     find_file (_find_compizconfig FindCompizConfig.cmake PATHS ${CMAKE_ROOT}/Modules ${ARGN})
+     if (NOT _find_compizconfig)
+@@ -70,7 +70,7 @@
+     install (FILES
+ 	     ${CMAKE_CURRENT_SOURCE_DIR}/compizconfig/libcompizconfig/cmake/FindCompizConfig.cmake
+ 	     DESTINATION
+-	     ${CMAKE_INSTALL_PREFIX}/share/cmake-${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}/)
++	     ${D}/${CMAKE_INSTALL_PREFIX}/share/cmake/)
+     add_custom_target (
+ 	findcompizconfig_install
+ 	${CMAKE_COMMAND} -E make_directory ${CMAKE_ROOT}/Modules &&

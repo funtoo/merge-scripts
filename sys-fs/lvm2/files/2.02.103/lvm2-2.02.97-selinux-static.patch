@@ -1,0 +1,91 @@
+diff -Naur LVM2.2.02.97/configure.in LVM2.2.02.97.new/configure.in
+--- LVM2.2.02.97/configure.in	2013-07-31 20:14:50.989498543 -0400
++++ LVM2.2.02.97.new/configure.in	2013-07-31 20:58:36.195546461 -0400
+@@ -927,7 +927,6 @@
+ 	UDEV_STATIC_LIBS=`$PKG_CONFIG --static --libs libudev`
+ 	AC_DEFINE([UDEV_SYNC_SUPPORT], 1, [Define to 1 to enable synchronisation with udev processing.])
+ fi
+-AC_SUBST(UDEV_STATIC_LIBS)
+ 
+ dnl -- Enable udev rules
+ AC_MSG_CHECKING(whether to enable installation of udev rules required for synchronisation)
+@@ -1130,19 +1129,32 @@
+ if test x$SELINUX = xyes; then
+ 	AC_CHECK_LIB([sepol], [sepol_check_context], [
+ 		AC_DEFINE([HAVE_SEPOL], 1, [Define to 1 if sepol_check_context is available.])
+-		SELINUX_LIBS="-lsepol"])
++		SEPOL_LIBS="-lsepol"])
+ 
+-	AC_CHECK_LIB([selinux], [is_selinux_enabled], [
+-		AC_CHECK_HEADERS([selinux/selinux.h],, hard_bailout)
+-		AC_CHECK_HEADERS([selinux/label.h])
+-		AC_DEFINE([HAVE_SELINUX], 1, [Define to 1 to include support for selinux.])
+-		SELINUX_LIBS="-lselinux $SELINUX_LIBS"
++	dnl -- init pkgconfig if required
++	if  test x$PKGCONFIG_INIT != x1; then
++		pkg_config_init
++	fi
++	PKG_CHECK_MODULES(SELINUX, libselinux, [
+ 		SELINUX_PC="libselinux"
+-		HAVE_SELINUX=yes ], [
+-		AC_MSG_WARN(Disabling selinux)
+-		SELINUX_LIBS=
+-		SELINUX_PC=
+-		HAVE_SELINUX=no ])
++		SELINUX_STATIC_LIBS=`$PKG_CONFIG --static --libs libselinux`
++		SELINUX_LIBS="$SELINUX_LIBS $SEPOL_LIBS"
++		AC_DEFINE([HAVE_SELINUX], 1, [Define to 1 to include support for selinux.])
++	],[
++		dnl -- old non-pkgconfig method, is buggy with static builds
++		AC_CHECK_LIB([selinux], [is_selinux_enabled], [
++			AC_CHECK_HEADERS([selinux/selinux.h],, hard_bailout)
++			AC_CHECK_HEADERS([selinux/label.h])
++			AC_DEFINE([HAVE_SELINUX], 1, [Define to 1 to include support for selinux.])
++			SELINUX_LIBS="-lselinux $SEPOL_LIBS"
++			SELINUX_STATIC_LIBS="$SELINUX_LIBS"
++			SELINUX_PC="libselinux"
++			HAVE_SELINUX=yes ], [
++			AC_MSG_WARN(Disabling selinux)
++			SELINUX_LIBS=
++			SELINUX_PC=
++			HAVE_SELINUX=no ])
++	])
+ fi
+ 
+ ################################################################################
+@@ -1531,6 +1543,7 @@
+ AC_SUBST(SALCK_CFLAGS)
+ AC_SUBST(SALCK_LIBS)
+ AC_SUBST(SELINUX_LIBS)
++AC_SUBST(SELINUX_STATIC_LIBS)
+ AC_SUBST(SELINUX_PC)
+ AC_SUBST(SNAPSHOTS)
+ AC_SUBST(STATICDIR)
+@@ -1540,6 +1553,7 @@
+ AC_SUBST(THIN)
+ AC_SUBST(THIN_CHECK_CMD)
+ AC_SUBST(UDEV_LIBS)
++AC_SUBST(UDEV_STATIC_LIBS)
+ AC_SUBST(UDEV_PC)
+ AC_SUBST(UDEV_RULES)
+ AC_SUBST(UDEV_SYNC)
+diff -Naur LVM2.2.02.97/make.tmpl.in LVM2.2.02.97.new/make.tmpl.in
+--- LVM2.2.02.97/make.tmpl.in	2013-07-31 20:14:50.988498543 -0400
++++ LVM2.2.02.97.new/make.tmpl.in	2013-07-31 20:49:32.291536533 -0400
+@@ -31,7 +31,7 @@
+ 
+ LIBS = @LIBS@
+ # Extra libraries always linked with static binaries
+-STATIC_LIBS = $(SELINUX_LIBS) $(UDEV_STATIC_LIBS)
++STATIC_LIBS = $(SELINUX_STATIC_LIBS) $(UDEV_STATIC_LIBS)
+ DEFS += @DEFS@
+ CFLAGS += @CFLAGS@
+ CLDFLAGS += @CLDFLAGS@
+@@ -45,6 +45,7 @@
+ PTHREAD_LIBS = @PTHREAD_LIBS@
+ READLINE_LIBS = @READLINE_LIBS@
+ SELINUX_LIBS = @SELINUX_LIBS@
++SELINUX_STATIC_LIBS = @SELINUX_STATIC_LIBS@
+ UDEV_LIBS = @UDEV_LIBS@
+ UDEV_STATIC_LIBS = @UDEV_STATIC_LIBS@
+ TESTING = @TESTING@

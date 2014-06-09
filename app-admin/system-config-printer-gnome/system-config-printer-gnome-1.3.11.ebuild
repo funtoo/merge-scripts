@@ -46,6 +46,11 @@ done
 
 S="${WORKDIR}/${MY_P}"
 
+# Bug 471472, http://bugs.funtoo.org/browse/FL-1118
+MAKEOPTS+=" -j1"
+
+
+
 pkg_setup() {
 	python_set_active_version 2
 }

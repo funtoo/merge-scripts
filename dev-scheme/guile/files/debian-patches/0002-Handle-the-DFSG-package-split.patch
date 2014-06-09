@@ -1,0 +1,51 @@
+From 1309cbe9a907c22250bf4215937810ddf3040154 Mon Sep 17 00:00:00 2001
+From: Rob Browning <rlb@defaultvalue.org>
+Date: Sat, 23 Apr 2011 14:57:48 -0500
+Subject: Handle the DFSG package split.
+
+---
+ configure.in    | 2 --
+ doc/Makefile.am | 9 +--------
+ 2 files changed, 1 insertion(+), 10 deletions(-)
+
+diff --git a/configure.in b/configure.in
+index 217ac83..9f23a4a 100644
+--- a/configure.in
++++ b/configure.in
+@@ -1559,9 +1559,7 @@ AC_CONFIG_FILES([
+   am/Makefile
+   benchmark-suite/Makefile
+   doc/Makefile
+-  doc/goops/Makefile
+   doc/r5rs/Makefile
+-  doc/ref/Makefile
+   doc/tutorial/Makefile
+   emacs/Makefile
+   examples/Makefile
+diff --git a/doc/Makefile.am b/doc/Makefile.am
+index 4581a72..b70d55d 100644
+--- a/doc/Makefile.am
++++ b/doc/Makefile.am
+@@ -21,21 +21,14 @@
+ 
+ AUTOMAKE_OPTIONS = gnu
+ 
+-SUBDIRS = ref tutorial goops r5rs
++SUBDIRS = tutorial r5rs
+ 
+ dist_man1_MANS = guile.1
+ 
+-EXAMPLE_SMOB_FILES = \
+-    ChangeLog-2008 Makefile README image-type.c image-type.h myguile.c
+-
+ OLDFMT = oldfmt.c
+ 
+ dist-hook:
+ 	cp $(srcdir)/$(OLDFMT) $(distdir)/
+-	mkdir $(distdir)/example-smob
+-	for f in $(EXAMPLE_SMOB_FILES); do \
+-	  cp $(srcdir)/example-smob/$$f $(distdir)/example-smob/; \
+-        done
+ 
+ EXTRA_DIST = groupings.alist ChangeLog-2008 # guile-api.alist
+ 

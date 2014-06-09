@@ -1,3 +1,5 @@
+dev-libs/libxml2 -icu
+dev-qt/qtwebkit -icu
 app-text/poppler qt4
 dev-python/PyQt4 declarative script sql svg webkit
 kde-base/kdelibs opengl

@@ -1,0 +1,21 @@
+diff -urN linux-debian-sources-3.10.11/debian/config/config linux-debian-sources-3.10.11-fixed/debian/config/config
+--- linux-debian-sources-3.10.11/debian/config/config	2013-08-17 13:57:25.000000000 -0600
++++ linux-debian-sources-3.10.11-fixed/debian/config/config	2013-12-10 15:58:46.512296124 -0700
+@@ -4183,7 +4183,7 @@
+ ##
+ ## file: fs/xfs/Kconfig
+ ##
+-CONFIG_XFS_FS=m
++CONFIG_XFS_FS=y
+ CONFIG_XFS_QUOTA=y
+ CONFIG_XFS_POSIX_ACL=y
+ CONFIG_XFS_RT=y
+@@ -4360,7 +4360,7 @@
+ CONFIG_CRC_ITU_T=m
+ CONFIG_CRC32=y
+ CONFIG_CRC7=m
+-CONFIG_LIBCRC32C=m
++CONFIG_LIBCRC32C=y
+ 
+ ##
+ ## file: lib/Kconfig.debug

@@ -1,0 +1,15 @@
+Increase max entries from 1024 to 8192 until 
+http://sourceforge.net/tracker/index.php?func=detail&aid=1515453&group_id=8874&atid=108874
+fix is backported to 2.4 branch.
+This fixes http://bugs.gentoo.org/show_bug.cgi?id=291049
+--- a/libgphoto2/gphoto2-list.c
++++ b/libgphoto2/gphoto2-list.c
+@@ -72,7 +72,7 @@
+ 
+ #ifdef CAMERALIST_STRUCT_COMPATIBILITY
+ 
+-#define MAX_ENTRIES 1024
++#define MAX_ENTRIES 8192
+ #define MAX_LIST_STRING_LENGTH 128
+ struct _CameraList {
+ 	int  count;
