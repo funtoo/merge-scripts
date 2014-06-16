@@ -21,7 +21,7 @@
 
 # FL-1174 - this is an experimental, slotted lua, so putting in cautionary.
 # Daniel Robbins, (22 Mar 2014)
-=dev-lang/lua-5.1.5-r9
+=dev-lang/lua-5.1.5-r1
 
 # Non bug commit. New gentoo-functions ebuild pulled into update list because of newer python-updater.
 # gentoo-funtions ebuild is a replacement of base shell functions, provided by OpenRC's /etc/init.d/functions.sh

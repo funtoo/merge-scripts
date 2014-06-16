@@ -1,8 +1,6 @@
-# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-lang/lua/lua-5.1.5.ebuild,v 1.16 2013/03/10 16:23:50 ago Exp $
 
-EAPI=4
+EAPI=5
 
 inherit eutils multilib portability toolchain-funcs versionator
 
@@ -11,19 +9,18 @@ HOMEPAGE="http://www.lua.org/"
 SRC_URI="http://www.lua.org/ftp/${P}.tar.gz"
 
 LICENSE="MIT"
-SLOT="0"
-KEYWORDS="alpha amd64 arm hppa ia64 ~mips ppc ppc64 s390 sh sparc x86 ~amd64-fbsd ~x86-fbsd ~arm-linux ~x86-linux"
+SLOT="5.1"
+KEYWORDS="*"
 IUSE="+deprecated emacs readline static"
 
 RDEPEND="readline? ( sys-libs/readline )"
-DEPEND="${RDEPEND}
-	sys-devel/libtool"
+DEPEND="${RDEPEND} sys-devel/libtool"
 PDEPEND="emacs? ( app-emacs/lua-mode )"
 
 src_prepare() {
 	local PATCH_PV=$(get_version_component_range 1-2)
 
-	epatch "${FILESDIR}"/${PN}-${PATCH_PV}-make-r1.patch
+	epatch "${FILESDIR}"/${PN}-${PATCH_PV}-make-r2.patch
 	epatch "${FILESDIR}"/${PN}-${PATCH_PV}-module_paths.patch
 
 	#EPATCH_SOURCE="${FILESDIR}/${PV}" EPATCH_SUFFIX="upstream.patch" epatch
@@ -89,17 +86,23 @@ src_compile() {
 
 src_install() {
 	emake INSTALL_TOP="${ED}/usr" INSTALL_LIB="${ED}/usr/$(get_libdir)" \
-			V=${PV} gentoo_install \
+			V=${SLOT} gentoo_install \
 	|| die "emake install gentoo_install failed"
-	cp -a ${ED}/usr/$(get_libdir)/liblua.so ${ED}/usr/$(get_libdir)/liblua.so.${PV:0:3} || die
+
 	dodoc HISTORY README
 	dohtml doc/*.html doc/*.png doc/*.css doc/*.gif
 
 	doicon etc/lua.ico
 	insinto /usr/$(get_libdir)/pkgconfig
-	doins etc/lua.pc
-
-	doman doc/lua.1 doc/luac.1
+	newins ${FILESDIR}/lua.pc-${PV} lua-5.1.pc
+	# libtool does not do what we want -- we want liblua.so.5.1 not liblua.so.5 (due to upstream lua ABI stuff):
+	mv ${ED}/usr/$(get_libdir)/liblua.so.${SLOT%%.*} ${ED}/usr/$(get_libdir)/liblua.so.${SLOT} || die
+	if [ -e "${ED}/usr/$(get_libdir)/liblua.a" ]; then
+		mv ${ED}/usr/$(get_libdir)/liblua.a ${ED}/usr/$(get_libdir)/liblua-5.1.a || die
+	fi
+	rm ${ED}/usr/$(get_libdir)/liblua.so || die
+	newman doc/lua.1 lua-5.1.1
+	newman doc/luac.1 luac-5.1.1
 }
 
 src_test() {
