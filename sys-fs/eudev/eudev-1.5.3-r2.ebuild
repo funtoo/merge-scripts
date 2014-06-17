@@ -49,12 +49,11 @@ RDEPEND="${COMMON_DEPEND}
 	!sys-apps/coldplug
 	!sys-apps/systemd
 	!<sys-fs/lvm2-2.02.97
-	!sys-fs/device-mapper
-	!<sys-fs/udev-init-scripts-18"
+	!sys-fs/device-mapper"
 
 PDEPEND="hwdb? ( >=sys-apps/hwids-20130717-r1[udev] )
 	keymap? ( >=sys-apps/hwids-20130717-r1[udev] )
-	openrc? ( >=sys-fs/udev-init-scripts-27 )"
+	openrc? ( >=sys-fs/udev-init-scripts-27-r1 )"
 
 REQUIRED_USE="keymap? ( hwdb )"
 
@@ -202,7 +201,6 @@ multilib_src_install_all()
 	prune_libtool_files --all
 	rm -rf "${ED}"/usr/share/doc/${PF}/LICENSE.*
 
-	use rule-generator && use openrc && doinitd "${FILESDIR}"/udev-postmount
 	# drop distributed hwdb files, they override sys-apps/hwids
 	rm -f "${ED}"/etc/udev/hwdb.d/*.hwdb
 
