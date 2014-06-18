@@ -16,6 +16,7 @@ bar_overlay = Tree("bar-overlay", "master", "git://github.com/adessemond/bar-ove
 bliss_overlay = Tree("bliss-overlay", "master", "https://github.com/fearedbliss/bliss-overlay.git", pull=True)
 squeezebox_overlay = Tree("squeezebox", "master", "git://git.overlays.gentoo.org/user/squeezebox.git", pull=True)
 progress_overlay = SvnTree("progress", "https://gentoo-progress.googlecode.com/svn/overlays/progress")
+plex_overlay = Tree("funtoo-plex", "master", "https://github.com/Ghent/funtoo-plex/funtoo-plex.git", pull=True)
 sabayon_for_gentoo = Tree("sabayon-for-gentoo", "master", "git://github.com/Sabayon/for-gentoo.git", pull=True)
 funtoo_gnome_overlay = Tree("funtoo-gnome", "master", "repos@git.funtoo.org:funtoo-gnome-overlay.git", pull=True)
 mysql_overlay = Tree("funtoo-mysql", "master", "repos@git.funtoo.org:funtoo-mysql.git", pull=True)
@@ -50,6 +51,8 @@ steps = [
 	InsertEbuilds(foo_overlay, select="all", skip=["sys-fs/mdev-bb", "sys-fs/mdev-like-a-boss", "media-video/handbrake"], replace=["app-shells/rssh","net-misc/unison"]),
 	InsertEbuilds(bar_overlay, select="all", skip=["app-emulation/qemu"], replace=False),
         InsertEbuilds(bliss_overlay, select="all", skip=None, replace=False),
+        InsertEbuilds(plex_overlay, select = [ "media-tv/plex-media-server" ], skip=None, replace=True),
+        SyncDir(plex_overlay.root,"licenses"),
 	InsertEbuilds(squeezebox_overlay, select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=None, replace=True, merge=True),
 	SyncFiles(funtoo_gnome_overlay.root, {
