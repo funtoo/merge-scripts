@@ -1,3 +1,7 @@
+# FL-1286, disable gstream USE flag for tumbler, with both ffmpeg and gstreamer flags enabled tumbler suffers from memory leaks, freezes.
+# Using ffmpeg only reported making tumbler to work much better
+xfce-extra/tumbler -gstreamer 
+ 
 # FL-1131, qemu, set usb and usbredir USE flag enabled by default
 app-emulation/qemu usb usbredir
 
