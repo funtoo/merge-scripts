@@ -20,6 +20,7 @@ plex_overlay = Tree("funtoo-plex", "master", "https://github.com/Ghent/funtoo-pl
 sabayon_for_gentoo = Tree("sabayon-for-gentoo", "master", "git://github.com/Sabayon/for-gentoo.git", pull=True)
 funtoo_gnome_overlay = Tree("funtoo-gnome", "master", "repos@git.funtoo.org:funtoo-gnome-overlay.git", pull=True)
 mysql_overlay = Tree("funtoo-mysql", "master", "repos@git.funtoo.org:funtoo-mysql.git", pull=True)
+ldap_overlay = Tree("funtoo-ldap", "master", "repos@git.funtoo.org:funtoo-ldap-overlay.git", pull=True)
 
 steps = [
 	SyncTree(gentoo_src, exclude=["/metadata/cache/**", "ChangeLog", "dev-util/metro"]),
@@ -48,6 +49,7 @@ steps = [
 	}),
 	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
         InsertEbuilds(mysql_overlay, select="all", skip=None, replace=True),
+        InsertEbuilds(ldap_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(foo_overlay, select="all", skip=["sys-fs/mdev-bb", "sys-fs/mdev-like-a-boss", "media-video/handbrake"], replace=["app-shells/rssh","net-misc/unison"]),
 	InsertEbuilds(bar_overlay, select="all", skip=["app-emulation/qemu"], replace=False),
         InsertEbuilds(bliss_overlay, select="all", skip=None, replace=False),
