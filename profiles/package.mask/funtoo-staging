@@ -3,8 +3,7 @@
 
 # Daniel Robbins (15 June 2014)
 # masked for testing
-=www-servers/nginx-1.7.1*
-
+>=www-servers/nginx-1.7.1
 
 # Oleg Vinichenko (2 June 2014), add beta and unstable versions of google-chrome as requested in FL-1258 and FL-1254
 # ebuilds are masked
