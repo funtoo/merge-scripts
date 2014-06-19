@@ -37,9 +37,6 @@
 #  mask newer version of cryptsetup, breakage expected
 >sys-fs/cryptsetup-1.6.3
 
-#  cautionary mask libvoribs due to ogg breakage
->media-libs/libvorbis-1.3.3
-
 #  Cautionary mask latest bash and readline, until it's time to update
 >=app-shells/bash-4.3
 >=sys-libs/readline-6.3
