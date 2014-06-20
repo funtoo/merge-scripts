@@ -70,10 +70,6 @@
 # Ref FL-454 and b.g.o # 477798
 app-benchmarks/phoronix-test-suite
 
-# Ryan Harris (21 Jul 2013)
-# Mask consolekit >=0.4.6 as it depends on >=udev-200
->=sys-auth/consolekit-0.4.6
-
 # Ryan Harris (30 Jun 2013)
 # Mask app-emulation/xen-tools-4.2.2-r1
 # depends on sys-app/texinfo-5
