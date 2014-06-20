@@ -29,11 +29,6 @@
 # latest python-updater to avoid mess.
 >app-admin/python-updater-0.11
 
-# Oleg Vinichenko (15 March)
-# maks latest sys-devel/flex, due to several problems
-# FL-1165; http://comments.gmane.org/gmane.linux.lfs.devel/14740 https://bugs.gentoo.org/show_bug.cgi?id=503522
->sys-devel/flex-2.5.37
-
 #  mask newer version of cryptsetup, breakage expected
 >sys-fs/cryptsetup-1.6.3
 
