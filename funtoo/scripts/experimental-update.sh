@@ -1,5 +1,4 @@
 #!/bin/bash
-eval `keychain --noask --eval id_dsa`  || exit 1
 cd /root/funtoo-overlay
 # get latest merge.py and friends
 git pull || exit 1
