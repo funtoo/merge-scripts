@@ -11,7 +11,7 @@ LICENSE=""
 SLOT="0"
 KEYWORDS="*"
 # These default enabled IUSE flags should follow defaults of sys-fs/udev.
-IUSE="+gudev introspection +static-libs"
+IUSE="+gudev +hwdb introspection +static-libs"
 
 DEPEND=""
 RDEPEND="virtual/libudev:0/1[${MULTILIB_USEDEP},static-libs?]
