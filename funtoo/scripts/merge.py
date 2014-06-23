@@ -58,7 +58,8 @@ steps = [
 	InsertEbuilds(squeezebox_overlay, select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=None, replace=True, merge=True),
 	SyncFiles(funtoo_gnome_overlay.root, {
-		"profiles/package.mask/funtoo-gnome3.8":"profiles/funtoo/1.0/linux-gnu/mix-ins/gnome/package.mask/01-gnome"
+		"profiles/package.mask/funtoo-gnome3.6":"profiles/funtoo/1.0/linux-gnu/mix-ins/gnome/package.mask/01-gnome",
+		"profiles/package.unmask/funtoo-gnome3.6":"profiles/funtoo/1.0/linux-gnu/mix-ins/gnome/package.unmask/01-gnome",
 	}),
         SyncFiles(mysql_overlay.root, {
                 "profiles/package.mask":"profiles/package.mask/mysql",

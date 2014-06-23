@@ -30,7 +30,7 @@ REQUIRED_USE="
 COMMON_DEPEND="
 	dev-libs/libdaemon
 	dev-libs/expat
-	>=dev-libs/glib-2.38.2-r1:2[${MULTILIB_USEDEP}]
+	dev-libs/glib:2[${MULTILIB_USEDEP}]
 	gdbm? ( >=sys-libs/gdbm-1.10-r1[${MULTILIB_USEDEP}] )
 	qt4? ( dev-qt/qtcore:4 )
 	gtk? ( x11-libs/gtk+:2 )
