@@ -21,8 +21,8 @@ DEPEND_COMMON="clvm? ( cman? ( =sys-cluster/cman-3* ) =sys-cluster/libdlm-3* )
 # This version of LVM is incompatible with cryptsetup <1.1.2.
 RDEPEND="${DEPEND_COMMON}
 	>=sys-apps/baselayout-2.2
-	!<sys-apps/openrc-0.11
-	!<sys-fs/cryptsetup-1.1.2
+	>sys-apps/openrc-0.11
+	>sys-fs/cryptsetup-1.1.2
 	!!sys-fs/clvm
 	!!sys-fs/lvm-user
 	>=sys-apps/util-linux-2.16
