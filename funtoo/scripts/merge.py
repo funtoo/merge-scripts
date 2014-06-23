@@ -32,7 +32,7 @@ steps = [
 	MergeUpdates(funtoo_overlay.root),
 	ProfileDepFix(),
 	SyncDir(funtoo_overlay.root,"licenses"),
-	##SyncDir(funtoo_overlay.root,"eclass"),
+	SyncDir(funtoo_gnome_overlay.root,"eclass"),
 	SyncDir(funtoo_overlay.root,"metadata"),
 	SyncFiles(gentoo_src.root, {
 		"profiles/package.mask":"profiles/package.mask/00-gentoo",
