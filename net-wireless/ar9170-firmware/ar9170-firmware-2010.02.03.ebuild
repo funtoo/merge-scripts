@@ -1,6 +1,4 @@
-# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
 
 EAPI=2
 
@@ -15,11 +13,11 @@ SRC_URI="https://api.opensuse.org/public/source/driver:wireless/ar9170-firmware/
 
 LICENSE="atheros-firmware"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="*"
 IUSE=""
 
 DEPEND=""
-RDEPEND="|| ( sys-fs/udev
+RDEPEND="|| ( virtual/udev
 		sys-apps/hotplug )"
 
 src_install() {
