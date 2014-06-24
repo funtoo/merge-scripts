@@ -1,6 +1,6 @@
 #!/usr/bin/python2
 
-import os,sys,types
+import os,sys
 import argparse
 import subprocess
 import shutil
@@ -25,17 +25,12 @@ def headSHA1(tree):
 			head = infile.readline().split()[0]
 	return head
 
-def get_status_output(*args, **kwargs):
-	p = subprocess.Popen(*args, **kwargs)
-	stdout, stderr = p.communicate()
-	return p.returncode, stdout, stderr
-
 def runShell(string,abortOnFail=True):
 	if debug:
 		print(string)
 	else:
 		print("running: %s" % string)
-		out = getstatusoutput(string)
+		out = subprocess.getstatusoutput(string)
 		if out[0] != 0:
 			print("Error executing '%s'" % string)
 			print()
@@ -388,10 +383,10 @@ class InsertEbuilds(MergeStep):
 				if not os.path.isdir(pkgdir):
 					# not a valid package dir in source overlay, so skip it
 					continue
-				if type(self.select) == types.ListType and catpkg not in self.select:
+				if type(self.select) == list and catpkg not in self.select:
 					# we have a list of pkgs to merge, and this isn't on the list, so skip:
 					continue
-				if type(self.skip) == types.ListType and catpkg in self.skip:
+				if type(self.skip) == list and catpkg in self.skip:
 					# we have a list of pkgs to skip, and this catpkg is on the list, so skip:
 					continue
 				dest_cat_set.add(cat)
@@ -399,7 +394,7 @@ class InsertEbuilds(MergeStep):
 				tpkgdir = os.path.join(tcatdir,pkg)
 				copy = False
 				copied = False
-				if self.replace == True or (type(self.replace) == types.ListType and "%s/%s" % (cat,pkg) in self.replace):
+				if self.replace == True or (type(self.replace) == list and "%s/%s" % (cat,pkg) in self.replace):
 					if not os.path.exists(tcatdir):
 						os.makedirs(tcatdir)
 					if self.merge is True or (isinstance(self.merge, list) and "%s/%s" % (cat,pkg) in self.merge and os.path.isdir(tpkgdir)):
@@ -445,17 +440,18 @@ class InsertEbuilds(MergeStep):
 					# log here.
 					cpv = "/".join(tpkgdir.split("/")[-2:])
 					mergeLog.write("%s\n" % cpv)
-					catxml = xml_out.find("/packages/category[@name='%s']" % cat)
+                                        # Record source tree of each copied catpkg to XML for later importing...
+					catxml = desttree.xml_out.find("packages/category[@name='%s']" % cat)
 					if catxml == None:
 					    catxml = etree.Element("category", name=cat)
-					    xml_out.append(catxml)
-					pkgxml = xml_out.find("/packages/category[@name='%s']/package/[@name='%s']" % ( cat ,pkg ))
+					    desttree.xml_out.append(catxml)
+					pkgxml = desttree.xml_out.find("packages/category[@name='%s']/package/[@name='%s']" % ( cat ,pkg ))
 					if pkgxml == None:
-					    pkgxml = etree.Element("package", name=pkg, repository=self.name)
+					    pkgxml = etree.Element("package", name=pkg, repository=self.srctree.name)
 					    catxml.append(pkgxml)
 					else:
 					    # here, we are replacing an ebuild that was already copied
-					    pkgxml["repository"] = self.name 
+					    pkgxml["repository"] = self.srctree.name 
 
 
 		with open(dest_cat_path, "w") as f:

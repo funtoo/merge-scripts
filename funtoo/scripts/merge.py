@@ -108,6 +108,9 @@ for d in dest:
 	prod.run()
 	prod.gitCommit(message="glorious funtoo updates",push=push)
 
-a=open("/home/repos/public_html/packages.xml","rb")
+if experimental:
+    a=open("/home/ports/public_html/experimental-packages.xml","wb")
+else:
+    a=open("/home/ports/public_html/packages.xml","wb")
 etree.ElementTree(xml_out).write(a, encoding='utf-8', xml_declaration=True, pretty_print=True)
 a.close()
