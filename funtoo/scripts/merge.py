@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python3
 
 from merge_utils import *
 
@@ -83,8 +83,8 @@ steps = [
 ]
 
 # work tree is a non-git tree in tmpfs for enhanced performance - we do all the heavy lifting there:
-
-work = UnifiedTree("/var/work/merge-%s" % os.path.basename(dest[0]),steps)
+xml_out = etree.Element("packages")
+work = UnifiedTree("/var/work/merge-%s" % os.path.basename(dest[0]),steps, xml_out=xml_out)
 work.run()
 
 steps = [
@@ -107,3 +107,7 @@ for d in dest:
 	prod = UnifiedTree(d,steps)
 	prod.run()
 	prod.gitCommit(message="glorious funtoo updates",push=push)
+
+a=open("/home/repos/public_html/packages.xml","rb")
+etree.ElementTree(xml_out).write(a, encoding='utf-8', xml_declaration=True, pretty_print=True)
+a.close()

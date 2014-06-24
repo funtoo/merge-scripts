@@ -2,9 +2,10 @@
 
 import os,sys,types
 import argparse
-import commands
+import subprocess
 import shutil
 import glob
+from lxml import etree
 
 debug = False
 
@@ -24,17 +25,22 @@ def headSHA1(tree):
 			head = infile.readline().split()[0]
 	return head
 
+def get_status_output(*args, **kwargs):
+	p = subprocess.Popen(*args, **kwargs)
+	stdout, stderr = p.communicate()
+	return p.returncode, stdout, stderr
+
 def runShell(string,abortOnFail=True):
 	if debug:
-		print string
+		print(string)
 	else:
-		print "running: %s" % string
-		out = commands.getstatusoutput(string)
+		print("running: %s" % string)
+		out = getstatusoutput(string)
 		if out[0] != 0:
-			print "Error executing '%s'" % string
-			print
-			print "output:"
-			print out[1]
+			print("Error executing '%s'" % string)
+			print()
+			print("output:")
+			print(out[1])
 			if abortOnFail:
 				sys.exit(1)
 
@@ -237,14 +243,14 @@ class DeadTree(Tree):
 		return "None"
 
 class RsyncTree(Tree):
-        def __init__(self,name,url="rsync://rsync.us.gentoo.org/gentoo-portage/"):
-                self.name = name
-                self.url = url 
-                base = "/var/rsync/source-trees"
-                self.root = "%s/%s" % (base, self.name)
-                if not os.path.exists(base):
-                    os.makedirs(base)
-                runShell("rsync --recursive --delete-excluded --links --safe-links --perms --times --compress --force --whole-file --delete --timeout=180 --exclude=/.git --exclude=/metadata/cache/ --exclude=/metadata/glsa/glsa-200*.xml --exclude=/metadata/glsa/glsa-2010*.xml --exclude=/metadata/glsa/glsa-2011*.xml --exclude=/metadata/md5-cache/  --exclude=/distfiles --exclude=/local --exclude=/packages %s %s/" % (self.url, self.root))
+	def __init__(self,name,url="rsync://rsync.us.gentoo.org/gentoo-portage/"):
+		self.name = name
+		self.url = url 
+		base = "/var/rsync/source-trees"
+		self.root = "%s/%s" % (base, self.name)
+		if not os.path.exists(base):
+		    os.makedirs(base)
+		runShell("rsync --recursive --delete-excluded --links --safe-links --perms --times --compress --force --whole-file --delete --timeout=180 --exclude=/.git --exclude=/metadata/cache/ --exclude=/metadata/glsa/glsa-200*.xml --exclude=/metadata/glsa/glsa-2010*.xml --exclude=/metadata/glsa/glsa-2011*.xml --exclude=/metadata/md5-cache/  --exclude=/distfiles --exclude=/local --exclude=/packages %s %s/" % (self.url, self.root))
 
 class SvnTree(object):
 	def __init__(self, name, url=None, trylocal=None):
@@ -285,11 +291,12 @@ class CvsTree(object):
 			runShell("(cd %s; cvs -d %s co %s)" % (base, self.url, path))
 
 class UnifiedTree(Tree):
-	def __init__(self,root,steps):
+	def __init__(self,root,steps,xml_out=None):
 		self.steps = steps
 		self.root = root
 		self.name = None
 		self.merged = []
+		self.xml_out = xml_out
 
 	def run(self):
 		for step in self.steps:
@@ -306,11 +313,11 @@ class UnifiedTree(Tree):
 				cmd += "  %s: %s\n" % ( name, sha1 )
 		cmd += "EOF\n"
 		cmd += ")\n"
-		print "running: %s" % cmd
+		print("running: %s" % cmd)
 		# we use os.system because this multi-line command breaks runShell() - really, breaks commands.getstatusoutput().
 		retval = os.system(cmd)
 		if retval != 0:
-			print "Commit failed."
+			print("Commit failed.")
 			sys.exit(1)
 		if push != False:
 			runShell("(cd %s; git push %s)" % ( self.root, push ))
@@ -368,7 +375,7 @@ class InsertEbuilds(MergeStep):
 			dest_cat_set = set(f.read().splitlines())
 
 		# Our main loop:
-		print "# Merging in ebuilds from %s" % self.srctree.root
+		print( "# Merging in ebuilds from %s" % self.srctree.root )
 		for cat in src_cat_set:
 			catdir = os.path.join(self.srctree.root,cat)
 			if not os.path.isdir(catdir):
@@ -438,6 +445,18 @@ class InsertEbuilds(MergeStep):
 					# log here.
 					cpv = "/".join(tpkgdir.split("/")[-2:])
 					mergeLog.write("%s\n" % cpv)
+					catxml = xml_out.find("/packages/category[@name='%s']" % cat)
+					if catxml == None:
+					    catxml = etree.Element("category", name=cat)
+					    xml_out.append(catxml)
+					pkgxml = xml_out.find("/packages/category[@name='%s']/package/[@name='%s']" % ( cat ,pkg ))
+					if pkgxml == None:
+					    pkgxml = etree.Element("package", name=pkg, repository=self.name)
+					    catxml.append(pkgxml)
+					else:
+					    # here, we are replacing an ebuild that was already copied
+					    pkgxml["repository"] = self.name 
+
 
 		with open(dest_cat_path, "w") as f:
 			f.write("\n".join(sorted(dest_cat_set)))
