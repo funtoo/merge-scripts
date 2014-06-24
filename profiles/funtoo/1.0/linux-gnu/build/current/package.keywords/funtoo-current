@@ -1,0 +1,4 @@
+# Jean-Francis Roy (June 24, 2014)
+# Keyword app-admin/lib_users, reported to be working fine on ARM.
+# FL-1303
+app-admin/lib_users ~arm
