@@ -31,7 +31,7 @@ SRC_URI="
 
 LICENSE="Oracle-BCLA-JavaSE"
 SLOT="1.7"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="amd64 x86"
 IUSE="X alsa fontconfig jce nsplugin pax_kernel"
 
 RESTRICT="strip"

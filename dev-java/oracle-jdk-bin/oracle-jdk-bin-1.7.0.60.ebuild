@@ -38,7 +38,7 @@ SRC_URI="
 
 LICENSE="Oracle-BCLA-JavaSE examples? ( BSD )"
 SLOT="1.7"
-KEYWORDS="~amd64 ~x86 ~arm"
+KEYWORDS="amd64 x86 arm"
 IUSE="+X alsa aqua derby doc examples +fontconfig jce nsplugin pax_kernel source"
 
 RESTRICT="strip"
