@@ -19,9 +19,10 @@ AT_arm_sflt="jdk-${MY_PV}-linux-arm-vfp-sflt.tar.gz"
 
 FXDEMOS_linux="javafx_samples-${FX_VERSION}-linux.zip"
 
-DEMOS_x86="${FXDEMOS_linux} jdk-${MY_PV}-linux-i586-demos.tar.gz"
-DEMOS_amd64="${FXDEMOS_linux} jdk-${MY_PV}-linux-x64-demos.tar.gz"
-DEMOS_arm="${FXDEMOS_linux} jdk-${MY_PV}-linux-arm-vfp-sflt-demos.tar.gz jdk-${MY_PV}-linux-arm-vfp-hflt-demos.tar.gz"
+DEMOS_x86="jdk-${MY_PV}-linux-i586-demos.tar.gz"
+DEMOS_amd64="jdk-${MY_PV}-linux-x64-demos.tar.gz"
+DEMOS_arm_hflt="jdk-${MY_PV}-linux-arm-vfp-hflt-demos.tar.gz"
+DEMOS_arm_sflt="jdk-${MY_PV}-linux-arm-vfp-sflt-demos.tar.gz"
 
 JCE_DIR="UnlimitedJCEPolicy"
 JCE_FILE="${JCE_DIR}JDK7.zip"
@@ -30,13 +31,14 @@ DESCRIPTION="Oracle's Java SE Development Kit"
 HOMEPAGE="http://www.oracle.com/technetwork/java/javase/"
 MIR_URI="http://www.funtoo.org/distfiles/oracle-java"
 SRC_URI=" 
-	amd64? ( ${MIR_URI}/${AT_amd64} examples? ( ${FXDEMOS} ${MIR_URI}/${DEMOS_amd64} ) )
-	x86? ( ${MIR_URI}/${AT_x86} examples? ( ${FXDEMOS} ${MIR_URI}/${DEMOS_x86} ) )
+	amd64? ( ${MIR_URI}/${AT_amd64} examples? ( ${MIR_URI}/${FXDEMOS_linux} ${MIR_URI}/${DEMOS_amd64} ) )
+	x86? ( ${MIR_URI}/${AT_x86} examples? ( ${MIR_URI}/${FXDEMOS_linux} ${MIR_URI}/${DEMOS_x86} ) )
+	arm? ( ${MIR_URI}/${AT_arm_sflt} ${MIR_URI}/${AT_arm_sflt} examples? ( ${MIR_URI}/${FXDEMOS_linux} ${MIR_URI}/${DEMOS_arm_sflt} ${MIR_URI}/${DEMOS_arm_hflt} ) )
 	jce? ( ${MIR_URI}/${JCE_FILE} )"
 
 LICENSE="Oracle-BCLA-JavaSE examples? ( BSD )"
 SLOT="1.7"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64 x86 arm"
 IUSE="+X alsa aqua derby doc examples +fontconfig jce nsplugin pax_kernel source"
 
 RESTRICT="strip"
@@ -85,6 +87,23 @@ check_tarballs_available() {
 		einfo "at '${uri}'"
 		einfo "and move them to '${DISTDIR}'"
 		einfo
+	fi
+}
+
+src_unpack() {
+	# Special case for ARM soft VS hard float.
+	if use arm ; then
+		if [[ ${CHOST} == *-hardfloat-* ]] ; then
+			unpack jdk-${MY_PV}-linux-arm-vfp-hflt.tar.gz
+			use examples && unpack jdk-${MY_PV}-linux-arm-vfp-hflt-demos.tar.gz
+		else
+			unpack jdk-${MY_PV}-linux-arm-vfp-sflt.tar.gz
+			use examples && unpack jdk-${MY_PV}-linux-arm-vfp-sflt-demos.tar.gz
+		fi
+		use examples && unpack javafx_samples-${FX_VERSION}-linux.zip
+		use jce && unpack ${JCE_FILE}
+	else
+		default
 	fi
 }
 
@@ -176,7 +195,7 @@ src_install() {
 		cp src.zip "${ddest}" || die
 	fi
 
-	if use !x86-macos && use !x64-macos ; then
+	if use !arm && use !x86-macos && use !x64-macos ; then
 		# Install desktop file for the Java Control Panel.
 		# Using ${PN}-${SLOT} to prevent file collision with jre and or
 		# other slots.  make_desktop_entry can't be used as ${P} would

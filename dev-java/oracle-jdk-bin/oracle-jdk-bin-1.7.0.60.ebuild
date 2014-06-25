@@ -7,7 +7,7 @@ inherit eutils java-vm-2 prefix versionator
 JDK_URI="http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html"
 JCE_URI="http://www.oracle.com/technetwork/java/javase/downloads/jce-7-download-432124.html"
 
-FX_VERSION="2_2_55"
+FX_VERSION="2_2_60"
 
 MY_PV="$(get_version_component_range 2)u$(get_version_component_range 4)"
 S_PV="$(replace_version_separator 3 '_')"
@@ -33,11 +33,12 @@ MIR_URI="http://www.funtoo.org/distfiles/oracle-java"
 SRC_URI=" 
 	amd64? ( ${MIR_URI}/${AT_amd64} examples? ( ${MIR_URI}/${FXDEMOS_linux} ${MIR_URI}/${DEMOS_amd64} ) )
 	x86? ( ${MIR_URI}/${AT_x86} examples? ( ${MIR_URI}/${FXDEMOS_linux} ${MIR_URI}/${DEMOS_x86} ) )
+	arm? ( ${MIR_URI}/${AT_arm_sflt} ${MIR_URI}/${AT_arm_sflt} examples? ( ${MIR_URI}/${FXDEMOS_linux} ${MIR_URI}/${DEMOS_arm_sflt} ${MIR_URI}/${DEMOS_arm_hflt} ) )
 	jce? ( ${MIR_URI}/${JCE_FILE} )"
 
 LICENSE="Oracle-BCLA-JavaSE examples? ( BSD )"
 SLOT="1.7"
-KEYWORDS="amd64 x86"
+KEYWORDS="~amd64 ~x86 ~arm"
 IUSE="+X alsa aqua derby doc examples +fontconfig jce nsplugin pax_kernel source"
 
 RESTRICT="strip"
