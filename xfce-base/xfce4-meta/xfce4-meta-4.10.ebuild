@@ -20,8 +20,10 @@ RDEPEND=">=x11-themes/gtk-engines-xfce-3:0
 	>=xfce-base/xfdesktop-4.10
 	>=xfce-base/xfwm4-4.10
 	>=xfce-base/thunar-1.6.3
+	>=xfce-extra/thunar-volman-0.8.0
 	>=x11-terms/xfce4-terminal-0.6.3
 	xfce-extra/xfce4-mixer
+	xfce-extra/xfburn
 	!minimal? (
 		media-fonts/dejavu
 		virtual/freedesktop-icon-theme
