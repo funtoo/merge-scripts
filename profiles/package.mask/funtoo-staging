@@ -1,9 +1,5 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
-# Oleg Vinichenko (23 June 2014)
-# update fcron-3.1.3, with various fixes, fix to fcrondyn segfault, ebuild masked for testing to avoid breaking (if any)
-# production systems.
->=sys-process/fcron-3.1.3 
 
 # Daniel Robbins (15 June 2014)
 # masked for testing
