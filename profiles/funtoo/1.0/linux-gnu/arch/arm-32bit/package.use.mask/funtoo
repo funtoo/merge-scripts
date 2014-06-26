@@ -1,0 +1,4 @@
+# Jean-Francis Roy <jeanfrancis@funtoo.org> (26 June 2014)
+# oracle-jdk-bin nsplugin is not available for ARM
+dev-java/oracle-jdk-bin nsplugin
+
