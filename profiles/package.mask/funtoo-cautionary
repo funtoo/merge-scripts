@@ -1,3 +1,7 @@
+# Oleg Vinichenko (26 June 2014) mask latest versions of libnl, sitck with stable version only:
+# FL-1310
+>dev-libs/libnl-3.2.23
+
 # Oleg Vinichenko (10 June 2014)
 # mask back python-3.4, this one not really fine to have installed. Also it become a default python version in stages.
 # Next time, allow to unmask only stable version of python with a consequent change of default PYTHON_ABIS. THis is 
@@ -7,10 +11,6 @@
 # Oleg Vinichenko (6 June 2014)_
 # maks latest gettext-0.19, breaks lot of packages
 >sys-devel/gettext-0.18.3.2
-
-#mask openvz-rhel6 kernel higher than 084.25, build issues:
-
->sys-kernel/openvz-rhel6-stable-2.6.32.042.084.25
  
 # FL-1202 - cautionary mask libnm-qt-0.9.8.1 until networkmanager update
 >net-libs/libnm-qt-0.9.8.0
