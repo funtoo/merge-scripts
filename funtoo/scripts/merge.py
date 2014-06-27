@@ -56,7 +56,8 @@ steps = [
         InsertEbuilds(plex_overlay, select = [ "media-tv/plex-media-server" ], skip=None, replace=True),
         SyncDir(plex_overlay.root,"licenses"),
 	InsertEbuilds(squeezebox_overlay, select="all", skip=None, replace=False),
-	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=None, replace=True, merge=True),
+	InsertEbuilds(funtoo_gnome_overlay, select=["x11-libs/gtk+"], skip=None, replace=True),
+	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=["x11-libs/gtk+"], replace=True, merge=True),
 	SyncFiles(funtoo_gnome_overlay.root, {
 		"profiles/package.mask/funtoo-gnome3.6":"profiles/funtoo/1.0/linux-gnu/mix-ins/gnome/package.mask/01-gnome",
 		"profiles/package.unmask/funtoo-gnome3.6":"profiles/funtoo/1.0/linux-gnu/mix-ins/gnome/package.unmask/01-gnome",
