@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python3
 
 # This script will compare the versions of ebuilds in the funtoo portage tree against
 # the versions of ebuilds in the target portage tree. Any higher versions in the 
@@ -9,7 +9,7 @@
 
 import portage.versions
 import os,sys
-import commands
+import subprocess
 import json
 
 from merge_utils import *
@@ -23,18 +23,18 @@ print("List of differences between funtoo-overlay and gentoo")
 print("=====================================================")
 
 def getKeywords(portdir, ebuild, warn):
-	a = commands.getstatusoutput(dirpath + "/keywords.sh %s %s" % ( portdir, ebuild ) )
+	a = subprocess.getstatusoutput(dirpath + "/keywords.sh %s %s" % ( portdir, ebuild ) )
 	if a[0] == 0:
 		my_set = set(a[1].split())
 		if warn and len(my_set) == 0:
-			print "WARNING: ebuild %s has no keywords" % ebuild
+			print("WARNING: ebuild %s has no keywords" % ebuild)
 		return (0, my_set)
 	else:
 		return a
 	
 
 if len(sys.argv) != 2:
-	print "Please specify portage tree to compare against as first argument."
+	print("Please specify portage tree to compare against as first argument.")
 	sys.exit(1)
 
 gportdir=sys.argv[1]
@@ -87,9 +87,9 @@ def get_cpv_in_portdir(portdir,cat,pkg):
 	
 def version_compare(portdir,gportdir,keywords,label):
 	print
-	print "Package comparison for %s" % keywords
-	print "============================================"
-	print "(note that package.{un}mask(s) are ignored - looking at ebuilds only)"
+	print("Package comparison for %s" % keywords)
+	print("============================================")
+	print("(note that package.{un}mask(s) are ignored - looking at ebuilds only)")
 	print
 
 	for cat in os.listdir(portdir):
@@ -128,7 +128,7 @@ def version_compare(portdir,gportdir,keywords,label):
 			mycmp = portage.versions.pkgcmp(fps, gps)
 			if mycmp == -1:
 				json_out[label].append("%s/%s %s %s" % (cat, pkg, gbest[len(cat)+len(pkg)+2:], fbest[len(cat)+len(pkg)+2:]))
-				print "%s (vs. %s in funtoo)" % ( gbest, fbest )
+				print("%s (vs. %s in funtoo)" % ( gbest, fbest ))
 json_out={}
 for keyw in [ "~amd64", "~x86" ]:
 	if keyw == "~x86":
