@@ -1,11 +1,6 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
-# Jean-Francis Roy (25 June 2014)
-# oracle-jre-bin and oracle-jdk-bin masked for testing
-=dev-java/oracle-jdk-bin-1.7.0.60
-=dev-java/oracle-jre-bin-1.7.0.60
-
 # Daniel Robbins (15 June 2014)
 # masked for testing
 >=www-servers/nginx-1.7.1

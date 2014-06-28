@@ -52,7 +52,7 @@ COMMON_DEPEND="
 	ppp? ( >=net-dialup/ppp-2.4.5[ipv6] )
 	resolvconf? ( net-dns/openresolv )
 	systemd? ( >=sys-apps/systemd-200 )
-	!systemd? ( sys-power/upower )
+	|| ( sys-power/upower sys-power/upower-pm-utils >=sys-apps/systemd-183 )
 "
 RDEPEND="${COMMON_DEPEND}
 	consolekit? ( sys-auth/consolekit )
