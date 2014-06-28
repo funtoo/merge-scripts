@@ -59,7 +59,7 @@ steps = [
 	InsertEbuilds(squeezebox_overlay, select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_gnome_overlay, select=["x11-libs/gtk+"], skip=None, replace=True),
 	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=["x11-libs/gtk+"], replace=True, merge=True),
-        InsertEbuilds(funtoo_deadbeef, select="all", skip=None replace=False),
+        InsertEbuilds(funtoo_deadbeef, select="all", skip=None, replace=False),
         SyncFiles(funtoo_deadbeef.root, {
                 "profiles/package.mask":"profiles/package.mask/deadbeef-mask"
         }),        
