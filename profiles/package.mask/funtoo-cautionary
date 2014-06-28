@@ -1,3 +1,7 @@
+# Daniel Robbins (28 Jun 2014)
+# FL-738: can break building of multiple packages (erlang, nginx, glibc, possibly guile (FL-919)
+app-admin/eselect-sh
+
 # Oleg Vinichenko (26 June 2014) mask latest versions of libnl, sitck with stable version only:
 # FL-1310
 >dev-libs/libnl-3.2.23
