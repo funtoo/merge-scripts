@@ -48,6 +48,11 @@ steps = [
 		"profiles/arch/amd64/no-multilib/package.mask":"profiles/funtoo/1.0/linux-gnu/arch/pure64/package.mask/01-gentoo",
 		"profiles/arch/amd64/no-multilib/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/pure64/use.mask/01-gentoo"
 	}),
+	SyncFiles(funtoo_overlay.root, {
+		"COPYRIGHT.txt":"COPYRIGHT.txt",
+		"LICENSE.txt":"LICENSE.txt",
+		"README.rst":"README.rst"
+	}),
 	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
         InsertEbuilds(mysql_overlay, select="all", skip=None, replace=True),
         InsertEbuilds(ldap_overlay, select="all", skip=None, replace=True),
@@ -62,7 +67,7 @@ steps = [
         InsertEbuilds(funtoo_deadbeef, select="all", skip=None, replace=False),
         SyncFiles(funtoo_deadbeef.root, {
                 "profiles/package.mask":"profiles/package.mask/deadbeef-mask"
-        }),        
+        }),
 	SyncFiles(funtoo_gnome_overlay.root, {
 		"profiles/package.mask/funtoo-gnome3.6":"profiles/funtoo/1.0/linux-gnu/mix-ins/gnome/package.mask/01-gnome",
 		"profiles/package.unmask/funtoo-gnome3.6":"profiles/funtoo/1.0/linux-gnu/mix-ins/gnome/package.unmask/01-gnome",
