@@ -1,39 +1,35 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI="4"
+EAPI="5"
 
 MY_P="${P/_/-}"
+PYTHON_COMPAT=( python{3_2,3_3,3_4} )
 
-BACKPORTS=1
-
-inherit eutils linux-info versionator flag-o-matic
-
-if [[ -n ${BACKPORTS} ]]; then
-	inherit autotools
-fi
+inherit autotools distutils-r1 eutils linux-info versionator flag-o-matic systemd
 
 DESCRIPTION="LinuX Containers userspace utilities"
 HOMEPAGE="http://lxc.sourceforge.net/"
-SRC_URI="http://lxc.sourceforge.net/download/lxc/${MY_P}.tar.gz
-	${BACKPORTS:+http://dev.gentoo.org/~flameeyes/${PN}/${MY_P}-backports-${BACKPORTS}.tar.xz}"
-S="${WORKDIR}/${MY_P}"
+SRC_URI="https://github.com/lxc/lxc/archive/${MY_P}.tar.gz"
 
 KEYWORDS="-* amd64 ppc64 x86 arm"
 
 LICENSE="LGPL-3"
 SLOT="0"
-IUSE="examples"
+IUSE="doc examples lua python seccomp"
 
-RDEPEND="sys-libs/libcap"
+RDEPEND="net-libs/gnutls
+	sys-libs/libcap
+	lua? ( >=dev-lang/lua-5.1 )
+	python? ( ${PYTHON_DEPS} )
+	seccomp? ( sys-libs/libseccomp )"
 
 DEPEND="${RDEPEND}
-	app-text/docbook-sgml-utils
+	doc? ( app-text/docbook-sgml-utils )
 	>=sys-kernel/linux-headers-3.2"
 
 RDEPEND="${RDEPEND}
 	sys-apps/util-linux
 	app-misc/pax-utils
-	>=sys-apps/openrc-0.9.9.1
 	virtual/awk"
 
 CONFIG_CHECK="~CGROUPS ~CGROUP_DEVICE
@@ -81,12 +77,23 @@ ERROR_GRKERNSEC_CHROOT_CAPS=":CONFIG_GRKERNSEC_CHROOT_CAPS	some GRSEC features m
 
 DOCS=(AUTHORS CONTRIBUTING MAINTAINERS TODO README doc/FAQ.txt)
 
+S="${WORKDIR}/${PN}-${MY_P}"
+
+REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
+
 src_prepare() {
 	sed -i 's/AM_CONFIG_HEADER/AC_CONFIG_HEADERS/g' configure.ac || die
 	if [[ -n ${BACKPORTS} ]]; then
 		epatch "${WORKDIR}"/patches/*
-		eautoreconf
 	fi
+
+	if use python; then
+		python_setup
+		# We will handle python on our own
+		echo > "${S}/src/python-${PN}/Makefile.am";
+	fi
+
+	eautoreconf
 }
 
 src_configure() {
@@ -98,24 +105,56 @@ src_configure() {
 		--docdir=/usr/share/doc/${PF} \
 		--with-config-path=/etc/lxc	\
 		--with-rootfs-path=/usr/lib/lxc/rootfs \
-		--enable-doc \
+		$(use_enable doc) \
 		--disable-apparmor \
-		$(use_enable examples)
+		$(use_enable examples) \
+		$(use_enable lua) \
+		$(use_enable python)
+}
+
+python_compile() {
+	distutils-r1_python_compile build_ext -I ../ -L ../${PN}
+}
+
+src_compile() {
+	default
+
+	if use python; then
+		pushd "${S}/src/python-${PN}" > /dev/null
+		distutils-r1_src_compile
+		popd > /dev/null
+	fi
 }
 
 src_install() {
 	default
 
-	rm -r "${D}"/usr/sbin/lxc-setcap \
-		|| die "unable to remove lxc-setcap"
+	if use python; then
+		pushd "${S}/src/python-lxc" > /dev/null
+		# Unset DOCS. This has been handled by the default target
+		unset DOCS
+		distutils-r1_src_install
+		popd > /dev/null
+	fi
 
-	keepdir /etc/lxc /usr/lib/lxc/rootfs
+	keepdir /etc/lxc /usr/lib/lxc/rootfs /var/log/lxc
 
 	find "${D}" -name '*.la' -delete
 
 	# Gentoo-specific additions!
 	newinitd "${FILESDIR}/${PN}.initd.3" ${PN}
-	keepdir /var/log/lxc
+
+	# lxc-devsetup script
+	exeinto /usr/libexec/${PN}
+	doexe config/init/systemd/${PN}-devsetup
+	# Use that script with the systemd service (Similar to upstream
+	# Makefile.am
+	cp "${FILESDIR}"/${PN}_at.service ${PN}_at.service
+	sed -i \
+		"/Restart=always/a ExecStartPre=/usr/libexec/${PN}/${PN}-devsetup" \
+		${PN}_at.service \
+		|| die "Failed to add ${PN}-devsetup to the systemd service file"
+	systemd_newunit ${PN}_at.service "lxc@.service"
 }
 
 pkg_postinst() {
