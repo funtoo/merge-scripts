@@ -1,12 +1,12 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI="4"
+EAPI="5"
 
 MY_P="${P/_/-}"
 
 BACKPORTS=1
 
-inherit eutils linux-info versionator flag-o-matic
+inherit eutils linux-info versionator flag-o-matic systemd
 
 if [[ -n ${BACKPORTS} ]]; then
 	inherit autotools
@@ -116,6 +116,8 @@ src_install() {
 	# Gentoo-specific additions!
 	newinitd "${FILESDIR}/${PN}.initd.3" ${PN}
 	keepdir /var/log/lxc
+
+	systemd_newunit "${FILESDIR}"/lxc_at.service "lxc@.service"
 }
 
 pkg_postinst() {

@@ -8,7 +8,11 @@
   <maintainer>
     <email>dev-zero@gentoo.org</email>
   </maintainer>
+  <maintainer>
+    <email>hwoarang@gentoo.org</email>
+  </maintainer>
   <use>
+    <flag name="seccomp">Use seccomp syscall filters using <pkg>sys-libs/libseccomp</pkg></flag>
     <flag name="vanilla">
       Avoid adding Gentoo Linux-specific modifications, which include
       the custom init script. This is present as a flag to avoid
