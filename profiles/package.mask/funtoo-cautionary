@@ -35,10 +35,6 @@ app-admin/eselect-sh
 #  Cautionary mask latest bash and readline, until it's time to update
 >=app-shells/bash-4.3
 >=sys-libs/readline-6.3
-
-#  cautionary mask to freetype-2.5.1, broken
->=media-libs/freetype-2.5.1
-
 #  Oleg Vinichenko (3 Dec 2013)
 #  mask latest version of autogen, broken
 >=sys-devel/autogen-5.18
