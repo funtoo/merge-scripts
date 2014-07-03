@@ -71,12 +71,6 @@ app-benchmarks/phoronix-test-suite
 # mask openmpi-1.6.4 due to sandbox issues, FL-578, https://bugs.gentoo.org/show_bug.cgi?id=462602
 =sys-cluster/openmpi-1.6.4
 
-# Oleg Vinichenko (19 Apr 2013)
-# mask back mpc-1.0.1, ebuild itself is fine and usable
-# the mask required for metro stages successfully built until 
-# we implement newer gcc ebuilds, see FL-507
->=dev-libs/mpc-1.0 
-
 # Not currently maintained, last commit near 1 yr ago
 # ZFSOnLinux is a muche more viable and mature replacement 
 sys-fs/zfs-fuse
