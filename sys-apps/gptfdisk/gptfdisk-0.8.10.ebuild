@@ -11,10 +11,9 @@ SRC_URI="mirror://sourceforge/${PN}/${P}.tar.gz"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="*"
-IUSE="+icu kernel_linux ncurses static"
+IUSE="kernel_linux ncurses static"
 
 LIB_DEPEND="dev-libs/popt[static-libs(+)]
-	icu? ( dev-libs/icu:=[static-libs(+)] )
 	ncurses? ( >=sys-libs/ncurses-5.7-r7[static-libs(+)] )
 	kernel_linux? ( sys-apps/util-linux[static-libs(+)] )" # libuuid
 RDEPEND="!static? ( ${LIB_DEPEND//\[static-libs(+)]} )"
@@ -24,16 +23,6 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	tc-export CXX PKG_CONFIG
-
-	if use icu; then
-	append-cxxflags $(${PKG_CONFIG} --variable=CXXFLAGS icu-io icu-uc)
-	else
-	sed \
-		-e 's:-licuio::g' \
-		-e 's:-licuuc::g' \
-		-e 's:-D USE_UTF16::g' \
-		-i Makefile || die
-	fi
 
 	if ! use ncurses; then
 		sed -i \
