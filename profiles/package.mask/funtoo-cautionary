@@ -41,6 +41,7 @@ app-admin/eselect-sh
 >virtual/perl-ExtUtils-CBuilder-0.280.205
 >virtual/perl-Perl-OSType-1.2.0-r1
 >virtual/perl-IO-1.25
+>virtual/perl-ExtUtils-Install-1.590.0
 
 #  Oleg Vinichenko (26 Aug 2013)
 #  mask latest icedtea-bin ebuild, multiple failures with dev-java/* packages.
