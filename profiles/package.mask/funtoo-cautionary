@@ -19,10 +19,6 @@ app-admin/eselect-sh
 # FL-1202 - cautionary mask libnm-qt-0.9.8.1 until networkmanager update
 >net-libs/libnm-qt-0.9.8.0
 
-# FL-1174 - this is an experimental, slotted lua, so putting in cautionary.
-# Daniel Robbins, (22 Mar 2014)
-=dev-lang/lua-5.1.5-r1
-
 # Non bug commit. New gentoo-functions ebuild pulled into update list because of newer python-updater.
 # gentoo-funtions ebuild is a replacement of base shell functions, provided by OpenRC's /etc/init.d/functions.sh
 # this is core package changes, that require at least news item and shouldn't be done via dependency of other package. Masking
