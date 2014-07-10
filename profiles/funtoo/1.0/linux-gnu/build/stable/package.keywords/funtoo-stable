@@ -1,3 +1,8 @@
+#FL-1327, stabilize packages to fix stable metro builds. There're more packages in list. These 3 supposed to fix a stage builds only, latter can be expan#ded
+=sys-devel/flex-2.5.39-r1 amd64 x86
+=sys-libs/db-4.8.30-r1 amd64 x86
+=virtual/libintl-0-r1 amd64 x86
+
 # stabilize pkgconf
 =dev-util/pkgconf-0.9.3-r1 amd64 x86 
 
