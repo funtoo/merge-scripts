@@ -7,10 +7,15 @@
 *app-arch/tar
 *app-arch/xz-utils
 *app-editors/nano
+*app-portage/gentoolkit
 *app-shells/bash
 *dev-lang/perl
 *dev-lang/python
+*dev-vcs/git
 *net-dns/openresolv
+*net-misc/bridge-utils
+*net-misc/dhcpcd
+*net-misc/ifenslave
 *net-misc/iputils
 *net-misc/rsync
 *net-misc/wget
@@ -22,12 +27,14 @@
 *sys-apps/file
 *sys-apps/findutils
 *sys-apps/gawk
+*sys-apps/gptfdisk
 *sys-apps/grep
 *sys-apps/iproute2
 *sys-apps/kbd
 *sys-apps/less
 *sys-apps/man-pages
 *sys-apps/net-tools
+*sys-apps/pciutils
 *sys-apps/sed
 *sys-apps/shadow
 *sys-apps/texinfo
@@ -36,6 +43,7 @@
 *sys-apps/which
 *sys-devel/autoconf
 *sys-devel/automake
+*sys-devel/bc
 *sys-devel/binutils
 *sys-devel/bison
 *sys-devel/flex
@@ -48,6 +56,7 @@
 *sys-process/procps
 *sys-process/psmisc
 *sys-fs/e2fsprogs
+*sys-fs/xfsprogs
 *sys-libs/ncurses
 *sys-libs/readline
 *sys-libs/zlib

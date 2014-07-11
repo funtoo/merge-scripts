@@ -186,7 +186,6 @@ src_install() {
 	keepdir /var/lib/misc
 	keepdir /var/lock/subsys
 	keepdir /var/log/news
-	keepdir /var/run
 	keepdir /var/spool
 	keepdir /var/state
 	keepdir /run
@@ -229,6 +228,8 @@ src_install() {
 		echo "LDPATH=\"${libdirs_env}\"" > "${T}"/04multilib
 		doenvd "${T}"/04multilib
 	fi
+	#create /var/run symlink	
+	ln -s ../run ${D}/var/run || die
 
 	# rc-scripts version for testing of features that *should* be present
 	echo "Funtoo Linux - baselayout ${PV}" > "${D}"/etc/gentoo-release
@@ -251,7 +252,6 @@ pkg_postinst() {
 
 	# openrc requires /run
 	[ ! -d ${ROOT}run ] && install -d ${ROOT}run
-
 
 	# templates installed to /usr/share/baselayout and copied into place if they
 	# don't exist in /etc.

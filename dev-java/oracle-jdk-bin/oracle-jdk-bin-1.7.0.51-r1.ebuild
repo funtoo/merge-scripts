@@ -33,7 +33,7 @@ MIR_URI="http://www.funtoo.org/distfiles/oracle-java"
 SRC_URI=" 
 	amd64? ( ${MIR_URI}/${AT_amd64} examples? ( ${MIR_URI}/${FXDEMOS_linux} ${MIR_URI}/${DEMOS_amd64} ) )
 	x86? ( ${MIR_URI}/${AT_x86} examples? ( ${MIR_URI}/${FXDEMOS_linux} ${MIR_URI}/${DEMOS_x86} ) )
-	arm? ( ${MIR_URI}/${AT_arm_sflt} ${MIR_URI}/${AT_arm_sflt} examples? ( ${MIR_URI}/${FXDEMOS_linux} ${MIR_URI}/${DEMOS_arm_sflt} ${MIR_URI}/${DEMOS_arm_hflt} ) )
+	arm? ( ${MIR_URI}/${AT_arm_sflt} ${MIR_URI}/${AT_arm_hflt} examples? ( ${MIR_URI}/${FXDEMOS_linux} ${MIR_URI}/${DEMOS_arm_sflt} ${MIR_URI}/${DEMOS_arm_hflt} ) )
 	jce? ( ${MIR_URI}/${JCE_FILE} )"
 
 LICENSE="Oracle-BCLA-JavaSE examples? ( BSD )"
