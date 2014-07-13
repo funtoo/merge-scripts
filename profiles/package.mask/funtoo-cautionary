@@ -1,3 +1,11 @@
+# Daniel Robbins (28 Jun 2014)
+# FL-738: can break building of multiple packages (erlang, nginx, glibc, possibly guile (FL-919)
+app-admin/eselect-sh
+
+# Oleg Vinichenko (26 June 2014) mask latest versions of libnl, sitck with stable version only:
+# FL-1310
+>dev-libs/libnl-3.2.23
+
 # Oleg Vinichenko (10 June 2014)
 # mask back python-3.4, this one not really fine to have installed. Also it become a default python version in stages.
 # Next time, allow to unmask only stable version of python with a consequent change of default PYTHON_ABIS. THis is 
@@ -11,10 +19,6 @@
 # FL-1202 - cautionary mask libnm-qt-0.9.8.1 until networkmanager update
 >net-libs/libnm-qt-0.9.8.0
 
-# FL-1174 - this is an experimental, slotted lua, so putting in cautionary.
-# Daniel Robbins, (22 Mar 2014)
-=dev-lang/lua-5.1.5-r1
-
 # Non bug commit. New gentoo-functions ebuild pulled into update list because of newer python-updater.
 # gentoo-funtions ebuild is a replacement of base shell functions, provided by OpenRC's /etc/init.d/functions.sh
 # this is core package changes, that require at least news item and shouldn't be done via dependency of other package. Masking
@@ -27,10 +31,6 @@
 #  Cautionary mask latest bash and readline, until it's time to update
 >=app-shells/bash-4.3
 >=sys-libs/readline-6.3
-
-#  cautionary mask to freetype-2.5.1, broken
->=media-libs/freetype-2.5.1
-
 #  Oleg Vinichenko (3 Dec 2013)
 #  mask latest version of autogen, broken
 >=sys-devel/autogen-5.18
@@ -41,19 +41,12 @@
 >virtual/perl-ExtUtils-CBuilder-0.280.205
 >virtual/perl-Perl-OSType-1.2.0-r1
 >virtual/perl-IO-1.25
+>virtual/perl-ExtUtils-Install-1.590.0
 
 #  Oleg Vinichenko (26 Aug 2013)
 #  mask latest icedtea-bin ebuild, multiple failures with dev-java/* packages.
 #  see bug #477972 at b.g.o, this doesn't allow clean emerge of jython, forked in Funtoo
 >dev-java/icedtea-bin-7.2.3.9
-
-#  Oleg Vinichenko (26 Jul 2013)
-#  FL-645, mask latest gdm, gnome-shell, gnome-settings-daemon
-#  as they explicitly require systemd
->=gnome-base/gdm-3.8.3
->=gnome-base/gnome-shell-3.8.3
->=gnome-base/gnome-settings-daemon-3.8.3
->=gnome-base/gnome-control-center-3.8
 
 # Ryan Harris (23 Jul 2013)
 # Mask phoronix-test-suite due to security concerns
@@ -74,18 +67,6 @@ app-benchmarks/phoronix-test-suite
 # Oleg Vinichenko (12 Jun 2013)
 # mask openmpi-1.6.4 due to sandbox issues, FL-578, https://bugs.gentoo.org/show_bug.cgi?id=462602
 =sys-cluster/openmpi-1.6.4
-
-# Jean-Francis Roy (3 Jun 2013)
-# Mask back app-admin/system-config-printer-{common,gnome}, depending
-# on >=virtual/udev-172, until FL-34 is resolved.
->=app-admin/system-config-printer-common-1.3.12
->=app-admin/system-config-printer-gnome-1.3.12
-
-# Oleg Vinichenko (19 Apr 2013)
-# mask back mpc-1.0.1, ebuild itself is fine and usable
-# the mask required for metro stages successfully built until 
-# we implement newer gcc ebuilds, see FL-507
->=dev-libs/mpc-1.0 
 
 # Not currently maintained, last commit near 1 yr ago
 # ZFSOnLinux is a muche more viable and mature replacement 

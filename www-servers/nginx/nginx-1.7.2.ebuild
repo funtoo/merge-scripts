@@ -3,7 +3,7 @@
 EAPI="5"
 
 # Funtoo notes:
-# test merge this way: NGINX_MODULES_HTTP="*" NGINX_MODULES_EMAIL="*" emerge nginx
+# test merge this way: NGINX_MODULES_HTTP="*" NGINX_MODULES_MAIL="*" USE="all but debug" emerge nginx
 
 # Maintainer notes:
 # - http_rewrite-independent pcre-support makes sense for matching locations without an actual rewrite
@@ -19,10 +19,11 @@ EAPI="5"
 GENTOO_DEPEND_ON_PERL="no"
 
 # syslog (https://github.com/yaoweibin/nginx_syslog_patch, BSD license)
-SYSLOG_MODULE_PV="0.25"
-SYSLOG_MODULE_NGINX_PV="1.4.0"
+# Using our own patch since upstream doesn't apply cleanly.
+SYSLOG_MODULE_PV="3ca5ba65541637f74467038aa032e2586321d0cb"
+SYSLOG_MODULE_NGINX_PV="1.7.0"
 SYSLOG_MODULE_P="ngx_syslog-${SYSLOG_MODULE_PV}"
-SYSLOG_MODULE_URI="https://github.com/yaoweibin/nginx_syslog_patch/archive/${SYSLOG_MODULE_P}.tar.gz"
+SYSLOG_MODULE_URI="https://github.com/yaoweibin/nginx_syslog_patch/archive/${SYSLOG_MODULE_PV}.tar.gz"
 SYSLOG_MODULE_WD="${WORKDIR}/nginx_syslog_patch-${SYSLOG_MODULE_PV}"
 
 # devel_kit (https://github.com/simpl/ngx_devel_kit, BSD license)
@@ -98,9 +99,9 @@ HTTP_NAXSI_MODULE_URI="https://github.com/nbs-system/naxsi/archive/${HTTP_NAXSI_
 HTTP_NAXSI_MODULE_WD="${WORKDIR}/naxsi-${HTTP_NAXSI_MODULE_PV}/naxsi_src"
 
 # nginx-rtmp-module (https://github.com/arut/nginx-rtmp-module, BSD license)
-RTMP_MODULE_PV="v1.1.4"
+RTMP_MODULE_PV="1.1.4"
 RTMP_MODULE_P="ngx_rtmp-${RTMP_MODULE_PV}"
-RTMP_MODULE_URI="https://github.com/arut/nginx-rtmp-module/archive/${RTMP_MODULE_PV}.tar.gz"
+RTMP_MODULE_URI="https://github.com/arut/nginx-rtmp-module/archive/v${RTMP_MODULE_PV}.tar.gz"
 RTMP_MODULE_WD="${WORKDIR}/nginx-rtmp-module-${RTMP_MODULE_PV}"
 
 # nginx-dav-ext-module (https://github.com/arut/nginx-dav-ext-module, BSD license)
@@ -130,7 +131,7 @@ HTTP_CONCAT_MODULE_WD="${WORKDIR}/nginx-http-concat-${HTTP_CONCAT_MODULE_PV}"
 # RRD graph
 HTTP_RRD_GRAPH_MODULE_PV="0.2.0"
 HTTP_RRD_GRAPH_MODULE_P="ngx_http_rrd_graph_module-${HTTP_RRD_GRAPH_MODULE_PV}"
-HTTP_RRD_GRAPH_MODULE_URI="http://wiki.nginx.org/images/5/51/Mod_rrd_graph-${HTTP_RRD_GRAPH_MODULE_PV}.tar.gz"
+HTTP_RRD_GRAPH_MODULE_URI="http://wiki.nginx.org/images/9/9d/Mod_rrd_graph-${HTTP_RRD_GRAPH_MODULE_PV}.tar.gz"
 HTTP_RRD_GRAPH_MODULE_WD="${WORKDIR}/mod_rrd_graph-${HTTP_RRD_GRAPH_MODULE_PV}"
 
 # echo-nginx-module (https://github.com/agentzh/echo-nginx-module, BSD license)
@@ -301,14 +302,15 @@ pkg_setup() {
 }
 
 src_prepare() {
+
+	if use syslog; then
+		epatch "${FILESDIR}"/nginx-1.7.2-syslog.patch
+	fi
+
 	epatch "${FILESDIR}/${PN}-1.4.1-fix-perl-install-path.patch"
 
 	if use nginx_modules_http_upstream_check; then
 		epatch "${FILESDIR}"/check-1.7.2+.patch
-	fi
-
-	if use syslog; then
-		epatch "${SYSLOG_MODULE_WD}"/syslog_${SYSLOG_MODULE_NGINX_PV}.patch
 	fi
 
 	if use nginx_modules_http_security; then
@@ -594,7 +596,7 @@ src_install() {
 
 	if use syslog; then
 		docinto ${SYSLOG_MODULE_P}
-		dodoc "${SYSLOG_MODULE_WD}"/README
+		dodoc "${SYSLOG_MODULE_WD}"/README.md
 	fi
 
 	if use nginx_modules_http_push; then
@@ -643,11 +645,6 @@ src_install() {
 		doins "${HTTP_NAXSI_MODULE_WD}"/../naxsi_config/naxsi_core.rules
 	fi
 
-	if use rtmp; then
-		docinto ${RTMP_MODULE_P}
-		dodoc "${RTMP_MODULE_WD}"/{AUTHORS,README.md,TODO,stat.xsl}
-	fi
-
 	if use nginx_modules_http_fancyindex; then
 		docinto ${HTTP_FANCYINDEX_MODULE_P}
 		dodoc "${HTTP_FANCYINDEX_MODULE_WD}"/README.rst
@@ -678,7 +675,7 @@ src_install() {
 
 	if use rtmp; then
 		docinto ${RTMP_MODULE_P}
-		dodoc "${RTMP_MODULE_WD}"/{AUTHORS,README.md,TODO,stat.xsl}
+		dodoc "${RTMP_MODULE_WD}"/{AUTHORS,README.md,stat.xsl}
 	fi
 
 	if use nginx_modules_http_dav_ext; then

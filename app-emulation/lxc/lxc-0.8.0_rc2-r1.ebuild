@@ -18,7 +18,7 @@ SRC_URI="http://lxc.sourceforge.net/download/lxc/${MY_P}.tar.gz
 	${BACKPORTS:+http://dev.gentoo.org/~flameeyes/${PN}/${MY_P}-backports-${BACKPORTS}.tar.xz}"
 S="${WORKDIR}/${MY_P}"
 
-KEYWORDS="~*"
+KEYWORDS="-* amd64 ppc64 x86 arm"
 
 LICENSE="LGPL-3"
 SLOT="0"

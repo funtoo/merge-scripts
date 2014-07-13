@@ -1,14 +1,8 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
-# Jean-Francis Roy (25 June 2014)
-# oracle-jre-bin and oracle-jdk-bin masked for testing
-=dev-java/oracle-jdk-bin-1.7.0.60
-=dev-java/oracle-jre-bin-1.7.0.60
-
-# Daniel Robbins (15 June 2014)
-# masked for testing
->=www-servers/nginx-1.7.1
+#Oleg Vinichenko (13 Jul 2014), FL-1358, portage parallel econf fix, ebuild masked for testing
+=sys-apps/portage-2.3.6-r9
 
 # Oleg Vinichenko (2 June 2014), add beta and unstable versions of google-chrome as requested in FL-1258 and FL-1254
 # ebuilds are masked

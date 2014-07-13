@@ -20,7 +20,7 @@ IUSE="static-libs"
 # older libgcrypt.
 
 RDEPEND=">=dev-libs/libgcrypt-1.6 
-		!<dev-libs/libgcrypt-1.6 
+		!dev-libs/libgcrypt:0/11
 		>=dev-libs/libgpg-error-1.12-r2[${MULTILIB_USEDEP}]
 		abi_x86_32? (
 	 		!<=app-emulation/emul-linux-x86-baselibs-20131008-r19
