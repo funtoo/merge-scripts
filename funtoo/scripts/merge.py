@@ -37,7 +37,7 @@ steps = [
 	MergeUpdates(funtoo_overlay.root),
 	ProfileDepFix(),
 	SyncDir(funtoo_overlay.root,"licenses"),
-	SyncDir(funtoo_gnome_overlay.root,"eclass"),
+	SyncDir(funtoo_gnome_overlay.root,"eclass") if not experimental else None,
 	SyncDir(funtoo_overlay.root,"metadata"),
 	SyncFiles(gentoo_src.root, {
 		"profiles/package.mask":"profiles/package.mask/00-gentoo",
@@ -67,10 +67,11 @@ steps = [
         InsertEbuilds(plex_overlay, select = [ "media-tv/plex-media-server" ], skip=None, replace=True),
         SyncDir(plex_overlay.root,"licenses"),
 	InsertEbuilds(squeezebox_overlay, select="all", skip=None, replace=False),
-	InsertEbuilds(funtoo_gnome_overlay, select=["x11-libs/gtk+"], skip=None, replace=True),
-	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=["x11-libs/gtk+"], replace=True, merge=True),
-	InsertEbuilds(funtoo_gnome_overlay, select=["gnome-extra/nm-applet"], skip=None, replace=True),
-	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=["gnome-extra/nm-applet"], replace=True, merge=True),
+	InsertEbuilds(funtoo_gnome_overlay, select=["x11-libs/gtk+"], skip=None, replace=True) if not experimental else None,
+	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=["x11-libs/gtk+"], replace=True, merge=True) if not experimental else None,
+	InsertEbuilds(funtoo_gnome_overlay, select=["gnome-extra/nm-applet"], skip=None, replace=True) if not experimental else None,
+	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=["gnome-extra/nm-applet"], replace=True, merge=True) if not experimental else None,
+	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=None, replace=True, merge=True) if experimental else None,
         InsertEbuilds(funtoo_deadbeef, select="all", skip=None, replace=False),
         SyncFiles(funtoo_deadbeef.root, {
                 "profiles/package.mask":"profiles/package.mask/deadbeef-mask"
@@ -78,7 +79,7 @@ steps = [
 	SyncFiles(funtoo_gnome_overlay.root, {
 		"profiles/package.mask/funtoo-gnome3.6":"profiles/funtoo/1.0/linux-gnu/mix-ins/gnome/package.mask/01-gnome",
 		"profiles/package.unmask/funtoo-gnome3.6":"profiles/funtoo/1.0/linux-gnu/mix-ins/gnome/package.unmask/01-gnome",
-	}),
+	}) if not experimental else None,
         SyncFiles(mysql_overlay.root, {
                 "profiles/package.mask":"profiles/package.mask/mysql",
                 "profiles/package.use.mask":"profiles/package.use.mask/mysql"
