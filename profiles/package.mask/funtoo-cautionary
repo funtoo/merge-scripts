@@ -35,14 +35,6 @@ app-admin/eselect-sh
 #  mask latest version of autogen, broken
 >=sys-devel/autogen-5.18
   
-#  Oleg Vinichenko (6 Sep 2013)
-#  mask perl modules that explicitly require newer perl-5.18
-#  until we get perl-5.18 to tree.
->virtual/perl-ExtUtils-CBuilder-0.280.205
->virtual/perl-Perl-OSType-1.2.0-r1
->virtual/perl-IO-1.25
->virtual/perl-ExtUtils-Install-1.590.0
-
 #  Oleg Vinichenko (26 Aug 2013)
 #  mask latest icedtea-bin ebuild, multiple failures with dev-java/* packages.
 #  see bug #477972 at b.g.o, this doesn't allow clean emerge of jython, forked in Funtoo
