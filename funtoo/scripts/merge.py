@@ -71,7 +71,7 @@ steps = [
 	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=["x11-libs/gtk+"], replace=True, merge=True) if not experimental else None,
 	InsertEbuilds(funtoo_gnome_overlay, select=["gnome-extra/nm-applet"], skip=None, replace=True) if not experimental else None,
 	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=["gnome-extra/nm-applet"], replace=True, merge=True) if not experimental else None,
-	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=None, replace=True, merge=True) if experimental else None,
+	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=None, replace=True, merge=False) if experimental else None,
         InsertEbuilds(funtoo_deadbeef, select="all", skip=None, replace=False),
         SyncFiles(funtoo_deadbeef.root, {
                 "profiles/package.mask":"profiles/package.mask/deadbeef-mask"
