@@ -1,3 +1,9 @@
+# Required by gnome for a clean emerge.
+gnome-base/gvfs udisks
+media-libs/grilo playlist
+net-misc/networkmanager modemmanager
+www-servers/apache apache2_modules_auth_digest
+
 # Required for background transparency support, FL-1373
 x11-terms/gnome-terminal deprecated
 
