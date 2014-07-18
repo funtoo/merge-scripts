@@ -1,3 +1,10 @@
+# Required by gnome for a more complete experience.
+app-editors/gedit spell
+gnome-base/gnome accessibility
+gnome-base/nautilus sendto
+mail-client/evolution spell
+net-im/empathy spell
+
 # Required by gnome for a clean emerge.
 gnome-base/gvfs udisks
 media-libs/grilo playlist
