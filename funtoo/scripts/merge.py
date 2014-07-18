@@ -37,7 +37,7 @@ steps = [
 	MergeUpdates(funtoo_overlay.root),
 	ProfileDepFix(),
 	SyncDir(funtoo_overlay.root,"licenses"),
-	SyncDir(funtoo_gnome_overlay.root,"eclass") if not experimental else None,
+	SyncDir(funtoo_gnome_overlay.root,"eclass"),
 	SyncDir(funtoo_overlay.root,"metadata"),
 	SyncFiles(gentoo_src.root, {
 		"profiles/package.mask":"profiles/package.mask/00-gentoo",
@@ -80,6 +80,10 @@ steps = [
 		"profiles/package.mask/funtoo-gnome3.6":"profiles/funtoo/1.0/linux-gnu/mix-ins/gnome/package.mask/01-gnome",
 		"profiles/package.unmask/funtoo-gnome3.6":"profiles/funtoo/1.0/linux-gnu/mix-ins/gnome/package.unmask/01-gnome",
 	}) if not experimental else None,
+	SyncFiles(funtoo_gnome_overlay.root, {
+		"profiles/package.mask/gnome_3.12":"profiles/funtoo/1.0/linux-gnu/mix-ins/gnome/package.mask/01-gnome",
+		"profiles/package.unmask/gnome_3.12":"profiles/funtoo/1.0/linux-gnu/mix-ins/gnome/package.unmask/01-gnome",
+	}) if experimental else None,
         SyncFiles(mysql_overlay.root, {
                 "profiles/package.mask":"profiles/package.mask/mysql",
                 "profiles/package.use.mask":"profiles/package.use.mask/mysql"
