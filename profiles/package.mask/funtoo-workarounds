@@ -1,3 +1,6 @@
+# FL-1407 - fix net-analyzer/tcpdump builds
+=net-libs/libpcap-1.6.1
+
 # FL-1360 - fix current stage builds
 >=virtual/perl-Perl-OSType-1.7.0
 
