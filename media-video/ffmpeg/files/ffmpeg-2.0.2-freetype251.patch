@@ -1,0 +1,51 @@
+Patch based on 
+http://git.videolan.org/?p=ffmpeg.git;a=commitdiff;h=cea5812fa723c08b89d929eeba73462e05de2973
+
+--- ffmpeg-2.0.2/configure
++++ ffmpeg-2.0.2/configure
+@@ -1096,6 +1096,26 @@
+     add_extralibs $(get_safe ${pkg}_libs)
+ }
+ 
++require_libfreetype(){
++    log require_libfreetype "$@"
++    pkg="freetype2"
++    check_cmd $pkg_config --exists --print-errors $pkg \
++      || die "ERROR: $pkg not found"
++    pkg_cflags=$($pkg_config --cflags $pkg)
++    pkg_libs=$($pkg_config --libs $pkg)
++    {
++        echo "#include <ft2build.h>"
++        echo "#include FT_FREETYPE_H"
++        echo "long check_func(void) { return (long) FT_Init_FreeType; }"
++        echo "int main(void) { return 0; }"
++    } | check_ld "cc" $pkg_cflags $pkg_libs \
++      && set_safe ${pkg}_cflags $pkg_cflags \
++      && set_safe ${pkg}_libs   $pkg_libs \
++      || die "ERROR: $pkg not found"
++    add_cflags    $(get_safe ${pkg}_cflags)
++    add_extralibs $(get_safe ${pkg}_libs)
++}
++
+ hostcc_o(){
+     eval printf '%s\\n' $HOSTCC_O
+ }
+@@ -4143,7 +4163,7 @@
+ enabled libfdk_aac        && require libfdk_aac fdk-aac/aacenc_lib.h aacEncOpen -lfdk-aac
+ flite_libs="-lflite_cmu_time_awb -lflite_cmu_us_awb -lflite_cmu_us_kal -lflite_cmu_us_kal16 -lflite_cmu_us_rms -lflite_cmu_us_slt -lflite_usenglish -lflite_cmulex -lflite"
+ enabled libflite          && require2 libflite "flite/flite.h" flite_init $flite_libs
+-enabled libfreetype       && require_pkg_config freetype2 "ft2build.h freetype/freetype.h" FT_Init_FreeType
++enabled libfreetype       && require_libfreetype
+ enabled libgme            && require  libgme gme/gme.h gme_new_emu -lgme
+ enabled libgsm            && { for gsm_hdr in "gsm.h" "gsm/gsm.h"; do
+                                    check_lib "${gsm_hdr}" gsm_create -lgsm && break;
+--- ffmpeg-2.0.2/libavfilter/vf_drawtext.c
++++ ffmpeg-2.0.2/libavfilter/vf_drawtext.c
+@@ -48,7 +48,6 @@
+ #include "video.h"
+ 
+ #include <ft2build.h>
+-#include <freetype/config/ftheader.h>
+ #include FT_FREETYPE_H
+ #include FT_GLYPH_H
+ #if CONFIG_FONTCONFIG
