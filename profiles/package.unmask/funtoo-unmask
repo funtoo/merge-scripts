@@ -1,3 +1,6 @@
+# Override Gentoo mask
+=media-video/mpv-0.4*
+
 # FL-998, FL-1100, unmask gcc-4.8.2-r1, added here, to override gentoo upstream mask
 =sys-devel/gcc-4.8.2-r1
 
