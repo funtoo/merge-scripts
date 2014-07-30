@@ -1,8 +1,8 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=3
+EAPI=5
 
-inherit eutils mount-boot
+inherit check-reqs eutils mount-boot
 
 SLOT=$PVR
 CKV=3.14.4
@@ -29,6 +29,15 @@ get_patch_list() {
 			echo "${line}"
 		fi
 	done < "${patch_series}"
+}
+
+pkg_pretend() {
+	# Ensure we have enough disk space to compile
+	if use binary ; then
+		CHECKREQS_DISK_BUILD="14G"
+	fi
+
+	check-reqs_pkg_setup
 }
 
 pkg_setup() {

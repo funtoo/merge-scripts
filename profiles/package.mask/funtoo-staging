@@ -19,12 +19,6 @@
 # masked for testing
 >=net-misc/dhcpcd-6.3.0
 
-# Oleg Vinichenko (24 Oct)
-# debian-sources-3.11.5, masked for testing, XFS issue FL-823
-# FL-823, newer kernels to test
-=sys-kernel/debian-sources-3.11.10
-=sys-kernel/debian-sources-3.12.3
-
 # Daniel Robbins (28 Sep 2013)
 # masked for testing
 =sys-cluster/vzctl-4.5.1*
