@@ -73,7 +73,8 @@ steps = [
                 "profiles/package.mask":"profiles/package.mask/deadbeef-mask"
         }),
 	SyncFiles(funtoo_gnome_overlay.root, {
-		"profiles/package.mask/gnome_3.12":"profiles/funtoo/1.0/linux-gnu/mix-ins/gnome/package.mask/01-gnome"
+		"profiles/package.mask":"profiles/funtoo/1.0/linux-gnu/mix-ins/gnome/package.mask"
+		"profiles/package.unmask":"profiles/funtoo/1.0/linux-gnu/mix-ins/gnome/package.unmask"
 	}),
         SyncFiles(mysql_overlay.root, {
                 "profiles/package.mask":"profiles/package.mask/mysql",
