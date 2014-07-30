@@ -4,15 +4,6 @@
 #Oleg Vinichenko (13 Jul 2014), FL-1358, portage parallel econf fix, ebuild masked for testing
 =sys-apps/portage-2.3.6-r9
 
-# Oleg Vinichenko (2 June 2014), add beta and unstable versions of google-chrome as requested in FL-1258 and FL-1254
-# ebuilds are masked
-=www-client/google-chrome-unstable-37.0.2017.2_p1
-=www-client/google-chrome-beta-36.0.1985.32_p1
-
-# Oleg Vinichenko (28 May 2014)
-# stable release update for google-chrome, masked for testing
-=www-client/google-chrome-35.0.1916.114_p1 
-
 # Oleg Vinichenko (26 Feb 2014)
 # FL-971, version 6.3.1 added
 # FL-971, dhcpcd-6.3.0 with ipv6, wpa_supplicant fixes
