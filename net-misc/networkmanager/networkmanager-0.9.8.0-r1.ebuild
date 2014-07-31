@@ -129,7 +129,7 @@ src_configure() {
 		--enable-ifnet \
 		--without-netconfig \
 		--with-dbus-sys-dir=/etc/dbus-1/system.d \
-		--with-udev-dir="$(udev_get_udevdir)" \
+		--with-udev-dir="$(get_udevdir)" \
 		--with-iptables=/sbin/iptables \
 		--enable-concheck \
 		--with-crypto=$(usex nss nss gnutls) \
