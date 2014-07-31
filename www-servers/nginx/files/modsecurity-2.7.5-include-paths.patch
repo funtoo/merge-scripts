@@ -1,9 +1,0 @@
-diff -rupN modsecurity/config modsecurity-patched/config
---- modsecurity/config	2013-07-26 13:05:25.000000000 +0300
-+++ modsecurity-patched/config	2013-09-09 15:55:23.290192067 +0300
-@@ -4,4 +4,4 @@ HTTP_AUX_FILTER_MODULES="ngx_http_modsec
- NGX_ADDON_SRCS="$NGX_ADDON_SRCS $ngx_addon_dir/ngx_http_modsecurity.c $ngx_addon_dir/apr_bucket_nginx.c $ngx_addon_dir/ngx_pool_context.c"
- NGX_ADDON_DEPS="$NGX_ADDON_DEPS $ngx_addon_dir/apr_bucket_nginx.h $ngx_addon_dir/ngx_pool_context.h"
- CORE_LIBS="$CORE_LIBS $ngx_addon_dir/../../standalone/.libs/standalone.a -L/usr/local/apr/lib -lapr-1  -L/usr/local/apr/lib -laprutil-1 -lpcre -lxml2 -lz -lm -ldl  "
--CORE_INCS="$CORE_INCS $ngx_addon_dir $ngx_addon_dir/../../standalone $ngx_addon_dir/../../apache2 /usr/include/libxml2  /usr/local/apache2/include /usr/local/apr/include/apr-1 /usr/local/apr/include/apr-1"
-+CORE_INCS="$CORE_INCS $ngx_addon_dir $ngx_addon_dir/../../standalone $ngx_addon_dir/../../apache2 /usr/include/libxml2  /usr/include/apache2 /usr/include/apr-1"
