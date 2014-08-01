@@ -1,6 +1,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=3
+EAPI="5"
+
 inherit eutils autotools flag-o-matic elisp-common
 
 DESCRIPTION="Scheme interpreter"
@@ -8,8 +9,10 @@ HOMEPAGE="http://www.gnu.org/software/guile/"
 SRC_URI="mirror://gnu/guile/${P}.tar.gz"
 
 LICENSE="LGPL-2.1"
+SLOT="0/1.8.8"
 KEYWORDS="*"
 IUSE="networking +regex discouraged +deprecated emacs nls debug-freelist debug-malloc debug +threads"
+
 RESTRICT="!regex? ( test )"
 
 DEPEND="
@@ -19,10 +22,6 @@ DEPEND="
 	emacs? ( virtual/emacs )"
 RDEPEND="${DEPEND}"
 
-# Guile seems to contain some slotting support, /usr/share/guile/ is slotted,
-# but there are lots of collisions. Most in /usr/share/libguile. Therefore
-# I'm slotting this in the same slot as guile-1.6* for now.
-SLOT="12"
 MAJOR="1.8"
 
 src_prepare() {

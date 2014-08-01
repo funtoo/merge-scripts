@@ -1,19 +1,19 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=5
+EAPI="5"
 
-inherit eutils multilib
+inherit eutils
 
 DESCRIPTION="Scheme interpreter. Also The GNU extension language"
 HOMEPAGE="http://www.gnu.org/software/guile/"
 SRC_URI="mirror://gnu/guile/${P}.tar.gz"
 
-RESTRICT="mirror"
-
 LICENSE="LGPL-3+"
-SLOT="12"
+SLOT="0/2.0.11"
 KEYWORDS="*"
 IUSE="debug debug-malloc +deprecated emacs networking nls +regex static +threads"
+
+RESTRICT="mirror"
 
 RDEPEND="
 	dev-libs/boehm-gc[threads?]
