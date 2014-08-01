@@ -16,6 +16,8 @@ IUSE="debug debug-malloc +deprecated emacs networking nls +regex static +threads
 RESTRICT="mirror"
 
 RDEPEND="
+	!dev-scheme/guile:12
+
 	dev-libs/boehm-gc[threads?]
 	dev-libs/gmp
 	dev-libs/libffi

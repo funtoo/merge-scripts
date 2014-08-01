@@ -16,6 +16,8 @@ IUSE="networking +regex discouraged +deprecated emacs nls debug-freelist debug-m
 RESTRICT="!regex? ( test )"
 
 DEPEND="
+	!dev-scheme/guile:12
+
 	>=dev-libs/gmp-4.1
 	>=sys-devel/libtool-1.5.6
 	sys-devel/gettext
