@@ -3,7 +3,7 @@
 EAPI=5
 
 PLOCALES="de ru"
-inherit bash-completion-r1 eutils multilib l10n
+inherit bash-completion-r1 eutils l10n
 
 DESCRIPTION="Search and query ebuilds, portage incl. local settings, ext. overlays, version changes, and more"
 HOMEPAGE="http://eix.berlios.de"
@@ -11,8 +11,8 @@ SRC_URI="mirror://berlios/${PN}/${P}.tar.xz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="*"
-IUSE="clang debug +dep doc nls optimization security strong-optimization strong-security sqlite swap-remote tools"
+KEYWORDS="~*"
+IUSE="debug +dep doc nls optimization security strong-optimization strong-security sqlite swap-remote tools"
 
 BOTHDEPEND="sqlite? ( >=dev-db/sqlite-3 )
 	nls? ( virtual/libintl )"
@@ -20,7 +20,6 @@ RDEPEND="${BOTHDEPEND}
 	app-shells/push"
 DEPEND="${BOTHDEPEND}
 	app-arch/xz-utils
-	clang? ( sys-devel/clang )
 	nls? ( sys-devel/gettext )"
 
 pkg_setup() {
@@ -32,6 +31,7 @@ pkg_setup() {
 }
 
 src_prepare() {
+	sed -i -e "s'/'${EPREFIX}/'" -- "${S}"/tmpfiles.d/eix.conf
 	epatch_user
 	epatch "${FILESDIR}/${PN}-disable-rsync.patch"
 }
@@ -45,7 +45,6 @@ src_configure() {
 		$(use_enable swap-remote) \
 		$(use_with prefix always-accept-keywords) \
 		$(use_with dep dep-default) \
-		$(use_with clang nongnu-cxx clang++) \
 		--with-zsh-completion \
 		--with-ebuild-sh-default="/usr/$(get_libdir)/portage/bin/ebuild.sh" \
 		--with-portage-rootpath="${ROOTPATH}" \
@@ -57,15 +56,19 @@ src_configure() {
 src_install() {
 	default
 	dobashcomp bash/eix
-	keepdir "/var/cache/${PN}"
-	fowners portage:portage "/var/cache/${PN}"
-	fperms 775 "/var/cache/${PN}"
+	insinto "/usr/lib/tmpfiles.d"
+	doins tmpfiles.d/eix.conf
 }
 
 pkg_postinst() {
-	# fowners in src_install doesn't work for owner/group portage:
-	# merging changes this owner/group back to root.
-	use prefix || chown portage:portage "${EROOT}var/cache/${PN}"
+	test -d "${EROOT}var/cache/${PN}" || {
+		mkdir "${EROOT}var/cache/${PN}"
+		use prefix || chown portage:portage "${EROOT}var/cache/${PN}"
+	}
 	local obs="${EROOT}var/cache/eix.previous"
 	! test -f "${obs}" || ewarn "Found obsolete ${obs}, please remove it"
+}
+
+pkg_postrm() {
+	[ -n "${REPLACED_BY_VERSION}" ] || rm -rf -- "${EROOT}var/cache/${PN}"
 }
