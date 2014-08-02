@@ -1,7 +1,7 @@
 #  Dantrell B. (2 Aug 2014)
 #  Selectively mask versions of net-irc/hexchat
 #  Ref FL-584 and FL-1435
-=net-irc/hexchat-2.10.1
+=net-irc/hexchat-2.10.0*
 =net-irc/hexchat-2.9.6*
 
 # Daniel Robbins (28 Jun 2014)
