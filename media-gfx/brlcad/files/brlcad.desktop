@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=BRL-CAD
+Keywrods=brl;cad;mged;
+Exec=mged
+Icon=brlcad
+Terminal=true
+Type=Application
+Categories=Graphics;Engineering;
+MimeType=application/brlcad-unknown;application/brlcad-v4;application/brlcad-v5;
