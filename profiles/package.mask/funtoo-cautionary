@@ -1,3 +1,9 @@
+#  Dantrell B. (2 Aug 2014)
+#  Selectively mask versions of net-irc/hexchat
+#  Ref FL-584 and FL-1435
+=net-irc/hexchat-2.10.1
+=net-irc/hexchat-2.9.6*
+
 # Daniel Robbins (28 Jun 2014)
 # FL-738: can break building of multiple packages (erlang, nginx, glibc, possibly guile (FL-919)
 app-admin/eselect-sh
@@ -51,10 +57,6 @@ app-benchmarks/phoronix-test-suite
 # Mask app-emulation/xen-tools-4.2.2-r1
 # depends on sys-app/texinfo-5
 =app-emulation/xen-tools-4.2.2-r1
-
-#  Oleg Vinichenko (16 Jun 2013)
-#  mask broken hexchat ebuild FL-584
->=net-irc/hexchat-2.9.5_p20130525 
 
 # Oleg Vinichenko (12 Jun 2013)
 # mask openmpi-1.6.4 due to sandbox issues, FL-578, https://bugs.gentoo.org/show_bug.cgi?id=462602
