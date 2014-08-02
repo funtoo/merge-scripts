@@ -1,5 +1,6 @@
 # Override Gentoo masks
 app-backup/rdiff-backup
 dev-scheme/guile
+games-board/aisleriot
 media-video/mpv
 www-servers/nginx
