@@ -53,15 +53,6 @@ app-admin/eselect-sh
 # Ref FL-454 and b.g.o # 477798
 app-benchmarks/phoronix-test-suite
 
-# Ryan Harris (30 Jun 2013)
-# Mask app-emulation/xen-tools-4.2.2-r1
-# depends on sys-app/texinfo-5
-=app-emulation/xen-tools-4.2.2-r1
-
-# Oleg Vinichenko (12 Jun 2013)
-# mask openmpi-1.6.4 due to sandbox issues, FL-578, https://bugs.gentoo.org/show_bug.cgi?id=462602
-=sys-cluster/openmpi-1.6.4
-
 # Not currently maintained, last commit near 1 yr ago
 # ZFSOnLinux is a muche more viable and mature replacement 
 sys-fs/zfs-fuse
