@@ -4,12 +4,6 @@
 #Oleg Vinichenko (13 Jul 2014), FL-1358, portage parallel econf fix, ebuild masked for testing
 =sys-apps/portage-2.3.6-r9
 
-# Oleg Vinichenko (26 Feb 2014)
-# FL-971, version 6.3.1 added
-# FL-971, dhcpcd-6.3.0 with ipv6, wpa_supplicant fixes
-# masked for testing
->=net-misc/dhcpcd-6.3.0
-
 # Daniel Robbins (28 Sep 2013)
 # masked for testing
 =sys-cluster/vzctl-4.5.1*
