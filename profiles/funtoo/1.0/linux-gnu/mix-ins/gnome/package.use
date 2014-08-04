@@ -4,6 +4,7 @@ gnome-base/gnome accessibility
 gnome-base/nautilus sendto
 mail-client/evolution spell
 net-im/empathy spell
+net-misc/networkmanager bluetooth connection-sharing consolekit modemmanager ppp upower wifi
 
 # Required by gnome for a clean emerge.
 gnome-base/gvfs udisks
