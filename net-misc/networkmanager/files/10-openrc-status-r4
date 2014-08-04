@@ -5,6 +5,11 @@
 # Ensures that the NetworkManager OpenRC service is marked as started and
 # providing net only when it has a successful connection.
 
+if [ ! -e "/run/openrc/softlevel" ]; then
+	# OpenRC is not running
+	exit 0
+fi
+
 # Ensure rc-service is in PATH
 PATH="${PATH}:@EPREFIX@/sbin:@EPREFIX@/usr/sbin"
 

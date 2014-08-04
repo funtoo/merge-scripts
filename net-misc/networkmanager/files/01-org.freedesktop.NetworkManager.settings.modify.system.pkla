@@ -1,6 +1,0 @@
-[Let users in plugdev group modify NetworkManager]
-Identity=unix-group:plugdev
-Action=org.freedesktop.NetworkManager.settings.modify.system
-ResultAny=no
-ResultInactive=no
-ResultActive=yes
