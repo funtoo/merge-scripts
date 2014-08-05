@@ -1,4 +1,5 @@
 sys-auth/pambase consolekit
 
 # For thunar
->=gnome-base/gvfs-1.12.3 udisks
+gnome-base/gvfs udisks
+xfce-base/thunar udisks
