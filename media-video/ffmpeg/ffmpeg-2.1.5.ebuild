@@ -29,7 +29,7 @@ IUSE="
 	gme	gnutls gsm +hardcoded-tables +iconv iec61883 ieee1394 jack jpeg2k
 	ladspa libass libcaca libsoxr libv4l modplug mp3 +network openal openssl opus
 	oss pic pulseaudio quvi rtmp schroedinger sdl speex ssh static-libs test theora
-	threads truetype twolame v4l vaapi vdpau vorbis vpx wavpack X x264 xvid
+	+threads truetype twolame v4l vaapi vdpau vorbis vpx wavpack X x264 xvid
 	+zlib zvbi
 	"
 

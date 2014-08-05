@@ -17,7 +17,7 @@ IUSE="
 	cpudetection debug doc +encode examples faac fdk flite fontconfig frei0r
 	gnutls gsm +hardcoded-tables iec61883 ieee1394 jack jpeg2k libass libcaca
 	libsoxr libv4l modplug mp3 network openal openssl opus oss pic pulseaudio
-	rtmp schroedinger sdl speex static-libs test theora threads truetype twolame
+	rtmp schroedinger sdl speex static-libs test theora +threads truetype twolame
 	v4l vaapi vdpau vorbis vpx X x264 xvid +zlib
 	"
 

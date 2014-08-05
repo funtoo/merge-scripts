@@ -16,7 +16,7 @@ IUSE="
 	aac aacplus alsa amr bindist +bzip2 cdio celt cpudetection debug
 	dirac doc +encode faac frei0r gnutls gsm +hardcoded-tables ieee1394 jack
 	jpeg2k libass libv4l modplug mp3 +network openal openssl oss pic pulseaudio
-	rtmp schroedinger sdl speex static-libs test theora threads
+	rtmp schroedinger sdl speex static-libs test theora +threads
 	truetype v4l vaapi vdpau vorbis vpx X x264 xvid +zlib
 	"
 
