@@ -1,8 +1,8 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=4
+EAPI="5"
 
-inherit eutils multilib ssl-cert toolchain-funcs flag-o-matic pam user versionator
+inherit eutils multilib ssl-cert toolchain-funcs flag-o-matic pam user versionator systemd
 
 MY_PV="${PV/_rc/-RC}"
 MY_SRC="${PN}-${MY_PV}"
@@ -19,7 +19,7 @@ SRC_URI="${MY_URI}/${MY_SRC}.tar.gz
 LICENSE="IBM"
 SLOT="0"
 KEYWORDS="*"
-IUSE="+berkdb cdb doc dovecot-sasl hardened ldap ldap-bind memcached mbox mysql nis pam postgres sasl selinux sqlite ssl vda"
+IUSE="+berkdb cdb doc dovecot-sasl hardened ldap ldap-bind memcached mbox mysql nis pam postgres sasl selinux sqlite ssl systemd vda"
 
 DEPEND=">=dev-libs/libpcre-3.4
 	dev-lang/perl
@@ -79,8 +79,12 @@ src_prepare() {
 
 	# change default paths to better comply with portage standard paths
 	sed -i -e "s:/usr/local/:/usr/:g" conf/master.cf || die "sed failed"
-	# change to unix and run as chrooted daemon 
-	epatch "${FILESDIR}"/${PN}-funtoo.patch
+
+	# add support for db-6
+	epatch "${FILESDIR}"/patches/db-6.patch
+
+	# change to unix socket and use chrooted deamon
+	epatch "${FILESDIR}"/patches/funtoo.patch
 }
 
 src_configure() {
@@ -177,6 +181,8 @@ src_configure() {
 	# Remove annoying C++ comment style warnings - bug #378099
 	append-flags -Wno-comment
 
+	sed -i -e "/^RANLIB/s/ranlib/$(tc-getRANLIB)/g" "${S}"/makedefs
+	sed -i -e "/^AR/s/ar/$(tc-getAR)/g" "${S}"/makedefs
 	emake DEBUG="" CC="$(tc-getCC)" OPT="${CFLAGS}" CCARGS="${mycc}" AUXLIBS="${mylibs}" makefiles
 }
 
@@ -259,6 +265,10 @@ src_install () {
 	# Remove unnecessary files
 	rm -f "${D}"/etc/postfix/{*LICENSE,access,aliases,canonical,generic}
 	rm -f "${D}"/etc/postfix/{header_checks,relocated,transport,virtual}
+
+	if use systemd ; then
+		systemd_dounit "${FILESDIR}/${PN}.service"
+	fi
 }
 
 pkg_preinst() {
@@ -287,6 +297,11 @@ pkg_postinst() {
 		SSL_ORGANIZATION="${SSL_ORGANIZATION:-Postfix SMTP Server}"
 		install_cert /etc/ssl/postfix/server
 		chown postfix:mail "${ROOT}"/etc/ssl/postfix/server.{key,pem}
+	fi
+
+	if [[ ! -e /etc/mail/aliases.db ]] ; then
+		elog "Creating aliases database"
+		/usr/bin/newaliases
 	fi
 
 	if [[ $(get_version_component_range 2 ${REPLACING_VERSIONS}) -lt 9 ]]; then

@@ -1,7 +1,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=5
-inherit eutils multilib ssl-cert toolchain-funcs flag-o-matic pam user versionator
+EAPI="5"
+inherit eutils flag-o-matic multilib pam ssl-cert systemd toolchain-funcs user versionator
 
 MY_PV="${PV/_pre/-}"
 MY_SRC="${PN}-${MY_PV}"
@@ -17,8 +17,8 @@ SRC_URI="${MY_URI}/${MY_SRC}.tar.gz
 
 LICENSE="IBM"
 SLOT="0"
-KEYWORDS="*"
-IUSE="+berkdb cdb doc dovecot-sasl hardened ldap ldap-bind memcached mbox mysql nis pam postgres sasl selinux sqlite ssl vda"
+KEYWORDS="~*"
+IUSE="+berkdb cdb doc dovecot-sasl hardened ldap ldap-bind lmdb memcached mbox mysql nis pam postgres sasl selinux sqlite ssl systemd vda"
 
 DEPEND=">=dev-libs/libpcre-3.4
 	dev-lang/perl
@@ -26,6 +26,7 @@ DEPEND=">=dev-libs/libpcre-3.4
 	cdb? ( || ( >=dev-db/tinycdb-0.76 >=dev-db/cdb-0.75-r1 ) )
 	ldap? ( net-nds/openldap )
 	ldap-bind? ( net-nds/openldap[sasl] )
+	lmdb? ( >=dev-db/lmdb-0.9.11 )
 	mysql? ( virtual/mysql )
 	pam? ( virtual/pam )
 	postgres? ( dev-db/postgresql-base )
@@ -73,7 +74,12 @@ src_prepare() {
 
 	# change default paths to better comply with portage standard paths
 	sed -i -e "s:/usr/local/:/usr/:g" conf/master.cf || die "sed failed"
-	epatch "${FILESDIR}"/${PN}-funtoo.patch
+
+	# add support for db-6
+	epatch "${FILESDIR}"/patches/db-6.patch
+
+	# change to unix socket and use chrooted deamon
+	epatch "${FILESDIR}"/patches/funtoo.patch
 }
 
 src_configure() {
@@ -107,6 +113,11 @@ src_configure() {
 		mylibs="${mylibs} -lssl -lcrypto"
 	fi
 
+	if use lmdb; then
+		mycc="${mycc} -DHAS_LMDB"
+		mylibs="${mylibs} -llmdb"
+	fi
+
 	# broken. and "in other words, not supported" by upstream.
 	# Use inet_protocols setting in main.cf
 	#if ! use ipv6; then
@@ -128,15 +139,14 @@ src_configure() {
 	fi
 
 	if ! use nis; then
-		sed -i -e "s|#define HAS_NIS|//#define HAS_NIS|g" \
-			src/util/sys_defs.h || die "sed failed"
+		mycc="${mycc} -DNO_NIS"
 	fi
 
 	if ! use berkdb; then
 		mycc="${mycc} -DNO_DB"
 		if use cdb; then
 			# change default hash format from Berkeley DB to cdb
-			sed -i -e "s/hash/cdb/" src/util/sys_defs.h || die
+			mycc="${mycc} -DDEF_DB_TYPE=\\\"cdb\\\""
 		fi
 	fi
 
@@ -202,9 +212,11 @@ src_install () {
 	# Provide another link for legacy FSH
 	dosym /usr/sbin/sendmail /usr/$(get_libdir)/sendmail
 
-	# Install qshape tool
+	# Install qshape tool and posttls-finger
 	dobin auxiliary/qshape/qshape.pl
 	doman man/man1/qshape.1
+	dobin bin/posttls-finger
+	doman man/man1/posttls-finger.1
 
 	# Performance tuning tools and their manuals
 	dosbin bin/smtp-{source,sink} bin/qmqp-{source,sink}
@@ -254,6 +266,10 @@ src_install () {
 	# Remove unnecessary files
 	rm -f "${D}"/etc/postfix/{*LICENSE,access,aliases,canonical,generic}
 	rm -f "${D}"/etc/postfix/{header_checks,relocated,transport,virtual}
+
+	if use systemd ; then
+		systemd_dounit "${FILESDIR}/${PN}.service"
+	fi
 }
 
 pkg_preinst() {
