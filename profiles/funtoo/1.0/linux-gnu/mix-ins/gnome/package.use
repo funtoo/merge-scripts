@@ -2,14 +2,15 @@
 app-editors/gedit spell
 gnome-base/gnome accessibility
 gnome-base/nautilus sendto
+gnome-extra/nm-applet bluetooth modemmanager
 mail-client/evolution spell
 net-im/empathy spell
-net-misc/networkmanager bluetooth connection-sharing consolekit modemmanager ppp upower wifi
+net-misc/networkmanager bluetooth connection-sharing consolekit upower wifi
 
 # Required by gnome for a clean emerge.
 gnome-base/gvfs udisks
 media-libs/grilo playlist
-net-misc/networkmanager modemmanager
+net-misc/networkmanager modemmanager ppp
 www-servers/apache apache2_modules_auth_digest
 
 # Required for background transparency support, FL-1373
