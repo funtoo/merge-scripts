@@ -19,7 +19,9 @@ DEPEND="${RDEPEND}
 src_prepare() {
 	# From Funtoo:
 	# 	https://bugs.funtoo.org/browse/FL-1329
-	epatch "${FILESDIR}"/${P}-rename-gnome-power-management-system-process.patch
+	# 	https://bugs.funtoo.org/browse/FL-1439
+	epatch "${FILESDIR}"/patches/rename-gnome-power-management-system-process.patch
+	epatch "${FILESDIR}"/patches/add-cinnamon-power-management-system-process.patch
 }
 
 src_configure() {
