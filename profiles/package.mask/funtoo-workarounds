@@ -1,6 +1,3 @@
-# FL-1433 - mask for review
-=app-i18n/ibus-1.5.8
-
 # FL-1407 - fix net-analyzer/tcpdump builds
 =net-libs/libpcap-1.6.1
 
