@@ -101,8 +101,10 @@ src_prepare() {
 	if [ "${PV%_p*}" != "${PV}" ] ; then # Snapshot
 		export revision=git-N-${FFMPEG_REVISION}
 	fi
+
 	epatch "${FILESDIR}/freiordl.patch"
 	epatch "${FILESDIR}/flashtest.patch"
+	epatch "${FILESDIR}/arm.patch"
 
 	if has_version dev-libs/libcdio-paranoia; then
 		sed -i \

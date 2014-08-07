@@ -112,6 +112,9 @@ src_prepare() {
 	if [ "${PV%_p*}" != "${PV}" ] ; then # Snapshot
 		export revision=git-N-${FFMPEG_REVISION}
 	fi
+
+	epatch "${FILESDIR}/arm.patch"
+
 	epatch_user
 }
 
