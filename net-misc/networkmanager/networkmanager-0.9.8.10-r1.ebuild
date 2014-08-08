@@ -1,22 +1,20 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="5"
-GCONF_DEBUG="no"
 GNOME_ORG_MODULE="NetworkManager"
-GNOME2_LA_PUNT="yes"
 VALA_MIN_API_VERSION="0.18"
 VALA_USE_DEPEND="vapigen"
 
-inherit bash-completion-r1 eutils gnome2 linux-info systemd user readme.gentoo toolchain-funcs vala virtualx udev
+inherit bash-completion-r1 eutils gnome.org linux-info systemd user readme.gentoo toolchain-funcs vala virtualx udev
 
 DESCRIPTION="Universal network configuration daemon for laptops, desktops, servers and virtualization hosts"
 HOMEPAGE="https://wiki.gnome.org/Projects/NetworkManager"
 
 LICENSE="GPL-2+"
 SLOT="0"
-IUSE="avahi bluetooth connection-sharing consolekit dhclient +dhcpcd gnutls introspection kernel_linux +nss modemmanager ncurses policykit ppp resolvconf selinux systemd teamd test upower vala wext wifi"
+IUSE="avahi bluetooth connection-sharing consolekit dhclient +dhcpcd gnutls introspection kernel_linux +nss modemmanager policykit ppp resolvconf systemd test upower vala wext wifi"
 
-KEYWORDS=""
+KEYWORDS="*"
 
 REQUIRED_USE="
 	modemmanager? ( ppp )
@@ -32,13 +30,11 @@ done
 
 COMMON_DEPEND="
 	>=sys-apps/dbus-1.2
-	>=dev-libs/dbus-glib-0.102
-	>=dev-libs/glib-2.32:2
-	>=dev-libs/libnl-3.2.5:3=
-	dev-libs/libndp
+	>=dev-libs/dbus-glib-0.94
+	>=dev-libs/glib-2.30
+	>=dev-libs/libnl-3.2.7:3=
 	policykit? ( >=sys-auth/polkit-0.106 )
 	>=net-libs/libsoup-2.26:2.4=
-	sys-libs/readline
 	virtual/libgudev:=
 	bluetooth? (
 		net-wireless/rfkill
@@ -51,7 +47,6 @@ COMMON_DEPEND="
 		dev-libs/libgcrypt:0=
 		net-libs/gnutls:= )
 	modemmanager? ( >=net-misc/modemmanager-0.7.991 )
-	ncurses? ( >=dev-libs/newt-0.52.15 )
 	nss? ( >=dev-libs/nss-3.11:= )
 	dhclient? ( =net-misc/dhcp-4*[client] )
 	dhcpcd? ( >=net-misc/dhcpcd-4.0.0_rc3 )
@@ -59,7 +54,6 @@ COMMON_DEPEND="
 	ppp? ( >=net-dialup/ppp-2.4.5[ipv6] )
 	resolvconf? ( net-dns/openresolv )
 	systemd? ( >=sys-apps/systemd-183:0= )
-	teamd? ( >=net-misc/libteam-1.9 )
 	upower? ( || ( sys-power/upower sys-power/upower-pm-utils ) )
 
 	plugins_openconnect? ( net-misc/networkmanager-openconnect )
@@ -123,6 +117,12 @@ src_prepare() {
 	DOC_CONTENTS="To modify system network connections without needing to enter the
 		root password, add your user account to the 'plugdev' group."
 
+	# Bug #402085, https://bugzilla.gnome.org/show_bug.cgi?id=387832
+	epatch "${FILESDIR}/${PN}-0.9.8.4-pre-sleep.patch"
+
+	# https://www.mail-archive.com/networkmanager-list@gnome.org/msg24038.html
+	epatch "${FILESDIR}/${PN}-0.9.8.9-fix-crash-on-wifi-rescan.patch"
+
 	# Use python2.7 shebangs for test scripts
 	sed -e 's@\(^#!.*python\)@\12.7@' \
 		-i */tests/*.py || die
@@ -137,8 +137,6 @@ src_prepare() {
 	use vala && vala_src_prepare
 
 	epatch_user # don't remove, users often want custom patches for NM
-
-	gnome2_src_prepare
 }
 
 src_configure() {
@@ -150,7 +148,7 @@ src_configure() {
 
 	fi
 
-	gnome2_src_configure \
+	econf \
 		--disable-more-warnings \
 		--disable-static \
 		--localstatedir=/var \
@@ -169,23 +167,21 @@ src_configure() {
 		$(use_with dhclient) \
 		$(use_with dhcpcd) \
 		$(use_with modemmanager modem-manager-1) \
-		$(use_with ncurses nmtui) \
 		$(use_with resolvconf) \
-		$(use_with selinux) \
-		$(use_enable teamd teamdctl) \
 		$(use_enable test tests) \
 		$(use_enable vala) \
-		--without-valgrind \
 		$(use_with wext) \
 		"$(systemd_with_unitdir)"
 }
 
 src_test() {
+	# bug #????
+	cp libnm-util/tests/certs/test_ca_cert.pem src/settings/plugins/ifnet/tests/ || die
 	Xemake check
 }
 
 src_install() {
-	gnome2_src_install
+	default
 
 	readme.gentoo_create_doc
 
@@ -197,12 +193,6 @@ src_install() {
 
 	# Need to keep the /etc/NetworkManager/dispatched.d for dispatcher scripts
 	keepdir /etc/NetworkManager/dispatcher.d
-
-	# Provide openrc net dependency only when nm is connected
-	exeinto /etc/NetworkManager/dispatcher.d
-	newexe "${FILESDIR}/10-openrc-status-r4" 10-openrc-status
-	sed -e "s:@EPREFIX@:${EPREFIX}:g" \
-		-i "${ED}/etc/NetworkManager/dispatcher.d/10-openrc-status" || die
 
 	# Add keyfile plugin support
 	keepdir /etc/NetworkManager/system-connections
@@ -217,12 +207,13 @@ src_install() {
 	insinto /usr/share/polkit-1/rules.d/
 	doins "${FILESDIR}/01-org.freedesktop.NetworkManager.settings.modify.system.rules"
 
+	prune_libtool_files --modules
+
 	# Funtoo addwifi script
 	newsbin ${FILESDIR}/addwifi-with-delay addwifi
 }
 
 pkg_postinst() {
-	gnome2_pkg_postinst
 	readme.gentoo_print_elog
 
 	if [[ -e "${EROOT}etc/NetworkManager/nm-system-settings.conf" ]]; then
