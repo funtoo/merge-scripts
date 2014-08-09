@@ -32,7 +32,7 @@ COMMON_DEPEND="
 	>=sys-apps/dbus-1.2
 	>=dev-libs/dbus-glib-0.94
 	>=dev-libs/glib-2.30
-	>=dev-libs/libnl-3.2.7:3=
+	<dev-libs/libnl-3.2.25:3=
 	policykit? ( >=sys-auth/polkit-0.106 )
 	>=net-libs/libsoup-2.26:2.4=
 	virtual/libgudev:=
