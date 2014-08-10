@@ -36,11 +36,6 @@ app-admin/eselect-sh
 #  Oleg Vinichenko (3 Dec 2013)
 #  mask latest version of autogen, broken
 >=sys-devel/autogen-5.18
-  
-#  Oleg Vinichenko (26 Aug 2013)
-#  mask latest icedtea-bin ebuild, multiple failures with dev-java/* packages.
-#  see bug #477972 at b.g.o, this doesn't allow clean emerge of jython, forked in Funtoo
->dev-java/icedtea-bin-7.2.3.9
 
 # Ryan Harris (23 Jul 2013)
 # Mask phoronix-test-suite due to security concerns
