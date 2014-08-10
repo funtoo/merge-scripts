@@ -1,3 +1,9 @@
+#  Dantrell B. (10 Aug 2014)
+#  Depends on sys-devel/gcc[gcj] which newer versions of gcc in Funtoo do not have
+#   Build against a version of gcc that does or use app-text/mcpdf instead
+#  Ref FL-970, FL-1351 and FL-1424
+app-text/pdftk
+
 #  Dantrell B. (2 Aug 2014)
 #  Selectively mask versions of net-irc/hexchat
 #  Ref FL-584 and FL-1435
