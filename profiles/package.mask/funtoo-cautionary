@@ -30,9 +30,6 @@ app-admin/eselect-sh
 # latest python-updater to avoid mess.
 >app-admin/python-updater-0.11
 
-#  mask newer version of cryptsetup, breakage expected
->sys-fs/cryptsetup-1.6.3
-
 #  Cautionary mask latest bash and readline, until it's time to update
 >=app-shells/bash-4.3
 >=sys-libs/readline-6.3
