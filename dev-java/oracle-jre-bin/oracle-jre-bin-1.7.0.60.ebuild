@@ -10,31 +10,22 @@ S_PV="$(replace_version_separator 3 '_')"
 X86_AT="jre-${MY_PV}-linux-i586.tar.gz"
 AMD64_AT="jre-${MY_PV}-linux-x64.tar.gz"
 
-# Sources for simplified BundleID direct download links:
-# https://www.java.com/en/download/manual.jsp?locale=en
-
-# Sources for JRE, JDK, JCE downloads:
-#http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html"
-#http://www.oracle.com/technetwork/java/javase/downloads/jre7-downloads-1880261.html"
-
-JCE_URI="http://www.oracle.com/technetwork/java/javase/downloads/jce-7-download-432124.html"
-
 JCE_DIR="UnlimitedJCEPolicy"
 JCE_FILE="${JCE_DIR}JDK7.zip"
 
 DESCRIPTION="Oracle's Java SE Runtime Environment"
 HOMEPAGE="http://www.oracle.com/technetwork/java/javase/"
 SRC_URI="
-	x86? ( http://javadl.sun.com/webapps/download/AutoDL?BundleId=83374 -> ${X86_AT} http://www.funtoo.org/distfiles/oracle-java/${X86_AT} )
-	amd64? ( http://javadl.sun.com/webapps/download/AutoDL?BundleId=83376 -> ${AMD64_AT} http://www.funtoo.org/distfiles/oracle-java/${AMD64_AT} )
+	x86? ( http://www.funtoo.org/distfiles/oracle-java/${X86_AT} )
+	amd64? ( http://www.funtoo.org/distfiles/oracle-java/${AMD64_AT} )
 	jce? ( http://www.funtoo.org/distfiles/oracle-java/${JCE_FILE} )"
 
 LICENSE="Oracle-BCLA-JavaSE"
 SLOT="1.7"
-KEYWORDS="amd64 x86"
+KEYWORDS="*"
 IUSE="X alsa fontconfig jce nsplugin pax_kernel"
 
-RESTRICT="strip"
+RESTRICT="mirror strip"
 QA_PREBUILT="*"
 
 RDEPEND="

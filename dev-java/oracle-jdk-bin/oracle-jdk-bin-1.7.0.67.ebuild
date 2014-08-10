@@ -7,22 +7,26 @@ inherit eutils java-vm-2 prefix versionator
 JDK_URI="http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html"
 JCE_URI="http://www.oracle.com/technetwork/java/javase/downloads/jce-7-download-432124.html"
 
-FX_VERSION="2_2_55"
+FX_VERSION="2_2_67"
 
 MY_PV="$(get_version_component_range 2)u$(get_version_component_range 4)"
 S_PV="$(replace_version_separator 3 '_')"
 
 AT_x86="jdk-${MY_PV}-linux-i586.tar.gz"
 AT_amd64="jdk-${MY_PV}-linux-x64.tar.gz"
-AT_arm_hflt="jdk-${MY_PV}-linux-arm-vfp-hflt.tar.gz"
-AT_arm_sflt="jdk-${MY_PV}-linux-arm-vfp-sflt.tar.gz"
+#AT_arm_hflt="jdk-${MY_PV}-linux-arm-vfp-hflt.tar.gz"
+AT_arm_hflt="jdk-7u60-linux-arm-vfp-hflt.tar.gz"
+#AT_arm_sflt="jdk-${MY_PV}-linux-arm-vfp-sflt.tar.gz"
+AT_arm_sflt="jdk-7u60-linux-arm-vfp-sflt.tar.gz"
 
 FXDEMOS_linux="javafx_samples-${FX_VERSION}-linux.zip"
 
 DEMOS_x86="jdk-${MY_PV}-linux-i586-demos.tar.gz"
 DEMOS_amd64="jdk-${MY_PV}-linux-x64-demos.tar.gz"
-DEMOS_arm_hflt="jdk-${MY_PV}-linux-arm-vfp-hflt-demos.tar.gz"
-DEMOS_arm_sflt="jdk-${MY_PV}-linux-arm-vfp-sflt-demos.tar.gz"
+#DEMOS_arm_hflt="jdk-${MY_PV}-linux-arm-vfp-hflt-demos.tar.gz"
+DEMOS_arm_hflt="jdk-7u60-linux-arm-vfp-hflt-demos.tar.gz"
+#DEMOS_arm_sflt="jdk-${MY_PV}-linux-arm-vfp-sflt-demos.tar.gz"
+DEMOS_arm_sflt="jdk-7u60-linux-arm-vfp-sflt-demos.tar.gz"
 
 JCE_DIR="UnlimitedJCEPolicy"
 JCE_FILE="${JCE_DIR}JDK7.zip"
@@ -33,17 +37,20 @@ MIR_URI="http://www.funtoo.org/distfiles/oracle-java"
 SRC_URI=" 
 	amd64? ( ${MIR_URI}/${AT_amd64} examples? ( ${MIR_URI}/${FXDEMOS_linux} ${MIR_URI}/${DEMOS_amd64} ) )
 	x86? ( ${MIR_URI}/${AT_x86} examples? ( ${MIR_URI}/${FXDEMOS_linux} ${MIR_URI}/${DEMOS_x86} ) )
+	arm? ( ${MIR_URI}/${AT_arm_sflt} ${MIR_URI}/${AT_arm_hflt} examples? ( ${MIR_URI}/${FXDEMOS_linux} ${MIR_URI}/${DEMOS_arm_sflt} ${MIR_URI}/${DEMOS_arm_hflt} ) )
 	jce? ( ${MIR_URI}/${JCE_FILE} )"
 
 LICENSE="Oracle-BCLA-JavaSE examples? ( BSD )"
 SLOT="1.7"
-KEYWORDS="amd64 x86"
-IUSE="+X alsa aqua derby doc examples +fontconfig jce nsplugin pax_kernel source"
+KEYWORDS="*"
+IUSE="+X alsa aqua derby doc examples +fontconfig jce nsplugin pax_kernel selinux source"
 
-RESTRICT="strip"
+RESTRICT="mirror strip"
 QA_PREBUILT="*"
 
-RDEPEND="
+COMMON_DEP="
+	selinux? ( sec-policy/selinux-java )"
+RDEPEND="${COMMON_DEP}
 	X? ( !aqua? (
 		x11-libs/libX11
 		x11-libs/libXext
@@ -57,7 +64,7 @@ RDEPEND="
 	!prefix? ( sys-libs/glibc )"
 # scanelf won't create a PaX header, so depend on paxctl to avoid fallback
 # marking. #427642
-DEPEND="
+DEPEND="${COMMON_DEP}
 	jce? ( app-arch/unzip )
 	examples? ( kernel_linux? ( app-arch/unzip ) )
 	pax_kernel? ( sys-apps/paxctl )"
@@ -112,34 +119,14 @@ src_prepare() {
 	fi
 }
 
-src_compile() {
-	# This needs to be done before CDS - #215225
-	java-vm_set-pax-markings "${S}"
-
-	# see bug #207282
-	einfo "Creating the Class Data Sharing archives"
-	case ${ARCH} in
-		arm|ia64)
-			bin/java -client -Xshare:dump || die
-			;;
-		x86)
-			bin/java -client -Xshare:dump || die
-			bin/java -server -Xshare:dump || die
-			;;
-		*)
-			bin/java -server -Xshare:dump || die
-			;;
-	esac
+src_install() {
+	local dest="/opt/${P}"
+	local ddest="${ED}${dest}"
 
 	# Create files used as storage for system preferences.
 	mkdir jre/.systemPrefs || die
 	touch jre/.systemPrefs/.system.lock || die
 	touch jre/.systemPrefs/.systemRootModFile || die
-}
-
-src_install() {
-	local dest="/opt/${P}"
-	local ddest="${ED}${dest}"
 
 	# We should not need the ancient plugin for Firefox 2 anymore, plus it has
 	# writable executable segments
@@ -191,7 +178,7 @@ src_install() {
 	fi
 
 	if use source; then
-		cp src.zip "${ddest}" || die
+		cp -p src.zip "${ddest}" || die
 	fi
 
 	if use !arm && use !x86-macos && use !x64-macos ; then
@@ -221,6 +208,26 @@ src_install() {
 		insinto "${dest}"/jre/lib/
 		doins "${T}"/fontconfig.properties
 	fi
+
+	# This needs to be done before CDS - #215225
+	java-vm_set-pax-markings "${ddest}"
+
+	# see bug #207282
+	einfo "Creating the Class Data Sharing archives"
+	case ${ARCH} in
+		arm|ia64)
+			${ddest}/bin/java -client -Xshare:dump || die
+			;;
+		x86)
+			${ddest}/bin/java -client -Xshare:dump || die
+			# limit heap size for large memory on x86 #467518
+			# this is a workaround and shouldn't be needed.
+			${ddest}/bin/java -server -Xms64m -Xmx64m -Xshare:dump || die
+			;;
+		*)
+			${ddest}/bin/java -server -Xshare:dump || die
+			;;
+	esac
 
 	# Remove empty dirs we might have copied
 	find "${D}" -type d -empty -exec rmdir -v {} + || die
