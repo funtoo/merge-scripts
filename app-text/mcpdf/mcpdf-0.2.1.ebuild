@@ -8,7 +8,7 @@ SRC_URI="https://oss.sonatype.org/content/repositories/releases/aero/m-click/${P
 
 LICENSE="as-is"
 SLOT="0"
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="+pdftk"
 
 RDEPEND="pdftk? ( !app-text/pdftk )"
