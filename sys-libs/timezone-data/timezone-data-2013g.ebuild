@@ -1,6 +1,6 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI="3"
+EAPI="5"
 
 inherit eutils toolchain-funcs flag-o-matic
 
@@ -10,18 +10,17 @@ DESCRIPTION="Timezone data (/usr/share/zoneinfo) and utilities (tzselect/zic/zdu
 HOMEPAGE="http://www.iana.org/time-zones http://www.twinsun.com/tz/tz-link.htm"
 SRC_URI="http://www.iana.org/time-zones/repository/releases/tzdata${data_ver}.tar.gz
 	http://www.iana.org/time-zones/repository/releases/tzcode${code_ver}.tar.gz
-	ftp://munnari.oz.au/pub/tzdata${data_ver}.tar.gz
-	ftp://munnari.oz.au/pub/tzcode${code_ver}.tar.gz"
+	ftp://munnari.oz.au/pub/oldtz/tzdata${data_ver}.tar.gz
+	ftp://munnari.oz.au/pub/oldtz/tzcode${data_ver}.tar.gz"
 
 LICENSE="BSD public-domain"
 SLOT="0"
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="nls elibc_FreeBSD elibc_glibc"
 
 RDEPEND="!<sys-libs/glibc-2.3.5"
 
 S=${WORKDIR}
-
 
 src_prepare() {
 	epatch "${FILESDIR}"/${PN}-2013f-makefile.patch

@@ -1,8 +1,6 @@
-# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-libs/timezone-data/timezone-data-2013f-r1.ebuild,v 1.2 2013/09/30 04:42:20 vapier Exp $
 
-EAPI="3"
+EAPI="5"
 
 inherit eutils toolchain-funcs flag-o-matic
 
@@ -12,12 +10,12 @@ DESCRIPTION="Timezone data (/usr/share/zoneinfo) and utilities (tzselect/zic/zdu
 HOMEPAGE="http://www.iana.org/time-zones http://www.twinsun.com/tz/tz-link.htm"
 SRC_URI="http://www.iana.org/time-zones/repository/releases/tzdata${data_ver}.tar.gz
 	http://www.iana.org/time-zones/repository/releases/tzcode${code_ver}.tar.gz
-	ftp://munnari.oz.au/pub/tzdata${data_ver}.tar.gz
-	ftp://munnari.oz.au/pub/tzcode${code_ver}.tar.gz"
+	ftp://munnari.oz.au/pub/oldtz/tzdata${data_ver}.tar.gz
+	ftp://munnari.oz.au/pub/oldtz/tzcode${data_ver}.tar.gz"
 
 LICENSE="BSD public-domain"
 SLOT="0"
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="nls elibc_FreeBSD elibc_glibc"
 
 RDEPEND="!<sys-libs/glibc-2.3.5"
@@ -25,7 +23,7 @@ RDEPEND="!<sys-libs/glibc-2.3.5"
 S=${WORKDIR}
 
 src_prepare() {
-	epatch "${FILESDIR}"/${PN}-2013f-makefile.patch
+	epatch "${FILESDIR}"/${PN}-2013h-makefile.patch
 	tc-is-cross-compiler && cp -pR "${S}" "${S}"-native
 }
 
