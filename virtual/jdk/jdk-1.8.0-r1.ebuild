@@ -7,8 +7,7 @@ SLOT="1.8"
 KEYWORDS="*"
 
 RDEPEND="|| (
-		=dev-java/icedtea-bin-8*
-		=dev-java/icedtea-8*
 		=dev-java/oracle-jdk-bin-1.8.0*
+		=dev-java/icedtea-bin-8*
 		=dev-java/soylatte-jdk-bin-8*
 	)"

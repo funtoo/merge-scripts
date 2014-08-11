@@ -3,11 +3,10 @@
 EAPI="5"
 
 DESCRIPTION="Virtual for Java Runtime Environment (JRE)"
-SLOT="1.8"
+SLOT="1.7"
 KEYWORDS="*"
 
 RDEPEND="|| (
-		=virtual/jdk-1.8.0*
-		=dev-java/oracle-jre-bin-1.8.0*
+		=dev-java/oracle-jre-bin-1.7.0*
+		=virtual/jdk-1.7.0*
 	)"
-DEPEND=""
