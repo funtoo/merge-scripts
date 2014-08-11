@@ -1,29 +1,27 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=5
+EAPI="5"
 
 inherit eutils multilib linux-info linux-mod toolchain-funcs versionator pax-utils
 
 DESCRIPTION="Ati precompiled drivers for Radeon Evergreen (HD5000 Series) and newer chipsets"
 HOMEPAGE="http://www.amd.com"
-RUN="${WORKDIR}/amd-catalyst-13.11-beta V9.4-linux-x86.x86_64.run"
+RUN="${WORKDIR}/fglrx-14.10.1006.1001/amd-driver-installer-14.10.1006.1001-x86.x86_64.run"
 SLOT="1"
-DRIVERS_URI="http://ftp.osuosl.org/pub/funtoo/distfiles/amd-catalyst-13.11-beta-v9.4-linux-x86.x86_64.run.zip"
+DRIVERS_URI="mirror://gentoo/amd-catalyst-14-4-rev2-linux-x86-x86-64-may6.zip http://www.funtoo.org/distfiles/amd-catalyst-14-4-rev2-linux-x86-x86-64-may6.zip"
 XVBA_SDK_URI="http://developer.amd.com/wordpress/media/2012/10/xvba-sdk-0.74-404001.tar.gz"
 SRC_URI="${DRIVERS_URI} ${XVBA_SDK_URI}"
 FOLDER_PREFIX="common/"
-RESTRICT="mirror"
 IUSE="+vaapi debug +modules multilib qt4 static-libs pax_kernel"
 
 LICENSE="AMD GPL-2 QPL-1.0"
-KEYWORDS="-* amd64 x86"
+KEYWORDS="*"
 
 RESTRICT="bindist test"
 
-# cogl blocker: see FL-1130
+PDEPEND="vaapi? ( x11-libs/xvba-video )"
 RDEPEND="
-	!<=media-libs/cogl-1.12.2-r1
-	<=x11-base/xorg-server-1.14.49[-minimal]
+	<=x11-base/xorg-server-1.15.49[-minimal]
 	>=app-admin/eselect-opengl-1.0.7
 	app-admin/eselect-opencl
 	sys-power/acpid
@@ -35,14 +33,17 @@ RDEPEND="
 	x11-libs/libXrender
 	virtual/glu
 	multilib? (
-			app-emulation/emul-linux-x86-opengl
+			|| (
+				>=virtual/glu-9.0-r1[abi_x86_32]
+				app-emulation/emul-linux-x86-opengl
+			)
 			|| (
 				(
-					x11-libs/libX11[abi_x86_32]
-					x11-libs/libXext[abi_x86_32]
-					x11-libs/libXinerama[abi_x86_32]
-					x11-libs/libXrandr[abi_x86_32]
-					x11-libs/libXrender[abi_x86_32]
+					>=x11-libs/libX11-1.6.2[abi_x86_32]
+					>=x11-libs/libXext-1.3.2[abi_x86_32]
+					>=x11-libs/libXinerama-1.1.3[abi_x86_32]
+					>=x11-libs/libXrandr-1.4.2[abi_x86_32]
+					>=x11-libs/libXrender-0.9.8[abi_x86_32]
 				)
 				app-emulation/emul-linux-x86-xlibs
 			)
@@ -75,7 +76,6 @@ DEPEND="${RDEPEND}
 	app-misc/pax-utils
 	app-arch/unzip
 "
-PDEPEND="vaapi? ( x11-libs/xvba-video )"
 
 EMULTILIB_PKG="true"
 
@@ -110,6 +110,8 @@ QA_PRESTRIPPED="
 	usr/lib\(32\|64\)\?/libAMDXvBA.so.1.0
 	usr/lib\(32\|64\)\?/libaticaldd.so
 	usr/lib\(32\|64\)\?/dri/fglrx_dri.so
+	usr/lib\(32\|64\)\?/OpenCL/vendors/amd/libOpenCL.so.1
+	usr/lib\(32\|64\)\?/OpenCL/vendors/amd/libamdocl\(32\|64\).so
 "
 
 QA_SONAME="
@@ -149,6 +151,14 @@ QA_DT_HASH="
 	usr/lib\(32\|64\)\?/OpenCL/vendors/amd/libamdocl\(32\|64\)\?.so
 	usr/lib\(32\|64\)\?/OpenCL/vendors/amd/libOpenCL.so.1
 "
+
+pkg_nofetch() {
+	einfo "The driver packages"
+	einfo ${A}
+	einfo "need to be downloaded manually from"
+	einfo "http://support.amd.com/en-us/download/desktop?os=Linux%20x86_64"
+	einfo "and ${XVBA_SDK_URI}"
+}
 
 pkg_pretend() {
 	local CONFIG_CHECK="~MTRR ~!DRM ACPI PCI_MSI !LOCKDEP !PAX_KERNEXEC_PLUGIN_METHOD_OR"
@@ -299,8 +309,6 @@ src_prepare() {
 
 	epatch "${FILESDIR}/ati-drivers-13.8-beta-include-seq_file.patch"
 
-	epatch "${FILESDIR}/check-for-iommu-only-if-iommu-is-supported.patch"
-
 	# Fix #483400
 	epatch "${FILESDIR}/fgl_glxgears-do-not-include-glATI.patch"
 
@@ -414,7 +422,7 @@ src_install() {
 	insinto /etc/ati
 	exeinto /etc/ati
 	# Everything except for the authatieventsd.sh script.
-	doins ${FOLDER_PREFIX}etc/ati/{logo*,control,atiogl.xml,signature,amdpcsdb.default}
+	doins ${FOLDER_PREFIX}etc/ati/{logo*,control,signature,amdpcsdb.default}
 	doexe ${FOLDER_PREFIX}etc/ati/authatieventsd.sh
 
 	# include.

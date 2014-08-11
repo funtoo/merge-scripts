@@ -1,6 +1,6 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=5
+EAPI="5"
 
 inherit eutils multilib linux-info linux-mod toolchain-funcs versionator pax-utils
 
@@ -8,15 +8,14 @@ DESCRIPTION="Ati precompiled drivers for Radeon Evergreen (HD5000 Series) and ne
 HOMEPAGE="http://www.amd.com"
 RUN="${WORKDIR}/amd-catalyst-13.12-linux-x86.x86_64.run"
 SLOT="1"
-DRIVERS_URI="http://ftp.osuosl.org/pub/funtoo/distfiles/amd-catalyst-13.12-linux-x86.x86_64.zip"
+DRIVERS_URI="mirror://gentoo/amd-catalyst-13.12-linux-x86.x86_64.zip http://ftp.osuosl.org/pub/funtoo/distfiles/amd-catalyst-13.12-linux-x86.x86_64.zip"
 XVBA_SDK_URI="http://developer.amd.com/wordpress/media/2012/10/xvba-sdk-0.74-404001.tar.gz"
 SRC_URI="${DRIVERS_URI} ${XVBA_SDK_URI}"
 FOLDER_PREFIX="common/"
-RESTRICT="mirror"
 IUSE="+vaapi debug +modules multilib qt4 static-libs pax_kernel"
 
 LICENSE="AMD GPL-2 QPL-1.0"
-KEYWORDS="-* amd64 x86"
+KEYWORDS="*"
 
 RESTRICT="bindist test"
 

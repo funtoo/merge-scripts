@@ -1,25 +1,27 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=4
+EAPI="5"
 
-inherit eutils multilib linux-info linux-mod toolchain-funcs versionator
+inherit eutils multilib linux-info linux-mod toolchain-funcs versionator pax-utils
 
 DESCRIPTION="Ati precompiled drivers for Radeon Evergreen (HD5000 Series) and newer chipsets"
 HOMEPAGE="http://www.amd.com"
-MY_V=( $(get_version_components) )
-#RUN="${WORKDIR}/amd-driver-installer-9.00-x86.x86_64.run"
-SRC_URI="http://www2.ati.com/drivers/beta/amd-driver-installer-12-9-beta-x86.x86_64.zip"
-FOLDER_PREFIX="common/"
-IUSE="debug +modules multilib qt4 static-libs disable-watermark"
-
-LICENSE="AMD GPL-2 QPL-1.0 as-is"
-KEYWORDS="-* ~amd64 ~x86"
+RUN="${WORKDIR}/fglrx-14.20/amd-driver-installer-14.20-x86.x86_64.run"
 SLOT="1"
+DRIVERS_URI="mirror://gentoo/linux-amd-catalyst-14.6-beta-v1.0-may23.zip http://www.funtoo.org/distfiles/linux-amd-catalyst-14.6-beta-v1.0-may23.zip"
+XVBA_SDK_URI="http://developer.amd.com/wordpress/media/2012/10/xvba-sdk-0.74-404001.tar.gz"
+SRC_URI="${DRIVERS_URI} ${XVBA_SDK_URI}"
+FOLDER_PREFIX="common/"
+IUSE="+vaapi debug +modules multilib qt4 static-libs pax_kernel"
 
-RESTRICT="bindist"
+LICENSE="AMD GPL-2 QPL-1.0"
+KEYWORDS=""
 
+RESTRICT="bindist test"
+
+PDEPEND="vaapi? ( x11-libs/xvba-video )"
 RDEPEND="
-	<=x11-base/xorg-server-1.12.49[-minimal]
+	<=x11-base/xorg-server-1.15.49[-minimal]
 	>=app-admin/eselect-opengl-1.0.7
 	app-admin/eselect-opencl
 	sys-power/acpid
@@ -29,9 +31,22 @@ RDEPEND="
 	x11-libs/libXinerama
 	x11-libs/libXrandr
 	x11-libs/libXrender
+	virtual/glu
 	multilib? (
-			app-emulation/emul-linux-x86-opengl
-			app-emulation/emul-linux-x86-xlibs
+			|| (
+				>=virtual/glu-9.0-r1[abi_x86_32]
+				app-emulation/emul-linux-x86-opengl
+			)
+			|| (
+				(
+					>=x11-libs/libX11-1.6.2[abi_x86_32]
+					>=x11-libs/libXext-1.3.2[abi_x86_32]
+					>=x11-libs/libXinerama-1.1.3[abi_x86_32]
+					>=x11-libs/libXrandr-1.4.2[abi_x86_32]
+					>=x11-libs/libXrender-0.9.8[abi_x86_32]
+				)
+				app-emulation/emul-linux-x86-xlibs
+			)
 	)
 	qt4? (
 			x11-libs/libICE
@@ -40,12 +55,18 @@ RDEPEND="
 			x11-libs/libXfixes
 			x11-libs/libXxf86vm
 			dev-qt/qtcore:4
-			dev-qt/qtgui:4
+			dev-qt/qtgui:4[accessibility]
 	)
 "
+if [[ legacy != ${SLOT} ]]; then
+	RDEPEND="${RDEPEND}
+		!x11-drivers/ati-drivers:legacy"
+else
+	RDEPEND="${RDEPEND}
+		!x11-drivers/ati-drivers:1"
+fi
 
 DEPEND="${RDEPEND}
-	app-arch/unzip
 	x11-proto/inputproto
 	x11-proto/xf86miscproto
 	x11-proto/xf86vidmodeproto
@@ -53,7 +74,7 @@ DEPEND="${RDEPEND}
 	x11-libs/libXtst
 	sys-apps/findutils
 	app-misc/pax-utils
-	virtual/glu
+	app-arch/unzip
 "
 
 EMULTILIB_PKG="true"
@@ -89,6 +110,8 @@ QA_PRESTRIPPED="
 	usr/lib\(32\|64\)\?/libAMDXvBA.so.1.0
 	usr/lib\(32\|64\)\?/libaticaldd.so
 	usr/lib\(32\|64\)\?/dri/fglrx_dri.so
+	usr/lib\(32\|64\)\?/OpenCL/vendors/amd/libOpenCL.so.1
+	usr/lib\(32\|64\)\?/OpenCL/vendors/amd/libamdocl\(32\|64\).so
 "
 
 QA_SONAME="
@@ -129,113 +152,47 @@ QA_DT_HASH="
 	usr/lib\(32\|64\)\?/OpenCL/vendors/amd/libOpenCL.so.1
 "
 
-_check_kernel_config() {
-	local failed=0
-	local error=""
-	if ! kernel_is ge 2 6; then
-		eerror "You need a 2.6 linux kernel to compile against!"
-		die "No 2.6 Kernel found"
-	fi
-
-	if ! linux_chkconfig_present MTRR; then
-		ewarn "You don't have MTRR support enabled in the kernel."
-		ewarn "Direct rendering will not work."
-	fi
-
-	if linux_chkconfig_builtin DRM; then
-		ewarn "You have DRM support built in to the kernel"
-		ewarn "Direct rendering will not work."
-	fi
-
-	if ! linux_chkconfig_present AGP && \
-		! linux_chkconfig_present PCIEPORTBUS; then
-		ewarn "You don't have AGP and/or PCIe support enabled in the kernel"
-		ewarn "Direct rendering will not work."
-	fi
-
-	if ! linux_chkconfig_present ACPI; then
-		eerror "${P} requires the ACPI support in the kernel"
-		eerror "Please enable it:"
-		eerror "    CONFIG_ACPI=y"
-		eerror "in /usr/src/linux/.config or"
-		eerror "    Power management and ACPI options --->"
-		eerror "        [*] Power Management support"
-		eerror "in the 'menuconfig'"
-		error+=" CONFIG_ACPI disabled;"
-		failed=1
-	fi
-
-	if ! linux_chkconfig_present PCI_MSI; then
-		eerror "${P} requires MSI in the kernel."
-		eerror "Please enable it:"
-		eerror "    CONFIG_PCI_MSI=y"
-		eerror "in /usr/src/linux/.config or"
-		eerror "    Bus options (PCI etc.)  --->"
-		eerror "        [*] Message Signaled Interrupts (MSI and MSI-X)"
-		eerror "in the kernel config."
-		error+=" CONFIG_PCI_MSI disabled;"
-		failed=1
-	fi
-
-	if linux_chkconfig_present LOCKDEP; then
-		eerror "You've enabled LOCKDEP -- lock tracking -- in the kernel."
-		eerror "Unfortunately, this option exports the symbol lock_acquire as GPL-only."
-		eerror "This prevents ${P} from compiling with an error like this:"
-		eerror "FATAL: modpost: GPL-incompatible module fglrx.ko uses GPL-only symbol 'lock_acquire'"
-		eerror "Please make sure the following options have been unset:"
-		eerror "    Kernel hacking  --->"
-		eerror "        [ ] Lock debugging: detect incorrect freeing of live locks"
-		eerror "        [ ] Lock debugging: prove locking correctness"
-		eerror "        [ ] Lock usage statistics"
-		eerror "in 'menuconfig'"
-		error+=" LOCKDEP enabled;"
-		failed=1
-	fi
-
-	use amd64 && if ! linux_chkconfig_present COMPAT; then
-		eerror "${P} requires COMPAT."
-		eerror "Please enable the 32 bit emulation:"
-		eerror "Executable file formats / Emulations  --->"
-		eerror "    [*] IA32 Emulation"
-		eerror "in the kernel config."
-		eerror "if this doesn't enable CONFIG_COMPAT add"
-		eerror "    CONFIG_COMPAT=y"
-		eerror "in /usr/src/linux/.config"
-		error+=" COMPAT disabled;"
-		failed=1
-	fi
-
-	kernel_is ge 2 6 37 && kernel_is le 2 6 38 && if ! linux_chkconfig_present BKL ; then
-		eerror "${P} requires BKL."
-		eerror "Please enable the Big Kernel Lock:"
-		eerror "Kernel hacking  --->"
-		eerror "    [*] Big Kernel Lock"
-		eerror "in the kernel config."
-		eerror "or add"
-		eerror "    CONFIG_BKL=y"
-		eerror "in /usr/src/linux/.config"
-		error+=" BKL disabled;"
-		failed=1
-	fi
-
-	#if linux_chkconfig_present X86_X32; then
-	#	eerror "You've enabled x32 in the kernel."
-	#	eerror "Unfortunately, this option is not supported yet and prevents the fglrx"
-	#	eerror "kernel module from loading."
-	#	error+=" X86_32 enabled;"
-	#	failed=1
-	#fi
-
-	[[ ${failed} -ne 0 ]] && die "${error}"
+pkg_nofetch() {
+	einfo "The driver packages"
+	einfo ${A}
+	einfo "need to be downloaded manually from"
+	einfo "http://support.amd.com/en-us/download/desktop?os=Linux%20x86_64"
+	einfo "and ${XVBA_SDK_URI}"
 }
 
 pkg_pretend() {
+	local CONFIG_CHECK="~MTRR ~!DRM ACPI PCI_MSI !LOCKDEP !PAX_KERNEXEC_PLUGIN_METHOD_OR"
+	use amd64 && CONFIG_CHECK+=" COMPAT"
+
+	local ERROR_MTRR="CONFIG_MTRR required for direct rendering."
+	local ERROR_DRM="CONFIG_DRM must be disabled or compiled as a module and not loaded for direct
+		rendering to work."
+	local ERROR_LOCKDEP="CONFIG_LOCKDEP (lock tracking) exports the symbol lock_acquire
+		as GPL-only. This prevents ${P} from compiling with an error like this:
+		FATAL: modpost: GPL-incompatible module fglrx.ko uses GPL-only symbol 'lock_acquire'"
+	local ERROR_PAX_KERNEXEC_PLUGIN_METHOD_OR="This config option will cause
+		kernel to reject loading the fglrx module with
+		\"ERROR: could not insert 'fglrx': Exec format error.\"
+		You may want to try CONFIG_PAX_KERNEXEC_PLUGIN_METHOD_BTS instead."
+	local ERROR_BKL="CONFIG_BKL must be enabled for kernels 2.6.37-2.6.38."
+
 	# workaround until bug 365543 is solved
 	if use modules; then
 		linux-info_pkg_setup
-		if linux_config_exists; then
-			_check_kernel_config
+		require_configured_kernel
+		kernel_is ge 2 6 37 && kernel_is le 2 6 38 && CONFIG_CHECK+=" BKL"
+		check_extra_config
+		if ! linux_chkconfig_present AGP && \
+			! linux_chkconfig_present PCIEPORTBUS; then
+			ewarn "You don't have AGP and/or PCIe support enabled in the kernel"
+			ewarn "Direct rendering will not work."
 		fi
+	fi
+
+	if ! has XT ${PAX_MARKINGS} && use pax_kernel; then
+		ewarn "You have disabled xattr pax markings for portage."
+		ewarn "This will likely cause programs using ati-drivers provided"
+		ewarn "libraries to be killed kernel."
 	fi
 }
 
@@ -269,32 +226,45 @@ pkg_setup() {
 	fi
 
 	elog
-	elog "Please note that this driver supports only graphic cards based on"
+	elog "Please note that this driver only supports graphic cards based on"
 	elog "Evergreen chipset and newer."
-	elog "This represent the AMD Radeon HD 5400+ series at this moment."
+	elog "This includes the AMD Radeon HD 5400+ series at this moment."
 	elog
 	elog "If your card is older then use ${CATEGORY}/xf86-video-ati"
-	elog "For migration informations please reffer to:"
+	elog "For migration informations please refer to:"
 	elog "http://www.gentoo.org/proj/en/desktop/x/x11/ati-migration-guide.xml"
 	einfo
 }
 
 src_unpack() {
-	#please note, RUN may be insanely assigned at top near SRC_URI
-	if [[ ${A} =~ .*\.zip ]]; then
-		unpack ${A}
-		[[ -z "$RUN" ]] && RUN="${S}/${A/%.zip/.run}"
+	local DRIVERS_DISTFILE XVBA_SDK_DISTFILE
+	DRIVERS_DISTFILE=${DRIVERS_URI##*/}
+	XVBA_SDK_DISTFILE=${XVBA_SDK_URI##*/}
+
+	if [[ ${DRIVERS_DISTFILE} =~ .*\.tar\.gz ]]; then
+		unpack ${DRIVERS_DISTFILE}
 	else
-		RUN="${DISTDIR}/${A}"
+		#please note, RUN may be insanely assigned at top near SRC_URI
+		if [[ ${DRIVERS_DISTFILE} =~ .*\.zip ]]; then
+			unpack ${DRIVERS_DISTFILE}
+			[[ -z "$RUN" ]] && RUN="${S}/${DRIVERS_DISTFILE/%.zip/.run}"
+		else
+			RUN="${DISTDIR}/${DRIVERS_DISTFILE}"
+		fi
+		sh "${RUN}" --extract "${S}" 2>&1 > /dev/null || die
 	fi
-	sh ${RUN} --extract "${S}" 2>&1 > /dev/null || die
+
+	mkdir xvba_sdk
+	cd xvba_sdk
+	unpack ${XVBA_SDK_DISTFILE}
+
+	mkdir -p "${WORKDIR}/extra" || die "mkdir extra failed"
+	cd "${WORKDIR}/extra"
+	tar -xf "../${FOLDER_PREFIX}usr/src/ati/fglrx_sample_source.tgz"
 }
 
 src_prepare() {
-	# All kernel options for prepare are ment to be in here
 	if use modules; then
-		# version patches
-		# epatch "${FILESDIR}"/kernel/${PV}-*.patch
 		if use debug; then
 			sed -i '/^#define DRM_DEBUG_CODE/s/0/1/' \
 				"${MODULE_DIR}/firegl_public.c" \
@@ -316,7 +286,7 @@ src_prepare() {
 		-e "s:/var/lib/xdm/authdir/authfiles/:/var/run/xauth/:" \
 		-e "s:/var/lib/gdm/:/var/gdm/:" \
 		"${S}/${FOLDER_PREFIX}etc/ati/authatieventsd.sh" \
-		|| die "sed failed."
+		|| die "ACPI fixups failed."
 
 	# Since "who" is in coreutils, we're using that one instead of "finger".
 	sed -i -e 's:finger:who:' \
@@ -330,6 +300,20 @@ src_prepare() {
 	#epatch "${FILESDIR}"/ati-drivers-old_rsp.patch
 	# first hunk applied upstream second (x32 related) was not
 	epatch "${FILESDIR}"/ati-drivers-x32_something_something.patch
+
+	# compile fix for AGP-less kernel, bug #435322
+	epatch "${FILESDIR}"/ati-drivers-12.9-KCL_AGP_FindCapsRegisters-stub.patch
+
+	# Compile fix for kernel typesafe uid types #469160
+	epatch "${FILESDIR}/typesafe-kuid.diff"
+
+	epatch "${FILESDIR}/ati-drivers-13.8-beta-include-seq_file.patch"
+
+	# Fix #483400
+	epatch "${FILESDIR}/fgl_glxgears-do-not-include-glATI.patch"
+
+	# Compile fix, https://bugs.gentoo.org/show_bug.cgi?id=454870
+	use pax_kernel && epatch "${FILESDIR}/const-notifier-block.patch"
 
 	cd "${MODULE_DIR}"
 
@@ -346,22 +330,6 @@ src_prepare() {
 	sed -i -e 's/__SMP__/CONFIG_SMP/' *.c *h || die "SMP sed failed"
 	sed -i -e 's/ifdef MODVERSIONS/ifdef CONFIG_MODVERSIONS/' *.c *.h \
 		|| die "MODVERSIONS sed failed"
-	cd "${S}"
-
-	mkdir extra || die "mkdir failed"
-	cd extra
-	unpack ./../${FOLDER_PREFIX}usr/src/ati/fglrx_sample_source.tgz
-
-	# Get rid of watermark. Oldest known reference:
-	# http://phoronix.com/forums/showthread.php?19875-Unsupported-Hardware-watermark
-	if use disable-watermark; then
-		ebegin "Disabling watermark"
-		driver="${MY_BASE_DIR}"/usr/X11R6/${PKG_LIBDIR}/modules/drivers/fglrx_drv.so
-		for x in $(objdump -d ${driver}|awk '/call/&&/EnableLogo/{print "\\x"$2"\\x"$3"\\x"$4"\\x"$5"\\x"$6}'); do
-		sed -i "s/${x/x5b/\x5b}/\x90\x90\x90\x90\x90/g" ${driver} || break 1
-		done
-		eend $? || die "Disabling watermark failed"
-	fi
 }
 
 src_compile() {
@@ -379,8 +347,6 @@ src_compile() {
 		-lGL -lGLU -lX11 -lm || die "fgl_glxgears build failed"
 	eend $?
 }
-
-src_test() { :; } # no tests present
 
 src_install() {
 	use modules && linux-mod_src_install
@@ -456,7 +422,7 @@ src_install() {
 	insinto /etc/ati
 	exeinto /etc/ati
 	# Everything except for the authatieventsd.sh script.
-	doins ${FOLDER_PREFIX}etc/ati/{logo*,control,atiogl.xml,signature,amdpcsdb.default}
+	doins ${FOLDER_PREFIX}etc/ati/{logo*,control,signature,amdpcsdb.default}
 	doexe ${FOLDER_PREFIX}etc/ati/authatieventsd.sh
 
 	# include.
@@ -578,13 +544,25 @@ src_install-libs() {
 	for so in $(find "${D}"/usr/$(get_libdir) -maxdepth 1 -name *.so.[0-9].[0-9])
 	do
 		local soname=${so##*/}
-		## let's keep also this alternative way ;)
-		#dosym ${soname} /usr/$(get_libdir)/${soname%.[0-9]}
-		dosym ${soname} /usr/$(get_libdir)/$(scanelf -qF "#f%S" ${so})
+		local soname_one=${soname%.[0-9]}
+		local soname_zero=${soname_one%.[0-9]}
+		dosym ${soname} /usr/$(get_libdir)/${soname_one}
+		dosym ${soname_one} /usr/$(get_libdir)/${soname_zero}
 	done
+
+	# See https://bugs.gentoo.org/show_bug.cgi?id=443466
+	dodir /etc/revdep-rebuild/
+	echo "SEARCH_DIRS_MASK=\"/opt/bin/clinfo\"" > "${ED}/etc/revdep-rebuild/62-ati-drivers"
 
 	#remove static libs if not wanted
 	use static-libs || rm -rf "${D}"/usr/$(get_libdir)/libfglrx_dm.a
+
+	#install xvba sdk headers
+	doheader xvba_sdk/include/amdxvba.h
+
+	if use pax_kernel; then
+		pax-mark m "${D}"/usr/lib*/opengl/ati/lib/libGL.so.1.2 || die "pax-mark failed"
+	fi
 }
 
 pkg_postinst() {
@@ -606,6 +584,20 @@ pkg_postinst() {
 	use modules && linux-mod_pkg_postinst
 	"${ROOT}"/usr/bin/eselect opengl set --use-old ati
 	"${ROOT}"/usr/bin/eselect opencl set --use-old amd
+
+	if has_version "x11-drivers/xf86-video-intel[sna]"; then
+		ewarn "It is reported that xf86-video-intel built with USE=\"sna\" causes the X server"
+		ewarn "to crash on systems that use hybrid AMD/Intel graphics. If you experience"
+		ewarn "this crash, downgrade to xf86-video-intel-2.20.2 or earlier or"
+		ewarn "try disabling sna for xf86-video-intel."
+		ewarn "For details, see https://bugs.gentoo.org/show_bug.cgi?id=430000"
+	fi
+
+	if use pax_kernel; then
+		ewarn "Please run \"revdep-pax -s libGL.so.1 -me\" after installation and"
+		ewarn "after you have run \"eselect opengl set ati\". Executacle"
+		ewarn "revdep-pax is part of package sys-apps/elfix."
+	fi
 }
 
 pkg_preinst() {
