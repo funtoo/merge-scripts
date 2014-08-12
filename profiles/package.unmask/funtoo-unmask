@@ -2,5 +2,6 @@
 app-backup/rdiff-backup
 dev-scheme/guile
 games-board/aisleriot
+media-libs/aubio
 media-video/mpv
 www-servers/nginx
