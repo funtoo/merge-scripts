@@ -22,6 +22,23 @@ RDEPEND="!<sys-libs/glibc-2.3.5"
 
 S=${WORKDIR}
 
+pkg_setup() {
+	# Deal with the case where older timezone-data installed a
+	# dir here, but newer one installs symlinks.  Portage will
+	# barf when you try to transition file types.
+	if cd "${EROOT}"/usr/share/zoneinfo 2>/dev/null ; then
+		# In case of a failed upgrade, clean up the symlinks #506570
+		if [ -L .gentoo-upgrade ] ; then
+			rm -rf posix .gentoo-upgrade
+		fi
+		if [ -d posix ] ; then
+			rm -rf .gentoo-upgrade #487192
+			mv posix .gentoo-upgrade || die
+			ln -s .gentoo-upgrade posix || die
+		fi
+	fi
+}
+
 src_prepare() {
 	epatch "${FILESDIR}"/${PN}-2013f-makefile.patch
 	tc-is-cross-compiler && cp -pR "${S}" "${S}"-native
@@ -108,5 +125,7 @@ pkg_config() {
 }
 
 pkg_postinst() {
+	rm -rf "${EROOT}"/usr/share/zoneinfo/.gentoo-upgrade &
 	pkg_config
+	wait
 }
