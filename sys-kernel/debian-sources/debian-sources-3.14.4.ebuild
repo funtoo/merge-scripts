@@ -35,9 +35,9 @@ pkg_pretend() {
 	# Ensure we have enough disk space to compile
 	if use binary ; then
 		CHECKREQS_DISK_BUILD="14G"
-	fi
 
-	check-reqs_pkg_setup
+		check-reqs_pkg_setup
+	fi
 }
 
 pkg_setup() {
