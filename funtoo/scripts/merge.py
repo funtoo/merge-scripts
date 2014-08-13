@@ -72,6 +72,7 @@ steps = [
         SyncFiles(funtoo_deadbeef.root, {
                 "profiles/package.mask":"profiles/package.mask/deadbeef-mask"
         }),
+        SyncDir(funtoo_deadbeef.root,"eclass"),
 	SyncFiles(funtoo_gnome_overlay.root, {
 		"profiles/package.mask":"profiles/funtoo/1.0/linux-gnu/mix-ins/gnome/package.mask"
 	}),
