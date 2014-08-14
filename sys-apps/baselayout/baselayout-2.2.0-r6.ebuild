@@ -193,7 +193,7 @@ src_install() {
 	diropts -m 1777
 	keepdir /tmp /var/tmp
 
-	diropts -o root -g uucp -m0775 /var/lock
+	diropts -o root -g uucp -m0775 ${D}/var/lock
 	keepdir /var/lock
 
 	diropts -m0700
