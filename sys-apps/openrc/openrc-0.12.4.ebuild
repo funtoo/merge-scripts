@@ -10,7 +10,7 @@ RESTRICT="mirror"
 
 LICENSE="BSD-2"
 SLOT="0"
-KEYWORDS="*"
+KEYWORDS="~*"
 IUSE="debug elibc_glibc ncurses pam selinux static-libs unicode kernel_linux kernel_FreeBSD"
 
 RDEPEND="kernel_linux? ( >=sys-apps/sysvinit-2.86-r11 )
@@ -23,8 +23,8 @@ DEPEND="ncurses? ( sys-libs/ncurses ) pam? ( virtual/pam ) virtual/os-headers vi
 
 GITHUB_REPO="${PN}"
 GITHUB_USER="funtoo"
-GITHUB_TAG="funtoo-openrc-0.12.3-r0"
-NETV="1.3.8"
+GITHUB_TAG="funtoo-openrc-0.12.4-r0"
+NETV="1.3.9"
 GITHUB_REPO_CN="corenetwork"
 GITHUB_TAG_CN="$NETV"
 
@@ -77,7 +77,7 @@ src_prepare() {
 		local ver="git-${EGIT_VERSION:0:6}"
 		sed -i "/^GITVER[[:space:]]*=/s:=.*:=${ver}:" mk/git.mk || die
 	fi
-	##epatch "${FILESDIR}/openrc-nodevfs.patch"
+	epatch "${FILESDIR}/fix-openvz-r1.patch"
 }
 src_compile() {
 	make_args
