@@ -156,7 +156,7 @@ DEPEND="dev-util/xdelta:3"
 # only one flavor at a time
 REQUIRED_USE="kde? ( !gnome ) gnome? ( !kde )"
 
-RESTRICT="test strip"
+RESTRICT="mirror test strip"
 
 S="${WORKDIR}"
 
