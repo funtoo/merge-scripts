@@ -4,6 +4,8 @@ EAPI="5"
 
 PYTHON_COMPAT=( python2_7 )
 
+DISTUTILS_SINGLE_IMPL=yes
+
 inherit distutils-r1 waf-utils multilib
 
 DESCRIPTION="Library for audio labelling"
