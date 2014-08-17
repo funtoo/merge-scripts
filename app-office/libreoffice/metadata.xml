@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+  <herd>openoffice</herd>
+  <longdescription>LibreOffice is a fork of OpenOffice.org. 
+This ebuild allows you to compile it yourself. Unfortunately this 
+compilation can take up to a day depending on the speed of your 
+computer. It will however make a snappier openoffice than the binary 
+version</longdescription>
+  <use>
+    <flag name="gtk3">Enable highly experimental gtk3 frontend</flag>
+    <flag name="jemalloc">Use <pkg>dev-libs/jemalloc</pkg> for allocations</flag>
+    <flag name="odk">Build the Office Development Kit</flag>
+    <flag name="telepathy">Enable document colaboration features using telepathy communication framework.</flag>
+    <flag name="vba">Enable support for VBA compatibility and ActiveX embedding</flag>
+	<flag name="vlc">Use <pkg>media-video/vlc</pkg> for video embedding</flag>
+    <flag name="webdav">Adds support for HTTP content adding via <pkg>net-libs/neon</pkg></flag>
+  </use>
+</pkgmetadata>
