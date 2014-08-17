@@ -144,6 +144,7 @@ RDEPEND="${COMMON_DEPEND}
 	media-fonts/libertine-ttf
 	media-fonts/liberation-fonts
 	media-fonts/urw-fonts
+	media-video/vlc
 	java? ( >=virtual/jre-1.6 )
 "
 
