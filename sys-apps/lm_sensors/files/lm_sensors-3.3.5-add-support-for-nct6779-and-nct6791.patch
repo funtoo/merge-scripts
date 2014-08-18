@@ -1,0 +1,12 @@
+diff -Naur lm_sensors-3.3.5.orig/etc/sensors.conf.default lm_sensors-3.3.5/etc/sensors.conf.default
+--- lm_sensors-3.3.5.orig/etc/sensors.conf.default	2012-01-31 11:25:29.057246000 -0300
++++ lm_sensors-3.3.5/etc/sensors.conf.default	2014-05-21 09:35:56.110779242 -0300
+@@ -308,7 +308,7 @@
+ #    set in8_max  3.0 * 1.10
+ 
+ 
+-chip "w83627ehf-*" "w83627dhg-*" "w83667hg-*" "nct6775-*" "nct6776-*"
++chip "w83627ehf-*" "w83627dhg-*" "w83667hg-*" "nct6775-*" "nct6776-*" "nct6779-*" "nct6791-*"
+ 
+     label in0 "Vcore"
+     label in2 "AVCC"
