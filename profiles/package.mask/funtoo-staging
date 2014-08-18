@@ -1,9 +1,6 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
-#Oleg Vinichenko (13 Jul 2014), FL-1358, portage parallel econf fix, ebuild masked for testing
-=sys-apps/portage-2.3.6-r9
-
 # Daniel Robbins (28 Sep 2013)
 # masked for testing
 =sys-cluster/vzctl-4.5.1*
