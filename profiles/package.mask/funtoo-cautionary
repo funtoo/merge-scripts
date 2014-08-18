@@ -1,3 +1,9 @@
+# Dantrell B. (17 Aug 2014)
+# Selectively mask versions of sys-devel/gettext
+# Ref FL-1470
+=sys-devel/gettext-0.19.1
+=sys-devel/gettext-0.19
+
 # Dantrell B. (14 Aug 2014)
 # Masked for testing
 # Ref FL-1106
@@ -24,10 +30,6 @@ app-admin/eselect-sh
 # Next time, allow to unmask only stable version of python with a consequent change of default PYTHON_ABIS. THis is 
 # FL-1274, FL-1265
 >dev-lang/python-3.3.5-r1000
-
-# Oleg Vinichenko (6 June 2014)_
-# maks latest gettext-0.19, breaks lot of packages
->sys-devel/gettext-0.18.3.2
 
 # Non bug commit. New gentoo-functions ebuild pulled into update list because of newer python-updater.
 # gentoo-funtions ebuild is a replacement of base shell functions, provided by OpenRC's /etc/init.d/functions.sh
