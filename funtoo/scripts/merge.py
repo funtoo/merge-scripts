@@ -25,6 +25,7 @@ funtoo_gnome_overlay = Tree("funtoo-gnome", "experimental" if experimental else 
 mysql_overlay = Tree("funtoo-mysql", "master", "repos@git.funtoo.org:funtoo-mysql.git", pull=True)
 ldap_overlay = Tree("funtoo-ldap", "master", "repos@git.funtoo.org:funtoo-ldap-overlay.git", pull=True)
 funtoo_deadbeef = Tree("funtoo-deadbeef", "master", "https://github.com/damex/funtoo-deadbeef.git", pull=True)
+funtoo_redhat = Tree("funtoo-redhat", "master", "https://github.com/damex/funtoo-redhat.git", pull=True)
 faustoo_overlay = Tree("faustoo", "master", "https://github.com/fmoro/faustoo.git", pull=True)
 
 steps = [
@@ -73,6 +74,7 @@ steps = [
                 "profiles/package.mask":"profiles/package.mask/deadbeef-mask"
         }),
         SyncDir(funtoo_deadbeef.root,"eclass"),
+        InsertEbuilds(funtoo_redhat, select="all", skip=None, replace=False),
 	SyncFiles(funtoo_gnome_overlay.root, {
 		"profiles/package.mask":"profiles/funtoo/1.0/linux-gnu/mix-ins/gnome/package.mask"
 	}),
