@@ -29,7 +29,7 @@ funtoo_redhat = Tree("funtoo-redhat", "master", "https://github.com/damex/funtoo
 faustoo_overlay = Tree("faustoo", "master", "https://github.com/fmoro/faustoo.git", pull=True)
 
 steps = [
-	SyncTree(gentoo_src, exclude=["/metadata/cache/**", "ChangeLog", "dev-util/metro"]),
+	SyncTree(gentoo_src, exclude=["/metadata/cache/**", "ChangeLog", "dev-util/metro", "profiles/base/package.use.stable.mask"]),
 	# Only include 2012 and up GLSA's:
 	SyncDir(gentoo_glsa.root, "en/glsa", "metadata/glsa", exclude=["glsa-200*.xml","glsa-2010*.xml", "glsa-2011*.xml"]) if not gentoo_use_rsync else None,
 	ApplyPatchSeries("%s/funtoo/patches" % funtoo_overlay.root ),
