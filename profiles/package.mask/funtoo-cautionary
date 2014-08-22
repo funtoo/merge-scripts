@@ -1,3 +1,8 @@
+# Dantrell B. (22 Aug 2014)
+# Masked for testing
+# Ref FL-1483
+>=net-libs/rb_libtorrent-1.0.1
+
 # Dantrell B. (17 Aug 2014)
 # Selectively mask versions of sys-devel/gettext
 # Ref FL-1470
