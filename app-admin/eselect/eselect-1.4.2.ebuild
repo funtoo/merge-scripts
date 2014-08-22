@@ -1,17 +1,17 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=4
+EAPI="5"
 
 inherit eutils bash-completion-r1
 
 DESCRIPTION="Gentoo's multi-purpose configuration and management tool"
-HOMEPAGE="http://www.gentoo.org/proj/en/eselect/"
-SRC_URI="mirror://gentoo/${P}.tar.xz"
+HOMEPAGE="http://wiki.gentoo.org/wiki/Project:Eselect"
+SRC_URI="http://dev.gentoo.org/~ulm/eselect/${P}.tar.xz"
 
-LICENSE="GPL-2+"
+LICENSE="GPL-2+ || ( GPL-2+ CC-BY-SA-2.5 )"
 SLOT="0"
-KEYWORDS="*"
-IUSE="doc"
+KEYWORDS="~*"
+IUSE="doc emacs vim-syntax"
 
 RDEPEND="sys-apps/sed
 	|| (
@@ -27,9 +27,8 @@ RDEPEND="!app-admin/eselect-news
 	sys-apps/file
 	sys-libs/ncurses"
 
-# Commented out: only few users of eselect will edit its source
-#PDEPEND="emacs? ( app-emacs/gentoo-syntax )
-#	vim-syntax? ( app-vim/eselect-syntax )"
+PDEPEND="emacs? ( app-emacs/eselect-mode )
+	vim-syntax? ( app-vim/eselect-syntax )"
 
 src_compile() {
 	emake

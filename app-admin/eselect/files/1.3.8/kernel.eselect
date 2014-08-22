@@ -24,8 +24,8 @@ sort_kernel_versions() {
 	#      2.6.29 0 linux-2.6.29-rc8
 	# 2. sort --version-sort
 	# 3. Run sed again to remove the prepended keys from step 1.
-	sed -e 's/^\(linux-.*\)\?\([[:digit:].]\+\)[-_]rc/\2 0 &/' \
-		-e 't;s/^\(linux-.*\)\?\([[:digit:].]\+\)/\2 1 &/' \
+	sed -r -e 's/^(linux-[^[:digit:]]*)?([[:digit:].]+)[-_]rc/\2 0 &/' \
+		   -e 't;s/^(linux-[^[:digit:]]*)?([[:digit:].]+)/\2 1 &/' \
 		| LC_ALL=C ${vsort} | sed 's/.* //'
 }
 
