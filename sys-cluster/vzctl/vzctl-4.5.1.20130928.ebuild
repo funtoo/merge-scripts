@@ -66,7 +66,7 @@ src_prepare() {
 }
 
 src_install() {
-	make DESTDIR="${D}" udevdir="$(udev_get_udevdir)"/rules.d install install-gentoo || die "make install failed"
+	make DESTDIR="${D}" udevdir="$(get_udevdir)"/rules.d install install-gentoo || die "make install failed"
 
 	# install the bash-completion script into the right location
 	rm -rf "${ED}"/etc/bash_completion.d
