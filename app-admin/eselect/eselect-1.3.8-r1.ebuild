@@ -50,8 +50,8 @@ src_install() {
 
 	# tweaks for funtoo-1.0 profile
 	insinto /usr/share/eselect/modules
-	doins $FILESDIR/$PVR/profile.eselect || die
-	doins $FILESDIR/$PVR/kernel.eselect || die
+	doins $FILESDIR/${PV}/profile.eselect || die
+	doins $FILESDIR/${PV}/kernel.eselect || die
 }
 
 pkg_postinst() {
