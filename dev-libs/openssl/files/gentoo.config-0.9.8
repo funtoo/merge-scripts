@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-libs/openssl/files/gentoo.config-1.0.1,v 1.2 2014/01/17 04:27:03 vapier Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-libs/openssl/files/gentoo.config-0.9.8,v 1.18 2012/05/25 17:41:21 vapier Exp $
 #
 # Openssl doesn't play along nicely with cross-compiling
 # like autotools based projects, so let's teach it new tricks.
@@ -14,9 +14,8 @@
 if [[ $1 == "test" ]] ; then
 	for c in \
 		"arm-gentoo-linux-uclibc      |linux-generic32 -DL_ENDIAN" \
-		"armv5b-linux-gnu             |linux-armv4 -DB_ENDIAN" \
+		"armv5b-linux-gnu             |linux-generic32 -DB_ENDIAN" \
 		"x86_64-pc-linux-gnu          |linux-x86_64" \
-		"alpha-linux-gnu              |linux-alpha-gcc" \
 		"alphaev56-unknown-linux-gnu  |linux-alpha+bwx-gcc" \
 		"i686-pc-linux-gnu            |linux-elf" \
 		"whatever-gentoo-freebsdX.Y   |BSD-generic32" \
@@ -33,8 +32,6 @@ if [[ $1 == "test" ]] ; then
 		"i386-apple-darwinX           |darwin-i386-cc" \
 		"powerpc-apple-darwinX        |darwin-ppc-cc" \
 		"i586-pc-winnt                |winnt-parity" \
-		"s390-ibm-linux-gnu           |linux-generic32 -DB_ENDIAN" \
-		"s390x-linux-gnu              |linux64-s390x" \
 	;do
 		CHOST=${c/|*}
 		ret_want=${c/*|}
@@ -55,16 +52,14 @@ fi
 
 # Detect the operating system
 case ${CHOST} in
-	*-aix*)          system="aix";;
-	*-darwin*)       system="darwin";;
-	*-freebsd*)      system="BSD";;
-	*-hpux*)         system="hpux";;
-	*-linux*)        system="linux";;
-	*-solaris*)      system="solaris";;
-	*-winnt*)        system="winnt";;
-	x86_64-*-mingw*) system="mingw64";;
-	*mingw*)         system="mingw";;
-	*)               exit 0;;
+	*-aix*)      system="aix";;
+	*-darwin*)   system="darwin";;
+	*-freebsd*)  system="BSD";;
+	*-hpux*)     system="hpux";;
+	*-linux*)    system="linux";;
+	*-solaris*)  system="solaris";;
+	*-winnt*)    system="winnt";;
+	*)           exit 0;;
 esac
 
 
@@ -80,29 +75,20 @@ machine=""
 chost_machine=${CHOST%%-*}
 case ${system} in
 linux)
-	case ${chost_machine}:${ABI} in
-		aarch64*be)   machine="generic64 -DB_ENDIAN";;
-		aarch64*)     machine="generic64 -DL_ENDIAN";;
-		alphaev56*|\
+	case ${chost_machine} in
+		alphaev56*)   machine=alpha+bwx-${compiler};;
 		alphaev[678]*)machine=alpha+bwx-${compiler};;
 		alpha*)       machine=alpha-${compiler};;
-		armv[4-9]*b*) machine="armv4 -DB_ENDIAN";;
-		armv[4-9]*)   machine="armv4 -DL_ENDIAN";;
 		arm*b*)       machine="generic32 -DB_ENDIAN";;
 		arm*)         machine="generic32 -DL_ENDIAN";;
-		avr*)         machine="generic32 -DL_ENDIAN";;
-		bfin*)        machine="generic32 -DL_ENDIAN";;
 	#	hppa64*)      machine=parisc64;;
 		hppa*)        machine="generic32 -DB_ENDIAN";;
-		i[0-9]86*|\
-		x86_64*:x86)  machine=elf;;
+		i[0-9]86*)    machine=elf;;
 		ia64*)        machine=ia64;;
 		m68*)         machine="generic32 -DB_ENDIAN";;
 		mips*el*)     machine="generic32 -DL_ENDIAN";;
 		mips*)        machine="generic32 -DB_ENDIAN";;
-		powerpc64*le) machine="generic64 -DL_ENDIAN";;
 		powerpc64*)   machine=ppc64;;
-		powerpc*le)   machine="generic32 -DL_ENDIAN";;
 		powerpc*)     machine=ppc;;
 	#	sh64*)        machine=elf;;
 		sh*b*)        machine="generic32 -DB_ENDIAN";;
@@ -110,9 +96,8 @@ linux)
 		sparc*v7*)    machine="generic32 -DB_ENDIAN";;
 		sparc64*)     machine=sparcv9;;
 		sparc*)       machine=sparcv8;;
-		s390x*)       machine=s390x system=linux64;;
+		s390x*)       machine="generic64 -DB_ENDIAN";;
 		s390*)        machine="generic32 -DB_ENDIAN";;
-		x86_64*:x32)  machine=x32;;
 		x86_64*)      machine=x86_64;;
 	esac
 	;;
@@ -152,10 +137,6 @@ solaris)
 	;;
 winnt)
 	machine=parity
-	;;
-mingw*)
-	# special case ... no xxx-yyy style name
-	echo ${system}
 	;;
 esac
 

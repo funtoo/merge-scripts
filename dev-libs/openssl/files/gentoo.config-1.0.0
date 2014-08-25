@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-libs/openssl/files/gentoo.config-1.0.1,v 1.2 2014/01/17 04:27:03 vapier Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-libs/openssl/files/gentoo.config-1.0.0,v 1.5 2012/05/25 17:41:21 vapier Exp $
 #
 # Openssl doesn't play along nicely with cross-compiling
 # like autotools based projects, so let's teach it new tricks.
@@ -16,7 +16,6 @@ if [[ $1 == "test" ]] ; then
 		"arm-gentoo-linux-uclibc      |linux-generic32 -DL_ENDIAN" \
 		"armv5b-linux-gnu             |linux-armv4 -DB_ENDIAN" \
 		"x86_64-pc-linux-gnu          |linux-x86_64" \
-		"alpha-linux-gnu              |linux-alpha-gcc" \
 		"alphaev56-unknown-linux-gnu  |linux-alpha+bwx-gcc" \
 		"i686-pc-linux-gnu            |linux-elf" \
 		"whatever-gentoo-freebsdX.Y   |BSD-generic32" \
@@ -34,7 +33,7 @@ if [[ $1 == "test" ]] ; then
 		"powerpc-apple-darwinX        |darwin-ppc-cc" \
 		"i586-pc-winnt                |winnt-parity" \
 		"s390-ibm-linux-gnu           |linux-generic32 -DB_ENDIAN" \
-		"s390x-linux-gnu              |linux64-s390x" \
+		"s390x-linux-gnu              |linux-s390x" \
 	;do
 		CHOST=${c/|*}
 		ret_want=${c/*|}
@@ -81,9 +80,7 @@ chost_machine=${CHOST%%-*}
 case ${system} in
 linux)
 	case ${chost_machine}:${ABI} in
-		aarch64*be)   machine="generic64 -DB_ENDIAN";;
-		aarch64*)     machine="generic64 -DL_ENDIAN";;
-		alphaev56*|\
+		alphaev56*)   machine=alpha+bwx-${compiler};;
 		alphaev[678]*)machine=alpha+bwx-${compiler};;
 		alpha*)       machine=alpha-${compiler};;
 		armv[4-9]*b*) machine="armv4 -DB_ENDIAN";;
@@ -100,9 +97,7 @@ linux)
 		m68*)         machine="generic32 -DB_ENDIAN";;
 		mips*el*)     machine="generic32 -DL_ENDIAN";;
 		mips*)        machine="generic32 -DB_ENDIAN";;
-		powerpc64*le) machine="generic64 -DL_ENDIAN";;
 		powerpc64*)   machine=ppc64;;
-		powerpc*le)   machine="generic32 -DL_ENDIAN";;
 		powerpc*)     machine=ppc;;
 	#	sh64*)        machine=elf;;
 		sh*b*)        machine="generic32 -DB_ENDIAN";;
@@ -110,7 +105,7 @@ linux)
 		sparc*v7*)    machine="generic32 -DB_ENDIAN";;
 		sparc64*)     machine=sparcv9;;
 		sparc*)       machine=sparcv8;;
-		s390x*)       machine=s390x system=linux64;;
+		s390x*)       machine=s390x;;
 		s390*)        machine="generic32 -DB_ENDIAN";;
 		x86_64*:x32)  machine=x32;;
 		x86_64*)      machine=x86_64;;
