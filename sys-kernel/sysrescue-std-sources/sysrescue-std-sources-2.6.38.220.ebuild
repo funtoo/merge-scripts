@@ -18,7 +18,7 @@ IUSE="binary"
 DEPEND="binary? ( >=sys-kernel/genkernel-3.4.12.6-r4 )"
 DESCRIPTION="System Rescue CD Full sources for the Linux kernel, including gentoo and sysresccd patches."
 HOMEPAGE="http://kernel.sysresccd.org"
-SRC_URI="${KERNEL_URI} http://www.funtoo.org/archive/sysrescue-std-sources/std-sources-${PV}-patches-config.tar.xz"
+SRC_URI="${KERNEL_URI} http://ftp.osuosl.org/pub/funtoo/distfiles/sysrescue-std-sources/std-sources-${PV}-patches-config.tar.xz"
 S="$WORKDIR/linux-${CKV}"
 S2="$WORKDIR/${SYSRESC_REL}"
 
