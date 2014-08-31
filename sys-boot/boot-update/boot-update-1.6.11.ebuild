@@ -7,7 +7,7 @@ PYTHON_RESTRICTED_ABIS="2.5 3.1 *-jython *-pypy-*"
 inherit multilib python
 
 DESCRIPTION="Funtoo Core Boot Framework for global boot loader configuration"
-HOMEPAGE="http://www.funtoo.org/en/funtoo/core/boot"
+HOMEPAGE="http://www.funtoo.org/Boot-Update"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="*"
