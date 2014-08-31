@@ -1,3 +1,6 @@
+#FL-1498: enable gtk USE flag for gnash for clean emerge if non-dekstop profile used
+www-plugins/gnash gtk
+
 #FL-1479
 net-libs/webkit-gtk -geoloc
 
