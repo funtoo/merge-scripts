@@ -3,6 +3,7 @@
 
 # damex (03 Sep 2014)
 # masked for testing
+=dev-util/valgrind-3.9.0
 =sys-apps/gawk-4.1.1
 =sys-apps/pciutils-3.2.1
 
