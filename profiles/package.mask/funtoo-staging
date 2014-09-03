@@ -1,6 +1,10 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
+# damex (03 Sep 2014)
+# masked for testing
+=sys-apps/gawk-4.1.1
+
 # Daniel Robbins (28 Sep 2013)
 # masked for testing
 =sys-cluster/vzctl-4.5.1*
