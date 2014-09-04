@@ -21,7 +21,9 @@ squeezebox_overlay = Tree("squeezebox", "master", "git://git.overlays.gentoo.org
 progress_overlay = SvnTree("progress", "https://gentoo-progress.googlecode.com/svn/overlays/progress")
 plex_overlay = Tree("funtoo-plex", "master", "https://github.com/Ghent/funtoo-plex.git", pull=True)
 sabayon_for_gentoo = Tree("sabayon-for-gentoo", "master", "git://github.com/Sabayon/for-gentoo.git", pull=True)
-funtoo_gnome_overlay = Tree("funtoo-gnome", "experimental" if experimental else "master", "repos@git.funtoo.org:funtoo-gnome-overlay.git", pull=True)
+#funtoo_gnome_overlay = Tree("funtoo-gnome", "experimental" if experimental else "master", "repos@git.funtoo.org:funtoo-gnome-overlay.git", pull=True)
+funtoo_gnome_overlay = Tree("funtoo-gnome", "master", "repos@git.funtoo.org:funtoo-gnome-overlay.git", pull=True)
+funtoo_toolchain_overlay = Tree("funtoo-toolchain", "master", "repos@git.funtoo.org:funtoo-toolchain-overlay.git", pull=True)
 mysql_overlay = Tree("funtoo-mysql", "master", "repos@git.funtoo.org:funtoo-mysql.git", pull=True)
 ldap_overlay = Tree("funtoo-ldap", "master", "repos@git.funtoo.org:funtoo-ldap-overlay.git", pull=True)
 funtoo_deadbeef = Tree("funtoo-deadbeef", "master", "https://github.com/damex/funtoo-deadbeef.git", pull=True)
@@ -59,6 +61,7 @@ steps = [
 		"README.rst":"README.rst"
 	}),
 	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
+        InsertEbuilds(funtoo_toolchain_overlay, select="all", skip=None, replace=True) if experimental else None,
         InsertEbuilds(mysql_overlay, select="all", skip=None, replace=True),
         InsertEbuilds(ldap_overlay, select="all", skip=None, replace=True),
         InsertEbuilds(faustoo_overlay, select=[ "app-office/projectlibre-bin" ], skip=None, replace=True),
