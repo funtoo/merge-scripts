@@ -4,3 +4,14 @@
 # Daniel Robbins (03 Sep 2014)
 # masked for testing
 =sys-cluster/vzctl-4.7.2*
+
+# damex (03 Sep 2014)
+# masked for testing
+=dev-util/valgrind-3.9.0
+=sys-apps/gawk-4.1.1
+=sys-apps/pciutils-3.2.1
+=sys-kernel/linux-headers-3.14
+=sys-kernel/linux-headers-3.15
+=sys-kernel/linux-headers-3.16
+
+
