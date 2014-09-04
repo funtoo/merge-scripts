@@ -1,12 +1,11 @@
+# Copyright 1999-2014 Gentoo Foundation.
 # Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/hardened/linux/package.mask,v 1.43 2014/08/04 03:52:14 robbat2 Exp $
 
 # Hardened versions of gcc-4.0* through gcc-4.2* are not available.
 =sys-devel/gcc-4.0*
 =sys-devel/gcc-4.1*
 =sys-devel/gcc-4.2*
-
-# Hardened >=sys-devel/gcc-4.4.3-r3 >=gcc-4.4.4-r1 available.
-=sys-devel/gcc-4.4.2*
 
 # =sys-devel/gdb-7.0 is not hardened-ready according to xake & Zorry.
 # sys-devel/gdb-7.1 works fine
@@ -18,7 +17,6 @@
 media-sound/skype-call-recorder
 net-im/skype
 net-im/skypetab-ng
-net-im/skysentials
 dev-python/skype4py
 
 # >=sci-libs/acml-3.6 requires gcc-4.2.
@@ -26,3 +24,5 @@ dev-python/skype4py
 
 # broken on hardened, use sys-apps/elfix to fix gnustack
 sys-devel/prelink
+# depends on prelink
+app-crypt/hmaccalc
