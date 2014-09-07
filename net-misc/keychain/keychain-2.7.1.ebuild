@@ -3,7 +3,7 @@
 EAPI=2
 
 DESCRIPTION="manage ssh and GPG keys in a convenient and secure manner. Frontend for ssh-agent/ssh-add"
-HOMEPAGE="http://www.funtoo.org/Keychain"
+HOMEPAGE="http://www.funtoo.org/Package:Keychain"
 SRC_URI="http://ftp.osuosl.org/pub/funtoo/distfiles/keychain/${P}.tar.bz2"
 
 LICENSE="GPL-2"
