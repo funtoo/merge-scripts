@@ -11,10 +11,6 @@
 # masked for testing
 =x11-wm/icewm-1.3.8
 
-# Daniel Robbins (03 Sep 2014)
-# masked for testing
-=sys-cluster/vzctl-4.7.2*
-
 # damex (03 Sep 2014)
 # masked for testing
 =dev-util/valgrind-3.9.0
