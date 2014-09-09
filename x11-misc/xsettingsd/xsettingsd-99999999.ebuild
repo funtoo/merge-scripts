@@ -2,12 +2,11 @@
 
 EAPI="5"
 
-EGIT_REPO_URI="git://github.com/derat/xsettingsd.git"
-
 inherit git-2 scons-utils
 
 DESCRIPTION="A daemon that implements the XSETTINGS specification"
 HOMEPAGE="https://code.google.com/p/xsettingsd"
+EGIT_REPO_URI="https://github.com/derat/xsettingsd.git"
 
 LICENSE="BSD-2"
 SLOT="0"
@@ -16,7 +15,8 @@ IUSE=""
 
 RDEPEND="x11-libs/libX11"
 
-DEPEND="${RDEPEND}"
+DEPEND="${RDEPEND}
+	virtual/pkgconfig"
 
 src_compile() {
 	escons
