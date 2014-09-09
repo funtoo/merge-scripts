@@ -1,0 +1,2 @@
+# do not let people accidentally install live ebuilds
+=x11-misc/xsettingsd-99999999
