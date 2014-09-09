@@ -6,7 +6,7 @@ EGIT_REPO_URI="git://github.com/derat/xsettingsd.git"
 
 inherit git-2 scons-utils
 
-DESCRIPTION="A daemon that implements the XSETTINGS specification."
+DESCRIPTION="A daemon that implements the XSETTINGS specification"
 HOMEPAGE="https://code.google.com/p/xsettingsd"
 
 LICENSE="BSD-2"
@@ -24,4 +24,5 @@ src_compile() {
 
 src_install() {
 	dobin xsettingsd dump_xsettings || die
+	doman xsettingsd.1 dump_xsettings.1 || die
 }
