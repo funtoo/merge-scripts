@@ -4,9 +4,7 @@ EAPI="5"
 
 inherit eutils versionator linux-mod
 
-MY_PV=$(get_version_component_range 1-2)
-MY_BUILD=$(get_version_component_range 3)
-MY_P="oss-v${MY_PV}-build${MY_BUILD}-src-gpl"
+MY_P="oss-v$(get_version_component_range 1-2)-build$(get_version_component_range 3)-src-gpl"
 
 DESCRIPTION="Open Sound System - portable, mixing-capable, high quality sound system for Unix"
 HOMEPAGE="http://developer.opensound.com"
@@ -14,7 +12,7 @@ SRC_URI="http://www.4front-tech.com/developer/sources/stable/gpl/${MY_P}.tar.bz2
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="*"
+KEYWORDS="~*"
 
 DEPRECATED_CARDS="allegro als3xx als4k digi32 maestro neomagic s3vibes vortex"
 
@@ -22,7 +20,6 @@ CARDS="ali5455 atiaudio audigyls audiocs audioloop audiopci cmi878x cmpci cs4281
 	digi96 emu10k1x envy24 envy24ht fmedia geode hdaudio ich imux madi midiloop
 	midimix sblive sbpci sbxfi solo trident usb userdev via823x via97 ymf7xx
 	${DEPRECATED_CARDS}"
-
 
 IUSE="alsa gtk midi ogg pax_kernel vmix_fixedpoint"
 
@@ -47,7 +44,7 @@ src_prepare() {
 	mkdir "${WORKDIR}/build"
 
 	einfo "Replacing init script with funtoo friendly one ..."
-	cp "${FILESDIR}/oss" "${S}/setup/Linux/oss/etc/S89oss"
+	cp "${FILESDIR}/init.d/oss" "${S}/setup/Linux/oss/etc/S89oss" || die
 
 	if ! use ogg ; then
 		sed -e "s;OGG_SUPPORT=YES;OGG_SUPPORT=NO;g" \
@@ -97,7 +94,7 @@ src_install() {
 	newinitd "${FILESDIR}/init.d/oss" oss || die
 	doenvd "${FILESDIR}/env.d/99oss" || die
 
-	cp -R "${WORKDIR}"/build/prototype/* "${D}"
+	cp -R "${WORKDIR}"/build/prototype/* "${D}" || die
 
 	local libdir=$(get_libdir)
 	insinto /usr/${libdir}/pkgconfig
@@ -110,8 +107,7 @@ src_install() {
 		dosym oss/lib/libsalsa.so.2.0.0 /usr/${libdir}/libsalsa.so.2.0.0 || die
 	fi
 
-	dosym /usr/${libdir}/oss/include \
-		/usr/include/oss || die
+	dosym /usr/${libdir}/oss/include /usr/include/oss || die
 }
 
 pkg_postinst() {
