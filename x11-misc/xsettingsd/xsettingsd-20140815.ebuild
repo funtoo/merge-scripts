@@ -7,6 +7,7 @@ inherit git-2 scons-utils
 DESCRIPTION="A daemon that implements the XSETTINGS specification"
 HOMEPAGE="https://code.google.com/p/xsettingsd"
 EGIT_REPO_URI="https://github.com/derat/xsettingsd.git"
+EGIT_COMMIT="b7312ceeb10c382e7889538b4acb5e12a6a16214"
 
 LICENSE="BSD-2"
 SLOT="0"
