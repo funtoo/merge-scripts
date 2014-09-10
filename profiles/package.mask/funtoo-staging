@@ -2,7 +2,5 @@
 # newest on top
 
 # damex (07 Sep 2014)
-# masked for testing
-=media-sound/oss-4.2.2010
 # broken. might be removed from the tree
 <media-sound/oss-4.2.2010
