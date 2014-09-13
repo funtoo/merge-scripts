@@ -21,9 +21,9 @@ KEYWORDS="*"
 IUSE=""
 
 if [ ${ARCH} == "amd64" ]; then
-	S="${WORKDIR}/release-${PACKAGE_TAG_AMD64}-v${PV}_NAIo0"
+	S="${WORKDIR}/release-${PACKAGE_TAG_AMD64}-v${PV}_uBPRd"
 elif [ ${ARCH} == "x86" ]; then
-	S="${WORKDIR}/release-${PACKAGE_TAG_x86}-v${PV}_mNfFZ"
+	S="${WORKDIR}/release-${PACKAGE_TAG_x86}-v${PV}_vzh1v"
 fi
 
 src_install() {
