@@ -3,12 +3,6 @@
 # Ref FL-1483
 >=net-libs/rb_libtorrent-1.0.1
 
-# Dantrell B. (17 Aug 2014)
-# Selectively mask versions of sys-devel/gettext
-# Ref FL-1470
-=sys-devel/gettext-0.19.1
-=sys-devel/gettext-0.19
-
 # Dantrell B. (14 Aug 2014)
 # Masked for testing
 # Ref FL-1106
