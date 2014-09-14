@@ -1,2 +1,3 @@
 # do not let people accidentally install live ebuilds
+=dev-libs/libstrophe-9999
 =x11-misc/xsettingsd-99999999
