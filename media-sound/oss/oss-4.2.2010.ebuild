@@ -2,7 +2,7 @@
 
 EAPI="5"
 
-inherit eutils versionator linux-mod
+inherit eutils flag-o-matic versionator linux-mod
 
 MY_P="oss-v$(get_version_component_range 1-2)-build$(get_version_component_range 3)-src-gpl"
 
@@ -87,6 +87,8 @@ src_configure() {
 }
 
 src_compile() {
+	filter-flags -fPIC # FL-1536
+
 	cd "${WORKDIR}/build" && emake build || die
 }
 	
