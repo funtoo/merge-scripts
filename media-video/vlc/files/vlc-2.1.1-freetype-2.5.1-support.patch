@@ -1,0 +1,19 @@
+X-Git-Url: http://git.videolan.org/?p=vlc%2Fvlc-2.1.git;a=blobdiff_plain;f=modules%2Ftext_renderer%2Ffreetype.c;h=c27ec4558956f00b1fd2b448fa07d680a2be5c82;hp=25d6b15650d13982fd8c792df92389fd4de8eadd;hb=4eb6d91e94f720bf2dd22dcfee171e4ff4b790df;hpb=9ebead9dfbdcac2da31bc856cec51c058f5ddca8
+
+diff --git a/modules/text_renderer/freetype.c b/modules/text_renderer/freetype.c
+index 25d6b15..c27ec45 100644
+--- a/modules/text_renderer/freetype.c
++++ b/modules/text_renderer/freetype.c
+@@ -90,10 +90,11 @@
+ #endif
+ 
+ /* Freetype */
+-#include <freetype/ftsynth.h>
++#include <ft2build.h>
+ #include FT_FREETYPE_H
+ #include FT_GLYPH_H
+ #include FT_STROKER_H
++#include FT_SYNTHESIS_H
+ 
+ #define FT_FLOOR(X)     ((X & -64) >> 6)
+ #define FT_CEIL(X)      (((X + 63) & -64) >> 6)
