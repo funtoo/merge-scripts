@@ -450,7 +450,7 @@ class InsertEbuilds(MergeStep):
 					if pkgxml != None:
 						pkgxml.getparent().remove(pkgxml)
 					pkgxml = etree.Element("package", name=pkg, repository=self.srctree.name)
-					dometa = True
+					doMeta = True
 					try:
 						tpkgmeta = open("%s/metadata.xml" % tpkgdir, 'rb')
 						try:
