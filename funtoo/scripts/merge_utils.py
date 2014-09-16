@@ -452,7 +452,7 @@ class InsertEbuilds(MergeStep):
 					pkgxml = etree.Element("package", name=pkg, repository=self.srctree.name)
 					dometa = True
 					try:
-						tpkgmeta = open("%s/metadata.xml" % tpkgdir)
+						tpkgmeta = open("%s/metadata.xml" % tpkgdir, 'rb')
 						try:
 							metatree=etree.parse(tpkgmeta)
 						except UnicodeDecodeError:
