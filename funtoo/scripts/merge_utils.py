@@ -450,21 +450,26 @@ class InsertEbuilds(MergeStep):
 					if pkgxml != None:
 						pkgxml.getparent().remove(pkgxml)
 					pkgxml = etree.Element("package", name=pkg, repository=self.srctree.name)
+					dometa = True
 					try:
 						tpkgmeta = open("%s/metadata.xml" % tpkgdir)
-						metatree=etree.parse(tpkgmeta)
+						try:
+							metatree=etree.parse(tpkgmeta)
+						except UnicodeDecodeError:
+							doMeta = false
 						tpkgmeta.close()
-						use_vars = []
-						use_desc = {}
-						usexml = etree.Element("use")
-						for el in metatree.iterfind('.//flag'):
-							name = el.get("name")
-							if name != None:
-								use_vars.append(name)
-								use_desc[name] = el.text
-							usexml.append(el)
-						pkgxml.attrib["use"] = ",".join(use_vars)
-						pkgxml.append(usexml)
+						if doMeta:
+							use_vars = []
+							use_desc = {}
+							usexml = etree.Element("use")
+							for el in metatree.iterfind('.//flag'):
+								name = el.get("name")
+								if name != None:
+									use_vars.append(name)
+									use_desc[name] = el.text
+								usexml.append(el)
+							pkgxml.attrib["use"] = ",".join(use_vars)
+							pkgxml.append(usexml)
 					except IOError:
 						pass
 					catxml.append(pkgxml)
