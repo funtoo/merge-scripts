@@ -1,1 +1,1 @@
-USE="consolekit kde policykit semantic-desktop"
+USE="introspection consolekit kde policykit semantic-desktop"
