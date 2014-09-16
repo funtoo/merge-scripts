@@ -440,18 +440,34 @@ class InsertEbuilds(MergeStep):
 					# log here.
 					cpv = "/".join(tpkgdir.split("/")[-2:])
 					mergeLog.write("%s\n" % cpv)
-                                        # Record source tree of each copied catpkg to XML for later importing...
+				# Record source tree of each copied catpkg to XML for later importing...
 					catxml = desttree.xml_out.find("packages/category[@name='%s']" % cat)
 					if catxml == None:
-					    catxml = etree.Element("category", name=cat)
-					    desttree.xml_out.append(catxml)
+						catxml = etree.Element("category", name=cat)
+						desttree.xml_out.append(catxml)
 					pkgxml = desttree.xml_out.find("packages/category[@name='%s']/package/[@name='%s']" % ( cat ,pkg ))
-					if pkgxml == None:
-					    pkgxml = etree.Element("package", name=pkg, repository=self.srctree.name)
-					    catxml.append(pkgxml)
-					else:
-					    # here, we are replacing an ebuild that was already copied
-					    pkgxml["repository"] = self.srctree.name 
+					#remove existing
+					if pkgxml != None:
+						pkgxml.getparent().remove(pkgxml)
+					pkgxml = etree.Element("package", name=pkg, repository=self.srctree.name)
+					try:
+						tpkgmeta = open("%s/metadata.xml" % tpkgdir)
+						metatree=etree.parse(tpkgmeta)
+						tpkgmeta.close()
+						use_vars = []
+						use_desc = {}
+						usexml = etree.Element("use")
+						for el in metatree.iterfind('.//flag'):
+							name = el.get("name")
+							if name != None:
+								use_vars.append(name)
+								use_desc[name] = el.text
+							usexml.append(el)
+						pkgxml.attrib["use"] = ",".join(use_vars)
+						pkgxml.append(usexml)
+					except IOError:
+						pass
+					catxml.append(pkgxml)
 
 
 		with open(dest_cat_path, "w") as f:
