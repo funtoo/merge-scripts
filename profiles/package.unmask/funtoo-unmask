@@ -1,4 +1,6 @@
 # Override Gentoo masks
+app-office/libreoffice-l10n
+app-office/libreoffice
 app-backup/rdiff-backup
 dev-scheme/guile
 games-board/aisleriot
