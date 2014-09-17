@@ -7,7 +7,8 @@ inherit bash-completion-r1 eutils l10n
 
 DESCRIPTION="Search and query ebuilds, portage incl. local settings, ext. overlays, version changes, and more"
 HOMEPAGE="http://eix.berlios.de"
-SRC_URI="mirror://berlios/${PN}/${P}.tar.xz"
+RESTRICT="mirror"
+SRC_URI="http://ftp.osuosl.org/pub/funtoo/distfiles/${P}.tar.xz"
 
 LICENSE="GPL-2"
 SLOT="0"
