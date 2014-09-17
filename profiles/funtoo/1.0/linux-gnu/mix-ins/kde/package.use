@@ -1,3 +1,5 @@
+#FL-1541.Enable xmp USE flag to exiv2. Required for clean kde-meta install.
+media-gfx/exiv2 xmp
 dev-libs/libxml2 -icu
 dev-qt/qtwebkit -icu
 app-text/poppler qt4
