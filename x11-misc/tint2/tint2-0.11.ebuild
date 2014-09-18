@@ -35,7 +35,7 @@ DEPEND="${RDEPEND}
 S="${WORKDIR}/${MY_P}"
 
 src_prepare() {
-	epatch "${FILESDIR}/battery_segfault.patch"
+	epatch "${FILESDIR}/${PN}-battery-segfault.patch"
 }
 
 src_configure() {
