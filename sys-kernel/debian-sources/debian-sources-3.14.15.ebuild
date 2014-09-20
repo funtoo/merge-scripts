@@ -5,9 +5,9 @@ EAPI=5
 inherit check-reqs eutils mount-boot
 
 SLOT=$PVR
-CKV=3.14.4
+CKV=3.14.15
 KV_FULL=${PN}-${PVR}
-EXTRAVERSION=-1
+EXTRAVERSION=-2
 KERNEL_ARCHIVE="linux_${PV}.orig.tar.xz"
 PATCH_ARCHIVE="linux_${PV}${EXTRAVERSION}.debian.tar.xz"
 RESTRICT="binchecks strip mirror"
@@ -47,7 +47,7 @@ pkg_setup() {
 
 src_prepare() {
 
-	cd ${S}
+	cd "${S}"
 	for debpatch in $( get_patch_list "${WORKDIR}/debian/patches/series" ); do
 		epatch -p1 "${WORKDIR}/debian/patches/${debpatch}"
 	done
@@ -66,58 +66,58 @@ src_prepare() {
 	cp -a "${WORKDIR}"/debian "${T}"
 	make -s mrproper || die "make mrproper failed"
 	#make -s include/linux/version.h || die "make include/linux/version.h failed"
-	cd ${S}
+	cd "${S}"
 	cp -aR "${WORKDIR}"/debian "${S}"/debian
 
 	## XFS LIBCRC kernel config fixes, FL-823
-	epatch ${FILESDIR}/debian-sources-3.14.4-xfs-libcrc32c-fix.patch
+	epatch "${FILESDIR}"/debian-sources-3.14.4-xfs-libcrc32c-fix.patch
 
 	local opts
 	use rt && opts="rt" || opts="standard"
 	local myarch="amd64"
 	[ "$REAL_ARCH" = "x86" ] && myarch="i386" && opts="$opts 686-pae"
-	cp ${FILESDIR}/config-extract . || die
+	cp "${FILESDIR}"/config-extract . || die
 	chmod +x config-extract || die
 	./config-extract ${myarch} ${opts} || die
-	cp .config ${T}/config || die
+	cp .config "${T}"/config || die
 	make -s mrproper || die "make mrproper failed"
 	#make -s include/linux/version.h || die "make include/linux/version.h failed"
 }
 
 src_compile() {
 	! use binary && return
-	install -d ${WORKDIR}/out/{lib,boot}
-	install -d ${T}/{cache,twork}
-	install -d $WORKDIR/build $WORKDIR/out/lib/firmware
+	install -d "${WORKDIR}"/out/{lib,boot}
+	install -d "${T}"/{cache,twork}
+	install -d "${WORKDIR}"/build "${WORKDIR}"/out/lib/firmware
 	genkernel \
 		--no-save-config \
-		--kernel-config="$T/config" \
+		--kernel-config="${T}"/config \
 		--kernname="${PN}" \
-		--build-src="$S" \
-		--build-dst=${WORKDIR}/build \
+		--build-src="${S}" \
+		--build-dst="${WORKDIR}"/build \
 		--makeopts="${MAKEOPTS}" \
-		--firmware-dst=${WORKDIR}/out/lib/firmware \
-		--cachedir="${T}/cache" \
-		--tempdir="${T}/twork" \
-		--logfile="${WORKDIR}/genkernel.log" \
-		--bootdir="${WORKDIR}/out/boot" \
+		--firmware-dst="${WORKDIR}"/out/lib/firmware \
+		--cachedir="${T}"/cache \
+		--tempdir="${T}"/twork \
+		--logfile="${WORKDIR}"/genkernel.log \
+		--bootdir="${WORKDIR}"/out/boot \
 		--lvm \
 		--luks \
 		--mdadm \
 		--iscsi \
-		--module-prefix="${WORKDIR}/out" \
+		--module-prefix="${WORKDIR}"/out \
 		all || die "genkernel failed"
 }
 
 src_install() {
 	# copy sources into place:
 	dodir /usr/src
-	cp -a ${S} ${D}/usr/src/linux-${P} || die
-	cd ${D}/usr/src/linux-${P}
+	cp -a "${S}" "${D}"/usr/src/linux-${P} || die
+	cd "${D}"/usr/src/linux-${P}
 	# prepare for real-world use and 3rd-party module building:
 	make mrproper || die
-	cp ${T}/config .config || die
-	cp -a ${T}/debian debian || die
+	cp "${T}"/config .config || die
+	cp -a "${T}"/debian debian || die
 	yes "" | make oldconfig || die
 	# if we didn't use genkernel, we're done. The kernel source tree is left in
 	# an unconfigured state - you can't compile 3rd-party modules against it yet.
@@ -127,27 +127,32 @@ src_install() {
 	# OK, now the source tree is configured to allow 3rd-party modules to be
 	# built against it, since we want that to work since we have a binary kernel
 	# built.
-	cp -a ${WORKDIR}/out/* ${D}/ || die "couldn't copy output files into place"
+	cp -a "${WORKDIR}"/out/* "${D}"/ || die "couldn't copy output files into place"
 	# module symlink fixup:
-	rm -f ${D}/lib/modules/*/source || die
-	rm -f ${D}/lib/modules/*/build || die
-	cd ${D}/lib/modules
+	rm -f "${D}"/lib/modules/*/source || die
+	rm -f "${D}"/lib/modules/*/build || die
+	cd "${D}"/lib/modules
 	# module strip:
 	find -iname *.ko -exec strip --strip-debug {} \;
 	# back to the symlink fixup:
 	local moddir="$(ls -d [23]*)"
-	ln -s /usr/src/linux-${P} ${D}/lib/modules/${moddir}/source || die
-	ln -s /usr/src/linux-${P} ${D}/lib/modules/${moddir}/build || die
+	ln -s /usr/src/linux-${P} "${D}"/lib/modules/${moddir}/source || die
+	ln -s /usr/src/linux-${P} "${D}"/lib/modules/${moddir}/build || die
 
 	# Fixes FL-14
-		cp "${WORKDIR}/build/System.map" "${D}/usr/src/linux-${P}/" || die
-		cp "${WORKDIR}/build/Module.symvers" "${D}/usr/src/linux-${P}/" || die
+	cp "${WORKDIR}/build/System.map" "${D}/usr/src/linux-${P}/" || die
+	cp "${WORKDIR}/build/Module.symvers" "${D}/usr/src/linux-${P}/" || die
 
 }
 
 pkg_postinst() {
-	if [ ! -e ${ROOT}usr/src/linux ]
+	if [[ -h "${ROOT}"usr/src/linux ]]; 
+	then 
+		rm "${ROOT}"usr/src/linux
+	fi
+
+	if [[ ! -e "${ROOT}"usr/src/linux ]];
 	then
-		ln -s linux-${P} ${ROOT}usr/src/linux
+		ln -sf linux-${P} "${ROOT}"usr/src/linux
 	fi
 }
