@@ -67,7 +67,7 @@ EOF
 }
 
 src_prepare() {
-	epatch "${FILESDIR}"/${P}-gentoo.patch
+	epatch "${FILESDIR}"/${PN}-9.0.30203-gentoo.patch
 
 	sed \
 		-e "s#@TVV@#${MV}/tv_bin#g" \
