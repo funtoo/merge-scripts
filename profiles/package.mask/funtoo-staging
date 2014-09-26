@@ -1,7 +1,6 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
-# Oleg Vinichenko (16 Sep 2014)
-# FL-1540: restore ve-unlimited.conf-sample and change default layout to SIMFS
-# masked for testing
-=sys-cluster/vzctl-4.7.2-r1
+# Daniel Robbins (25 Sep 2014)
+# # FL-1532: masked for testing
+=sys-kernel/openvz-rhel6-stable-2.6.32.042.093.5*
