@@ -49,7 +49,7 @@ src_unpack() {
 
 src_prepare() {
 	# Custom changes for gentoo
-	epatch "${FILESDIR}/${PN}-3.15-gentoo-fixups.patch"
+	epatch "${FILESDIR}/${PN}-3.17.1-gentoo-fixups.patch"
 	epatch "${FILESDIR}/${PN}-3.15-gentoo-fixup-warnings.patch"
 	use cacert && epatch "${DISTDIR}/${PN}-3.14.1-add_spi+cacerts_ca_certs.patch"
 	use nss-pem && epatch "${FILESDIR}/${PN}-3.15.4-enable-pem.patch"
