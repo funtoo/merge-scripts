@@ -20,7 +20,7 @@ KEYWORDS="*"
 RDEPEND="app-shells/zsh"
 
 src_prepare() {
-	epatch "${FILESDIR/${P}-cleanup.patch"
+	epatch "${FILESDIR}/${P}-cleanup.patch"
 	epatch "${FILESDIR}/${P}-eselect-funtoo.patch"
 }
 
