@@ -1,0 +1,1 @@
+CONFIG_PROTECT="$CONFIG_PROTECT /usr/lib/oss/conf/"

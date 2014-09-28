@@ -16,20 +16,24 @@ else:
 funtoo_overlay = Tree("funtoo-overlay", branch, "repos@git.funtoo.org:funtoo-overlay.git", pull=True)
 foo_overlay = Tree("foo-overlay", "master", "https://github.com/slashbeast/foo-overlay.git", pull=True)
 bar_overlay = Tree("bar-overlay", "master", "git://github.com/adessemond/bar-overlay.git", pull=True)
+funtoo_media = Tree("funtoo-media", "master", "repos@git.funtoo.org:funtoo-media.git", pull=True)
 bliss_overlay = Tree("bliss-overlay", "master", "https://github.com/fearedbliss/bliss-overlay.git", pull=True)
 squeezebox_overlay = Tree("squeezebox", "master", "git://git.overlays.gentoo.org/user/squeezebox.git", pull=True)
 progress_overlay = SvnTree("progress", "https://gentoo-progress.googlecode.com/svn/overlays/progress")
 plex_overlay = Tree("funtoo-plex", "master", "https://github.com/Ghent/funtoo-plex.git", pull=True)
 sabayon_for_gentoo = Tree("sabayon-for-gentoo", "master", "git://github.com/Sabayon/for-gentoo.git", pull=True)
-funtoo_gnome_overlay = Tree("funtoo-gnome", "experimental" if experimental else "master", "repos@git.funtoo.org:funtoo-gnome-overlay.git", pull=True)
+#funtoo_gnome_overlay = Tree("funtoo-gnome", "experimental" if experimental else "master", "repos@git.funtoo.org:funtoo-gnome-overlay.git", pull=True)
+funtoo_gnome_overlay = Tree("funtoo-gnome", "master", "repos@git.funtoo.org:funtoo-gnome-overlay.git", pull=True)
+funtoo_toolchain_overlay = Tree("funtoo-toolchain", "master", "repos@git.funtoo.org:funtoo-toolchain-overlay.git", pull=True)
 mysql_overlay = Tree("funtoo-mysql", "master", "repos@git.funtoo.org:funtoo-mysql.git", pull=True)
 ldap_overlay = Tree("funtoo-ldap", "master", "repos@git.funtoo.org:funtoo-ldap-overlay.git", pull=True)
 funtoo_deadbeef = Tree("funtoo-deadbeef", "master", "https://github.com/damex/funtoo-deadbeef.git", pull=True)
 funtoo_redhat = Tree("funtoo-redhat", "master", "https://github.com/damex/funtoo-redhat.git", pull=True)
+funtoo_wmfs = Tree("funtoo-wmfs", "master", "https://github.com/damex/funtoo-wmfs.git", pull=True)
 faustoo_overlay = Tree("faustoo", "master", "https://github.com/fmoro/faustoo.git", pull=True)
 
 steps = [
-	SyncTree(gentoo_src, exclude=["/metadata/cache/**", "ChangeLog", "dev-util/metro", "profiles/base/package.use.stable.mask"]),
+	SyncTree(gentoo_src, exclude=["/metadata/cache/**", "ChangeLog", "dev-util/metro"]),
 	# Only include 2012 and up GLSA's:
 	SyncDir(gentoo_glsa.root, "en/glsa", "metadata/glsa", exclude=["glsa-200*.xml","glsa-2010*.xml", "glsa-2011*.xml"]) if not gentoo_use_rsync else None,
 	ApplyPatchSeries("%s/funtoo/patches" % funtoo_overlay.root ),
@@ -59,6 +63,7 @@ steps = [
 		"README.rst":"README.rst"
 	}),
 	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
+        InsertEbuilds(funtoo_toolchain_overlay, select="all", skip=None, replace=True) if experimental else None,
         InsertEbuilds(mysql_overlay, select="all", skip=None, replace=True),
         InsertEbuilds(ldap_overlay, select="all", skip=None, replace=True),
         InsertEbuilds(faustoo_overlay, select=[ "app-office/projectlibre-bin" ], skip=None, replace=True),
@@ -75,6 +80,10 @@ steps = [
         }),
         SyncDir(funtoo_deadbeef.root,"eclass"),
         InsertEbuilds(funtoo_redhat, select="all", skip=None, replace=False),
+        InsertEbuilds(funtoo_wmfs, select="all", skip=None, replace=False),
+        SyncFiles(funtoo_wmfs.root, {
+                "profiles/package.mask":"profiles/package.mask/wmfs-mask"
+        }),
 	SyncFiles(funtoo_gnome_overlay.root, {
 		"profiles/package.mask":"profiles/funtoo/1.0/linux-gnu/mix-ins/gnome/package.mask"
 	}),
@@ -94,6 +103,7 @@ steps = [
 	InsertEbuilds(progress_overlay, select="all", skip=None, replace=True, merge=["dev-python/psycopg", "dev-python/python-docs", "dev-python/simpletal", "dev-python/wxpython", "x11-libs/vte"]),
 	MergeUpdates(progress_overlay.root),
 	AutoGlobMask("dev-lang/python", "python*_pre*", "funtoo-python"),
+        InsertEbuilds(funtoo_media, select="all", skip=None, replace=True),
 	Minify(),
 	GenCache(),
 	GenUseLocalDesc()

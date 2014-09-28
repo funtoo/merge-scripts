@@ -14,7 +14,7 @@ HOMEPAGE="https://wiki.gnome.org/Projects/NetworkManager"
 
 LICENSE="GPL-2+"
 SLOT="0"
-IUSE="avahi bluetooth connection-sharing consolekit dhclient +dhcpcd gnutls introspection kernel_linux +nss modemmanager ncurses policykit ppp resolvconf selinux systemd teamd test upower vala wext wifi"
+IUSE="avahi bluetooth connection-sharing consolekit dhclient +dhcpcd gnutls introspection kernel_linux +nss modemmanager ncurses policykit ppp resolvconf selinux systemd teamd test upower vala wext +wifi"
 
 KEYWORDS=""
 

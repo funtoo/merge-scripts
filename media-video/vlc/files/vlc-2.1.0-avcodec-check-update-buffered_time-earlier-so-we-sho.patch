@@ -1,0 +1,60 @@
+From 31df15fbbee73dcf51ff63451064205a03c99bd8 Mon Sep 17 00:00:00 2001
+From: Ilkka Ollakka <ileoo@videolan.org>
+Date: Sun, 29 Sep 2013 14:26:59 +0300
+Subject: [PATCH] avcodec: check/update buffered_time earlier, so we shouldn't
+ use 0 as time when encoding
+
+Ref #9022
+(cherry picked from commit 5a43b77365cb65ea8a28e3db2d0b9f3cdcee7191)
+
+Signed-off-by: Ilkka Ollakka <ileoo@videolan.org>
+---
+ modules/codec/avcodec/encoder.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/modules/codec/avcodec/encoder.c b/modules/codec/avcodec/encoder.c
+index a82d235..be473bf 100644
+--- a/modules/codec/avcodec/encoder.c
++++ b/modules/codec/avcodec/encoder.c
+@@ -1149,12 +1149,17 @@ static block_t *EncodeAudio( encoder_t *p_enc, block_t *p_aout_buf )
+         AVPacket packet = {0};
+         avcodec_get_frame_defaults( p_sys->frame );
+         p_sys->frame->format     = p_sys->p_context->sample_fmt;
+-        p_sys->frame->pts        = date_Get( &p_sys->buffer_date );
+         p_sys->frame->nb_samples = leftover_samples + p_sys->i_samples_delay;
+-        date_Increment( &p_sys->buffer_date, p_sys->i_frame_size );
+ 
++        if( unlikely( p_aout_buf && ( p_aout_buf->i_pts > VLC_TS_INVALID ) &&
++            (p_aout_buf->i_pts != date_Get( &p_sys->buffer_date ) ) ) )
++            date_Set( &p_sys->buffer_date, p_aout_buf->i_pts );
++
++        p_sys->frame->pts        = date_Get( &p_sys->buffer_date );
++        date_Increment( &p_sys->buffer_date, p_sys->i_frame_size );
+         if( likely( p_aout_buf ) )
+         {
++
+             p_aout_buf->i_nb_samples -= leftover_samples;
+             memcpy( p_sys->p_buffer+buffer_delay, p_aout_buf->p_buffer, leftover );
+ 
+@@ -1169,6 +1174,7 @@ static block_t *EncodeAudio( encoder_t *p_enc, block_t *p_aout_buf )
+             p_aout_buf->i_buffer     -= leftover;
+             p_aout_buf->i_pts         = date_Get( &p_sys->buffer_date );
+         }
++
+         if(unlikely( ( (leftover + buffer_delay) < p_sys->i_buffer_out ) &&
+                      !(p_sys->p_codec->capabilities & CODEC_CAP_SMALL_LAST_FRAME ))
+           )
+@@ -1254,10 +1260,6 @@ static block_t *EncodeAudio( encoder_t *p_enc, block_t *p_aout_buf )
+         const int align = 1;
+ #endif
+ 
+-        if( unlikely( p_aout_buf->i_pts > VLC_TS_INVALID &&
+-                      p_aout_buf->i_pts != date_Get( &p_sys->buffer_date ) ) )
+-            date_Set( &p_sys->buffer_date, p_aout_buf->i_pts );
+-
+         avcodec_get_frame_defaults( p_sys->frame );
+         if( p_sys->b_variable )
+             p_sys->frame->nb_samples = p_aout_buf->i_nb_samples;
+-- 
+1.8.4
+

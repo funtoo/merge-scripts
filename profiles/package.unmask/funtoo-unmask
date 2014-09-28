@@ -4,4 +4,6 @@ dev-scheme/guile
 games-board/aisleriot
 media-libs/aubio
 media-video/mpv
-www-servers/nginx
+
+# CVE-2014-3616
+>=www-servers/nginx-1.7.5

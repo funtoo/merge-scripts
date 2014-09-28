@@ -3,12 +3,6 @@
 # Ref FL-1483
 >=net-libs/rb_libtorrent-1.0.1
 
-# Dantrell B. (17 Aug 2014)
-# Selectively mask versions of sys-devel/gettext
-# Ref FL-1470
-=sys-devel/gettext-0.19.1
-=sys-devel/gettext-0.19
-
 # Dantrell B. (14 Aug 2014)
 # Masked for testing
 # Ref FL-1106
@@ -45,10 +39,6 @@ app-admin/eselect-sh
 #  Cautionary mask latest bash and readline, until it's time to update
 >=app-shells/bash-4.3
 >=sys-libs/readline-6.3
-#  Oleg Vinichenko (3 Dec 2013)
-#  mask latest version of autogen, broken
->=sys-devel/autogen-5.18
-
 # Ryan Harris (23 Jul 2013)
 # Mask phoronix-test-suite due to security concerns
 # Packages should not try to run emerge on their own
