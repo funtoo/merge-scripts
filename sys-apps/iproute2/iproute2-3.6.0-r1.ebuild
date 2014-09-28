@@ -14,7 +14,7 @@ if [[ ${PV} == "9999" ]] ; then
 	SRC_URI=""
 	#KEYWORDS=""
 else
-	SRC_URI="http://ftp.osuosl.org/pub/funtoo/distfiles/${P}.tar.xz"
+	SRC_URI="http://build.funtoo.org/distfiles/${P}.tar.xz"
 	KEYWORDS="*"
 fi
 

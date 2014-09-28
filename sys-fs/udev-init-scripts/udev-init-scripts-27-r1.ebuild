@@ -10,7 +10,7 @@ HOMEPAGE="http://www.gentoo.org"
 LICENSE="GPL-2"
 SLOT="0"
 IUSE=""
-SRC_URI="http://ftp.osuosl.org/pub/funtoo/distfiles/${P}.tar.xz"
+SRC_URI="http://build.funtoo.org/distfiles/${P}.tar.xz"
 KEYWORDS="*"
 
 

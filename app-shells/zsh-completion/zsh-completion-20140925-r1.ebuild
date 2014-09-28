@@ -10,7 +10,7 @@ DESCRIPTION="Programmable Completion for Z Shell (include eselect, gcc,\
 HOMEPAGE=""
 
 SRC_URI="http://build.funtoo.org/distfiles/${P}.tar.xz
-	http://ftp.osuosl.org/pub/funtoo/distfiles/${P}.tar.xz
+	http://build.funtoo.org/distfiles/${P}.tar.xz
 	http://ftp.heanet.ie/mirrors/funtoo/distfiles/${P}.tar.xz"
 
 LICENSE="ZSH"
