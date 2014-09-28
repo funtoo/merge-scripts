@@ -5,7 +5,7 @@
 <www-servers/nginx-1.7.5
 
 # CVE-2014-6271 CVE-2014-7169
-<app-shell/bash-4.2_p49
+<app-shell/bash-4.2_p49-r1
 
 # CVE-2014-1568
 # we do not have =dev-libs/nss-3.16.2.* available
