@@ -6,8 +6,8 @@ KDE_REQUIRED="optional"
 CMAKE_REQUIRED="never"
 
 BASE_PACKAGENAME="bin"
-BASE_AMD64_URI="http://www.funtoo.org/distfiles/libreoffice/amd64-${BASE_PACKAGENAME}-"
-BASE_X86_URI="http://www.funtoo.org/distfiles/libreoffice/x86-${BASE_PACKAGENAME}-"
+BASE_AMD64_URI="http://build.funtoo.org/distfiles/libreoffice/amd64-${BASE_PACKAGENAME}-"
+BASE_X86_URI="http://build.funtoo.org/distfiles/libreoffice/x86-${BASE_PACKAGENAME}-"
 
 PYTHON_COMPAT=( python2_7 python3_3 python3_4 )
 PYTHON_REQ_USE="threads,xml"

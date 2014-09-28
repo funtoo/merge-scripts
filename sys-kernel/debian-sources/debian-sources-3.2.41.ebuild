@@ -18,8 +18,8 @@ IUSE="binary rt"
 DEPEND="binary? ( >=sys-kernel/genkernel-3.4.40-r2 )"
 DESCRIPTION="Debian Sources (and optional binary kernel)"
 HOMEPAGE="http://www.debian.org"
-SRC_URI="http://www.funtoo.org/distfiles/${KERNEL_ARCHIVE}
-	http://www.funtoo.org/distfiles/${PATCH_ARCHIVE}"
+SRC_URI="http://build.funtoo.org/distfiles/${KERNEL_ARCHIVE}
+	http://build.funtoo.org/distfiles/${PATCH_ARCHIVE}"
 S="$WORKDIR/linux-${CKV}"
 
 apply() {
