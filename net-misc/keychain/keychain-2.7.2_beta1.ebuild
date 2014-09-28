@@ -4,7 +4,7 @@ EAPI=5
 
 DESCRIPTION="manage ssh and GPG keys in a convenient and secure manner. Frontend for ssh-agent/ssh-add"
 HOMEPAGE="http://www.funtoo.org/Package:Keychain"
-SRC_URI="http://ftp.osuosl.org/pub/funtoo/distfiles/keychain/${P}.tar.bz2"
+SRC_URI="http://build.funtoo.org/distfiles/keychain/${P}.tar.bz2"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -26,6 +26,6 @@ src_install() {
 
 pkg_postinst() {
 	einfo "Please see the keychain man page or visit"
-	einfo "http://www.funtoo.org/Keychain"
+	einfo "$HOMEPAGE"
 	einfo "for information on how to use keychain."
 }
