@@ -1,5 +1,6 @@
 # CVE-2014-4330
 <perl-core/Data-Dumper-2.153.0
+<virtual/perl-Data-Dumper-2.153.0
 
 # CVE-2014-3616
 <www-servers/nginx-1.7.5
