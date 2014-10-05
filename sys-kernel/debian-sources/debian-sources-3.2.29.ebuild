@@ -19,8 +19,8 @@ DEPEND="binary? ( >=sys-kernel/genkernel-3.4.12.6-r4 )"
 DESCRIPTION="Debian Sources (and optional binary kernel)"
 HOMEPAGE="http://www.debian.org"
 MAINPATCH="linux-2.6_${PV}${EXTRAVERSION}.diff.gz"
-SRC_URI="http://www.funtoo.org/distfiles/${PN}/${KERNEL_ARCHIVE}
-	http://www.funtoo.org/distfiles/${PN}//${PATCH_ARCHIVE}"
+SRC_URI="http://build.funtoo.org/distfiles/${PN}/${KERNEL_ARCHIVE}
+	http://build.funtoo.org/distfiles/${PN}//${PATCH_ARCHIVE}"
 S="$WORKDIR/linux-${CKV}"
 
 apply() {

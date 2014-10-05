@@ -9,7 +9,7 @@ GITHUB_USER="funtoo"
 GITHUB_TAG="${PV}"
 
 DESCRIPTION="vim plugin: Funtoo Ebuild, Eclass, GLEP, ChangeLog and Portage Files syntax highlighting, filetype and indent settings"
-HOMEPAGE="http://www.funtoo.org/"
+HOMEPAGE="http://www.funtoo.org/Package:Gentoo_Syntax_(Vim)"
 SRC_URI="https://github.com/funtoo/funtoo-syntax/tarball/$GITHUB_TAG -> ${PN}-${PV}.tar.gz"
 LICENSE="vim"
 KEYWORDS="*"

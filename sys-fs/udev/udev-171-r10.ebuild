@@ -7,7 +7,7 @@ DESCRIPTION="Linux dynamic and persistent device naming support (aka userspace d
 HOMEPAGE="http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev.html"
 #PATCHSET="${P}-gentoo-patchset-v1"
 RESTRICT="mirror test"
-SRC_URI="http://ftp.osuosl.org/pub/funtoo/distfiles/${P}.tar.bz2"
+SRC_URI="http://build.funtoo.org/distfiles/${P}.tar.bz2"
 
 if [ -n "$PATCHSET" ]
 then
