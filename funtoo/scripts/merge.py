@@ -17,6 +17,7 @@ funtoo_overlay = Tree("funtoo-overlay", branch, "repos@git.funtoo.org:funtoo-ove
 foo_overlay = Tree("foo-overlay", "master", "https://github.com/slashbeast/foo-overlay.git", pull=True)
 bar_overlay = Tree("bar-overlay", "master", "git://github.com/adessemond/bar-overlay.git", pull=True)
 funtoo_media = Tree("funtoo-media", "master", "repos@git.funtoo.org:funtoo-media.git", pull=True)
+causes_overlay = Tree("causes","master", "https://github.com/causes-/causelay", pull=True)
 bliss_overlay = Tree("bliss-overlay", "master", "https://github.com/fearedbliss/bliss-overlay.git", pull=True)
 squeezebox_overlay = Tree("squeezebox", "master", "git://git.overlays.gentoo.org/user/squeezebox.git", pull=True)
 progress_overlay = SvnTree("progress", "https://gentoo-progress.googlecode.com/svn/overlays/progress")
@@ -73,6 +74,7 @@ steps = [
         InsertEbuilds(plex_overlay, select = [ "media-tv/plex-media-server" ], skip=None, replace=True),
         SyncDir(plex_overlay.root,"licenses"),
 	InsertEbuilds(squeezebox_overlay, select="all", skip=None, replace=False),
+        InsertEbuilds(causes_overlay, select=[ "media-sound/renoise", "media-sound/renoise-demo" ], skip=None, replace=True),
 	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=None, replace=True, merge=False),
         InsertEbuilds(funtoo_deadbeef, select="all", skip=None, replace=False),
         SyncFiles(funtoo_deadbeef.root, {
