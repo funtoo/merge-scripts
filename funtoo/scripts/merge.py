@@ -74,7 +74,7 @@ steps = [
         InsertEbuilds(plex_overlay, select = [ "media-tv/plex-media-server" ], skip=None, replace=True),
         SyncDir(plex_overlay.root,"licenses"),
 	InsertEbuilds(squeezebox_overlay, select="all", skip=None, replace=False),
-        InsertEbuilds(causes_overlay, select=[ "media-sound/renoise", "media-sound/renoise-demo" ], skip=None, replace=True),
+        InsertEbuilds(causes_overlay, select=[ "media-sound/renoise", "media-sound/renoise-demo", "sys-fs/smdev", "x11-wm/dwm" ], skip=None, replace=True),
 	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=None, replace=True, merge=False),
         InsertEbuilds(funtoo_deadbeef, select="all", skip=None, replace=False),
         SyncFiles(funtoo_deadbeef.root, {
