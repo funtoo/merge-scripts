@@ -7,7 +7,8 @@
 
 # CVE-2014-6271 CVE-2014-7169
 # CVE-2014-7186 CVE-2014-7187
-<app-shell/bash-4.2_p49-r2
+# CVE-2014-6277 CVE-2014-6278
+<app-shell/bash-4.2_p53
 
 # CVE-2014-1568
 # we do not have =dev-libs/nss-3.16.2.* available
