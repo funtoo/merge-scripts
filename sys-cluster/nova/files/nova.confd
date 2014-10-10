@@ -1,3 +1,0 @@
-FLAG_FILE=/etc/nova/nova.conf
-PID_PATH=/var/run/nova
-LOG_PATH=/var/log/nova
