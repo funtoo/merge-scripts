@@ -40,7 +40,7 @@ src_prepare() {
 	sed -i -e 's:=redhat-:=gentoo-:' etc/dists/default || die 'sed on etc/dists/default failed'
 	# Set proper udev directory
 	sed -i -e "s:/lib/udev:$(get_udevdir):" src/lib/dev.c || die 'sed on src/lib/dev.c failed'
-epatch "${FILESDIR}"/${PN}-ve-layout.patch
+	epatch "${FILESDIR}"/${PN}-4.8-vz.conf.patch
 }
 
 src_configure() {
@@ -69,7 +69,7 @@ src_install() {
 	insinto /etc/vz
 	doins ${FILESDIR}/vznet.conf
 	#FL-1540. Restore ve-unlimited.conf-sample file
-	insinto /etc/vz
+	insinto /etc/vz/conf
 	doins ${FILESDIR}/ve-unlimited.conf-sample
 
 	# install our tweaked Funtoo set-hostname script so FQDN gets set correctly:

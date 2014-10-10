@@ -1,0 +1,18 @@
+diff -urN vzctl-4.8/etc/vz.conf.in vzctl-4.8-fixed/etc/vz.conf.in
+--- vzctl-4.8/etc/vz.conf.in	2014-10-06 10:02:23.000000000 -0600
++++ vzctl-4.8-fixed/etc/vz.conf.in	2014-10-09 21:28:16.411999034 -0600
+@@ -40,11 +40,11 @@
+ ## Defaults for containers
+ VE_ROOT=@VZDIR@/root/$VEID
+ VE_PRIVATE=@VZDIR@/private/$VEID
+-CONFIGFILE="vswap-256m"
+-DEF_OSTEMPLATE="centos-6-x86"
++CONFIGFILE="unlimited"
++DEF_OSTEMPLATE="funtoo"
+ NAMESERVER=inherit # Copy from host system's /etc/resolv.conf
+ ## Filesystem layout for new CTs: either simfs or ploop
+-VE_LAYOUT=ploop
++VE_LAYOUT=simfs
+ 
+ # User namespace configuration
+ LOCAL_UID=100000
