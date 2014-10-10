@@ -1,11 +1,2 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
-
-# Daniel Robbins (09 Oct 2014)
-# FL-1606: masked for testing
-=dev-php/xcache-3.2.0*
-
-
-# Daniel Robbins (25 Sep 2014)
-# # FL-1532: masked for testing
-=sys-kernel/openvz-rhel6-stable-2.6.32.042.093.5*
