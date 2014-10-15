@@ -40,6 +40,7 @@ steps = [
 	ApplyPatchSeries("%s/funtoo/patches" % funtoo_overlay.root ),
 	ThirdPartyMirrors(),
 	SyncDir(funtoo_overlay.root, "profiles", "profiles", exclude=["categories", "repo_name", "updates"]),
+	SyncDir(funtoo_overlay.root, "eclass"),
 	MergeUpdates(funtoo_overlay.root),
 	ProfileDepFix(),
 	SyncDir(funtoo_overlay.root,"licenses"),
