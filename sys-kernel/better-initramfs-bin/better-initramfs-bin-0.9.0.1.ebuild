@@ -2,6 +2,8 @@
 
 EAPI="5"
 
+inherit mount-boot
+
 BITBUCKET_USERNAME="piotrkarbowski"
 BITBUCKET_REPO="better-initramfs"
 BITBUCKET_TAG_AMD64="release-x86_64-v${PV}"
@@ -18,19 +20,22 @@ RESTRICT="mirror"
 LICENSE="as-is"
 SLOT="0"
 KEYWORDS="*"
-IUSE=""
+IUSE="+gzip"
 
 if [ ${ARCH} == "amd64" ]; then
-	S="${WORKDIR}/release-${PACKAGE_TAG_AMD64}-v${PV}_uBPRd"
+	S="${WORKDIR}/release-${PACKAGE_TAG_AMD64}-v${PV}_ygqQV"
 elif [ ${ARCH} == "x86" ]; then
-	S="${WORKDIR}/release-${PACKAGE_TAG_x86}-v${PV}_vzh1v"
+	S="${WORKDIR}/release-${PACKAGE_TAG_x86}-v${PV}_jL8Ev"
 fi
 
 src_install() {
-	gzip initramfs.cpio
+	use gzip && gzip initramfs.cpio
 
 	insinto /boot
-	doins initramfs.cpio.gz || die "Could not find file initramfs.cpio.gz!"
-
+	if use gzip; then
+		doins initramfs.cpio.gz || die "Could not find file 'initramfs.cpio.gz'!"
+	else
+		doins initramfs.cpio || die "Could not find file 'initramfs.cpio'!"
+	fi
 	dodoc LICENSE README.binary README.rst
 }
