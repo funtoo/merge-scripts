@@ -38,6 +38,9 @@ def runShell(string,abortOnFail=True):
 			print(out[1])
 			if abortOnFail:
 				sys.exit(1)
+			else:
+				return False
+	return True
 
 class MergeStep(object):
 	pass
@@ -179,7 +182,7 @@ class CleanTree(MergeStep):
 				continue
 			runShell("rm -rf %s/%s" % (tree.root, fn))
 
-class SyncTree(SyncDir):
+class SyncFromTree(SyncDir):
 	# sync a full portage tree, deleting any excess files in the target dir:
 	def __init__(self,srctree,exclude=[]):
 		self.srctree = srctree
@@ -188,116 +191,71 @@ class SyncTree(SyncDir):
 	def run(self,desttree):
 		SyncDir.run(self,desttree)
 		desttree.logTree(self.srctree)
+
 class Tree(object):
-	def __init__(self,name,branch="master",url=None,pull=False, trylocal=None):
-		self.name = name
-		self.branch = branch
-		self.url = url
-		self.merged = []
-		self.trylocal = trylocal
-		if self.trylocal and os.path.exists(self.trylocal):
-			base = os.path.basename(self.trylocal)
-			self.root = trylocal
-		else:
-			base = "/var/git/source-trees"
-			self.root = "%s/%s" % ( base, self.name )
-
-		if not os.path.exists(base):
-			os.makedirs(base)
-		if os.path.exists(self.root):
-			runShell("(cd %s; git fetch origin)" % self.root, abortOnFail=False)
-			runShell("(cd %s; git checkout %s)" % ( self.root, self.branch ))
-			if pull:
-				runShell("(cd %s; git pull -f origin %s)" % ( self.root, self.branch ), abortOnFail=False)
-		else:
-			runShell("(cd %s; git clone %s %s)" % ( base, self.url, self.name ))
-			runShell("(cd %s; git checkout %s)" % ( self.root, self.branch ))
-
-	def head(self):
-		return headSHA1(self.root)
-
-
-	def logTree(self,srctree):
-		# record name and SHA of src tree in dest tree, used for git commit message/auditing:
-		if srctree.name == None:
-			# this tree doesn't have a name, so just copy any existing history from that tree
-			self.merged.extend(srctree.merged)
-		else:
-			# this tree has a name, so record the name of the tree and its SHA1 for reference
-			if hasattr(srctree, "origroot"):
-				self.merged.append([srctree.name, headSHA1(srctree.origroot)])
-				return
-
-			self.merged.append([srctree.name, headSHA1(srctree.root)])
-
-class DeadTree(Tree):
 	def __init__(self,name,root):
 		self.name = name
 		self.root = root
 	def head(self):
 		return "None"
 
-class RsyncTree(Tree):
-	def __init__(self,name,url="rsync://rsync.us.gentoo.org/gentoo-portage/"):
-		self.name = name
-		self.url = url 
-		base = "/var/rsync/source-trees"
-		self.root = "%s/%s" % (base, self.name)
-		if not os.path.exists(base):
-		    os.makedirs(base)
-		runShell("rsync --recursive --delete-excluded --links --safe-links --perms --times --compress --force --whole-file --delete --timeout=180 --exclude=/.git --exclude=/metadata/cache/ --exclude=/metadata/glsa/glsa-200*.xml --exclude=/metadata/glsa/glsa-2010*.xml --exclude=/metadata/glsa/glsa-2011*.xml --exclude=/metadata/md5-cache/  --exclude=/distfiles --exclude=/local --exclude=/packages %s %s/" % (self.url, self.root))
+class GitTree(Tree):
 
-class SvnTree(object):
-	def __init__(self, name, url=None, trylocal=None):
-		self.name = name
-		self.url = url
-		self.trylocal = trylocal
-		if self.trylocal and os.path.exists(self.trylocal):
-			base = os.path.basename(self.trylocal)
-			self.root = trylocal
-		else:
-			base = "/var/svn/source-trees"
-			self.root = "%s/%s" % (base, self.name)
-		if not os.path.exists(base):
-			os.makedirs(base)
-		if os.path.exists(self.root):
-			runShell("(cd %s; svn up)" % self.root, abortOnFail=False)
-		else:
-			runShell("(cd %s; svn co %s %s)" % (base, self.url, self.name))
+	"A Tree (git) that we can use as a source for work jobs, and/or a target for running jobs."
 
-class CvsTree(object):
-	def __init__(self, name, url=None, path=None, trylocal=None):
+	def __init__(self,name,branch="master",url=None,pull=False,root=None,xml_out=None,initialize=False):
 		self.name = name
-		self.url = url
-		if path is None:
-			path = self.name
-		self.trylocal = trylocal
-		if self.trylocal and os.path.exists(self.trylocal):
-			base = os.path.basename(self.trylocal)
-			self.root = trylocal
-		else:
-			base = "/var/cvs/source-trees"
-			self.root = "%s/%s" % (base, path)
-		if not os.path.exists(base):
-			os.makedirs(base)
-		if os.path.exists(self.root):
-			runShell("(cd %s; cvs update -dP)" % self.root, abortOnFail=False)
-		else:
-			runShell("(cd %s; cvs -d %s co %s)" % (base, self.url, path))
-
-class UnifiedTree(Tree):
-	def __init__(self,root,steps,xml_out=None):
-		self.steps = steps
 		self.root = root
-		self.name = None
+		self.branch = branch
+		self.url = url
 		self.merged = []
 		self.xml_out = xml_out
+		self.push = False
+		# if we don't specify root destination tree, assume we are source only:
+		if self.root == None:
+			self.writeTree = False
+			if self.url == None:
+				print("Error: please specify root or url for GitTree.")
+				sys.exit(1)
+			base = "/var/git/source-trees"
+			self.root = "%s/%s" % ( base, self.name )
+			if os.path.exists(self.root):
+				runShell("(cd %s; git fetch origin)" % self.root, abortOnFail=False)
+				runShell("(cd %s; git checkout %s)" % ( self.root, self.branch ))
+				if pull:
+					runShell("(cd %s; git pull -f origin %s)" % ( self.root, self.branch ), abortOnFail=False)
+			else:
+				if not os.path.exists(base):
+					os.makedirs(base)
+				if url:
+					runShell("(cd %s; git clone %s %s)" % ( base, self.url, self.name ))
+					runShell("(cd %s; git checkout %s)" % ( self.root, self.branch ))
+				else:
+					print("Error: tree %s does not exist, but no clone URL specified. Exiting." % self.root)
+					sys.exit(1)
+		else:
+			self.writeTree = True
+			if not os.path.isdir("%s/.git" % self.root):
+				if not initialize:
+					print("Error: repository does not exist at %s. Exiting." % self.root)
+					sys.exit(1)
+				else:
+					if not os.path.isdir(self.root):
+						os.makedirs(self.root)
+					runShell("( cd %s; git init )" % self.root )
+					runShell("echo 'created by merge.py' > %s/README" % self.root )
+					runShell("( cd %s; git add README; git commit -a -m 'initial commit by merge.py' )" % self.root )
+					if type(initialize) is str:
+						if not runShell("( cd %s; git checkout -b %s; git rm -f README; git commit -a -m 'initial %s commit' )" % (self.root,initialize,initialize),abortOnFail=False ):
+							print("Git repository creation failed, removing.")
+							runShell("( rm -f %s )" % self.root)
+							sys.exit(1)
+			else:
+				self.push = True
 
-	def run(self):
-		for step in self.steps:
-			step.run(self)
-
-	def gitCommit(self,message="",push=False):
+	def gitCommit(self,message="",branch=None):
+		if branch == None:
+			branch = self.branch
 		runShell("( cd %s; git add . )" % self.root )
 		cmd = "( cd %s; [ -n \"$(git status --porcelain)\" ] && git commit -a -F - << EOF || exit 0\n" % self.root
 		if message != "":
@@ -315,21 +273,114 @@ class UnifiedTree(Tree):
 			print("Commit failed.")
 			sys.exit(1)
 		if push != False:
-			runShell("(cd %s; git push %s)" % ( self.root, push ))
+			runShell("(cd %s; git push %s)" % ( self.root, branch ))
+		else:	 
+			print("Pushing disabled because repository created from scratch (no origin.)")
 
-class VarLocTree(Tree):
-	# This class is for use with overlays where the ebuilds are not stored at the root of the tree.
-	# It allows self.root to be modified later and still remember original root location
 
-	def __init__(self,name,branch="master",url=None,pull=False, trylocal=None):
-		Tree.__init__(self, name, branch, url, pull, trylocal)
-		self.origroot = self.root
+	def run(self,steps):
+		for step in steps:
+			step.run(self)
 
 	def head(self):
-		return headSHA1(self.origroot)
+		return headSHA1(self.root)
+
+	def treelet_update(self, src_tree, select, skip=None):
+		steps = [
+		InsertEbuilds(src_tree, select=select, skip=skip, replace=True),
+		Minify()
+		]
+
+
+	def logTree(self,srctree):
+		# record name and SHA of src tree in dest tree, used for git commit message/auditing:
+		if srctree.name == None:
+			# this tree doesn't have a name, so just copy any existing history from that tree
+			self.merged.extend(srctree.merged)
+		else:
+			# this tree has a name, so record the name of the tree and its SHA1 for reference
+			if hasattr(srctree, "origroot"):
+				self.merged.append([srctree.name, headSHA1(srctree.origroot)])
+				return
+
+			self.merged.append([srctree.name, headSHA1(srctree.root)])
+
+class RsyncTree(Tree):
+	def __init__(self,name,url="rsync://rsync.us.gentoo.org/gentoo-portage/"):
+		self.name = name
+		self.url = url 
+		base = "/var/rsync/source-trees"
+		self.root = "%s/%s" % (base, self.name)
+		if not os.path.exists(base):
+			os.makedirs(base)
+		runShell("rsync --recursive --delete-excluded --links --safe-links --perms --times --compress --force --whole-file --delete --timeout=180 --exclude=/.git --exclude=/metadata/cache/ --exclude=/metadata/glsa/glsa-200*.xml --exclude=/metadata/glsa/glsa-2010*.xml --exclude=/metadata/glsa/glsa-2011*.xml --exclude=/metadata/md5-cache/	--exclude=/distfiles --exclude=/local --exclude=/packages %s %s/" % (self.url, self.root))
+
+class SvnTree(Tree):
+	def __init__(self, name, url=None):
+		self.name = name
+		self.url = url
+		base = "/var/svn/source-trees"
+		self.root = "%s/%s" % (base, self.name)
+		if not os.path.exists(base):
+			os.makedirs(base)
+		if os.path.exists(self.root):
+			runShell("(cd %s; svn up)" % self.root, abortOnFail=False)
+		else:
+			runShell("(cd %s; svn co %s %s)" % (base, self.url, self.name))
+
+class CvsTree(Tree):
+	def __init__(self, name, url=None, path=None):
+		self.name = name
+		self.url = url
+		if path is None:
+			path = self.name
+		base = "/var/cvs/source-trees"
+		self.root = "%s/%s" % (base, path)
+		if not os.path.exists(base):
+			os.makedirs(base)
+		if os.path.exists(self.root):
+			runShell("(cd %s; cvs update -dP)" % self.root, abortOnFail=False)
+		else:
+			runShell("(cd %s; cvs -d %s co %s)" % (base, self.url, path))
 
 class InsertEbuilds(MergeStep):
 
+	"""
+	Insert ebuilds in source tre into destination tree.
+
+	select: Ebuilds to copy over.
+		By default, all ebuilds will be selected. This can be modified by setting select to a
+		list of ebuilds to merge (specify by catpkg, as in "x11-apps/foo"). It is also possible
+		to specify "x11-apps/*" to refer to all source ebuilds in a particular category.
+
+	skip: Ebuilds to skip.
+		By default, no ebuilds will be skipped. If you want to skip copying certain ebuilds,
+		you can specify a list of ebuilds to skip. Skipping will remove additional ebuilds from
+		the set of selected ebuilds. Specify ebuilds to skip using catpkg syntax, ie.
+		"x11-apps/foo". It is also possible to specify "x11-apps/*" to skip all ebuilds in
+		a particular category.
+
+	replace: Ebuilds to replace.
+		By default, if an catpkg dir already exists in the destination tree, it will not be overwritten.
+		However, it is possible to change this behavior by setting replace to True, which means that
+		all catpkgs should be overwritten. It is also possible to set replace to a list containing
+		catpkgs that should be overwritten. Wildcards such as "x11-libs/*" will be respected as well.
+
+	merge: Merge source/destination ebuilds. Default = None.
+		If a source catpkg is going to replace a destination catpkg, and this behavior is not desired,
+		you can use merge to tell InsertEbuilds to add the source ebuilds "on top of" the existing
+		ebuilds. The Manifest file will be updated appropriately. Possible values are None (don't
+		do merging), True (if dest catpkg exists, *always* merge new ebuilds on top), or a list containing
+		catpkg atoms, with wildcards like "x11-apps/*" being recognized. Note that if merging is
+		enabled and identical ebuild versions exist, then the version in the source repo will replace
+		the version in the destination repo.
+
+	categories: Categories to process. 
+		categories to process for inserting ebuilds. Defaults to all categories in tree, using
+		profiles/categories and all dirs with "-" in them and "virtuals" as sources.
+	
+	
+	"""
 	def __init__(self,srctree,select="all",skip=None,replace=False,merge=None,categories=None,ebuildloc=None):
 		self.select = select
 		self.skip = skip
@@ -377,16 +428,17 @@ class InsertEbuilds(MergeStep):
 				# not a valid category in source overlay, so skip it
 				continue
 			#runShell("install -d %s" % catdir)
+			catall = "%s/*" % cat
 			for pkg in os.listdir(catdir):
 				catpkg = "%s/%s" % (cat,pkg)
 				pkgdir = os.path.join(catdir, pkg)
 				if not os.path.isdir(pkgdir):
 					# not a valid package dir in source overlay, so skip it
 					continue
-				if type(self.select) == list and catpkg not in self.select:
+				if type(self.select) == list and (catall not in self.select) and (catpkg not in self.select):
 					# we have a list of pkgs to merge, and this isn't on the list, so skip:
 					continue
-				if type(self.skip) == list and catpkg in self.skip:
+				if type(self.skip) == list and ((catpkg in self.skip) or (catall in self.skip)):
 					# we have a list of pkgs to skip, and this catpkg is on the list, so skip:
 					continue
 				dest_cat_set.add(cat)
@@ -394,10 +446,12 @@ class InsertEbuilds(MergeStep):
 				tpkgdir = os.path.join(tcatdir,pkg)
 				copy = False
 				copied = False
-				if self.replace == True or (type(self.replace) == list and "%s/%s" % (cat,pkg) in self.replace):
+				if self.replace == True or (type(self.replace) == list and ((catpkg in self.replace) or (catall in self.replace))):
 					if not os.path.exists(tcatdir):
 						os.makedirs(tcatdir)
-					if self.merge is True or (isinstance(self.merge, list) and "%s/%s" % (cat,pkg) in self.merge and os.path.isdir(tpkgdir)):
+					if self.merge is True or (type(self.replace) == list and ((catpkg in self.merge) or (catall in self.merge)) and os.path.isdir(tpkgdir)):
+						# We are being told to merge, and the destination catpkg dir exists... so merging is required! :)
+						# Manifests must be processed and combined:
 						try:
 							pkgdir_manifest_file = open("%s/Manifest" % pkgdir)
 							pkgdir_manifest = pkgdir_manifest_file.readlines()
@@ -500,7 +554,8 @@ class GenUseLocalDesc(MergeStep):
 	def run(self,tree):
 		runShell("egencache --update-use-local-desc --portdir=%s" % tree.root, abortOnFail=False)
 
-class GitPrep(MergeStep):
+class GitCheckout(MergeStep):
+
 	def __init__(self,branch):
 		self.branch = branch
 
