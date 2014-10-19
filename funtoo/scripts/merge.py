@@ -129,10 +129,21 @@ steps = [step for step in steps if step is not None]
 
 xml_out = etree.Element("packages")
 # specify a git tree that we will do all our stuff in. Initialize (create from scratch) if it doesn't exist:
+initialize=False
+if args.init:
+	initialize="funtoo.org"
+	push = False
+elif not os.path.exists(dest):
+	print("Destination Portage tree %s does not exist. Use --init if you want to create a new repo." % dest)
+	sys.exit(1)
+if args.nopush:
+	push = False
+else:
+	push = "funtoo.org"
 
-work = GitTree("funtoo-merge",root="/var/work/merge-%s" % os.path.basename(dest[0]), xml_out=xml_out, initialize="funtoo.org")
+work = GitTree(os.path.basename(dest), branch="funtoo.org", root=dest, xml_out=xml_out, initialize=initialize)
 work.run(steps)
-work.gitCommit(message="glorious funtoo updates")
+work.gitCommit(message="glorious funtoo updates",branch=push)
 
 if experimental:
     a=open("/home/ports/public_html/experimental-packages.xml","wb")

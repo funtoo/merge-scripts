@@ -240,8 +240,10 @@ class GitTree(Tree):
 					print("Error: repository does not exist at %s. Exiting." % self.root)
 					sys.exit(1)
 				else:
-					if not os.path.isdir(self.root):
-						os.makedirs(self.root)
+					if os.path.exists(self.root):
+						print("Repository %s: --init specified but path already exists. Exiting.")
+						sys.exit(1)
+					os.makedirs(self.root)
 					runShell("( cd %s; git init )" % self.root )
 					runShell("echo 'created by merge.py' > %s/README" % self.root )
 					runShell("( cd %s; git add README; git commit -a -m 'initial commit by merge.py' )" % self.root )
@@ -253,7 +255,7 @@ class GitTree(Tree):
 			else:
 				self.push = True
 
-	def gitCommit(self,message="",branch=None):
+	def gitCommit(self,message="",upstream="origin",branch=None):
 		if branch == None:
 			branch = self.branch
 		runShell("( cd %s; git add . )" % self.root )
@@ -272,8 +274,8 @@ class GitTree(Tree):
 		if retval != 0:
 			print("Commit failed.")
 			sys.exit(1)
-		if push != False:
-			runShell("(cd %s; git push %s)" % ( self.root, branch ))
+		if branch != False:
+			runShell("(cd %s; git push %s %s)" % ( self.root, upstream, branch ))
 		else:	 
 			print("Pushing disabled because repository created from scratch (no origin.)")
 
@@ -574,20 +576,15 @@ parser = argparse.ArgumentParser(description="merge.py checks out funtoo.org's G
 parser.add_argument("--nopush", action="store_true", help="Prevents the script to push the git repositories")
 parser.add_argument("--branch", default="master", help="The funtoo-overlay branch to use. Default: master.")
 parser.add_argument("--experimental", default=False, action="store_true", help="Generate an experimental tree.")
-parser.add_argument("destination", nargs="+", help="The destination git repository.")
+parser.add_argument("--init",default=False, action="store_true", help="Create new ports repository if it doesn't already exist.")
+parser.add_argument("destination", help="The destination git repository.")
 
 args = parser.parse_args()
 
-if args.nopush:
-	push = False
-else:
-	push = "origin funtoo.org"
-
 dest = args.destination
-for d in dest:
-	if d[0] != "/":
-		print("%s: Please specify destination git tree with an absolute path." % d)
-		sys.exit(1)
+if dest[0] != "/":
+	print("%s: Please specify destination git tree with an absolute path." % dest)
+	sys.exit(1)
 
 branch = args.branch
 experimental = args.experimental
