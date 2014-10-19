@@ -38,10 +38,10 @@ faustoo_overlay = GitTree("faustoo", "master", "https://github.com/fmoro/faustoo
 xorg_treelet = GitWriteTree(
 
 .treelet_update(gentoo_src, select=[
-    "x11-base/*", 
-    "x11-drivers/*", 
-    "x11-wm/twm", 
-    "x11-terms/xterm"
+	"x11-base/*", 
+	"x11-drivers/*", 
+	"x11-wm/twm", 
+	"x11-terms/xterm"
 ])
 """
 
@@ -50,15 +50,6 @@ steps = [
 	SyncFromTree(gentoo_src, exclude=["/metadata/cache/**", "ChangeLog", "dev-util/metro"]),
 	# Only include 2012 and up GLSA's:
 	SyncDir(gentoo_glsa.root, "en/glsa", "metadata/glsa", exclude=["glsa-200*.xml","glsa-2010*.xml", "glsa-2011*.xml"]) if not gentoo_use_rsync else None,
-	ApplyPatchSeries("%s/funtoo/patches" % funtoo_overlay.root ),
-	ThirdPartyMirrors(),
-	SyncDir(funtoo_overlay.root, "profiles", "profiles", exclude=["categories", "repo_name", "updates"]),
-	SyncDir(funtoo_overlay.root, "eclass"),
-	MergeUpdates(funtoo_overlay.root),
-	ProfileDepFix(),
-	SyncDir(funtoo_overlay.root,"licenses"),
-	SyncDir(funtoo_gnome_overlay.root,"eclass"),
-	SyncDir(funtoo_overlay.root,"metadata"),
 	SyncFiles(gentoo_src.root, {
 		"profiles/package.mask":"profiles/package.mask/00-gentoo",
 		"profiles/arch/amd64/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/package.use.mask/01-gentoo",
@@ -77,10 +68,6 @@ steps = [
 		"LICENSE.txt":"LICENSE.txt",
 		"README.rst":"README.rst"
 	}),
-	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
-	InsertEbuilds(funtoo_toolchain_overlay, select="all", skip=None, replace=True) if experimental else None,
-	InsertEbuilds(mysql_overlay, select="all", skip=None, replace=True),
-	InsertEbuilds(ldap_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(faustoo_overlay, select=[ "app-office/projectlibre-bin" ], skip=None, replace=True),
 	InsertEbuilds(foo_overlay, select="all", skip=["sys-fs/mdev-bb", "sys-fs/mdev-like-a-boss", "media-sound/deadbeef", "media-video/handbrake"], replace=["app-shells/rssh","net-misc/unison"]),
 	InsertEbuilds(bar_overlay, select="all", skip=["app-emulation/qemu"], replace=False),
@@ -89,7 +76,6 @@ steps = [
 	SyncDir(plex_overlay.root,"licenses"),
 	InsertEbuilds(squeezebox_overlay, select="all", skip=None, replace=False),
 	InsertEbuilds(causes_overlay, select=[ "media-sound/renoise", "media-sound/renoise-demo", "sys-fs/smdev", "x11-wm/dwm" ], skip=None, replace=True),
-	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=None, replace=True, merge=False),
 	InsertEbuilds(funtoo_deadbeef, select="all", skip=None, replace=False),
 	SyncFiles(funtoo_deadbeef.root, {
 		"profiles/package.mask":"profiles/package.mask/deadbeef-mask"
@@ -100,14 +86,6 @@ steps = [
 	SyncFiles(funtoo_wmfs.root, {
 		"profiles/package.mask":"profiles/package.mask/wmfs-mask"
 	}),
-	SyncFiles(funtoo_gnome_overlay.root, {
-		"profiles/package.mask":"profiles/funtoo/1.0/linux-gnu/mix-ins/gnome/package.mask"
-	}),
-	SyncFiles(mysql_overlay.root, {
-		"profiles/package.mask":"profiles/package.mask/mysql",
-		"profiles/package.use.mask":"profiles/package.use.mask/mysql"
-	}),
-	SyncDir(mysql_overlay.root, "eclass"),
 	InsertEbuilds(sabayon_for_gentoo, select=["app-admin/equo", "app-admin/matter", "sys-apps/entropy", "sys-apps/entropy-server", "sys-apps/entropy-client-services","app-admin/rigo", "sys-apps/rigo-daemon", "sys-apps/magneto-core", "x11-misc/magneto-gtk", "x11-misc/magneto-gtk3", "kde-misc/magneto-kde", "app-misc/magneto-loader"], replace=True),
 	SyncDir(progress_overlay.root, "eclass"),
 	SyncDir(progress_overlay.root, "profiles/unpack_dependencies"),
@@ -119,7 +97,29 @@ steps = [
 	InsertEbuilds(progress_overlay, select="all", skip=None, replace=True, merge=["dev-python/psycopg", "dev-python/python-docs", "dev-python/simpletal", "dev-python/wxpython", "x11-libs/vte"]),
 	MergeUpdates(progress_overlay.root),
 	AutoGlobMask("dev-lang/python", "python*_pre*", "funtoo-python"),
+	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
+	ApplyPatchSeries("%s/funtoo/patches" % funtoo_overlay.root ),
+	ThirdPartyMirrors(),
+	SyncDir(funtoo_overlay.root, "profiles", "profiles", exclude=["categories", "repo_name", "updates"]),
+	SyncDir(funtoo_overlay.root, "eclass"),
+	MergeUpdates(funtoo_overlay.root),
+	ProfileDepFix(),
+	SyncDir(funtoo_overlay.root,"licenses"),
+	SyncDir(funtoo_overlay.root,"metadata"),
+	InsertEbuilds(funtoo_toolchain_overlay, select="all", skip=None, replace=True) if experimental else None,
+	InsertEbuilds(mysql_overlay, select="all", skip=None, replace=True),
+	InsertEbuilds(ldap_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(funtoo_media, select="all", skip=None, replace=True),
+	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=None, replace=True, merge=False),
+	SyncFiles(funtoo_gnome_overlay.root, {
+		"profiles/package.mask":"profiles/funtoo/1.0/linux-gnu/mix-ins/gnome/package.mask"
+	}),
+	SyncDir(funtoo_gnome_overlay.root,"eclass"),
+	SyncFiles(mysql_overlay.root, {
+		"profiles/package.mask":"profiles/package.mask/mysql",
+		"profiles/package.use.mask":"profiles/package.use.mask/mysql"
+	}),
+	SyncDir(mysql_overlay.root, "eclass"),
 	Minify(),
 	GenCache(),
 	GenUseLocalDesc()
@@ -146,8 +146,8 @@ work.run(steps)
 work.gitCommit(message="glorious funtoo updates",branch=push)
 
 if experimental:
-    a=open("/home/ports/public_html/experimental-packages.xml","wb")
+	a=open("/home/ports/public_html/experimental-packages.xml","wb")
 else:
-    a=open("/home/ports/public_html/packages.xml","wb")
+	a=open("/home/ports/public_html/packages.xml","wb")
 etree.ElementTree(xml_out).write(a, encoding='utf-8', xml_declaration=True, pretty_print=True)
 a.close()
