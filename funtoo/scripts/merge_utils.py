@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python3
 
 import os,sys
 import argparse
@@ -47,6 +47,22 @@ class MergeStep(object):
 
 class AutoGlobMask(MergeStep):
 
+	"""
+	AutoGlobMask will automatically create a package.mask file that matches particular
+	ebuilds that it finds in the tree.
+
+	catpkg: The catpkg to process. AutoGlobMask will look into the destination tree in
+	this catpkg directory.
+
+	glob: the wildcard pattern of an ebuild files to match in the catpkg directory.
+
+	maskdest: The filename of the mask file to create in profiles/packages.mask.
+
+	All ebuilds matching glob in the catpkg dir will have mask entries created and
+	written to profiles/package.mask/maskdest.
+
+	"""
+
 	def __init__(self,catpkg,glob,maskdest):
 		self.glob = glob
 		self.catpkg = catpkg
@@ -61,6 +77,7 @@ class AutoGlobMask(MergeStep):
 		f.close()
 
 class ThirdPartyMirrors(MergeStep):
+	"Add funtoo's distfiles mirror as a gentoo mirror."
 
 	def run(self,tree):
 		orig = "%s/profiles/thirdpartymirrors" % tree.root
@@ -282,7 +299,8 @@ class GitTree(Tree):
 
 	def run(self,steps):
 		for step in steps:
-			step.run(self)
+			if step != None:
+				step.run(self)
 
 	def head(self):
 		return headSHA1(self.root)
@@ -536,6 +554,8 @@ class InsertEbuilds(MergeStep):
 
 class ProfileDepFix(MergeStep):
 
+	"ProfileDepFix undeprecates profiles marked as deprecated."
+
 	def run(self,tree):
 		fpath = os.path.join(tree.root,"profiles/profiles.desc")
 		if os.path.exists(fpath):
@@ -549,10 +569,16 @@ class ProfileDepFix(MergeStep):
 					runShell("rm -f %s/profiles/%s/deprecated" % ( tree.root, prof_path ))
 
 class GenCache(MergeStep):
+
+	"GenCache runs egencache --update to update metadata."
+
 	def run(self,tree):
 		runShell("egencache --update --portdir=%s --jobs=24" % tree.root, abortOnFail=False)
 
 class GenUseLocalDesc(MergeStep):
+
+	"GenUseLocalDesc runs egencache to update use.local.desc"
+
 	def run(self,tree):
 		runShell("egencache --update-use-local-desc --portdir=%s" % tree.root, abortOnFail=False)
 
@@ -565,6 +591,9 @@ class GitCheckout(MergeStep):
 		runShell("( cd %s; git checkout %s )" % ( tree.root, self.branch ))
 
 class Minify(MergeStep):
+
+	"Minify removes ChangeLogs and shrinks Manifests."
+
 	def run(self,tree):
 		runShell("( cd %s; find -iname ChangeLog -exec rm -f {} \; )" % tree.root )
 		runShell("( cd %s; find -iname Manifest -exec sed -n -i -e \"/DIST/p\" {} \; )" % tree.root )
