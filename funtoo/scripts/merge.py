@@ -187,5 +187,5 @@ if experimental:
 	a=open("/home/ports/public_html/experimental-packages.xml","wb")
 else:
 	a=open("/home/ports/public_html/packages.xml","wb")
-tree.ElementTree(xml_out).write(a, encoding='utf-8', xml_declaration=True, pretty_print=True)
+etree.ElementTree(xml_out).write(a, encoding='utf-8', xml_declaration=True, pretty_print=True)
 a.close()

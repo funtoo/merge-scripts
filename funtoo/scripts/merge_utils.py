@@ -294,7 +294,7 @@ class GitTree(Tree):
 		if branch != False:
 			runShell("(cd %s; git push %s %s)" % ( self.root, upstream, branch ))
 		else:	 
-			print("Pushing disabled because repository created from scratch (no origin.)")
+			print("Pushing disabled.")
 
 
 	def run(self,steps):
