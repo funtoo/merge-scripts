@@ -50,6 +50,7 @@ steps = [
 	SyncFromTree(gentoo_src, exclude=["/metadata/cache/**", "ChangeLog", "dev-util/metro"]),
 	# Only include 2012 and up GLSA's:
 	SyncDir(gentoo_glsa.root, "en/glsa", "metadata/glsa", exclude=["glsa-200*.xml","glsa-2010*.xml", "glsa-2011*.xml"]) if not gentoo_use_rsync else None,
+	SyncDir(funtoo_overlay.root, "profiles", "profiles", exclude=["categories", "repo_name", "updates"]),
 	SyncFiles(gentoo_src.root, {
 		"profiles/package.mask":"profiles/package.mask/00-gentoo",
 		"profiles/arch/amd64/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/package.use.mask/01-gentoo",
@@ -100,7 +101,6 @@ steps = [
 	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
 	ApplyPatchSeries("%s/funtoo/patches" % funtoo_overlay.root ),
 	ThirdPartyMirrors(),
-	SyncDir(funtoo_overlay.root, "profiles", "profiles", exclude=["categories", "repo_name", "updates"]),
 	SyncDir(funtoo_overlay.root, "eclass"),
 	MergeUpdates(funtoo_overlay.root),
 	ProfileDepFix(),
