@@ -466,10 +466,10 @@ class InsertEbuilds(MergeStep):
 				tpkgdir = os.path.join(tcatdir,pkg)
 				copy = False
 				copied = False
-				if self.replace == True or isinstance(self.replace, list) and ((catpkg in self.replace) or (catall in self.replace))):
+				if self.replace == True or (isinstance(self.replace, list) and ((catpkg in self.replace) or (catall in self.replace))):
 					if not os.path.exists(tcatdir):
 						os.makedirs(tcatdir)
-					if self.merge is True or isinstance(self.merge, list) and ((catpkg in self.merge) or (catall in self.merge)) and os.path.isdir(tpkgdir)):
+					if self.merge is True or (isinstance(self.merge, list) and ((catpkg in self.merge) or (catall in self.merge)) and os.path.isdir(tpkgdir)):
 						# We are being told to merge, and the destination catpkg dir exists... so merging is required! :)
 						# Manifests must be processed and combined:
 						try:
