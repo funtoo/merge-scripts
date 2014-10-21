@@ -264,7 +264,7 @@ class GitTree(Tree):
 					runShell("( cd %s; git init )" % self.root )
 					runShell("echo 'created by merge.py' > %s/README" % self.root )
 					runShell("( cd %s; git add README; git commit -a -m 'initial commit by merge.py' )" % self.root )
-					if type(initialize) is str:
+					if isinstance(initialize, str):
 						if not runShell("( cd %s; git checkout -b %s; git rm -f README; git commit -a -m 'initial %s commit' )" % (self.root,initialize,initialize),abortOnFail=False ):
 							print("Git repository creation failed, removing.")
 							runShell("( rm -f %s )" % self.root)
@@ -455,10 +455,10 @@ class InsertEbuilds(MergeStep):
 				if not os.path.isdir(pkgdir):
 					# not a valid package dir in source overlay, so skip it
 					continue
-				if type(self.select) == list and (catall not in self.select) and (catpkg not in self.select):
+				if isinstance(self.select, list) and (catall not in self.select) and (catpkg not in self.select):
 					# we have a list of pkgs to merge, and this isn't on the list, so skip:
 					continue
-				if type(self.skip) == list and ((catpkg in self.skip) or (catall in self.skip)):
+				if isinstance(self.skip, list) and ((catpkg in self.skip) or (catall in self.skip)):
 					# we have a list of pkgs to skip, and this catpkg is on the list, so skip:
 					continue
 				dest_cat_set.add(cat)
@@ -466,10 +466,10 @@ class InsertEbuilds(MergeStep):
 				tpkgdir = os.path.join(tcatdir,pkg)
 				copy = False
 				copied = False
-				if self.replace == True or (type(self.replace) == list and ((catpkg in self.replace) or (catall in self.replace))):
+				if self.replace == True or isinstance(self.replace, list) and ((catpkg in self.replace) or (catall in self.replace))):
 					if not os.path.exists(tcatdir):
 						os.makedirs(tcatdir)
-					if self.merge is True or (type(self.replace) == list and ((catpkg in self.merge) or (catall in self.merge)) and os.path.isdir(tpkgdir)):
+					if self.merge is True or isinstance(self.merge, list) and ((catpkg in self.merge) or (catall in self.merge)) and os.path.isdir(tpkgdir)):
 						# We are being told to merge, and the destination catpkg dir exists... so merging is required! :)
 						# Manifests must be processed and combined:
 						try:

@@ -106,24 +106,32 @@ profile_steps = [
 # Steps related to copying ebuilds. Note that order can make a difference here when multiple overlays are
 # providing identical catpkgs.
 
-ebuild_steps = [
-	InsertEbuilds(faustoo_overlay, select=[ "app-office/projectlibre-bin" ], skip=None, replace=True),
-	InsertEbuilds(foo_overlay, select="all", skip=["sys-fs/mdev-bb", "sys-fs/mdev-like-a-boss", "media-sound/deadbeef", "media-video/handbrake"], replace=["app-shells/rssh","net-misc/unison"]),
+# Ebuild additions -- these are less-risky changes because ebuilds are only added, and not replaced.
+
+ebuild_additions = [
 	InsertEbuilds(bar_overlay, select="all", skip=["app-emulation/qemu"], replace=False),
 	InsertEbuilds(bliss_overlay, select="all", skip=None, replace=False),
-	InsertEbuilds(plex_overlay, select = [ "media-tv/plex-media-server" ], skip=None, replace=True),
 	InsertEbuilds(squeezebox_overlay, select="all", skip=None, replace=False),
-	InsertEbuilds(causes_overlay, select=[ "media-sound/renoise", "media-sound/renoise-demo", "sys-fs/smdev", "x11-wm/dwm" ], skip=None, replace=True),
-	InsertEbuilds(funtoo_deadbeef, select="all", skip=None, replace=False),
+        InsertEbuilds(funtoo_deadbeef, select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_redhat, select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_wmfs, select="all", skip=None, replace=False),
+]
+
+# Ebuild modifications -- these changes need to be treated more carefully as ordering can be important
+# for wholesale replacing as well as merging.
+
+ebuild_modifications = [
+	InsertEbuilds(faustoo_overlay, select=[ "app-office/projectlibre-bin" ], skip=None, replace=True),
+	InsertEbuilds(foo_overlay, select="all", skip=["sys-fs/mdev-bb", "sys-fs/mdev-like-a-boss", "media-sound/deadbeef", "media-video/handbrake"], replace=["app-shells/rssh","net-misc/unison"]),
+	InsertEbuilds(plex_overlay, select = [ "media-tv/plex-media-server" ], skip=None, replace=True),
+	InsertEbuilds(causes_overlay, select=[ "media-sound/renoise", "media-sound/renoise-demo", "sys-fs/smdev", "x11-wm/dwm" ], skip=None, replace=True),
 	InsertEbuilds(sabayon_for_gentoo, select=["app-admin/equo", "app-admin/matter", "sys-apps/entropy", "sys-apps/entropy-server", "sys-apps/entropy-client-services","app-admin/rigo", "sys-apps/rigo-daemon", "sys-apps/magneto-core", "x11-misc/magneto-gtk", "x11-misc/magneto-gtk3", "kde-misc/magneto-kde", "app-misc/magneto-loader"], replace=True),
+	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=None, replace=True, merge=False),
 	InsertEbuilds(progress_overlay, select="all", skip=None, replace=True, merge=["dev-python/psycopg", "dev-python/python-docs", "dev-python/simpletal", "dev-python/wxpython", "x11-libs/vte"]),
 	InsertEbuilds(funtoo_toolchain_overlay, select="all", skip=None, replace=True) if experimental else None,
 	InsertEbuilds(mysql_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(ldap_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(funtoo_media, select="all", skip=None, replace=True),
-	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=None, replace=True, merge=False),
 	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
 ]
 
@@ -155,7 +163,7 @@ treeprep_steps = [
 
 # all_steps lists all of the groups of steps, in order, that will be executed to generate our Portage tree:
 
-all_steps = [ base_steps, profile_steps, ebuild_steps, eclass_steps, treeprep_steps ]
+all_steps = [ base_steps, profile_steps, ebuild_additions, ebuild_modifications, eclass_steps, treeprep_steps ]
 
 # These steps are deprecated and are kept here for reference only:
 #
