@@ -1,5 +1,8 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
+# FL-1638
+=x11-drivers/ati-drivers-14.9
+
 # FL-1636
 =sys-boot/boot-update-1.7.0
