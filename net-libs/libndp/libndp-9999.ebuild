@@ -8,7 +8,7 @@ DESCRIPTION="Library for Neighbor Discovery Protocol"
 HOMEPAGE="https://github.com/jpirko/libndp"
 EGIT_REPO_URI="https://github.com/jpirko/${PN}.git"
 
-LICENSE="LGPL-2.1"
+LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS=""
 IUSE=""
