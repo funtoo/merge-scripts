@@ -3,7 +3,12 @@
 <virtual/perl-Data-Dumper-2.153.0
 
 # CVE-2014-3616
-<www-servers/nginx-1.7.5
+=www-servers/nginx-1.7.4
+=www-servers/nginx-1.7.3
+=www-servers/nginx-1.7.2
+=www-servers/nginx-1.7.1
+=www-servers/nginx-1.7.0
+<www-servers/nginx-1.6.2
 
 # CVE-2014-6271 CVE-2014-7169
 # CVE-2014-7186 CVE-2014-7187
