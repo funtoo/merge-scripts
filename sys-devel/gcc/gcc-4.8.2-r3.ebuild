@@ -35,7 +35,7 @@ inherit multilib eutils pax-utils
 RESTRICT="strip"
 FEATURES=${FEATURES/multilib-strict/}
 
-IUSE="go fortran objc objc++ openmp" # languages
+IUSE="go +fortran objc objc++ openmp" # languages
 IUSE="$IUSE cxx multislot nls vanilla doc multilib altivec libssp hardened" # other stuff
 
 if use multislot; then
