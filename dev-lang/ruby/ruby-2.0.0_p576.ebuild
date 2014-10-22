@@ -8,13 +8,12 @@ inherit autotools eutils flag-o-matic multilib versionator
 
 RUBYPL=$(get_version_component_range 4)
 
-MY_P="${PN}-$(get_version_component_range 1-3)"
-#MY_P="${PN}-$(get_version_component_range 1-3)-${RUBYPL:-0}"
+MY_P="${PN}-$(get_version_component_range 1-3)-${RUBYPL:-0}"
 S=${WORKDIR}/${MY_P}
 
 SLOT=$(get_version_component_range 1-2)
 MY_SUFFIX=$(delete_version_separator 1 ${SLOT})
-RUBYVERSION=2.1.0
+RUBYVERSION=2.0.0
 
 if [[ -n ${PATCHSET} ]]; then
 	if [[ ${PVR} == ${PV} ]]; then
@@ -28,11 +27,11 @@ fi
 
 DESCRIPTION="An object-oriented scripting language"
 HOMEPAGE="http://www.ruby-lang.org/"
-SRC_URI="mirror://ruby/2.1/${MY_P}.tar.bz2
+SRC_URI="mirror://ruby/2.0/${MY_P}.tar.bz2
 		 http://dev.gentoo.org/~flameeyes/ruby-team/${PN}-patches-${PATCHSET}.tar.bz2"
 
 LICENSE="|| ( Ruby-BSD BSD-2 )"
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="berkdb debug doc examples gdbm ipv6 +rdoc rubytests socks5 ssl xemacs ncurses +readline"
 
 RDEPEND="
@@ -45,16 +44,16 @@ RDEPEND="
 	dev-libs/libyaml
 	virtual/libffi
 	sys-libs/zlib
-	>=app-admin/eselect-ruby-20131227
+	>=app-admin/eselect-ruby-20100402
 	!<dev-ruby/rdoc-3.9.4
 	!<dev-ruby/rubygems-1.8.10-r1"
 
 DEPEND="${RDEPEND}"
 PDEPEND="
-	>=dev-ruby/rubygems-2.0.14[ruby_targets_ruby21]
-	>=dev-ruby/json-1.8.1[ruby_targets_ruby21]
-	>=dev-ruby/rake-0.9.6[ruby_targets_ruby21]
-	rdoc? ( >=dev-ruby/rdoc-4.0.1[ruby_targets_ruby21] )
+	virtual/rubygems:ruby20
+	>=dev-ruby/json-1.7.7[ruby_targets_ruby20]
+	>=dev-ruby/rake-0.9.6[ruby_targets_ruby20]
+	rdoc? ( >=dev-ruby/rdoc-4.0.0[ruby_targets_ruby20] )
 	xemacs? ( app-xemacs/ruby-modes )"
 
 src_prepare() {

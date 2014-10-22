@@ -56,7 +56,7 @@ RDEPEND="
 
 DEPEND="${RDEPEND}"
 PDEPEND="
-	>=dev-ruby/rubygems-1.8.10-r1[ruby_targets_ruby19]
+	virtual/rubygems:ruby19
 	rdoc? ( >=dev-ruby/rdoc-3.9.4[ruby_targets_ruby19] )
 	xemacs? ( app-xemacs/ruby-modes )"
 
