@@ -95,7 +95,7 @@ profile_steps = [
 		"profiles/use.mask":"profiles/use.mask/progress"
 	}),
 	SyncFiles(funtoo_gnome_overlay.root, {
-		"profiles/package.mask":"profiles/funtoo/1.0/linux-gnu/mix-ins/gnome/package.mask"
+		"profiles/package.mask":"profiles/package.mask/funtoo-gnome"
 	}),
 	SyncFiles(mysql_overlay.root, {
 		"profiles/package.mask":"profiles/package.mask/mysql",
