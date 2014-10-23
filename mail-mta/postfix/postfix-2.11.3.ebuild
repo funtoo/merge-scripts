@@ -10,7 +10,7 @@ VDA_PV="2.10.0"
 VDA_P="${PN}-vda-v13-${VDA_PV}"
 RC_VER="2.7"
 
-DESCRIPTION="A fast and secure drop-in replacement for sendmail."
+DESCRIPTION="A fast and secure drop-in replacement for sendmail"
 HOMEPAGE="http://www.postfix.org/"
 SRC_URI="${MY_URI}/${MY_SRC}.tar.gz
 	vda? ( http://vda.sourceforge.net/VDA/${VDA_P}.patch ) "
@@ -31,6 +31,7 @@ DEPEND=">=dev-libs/libpcre-3.4
 	pam? ( virtual/pam )
 	postgres? ( dev-db/postgresql-base )
 	sasl? (  >=dev-libs/cyrus-sasl-2 )
+	selinux? ( sec-policy/selinux-postfix )
 	sqlite? ( dev-db/sqlite:3 )
 	ssl? ( >=dev-libs/openssl-0.9.6g )"
 
@@ -38,7 +39,6 @@ RDEPEND="${DEPEND}
 	dovecot-sasl? ( net-mail/dovecot )
 	memcached? ( net-misc/memcached )
 	net-mail/mailbase
-	selinux? ( sec-policy/selinux-postfix )
 	!mail-mta/courier
 	!mail-mta/esmtp
 	!mail-mta/exim

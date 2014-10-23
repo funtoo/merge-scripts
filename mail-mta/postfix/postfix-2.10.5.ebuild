@@ -1,17 +1,16 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="5"
-
 inherit eutils multilib ssl-cert toolchain-funcs flag-o-matic pam user versionator systemd
 
-MY_PV="${PV/_rc/-RC}"
+MY_PV="${PV/_pre/-}"
 MY_SRC="${PN}-${MY_PV}"
 MY_URI="ftp://ftp.porcupine.org/mirrors/postfix-release/official"
-VDA_PV="2.9.1"
-VDA_P="${PN}-vda-v11-${VDA_PV}"
+VDA_PV="2.10.0"
+VDA_P="${PN}-vda-v13-${VDA_PV}"
 RC_VER="2.7"
 
-DESCRIPTION="A fast and secure drop-in replacement for sendmail."
+DESCRIPTION="A fast and secure drop-in replacement for sendmail"
 HOMEPAGE="http://www.postfix.org/"
 SRC_URI="${MY_URI}/${MY_SRC}.tar.gz
 	vda? ( http://vda.sourceforge.net/VDA/${VDA_P}.patch ) "
@@ -23,7 +22,6 @@ IUSE="+berkdb cdb doc dovecot-sasl hardened ldap ldap-bind memcached mbox mysql 
 
 DEPEND=">=dev-libs/libpcre-3.4
 	dev-lang/perl
-	net-mail/mailbase
 	berkdb? ( >=sys-libs/db-3.2 )
 	cdb? ( || ( >=dev-db/tinycdb-0.76 >=dev-db/cdb-0.75-r1 ) )
 	ldap? ( net-nds/openldap )
@@ -38,18 +36,18 @@ DEPEND=">=dev-libs/libpcre-3.4
 RDEPEND="${DEPEND}
 	dovecot-sasl? ( net-mail/dovecot )
 	memcached? ( net-misc/memcached )
+	net-mail/mailbase
 	selinux? ( sec-policy/selinux-postfix )
 	!mail-mta/courier
 	!mail-mta/esmtp
 	!mail-mta/exim
 	!mail-mta/mini-qmail
 	!mail-mta/msmtp[mta]
-	!mail-mta/nbsmtp
 	!mail-mta/netqmail
 	!mail-mta/nullmailer
-	!mail-mta/opensmtpd
 	!mail-mta/qmail-ldap
 	!mail-mta/sendmail
+	!mail-mta/opensmtpd
 	!<mail-mta/ssmtp-2.64-r2
 	!>=mail-mta/ssmtp-2.64-r2[mta]
 	!net-mail/fastforward"
@@ -68,10 +66,6 @@ pkg_setup() {
 src_prepare() {
 	if use vda; then
 		epatch "${DISTDIR}"/${VDA_P}.patch
-	fi
-
-	if ! use berkdb; then
-		epatch "${FILESDIR}/${PN}_no-berkdb.patch"
 	fi
 
 	sed -i -e "/^#define ALIAS_DB_MAP/s|:/etc/aliases|:/etc/mail/aliases|" \
@@ -272,12 +266,13 @@ src_install () {
 }
 
 pkg_preinst() {
+	# Postfix 2.9.
 	# default for inet_protocols changed from ipv4 to all in postfix-2.9.
 	# check inet_protocols setting in main.cf and modify if necessary to prevent
 	# performance loss with useless DNS lookups and useless connection attempts.
 	[[ -d ${ROOT}/etc/postfix ]] && {
 	if [[ "$(${D}/usr/sbin/postconf -dh inet_protocols)" != "ipv4" ]]; then
-		if [[ ! -n "$(${D}/usr/sbin/postconf -c ${ROOT}/etc/postfix -nh inet_protocols)" ]];
+		if [[ ! -n "$(${D}/usr/sbin/postconf -c ${ROOT}/etc/postfix -n inet_protocols)" ]];
 		then
 			ewarn "\nCOMPATIBILITY: adding inet_protocols=ipv4 to main.cf."
 			ewarn "That will keep the same behaviour as previous postfix versions."
@@ -311,8 +306,8 @@ pkg_postinst() {
 		elog "http://www.postfix.org/MULTI_INSTANCE_README.html"
 		if ! use berkdb; then
 			ewarn "\nPostfix is installed without BerkeleyDB support."
-			ewarn "Please turn on berkdb USE flag for hash or btree table"
-			ewarn "lookup support.\n"
+			ewarn "Please turn on berkdb USE flag if you need hash or"
+			ewarn "btree table lookups.\n"
 		fi
 		ewarn "Postfix daemons now live under /usr/libexec/postfix"
 		ewarn "Please adjust your main.cf accordingly by running"
