@@ -1,5 +1,6 @@
 # Override Gentoo masks
 app-backup/rdiff-backup
+dev-libs/libgit2-glib
 dev-scheme/guile
 games-board/aisleriot
 media-libs/aubio
