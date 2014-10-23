@@ -27,7 +27,7 @@ RDEPEND=">=dev-libs/libtasn1-3.4[${MULTILIB_USEDEP}]
 	dane? ( >=net-dns/unbound-1.4.20[${MULTILIB_USEDEP}] )
 	guile? ( >=dev-scheme/guile-1.8[networking] )
 	nls? ( >=virtual/libintl-0-r1[${MULTILIB_USEDEP}] )
-	pkcs11? ( >=app-crypt/p11-kit-0.19.3[${MULTILIB_USEDEP}] )
+	pkcs11? ( >=app-crypt/p11-kit-0.20.7[${MULTILIB_USEDEP}] )
 	zlib? ( >=sys-libs/zlib-1.2.8-r1[${MULTILIB_USEDEP}] )
 	abi_x86_32? (
 		!<=app-emulation/emul-linux-x86-baselibs-20140508
@@ -36,13 +36,14 @@ RDEPEND=">=dev-libs/libtasn1-3.4[${MULTILIB_USEDEP}]
 DEPEND="${RDEPEND}
 	>=sys-devel/automake-1.11.6
 	>=virtual/pkgconfig-0-r1[${MULTILIB_USEDEP}]
+	>=sys-apps/texinfo-5.2
 	doc? ( dev-util/gtk-doc )
 	nls? ( sys-devel/gettext )
 	test? ( app-misc/datefudge )"
 
 DOCS=( AUTHORS ChangeLog NEWS README THANKS doc/TODO )
 
-S=${WORKDIR}/${PN}-$(get_version_component_range 1-3)
+S="${WORKDIR}/${PN}-$(get_version_component_range 1-3)"
 
 src_prepare() {
 	sed -i \
@@ -53,6 +54,13 @@ src_prepare() {
 	local file
 	for file in $(grep -l AutoGen-ed src/*.c) ; do
 		rm src/$(basename ${file} .c).{c,h} || die
+	done
+
+	# force regeneration of makeinfo files
+	# have no idea why on some system these files are not
+	# accepted as-is, see bug#520818
+	for file in $(grep -l "produced by makeinfo" doc/*.info) ; do
+		rm "${file}" || die
 	done
 
 	# support user patches
@@ -143,6 +151,8 @@ multilib_src_install_all() {
 	if use doc; then
 		dodoc doc/gnutls.pdf
 		dohtml doc/gnutls.html
+	else
+		rm -fr "${ED}/usr/share/doc/${PF}/html"
 	fi
 
 	if use examples; then
