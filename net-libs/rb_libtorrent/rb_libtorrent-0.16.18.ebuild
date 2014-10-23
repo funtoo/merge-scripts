@@ -1,11 +1,11 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="5"
-PYTHON_DEPEND="python? 2:2.6"
+PYTHON_DEPEND="python? 2:2.7"
 PYTHON_USE_WITH="threads"
 PYTHON_USE_WITH_OPT="python"
 
-inherit multilib python versionator
+inherit autotools eutils multilib python versionator
 
 MY_P=${P/rb_/}
 MY_P=${MY_P/torrent/torrent-rasterbar}
@@ -36,6 +36,10 @@ pkg_setup() {
 }
 
 src_prepare() {
+	epatch "${FILESDIR}"/"${P}"-add-missing-python-binding-header-file-to-tarball.patch
+
+	eautoreconf
+
 	use python && python_convert_shebangs -r 2 .
 }
 
