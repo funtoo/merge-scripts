@@ -97,10 +97,6 @@ profile_steps = [
 	SyncFiles(funtoo_gnome_overlay.root, {
 		"profiles/package.mask":"profiles/package.mask/funtoo-gnome"
 	}),
-	SyncFiles(mysql_overlay.root, {
-		"profiles/package.mask":"profiles/package.mask/mysql",
-		"profiles/package.use.mask":"profiles/package.use.mask/mysql"
-	})
 ]
 
 # Steps related to copying ebuilds. Note that order can make a difference here when multiple overlays are
