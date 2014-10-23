@@ -15,7 +15,7 @@ FFMPEG_SUBSLOT=52.55.55
 
 inherit eutils flag-o-matic multilib multilib-minimal toolchain-funcs
 
-DESCRIPTION="Complete solution to record, convert and stream audio and video. Includes libavcodec."
+DESCRIPTION="Complete solution to record, convert and stream audio and video. Includes libavcodec"
 HOMEPAGE="http://ffmpeg.org/"
 SRC_URI="http://ffmpeg.org/releases/${P/_/-}.tar.bz2"
 FFMPEG_REVISION="${PV#*_p}"
@@ -133,6 +133,7 @@ RDEPEND="
 		>=x11-libs/libX11-1.6.2[${MULTILIB_USEDEP}]
 		>=x11-libs/libXext-1.3.2[${MULTILIB_USEDEP}]
 		>=x11-libs/libXfixes-5.0.1[${MULTILIB_USEDEP}]
+		>=x11-libs/libXv-1.0.10[${MULTILIB_USEDEP}]
 	)
 	zlib? ( >=sys-libs/zlib-1.2.8-r1[${MULTILIB_USEDEP}] )
 	zvbi? ( >=media-libs/zvbi-0.2.35[${MULTILIB_USEDEP}] )

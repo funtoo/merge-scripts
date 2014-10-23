@@ -1,35 +1,57 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI="4"
+EAPI="5"
+
+# Subslot: libavutil major.libavcodec major.libavformat major
+# Since FFmpeg ships several libraries, subslot is kind of limited here.
+# Most consumers will use those three libraries, if a "less used" library
+# changes its soname, consumers will have to be rebuilt the old way
+# (preserve-libs).
+# If, for example, a package does not link to libavformat and only libavformat
+# changes its ABI then this package will be rebuilt needlessly. Hence, such a
+# package is free _not_ to := depend on FFmpeg but I would strongly encourage
+# doing so since such a case is unlikely.
+FFMPEG_SUBSLOT=54.56.56
 
 inherit eutils flag-o-matic multilib multilib-minimal toolchain-funcs
 
-DESCRIPTION="Complete solution to record, convert and stream audio and video. Includes libavcodec."
+DESCRIPTION="Complete solution to record, convert and stream audio and video. Includes libavcodec"
 HOMEPAGE="http://ffmpeg.org/"
 SRC_URI="http://ffmpeg.org/releases/${P/_/-}.tar.bz2"
 FFMPEG_REVISION="${PV#*_p}"
 
-LICENSE="GPL-2 amr? ( GPL-3 ) encode? ( aac? ( GPL-3 ) )"
-SLOT="0"
-KEYWORDS="*"
+LICENSE="GPL-2 amr? ( GPL-3 ) encode? ( aac? ( GPL-3 ) ) samba? ( GPL-3 )"
+SLOT="0/${FFMPEG_SUBSLOT}"
+KEYWORDS="~*"
 IUSE="
-	aac aacplus alsa amr bindist bluray +bzip2 cdio celt
+	aac aacplus alsa amr amrenc bindist bluray bs2b +bzip2 cdio celt
 	cpudetection debug doc +encode examples faac fdk flite fontconfig frei0r
-	gnutls gsm +hardcoded-tables +iconv iec61883 ieee1394 jack jpeg2k libass
-	libcaca libsoxr libv4l modplug mp3 +network openal openssl opus oss pic
-	pulseaudio rtmp schroedinger sdl speex static-libs test theora +threads
-	truetype twolame v4l vaapi vdpau vorbis vpx X x264 xvid +zlib
+	fribidi gme	gnutls gsm +hardcoded-tables +iconv iec61883 ieee1394 jack
+	jpeg2k ladspa libass libcaca libsoxr libv4l lzma modplug mp3 +network
+	openal opengl openssl opus oss pic pulseaudio quvi rtmp samba schroedinger
+	sdl speex ssh static-libs test theora +threads truetype twolame v4l vaapi
+	vdpau vorbis vpx wavpack webp X x264 x265 xvid +zlib zvbi
 	"
+
+ARM_CPU_FEATURES="armv5te armv6 armv6t2 neon armvfp:vfp"
+MIPS_CPU_FEATURES="mips32r2 mipsdspr1 mipsdspr2 mipsfpu"
+PPC_CPU_FEATURES="altivec"
+X86_CPU_FEATURES="3dnow:amd3dnow 3dnowext:amd3dnowext avx avx2 fma3 fma4 mmx mmxext sse sse2 sse3 ssse3 sse4 sse4_2:sse42 xop"
 
 # String for CPU features in the useflag[:configure_option] form
 # if :configure_option isn't set, it will use 'useflag' as configure option
-CPU_FEATURES="3dnow:amd3dnow 3dnowext:amd3dnowext altivec avx mmx mmxext ssse3 vis neon"
+CPU_FEATURES="
+	${ARM_CPU_FEATURES}
+	${MIPS_CPU_FEATURES}
+	${PPC_CPU_FEATURES}
+	${X86_CPU_FEATURES}
+"
 
 for i in ${CPU_FEATURES}; do
 	IUSE="${IUSE} ${i%:*}"
 done
 
-FFTOOLS="aviocat cws2fws ffescape ffeval fourcc2pixfmt graph2dot ismindex pktdumper qt-faststart trasher"
+FFTOOLS="aviocat cws2fws ffescape ffeval ffhash fourcc2pixfmt graph2dot ismindex pktdumper qt-faststart trasher"
 
 for i in ${FFTOOLS}; do
 	IUSE="${IUSE} +fftools_$i"
@@ -39,32 +61,33 @@ RDEPEND="
 	alsa? ( >=media-libs/alsa-lib-1.0.27.2[${MULTILIB_USEDEP}] )
 	amr? ( >=media-libs/opencore-amr-0.1.3-r1[${MULTILIB_USEDEP}] )
 	bluray? ( >=media-libs/libbluray-0.3.0-r1[${MULTILIB_USEDEP}] )
+	bs2b? ( >=media-libs/libbs2b-3.1.0-r1[${MULTILIB_USEDEP}] )
 	bzip2? ( >=app-arch/bzip2-1.0.6-r4[${MULTILIB_USEDEP}] )
-	cdio? (
-		|| (
-			>=dev-libs/libcdio-paranoia-0.90_p1-r1[${MULTILIB_USEDEP}]
-			<dev-libs/libcdio-0.90[-minimal,${MULTILIB_USEDEP}]
-		)
-	)
+	cdio? ( >=dev-libs/libcdio-paranoia-0.90_p1-r1[${MULTILIB_USEDEP}] )
 	celt? ( >=media-libs/celt-0.11.1-r1[${MULTILIB_USEDEP}] )
 	encode? (
 		aac? ( >=media-libs/vo-aacenc-0.1.3[${MULTILIB_USEDEP}] )
 		aacplus? ( >=media-libs/libaacplus-2.0.2-r1[${MULTILIB_USEDEP}] )
-		amr? ( >=media-libs/vo-amrwbenc-0.1.2-r1[${MULTILIB_USEDEP}] )
+		amrenc? ( >=media-libs/vo-amrwbenc-0.1.2-r1[${MULTILIB_USEDEP}] )
 		faac? ( >=media-libs/faac-1.28-r3[${MULTILIB_USEDEP}] )
-		fdk? ( >=media-libs/fdk-aac-0.1.2[${MULTILIB_USEDEP}] )
 		mp3? ( >=media-sound/lame-3.99.5-r1[${MULTILIB_USEDEP}] )
 		theora? (
-			>=media-libs/libtheora-1.1.1[${MULTILIB_USEDEP},encode]
+			>=media-libs/libtheora-1.1.1[encode,${MULTILIB_USEDEP}]
 			>=media-libs/libogg-1.3.0[${MULTILIB_USEDEP}]
 		)
 		twolame? ( >=media-sound/twolame-0.3.13-r1[${MULTILIB_USEDEP}] )
-		x264? ( >=media-libs/x264-0.0.20130506[${MULTILIB_USEDEP}] )
+		wavpack? ( >=media-sound/wavpack-4.60.1-r1[${MULTILIB_USEDEP}] )
+		webp? ( >=media-libs/libwebp-0.3.0[${MULTILIB_USEDEP}] )
+		x264? ( >=media-libs/x264-0.0.20130506:=[${MULTILIB_USEDEP}] )
+		x265? ( >=media-libs/x265-1.2:=[${MULTILIB_USEDEP}] )
 		xvid? ( >=media-libs/xvid-1.3.2-r1[${MULTILIB_USEDEP}] )
 	)
+	fdk? ( >=media-libs/fdk-aac-0.1.3[${MULTILIB_USEDEP}] )
 	flite? ( >=app-accessibility/flite-1.4-r4[${MULTILIB_USEDEP}] )
 	fontconfig? ( >=media-libs/fontconfig-2.10.92[${MULTILIB_USEDEP}] )
 	frei0r? ( media-plugins/frei0r-plugins )
+	fribidi? ( >=dev-libs/fribidi-0.19.6[${MULTILIB_USEDEP}] )
+	gme? ( >=media-libs/game-music-emu-0.6.0[${MULTILIB_USEDEP}] )
 	gnutls? ( >=net-libs/gnutls-2.12.23-r6[${MULTILIB_USEDEP}] )
 	gsm? ( >=media-sound/gsm-1.0.13-r1[${MULTILIB_USEDEP}] )
 	iconv? ( >=virtual/libiconv-0-r1[${MULTILIB_USEDEP}] )
@@ -83,15 +106,20 @@ RDEPEND="
 	libcaca? ( >=media-libs/libcaca-0.99_beta18-r1[${MULTILIB_USEDEP}] )
 	libsoxr? ( >=media-libs/soxr-0.1.0[${MULTILIB_USEDEP}] )
 	libv4l? ( >=media-libs/libv4l-0.9.5[${MULTILIB_USEDEP}] )
+	lzma? ( >=app-arch/xz-utils-5.0.5-r1[${MULTILIB_USEDEP}] )
 	modplug? ( >=media-libs/libmodplug-0.8.8.4-r1[${MULTILIB_USEDEP}] )
 	openal? ( >=media-libs/openal-1.15.1[${MULTILIB_USEDEP}] )
+	opengl? ( >=virtual/opengl-7.0-r1[${MULTILIB_USEDEP}] )
 	openssl? ( >=dev-libs/openssl-1.0.1h-r2[${MULTILIB_USEDEP}] )
 	opus? ( >=media-libs/opus-1.0.2-r2[${MULTILIB_USEDEP}] )
 	pulseaudio? ( >=media-sound/pulseaudio-2.1-r1[${MULTILIB_USEDEP}] )
+	quvi? ( media-libs/libquvi:0.4[${MULTILIB_USEDEP}] )
 	rtmp? ( >=media-video/rtmpdump-2.4_p20131018[${MULTILIB_USEDEP}] )
-	sdl? ( >=media-libs/libsdl-1.2.15-r4[sound,video,${MULTILIB_USEDEP}] )
+	samba? ( >=net-fs/samba-3.6.23-r1[${MULTILIB_USEDEP}] )
 	schroedinger? ( >=media-libs/schroedinger-1.0.11-r1[${MULTILIB_USEDEP}] )
+	sdl? ( >=media-libs/libsdl-1.2.15-r4[sound,video,${MULTILIB_USEDEP}] )
 	speex? ( >=media-libs/speex-1.2_rc1-r1[${MULTILIB_USEDEP}] )
+	ssh? ( >=net-libs/libssh-0.5.5[${MULTILIB_USEDEP}] )
 	truetype? ( >=media-libs/freetype-2.5.0.1:2[${MULTILIB_USEDEP}] )
 	vaapi? ( >=x11-libs/libva-1.2.1-r1[${MULTILIB_USEDEP}] )
 	vdpau? ( >=x11-libs/libvdpau-0.7[${MULTILIB_USEDEP}] )
@@ -104,8 +132,10 @@ RDEPEND="
 		>=x11-libs/libX11-1.6.2[${MULTILIB_USEDEP}]
 		>=x11-libs/libXext-1.3.2[${MULTILIB_USEDEP}]
 		>=x11-libs/libXfixes-5.0.1[${MULTILIB_USEDEP}]
+		>=x11-libs/libXv-1.0.10[${MULTILIB_USEDEP}]
 	)
 	zlib? ( >=sys-libs/zlib-1.2.8-r1[${MULTILIB_USEDEP}] )
+	zvbi? ( >=media-libs/zvbi-0.2.35[${MULTILIB_USEDEP}] )
 	!media-video/qt-faststart
 	!media-libs/libpostproc
 "
@@ -116,8 +146,9 @@ DEPEND="${RDEPEND}
 	fontconfig? ( >=virtual/pkgconfig-0-r1[${MULTILIB_USEDEP}] )
 	gnutls? ( >=virtual/pkgconfig-0-r1[${MULTILIB_USEDEP}] )
 	ieee1394? ( >=virtual/pkgconfig-0-r1[${MULTILIB_USEDEP}] )
+	ladspa? ( >=media-libs/ladspa-sdk-1.13-r2[${MULTILIB_USEDEP}] )
 	libv4l? ( >=virtual/pkgconfig-0-r1[${MULTILIB_USEDEP}] )
-	mmx? ( dev-lang/yasm )
+	mmx? ( >=dev-lang/yasm-1.2 )
 	rtmp? ( >=virtual/pkgconfig-0-r1[${MULTILIB_USEDEP}] )
 	schroedinger? ( >=virtual/pkgconfig-0-r1[${MULTILIB_USEDEP}] )
 	test? ( net-misc/wget )
@@ -145,7 +176,6 @@ src_prepare() {
 	if [[ "${PV%_p*}" != "${PV}" ]] ; then # Snapshot
 		export revision=git-N-${FFMPEG_REVISION}
 	fi
-
 	epatch_user
 }
 
@@ -157,23 +187,25 @@ multilib_src_configure() {
 	# or $(use_enable foo foo) if no :bar is set.
 	local ffuse=(
 		bzip2:bzlib cpudetection:runtime-cpudetect debug doc
-		gnutls hardcoded-tables iconv network openssl sdl:ffplay vaapi vdpau zlib
+		gnutls hardcoded-tables iconv lzma network openssl samba:libsmbclient
+		sdl:ffplay vaapi vdpau X:xlib zlib
 	)
 	use openssl && myconf+=( --enable-nonfree )
+	use samba && myconf+=( --enable-version3 )
 
 	# Encoders
 	if use encode
 	then
-		ffuse+=( aac:libvo-aacenc amr:libvo-amrwbenc mp3:libmp3lame fdk:libfdk-aac )
-		for i in aacplus faac theora twolame x264 xvid; do
+		ffuse+=( aac:libvo-aacenc amrenc:libvo-amrwbenc mp3:libmp3lame )
+		for i in aacplus faac theora twolame wavpack webp x264 x265 xvid; do
 			ffuse+=( ${i}:lib${i} )
 		done
 
 		# Licensing.
-		if use aac || use amr ; then
+		if use aac || use amrenc ; then
 			myconf+=( --enable-version3 )
 		fi
-		if use aacplus || use faac || use fdk ; then
+		if use aacplus || use faac ; then
 			myconf+=( --enable-nonfree )
 		fi
 	else
@@ -181,10 +213,10 @@ multilib_src_configure() {
 	fi
 
 	# libavdevice options
-	ffuse+=( cdio:libcdio iec61883:libiec61883 ieee1394:libdc1394 libcaca openal )
+	ffuse+=( cdio:libcdio iec61883:libiec61883 ieee1394:libdc1394 libcaca openal opengl )
 
 	# Indevs
-	use v4l || myconf+=( --disable-indev=v4l2 )
+	use v4l || myconf+=( --disable-indev=v4l2 --disable-outdev=v4l2 )
 	for i in alsa oss jack ; do
 		use ${i} || myconf+=( --disable-indev=${i} )
 	done
@@ -196,7 +228,7 @@ multilib_src_configure() {
 	done
 
 	# libavfilter options
-	ffuse+=( flite:libflite frei0r fontconfig libass truetype:libfreetype )
+	ffuse+=( bs2b:libbs2b flite:libflite frei0r fribidi:libfribidi fontconfig ladspa libass truetype:libfreetype )
 
 	# libswresample options
 	ffuse+=( libsoxr )
@@ -205,11 +237,12 @@ multilib_src_configure() {
 	ffuse+=( threads:pthreads )
 
 	# Decoders
-	ffuse+=( amr:libopencore-amrwb amr:libopencore-amrnb jpeg2k:libopenjpeg )
+	ffuse+=( amr:libopencore-amrwb amr:libopencore-amrnb fdk:libfdk-aac jpeg2k:libopenjpeg )
 	use amr && myconf+=( --enable-version3 )
-	for i in bluray celt gsm modplug opus rtmp schroedinger speex vorbis vpx; do
+	for i in bluray celt gme gsm modplug opus quvi rtmp ssh schroedinger speex vorbis vpx zvbi; do
 		ffuse+=( ${i}:lib${i} )
 	done
+	use fdk && myconf+=( --enable-nonfree )
 
 	for i in "${ffuse[@]}" ; do
 		myconf+=( $(use_enable ${i%:*} ${i#*:}) )
@@ -217,7 +250,9 @@ multilib_src_configure() {
 
 	# (temporarily) disable non-multilib deps
 	if ! multilib_is_native_abi; then
-		myconf+=( --disable-frei0r )
+		for i in frei0r ; do
+			myconf+=( --disable-${i} )
+		done
 	fi
 
 	# CPU features
@@ -312,7 +347,8 @@ multilib_src_install() {
 }
 
 multilib_src_install_all() {
-	dodoc Changelog README CREDITS doc/*.txt doc/APIchanges doc/RELEASE_NOTES
+	dodoc Changelog README.md CREDITS doc/*.txt doc/APIchanges
+	[ -f "RELEASE_NOTES" ] && dodoc "RELEASE_NOTES"
 	use doc && dohtml -r doc/*
 	if use examples ; then
 		dodoc -r doc/examples
