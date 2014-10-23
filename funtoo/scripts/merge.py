@@ -108,7 +108,7 @@ ebuild_additions = [
 	InsertEbuilds(bar_overlay, select="all", skip=["app-emulation/qemu"], replace=False),
 	InsertEbuilds(bliss_overlay, select="all", skip=None, replace=False),
 	InsertEbuilds(squeezebox_overlay, select="all", skip=None, replace=False),
-        InsertEbuilds(funtoo_deadbeef, select="all", skip=None, replace=False),
+	InsertEbuilds(funtoo_deadbeef, select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_redhat, select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_wmfs, select="all", skip=None, replace=False),
 ]
@@ -116,14 +116,16 @@ ebuild_additions = [
 # Ebuild modifications -- these changes need to be treated more carefully as ordering can be important
 # for wholesale replacing as well as merging.
 
+pymerge=["dev-python/psycopg", "dev-python/python-docs", "dev-python/simpletal", "dev-python/wxpython", "x11-libs/vte","dev-python/pygobject"]
+
 ebuild_modifications = [
 	InsertEbuilds(faustoo_overlay, select=[ "app-office/projectlibre-bin" ], skip=None, replace=True),
 	InsertEbuilds(foo_overlay, select="all", skip=["sys-fs/mdev-bb", "sys-fs/mdev-like-a-boss", "media-sound/deadbeef", "media-video/handbrake"], replace=["app-shells/rssh","net-misc/unison"]),
 	InsertEbuilds(plex_overlay, select = [ "media-tv/plex-media-server" ], skip=None, replace=True),
 	InsertEbuilds(causes_overlay, select=[ "media-sound/renoise", "media-sound/renoise-demo", "sys-fs/smdev", "x11-wm/dwm" ], skip=None, replace=True),
 	InsertEbuilds(sabayon_for_gentoo, select=["app-admin/equo", "app-admin/matter", "sys-apps/entropy", "sys-apps/entropy-server", "sys-apps/entropy-client-services","app-admin/rigo", "sys-apps/rigo-daemon", "sys-apps/magneto-core", "x11-misc/magneto-gtk", "x11-misc/magneto-gtk3", "kde-misc/magneto-kde", "app-misc/magneto-loader"], replace=True),
-	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=None, replace=True, merge=False),
-	InsertEbuilds(progress_overlay, select="all", skip=None, replace=True, merge=["dev-python/psycopg", "dev-python/python-docs", "dev-python/simpletal", "dev-python/wxpython", "x11-libs/vte"]),
+	InsertEbuilds(progress_overlay, select="all", skip=None, replace=True, merge=pymerge),
+	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=None, replace=True, merge=mymerge),
 	InsertEbuilds(funtoo_toolchain_overlay, select="all", skip=None, replace=True) if experimental else None,
 	InsertEbuilds(mysql_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(ldap_overlay, select="all", skip=None, replace=True),
