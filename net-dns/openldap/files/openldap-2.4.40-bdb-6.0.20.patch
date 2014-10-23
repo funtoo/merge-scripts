@@ -1,0 +1,19 @@
+diff -ur openldap-2.4.40/build/openldap.m4 openldap-2.4.40.fix/build/openldap.m4
+--- openldap-2.4.40/build/openldap.m4	2014-09-19 05:48:49.000000000 +0400
++++ openldap-2.4.40.fix/build/openldap.m4	2014-10-16 15:51:38.223985217 +0400
+@@ -553,13 +553,10 @@
+ 
+ #define DB_VERSION_FULL        ((DB_VERSION_MAJOR<<16)|(DB_VERSION_MINOR<<8)|DB_VERSION_PATCH)
+ 
+-/* require 4.4 or later, but less than 6.0.20 */
+-#if DB_VERSION_FULL >= 0x040400 && DB_VERSION_FULL < 0x060014
++/* require 4.4 or later */
++#if DB_VERSION_FULL >= 0x040400
+ 	__db_version_compat
+ #endif
+-#if DB_VERSION_FULL >= 0x060014
+-#error "BerkeleyDB 6.0.20+ license is incompatible with LDAP"
+-#endif
+ 	], [ol_cv_bdb_compat=yes], [ol_cv_bdb_compat=no])])
+ ])
+ 
