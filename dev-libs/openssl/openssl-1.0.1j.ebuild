@@ -5,7 +5,7 @@ EAPI="5"
 inherit eutils flag-o-matic toolchain-funcs multilib multilib-minimal
 
 REV="1.7"
-DESCRIPTION="full-strength general purpose cryptography library (including SSL and TLS)"
+DESCRIPTION="Toolkit for SSL v2/v3 and TLS v1"
 HOMEPAGE="http://www.openssl.org/"
 SRC_URI="mirror://openssl/source/${P}.tar.gz
 	http://cvs.pld-linux.org/cgi-bin/cvsweb.cgi/packages/${PN}/${PN}-c_rehash.sh?rev=${REV} -> ${PN}-c_rehash.sh.${REV}"
@@ -78,6 +78,16 @@ src_prepare() {
 		|| die
 	# show the actual commands in the log
 	sed -i '/^SET_X/s:=.*:=set -x:' Makefile.shared
+
+	# since we're forcing $(CC) as makedep anyway, just fix
+	# the conditional as always-on
+	# helps clang (#417795), and versioned gcc (#499818)
+	sed -i 's/expr.*MAKEDEPEND.*;/true;/' util/domd || die
+
+	# quiet out unknown driver argument warnings since openssl
+	# doesn't have well-split CFLAGS and we're making it even worse
+	# and 'make depend' uses -Werror for added fun (#417795 again)
+	[[ ${CC} == *clang* ]] && append-flags -Qunused-arguments
 
 	# allow openssl to be cross-compiled
 	cp "${FILESDIR}"/gentoo.config-1.0.1 gentoo.config || die

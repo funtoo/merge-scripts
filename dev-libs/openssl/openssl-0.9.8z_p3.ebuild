@@ -8,7 +8,7 @@ PLEVEL=$(echo "${PV##*_p}" | tr '[1-9]' '[a-i]')
 MY_PV=${PV/_p*/${PLEVEL}}
 MY_P=${PN}-${MY_PV}
 S="${WORKDIR}/${MY_P}"
-DESCRIPTION="full-strength general purpose cryptography library (including SSL and TLS)"
+DESCRIPTION="Toolkit for SSL v2/v3 and TLS v1"
 HOMEPAGE="http://www.openssl.org/"
 SRC_URI="mirror://openssl/source/${MY_P}.tar.gz"
 
