@@ -5,15 +5,13 @@ EAPI="5"
 inherit autotools
 
 DESCRIPTION="Library for Neighbor Discovery Protocol"
-HOMEPAGE="https://github.com/jpirko/libndp"
-SRC_URI="https://github.com/jpirko/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
+HOMEPAGE="http://libndp.org"
+SRC_URI="http://libndp.org/files/${P}.tar.gz"
 
-LICENSE="LGPL-2.1"
+LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="*"
 IUSE=""
-
-RESTRICT="mirror"
 
 RDEPEND=""
 DEPEND="${RDEPEND}"
