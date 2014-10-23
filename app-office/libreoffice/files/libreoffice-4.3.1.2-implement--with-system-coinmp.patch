@@ -1,0 +1,98 @@
+From d85f513934bb5735a2c0c343fbe7dc2b9c11af3e Mon Sep 17 00:00:00 2001
+From: Rene Engelhard <rene@debian.org>
+Date: Wed, 6 Aug 2014 00:03:21 +0200
+Subject: [PATCH] implement --with-system-coinmp
+
+Change-Id: I02928097f049e8f3cbefbc872b570b2d2b072658
+---
+ RepositoryExternal.mk |   15 +++++++++++++++
+ config_host.mk.in     |    3 +++
+ configure.ac          |   16 ++++++++++++++--
+ 3 files changed, 32 insertions(+), 2 deletions(-)
+
+diff --git a/RepositoryExternal.mk b/RepositoryExternal.mk
+index a9c9e53..1961829 100644
+--- a/RepositoryExternal.mk
++++ b/RepositoryExternal.mk
+@@ -2250,6 +2250,8 @@ endif # ENABLE_LPSOLVE
+ 
+ ifneq ($(ENABLE_COINMP),)
+ 
++ifneq ($(SYSTEM_COINMP),TRUE)
++
+ define gb_LinkTarget__use_coinmp
+ $(call gb_LinkTarget_use_package,$(1),coinmp)
+ ifeq ($(COM),MSC)
+@@ -2279,6 +2281,19 @@ $(eval $(call gb_Helper_register_packages_for_install,ooo,\
+ 	coinmp \
+ ))
+ 
++else # SYSTEM_COINMP
++
++define gb_LinkTarget__use_coinmp
++$(call gb_LinkTarget_set_include,$(1),\
++       $$(INCLUDE) \
++       $(COINMP_CFLAGS) \
++)
++$(call gb_LinkTarget_add_libs,$(1),$(COINMP_LIBS))
++
++endef
++
++endif
++
+ else
+ 
+ gb_LinkTarget__use_coinmp :=
+diff --git a/config_host.mk.in b/config_host.mk.in
+--- a/config_host.mk.in
++++ b/config_host.mk.in
+@@ -109,6 +109,9 @@ export ENABLE_CAIRO_CANVAS=@ENABLE_CAIRO_CANVAS@
+ export ENABLE_CHART_TESTS=@ENABLE_CHART_TESTS@
+ export ENABLE_CMIS=@ENABLE_CMIS@
+ export ENABLE_COINMP=@ENABLE_COINMP@
++export SYSTEM_COINMP=@SYSTEM_COINMP@
++export COINMP_CFLAGS=@COINMP_CFLAGS@
++export COINMP_LIBS=@COINMP_LIBS@
+ export ENABLE_COLLADA=@ENABLE_COLLADA@
+ export ENABLE_CRASHDUMP=@ENABLE_CRASHDUMP@
+ export ENABLE_CUPS=@ENABLE_CUPS@
+diff --git a/configure.ac b/configure.ac
+index e91773f..3aadd12 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1867,6 +1867,11 @@ AC_ARG_WITH(system-lpsolve,
+         [Use lpsolve already on system.]),,
+     [with_system_lpsolve="$with_system_libs"])
+ 
++AC_ARG_WITH(system-coinmp,
++    AS_HELP_STRING([--with-system-coinmp],
++        [Use CoinMP already on system.]),,
++    [with_system_coinmp="$with_system_libs"])
++
+ AC_ARG_WITH(system-liblangtag,
+     AS_HELP_STRING([--with-system-liblangtag],
+         [Use liblangtag library already on system.]),,
+@@ -9661,12 +9666,19 @@ AC_MSG_CHECKING([whether to build with CoinMP])
+ if test "$enable_coinmp" != "no"; then
+     ENABLE_COINMP=TRUE
+     AC_MSG_RESULT([yes])
+-    # Should we check for system CoinMP ? How to do that ?
+-    BUILD_TYPE="$BUILD_TYPE COINMP"
++    if test "$with_system_coinmp" = "yes"; then
++	SYSTEM_COINMP=TRUE
++	PKG_CHECK_MODULES( COINMP, coinmp )
++    else
++    	BUILD_TYPE="$BUILD_TYPE COINMP"
++    fi
+ else
+     AC_MSG_RESULT([no])
+ fi
+ AC_SUBST(ENABLE_COINMP)
++AC_SUBST(SYSTEM_COINMP)
++AC_SUBST(COINMP_CFLAGS)
++AC_SUBST(COINMP_LIBS)
+ 
+ ENABLE_LPSOLVE=
+ AC_MSG_CHECKING([whether to build with lpsolve])
+-- 
+1.7.1
