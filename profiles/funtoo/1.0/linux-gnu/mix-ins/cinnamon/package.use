@@ -8,6 +8,3 @@ app-text/poppler cairo
 media-gfx/imagemagick png jpeg
 net-misc/networkmanager modemmanager ppp
 x11-libs/cairo opengl
-
-# Required for pm-utils support.
-sys-power/upower deprecated

@@ -25,17 +25,6 @@ media-libs/grilo playlist
 net-misc/networkmanager modemmanager ppp
 www-servers/apache apache2_modules_auth_digest
 
-# Required for background transparency support, FL-1373
-x11-terms/gnome-terminal deprecated
-
-# Required for pm-utils support.
-sys-power/upower deprecated
-gnome-base/gnome-control-center deprecated
-gnome-base/gnome-session deprecated
-gnome-base/gnome-settings-daemon deprecated
-gnome-base/gnome-shell deprecated
-net-im/telepathy-mission-control deprecated
-
 # eds is a problematic flag, causing many package to fail. It does allow
 # to build gnome clean but leading to pidgin failures. FL-347
 net-im/pidgin -eds
