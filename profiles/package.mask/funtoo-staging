@@ -4,9 +4,6 @@
 # FL-1638
 =x11-drivers/ati-drivers-14.9
 
-# FL-1636
-=sys-boot/boot-update-1.7.0
-
 # Dantrell B. (22 Aug 2014)
 # Masked for testing
 # Ref FL-1483
