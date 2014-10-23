@@ -2,6 +2,6 @@
 app-backup/rdiff-backup
 dev-libs/libgit2-glib
 dev-scheme/guile
-games-board/aisleriot
+<games-board/aisleriot-3.14.0
 media-libs/aubio
 media-video/mpv
