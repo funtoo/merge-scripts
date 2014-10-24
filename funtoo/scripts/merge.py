@@ -119,7 +119,7 @@ ebuild_additions = [
 
 
 ebuild_modifications = [
-	InsertEbuilds(sera_overlay, select="all", skip=None, merge=True),
+	InsertEbuilds(sera_overlay, select="all", skip=None, replace=True, merge=True),
 	InsertEbuilds(faustoo_overlay, select=[ "app-office/projectlibre-bin" ], skip=None, replace=True),
 	InsertEbuilds(foo_overlay, select="all", skip=["sys-fs/mdev-bb", "sys-fs/mdev-like-a-boss", "media-sound/deadbeef", "media-video/handbrake"], replace=["app-shells/rssh","net-misc/unison"]),
 	InsertEbuilds(plex_overlay, select = [ "media-tv/plex-media-server" ], skip=None, replace=True),
