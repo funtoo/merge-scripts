@@ -129,9 +129,9 @@ ebuild_modifications = [
 	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=None, replace=True, merge=["dev-python/pyatspi", "dev-python/pygobject", "dev-util/gdbus-codegen", "x11-libs/vte"]),
 	InsertEbuilds(funtoo_toolchain_overlay, select="all", skip=None, replace=True) if experimental else None,
 	InsertEbuilds(mysql_overlay, select="all", skip=None, replace=True),
-	InsertEbuilds(ldap_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(funtoo_media, select="all", skip=None, replace=True),
 	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
+	InsertEbuilds(ldap_overlay, select="all", skip=None, replace=True),
 ]
 
 # Steps related to eclass copying:
