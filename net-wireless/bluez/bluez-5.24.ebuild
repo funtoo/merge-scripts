@@ -1,6 +1,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="5"
+
 PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3} )
 
 inherit autotools eutils multilib python-any-r1 readme.gentoo systemd udev user multilib-minimal
@@ -10,7 +11,7 @@ HOMEPAGE="http://www.bluez.org"
 SRC_URI="mirror://kernel/linux/bluetooth/${P}.tar.xz"
 
 LICENSE="GPL-2+ LGPL-2.1+"
-SLOT="0/5.12-r2"
+SLOT="0/3"
 KEYWORDS="*"
 IUSE="cups debug +obex +readline selinux systemd test +udev"
 REQUIRED_USE="test? ( ${PYTHON_REQUIRED_USE} )"
@@ -78,6 +79,10 @@ src_prepare() {
 	# Ubuntu workaround for bug #501120
 	epatch "${FILESDIR}"/0001-work-around-Logitech-diNovo-Edge-keyboard-firmware-i.patch
 
+	# Fix compatibility with musl, bug #524454
+	# http://marc.info/?l=linux-bluetooth&m=141269379106447
+	epatch "${FILESDIR}/${PN}-5.24-musl-compat.patch"
+
 	if use cups; then
 		sed -i \
 			-e "s:cupsdir = \$(libdir)/cups:cupsdir = $(cups-config --serverbin):" \
@@ -103,10 +108,10 @@ multilib_src_configure() {
 		)
 	fi
 
-	# Missing flags: experimental (sap, nfc, ...)
 	econf \
 		--localstatedir=/var \
 		--disable-android \
+		--enable-datafiles \
 		--enable-experimental \
 		--enable-optimization \
 		$(use_enable debug) \
@@ -115,6 +120,7 @@ multilib_src_configure() {
 		--enable-library \
 		$(multilib_native_use_enable test) \
 		--enable-tools \
+		--enable-manpages \
 		--enable-monitor \
 		$(multilib_native_use_enable cups) \
 		$(multilib_native_use_enable obex) \
@@ -142,6 +148,12 @@ multilib_src_install() {
 	if multilib_is_native_abi; then
 		emake DESTDIR="${D}" install
 
+		# Upstream don't install this, bug #524640
+		# http://permalink.gmane.org/gmane.linux.bluez.kernel/53115
+		# http://comments.gmane.org/gmane.linux.bluez.kernel/54564
+		dobin attrib/gatttool
+		dobin tools/hex2hcd
+
 		# Unittests are not that useful once installed
 		if use test ; then
 			rm -r "${ED}"/usr/$(get_libdir)/bluez/test || die
@@ -159,23 +171,23 @@ multilib_src_install_all() {
 
 	keepdir /var/lib/bluetooth
 
+	# Upstream don't want people to play with them
+	# But we keep installing them due 'historical' reasons
 	insinto /etc/bluetooth
 	local d
 	for d in input network proximity; do
 		doins profiles/${d}/${d}.conf
 	done
-
 	doins src/main.conf
 	doins src/bluetooth.conf
 
 	insinto /usr/include/bluetooth
 	doins lib/mgmt.h
 
-	insinto /usr/share/dbus-1/system-services
-	doins src/org.bluez.service
-
 	newinitd "${FILESDIR}"/bluetooth-init.d-r3 bluetooth
 	newinitd "${FILESDIR}"/rfcomm-init.d-r2 rfcomm
+
+	einstalldocs
 
 	readme.gentoo_create_doc
 }
