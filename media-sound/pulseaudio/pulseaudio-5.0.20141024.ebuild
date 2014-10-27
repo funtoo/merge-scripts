@@ -6,7 +6,7 @@ inherit autotools bash-completion-r1 eutils flag-o-matic git-2 linux-info readme
 
 DESCRIPTION="A networked sound server with an advanced plugin system"
 HOMEPAGE="http://www.pulseaudio.org/"
-EGIT_REPO_URI="git://anongit.freedesktop.org/pulseaudio/pulseaudio"
+EGIT_REPO_URI="https://github.com/pulseaudio/pulseaudio"
 EGIT_COMMIT="e728bcf614924bfa37627653c32ac3ae4d604d4e"
 
 # libpulse-simple and libpulse link to libpulse-core; this is daemon's
