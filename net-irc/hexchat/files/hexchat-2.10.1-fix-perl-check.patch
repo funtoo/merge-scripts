@@ -1,0 +1,14 @@
+diff -urN hexchat-2.10.1/configure hexchat-2.10.1-patched/configure
+--- hexchat-2.10.1/configure	2014-07-28 15:48:35.000000000 -0400
++++ hexchat-2.10.1-patched/configure	2014-10-28 11:35:50.426207989 -0400
+@@ -15626,8 +15626,9 @@
+ 				LDFLAGS="$PERL_LDFLAGS"
+ 				cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
++#define PERL_NO_INLINE_FUNCTIONS
+ #include <EXTERN.h>
+-	#include <perl.h>
++#include <perl.h>
+ int
+ main ()
+ {
