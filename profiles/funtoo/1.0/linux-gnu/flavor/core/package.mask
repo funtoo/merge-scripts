@@ -1,0 +1,2 @@
+# This is masked to along with PHP_TARGETS, also set in this flavor.
+>=dev-lang/php-5.6
