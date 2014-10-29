@@ -1,3 +1,6 @@
+# FL-1685 enable extraengine for dev-db/mariadb, work-arounds for clean emerge
+dev-db/mariadb extraengine
+
 # FL-1286, disable gstream USE flag for tumbler, with both ffmpeg and gstreamer flags enabled tumbler suffers from memory leaks, freezes.
 # Using ffmpeg only reported making tumbler to work much better
 xfce-extra/tumbler -gstreamer 
