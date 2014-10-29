@@ -1,3 +1,8 @@
+# Dantrell B. (29 Oct 2014)
+# Depends on a header dev-python/imaging does not yet provide
+# Ref FL-1672
+>=media-gfx/uniconvertor-2
+
 # FL-1360 - fix current stage builds
 >=virtual/perl-Perl-OSType-1.7.0
 
