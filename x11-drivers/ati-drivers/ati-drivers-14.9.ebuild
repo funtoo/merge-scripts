@@ -14,13 +14,13 @@ FOLDER_PREFIX="common/"
 IUSE="+vaapi debug +modules multilib qt4 static-libs pax_kernel"
 
 LICENSE="AMD GPL-2 QPL-1.0"
-KEYWORDS=""
+KEYWORDS="*"
 
 RESTRICT="bindist test"
 
 PDEPEND="vaapi? ( x11-libs/xvba-video )"
 RDEPEND="
-	<=x11-base/xorg-server-1.15.49[-minimal]
+	x11-base/xorg-server[-minimal]
 	>=app-admin/eselect-opengl-1.0.7
 	app-admin/eselect-opencl
 	sys-power/acpid
