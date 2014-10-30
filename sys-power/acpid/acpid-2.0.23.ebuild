@@ -1,7 +1,8 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=5
-inherit systemd
+EAPI="5"
+
+inherit linux-info systemd
 
 DESCRIPTION="Daemon for Advanced Configuration and Power Interface"
 HOMEPAGE="http://sourceforge.net/projects/acpid2"
@@ -10,11 +11,18 @@ SRC_URI="mirror://sourceforge/${PN}2/${P}.tar.xz"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="*"
-IUSE="selinux"
+IUSE="selinux systemd"
 
 RDEPEND="selinux? ( sec-policy/selinux-apm )"
 DEPEND="${RDEPEND}
-	    >=sys-kernel/linux-headers-3"
+	    >=sys-kernel/linux-headers-3
+	    systemd? ( sys-apps/systemd )"
+
+pkg_pretend() {
+	local CONFIG_CHECK="~INPUT_EVDEV"
+	local WARNING_INPUT_EVDEV="CONFIG_INPUT_EVDEV is required for ACPI button event support."
+	[[ ${MERGE_TYPE} != buildonly ]] && check_extra_config
+}
 
 src_prepare() {
 	# From Funtoo:
@@ -45,7 +53,9 @@ src_install() {
 	newinitd "${FILESDIR}"/${PN}-2.0.16-init.d ${PN}
 	newconfd "${FILESDIR}"/${PN}-2.0.16-conf.d ${PN}
 
-	systemd_dounit "${FILESDIR}"/systemd/${PN}.{service,socket}
+	if use systemd ; then
+		systemd_dounit "${FILESDIR}"/systemd/${PN}.{service,socket}
+	fi
 }
 
 pkg_postinst() {

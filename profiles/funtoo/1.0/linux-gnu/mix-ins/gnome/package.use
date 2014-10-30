@@ -1,8 +1,7 @@
 # Required by GNOME 3.14 (extras) for a clean emerge.
+app-crypt/gcr vala
 app-emulation/qemu spice
-media-gfx/eog-plugins python_single_target_python3_3
 media-plugins/grilo-plugins upnp-av
-media-sound/gnome-music python_single_target_python3_3
 
 # Required by GNOME 3.14 (base) for a clean emerge.
 media-libs/cogl gles2
