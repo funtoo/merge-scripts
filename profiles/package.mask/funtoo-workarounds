@@ -1,3 +1,8 @@
+# Dantrell B. (30 Oct 2014)
+# Causes a regression in how scanelf reports to app-admin/python-updater
+# Ref FL-1695
+>=app-misc/pax-utils-0.9.1
+
 # Dantrell B. (29 Oct 2014)
 # Depends on a header dev-python/imaging does not yet provide
 # Ref FL-1672
