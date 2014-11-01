@@ -26,8 +26,6 @@ def getKeywords(portdir, ebuild, warn):
 	a = subprocess.getstatusoutput(dirpath + "/keywords.sh %s %s" % ( portdir, ebuild ) )
 	if a[0] == 0:
 		my_set = set(a[1].split())
-		if warn and len(my_set) == 0:
-			print("WARNING: ebuild %s has no keywords" % ebuild)
 		return (0, my_set)
 	else:
 		return a
@@ -79,8 +77,6 @@ def get_cpv_in_portdir(portdir,cat,pkg):
 	files = os.listdir("%s/%s/%s" % (portdir, cat, pkg))
 	ebuilds = []
 	for file in files:
-		if file[-12:] == "-9999.ebuild":
-			continue
 		if file[-7:] == ".ebuild":
 			ebuilds.append("%s/%s" % (cat, file[:-7]))
 	return ebuilds
@@ -125,6 +121,8 @@ def version_compare(portdir,gportdir,keywords,label):
 			gps = list(portage.versions.catpkgsplit(gbest))[1:]
 			gps[-1] = "r0"
 			fps[-1] = "r0"
+			if gps[-2] in [ "9999", "99999", "999999", "9999999", "99999999"]:
+				continue
 			mycmp = portage.versions.pkgcmp(fps, gps)
 			if mycmp == -1:
 				json_out[label].append("%s/%s %s %s" % (cat, pkg, gbest[len(cat)+len(pkg)+2:], fbest[len(cat)+len(pkg)+2:]))
