@@ -27,12 +27,6 @@ DEPEND="
 "
 RDEPEND="${DEPEND}"
 
-src_prepare() {
-	epatch "${FILESDIR}"/${P}-parallel-grammar.patch #511892
-	epatch "${FILESDIR}"/${P}-libpcap-check.patch
-	eautoreconf
-}
-
 src_configure() {
 	# We forced libpcap to 1.x, so we can set this cache var so
 	# cross-compiling doesn't break on us.
