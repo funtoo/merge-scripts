@@ -1,6 +1,6 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=5
+EAPI="5"
 
 inherit autotools eutils multilib prefix toolchain-funcs versionator virtualx
 
@@ -41,7 +41,7 @@ src_prepare() {
 	# From Funtoo:
 	# 	https://bugs.funtoo.org/browse/FL-1246
 	cd "${SPARENT}"
-	epatch "${FILESDIR}"/${P}-fix-tk-8.6-requirement-error.patch
+	epatch "${FILESDIR}"/${PN}-8.6.1-fix-tk-8.6-requirement-error.patch
 	cd "${S}"
 
 	epatch \
@@ -53,10 +53,6 @@ src_prepare() {
 
 	# Bug 125971
 	epatch "${FILESDIR}"/${PN}-8.5.14-conf.patch
-
-	# Bug 354067 : the same applies to tcl, since the patch is about tcl.m4, just
-	# copy the tcl patch
-	epatch "${FILESDIR}"/tcl-8.5.9-gentoo-fbsd.patch
 
 	# Make sure we use the right pkg-config, and link against fontconfig
 	# (since the code base uses Fc* functions).

@@ -1,6 +1,6 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=5
+EAPI="5"
 
 inherit autotools eutils flag-o-matic multilib toolchain-funcs versionator multilib-minimal
 
@@ -30,10 +30,7 @@ src_prepare() {
 	epatch "${FILESDIR}"/${PN}-8.5.13-multilib.patch
 
 	# Bug 125971
-	epatch "${FILESDIR}"/${P}-conf.patch
-
-	# Bug 354067
-	epatch "${FILESDIR}"/${PN}-8.5.9-gentoo-fbsd.patch
+	epatch "${FILESDIR}"/${PN}-8.6.1-conf.patch
 
 	# workaround stack check issues, bug #280934
 	use hppa && append-cflags "-DTCL_NO_STACK_CHECK=1"
