@@ -1,6 +1,6 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=5
+EAPI="5"
 
 inherit fcaps multilib eutils toolchain-funcs flag-o-matic gnuconfig pax-utils
 
@@ -92,7 +92,13 @@ src_prepare() {
 		-e "s|^\(INS_BASE=\).*|\1\t${ED}/usr|" \
 		-e "s|^\(INS_RBASE=\).*|\1\t${ED}|" \
 		-e "s|^\(DEFINSGRP=\).*|\1\t0|" \
+		-e '/^DEFUMASK/s,002,022,g' \
 		Defaults.${os} || die "sed Schily make setup"
+	# re DEFUMASK above:
+	# bug 486680: grsec TPE will block the exec if the directory is
+	# group-writable. This is painful with cdrtools, because it makes a bunch of
+	# group-writable directories during build. Change the umask on their
+	# creation to prevent this.
 }
 
 ac_cv_sizeof() {
