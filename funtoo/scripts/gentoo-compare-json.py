@@ -143,6 +143,7 @@ for keyw in [ "~amd64", "~x86" ]:
 
 	version_compare(portdir,gportdir,keyw,label)
 for key in json_out:
+	json_out[key].sort()
 	json_out[key] = ",".join(json_out[key])
 jsonfile = "/home/ports/public_html/my.json"
 a = open(jsonfile, 'w')
