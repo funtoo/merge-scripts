@@ -18,15 +18,14 @@ IUSE="chipcard debug +doc hbci mysql ofx postgres python quotes sqlite"
 # FIXME: rdepend on dev-libs/qof when upstream fix their mess (see configure.ac)
 # libdbi version requirement for sqlite taken from bug #455134
 RDEPEND="
+	>=app-crypt/libsecret-0.18
 	>=dev-libs/glib-2.32.0:2
 	>=dev-libs/popt-1.5
 	>=dev-libs/libxml2-2.5.10:2
 	dev-libs/libxslt
-	>=dev-scheme/guile-1.8.3[deprecated,regex]
+	>=dev-scheme/guile-1.8.5[deprecated,regex]
 	dev-scheme/guile-www
-	>=dev-scheme/slib-3.1.4
 	gnome-base/libgnomecanvas
-	gnome-base/libgnome-keyring
 	>=net-libs/webkit-gtk-1.2:2
 	>=sys-libs/zlib-1.1.4
 	>=x11-libs/gtk+-2.24:2
