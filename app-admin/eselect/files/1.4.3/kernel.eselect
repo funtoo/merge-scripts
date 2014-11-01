@@ -1,9 +1,6 @@
 # -*-eselect-*-  vim: ft=eselect
-# Copyright 2005-2012 Gentoo Foundation
+# Copyright 2005-2014 Gentoo Foundation
 # Distributed under the terms of the GNU GPL version 2 or later
-# $Id: $
-
-# This version was modified by Funtoo to support all kernel sources in /usr/src
 
 DESCRIPTION="Manage the /usr/src/linux symlink"
 MAINTAINER="rh1@funtoo.org"
@@ -32,8 +29,8 @@ sort_kernel_versions() {
 # find a list of kernel symlink targets
 find_targets() {
 	local f
-	for f in "${EROOT}"/usr/src/linux-[[:graph:]]*; do
-		[[ -d ${f} ]] && basename "${f}"
+	for f in "${EROOT}"/usr/src/linux-*; do
+		[[ -f ${f}/Makefile && -f ${f}/Kconfig ]] && basename "${f}"
 	done | sort_kernel_versions
 }
 
@@ -53,9 +50,9 @@ set_symlink() {
 
 	if [[ -z ${target} ]]; then
 		die -q "Target \"$1\" doesn't appear to be valid!"
-	elif [[ -d ${EROOT}/usr/src/${target} ]]; then
+	elif [[ -f ${EROOT}/usr/src/${target}/Makefile ]]; then
 		ln -s "${target}" "${EROOT}/usr/src/linux"
-	elif [[ -d ${EROOT}/usr/src/linux-${target} ]]; then
+	elif [[ -f ${EROOT}/usr/src/linux-${target}/Makefile ]]; then
 		ln -s "linux-${target}" "${EROOT}/usr/src/linux"
 	else
 		die -q "Target \"$1\" doesn't appear to be valid!"
@@ -73,6 +70,8 @@ do_show() {
 	if [[ -L ${EROOT}/usr/src/linux ]]; then
 		local kernel=$(canonicalise "${EROOT}/usr/src/linux")
 		write_kv_list_entry "${kernel%/}" ""
+		[[ -f ${kernel}/Makefile ]] \
+			|| write_warning_msg "Symlink target doesn't appear to be valid!"
 	else
 		write_kv_list_entry "(unset)" ""
 	fi
