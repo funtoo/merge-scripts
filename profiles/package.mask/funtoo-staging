@@ -1,6 +1,9 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
+# FL-1705
+>=app-misc/screen-4.2.1
+
 # FL-1638
 =x11-drivers/ati-drivers-14.9
 
