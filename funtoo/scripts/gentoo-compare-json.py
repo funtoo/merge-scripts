@@ -14,7 +14,7 @@ import json
 
 from merge_utils import *
 # this causes the funtoo overlay to be updated
-funtoo_overlay = Tree("funtoo-overlay", branch, "repos@git.funtoo.org:funtoo-overlay.git", pull=True)
+funtoo_overlay = GitTree("funtoo-overlay", branch, "repos@git.funtoo.org:funtoo-overlay.git", pull=True)
 
 dirpath = os.path.dirname(os.path.realpath(__file__))
 portdir = os.path.normpath("/var/git/source-trees/funtoo-overlay")
