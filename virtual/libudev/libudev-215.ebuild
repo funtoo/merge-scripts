@@ -11,9 +11,7 @@ SRC_URI=""
 LICENSE=""
 SLOT="0/1"
 KEYWORDS="*"
-IUSE="+static-libs systemd"
+IUSE="+static-libs"
 
 DEPEND=""
-RDEPEND="
-	!systemd? ( >=sys-fs/eudev-1.3:0/0[${MULTILIB_USEDEP},static-libs?] )
-	systemd? ( !static-libs? ( >=sys-apps/systemd-212-r5:0/2[${MULTILIB_USEDEP}] ) )"
+RDEPEND=">=sys-fs/eudev-1.3:0/0[${MULTILIB_USEDEP},static-libs?]"
