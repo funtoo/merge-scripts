@@ -1,5 +1,7 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
+# FL-1716 kmod update
+=sys-apps/kmod-18-r2
 
 # FL-1705
 >=app-misc/screen-4.2.1

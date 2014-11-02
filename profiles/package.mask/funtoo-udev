@@ -1,6 +1,6 @@
 ## File has duplicate masks in cautionary files, but it's fine, will get cleaned after unmask in both
 ## http://bugs.funtoo.org/browse/FL-986
->virtual/udev-208-r2
+>virtual/udev-215
 >sys-apps/hwids-20140602
 >=sys-fs/eudev-1.5.4
 >sys-fs/lvm2-2.02.103

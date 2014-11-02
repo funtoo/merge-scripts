@@ -4,14 +4,20 @@ EAPI="5"
 
 inherit java-vm-2 eutils prefix versionator
 
-MY_PV="$(get_version_component_range 2)u$(get_version_component_range 4)"
-S_PV="$(replace_version_separator 3 '_')"
+if [[ "$(get_version_component_range 4)" == 0 ]] ; then
+	S_PV="$(get_version_component_range 1-3)"
+else
+	MY_PV_EXT="u$(get_version_component_range 4)"
+	S_PV="$(get_version_component_range 1-4)"
+fi
+
+MY_PV="$(get_version_component_range 2)${MY_PV_EXT}"
 
 X86_AT="jre-${MY_PV}-linux-i586.tar.gz"
 AMD64_AT="jre-${MY_PV}-linux-x64.tar.gz"
 
 JCE_DIR="UnlimitedJCEPolicy"
-JCE_FILE="${JCE_DIR}JDK7.zip"
+JCE_FILE="${JCE_DIR}JDK8.zip"
 
 DESCRIPTION="Oracle's Java SE Runtime Environment"
 HOMEPAGE="http://www.oracle.com/technetwork/java/javase/"
@@ -21,14 +27,16 @@ SRC_URI="
 	jce? ( http://build.funtoo.org/distfiles/oracle-java/${JCE_FILE} )"
 
 LICENSE="Oracle-BCLA-JavaSE"
-SLOT="1.7"
+SLOT="1.8"
 KEYWORDS="*"
-IUSE="X alsa fontconfig jce nsplugin pax_kernel"
+IUSE="X alsa fontconfig jce nsplugin pax_kernel selinux"
 
 RESTRICT="mirror strip"
 QA_PREBUILT="*"
 
-RDEPEND="
+COMMON_DEP="
+	selinux? ( sec-policy/selinux-java )"
+RDEPEND="${COMMON_DEP}
 	X? (
 		x11-libs/libXext
 		x11-libs/libXi
@@ -41,11 +49,20 @@ RDEPEND="
 	!prefix? ( sys-libs/glibc )"
 # scanelf won't create a PaX header, so depend on paxctl to avoid fallback
 # marking. #427642
-DEPEND="
+DEPEND="${COMMON_DEP}
 	jce? ( app-arch/unzip )
 	pax_kernel? ( sys-apps/paxctl )"
 
-S="${WORKDIR}/jre${S_PV}"
+S="${WORKDIR}/jre"
+
+src_unpack() {
+	default
+
+	# Upstream is changing their versioning scheme every release around 1.8.0.*;
+	# to stop having to change it over and over again, just wildcard match and
+	# live a happy life instead of trying to get this new jre1.8.0_05 to work.
+	mv "${WORKDIR}"/jre* "${S}" || die
+}
 
 src_prepare() {
 	if use jce; then
@@ -53,34 +70,14 @@ src_prepare() {
 	fi
 }
 
-src_compile() {
-	# This needs to be done before CDS - #215225
-	java-vm_set-pax-markings "${S}"
-
-	# see bug #207282
-	einfo "Creating the Class Data Sharing archives"
-	case ${ARCH} in
-		arm|ia64)
-			bin/java -client -Xshare:dump || die
-			;;
-		x86)
-			bin/java -client -Xshare:dump || die
-			bin/java -server -Xshare:dump || die
-			;;
-		*)
-			bin/java -server -Xshare:dump || die
-			;;
-	esac
+src_install() {
+	local dest="/opt/${P}"
+	local ddest="${ED}${dest}"
 
 	# Create files used as storage for system preferences.
 	mkdir .systemPrefs || die
 	touch .systemPrefs/.system.lock || die
 	touch .systemPrefs/.systemRootModFile || die
-}
-
-src_install() {
-	local dest="/opt/${P}"
-	local ddest="${ED}${dest}"
 
 	# We should not need the ancient plugin for Firefox 2 anymore, plus it has
 	# writable executable segments
@@ -100,6 +97,25 @@ src_install() {
 	dodir "${dest}"
 	cp -pPR bin lib man "${ddest}" || die
 
+	# This needs to be done before CDS - #215225
+	java-vm_set-pax-markings "${ddest}"
+
+	# see bug #207282
+	einfo "Creating the Class Data Sharing archives"
+	case ${ARCH} in
+		arm|ia64)
+			${ddest}/bin/java -client -Xshare:dump || die
+			;;
+		x86)
+			${ddest}/bin/java -client -Xshare:dump || die
+			# limit heap size for large memory on x86 #467518
+			# this is a workaround and shouldn't be needed.
+			${ddest}/bin/java -server -Xms64m -Xmx64m -Xshare:dump || die
+			;;
+		*)
+			${ddest}/bin/java -server -Xshare:dump || die
+			;;
+	esac
 	# Remove empty dirs we might have copied
 	find "${D}" -type d -empty -exec rmdir -v {} + || die
 
