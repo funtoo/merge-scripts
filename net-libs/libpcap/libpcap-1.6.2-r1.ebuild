@@ -1,7 +1,8 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="5"
-inherit autotools eutils
+
+inherit autotools eutils multilib-minimal
 
 DESCRIPTION="A system-independent library for user-level network packet capture"
 HOMEPAGE="http://www.tcpdump.org/"
@@ -14,35 +15,28 @@ KEYWORDS="*"
 IUSE="bluetooth dbus ipv6 netlink static-libs canusb"
 
 RDEPEND="
-	bluetooth? ( net-wireless/bluez:= )
-	dbus? ( sys-apps/dbus )
-	netlink? ( dev-libs/libnl )
-	canusb? ( virtual/libusb )
+	bluetooth? ( net-wireless/bluez:=[${MULTILIB_USEDEP}] )
+	dbus? ( sys-apps/dbus[${MULTILIB_USEDEP}] )
+	netlink? ( dev-libs/libnl:3[${MULTILIB_USEDEP}] )
+	canusb? ( virtual/libusb:1[${MULTILIB_USEDEP}] )
 "
 DEPEND="${RDEPEND}
 	sys-devel/flex
-	virtual/pkgconfig
 	virtual/yacc
+	dbus? ( virtual/pkgconfig[${MULTILIB_USEDEP}] )
 "
-
-DOCS=( CREDITS CHANGES VERSION TODO README{,.dag,.linux,.macosx,.septel} )
 
 src_prepare() {
 	epatch "${FILESDIR}"/${PN}-1.2.0-cross-linux.patch
-
-	# Prefix' Solaris uses GNU ld
-	sed -e 's/freebsd\*/freebsd*|solaris*/' \
-		-e 's/sparc64\*/sparc64*|sparcv9*/'  \
-		-i aclocal.m4 || die
-	# Prefix' Darwin systems are single arch, hijack Darwin7 case which
-	# assumes this setup
-	sed -e 's/darwin\[0-7\]\./darwin*/' \
-		-i configure.in || die
+	epatch "${FILESDIR}"/${PN}-1.6.1-configure.patch
+	epatch "${FILESDIR}"/${PN}-1.6.1-prefix-solaris.patch
+	epatch "${FILESDIR}"/${PN}-1.6.2-dbus.patch
 
 	eautoreconf
 }
 
-src_configure() {
+multilib_src_configure() {
+	ECONF_SOURCE="${S}" \
 	econf \
 		$(use_enable bluetooth) \
 		$(use_enable ipv6) \
@@ -51,12 +45,12 @@ src_configure() {
 		$(use_with netlink libnl)
 }
 
-src_compile() {
+multilib_src_compile() {
 	emake all shared
 }
 
-src_install() {
-	default
+multilib_src_install_all() {
+	dodoc CREDITS CHANGES VERSION TODO README{,.dag,.linux,.macosx,.septel}
 
 	# remove static libraries (--disable-static does not work)
 	if ! use static-libs; then
