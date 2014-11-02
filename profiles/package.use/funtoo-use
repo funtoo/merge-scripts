@@ -1,3 +1,6 @@
+# FL-1711 enable most filesystem support in gparted 
+sys-block/gparted fat hfs jfs ntfs xfs reiserfs btrfs
+
 # FL-1685 enable extraengine for dev-db/mariadb, work-arounds for clean emerge
 dev-db/mariadb extraengine
 
