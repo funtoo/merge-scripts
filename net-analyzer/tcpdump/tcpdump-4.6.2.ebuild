@@ -2,8 +2,7 @@
 
 EAPI="5"
 
-AUTOTOOLS_AUTO_DEPEND="no" # Only cross-compiling
-inherit autotools eutils flag-o-matic toolchain-funcs user
+inherit eutils flag-o-matic toolchain-funcs user
 
 DESCRIPTION="A Tool for network monitoring and data acquisition"
 HOMEPAGE="http://www.tcpdump.org/"
@@ -13,7 +12,7 @@ SRC_URI="http://www.tcpdump.org/release/${P}.tar.gz
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="*"
-IUSE="+drop-root smi ssl ipv6 -samba suid test"
+IUSE="+drop-root smi ssl ipv6 samba suid test"
 
 RDEPEND="
 	drop-root? ( sys-libs/libcap-ng )
@@ -31,28 +30,12 @@ DEPEND="
 "
 
 pkg_setup() {
-	if use samba ; then
-		ewarn
-		ewarn "CAUTION !!! CAUTION !!! CAUTION"
-		ewarn
-		ewarn "You're about to compile tcpdump with samba printing support"
-		ewarn "Upstream tags it with:"
-		ewarn "WARNING: The SMB printer may have exploitable buffer overflows!!!"
-		ewarn "So think twice whether this is fine with you"
-		ewarn
-		ewarn "CAUTION !!! CAUTION !!! CAUTION"
-		ewarn
-	fi
 	if use drop-root || use suid; then
 		enewgroup tcpdump
 		enewuser tcpdump -1 -1 -1 tcpdump
 	fi
 }
 
-src_prepare() {
-	sed -i aclocal.m4 -e 's|\"-O2\"|\"\"|g' || die
-	eautoconf
-}
 src_configure() {
 	# tcpdump needs some optimization. see bug #108391
 	# but do not replace -Os
