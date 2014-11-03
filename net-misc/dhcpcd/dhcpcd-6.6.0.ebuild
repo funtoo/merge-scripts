@@ -1,18 +1,13 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=5
+EAPI="5"
 
-if [[ ${PV} == "9999" ]]; then
-	EGIT_REPO_URI="git://roy.marples.name/${PN}.git"
-	inherit git-r3
-else
-	MY_P="${P/_alpha/-alpha}"
-	MY_P="${MY_P/_beta/-beta}"
-	MY_P="${MY_P/_rc/-rc}"
-	SRC_URI="http://roy.marples.name/downloads/${PN}/${MY_P}.tar.bz2"
-	KEYWORDS="*"
-	S="${WORKDIR}/${MY_P}"
-fi
+MY_P="${P/_alpha/-alpha}"
+MY_P="${MY_P/_beta/-beta}"
+MY_P="${MY_P/_rc/-rc}"
+SRC_URI="http://roy.marples.name/downloads/${PN}/${MY_P}.tar.bz2"
+KEYWORDS="~*"
+S="${WORKDIR}/${MY_P}"
 
 inherit eutils systemd
 
@@ -28,9 +23,6 @@ RDEPEND="${COMMON_DEPEND}"
 
 src_prepare()
 {
-	epatch "${FILESDIR}/${P}-no_ipv6_fix.patch" #497098
-	epatch "${FILESDIR}/${P}-wpa_supplicant.patch" #http://bugs.funtoo.org/browse/FL-971
-
 	if ! use zeroconf; then
 			elog "Disabling zeroconf support"
 			{
@@ -39,6 +31,7 @@ src_prepare()
 					echo "noipv4ll"
 			} >> dhcpcd.conf
 	fi
+
 	epatch_user
 }
 
@@ -80,20 +73,24 @@ pkg_postinst()
 	if [ -e "${old_duid}" -a ! -e "${new_duid}" ]; then
 		cp -p "${old_duid}" "${new_duid}"
 	fi
-	if use zeroconf; then
+
+	if [ -z "$REPLACING_VERSIONS" ]; then
+		if use zeroconf; then
+			elog
+			elog "dhcpcd has zeroconf support active by default."
+			elog "This means it will always obtain an IP address even if no"
+			elog "DHCP server can be contacted, which will break any existing"
+			elog "failover support you may have configured in your net configuration."
+			elog "This behaviour can be controlled with the noipv4ll configuration"
+			elog "file option or the -L command line switch."
+			elog "See the dhcpcd and dhcpcd.conf man pages for more details."
+		fi
+
 		elog
-		elog "dhcpcd has zeroconf support active by default."
-		elog "This means it will always obtain an IP address even if no"
-		elog "DHCP server can be contacted, which will break any existing"
-		elog "failover support you may have configured in your net configuration."
-		elog "This behaviour can be controlled with the noipv4ll configuration"
-		elog "file option or the -L command line switch."
-		elog "See the dhcpcd and dhcpcd.conf man pages for more details."
+		elog "Dhcpcd has duid enabled by default, and this may cause issues"
+		elog "with some dhcp servers. For more information, see"
+		elog "https://bugs.gentoo.org/show_bug.cgi?id=477356"
 	fi
-	elog
-	elog "Dhcpcd has duid enabled by default, and this may cause issues"
-	elog "with some dhcp servers. For more information, see"
-	elog "https://bugs.gentoo.org/show_bug.cgi?id=477356"
 
 	if ! has_version net-dns/bind-tools; then
 		elog
