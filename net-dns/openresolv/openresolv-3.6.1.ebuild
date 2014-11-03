@@ -1,6 +1,8 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=2
+EAPI=5
+
+inherit eutils
 
 DESCRIPTION="A framework for managing DNS information"
 HOMEPAGE="http://roy.marples.name/projects/openresolv"
@@ -8,29 +10,25 @@ SRC_URI="http://roy.marples.name/downloads/${PN}/${P}.tar.bz2"
 
 LICENSE="BSD-2"
 SLOT="0"
-KEYWORDS="alpha amd64 arm hppa ia64 m68k ~mips ppc ppc64 s390 sh sparc x86 ~sparc-fbsd ~x86-fbsd"
+KEYWORDS="*"
 IUSE=""
 
 DEPEND="!net-dns/resolvconf-gentoo
 	!<net-dns/dnsmasq-2.40-r1"
 RDEPEND=""
 
-pkg_setup() {
-	export PREFIX=
-	export LIBEXECDIR="${PREFIX}/lib/resolvconf"
+src_configure() {
+	econf \
+		--prefix= \
+		--rundir=/var/run \
+		--libexecdir=/lib/resolvconf \
+		--restartcmd="/lib/resolvconf/helpers/restartcmd \1"
 }
 
 src_install() {
-	emake DESTDIR="${D}" install || die
-	exeinto /lib/resolvconf/
-	doexe "${FILESDIR}/pdnsd" || die
-}
-
-pkg_postinst() {
-	einfo "${PN}-3.0 has a new configuration file /etc/resolvconf.conf"
-	einfo "instead of mini files in different directories."
-	einfo "You should configure /etc/resolvconf.conf if you use a resolver"
-	einfo "other than libc."
+	default
+	exeinto /lib/resolvconf/helpers
+	doexe "${FILESDIR}"/restartcmd
 }
 
 pkg_config() {

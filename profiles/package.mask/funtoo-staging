@@ -1,5 +1,9 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
+
+# masked for testing
+=net-dns/openresolv-3.6.1
+
 # FL-1716 kmod update
 =sys-apps/kmod-18-r2
 
