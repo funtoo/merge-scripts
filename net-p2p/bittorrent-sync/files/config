@@ -1,0 +1,20 @@
+{
+  "device_name": "GENTOO",
+  "listening_port" : 0,
+  
+  "storage_path" : "/home/btsync/.sync",
+  "pid_file" : "/var/run/btsync.pid",
+
+  "check_for_updates" : true, 
+  "use_upnp" : true,
+
+  "download_limit" : 0,                       
+  "upload_limit" : 0, 
+
+  "webui" :
+  {
+    "listen" : "0.0.0.0:8888",
+    "login" : "admin",
+    "password" : "admin"
+  }
+}

@@ -108,7 +108,7 @@ profile_steps = [
 
 ebuild_additions = [
 	InsertEbuilds(bar_overlay, select="all", skip=["app-emulation/qemu"], replace=False),
-	InsertEbuilds(bliss_overlay, select="all", skip=None, replace=False),
+	InsertEbuilds(bliss_overlay, select="all", skip=["net-p2p/bittorrent-sync"], replace=False),
 	InsertEbuilds(squeezebox_overlay, select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_deadbeef, select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_redhat, select="all", skip=None, replace=False),

@@ -1,0 +1,13 @@
+# Copyright 2014 Jonathan Vasquez <jvasquez1011@gmail.com>
+# Distributed under the terms of the GNU General Public License v2
+
+[Unit]
+Description=BitTorrent Sync
+After=systemd-udev-settle.target local-fs.target zfs.service
+
+[Service]
+Type=forking
+ExecStart=/opt/btsync/btsync --config /etc/btsync/config
+
+[Install]
+WantedBy=multi-user.target
