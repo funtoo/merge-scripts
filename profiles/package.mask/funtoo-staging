@@ -1,6 +1,9 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
+# dhcpcd update, masked for testing
+=net-misc/dhcpcd-6.6.0
+
 # masked for testing
 =net-dns/openresolv-3.6.1
 
