@@ -6,7 +6,7 @@ MY_P="${P/_alpha/-alpha}"
 MY_P="${MY_P/_beta/-beta}"
 MY_P="${MY_P/_rc/-rc}"
 SRC_URI="http://roy.marples.name/downloads/${PN}/${MY_P}.tar.bz2"
-KEYWORDS="~*"
+KEYWORDS="*"
 S="${WORKDIR}/${MY_P}"
 
 inherit eutils systemd
