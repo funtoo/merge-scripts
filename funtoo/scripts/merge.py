@@ -96,6 +96,9 @@ profile_steps = [
 		"profiles/use.aliases":"profiles/use.aliases/progress",
 		"profiles/use.mask":"profiles/use.mask/progress"
 	}),
+	SyncFiles(funtoo_gnome_overlay.root, {
+		"profiles/package.mask":"profiles/package.mask/funtoo-gnome"
+	}),
 ]
 
 # Steps related to copying ebuilds. Note that order can make a difference here when multiple overlays are
