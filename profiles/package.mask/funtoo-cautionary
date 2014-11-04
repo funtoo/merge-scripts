@@ -26,9 +26,6 @@ app-admin/eselect-sh
 # latest python-updater to avoid mess.
 >app-admin/python-updater-0.11
 
-#  Cautionary mask latest bash and readline, until it's time to update
->=app-shells/bash-4.3
->=sys-libs/readline-6.3
 # Ryan Harris (23 Jul 2013)
 # Mask phoronix-test-suite due to security concerns
 # Packages should not try to run emerge on their own
