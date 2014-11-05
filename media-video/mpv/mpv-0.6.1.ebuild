@@ -7,11 +7,11 @@ EGIT_REPO_URI="https://github.com/mpv-player/mpv.git"
 inherit eutils waf-utils pax-utils fdo-mime gnome2-utils
 [[ ${PV} == *9999* ]] && inherit git-r3
 
-WAF_V="1.7.15"
+WAF_V="1.7.16"
 
 DESCRIPTION="Video player based on MPlayer/mplayer2"
 HOMEPAGE="http://mpv.io/"
-SRC_URI="https://waf.googlecode.com/files/waf-${WAF_V}"
+SRC_URI="http://ftp.waf.io/pub/release/waf-${WAF_V}"
 [[ ${PV} == *9999* ]] || \
 SRC_URI+=" https://github.com/mpv-player/mpv/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 
@@ -19,9 +19,9 @@ LICENSE="GPL-2"
 SLOT="0"
 [[ ${PV} == *9999* ]] || \
 KEYWORDS="*"
-IUSE="+alsa bluray bs2b +cdio -doc-pdf dvb +dvd dvdnav +enca encode +iconv jack -joystick
-jpeg ladspa lcms +libass libcaca libguess lirc lua luajit +mpg123 -openal +opengl
-oss portaudio +postproc pulseaudio pvr +quvi -radio samba sdl selinux +shm v4l vaapi vcd vdpau
+IUSE="+alsa bluray bs2b cdio -doc-pdf dvb +dvd dvdnav +enca encode +iconv jack -joystick
+jpeg ladspa lcms +libass libcaca libguess libmpv lirc lua luajit +mpg123 -openal +opengl
+oss portaudio postproc pulseaudio pvr +quvi samba sdl selinux +shm v4l vaapi vdpau
 vf-dlopen wayland +X xinerama +xscreensaver +xv"
 
 REQUIRED_USE="
@@ -32,7 +32,6 @@ REQUIRED_USE="
 	luajit? ( lua )
 	opengl? ( || ( wayland X ) )
 	pvr? ( v4l )
-	radio? ( v4l || ( alsa oss ) )
 	vaapi? ( X )
 	vdpau? ( X )
 	wayland? ( opengl )
@@ -41,16 +40,15 @@ REQUIRED_USE="
 	xv? ( X )
 "
 
-RDEPEND+=">=media-video/ffmpeg-1.2.4:0=[encode?,threads,vaapi?,vdpau?]
-
+RDEPEND+=">=media-video/libav-10:=[encode?,threads,vaapi?,vdpau?]
 	sys-libs/ncurses
 	sys-libs/zlib
 	X? (
 		x11-libs/libX11
 		x11-libs/libXext
-		x11-libs/libXxf86vm
+		>=x11-libs/libXrandr-1.2.0
 		opengl? ( virtual/opengl )
-		lcms? ( media-libs/lcms:2 )
+		lcms? ( >=media-libs/lcms-2.6:2 )
 		vaapi? ( >=x11-libs/libva-0.34.0[X(+)] )
 		vdpau? ( >=x11-libs/libvdpau-0.2 )
 		xinerama? ( x11-libs/libXinerama )
@@ -58,7 +56,7 @@ RDEPEND+=">=media-video/ffmpeg-1.2.4:0=[encode?,threads,vaapi?,vdpau?]
 		xv? ( x11-libs/libXv )
 	)
 	alsa? ( media-libs/alsa-lib )
-	bluray? ( >=media-libs/libbluray-0.2.1 )
+	bluray? ( >=media-libs/libbluray-0.3.0 )
 	bs2b? ( media-libs/libbs2b )
 	cdio? (
 		dev-libs/libcdio
@@ -90,21 +88,20 @@ RDEPEND+=">=media-video/ffmpeg-1.2.4:0=[encode?,threads,vaapi?,vdpau?]
 	portaudio? ( >=media-libs/portaudio-19_pre20111121 )
 	postproc? (
 		|| (
-			media-libs/libpostproc
-			>=media-video/ffmpeg-1.2:0[encode?,threads,vaapi?,vdpau?]
+			>=media-libs/libpostproc-10.20140517
+			>=media-video/ffmpeg-2.1.4:0
 		)
 	)
 	pulseaudio? ( media-sound/pulseaudio )
 	quvi? (
 		>=media-libs/libquvi-0.4.1:=
-		>=media-video/ffmpeg-1.2.4:0[network]
+		>=media-video/ffmpeg-2.1.4:0[network]
 		)
 	samba? ( net-fs/samba )
 	sdl? ( media-libs/libsdl2[threads] )
-	selinux? ( sec-policy/selinux-mplayer )
 	v4l? ( media-libs/libv4l )
 	wayland? (
-		>=dev-libs/wayland-1.3.0
+		>=dev-libs/wayland-1.6.0
 		media-libs/mesa[egl,wayland]
 		>=x11-libs/libxkbcommon-0.3.0
 	)
@@ -113,18 +110,15 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 	>=dev-lang/perl-5.8
 	dev-python/docutils
-	doc-pdf? (
-		dev-texlive/texlive-latex
-		dev-texlive/texlive-latexrecommended
-		dev-texlive/texlive-latexextra
-		dev-tex/xcolor
-	)
+	doc-pdf? ( dev-python/rst2pdf )
 	X? (
 		x11-proto/videoproto
-		x11-proto/xf86vidmodeproto
 		xinerama? ( x11-proto/xineramaproto )
 		xscreensaver? ( x11-proto/scrnsaverproto )
 	)
+"
+RDEPEND+="
+	selinux? ( sec-policy/selinux-mplayer )
 "
 DOCS=( Copyright README.md etc/example.conf etc/input.conf )
 
@@ -159,16 +153,18 @@ src_configure() {
 	# do not add -g to CFLAGS
 	# SDL output is fallback for platforms where nothing better is available
 	# media-sound/rsound is in pro-audio overlay only
+	# vapoursynth is not packaged
 	waf-utils_src_configure \
 		--disable-build-date \
+		--disable-optimize \
 		--disable-debug-build \
-		--disable-sdl \
+		--disable-sdl1 \
 		$(use_enable sdl sdl2) \
 		--disable-rsound \
+		--disable-vapoursynth \
 		$(use_enable encode encoding) \
 		$(use_enable joystick) \
 		$(use_enable bluray libbluray) \
-		$(use_enable vcd) \
 		$(use_enable quvi libquvi) \
 		$(use_enable samba libsmbclient) \
 		$(use_enable lirc) \
@@ -183,14 +179,12 @@ src_configure() {
 		$(use_enable iconv) \
 		$(use_enable libass) \
 		$(use_enable libguess) \
+		$(use_enable libmpv libmpv-shared) \
 		$(use_enable dvb) \
 		$(use_enable pvr) \
 		$(use_enable v4l libv4l2) \
 		$(use_enable v4l tv) \
 		$(use_enable v4l tv-v4l2) \
-		$(use_enable radio) \
-		$(use_enable radio radio-capture) \
-		$(use_enable radio radio-v4l2) \
 		$(use_enable mpg123) \
 		$(use_enable jpeg) \
 		$(use_enable libcaca caca) \
@@ -205,6 +199,8 @@ src_configure() {
 		$(use_enable pulseaudio pulse) \
 		$(use_enable shm) \
 		$(use_enable X x11) \
+		$(use_enable X xext) \
+		$(use_enable X xrandr) \
 		$(use_enable vaapi) \
 		$(use_enable vdpau) \
 		$(use_enable wayland) \
