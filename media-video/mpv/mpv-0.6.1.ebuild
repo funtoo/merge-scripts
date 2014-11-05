@@ -40,7 +40,7 @@ REQUIRED_USE="
 	xv? ( X )
 "
 
-RDEPEND+=">=media-video/libav-10:=[encode?,threads,vaapi?,vdpau?]
+RDEPEND+=">=media-video/ffmpeg-2.1.4:0=[encode?,threads,vaapi?,vdpau?]
 	sys-libs/ncurses
 	sys-libs/zlib
 	X? (
