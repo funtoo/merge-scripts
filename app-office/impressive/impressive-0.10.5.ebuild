@@ -19,7 +19,7 @@ IUSE=""
 
 DEPEND=""
 RDEPEND="${PYTHON_DEPS}
-	app-text/pdftk
+	app-text/mcpdf
 	virtual/python-imaging[${PYTHON_USEDEP}]
 	dev-python/pygame[${PYTHON_USEDEP}]
 	dev-python/pyopengl[${PYTHON_USEDEP}]
