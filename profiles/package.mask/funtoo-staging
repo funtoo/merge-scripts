@@ -1,6 +1,9 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
+# masked for testing:
+=sys-fs/lvm2-2.02.111
+
 # dhcpcd update, masked for testing
 =net-misc/dhcpcd-6.6.0
 
