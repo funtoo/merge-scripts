@@ -23,7 +23,7 @@ HOMEPAGE="http://www.kernel.org/pub/linux/utils/util-linux/"
 
 LICENSE="GPL-2 LGPL-2.1 BSD-4 MIT public-domain"
 SLOT="0"
-IUSE="caps +cramfs fdformat ncurses nls pam python selinux slang static-libs +suid test tty-helpers udev unicode"
+IUSE="caps +cramfs fdformat ncurses nls pam python selinux slang +static-libs +suid test +tty-helpers udev unicode"
 
 RDEPEND="!sys-process/schedutils
 	!sys-apps/setarch
