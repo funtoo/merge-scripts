@@ -298,9 +298,6 @@ src_prepare() {
 	# first hunk applied upstream second (x32 related) was not
 	epatch "${FILESDIR}"/ati-drivers-x32_something_something.patch
 
-	# compile fix for AGP-less kernel, bug #435322
-	epatch "${FILESDIR}"/ati-drivers-12.9-KCL_AGP_FindCapsRegisters-stub.patch
-
 	epatch "${FILESDIR}/ati-drivers-13.8-beta-include-seq_file.patch"
 
 	# Fix #483400
