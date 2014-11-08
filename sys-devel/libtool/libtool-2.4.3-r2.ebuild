@@ -28,8 +28,8 @@ RDEPEND="sys-devel/gnuconfig
 	>=sys-devel/automake-1.13
 	dev-libs/libltdl:0"
 DEPEND="${RDEPEND}
-	app-arch/xz-utils"
-[[ ${PV} == "9999" ]] && DEPEND+=" sys-apps/help2man"
+	app-arch/xz-utils
+	sys-apps/help2man"
 
 src_unpack() {
 	if [[ ${PV} == "9999" ]] ; then
