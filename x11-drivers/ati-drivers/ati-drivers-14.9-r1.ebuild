@@ -7,7 +7,10 @@ inherit eutils multilib linux-info linux-mod toolchain-funcs versionator pax-uti
 DESCRIPTION="Ati precompiled drivers for Radeon Evergreen (HD5000 Series) and newer chipsets"
 HOMEPAGE="http://www.amd.com"
 SLOT="1"
-DRIVERS_URI="http://archive.ubuntu.com/ubuntu/pool/restricted/f/fglrx-installer/fglrx-installer_14.201.orig.tar.gz"
+INSTALLER="fglrx-installer_14.201.orig.tar.gz"
+# Original location, resolveable only via IPv6 (duh)
+#DRIVERS_URI="http://archive.ubuntu.com/ubuntu/pool/restricted/f/fglrx-installer/$INSTALLER"
+DRIVERS_URI="http://build.funtoo.org/distfiles/$INSTALLER"
 XVBA_SDK_URI="http://developer.amd.com/wordpress/media/2012/10/xvba-sdk-0.74-404001.tar.gz"
 SRC_URI="${DRIVERS_URI} ${XVBA_SDK_URI}"
 FOLDER_PREFIX="common/"
@@ -236,10 +239,9 @@ pkg_setup() {
 }
 
 src_unpack() {
-	local DRIVERS_DISTFILE XVBA_SDK_DISTFILE
-	DRIVERS_DISTFILE=${DRIVERS_URI##*/}
+	local XVBA_SDK_DISTFILE
 	XVBA_SDK_DISTFILE=${XVBA_SDK_URI##*/}
-	unpack ${DRIVERS_DISTFILE}
+	unpack ${INSTALLER}
 	[[ -z "$RUN" ]] && RUN=$(ls ${S}/fglrx-*/*.run)
 	#sh "${RUN}" --extract "${S}" 2>&1 > /dev/null || die
 	mkdir common || die
