@@ -15,12 +15,6 @@
 # FL-1716 kmod update
 =sys-apps/kmod-18-r2
 
-# FL-1705
->=app-misc/screen-4.2.1
-
-# FL-1638
-=x11-drivers/ati-drivers-14.9
-
 # Dantrell B. (22 Aug 2014)
 # Masked for testing
 # Ref FL-1483
