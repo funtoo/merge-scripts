@@ -242,8 +242,6 @@ src_unpack() {
 	local XVBA_SDK_DISTFILE
 	XVBA_SDK_DISTFILE=${XVBA_SDK_URI##*/}
 	unpack ${INSTALLER}
-	[[ -z "$RUN" ]] && RUN=$(ls ${S}/fglrx-*/*.run)
-	#sh "${RUN}" --extract "${S}" 2>&1 > /dev/null || die
 	mkdir common || die
 	mv etc lib usr common || die
 	mkdir xvba_sdk || die
