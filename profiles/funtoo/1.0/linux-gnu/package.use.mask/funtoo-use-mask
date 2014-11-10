@@ -1,3 +1,0 @@
-##FL-1194, FL-1101, amsk udev use flag in libsub and virtual/libusb
-dev-libs/libusb udev
-virtual/libusb udev
