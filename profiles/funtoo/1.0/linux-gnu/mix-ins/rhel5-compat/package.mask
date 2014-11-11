@@ -1,2 +1,0 @@
->=sys-fs/udev-147
->=sys-fs/lvm2-2.02.69
