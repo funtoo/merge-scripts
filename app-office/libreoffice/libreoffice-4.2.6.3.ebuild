@@ -114,7 +114,6 @@ COMMON_DEPEND="
 	dev-libs/expat
 	>=dev-libs/hyphen-2.7.1
 	>=dev-libs/icu-4.8.1.1:=
-	>=dev-libs/libatomic_ops-7.2d
 	=dev-libs/liborcus-0.5*
 	>=dev-libs/nspr-4.8.8
 	>=dev-libs/nss-3.12.9
@@ -168,7 +167,7 @@ COMMON_DEPEND="
 		virtual/glu
 		virtual/opengl
 	)
-	postgres? ( >=dev-db/postgresql-base-9.0[kerberos] )
+	postgres? ( >=virtual/postgresql-9.0[kerberos] )
 	telepathy? (
 		dev-libs/glib:2
 		>=net-libs/telepathy-glib-0.18.0
@@ -201,6 +200,7 @@ fi
 #        after everything upstream is under gbuild
 #        as dmake execute tests right away
 DEPEND="${COMMON_DEPEND}
+	>=dev-libs/libatomic_ops-7.2d
 	>=dev-libs/libxml2-2.7.8
 	dev-libs/libxslt
 	dev-perl/Archive-Zip
@@ -274,7 +274,7 @@ pkg_pretend() {
 
 	# Ensure pg version but we have to be sure the pg is installed (first
 	# install on clean system)
-	if use postgres && has_version dev-db/postgresql-base; then
+	if use postgres && has_version virtual/postgresql; then
 		 pgslot=$(postgresql-config show)
 		 if [[ ${pgslot//.} < 90 ]] ; then
 			eerror "PostgreSQL slot must be set to 9.0 or higher."
