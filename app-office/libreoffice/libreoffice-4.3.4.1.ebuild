@@ -195,7 +195,7 @@ RDEPEND="${COMMON_DEPEND}
 "
 
 if [[ ${PV} != *9999* ]]; then
-	PDEPEND="~app-office/libreoffice-l10n-${PV}"
+	PDEPEND="=app-office/libreoffice-l10n-4.3.3"
 else
 	# Translations are not reliable on live ebuilds
 	# rather force people to use english only.
