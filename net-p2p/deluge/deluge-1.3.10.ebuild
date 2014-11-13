@@ -13,7 +13,7 @@ SRC_URI="http://download.deluge-torrent.org/source/${P}.tar.bz2"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="*"
-IUSE="geoip gtk libnotify setproctitle sound webinterface"
+IUSE="geoip gtk libnotify setproctitle sound +webinterface"
 
 DEPEND="( $(python_abi_depend dev-python/setuptools) >=net-libs/rb_libtorrent-0.14.9[python] dev-util/intltool )"
 RDEPEND="${DEPEND} $(python_abi_depend	dev-python/chardet dev-python/pyopenssl dev-python/pyxdg dev-python/simplejson dev-python/twisted-core dev-python/twisted-web)
