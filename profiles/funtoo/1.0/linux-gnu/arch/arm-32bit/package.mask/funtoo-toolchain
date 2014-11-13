@@ -2,7 +2,7 @@
 # Latest glibc versions break ARM installations.
 # Still investigating...
 
->sys-libs/glibc-2.13-r5
+>sys-libs/glibc-2.13-r6
 
 # binutils-2.23.2 has a regression for ARM
 # (see FL-907)
