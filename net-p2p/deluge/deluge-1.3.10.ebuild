@@ -37,7 +37,7 @@ src_prepare() {
 
 src_install() {
 	distutils_src_install
-	newinitd "${FILESDIR}"/deluged.init deluged
+	newinitd "${FILESDIR}"/deluged.init-1 deluged
 	newconfd "${FILESDIR}"/deluged.conf deluged
 }
 
