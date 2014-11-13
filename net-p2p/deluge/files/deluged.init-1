@@ -1,10 +1,6 @@
 #!/sbin/runscript
 # Distributed under the terms of the GNU General Public License, v2 or later
 
-depend() 
-{
-}
-
 checkconfig() {
 	if [ "${DELUGED_USER}" = "" ] ; then
 		eerror "Please edit /etc/conf.d/deluged"
