@@ -1,1 +1,1 @@
-USE="cairo caja gdu consolekit introspection gtk policykit udisks"
+USE=" base cairo caja gdu consolekit extras introspection gtk policykit themes udisks"
