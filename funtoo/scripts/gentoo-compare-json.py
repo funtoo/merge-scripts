@@ -4,23 +4,17 @@
 # the versions of ebuilds in the target portage tree. Any higher versions in the 
 # target Portage tree will be printed to stdout.
 
-# Run this script from the root of the funtoo-overlay tree, specifying the target
-# tree to compare against as an argument.
-
 import portage.versions
 import os,sys
 import subprocess
 import json
 
 from merge_utils import *
-# this causes the funtoo overlay to be updated
-funtoo_overlay = GitTree("funtoo-overlay", branch, "repos@git.funtoo.org:funtoo-overlay.git", pull=True)
-
 dirpath = os.path.dirname(os.path.realpath(__file__))
-portdir = os.path.normpath("/var/git/source-trees/funtoo-overlay")
+portdir = os.path.normpath("/var/work/ports-2012")
 
-print("List of differences between funtoo-overlay and gentoo")
-print("=====================================================")
+print("List of differences between funtoo and gentoo")
+print("=============================================")
 
 def getKeywords(portdir, ebuild, warn):
 	a = subprocess.getstatusoutput(dirpath + "/keywords.sh %s %s" % ( portdir, ebuild ) )
@@ -128,7 +122,7 @@ def version_compare(portdir,gportdir,keywords,label):
 				json_out[label].append("%s/%s %s %s" % (cat, pkg, gbest[len(cat)+len(pkg)+2:], fbest[len(cat)+len(pkg)+2:]))
 				print("%s (vs. %s in funtoo)" % ( gbest, fbest ))
 json_out={}
-for keyw in [ "~amd64", "~x86" ]:
+for keyw in [ "~amd64" ]:
 	if keyw == "~x86":
 		label = "fcx8632"
 	elif keyw == "~amd64":
