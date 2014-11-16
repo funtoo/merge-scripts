@@ -1,0 +1,34 @@
+From da77623a6762c655ae47fc595eaa9251f5ce5d5d Mon Sep 17 00:00:00 2001
+From: Colin Watson <cjwatson@ubuntu.com>
+Date: Thu, 10 Apr 2014 14:42:41 +0100
+Subject: [PATCH 7/8] Improve LVM "logical_volumes" string matching
+
+* grub-core/disk/lvm.c (grub_lvm_detect): Search for
+"logical_volumes" block a little more accurately.
+
+Conflicts:
+	ChangeLog
+---
+ grub-core/disk/lvm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/grub-core/disk/lvm.c b/grub-core/disk/lvm.c
+index 483c17e..862a966 100644
+--- a/grub-core/disk/lvm.c
++++ b/grub-core/disk/lvm.c
+@@ -333,10 +333,10 @@ grub_lvm_detect (grub_disk_t disk,
+ 	    }
+ 	}
+ 
+-      p = grub_strstr (p, "logical_volumes");
++      p = grub_strstr (p, "logical_volumes {");
+       if (p)
+ 	{
+-	  p += sizeof ("logical_volumes = ") - 1;
++	  p += sizeof ("logical_volumes {") - 1;
+ 
+ 	  /* And add all the lvs to the volume group. */
+ 	  while (1)
+-- 
+2.1.0
+

@@ -1,0 +1,43 @@
+From ed2d3ef84e798d42ec361d109485ec20eafe9831 Mon Sep 17 00:00:00 2001
+From: Colin Watson <cjwatson@ubuntu.com>
+Date: Mon, 31 Mar 2014 13:51:17 +0100
+Subject: [PATCH 3/5] Fix grub-probe -0 option
+
+* util/grub-probe,c (options): Make -0 work again (broken by
+conversion to argp).
+(main): Simplify logic.
+
+Conflicts:
+	ChangeLog
+---
+ util/grub-probe.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/util/grub-probe.c b/util/grub-probe.c
+index 1f3b59f..80509be 100644
+--- a/util/grub-probe.c
++++ b/util/grub-probe.c
+@@ -711,6 +711,7 @@ static struct argp_option options[] = {
+    N_("use FILE as the device map [default=%s]"), 0},
+   {"target",  't', N_("TARGET"), 0, 0, 0},
+   {"verbose",     'v', 0,      0, N_("print verbose messages."), 0},
++  {0, '0', 0, 0, N_("separate items in output using ASCII NUL characters"), 0},
+   { 0, 0, 0, 0, 0, 0 }
+ };
+ 
+@@ -884,11 +885,7 @@ main (int argc, char *argv[])
+   else
+     probe (arguments.devices[0], NULL, delim);
+ 
+-  if (!arguments.zero_delim && (print == PRINT_BIOS_HINT
+-				|| print == PRINT_IEEE1275_HINT
+-				|| print == PRINT_BAREMETAL_HINT
+-				|| print == PRINT_EFI_HINT
+-				|| print == PRINT_ARC_HINT))
++  if (delim == ' ')
+     putchar ('\n');
+ 
+   /* Free resources.  */
+-- 
+2.1.0
+
