@@ -22,6 +22,7 @@ RDEPEND=">=x11-themes/gtk-engines-xfce-3:0
 	>=xfce-base/thunar-1.6.3
 	>=xfce-extra/thunar-volman-0.8.0
 	>=x11-terms/xfce4-terminal-0.6.3
+	media-gfx/ristretto
 	xfce-extra/xfce4-mixer
 	app-cdr/xfburn
 	!minimal? (

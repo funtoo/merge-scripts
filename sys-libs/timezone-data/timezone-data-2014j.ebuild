@@ -9,16 +9,14 @@ data_ver=${PV}
 DESCRIPTION="Timezone data (/usr/share/zoneinfo) and utilities (tzselect/zic/zdump)"
 HOMEPAGE="http://www.iana.org/time-zones http://www.twinsun.com/tz/tz-link.htm"
 SRC_URI="http://www.iana.org/time-zones/repository/releases/tzdata${data_ver}.tar.gz
-	http://www.iana.org/time-zones/repository/releases/tzcode${code_ver}.tar.gz
-	ftp://munnari.oz.au/pub/oldtz/tzdata${data_ver}.tar.gz
-	ftp://munnari.oz.au/pub/oldtz/tzcode${data_ver}.tar.gz"
+	http://www.iana.org/time-zones/repository/releases/tzcode${code_ver}.tar.gz"
 
 LICENSE="BSD public-domain"
 SLOT="0"
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="nls right_timezone elibc_FreeBSD elibc_glibc"
 
-RDEPEND="!<sys-libs/glibc-2.3.5"
+RDEPEND="!sys-libs/glibc[vanilla(+)]"
 
 S=${WORKDIR}
 
@@ -40,7 +38,7 @@ pkg_setup() {
 }
 
 src_prepare() {
-	epatch "${FILESDIR}"/${PN}-2014f-makefile.patch
+	epatch "${FILESDIR}"/${PN}-2014h-makefile.patch
 	tc-is-cross-compiler && cp -pR "${S}" "${S}"-native
 }
 
@@ -66,13 +64,14 @@ src_compile() {
 		AR="$(tc-getAR)" \
 		CC="$(tc-getCC)" \
 		RANLIB="$(tc-getRANLIB)" \
-		CFLAGS="${CPPFLAGS} ${CFLAGS} -std=gnu99" \
+		CFLAGS="${CFLAGS} -std=gnu99" \
 		LDFLAGS="${LDFLAGS}" \
 		LDLIBS="${LDLIBS}"
 	if tc-is-cross-compiler ; then
 		_emake -C "${S}"-native \
 			CC="$(tc-getBUILD_CC)" \
 			CFLAGS="${BUILD_CFLAGS}" \
+			CPPFLAGS="${BUILD_CPPFLAGS}" \
 			LDFLAGS="${BUILD_LDFLAGS}" \
 			LDLIBS="${LDLIBS}" \
 			zic
@@ -83,7 +82,7 @@ src_install() {
 	local zic=""
 	tc-is-cross-compiler && zic="zic=${S}-native/zic"
 	_emake install ${zic} DESTDIR="${D}"
-	dodoc README Theory
+	dodoc CONTRIBUTING README NEWS Theory
 	dohtml *.htm
 
 	# install the symlink by hand to not break existing timezones
