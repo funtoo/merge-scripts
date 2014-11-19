@@ -1,5 +1,6 @@
 # FL-1796, stabilize iputils:
 =net-misc/iputils-20121221-r1 amd64 x86
+=dev-libs/dbus-glib-0.102 amd64 x86
 
 # FL-1785, stabilize texinfo-5.2
 =sys-apps/texinfo-5.2 amd64 x86
