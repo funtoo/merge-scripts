@@ -44,7 +44,7 @@ HOMEPAGE="http://www.gnu.org/software/grub/"
 
 # Includes licenses for dejavu and unifont
 LICENSE="GPL-3 truetype? ( BitstreamVera GPL-2-with-font-exception )"
-SLOT="2"
+SLOT="0"
 IUSE="+binfont debug device-mapper doc efiemu mount multislot nls static sdl test truetype libzfs"
 
 GRUB_ALL_PLATFORMS=(
