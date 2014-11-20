@@ -207,14 +207,6 @@ src_configure() {
 		bootstrap="enable"
 	fi
 
-	if has "${vm}" gcj-jdk; then
-		# gcj-jdk ensures ecj is present.
-		use jbootstrap || einfo "bootstrap is necessary when building with ${vm}, ignoring USE=\"-jbootstrap\""
-		bootstrap="enable"
-		local ecj_jar="$(readlink "${EPREFIX}"/usr/share/eclipse-ecj/ecj.jar)"
-		config+=" --with-ecj-jar=${ecj_jar}"
-	fi
-
 	config+=" --${bootstrap}-bootstrap"
 
 	# Use Zero if requested
