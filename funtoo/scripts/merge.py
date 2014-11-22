@@ -101,7 +101,9 @@ profile_steps = [
 		"profiles/package.mask":"profiles/package.mask/funtoo-gnome"
 	}),
 	SyncFiles(funtoo_toolchain_overlay.root, {
-		"profiles/package.mask/funtoo-toolchain-experimental" if experimental else "profiles/package.mask/funtoo-toolchain":"profiles/package.mask/funtoo-toolchain"
+		"profiles/package.mask/funtoo-toolchain":"profiles/funtoo/1.0/linux-gnu/build/current/funtoo-toolchain",
+		"profiles/package.mask/funtoo-toolchain":"profiles/funtoo/1.0/linux-gnu/build/stable/funtoo-toolchain",
+		"profiles/package.mask/funtoo-toolchain-experimental":"profiles/funtoo/1.0/linux-gnu/build/experimental/funtoo-toolchain",
 	}),
 ]
 
