@@ -100,6 +100,9 @@ profile_steps = [
 	SyncFiles(funtoo_gnome_overlay.root, {
 		"profiles/package.mask":"profiles/package.mask/funtoo-gnome"
 	}),
+	SyncFiles(funtoo_toolchain_overlay.root, {
+		"profiles/package.mask/funtoo-toolchain-experimental" if experimental else "profiles/package.mask/funtoo-toolchain":"profiles/package.mask/funtoo-toolchain"
+	}),
 ]
 
 # Steps related to copying ebuilds. Note that order can make a difference here when multiple overlays are
