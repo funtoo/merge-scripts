@@ -141,7 +141,7 @@ ebuild_modifications = [
 	InsertEbuilds(mysql_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(funtoo_media, select="all", skip=None, replace=True),
 	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
-	InsertEbuilds(funtoo_toolchain_overlay, select="all", skip=None, replace=True, merge=True),
+	InsertEbuilds(funtoo_toolchain_overlay, select="all", skip=None, replace=True, merge=False),
 	InsertEbuilds(ldap_overlay, select="all", skip=None, replace=True),
 ]
 
