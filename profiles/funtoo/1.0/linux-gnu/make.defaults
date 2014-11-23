@@ -8,4 +8,4 @@ ACCEPT_PROPERTIES="* -reboot"
 
 USE_EXPAND="PYTHON_ABIS"
 PYTHON_ABIS="2.7 3.3"
-USE="${USE} python_targets_python2_7 python_targets_python3_3 -python_targets_python3_2"
+USE="${USE} python_targets_python2_7 python_targets_python3_3 -python_targets_python3_4"
