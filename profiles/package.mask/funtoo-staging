@@ -1,3 +1,6 @@
+# bluez-5.25, masked for testing:
+=net-wireless/bluez-5.25
+
 # in development/testing
 =sys-boot/grub-2.02_beta2-r2
 
