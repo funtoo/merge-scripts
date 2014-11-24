@@ -123,7 +123,7 @@ multilib_src_configure() {
 
 multilib_src_compile() {
 	if multilib_is_native_abi; then
-		default
+		emake -j1	
 	else
 		# build libraries only
 		emake -j1 -f Makefile -f - mylibs \
@@ -137,7 +137,7 @@ multilib_src_test() {
 
 multilib_src_install() {
 	if multilib_is_native_abi; then
-		default
+		emake -j1 DESTDIR="${D}" install
 	else
 		emake -j1 DESTDIR="${D}" install-usrlib_execLTLIBRARIES \
 			install-pkgconfigDATA install-uuidincHEADERS \
