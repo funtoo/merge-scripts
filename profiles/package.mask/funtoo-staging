@@ -1,3 +1,6 @@
+# grass-6.4.4 with wxpython GUI, masked for testing:
+=sci-geosciences/grass-6.4.4
+
 # bluez-5.25, masked for testing:
 =net-wireless/bluez-5.25
 
