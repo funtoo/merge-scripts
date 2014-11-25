@@ -15,7 +15,7 @@ SRC_URI="http://grass.osgeo.org/${MY_PM}/source/${MY_P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="6"
-KEYWORDS="~amd64 ~ppc ~ppc64 ~x86"
+KEYWORDS="*"
 IUSE="+X +cairo cxx ffmpeg fftw gmath jpeg motif mysql nls odbc opengl png postgres python readline sqlite +tiff truetype +wxwidgets"
 
 RDEPEND="
