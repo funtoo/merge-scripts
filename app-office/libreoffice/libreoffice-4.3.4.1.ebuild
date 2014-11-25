@@ -195,7 +195,7 @@ RDEPEND="${COMMON_DEPEND}
 "
 
 if [[ ${PV} != *9999* ]]; then
-	PDEPEND="=app-office/libreoffice-l10n-4.3.3"
+	PDEPEND="~app-office/libreoffice-l10n-${PV}"
 else
 	# Translations are not reliable on live ebuilds
 	# rather force people to use english only.
@@ -559,7 +559,10 @@ src_install() {
 
 	# Fix bash completion placement
 	newbashcomp "${ED}"/etc/bash_completion.d/libreoffice.sh ${PN}
-	rm -rf "${ED}"/etc/
+	bashcomp_alias \
+			libreoffice \
+			unopkg loimpress lobase localc lodraw lomath lowriter lofromtemplate loweb loffice
+	rm -rf "${ED}"/etc/ || die
 
 	if use branding; then
 		insinto /usr/$(get_libdir)/${PN}/program
