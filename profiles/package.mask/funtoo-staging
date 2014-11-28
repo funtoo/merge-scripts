@@ -20,7 +20,7 @@
 =sys-fs/lvm2-2.02.111
 
 # dhcpcd update, masked for testing
-=net-misc/dhcpcd-6.6.0
+>=net-misc/dhcpcd-6.6.0
 
 # masked for testing
 =net-dns/openresolv-3.6.1
