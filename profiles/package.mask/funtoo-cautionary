@@ -18,7 +18,7 @@ app-admin/eselect-sh
 # mask back python-3.4, this one not really fine to have installed. Also it become a default python version in stages.
 # Next time, allow to unmask only stable version of python with a consequent change of default PYTHON_ABIS. THis is 
 # FL-1274, FL-1265
->dev-lang/python-3.3.5-r1000
+>=dev-lang/python-3.4
 
 # Non bug commit. New gentoo-functions ebuild pulled into update list because of newer python-updater.
 # gentoo-funtions ebuild is a replacement of base shell functions, provided by OpenRC's /etc/init.d/functions.sh
