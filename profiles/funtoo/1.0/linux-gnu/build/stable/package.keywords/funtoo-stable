@@ -1,5 +1,5 @@
-# FL-367: set stabl keywords to gentoo-xyntax, after unfork, in gentoo-x86 desired verssion is unstable only
-=app-vim/gentoo-syntax-20141102 amd64 x86
+# FL-367: set stable keywords to gentoo-syntax, after unfork, in gentoo-x86 desired version is unstable only
+>=app-vim/gentoo-syntax-20141102 amd64 x86
 
 # FL-1796, stabilize iputils:
 =net-misc/iputils-20121221-r1 amd64 x86
