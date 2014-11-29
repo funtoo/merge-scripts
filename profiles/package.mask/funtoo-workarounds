@@ -1,8 +1,3 @@
-# Oleg Vinichenko (19.11.14)
-# FL-1794: mask latest shorewall to avoid openrc block
-=net-firewall/shorewall-4.6.5.2
-
-# Dantrell B. (30 Oct 2014)
 # Causes a regression in how scanelf reports to app-admin/python-updater
 # Ref FL-1695
 >=app-misc/pax-utils-0.9.1
