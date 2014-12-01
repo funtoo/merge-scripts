@@ -1,10 +1,12 @@
 #!/usr/bin/python3
 
-import os,sys
 import argparse
-import subprocess
-import shutil
 import glob
+import itertools
+import os
+import shutil
+import subprocess
+import sys
 from lxml import etree
 
 debug = False
@@ -29,14 +31,41 @@ def runShell(string,abortOnFail=True):
 	if debug:
 		print(string)
 	else:
-		print("running: %s" % string)
+		print("running: %r" % string)
 		out = subprocess.getstatusoutput(string)
 		if out[0] != 0:
-			print("Error executing '%s'" % string)
+			print("Error executing %r" % string)
 			print()
 			print("output:")
 			print(out[1])
 			if abortOnFail:
+				sys.exit(1)
+			else:
+				return False
+	return True
+
+def run_command(args, *, abort_on_failure=True, **kwargs):
+	if debug:
+		print(args)
+	else:
+		print("running: %r" % args)
+		stdout = kwargs.pop("stdout", subprocess.PIPE)
+		stderr = kwargs.pop("stderr", subprocess.PIPE)
+		try:
+			with subprocess.Popen(args, stdout=stdout, stderr=stderr, **kwargs) as process:
+				status = process.wait()
+				stdout_content = process.stdout.read().decode()
+				stderr_content = process.stderr.read().decode()
+		except OSError as e:
+			status = -1
+			stdout_content = ""
+			stderr_content = e.strerror
+		if status != 0:
+			print("Error executing %r" % args)
+			print()
+			print("stdout: %s" % stdout_content)
+			print("stderr: %s" % stderr_content)
+			if abort_on_failure:
 				sys.exit(1)
 			else:
 				return False
@@ -567,6 +596,25 @@ class ProfileDepFix(MergeStep):
 				if len(sp) >= 2:
 					prof_path = sp[1]
 					runShell("rm -f %s/profiles/%s/deprecated" % ( tree.root, prof_path ))
+
+class RunSed(MergeStep):
+
+	"""
+	Run sed commands on specified files.
+
+	files: List of files.
+
+	commands: List of commands.
+	"""
+
+	def __init__(self, files, commands):
+		self.files = files
+		self.commands = commands
+
+	def run(self, tree):
+		commands = list(itertools.chain.from_iterable(("-e", command) for command in self.commands))
+		files = [os.path.join(tree.root, file) for file in self.files]
+		run_command(["sed"] + commands + ["-i"] + files)
 
 class GenCache(MergeStep):
 
