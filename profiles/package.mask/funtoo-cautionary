@@ -1,3 +1,6 @@
+# Do not let live ebuild of gentoo-syntax installs:
+=app-vim/gentoo-syntax-9999*
+
 # Dantrell B. (10 Aug 2014)
 # Depends on sys-devel/gcc[gcj] which newer versions of gcc in Funtoo do not have
 #  Build against a version of gcc that does or use app-text/mcpdf instead
