@@ -71,7 +71,7 @@ base_steps = [
 # files in the funtoo overlay.
 
 profile_steps = [
-	SyncDir(funtoo_overlay.root, "profiles", "profiles", exclude=["categories", "repo_name", "updates"]),
+	SyncDir(funtoo_overlay.root, "profiles", "profiles", exclude=["categories", "updates"]),
 	SyncFiles(gentoo_src.root, {
 		"profiles/package.mask":"profiles/package.mask/00-gentoo",
 		"profiles/arch/amd64/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/package.use.mask/01-gentoo",
@@ -167,6 +167,9 @@ treeprep_steps = [
 	ThirdPartyMirrors(),
 	ProfileDepFix(),
 	Minify(),
+	# Set name of repository as "gentoo".
+	RunSed(["metadata/layout.conf"], ["s/^repo-name = .*/repo-name = gentoo/"]),
+	RunSed(["profiles/repo_name"], ["s/.*/gentoo/"]),
 	GenCache(),
 	GenUseLocalDesc()
 ]
