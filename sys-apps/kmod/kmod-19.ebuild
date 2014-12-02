@@ -30,6 +30,7 @@ RESTRICT="test"
 
 # Block systemd below 217 for -static-nodes-indicate-that-creation-of-static-nodes-.patch
 RDEPEND="!sys-apps/module-init-tools
+	>=sys-apps/openrc-0.12.4-r2
 	!sys-apps/modutils
 	!<sys-apps/systemd-217
 	lzma? ( >=app-arch/xz-utils-5.0.4-r1 )
