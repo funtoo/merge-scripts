@@ -19,7 +19,8 @@ RDEPEND="dev-libs/glib:2
 	dev-libs/libstrophe[xml=]
 	net-misc/curl
 	sys-libs/ncurses
-	libnotify? ( virtual/notification-daemon )
+	libnotify? ( virtual/notification-daemon
+		x11-libs/libnotify )
 	otr? ( net-libs/libotr )
 	xscreensaver? ( x11-libs/libXScrnSaver )"
 
