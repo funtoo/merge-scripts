@@ -31,6 +31,7 @@ RESTRICT="test"
 # Block systemd below 217 for -static-nodes-indicate-that-creation-of-static-nodes-.patch
 RDEPEND="!sys-apps/module-init-tools
 	!sys-apps/modutils
+	!<sys-apps/systemd-217
 	lzma? ( >=app-arch/xz-utils-5.0.4-r1 )
 	python? ( ${PYTHON_DEPS} )
 	zlib? ( >=sys-libs/zlib-1.2.6 )" #427130
@@ -60,11 +61,8 @@ src_prepare() {
 		fi
 		eautoreconf
 	else
-		epatch "${FILESDIR}"/${PN}-15-dynamic-kmod.patch #493630
 		elibtoolize
 	fi
-
-	epatch "${FILESDIR}"/${P}-static-nodes-indicate-that-creation-of-static-nodes-.patch
 
 	# Restore possibility of running --enable-static wrt #472608
 	sed -i \
@@ -102,12 +100,6 @@ src_configure() {
 }
 
 src_compile() {
-	if [[ ${PV} != 9999* ]]; then
-		# Force -j1 because of -15-dynamic-kmod.patch, likely caused by lack of eautoreconf
-		# wrt #494806
-		local MAKEOPTS="${MAKEOPTS} -j1"
-	fi
-
 	emake -C "${BUILD_DIR}"
 
 	if use python; then
@@ -145,9 +137,9 @@ src_install() {
 	prune_libtool_files --modules
 
 	if use tools; then
-		local bincmd sbincmd
+		local sbincmd
 		for sbincmd in depmod insmod lsmod modinfo modprobe rmmod; do
-			dosym /bin/kmod /sbin/${sbincmd}
+			dosym /sbin/kmod /sbin/${sbincmd}
 		done
 	fi
 

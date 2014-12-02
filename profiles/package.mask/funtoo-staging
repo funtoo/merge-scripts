@@ -1,3 +1,7 @@
+# FL-1729: eudev update, this ebuild masked, kernel older 2.6.39 version unsupported
+# openvz require older version of eudev and kmod
+=sys-fs/eudev-2.1.1
+
 # FL-1376: thrift ebuild, masked for testing
 =dev-libs/thrift-0.9.1
 
@@ -29,7 +33,7 @@
 =net-dns/openresolv-3.6.1
 
 # FL-1716 kmod update
-=sys-apps/kmod-18-r2
+=sys-apps/kmod-19
 
 # Dantrell B. (22 Aug 2014)
 # Masked for testing
