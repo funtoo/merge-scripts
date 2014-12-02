@@ -72,7 +72,7 @@ src_prepare() {
 
 src_configure() {
 	local myeconfargs=(
-		--bindir="${EPREFIX}/bin"
+		--bindir="${EPREFIX}/sbin"
 		--with-rootlibdir="${EPREFIX}/$(get_libdir)"
 		--enable-shared
 		$(use_enable static-libs static)
