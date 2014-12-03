@@ -181,6 +181,10 @@ src_configure() {
 		$(use_with cxx) \
 		$(use_with fftw) \
 		$(use_with ffmpeg) \
+		--with-ffmpeg-includes="/usr/include/libavcodec \
+		/usr/include/libavformat \
+		/usr/include/libavutil \
+		/usr/include/libswscale" \
 		$(use_with gmath blas) \
 		$(use_with gmath lapack) \
 		$(use_with jpeg) \
