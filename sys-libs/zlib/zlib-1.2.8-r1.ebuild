@@ -14,7 +14,7 @@ SRC_URI="http://zlib.net/${P}.tar.gz
 LICENSE="ZLIB"
 SLOT="0"
 KEYWORDS="*"
-IUSE="minizip static-libs"
+IUSE="+minizip static-libs"
 
 DEPEND="minizip? ( ${AUTOTOOLS_DEPEND} )"
 RDEPEND="abi_x86_32? (
