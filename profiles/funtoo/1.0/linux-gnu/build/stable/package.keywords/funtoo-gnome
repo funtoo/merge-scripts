@@ -1,0 +1,14 @@
+=x11-misc/colord-1.2.5-r1 amd64 x86
+=dev-libs/libgusb-0.1.6-r1 amd64 x86
+=x11-libs/libwnck-3.4.9 amd64 x86
+=gnome-base/librsvg-2.40.5 amd64 x86
+=media-libs/grilo-0.2.11 amd64 x86
+=x11-libs/libnotify-0.7.6-r1 amd64 x86
+=app-accessibility/caribou-0.4.15 amd64 x86
+=dev-util/gtk-doc-am-1.21 amd64 x86
+=media-plugins/grilo-plugins-0.2.13 amd64 x86
+=dev-libs/folks-0.10.0 amd64 x86
+=net-misc/modemmanager-1.4.0 amd64 x86 
+=mail-client/geary-0.8.2 amd64 x86
+=dev-util/gtk-doc-1.21 amd64 x86 
+=dev-libs/gom-0.2.1 amd64 x86
