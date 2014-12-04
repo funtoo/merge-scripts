@@ -15,3 +15,6 @@ media-tv/xbmc profile
 
 # bug #468404
 net-analyzer/wireshark profile
+
+# FL-1841, mem-scramble is known to cause memory allocation issues
+app-shells/bash mem-scramble

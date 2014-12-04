@@ -15,7 +15,7 @@
 # newest on top
 # deluge update FL-1764, masked for testing
 # Oleg Vinichenko (13.11.2014)
-=net-p2p/deluge-1.3.10
+=net-p2p/deluge-1.3.11
 
 # util-linux update FL-1737, masked for testing
 =sys-apps/util-linux-2.25.2
