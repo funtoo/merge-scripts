@@ -12,3 +12,5 @@
 =mail-client/geary-0.8.2 amd64 x86
 =dev-util/gtk-doc-1.21 amd64 x86 
 =dev-libs/gom-0.2.1 amd64 x86
+=gnome-extra/gnome-do-plugins-0.8.5 amd64 x86
+=gnome-extra/gnome-do-0.9 amd64 x86
