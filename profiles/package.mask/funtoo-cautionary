@@ -52,10 +52,6 @@ sys-fs/zfs-fuse
 # Oleg Vinichenko (8 Sep 2013) FL-710, stabilize automake-1.13.4
 >sys-devel/automake-1.13.4
 
-# Oleg Vinichenko (17 Dec 2012)
-# mask >dev-perl/Net-DNS-0.680.0 due to FL-275
->dev-perl/Net-DNS-0.680.0
-
 # Oleg Vinichenko (4 Nov 2012)
 # mask dangerous baselayout-2.2.0-r2
 =sys-apps/baselayout-2.2.0-r2
