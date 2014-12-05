@@ -18,8 +18,8 @@ LICENSE="!gdbm? ( LGPL-2.1 ) gdbm? ( GPL-2 )"
 SLOT="0"
 KEYWORDS="*"
 
-IUSE="+alsa +asyncns bluetooth +caps dbus doc equalizer +gdbm +glib gnome
-gtk ipv6 jack libsamplerate lirc neon +orc oss qt4 realtime ssl systemd
+IUSE="+alsa +alsa-plugin +asyncns bluetooth +caps dbus doc equalizer +gdbm +glib
+gnome gtk ipv6 jack libsamplerate lirc neon +orc oss qt4 realtime ssl systemd
 system-wide tcpd test +udev +webrtc-aec +X xen zeroconf"
 
 # See "*** BLUEZ support not found (requires D-Bus)" in configure.ac
@@ -88,6 +88,8 @@ DEPEND="${RDEPEND}
 	dev-util/intltool
 	>=sys-devel/gettext-0.18.1
 "
+# This is a PDEPEND to avoid a circular dep
+PDEPEND="alsa-plugin? ( >=media-plugins/alsa-plugins-1.0.27-r1[pulseaudio] )"
 
 # alsa-utils dep is for the alsasound init.d script (see bug #155707)
 # bluez dep is for the bluetooth init.d script
@@ -336,11 +338,5 @@ pkg_postinst() {
 		elog "You've enabled the 'equalizer' USE-flag but not the 'qt4' USE-flag."
 		elog "This will build the equalizer module, but the 'qpaeq' tool"
 		elog "which is required to set equalizer levels will not work."
-	fi
-
-	if use alsa && ! has_version 'media-plugins/alsa-plugins[pulseaudio]'; then
-		elog
-		elog "You may want to install media-plugins/alsa-plugins[pulseaudio]"
-		elog "if you want ALSA-only apps to automatically use PulseAudio."
 	fi
 }
