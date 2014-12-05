@@ -1,3 +1,6 @@
+# FL-1808, enable xft USE in rxvt-unicode by default:
+x11-terms/rxvt-unicode xft
+
 # FL-1805: enable json USE in syslog-ng, required for correct work
 app-admin/syslog-ng json
 
