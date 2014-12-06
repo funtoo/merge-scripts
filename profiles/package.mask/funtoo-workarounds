@@ -1,3 +1,6 @@
+# FL-847: unsatisfiable dependencies, is likely to be removed soon
+app-office/openerp-web
+
 # Causes a regression in how scanelf reports to app-admin/python-updater
 # Ref FL-1695
 >=app-misc/pax-utils-0.9.1
