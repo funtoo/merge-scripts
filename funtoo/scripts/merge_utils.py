@@ -569,7 +569,7 @@ class InsertEbuilds(MergeStep):
 								name = el.get("name")
 								if name != None:
 									use_vars.append(name)
-									use_desc[name] = el.text
+									use_desc[name] = el.text_content()
 								usexml.append(el)
 							pkgxml.attrib["use"] = ",".join(use_vars)
 							pkgxml.append(usexml)
