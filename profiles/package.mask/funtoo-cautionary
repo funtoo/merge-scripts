@@ -27,12 +27,6 @@ app-admin/eselect-sh
 # FL-1274, FL-1265
 >=dev-lang/python-3.4
 
-# Non bug commit. New gentoo-functions ebuild pulled into update list because of newer python-updater.
-# gentoo-funtions ebuild is a replacement of base shell functions, provided by OpenRC's /etc/init.d/functions.sh
-# this is core package changes, that require at least news item and shouldn't be done via dependency of other package. Masking
-# latest python-updater to avoid mess.
->app-admin/python-updater-0.11
-
 # Ryan Harris (23 Jul 2013)
 # Mask phoronix-test-suite due to security concerns
 # Packages should not try to run emerge on their own
