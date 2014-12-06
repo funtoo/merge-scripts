@@ -563,14 +563,14 @@ class InsertEbuilds(MergeStep):
 						tpkgmeta.close()
 						if doMeta:
 							use_vars = []
-							use_desc = {}
 							usexml = etree.Element("use")
 							for el in metatree.iterfind('.//flag'):
 								name = el.get("name")
 								if name != None:
-									use_vars.append(name)
-									use_desc[name] = el.text_content()
-								usexml.append(el)
+									flag = etree.Element("flag")
+									flag.attrib["name"] = name
+									flag.text = etree.tostring(el, method="text").strip()
+									usexml.append(flag)
 							pkgxml.attrib["use"] = ",".join(use_vars)
 							pkgxml.append(usexml)
 					except IOError:
