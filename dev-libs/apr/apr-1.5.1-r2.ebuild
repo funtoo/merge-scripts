@@ -27,9 +27,8 @@ src_prepare() {
 	epatch "${FILESDIR}"/${PN}-1.5.0-cross-types.patch
 	epatch "${FILESDIR}"/${PN}-1.5.0-sysroot.patch #385775
 	epatch "${FILESDIR}"/${PN}-1.5.1-parallel_make_install.patch
-	epatch "${FILESDIR}"/${P}-libtool-2.4.3.patch
-
 	epatch_user #449048
+	_elibtoolize --install --copy --force
 
 	AT_M4DIR="build" eautoreconf
 	elibtoolize
