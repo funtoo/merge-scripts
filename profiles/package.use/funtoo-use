@@ -1,3 +1,6 @@
+# FL-1867, enable python single target for intel-gpu-utils
+x11-apps/intel-gpu-tools python_single_target_python3_3
+
 # FL-1808, enable xft USE in rxvt-unicode by default:
 x11-terms/rxvt-unicode xft
 
