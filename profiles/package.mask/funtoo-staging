@@ -1,3 +1,8 @@
+# FL-696: FL-1314: FL-1310":
+# masked xorg for new-design opengl
+>xorg-base/xorg-server-1.16.1-r1
+
+
 # FL-1729: eudev update, this ebuild masked, kernel older 2.6.39 version unsupported
 # openvz require older version of eudev and kmod
 =sys-fs/eudev-2.1.1
