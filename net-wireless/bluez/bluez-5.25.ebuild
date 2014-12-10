@@ -39,8 +39,9 @@ DEPEND="${CDEPEND}
 	)
 "
 RDEPEND="${CDEPEND}
-	selinux? ( sec-policy/selinux-bluetooth )
-"
+	selinux? ( sec-policy/selinux-bluetooth )"
+PDEPEND="net-wireless/bluez-hcidump"	
+
 DOC_CONTENTS="
 	If you want to use rfcomm as a normal user, you need to add the user
 	to the uucp group.
