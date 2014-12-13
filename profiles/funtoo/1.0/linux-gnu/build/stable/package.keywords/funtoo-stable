@@ -1,3 +1,8 @@
+# FL-1875: stablize mediastreamer, which correctly builds with ffmpeg-2.2. Require ortp keywording aswell
+
+=media-libs/mediastreamer-2.9.0 amd64 x86
+=net-libs/ortp-0.23.0 amd64 x86
+
 # FL-367: set stable keywords to gentoo-syntax, after unfork, in gentoo-x86 desired version is unstable only
 >=app-vim/gentoo-syntax-20141102 amd64 x86
 
