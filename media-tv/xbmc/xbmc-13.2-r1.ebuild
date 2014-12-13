@@ -29,7 +29,7 @@ case ${PV} in
 	MY_P="${PN}-${MY_PV}"
 	SRC_URI="http://mirrors.xbmc.org/releases/source/${MY_P}.tar.gz
 		http://mirrors.xbmc.org/releases/source/${MY_P}-generated-addons.tar.xz"
-	KEYWORDS="~amd64 ~x86"
+	KEYWORDS="*"
 
 	S=${WORKDIR}/${MY_P}-${CODENAME}
 	;;
