@@ -17,7 +17,7 @@ SLOT="0"
 KEYWORDS="*"
 IUSE="berkdb +gdbm nls static-libs zlib"
 
-RDEPEND="dev-libs/libpipeline
+RDEPEND=">=dev-libs/libpipeline-1.3.0
 	berkdb? ( sys-libs/db )
 	gdbm? ( sys-libs/gdbm )
 	!berkdb? ( !gdbm? ( sys-libs/gdbm ) )
