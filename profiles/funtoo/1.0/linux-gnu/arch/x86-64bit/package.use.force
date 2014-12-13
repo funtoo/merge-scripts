@@ -2,6 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/profiles/arch/amd64/package.use.force,v 1.6 2011/04/21 10:30:15 flameeyes Exp $
 
+# FL-1832; force multilib support on sys-devel/gcc
+sys-devel/gcc abi_x86_32
+
 # Diego Elio Pettenò <flameeyes@gmail.com> (21 Apr 2011)
 # The plugin is 32-bit only (and I'm not even sure if it works with
 # modern iscan); make sure it only installs the firmware for amd64!
