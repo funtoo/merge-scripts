@@ -15,7 +15,7 @@
 
 arch		funtoo/1.0/linux-gnu/arch/x86-32bit			stable
 arch		funtoo/1.0/linux-gnu/arch/x86-64bit			stable
-arch		funtoo/1.0/linux-gnu/arch/pure64			exp	
+arch		funtoo/1.0/linux-gnu/arch/pure64			exp
 arch		funtoo/1.0/linux-gnu/arch/arm-32bit/armv7a_hardfp	exp
 arch		funtoo/1.0/linux-gnu/arch/arm-32bit/armv6j_hardfp	exp
 arch		funtoo/1.0/linux-gnu/arch/arm-32bit/armv5te		exp
@@ -38,6 +38,7 @@ mix-ins		funtoo/1.0/linux-gnu/mix-ins/gnome			stable
 mix-ins		funtoo/1.0/linux-gnu/mix-ins/kde			stable
 mix-ins		funtoo/1.0/linux-gnu/mix-ins/mate			stable
 mix-ins		funtoo/1.0/linux-gnu/mix-ins/media			stable
+mix-ins		funtoo/1.0/linux-gnu/mix-ins/no-emul-linux-x86		exp
 mix-ins		funtoo/1.0/linux-gnu/mix-ins/print		    	stable
 mix-ins		funtoo/1.0/linux-gnu/mix-ins/python3-only	    	exp
 mix-ins		funtoo/1.0/linux-gnu/mix-ins/X			    	stable

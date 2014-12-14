@@ -1,0 +1,28 @@
+# Copyright 1999-2014 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/amd64/no-emul-linux-x86/package.mask,v 1.5 2014/12/08 23:50:23 mgorny Exp $
+
+# Michał Górny <mgorny@gentoo.org> (14 Sep 2014)
+# on behalf of gx86-multilib project <multilib@gentoo.org>
+# Mask emul-linux-x86 packages.
+app-emulation/emul-linux-x86-baselibs
+app-emulation/emul-linux-x86-cpplibs
+app-emulation/emul-linux-x86-db
+app-emulation/emul-linux-x86-gstplugins
+app-emulation/emul-linux-x86-gtklibs
+app-emulation/emul-linux-x86-gtkmmlibs
+app-emulation/emul-linux-x86-medialibs
+app-emulation/emul-linux-x86-motif
+app-emulation/emul-linux-x86-opengl
+app-emulation/emul-linux-x86-qtlibs
+app-emulation/emul-linux-x86-sdl
+app-emulation/emul-linux-x86-soundlibs
+app-emulation/emul-linux-x86-xlibs
+
+# Ian Stakenvicius <axs@gentoo.org> (12 Nov 2014)
+# on behalf of gx86-multilib project <multilib@gentoo.org>
+# Allow emul's for java, for now, as there are no other multilib
+# alternatives yet, and these emul packages are satisfied with
+# gx86-multilib dependencies
+#app-emulation/emul-linux-x86-java
+<app-emulation/emul-linux-x86-jna-20140508-r1
