@@ -1,3 +1,6 @@
+# FL-1880: mask handbrake, higher than 0.9.9
+>media-video/handbrake-0.9.9-r1
+
 # FL-1855, mask usbutils-008, until we sort udev failure.
 
 >sys-apps/usbutils-007
