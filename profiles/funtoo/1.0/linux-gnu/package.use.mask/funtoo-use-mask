@@ -1,0 +1,4 @@
+#Oleg Vinichenko (15.12.14)
+#FL-1874: mask gles USE in xbmc, breaks.
+media-tv/xbmc gles
+
