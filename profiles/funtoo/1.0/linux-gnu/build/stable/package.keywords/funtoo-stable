@@ -1,3 +1,7 @@
+# FL-1863: make arm stable. This keywording entry can be deleted after https://bugs.gentoo.org/show_bug.cgi?id=531970 fixed
+
+=net-misc/arm-1.4.5.0-r2 amd64 x86
+
 # FL-318, unfork genlop, Funtoo changes now merged upstream, set kaywords to make stable users happy aswell
 =app-portage/genlop-0.30.10 amd64 x86
 
