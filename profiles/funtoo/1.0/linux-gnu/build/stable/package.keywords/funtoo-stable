@@ -1,3 +1,6 @@
+# FL-318, unfork genlop, Funtoo changes now merged upstream, set kaywords to make stable users happy aswell
+=app-portage/genlop-0.30.10 amd64 x86
+
 # FL-1875: stablize mediastreamer, which correctly builds with ffmpeg-2.2. Require ortp keywording aswell
 
 =media-libs/mediastreamer-2.9.0 amd64 x86
