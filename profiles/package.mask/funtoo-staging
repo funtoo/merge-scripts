@@ -1,6 +1,3 @@
-#FL-1874: xbmc with Debian patch set, masked for testing:
-=media-tv/xbmc-13.2-r1
-
 # FL-696: FL-1314: FL-1310":
 # masked xorg for new-design opengl
 >xorg-base/xorg-server-1.16.1-r1
