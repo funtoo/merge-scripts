@@ -2,7 +2,8 @@
 
 EAPI="5"
 
-inherit eutils multilib linux-info linux-mod toolchain-funcs versionator pax-utils
+MULTILIB_COMPAT=( abi_x86_{32,64} )
+inherit eutils multilib-build linux-info linux-mod toolchain-funcs versionator pax-utils
 
 DESCRIPTION="Ati precompiled drivers for Radeon Evergreen (HD5000 Series) and newer chipsets"
 HOMEPAGE="http://www.amd.com"
@@ -14,7 +15,7 @@ DRIVERS_URI="http://build.funtoo.org/distfiles/$INSTALLER"
 XVBA_SDK_URI="http://developer.amd.com/wordpress/media/2012/10/xvba-sdk-0.74-404001.tar.gz"
 SRC_URI="${DRIVERS_URI} ${XVBA_SDK_URI}"
 FOLDER_PREFIX="common/"
-IUSE="+vaapi debug +modules multilib qt4 static-libs pax_kernel"
+IUSE="+vaapi debug +modules qt4 static-libs pax_kernel"
 
 LICENSE="AMD GPL-2 QPL-1.0"
 KEYWORDS="*"
@@ -34,7 +35,7 @@ RDEPEND="
 	x11-libs/libXrandr
 	x11-libs/libXrender
 	virtual/glu
-	multilib? (
+	abi_x86_32? (
 			|| (
 				virtual/glu[abi_x86_32]
 				app-emulation/emul-linux-x86-opengl
@@ -376,21 +377,7 @@ src_install() {
 	# amd64 are installed in src_install-libs. Everything else
 	# (including libraries only available in native 64bit on amd64)
 	# goes in here.
-
-	# There used to be some code here that tried to detect running
-	# under a "native multilib" portage ((precursor of)
-	# http://dev.gentoo.org/~kanaka/auto-multilib/). I removed that, it
-	# should just work (only doing some duplicate work). --marienz
-	if has_multilib_profile; then
-		local OABI=${ABI}
-		for ABI in $(get_install_abis); do
-			src_install-libs
-		done
-		ABI=${OABI}
-		unset OABI
-	else
-		src_install-libs
-	fi
+	multilib_foreach_abi src_install-libs
 
 	# This is sorted by the order the files occur in the source tree.
 

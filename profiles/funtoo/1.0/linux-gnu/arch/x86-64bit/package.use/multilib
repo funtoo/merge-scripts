@@ -1,2 +1,5 @@
 # FL-1858, apulse is majorily used for Skype, and Skype is 32-bit.
 media-sound/apulse abi_x86_32
+
+# FL-1885, binary package with likely wanted 32-bit counterpart
+x11-drivers/ati-drivers abi_x86_32
