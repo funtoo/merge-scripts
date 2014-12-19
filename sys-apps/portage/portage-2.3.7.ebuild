@@ -1,13 +1,13 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="5-progress"
-PYTHON_MULTIPLE_ABIS="1"
-PYTHON_RESTRICTED_ABIS="2.5 *-jython 2.7-pypy-1.9"
+PYTHON_ABI_TYPE="multiple"
 PYTHON_DEPEND="<<[{2.6}threads]>> !build? ( <<[ssl]>> )"
+PYTHON_RESTRICTED_ABIS="*-jython"
 PYTHON_MODULES="_emerge portage repoman"
 DISTUTILS_SRC_TEST="setup.py"
 
-inherit eutils distutils vcs-snapshot
+inherit distutils eutils vcs-snapshot
 
 DESCRIPTION="Portage is the package management and distribution system for Gentoo"
 HOMEPAGE="http://www.gentoo.org/proj/en/portage/index.xml"
@@ -22,7 +22,7 @@ RESTRICT="mirror"
 
 DEPEND=">=sys-apps/sed-4.0.5 sys-devel/patch
 	doc? ( app-text/xmlto ~app-text/docbook-xml-dtd-4.4 )
-	epydoc? ( $(python_abi_depend --include-ABIs '2.*' '>=dev-python/epydoc-2.0') )"
+	epydoc? ( >=dev-python/epydoc-2.0 )"
 # Require sandbox-2.2 for bug #288863.
 # For xattr, we can spawn getfattr and setfattr from sys-apps/attr, but that's
 # quite slow, so it's not considered in the dependencies as an alternative to
@@ -40,11 +40,11 @@ RDEPEND="
 	elibc_glibc? ( >=sys-apps/sandbox-2.2 )
 	elibc_uclibc? ( >=sys-apps/sandbox-2.2 )
 	>=app-misc/pax-utils-0.1.17
-	selinux? ( $(python_abi_depend '>=sys-libs/libselinux-2.0.94[python]') )
-	xattr? ( kernel_linux? (
+	selinux? ( $(python_abi_depend "sys-libs/libselinux[python]") )
+	xattr? ( kernel_linux? ( || (
 		>=sys-apps/install-xattr-0.3
-		$(python_abi_depend --include-ABIs '2.7* 3.2*' 'dev-python/pyxattr')
-	) )
+		$(python_abi_depend -i "2.* 3.[1-2]" dev-python/pyxattr)
+	) ) )
 	!<app-admin/logrotate-3.8.0"
 PDEPEND="
 	!build? (
@@ -146,11 +146,10 @@ src_install() {
 		--sysconfdir="${EPREFIX}/etc" \
 		"${@}"
 
-	exeinto /usr/lib/portage/bin
-	doexe "${FILESDIR}/pygrade.py"
-
 	use doc && "$(PYTHON -f)" setup.py install_docbook
 	use epydoc && "$(PYTHON -f)" setup.py install_epydoc
+
+	PYGRADE_CODE="$(<"${FILESDIR}/pygrade.py")"
 }
 
 pkg_preinst() {
@@ -174,11 +173,7 @@ pkg_preinst() {
 		chmod g+s,ug+rwx "${ED}"var/log/portage{,/elog}
 	fi
 
-	if has_version "<${CATEGORY}/${PN}-2.1.13" || \
-		{
-			has_version ">=${CATEGORY}/${PN}-2.2_rc0" && \
-			has_version "<${CATEGORY}/${PN}-2.2.0_alpha189"
-		} ; then
+	if has_version "<${CATEGORY}/${PN}-2.3.7" ; then
 		USERPRIV_UPGRADE=true
 		USERSYNC_UPGRADE=true
 		REPOS_CONF_UPGRADE=true
@@ -192,10 +187,41 @@ pkg_preinst() {
 	fi
 }
 
+get_ownership() {
+	case ${USERLAND} in
+		BSD)
+			stat -f '%Su:%Sg' "${1}"
+			;;
+		*)
+			stat -c '%U:%G' "${1}"
+			;;
+	esac
+}
+
+new_config_protect() {
+	# Generate a ._cfg file even if the target file
+	# does not exist, ensuring that the user will
+	# notice the config change.
+	local basename=${1##*/}
+	local dirname=${1%/*}
+	local i=0
+	while true ; do
+		local filename=$(
+			echo -n "${dirname}/._cfg"
+			printf "%04d" ${i}
+			echo -n "_${basename}"
+		)
+		[[ -e ${filename} ]] || break
+		(( i++ ))
+	done
+	echo "${filename}"
+}
+
 pkg_postinst() {
 	distutils_pkg_postinst
 
-	"${EROOT}usr/lib/portage/bin/pygrade.py"
+	echo "${PYGRADE_CODE}" > "${T}/pygrade.py"
+	"$(PYTHON -f)" "${T}/pygrade.py"
 
 	if ${REPOS_CONF_UPGRADE} ; then
 		einfo "Generating repos.conf"
