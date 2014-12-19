@@ -167,8 +167,8 @@ treeprep_steps = [
 	ThirdPartyMirrors(),
 	ProfileDepFix(),
 	Minify(),
-	# Set name of repository as "gentoo".
-	RunSed(["metadata/layout.conf"], ["s/^repo-name = .*/repo-name = gentoo/"]),
+	# Set name of repository as "gentoo". Unset masters.
+	RunSed(["metadata/layout.conf"], ["s/^repo-name = .*/repo-name = gentoo/", "/^masters =/d"]),
 	RunSed(["profiles/repo_name"], ["s/.*/gentoo/"]),
 	GenCache(),
 	GenUseLocalDesc()
