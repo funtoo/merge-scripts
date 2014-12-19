@@ -1,3 +1,6 @@
+# FL-1761: new rebased Portage, needs a lot of testing
+>=sys-apps/portage-2.3.7
+
 # FL-696: FL-1314: FL-1310":
 # masked xorg for new-design opengl
 >xorg-base/xorg-server-1.16.1-r1
