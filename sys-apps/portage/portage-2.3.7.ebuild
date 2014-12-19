@@ -241,9 +241,6 @@ pkg_postinst() {
 		fi
 
 		cat <<-EOF > "${T}/repos.conf"
-		[DEFAULT]
-		main-repo = ${repo_name:-gentoo}
-
 		[${repo_name:-gentoo}]
 		location = ${PORTDIR:-${EPREFIX}/usr/portage}
 		sync-type = ${sync_type:-rsync}
