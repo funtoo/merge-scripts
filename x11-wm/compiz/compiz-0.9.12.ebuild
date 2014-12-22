@@ -8,8 +8,7 @@ EAPI=4
 
 # Pick your poison, EITHER the 3 lines above or the 2 lines below
 
-#SRC_URI="file:///usr/portage_large/distfiles/compiz-0.9.12.tar.bz2"
-SRC_URI="http://bazaar.launchpad.net/~compiz-team/compiz/0.9.12/tarball/3901 -> ${P}.tgz"
+SRC_URI="http://bazaar.launchpad.net/~compiz-team/compiz/0.9.12/tarball/3919 -> ${P}.tgz"
 inherit cmake-utils eutils gnome2-utils toolchain-funcs python
 
 KEYWORDS="*"
@@ -123,24 +122,6 @@ src_prepare() {
 pkg_setup() {
 	python_set_active_version 2
 }
-
-#src_configure() {
-#local mycmakeargs=(
-#"$(cmake-utils_use_use gnome GCONF)"
-#"$(cmake-utils_use_use gnome GNOME)"
-#"$(cmake-utils_use_use gnome GSETTINGS)"
-#"$(cmake-utils_use_use gtk GTK)"
-#"$(cmake-utils_use_use kde KDE4)"
-#"$(cmake-utils_use test COMPIZ_BUILD_TESTING)"
-#"-DCMAKE_INSTALL_PREFIX=/usr"
-#"-DCMAKE_C_FLAGS=$(usex debug '-DDEBUG -ggdb' '')"
-#"-DCMAKE_CXX_FLAGS=$(usex debug '-DDEBUG -ggdb' '')"
-#"-DCOMPIZ_DEFAULT_PLUGINS=ccp"
-#"-DCOMPIZ_DISABLE_SCHEMAS_INSTALL=ON"
-#"-DCOMPIZ_PACKAGING_ENABLED=ON"
-#)
-#cmake-utils_src_configure
-#}
 
 src_configure() {
 BUILD_DIR=${WORKDIR}/build
