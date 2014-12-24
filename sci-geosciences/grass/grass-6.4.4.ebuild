@@ -1,6 +1,7 @@
-EAPI=4
-
-PYTHON_DEPEND="python? 2"
+EAPI="5-progress"
+PYTHON_ABI_TYPE="single"
+PYTHON_DEPEND="python? ( <<>> )"
+PYTHON_RESTRICTED_ABIS="3.* *-jython *-pypy"
 WANT_AUTOCONF="2.1"
 
 inherit eutils gnome2 multilib python versionator wxwidgets autotools
@@ -44,7 +45,7 @@ RDEPEND="
 	sqlite? ( dev-db/sqlite:3 )
 	tiff? ( media-libs/tiff )
 	truetype? ( media-libs/freetype:2 )
-	wxwidgets? ( >=dev-python/wxpython-2.8.10.1[cairo,opengl?] )
+	wxwidgets? ( $(python_abi_depend ">=dev-python/wxpython-2.8.10.1[cairo,opengl?]") )
 	X? (
 		x11-libs/libICE
 		x11-libs/libSM
@@ -113,8 +114,7 @@ pkg_setup() {
 	fi
 
 	if use python; then
-		# only py2 is supported
-		python_set_active_version 2
+		python_pkg_setup
 	fi
 }
 
