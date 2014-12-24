@@ -1,3 +1,7 @@
+# FL-1673: unfork hexchat, perl checks now fixed upstream. set stable keywords.
+
+=net-irc/hexchat-2.10.2 amd64 x86
+
 # FL-1863: make arm stable. This keywording entry can be deleted after https://bugs.gentoo.org/show_bug.cgi?id=531970 fixed
 
 =net-misc/arm-1.4.5.0-r2 amd64 x86
