@@ -170,6 +170,10 @@ treeprep_steps = [
 	# Set name of repository as "gentoo". Unset masters.
 	RunSed(["metadata/layout.conf"], ["s/^repo-name = .*/repo-name = gentoo/", "/^masters =/d"]),
 	RunSed(["profiles/repo_name"], ["s/.*/gentoo/"]),
+	# Set _PYTHON_GLOBALLY_NONDEFAULT_ABIS="3.[4-9]" variable for single-Python-ABI packages.
+	# This value should be kept in synchronization with PYTHON_ABIS variable set in profiles/funtoo/1.0/linux-gnu/make.defaults.
+	# This value should match Python ABIs newer than Python ABIs listed in PYTHON_ABIS variable.
+	RunSed(["eclass/python.eclass"], [r"s/^\(_PYTHON_GLOBALLY_NONDEFAULT_ABIS\)=.*/\1=\"3.[4-9]\"/"]),
 	GenCache(),
 	GenUseLocalDesc()
 ]
