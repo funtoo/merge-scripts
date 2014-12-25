@@ -194,11 +194,11 @@ src_configure() {
 src_compile() {
 	# we don't want to link against embeded mysql lib
 	# working around the fucked up build system
-	emake MYSQLDLIB="" || true
+	emake -j1 MYSQLDLIB="" || true
 }
 
 src_install() {
-	emake DESTDIR="${D}" \
+	emake -j1 DESTDIR="${D}" \
 		INST_DIR="${D}"/usr/${MY_PM} \
 		prefix="${D}"/usr BINDIR="${D}"/usr/bin \
 		PREFIX="${D}"/usr/ \
