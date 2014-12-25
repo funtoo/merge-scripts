@@ -113,9 +113,7 @@ pkg_setup() {
 		fi
 	fi
 
-	if use python; then
-		python_pkg_setup
-	fi
+	python_pkg_setup
 }
 
 src_prepare() {
@@ -126,19 +124,14 @@ src_prepare() {
 }
 
 src_configure() {
-	local myconf TCL_LIBDIR
+	local myconf 
 
 	if use X; then
-		. /usr/lib/tclConfig.sh
-		TCL_LIBDIR="/usr/$(get_libdir)/tcl$TCL_VERSION"
 		myconf+="
-			--with-tcltk-libs=${TCL_LIBDIR}
 			$(use_with motif)
 			$(use_with opengl)
 			--with-x
 			"
-
-		use opengl && myconf+=" --with-tcltk"
 		use motif && use opengl && myconf+=" --with-glw"
 		use motif || myconf+=" --without-glw"
 
@@ -149,13 +142,6 @@ src_configure() {
 			myconf+="
 				--without-tcltk
 				--with-wxwidgets=${WX_CONFIG}
-			"
-		else
-			WX_BUILD=no
-			# use tcl gui if wxwidgets are disabled
-			myconf+="
-				--with-tcltk
-				--without-wxwidgets
 			"
 		fi
 	else
