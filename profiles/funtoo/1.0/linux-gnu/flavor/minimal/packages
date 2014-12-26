@@ -42,7 +42,8 @@
 *sys-apps/util-linux
 *sys-apps/which
 *sys-devel/autoconf
-*sys-devel/automake
+*sys-devel/automake:1.13
+*sys-devel/automake:1.14
 *sys-devel/bc
 *sys-devel/binutils
 *sys-devel/bison

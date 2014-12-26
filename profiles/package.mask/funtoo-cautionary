@@ -51,14 +51,6 @@ app-benchmarks/phoronix-test-suite
 # ZFSOnLinux is a muche more viable and mature replacement 
 sys-fs/zfs-fuse
 
-# Ryan Harris (20 June 2012)
-# mask automake-1.12.1 due to multiple failures 
-# Ref b.g.o.# 421465
-# Oleg Vinichenko (16 Apr 2013)
-# 1.12 now pretty safe to use, we will keep 1.13 masked FL-499
-# Oleg Vinichenko (8 Sep 2013) FL-710, stabilize automake-1.13.4
->sys-devel/automake-1.13.4
-
 # Oleg Vinichenko (4 Nov 2012)
 # mask dangerous baselayout-2.2.0-r2
 =sys-apps/baselayout-2.2.0-r2
