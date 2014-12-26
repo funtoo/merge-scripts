@@ -1,5 +1,6 @@
 # Override Gentoo masks
 app-backup/rdiff-backup
+app-crypt/gpgme
 app-misc/tracker
 dev-libs/libgit2-glib
 dev-scheme/guile
