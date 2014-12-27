@@ -45,7 +45,7 @@ RDEPEND="
 	sqlite? ( dev-db/sqlite:3 )
 	tiff? ( media-libs/tiff )
 	truetype? ( media-libs/freetype:2 )
-	wxwidgets? ( $(python_abi_depend dev-python/numpy ">=dev-python/wxpython-2.8.10.1[cairo,opengl?]") )
+	wxwidgets? ( $(python_abi_depend "=dev-python/numpy-1.8.2-r1000" ">=dev-python/wxpython-2.8.10.1[cairo,opengl?]") )
 	X? (
 		x11-libs/libICE
 		x11-libs/libSM
