@@ -45,7 +45,7 @@ RDEPEND="
 	sqlite? ( dev-db/sqlite:3 )
 	tiff? ( media-libs/tiff )
 	truetype? ( media-libs/freetype:2 )
-	wxwidgets? ( $(python_abi_depend ">=dev-python/wxpython-2.8.10.1[cairo,opengl?]") )
+	wxwidgets? ( $(python_abi_depend dev-python/numpy ">=dev-python/wxpython-2.8.10.1[cairo,opengl?]") )
 	X? (
 		x11-libs/libICE
 		x11-libs/libSM
@@ -269,6 +269,7 @@ src_install() {
 
 	# fix weird +x on tcl scripts
 	find "${D}" -name "*.tcl" -exec chmod +r-x '{}' \;
+	python_convert_shebangs -r "${PYTHON_ABI}" "${ED}"
 }
 
 pkg_postinst() {
