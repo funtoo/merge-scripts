@@ -32,7 +32,7 @@ NETBEANS="apisupport cnd groovy gsf harness ide identity j2ee java mobility nb p
 
 # Removing ruby18, scheduled for clean-up in 30 days, add ruby21 target for clean ruby emerge, FL-1170, Oleg Vinichenko <oleg@funtoo.org> (17 March 2014)
 # Default Ruby build targets
-RUBY_TARGETS="ruby19 ruby20 ruby21"
+RUBY_TARGETS="ruby19 ruby20 ruby21 ruby22"
 
 # Small default list of enabled plugins for collectd
 COLLECTD_PLUGINS="df interface irq load memory rrdtool swap syslog"

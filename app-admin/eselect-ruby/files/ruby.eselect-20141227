@@ -1,0 +1,217 @@
+# Distributed under the terms of the GNU General Public License v2
+
+DESCRIPTION="Manage Ruby symlinks"
+MAINTAINER="drobbins@funtoo.org; Funtoo Stuff"
+SVN_DATE="20141227"
+VERSION="20141227"
+
+bindir=/usr/bin
+man1dir=/usr/share/man/man1
+
+find_targets() {
+	for t in ${EROOT}${bindir}/${1:-ruby}{18,19,20,21,22} ; do
+		[[ -e $t ]] || continue
+		echo ${t}
+	done
+}
+
+check_target() {
+	local target=${1} targets
+	targets=( $(find_targets ) )
+
+	# number from the list
+	if is_number ${target} && [[ ${target} -ge 1 ]] ; then
+		if [[ ${target} -gt ${#targets[@]} ]] ; then
+			target="invalid"
+		elif [[ -e "${targets[$(( ${target} - 1 ))]}" ]] ; then
+			target=$(basename ${targets[$((${target} - 1 ))]} )
+		else
+			write_warning_msg ${targets[$((${target} - 1 ))]}
+			target="invalid"
+		fi
+	# `rubyXX' string
+	else
+	[[ -e "${EROOT}${bindir}/${target}" ]] || \
+			target="invalid"
+	fi
+
+	echo ${target}
+}
+
+remove_symlinks() {
+	rm -f ${EROOT}${bindir}/{ruby,gem,irb,erb,ri,rdoc,testrb} && \
+	rm -f ${EROOT}${man1dir}/{ruby,irb,erb,ri}.1*
+	# funtoo mod start
+	for x in ${EROOT}${bindir}/ruby[0-9].[0-9]; do
+		# remove ruby1.9 -> ruby19 symlink if it exists:
+		if [ -L "$x" ]; then
+			rm -f "$x"
+		fi
+	done
+	# funtoo mod end
+}
+
+create_man_links() {
+	local version=${1}
+
+	for manpage in "ruby" "irb" "erb" "ri" ; do
+		for m in ${EROOT}${man1dir}/${manpage}${version}.1* ; do
+			if [[ -e ${m} ]]; then
+				echo ".so ${manpage}${version}.1" > ${EROOT}${man1dir}/${manpage}.1 || \
+					write_error_msg "Could not set up manpage link for ${manpage}.1"
+			fi
+		done
+	done
+}
+
+create_symlinks() {
+	local target=${1} version
+
+	version=${target##*ruby}
+	
+	local path="${EROOT}${bindir}/"
+	# these have to work
+	for f in "ruby" "irb" "erb" "ri" "testrb" "rdoc" ; do
+		ln -s "${f}${version}" "${path}${f}" || \
+			die -q "Could not set ${f} symlink"
+	done
+
+	# funtoo mod start
+	case $version in
+	[0-9][0-9])
+		# create ruby1.9 symlink if we have ruby19, for example:
+		ln -s "ruby${version}" "${path}/ruby${version:0:1}.${version:1:2}"
+		;;
+	esac
+	# funtoo mod end
+
+	# these can fail
+	if [[ -e "${path}gem${version}" ]] ; then
+		ln -s "gem${version}" "${path}gem" || \
+			die -q "Could not set gem symlink"
+	else
+		write_warning_msg "Could not set gem symlink"
+		echo "It appears you do not have RubyGems installed for this profile."
+		echo "If you need RubyGems, emerge dev-ruby/rubygems with the appropriate RUBY_TARGETS setting."
+		echo
+	fi
+
+	[[ $(portageq envvar FEATURES) =~ noman ]] || create_man_links ${version}
+
+	write_list_start "Successfully switched to profile:"
+	write_kv_list_entry "${target}" ""
+}
+
+### show action ###
+describe_show() {
+	echo "Prints the current configuration."
+}
+
+do_show() {
+	[[ -z "${@}" ]] || die -q "This function does not expect any arguments"
+
+	local rb=""
+
+	write_list_start "Current Ruby version:"
+	if [[ -L "${EROOT}${bindir}/ruby" ]] ; then
+		rb=$(basename $(canonicalise ${EROOT}${bindir}/ruby ) )
+		write_kv_list_entry $rb ""
+	elif [[ -e "${EROOT}${bindir}/ruby" ]] ; then
+		write_warning_msg "${bindir}/ruby is a SLOT incompatible version."
+		write_kv_list_entry "$(basename $(canonicalise ${EROOT}${bindir}/ruby ) )" ""
+	else
+		write_kv_list_entry "(none)"
+		return 1
+	fi
+	
+	write_list_start "Current Rubygems version:"
+	if [[ -L "${EROOT}${bindir}/gem" ]] ; then
+		write_kv_list_entry "$(basename $(canonicalise ${EROOT}${bindir}/gem ) )" ""
+	elif [[ -e "${EROOT}${bindir}/gem" ]] ; then
+		write_warning_msg "${bindir}/gem is a SLOT incompatible version."
+		write_kv_list_entry "$(basename $(canonicalise ${EROOT}${bindir}/gem) )" ""
+	else
+		write_kv_list_entry "gem??" "(not found)"
+	fi
+}
+
+### list action ###
+describe_list() {
+	echo "Lists available Ruby profiles."
+}
+
+do_list() {
+	write_list_start "Available Ruby profiles:"
+	local targets=( $(find_targets) )
+	local i line
+
+	for (( i = 0; i < ${#targets[@]}; i++ )) ; do
+		line=$(basename "${targets[i]}")
+
+		# Do we have a matching rubygems?
+		if [[ -e ${targets[i]/ruby/gem} ]] ; then
+			line="${line} (with Rubygems)"
+		fi
+
+		# find out the current version
+		if [[ ${targets[i]} = $(canonicalise "${EROOT}${bindir}/ruby") ]] ; then
+			targets[i]=$(highlight_marker "${line}")
+		else
+			targets[i]=${line}
+		fi
+	done
+	write_numbered_list -m "(none found)" "${targets[@]}"
+}
+
+### set action ###
+describe_set() {
+	echo "Switches to a ruby profile."
+}
+
+describe_set_options() {
+	echo "target : Target name or number (from 'list' action)"
+}
+
+describe_set_parameters() {
+	echo "<target>"
+}
+
+do_set() {
+	[[ -z ${@} ]] && die -q "Parameter expected."
+	
+	local target=$(check_target ${1})
+	
+	[[ $target = "invalid" ]] && die -q "Can't use that profile. No suitable Ruby interpreter found."
+	
+	remove_symlinks || \
+		die -q "Could not remove symlinks"
+
+	create_symlinks ${target}
+}
+
+### cleanup action ###
+describe_cleanup() {
+	echo "This action is not to be called manually."
+}
+
+do_cleanup() {
+	[[ -z ${@} ]] || die -q "This function does not expect any arguments"
+
+	# Do we need to clean up?
+	if [[ -e "${EROOT}${bindir}"/$(readlink "${EROOT}${bindir}/ruby") ]]; then
+		echo "Nothing to clean up."
+		return
+	fi
+
+	local targets=( $(find_targets) )
+
+	remove_symlinks || \
+		die -q "Could not remove symlinks"
+
+	if [[ ${#targets[@]} -ne 0 ]] ; then
+		echo "Marking the latest still installed version as default..."
+		create_symlinks $(basename ${targets[@]: -1})
+	else
+		echo "No ruby profiles left on the system. Stale symlinks removed."
+	fi
+}
