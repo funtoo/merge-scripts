@@ -246,6 +246,8 @@ src_install() {
 			-e "1,\$s:^DEFAULT_GUI.*:DEFAULT_GUI=\"wxpython\":" \
 			"${ED}"/usr/$(get_libdir)/${MY_PM}/etc/Init.sh || die
 	fi
+	# set a correct python version
+	sed -e "s:GRASS_PYTHON=python:GRASS_PYTHON=$(PYTHON -a):" -i "${ED}usr/$(get_libdir)/${MY_PM}/etc/Init.sh" || die "sed failed"
 
 	# get proper folder for grass path in script
 	sed -i \
