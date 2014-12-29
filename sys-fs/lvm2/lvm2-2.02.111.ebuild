@@ -226,7 +226,7 @@ src_install() {
 		newconfd "${MYDIR}"/lvm.confd-2.02.28-r2 lvm
 
 		newinitd "${MYDIR}"/lvm-monitoring.initd-2.02.105-r2 lvm-monitoring
-		newinitd "${MYDIR}"/lvmetad.initd-2.02.105-r2 lvmetad
+		newinitd "${MYDIR}"/lvmetad.initd-2.02.105-r3 lvmetad
 	fi
 
 	if use clvm; then
