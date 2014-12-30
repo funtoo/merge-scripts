@@ -70,6 +70,8 @@ pkg_setup() {
 src_prepare() {
 	# Gentoo specific modification(s):
 	epatch "${MYDIR}"/${PN}-2.02.108-example.conf.in.patch
+	# Funtoo change. FL-1755. Do not probe cdrom by lvm
+	epatch "${MYDIR}"/${P}-no-cdrom-probe.patch
 
 	sed -i \
 		-e "1iAR = $(tc-getAR)" \
