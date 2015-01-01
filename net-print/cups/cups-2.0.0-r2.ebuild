@@ -1,6 +1,6 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI="5"
+EAPI=5
 
 PYTHON_COMPAT=( python{2_6,2_7} )
 
@@ -29,7 +29,7 @@ for X in ${LANGS} ; do
 	IUSE="${IUSE} +linguas_${X}"
 done
 
-RDEPEND="
+CDEPEND="
 	app-text/libpaper
 	acl? (
 		kernel_linux? (
@@ -43,7 +43,6 @@ RDEPEND="
 	!lprng-compat? ( !net-print/lprng )
 	pam? ( virtual/pam )
 	python? ( ${PYTHON_DEPS} )
-	selinux? ( sec-policy/selinux-cups )
 	ssl? (
 		>=dev-libs/libgcrypt-1.5.3:0[${MULTILIB_USEDEP}]
 		>=net-libs/gnutls-2.12.23-r6[${MULTILIB_USEDEP}]
@@ -59,8 +58,12 @@ RDEPEND="
 	)
 "
 
-DEPEND="${RDEPEND}
+DEPEND="${CDEPEND}
 	>=virtual/pkgconfig-0-r1[${MULTILIB_USEDEP}]
+"
+
+RDEPEND="${CDEPEND}
+	selinux? ( sec-policy/selinux-cups )
 "
 
 PDEPEND="
@@ -83,7 +86,7 @@ PATCHES=(
 	"${FILESDIR}/${PN}-1.6.0-dont-compress-manpages.patch"
 	"${FILESDIR}/${PN}-1.6.0-fix-install-perms.patch"
 	"${FILESDIR}/${PN}-1.4.4-nostrip.patch"
-	"${FILESDIR}/${PN}-2.0.0-rename-systemd-service-files.patch"
+	"${FILESDIR}/${P}-rename-systemd-service-files.patch"
 )
 
 MULTILIB_CHOST_TOOLS=(
@@ -244,7 +247,7 @@ multilib_src_install_all() {
 	use zeroconf && neededservices+=" avahi-daemon"
 	use dbus && neededservices+=" dbus"
 	[[ -n ${neededservices} ]] && neededservices="need${neededservices}"
-	cp "${FILESDIR}"/cupsd.init.d-r2 "${T}"/cupsd || die
+	cp "${FILESDIR}"/cupsd.init.d-r1 "${T}"/cupsd || die
 	sed -i \
 		-e "s/@neededservices@/$neededservices/" \
 		"${T}"/cupsd || die
