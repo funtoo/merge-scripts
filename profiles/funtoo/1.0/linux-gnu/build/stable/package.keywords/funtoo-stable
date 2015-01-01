@@ -1,3 +1,6 @@
+# Stabilize gnutls-3.3.10-r2 until https://bugs.gentoo.org/show_bug.cgi?id=492522 is fixed.
+=net-libs/gnutls-3.3.10-r2 amd64 x86
+
 # FL-1673: unfork hexchat, perl checks now fixed upstream. set stable keywords.
 
 =net-irc/hexchat-2.10.2 amd64 x86
