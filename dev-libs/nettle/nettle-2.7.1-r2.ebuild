@@ -1,8 +1,9 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=5
+AUTOTOOLS_AUTORECONF=yes
 
-inherit eutils autotools-multilib multilib
+inherit eutils autotools-multilib multilib toolchain-funcs
 
 DESCRIPTION="Low-level cryptographic library"
 HOMEPAGE="http://www.lysator.liu.se/~nisse/nettle/"
@@ -21,7 +22,7 @@ RDEPEND="${DEPEND}
 	)"
 
 src_prepare() {
-	epatch "${FILESDIR}"/${PN}-2.7-shared.patch
+	tc-is-static-only || epatch "${FILESDIR}"/${PN}-2.7-shared.patch
 
 	sed -e '/CFLAGS=/s: -ggdb3::' \
 		-e 's/solaris\*)/sunldsolaris*)/' \
@@ -30,7 +31,7 @@ src_prepare() {
 	# conditionally build tests and examples required by tests
 	use test || sed -i '/SUBDIRS/s/testsuite examples//' Makefile.in || die
 
-	eautoreconf
+	autotools-utils_src_prepare
 }
 
 multilib_src_configure() {
@@ -40,11 +41,13 @@ multilib_src_configure() {
 		$(use_enable gmp public-key) \
 		$(use_enable static-libs static) \
 		--disable-openssl \
+		$(tc-is-static-only && echo --disable-shared) \
 		$(use_enable doc documentation) \
 		$(use_enable neon arm-neon)
 }
 
 multilib_src_install_all() {
+	einstalldocs
 	if use doc ; then
 		dohtml nettle.html
 		dodoc nettle.pdf
