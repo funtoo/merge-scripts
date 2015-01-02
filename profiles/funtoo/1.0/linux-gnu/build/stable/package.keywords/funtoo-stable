@@ -49,14 +49,9 @@
 # FL-1074: stabilize libxcb-1.9.3-r1
 =x11-libs/libxcb-1.10 amd64 x86
 
-# FL-942, mark procps-3.3.9 stable
-=sys-process/procps-3.3.9 amd64 x86
-
 # FL-895: stabilize libxcb-1.9.3
 =x11-libs/libxcb-1.9.3 amd64 x86
 
-# FL-776, stabilize systemtap-2.2 with unfork
-=dev-util/systemtap-2.2 amd64 x86
 
 ## FL-408, an attempt to stabilize blender, this require certain packages
 ## keywording
@@ -68,18 +63,6 @@ dev-cpp/gflags amd64 x86
 =media-gfx/blender-2.66-r1 amd64 x86
 
 ########################################
-=dev-python/setuptools-0.6.25* amd64 x86
 =dev-libs/expat-2.1.0* amd64 x86
-=sys-apps/file-5.11 amd64 x86
-=dev-libs/gmp-5* amd64 x86
 =dev-libs/mpfr-3* amd64 x86
-=sys-apps/coreutils-8.16* amd64 x86
 ~sys-fs/device-mapper-1.02.28 amd64 x86
-=sys-apps/pciutils-3.1.9-r2 amd64 x86
-=sys-apps/hwids-201* amd64 x86
-=sys-apps/usbutils-005-r1 amd64 x86
-=sys-apps/usbutils-006 amd64 x86
-=sys-fs/cryptsetup-1.4.3 amd64 x86
-=media-libs/freetype-2.4.1* amd64 x86
-=media-libs/fontconfig-infinality-20120619 amd64 x86
-=dev-libs/libpipeline-1.2* amd64 x86
