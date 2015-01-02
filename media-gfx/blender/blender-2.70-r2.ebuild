@@ -111,7 +111,8 @@ src_prepare() {
 		"${FILESDIR}"/05-${PN}-2.68-unbundle-eigen3.patch \
 		"${FILESDIR}"/06-${PN}-2.68-fix-install-rules.patch \
 		"${FILESDIR}"/07-${PN}-2.70-sse2.patch \
-		"${FILESDIR}"/08-${PN}-2.71-gflags.patch
+		"${FILESDIR}"/08-${PN}-2.71-gflags.patch \
+		"${FILESDIR}"/${PN}-2.72-T42797.diff
 
 	# remove some bundled deps
 	rm -r \
