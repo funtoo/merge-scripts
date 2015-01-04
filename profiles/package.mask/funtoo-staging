@@ -7,7 +7,7 @@
 # FL-696: FL-1314: FL-1310":
 # masked xorg for new-design opengl
 >app-admin/eselect-opengl-1.2.7
->media-libs/mesa-10.3.4
+>media-libs/mesa-10.3.5
 >x11-base/xorg-server-1.16.1-r2
 >x11-proto/glproto-1.4.17
 

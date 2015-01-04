@@ -14,5 +14,5 @@
 =dev-libs/gom-0.2.1 amd64 x86
 =gnome-extra/gnome-do-plugins-0.8.5 amd64 x86
 =gnome-extra/gnome-do-0.9 amd64 x86
-=media-libs/mesa-10.3.4 amd64 x86
+=media-libs/mesa-10.3.5 amd64 x86
 =x11-libs/libdrm-2.4.58 amd64 x86
