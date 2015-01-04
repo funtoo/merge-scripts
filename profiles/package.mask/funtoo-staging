@@ -43,8 +43,3 @@
 # Masked for testing
 # Ref FL-1483
 >=net-libs/rb_libtorrent-1.0.1
-
-# Dantrell B. (14 Aug 2014)
-# Masked for testing
-# Ref FL-1106
->sys-apps/openrc-0.12.3-r3
