@@ -1,3 +1,6 @@
+# stabilize youtube-dl. Very often this package beome outdated, because of frequent changes on different sites
+=net-misc/youtube-dl-2015* amd64 x86
+
 # Stabilize gnutls-3.3.10-r2 until https://bugs.gentoo.org/show_bug.cgi?id=492522 is fixed.
 =net-libs/gnutls-3.3.10-r2 amd64 x86
 

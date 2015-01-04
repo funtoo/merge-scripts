@@ -18,7 +18,7 @@ SRC_URI+=" https://github.com/mpv-player/mpv/archive/v${PV}.tar.gz -> ${P}.tar.g
 LICENSE="GPL-2"
 SLOT="0"
 [[ ${PV} == *9999* ]] || \
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="+alsa bluray bs2b cdio +cli -doc-pdf dvb +dvd dvdnav egl +enca encode
 +iconv jack -joystick jpeg ladspa lcms +libass libcaca libguess libmpv lirc +lua
 luajit +mpg123 -openal +opengl oss -portaudio postproc pulseaudio pvr samba -sdl
