@@ -1,0 +1,3 @@
+# Consumer-level video device support (DVD, BluRay, webcams)
+
+USE="bluray dvd v4l"

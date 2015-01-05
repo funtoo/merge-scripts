@@ -1,0 +1,5 @@
+# Consumer-level audio device support (music players, etc.)
+
+# ios, ipod: Apple iOS devices
+# mtp: used by Android phones
+USE="ios ipod mtp"

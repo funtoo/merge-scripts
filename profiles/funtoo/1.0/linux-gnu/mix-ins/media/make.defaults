@@ -1,6 +1,0 @@
-# Media: desktop or server-based media USE flags and settings. For servers, these are useful
-# for media servers. Do not include any desktop-related USE flags such as dri, etc.
-
-USE="flac lame mad mp3 mpeg ogg vorbis wavpack win32codecs"				 	#core media features
-USE="$USE gif jpeg png tiff truetype"								#core graphics
-USE="$USE apng"					#FL-413 Firefox requres package.use change

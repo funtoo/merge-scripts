@@ -1,0 +1,3 @@
+# Commonly found audio file formats.
+
+USE="flac lame mad mp3 ogg sndfile taglib vorbis wav wavpack"

@@ -1,0 +1,3 @@
+# Common media device support
+
+USE="cdda cdio ieee1394"
