@@ -1,8 +1,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI="5"
-
-PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3} )
+EAPI=5
+PYTHON_COMPAT=( python{2_7,3_3,3_4} )
 
 inherit autotools eutils multilib python-any-r1 readme.gentoo systemd udev user multilib-minimal
 
@@ -16,14 +15,13 @@ KEYWORDS="*"
 IUSE="cups debug +obex +readline selinux systemd test +udev"
 REQUIRED_USE="test? ( ${PYTHON_REQUIRED_USE} )"
 
-RDEPEND="
+CDEPEND="
 	>=dev-libs/glib-2.28:2
 	>=sys-apps/dbus-1.6:=
 	>=sys-apps/hwids-20121202.2
 	cups? ( net-print/cups:= )
 	obex? ( dev-libs/libical )
 	readline? ( sys-libs/readline:= )
-	selinux? ( sec-policy/selinux-bluetooth )
 	systemd? ( sys-apps/systemd )
 	udev? ( >=virtual/udev-172 )
 	abi_x86_32? (
@@ -31,7 +29,7 @@ RDEPEND="
 		!app-emulation/emul-linux-x86-soundlibs[-abi_x86_32]
 	)
 "
-DEPEND="${RDEPEND}
+DEPEND="${CDEPEND}
 	virtual/pkgconfig
 	test? (
 		${PYTHON_DEPS}
@@ -40,6 +38,9 @@ DEPEND="${RDEPEND}
 		dev-python/pygobject:3
 	)
 "
+RDEPEND="${CDEPEND}
+	selinux? ( sec-policy/selinux-bluetooth )"
+PDEPEND="net-wireless/bluez-hcidump"	
 
 DOC_CONTENTS="
 	If you want to use rfcomm as a normal user, you need to add the user
@@ -78,10 +79,6 @@ src_prepare() {
 
 	# Ubuntu workaround for bug #501120
 	epatch "${FILESDIR}"/0001-work-around-Logitech-diNovo-Edge-keyboard-firmware-i.patch
-
-	# Fix compatibility with musl, bug #524454
-	# http://marc.info/?l=linux-bluetooth&m=141269379106447
-	epatch "${FILESDIR}/${PN}-5.24-musl-compat.patch"
 
 	if use cups; then
 		sed -i \
@@ -181,8 +178,10 @@ multilib_src_install_all() {
 	doins src/main.conf
 	doins src/bluetooth.conf
 
-	insinto /usr/include/bluetooth
-	doins lib/mgmt.h
+# FIXME:
+# Looks like upstream installs it only for systemd, probably not needed
+#	insinto /usr/share/dbus-1/system-services
+#	doins src/org.bluez.service
 
 	newinitd "${FILESDIR}"/bluetooth-init.d-r3 bluetooth
 	newinitd "${FILESDIR}"/rfcomm-init.d-r2 rfcomm
