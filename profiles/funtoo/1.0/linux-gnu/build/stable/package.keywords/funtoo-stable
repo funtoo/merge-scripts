@@ -1,3 +1,6 @@
+# Stabilize ffmpeg-2.2* until it is stable in gentoo-x86.
+=media-video/ffmpeg-2.2* amd64 x86
+
 # stabilize youtube-dl. Very often this package beome outdated, because of frequent changes on different sites
 =net-misc/youtube-dl-2015* amd64 x86
 

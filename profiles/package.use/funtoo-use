@@ -1,3 +1,6 @@
+# FL-1437
+media-video/ffmpeg threads
+
 # FL-1867, enable python single target for intel-gpu-utils
 x11-apps/intel-gpu-tools python_single_target_python3_3
 
