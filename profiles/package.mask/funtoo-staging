@@ -16,9 +16,6 @@
 # openvz require older version of eudev and kmod
 =sys-fs/eudev-2.1.1
 
-# FL-1376: thrift ebuild, masked for testing
-=dev-libs/thrift-0.9.1
-
 # grass-6.4.4 with wxpython GUI, masked for testing:
 =sci-geosciences/grass-6.4.4
 
