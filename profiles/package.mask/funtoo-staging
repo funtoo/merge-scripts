@@ -4,9 +4,10 @@
 # FL-1761: new rebased Portage, needs a lot of testing
 >=sys-apps/portage-2.3.7
 
-# FL-696: FL-1314: FL-1310":
+# FL-696: FL-1314: FL-1310: FL-1920:
 # masked xorg for new-design opengl
 >app-admin/eselect-opengl-1.2.7
+>app-emulation/emul-linux-x86-opengl-20140508
 >media-libs/mesa-10.3.5
 >x11-base/xorg-server-1.16.1-r2
 >x11-proto/glproto-1.4.17
@@ -14,9 +15,6 @@
 # FL-1729: eudev update, this ebuild masked, kernel older 2.6.39 version unsupported
 # openvz require older version of eudev and kmod
 =sys-fs/eudev-2.1.1
-
-# FL-1376: thrift ebuild, masked for testing
-=dev-libs/thrift-0.9.1
 
 # grass-6.4.4 with wxpython GUI, masked for testing:
 =sci-geosciences/grass-6.4.4
