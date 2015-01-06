@@ -4,6 +4,7 @@ USERLAND="GNU"
 LDFLAGS="-Wl,-O1 -Wl,--sort-common -Wl,--as-needed"
 USE="kernel_linux userland_GNU elibc_glibc"
 
+ACCEPT_LICENSE="* -@EULA Oracle-BCLA-JavaSE"
 ACCEPT_PROPERTIES="* -reboot"
 
 USE_EXPAND="PYTHON_ABIS PYTHON_SINGLE_ABI"
