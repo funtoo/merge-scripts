@@ -11,14 +11,14 @@ SRC_URI="http://libtorrent.rakshasa.no/downloads/${P}.tar.gz"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="*"
-IUSE="debug ipv6 ssl"
+IUSE="debug ipv6 ssl test"
 
 RDEPEND="
 	>=dev-libs/libsigc++-2.2.2:2
 	ssl? ( dev-libs/openssl )"
 DEPEND="${RDEPEND}
-	virtual/pkgconfig"
-
+	virtual/pkgconfig
+	test? ( dev-util/cppunit )"
 src_prepare() {
 	elibtoolize
 }
@@ -37,6 +37,7 @@ src_configure() {
 	# configure needs bash or script bombs out on some null shift, bug #291229
 	CONFIG_SHELL=${BASH} econf \
 		--disable-dependency-tracking \
+		--disable-instrumentation \
 		--enable-aligned \
 		$(use_enable debug) \
 		$(use_enable ipv6) \
