@@ -1,3 +1,6 @@
+# FL-1927: enable 32 bit flag to nvidia-cg-toolkit:
+media-gfx/nvidia-cg-toolkit abi_x86_32
+
 # FL-1858, apulse is majorily used for Skype, and Skype is 32-bit.
 media-sound/apulse abi_x86_32
 
