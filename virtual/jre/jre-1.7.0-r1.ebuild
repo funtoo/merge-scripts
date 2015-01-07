@@ -9,5 +9,4 @@ KEYWORDS="*"
 RDEPEND="|| (
 		=dev-java/oracle-jre-bin-1.7.0*
 		=virtual/jdk-1.7.0*
-		=dev-java/icedtea-7*
 	)"
