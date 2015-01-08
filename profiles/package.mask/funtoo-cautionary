@@ -1,3 +1,8 @@
+# Protect newest automake and autoconf
+>sys-devel/automake-1.14.1
+>sys-devel/autoconf-2.69
+
+
 # Protect against beta OpenRC
 >=sys-apps/openrc-0.12.4
 
