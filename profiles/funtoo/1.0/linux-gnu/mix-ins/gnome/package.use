@@ -1,3 +1,6 @@
+# FL-1940: prefer gstreamer for app-misc/tracker
+app-misc/tracker -ffmpeg
+
 # Required by GNOME 3.14 (extras) for a clean emerge.
 app-crypt/gcr vala
 app-emulation/qemu spice
