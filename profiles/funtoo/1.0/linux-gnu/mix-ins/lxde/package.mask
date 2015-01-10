@@ -1,2 +1,0 @@
-# FL-1932: mask newest menu-cache
->lxde-base/menu-cache-0.5.1
