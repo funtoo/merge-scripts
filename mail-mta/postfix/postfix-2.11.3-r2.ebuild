@@ -336,6 +336,6 @@ pkg_postinst() {
 		ewarn "daemon_directory setting."
 	fi
 add_init default postfix
-	ewarn "Postfix automatically added to defaut runlevel. To start daemon /sbin/rc required"
+	ewarn "Postfix automatically added to defaut runlevel. To start daemon, run /sbin/rc"
 
 }
