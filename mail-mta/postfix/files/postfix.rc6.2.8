@@ -37,18 +37,18 @@ start() {
 		eend 1 "${CONF_DIR} does not exist"
 		return 1
 	fi
-	/usr/sbin/postfix -c ${CONF_DIR} start >/dev/null 2>&1
+	/usr/sbin/postfix -c ${CONF_DIR} start
 	eend $?
 }
 
 stop() {
 	ebegin "Stopping postfix (${CONF_DIR})"
-	/usr/sbin/postfix -c ${CONF_DIR} stop >/dev/null 2>&1
+	/usr/sbin/postfix -c ${CONF_DIR} stop
 	eend $?
 }
 
 reload() {
 	ebegin "Reloading postfix (${CONF_DIR})"
-	/usr/sbin/postfix -c ${CONF_DIR} reload >/dev/null 2>&1
+	/usr/sbin/postfix -c ${CONF_DIR} reload
 	eend $?
 }
