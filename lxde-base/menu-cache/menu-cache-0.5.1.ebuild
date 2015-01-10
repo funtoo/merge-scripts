@@ -7,8 +7,8 @@ HOMEPAGE="http://lxde.sourceforge.net/"
 SRC_URI="mirror://sourceforge/lxde/${P}.tar.gz"
 
 LICENSE="GPL-2"
-# ABI is v2. See Makefile.am
-SLOT="0/2"
+# Subslot based on soname of libmenu-cache.so.
+SLOT="0/3"
 KEYWORDS="*"
 IUSE=""
 
