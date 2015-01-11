@@ -1,3 +1,6 @@
+# FL-1948:
+media-video/mjpegtools -v4l
+
 # FL-1437
 media-video/ffmpeg threads
 
