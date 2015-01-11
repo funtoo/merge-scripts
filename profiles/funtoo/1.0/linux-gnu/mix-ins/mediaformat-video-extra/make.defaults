@@ -1,3 +1,6 @@
+# Extra audio supoort
+USE="fdk"
+
 # Extra video file formats.
 
 USE="dirac dv kate libtiger nuv schroedinger"
