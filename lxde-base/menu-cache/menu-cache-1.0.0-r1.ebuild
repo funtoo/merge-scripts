@@ -2,7 +2,7 @@
 
 EAPI="5"
 
-inherit multilib
+inherit eutils multilib
 
 LIBFM="libfm-1.2.3"
 
@@ -22,6 +22,10 @@ DEPEND="${RDEPEND}
 	sys-devel/gettext
 	virtual/pkgconfig"
 PDEPEND="x11-libs/libfm"
+
+src_prepare() {
+	epatch "${FILESDIR}"/${PN}-segfault-fix.patch
+}
 
 src_configure() {
 	pushd "${WORKDIR}/${LIBFM}" > /dev/null || die
