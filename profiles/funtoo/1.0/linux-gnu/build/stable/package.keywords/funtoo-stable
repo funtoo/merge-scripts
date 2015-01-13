@@ -1,6 +1,7 @@
 # FL-1952: stabilize lbfm-1.2.3, pcmanfm-1.2.3:
 =x11-libs/libfm-1.2.3 amd64 86
 =x11-misc/pcmanfm-1.2.3 amd64 x86
+=lxde-base/lxde-meta-0.5.5-r4
 
 # Stabilize ffmpeg-2.2* until it is stable in gentoo-x86.
 =media-video/ffmpeg-2.2* amd64 x86
