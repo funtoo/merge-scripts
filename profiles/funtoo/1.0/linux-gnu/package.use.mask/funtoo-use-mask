@@ -1,3 +1,6 @@
+# FL-1954: mask avx and avx2 USE in media-libs/libvpx
+media-libs/libvpx avx avx2
+
 #Oleg Vinichenko (15.12.14)
 #FL-1874: mask gles USE in xbmc, breaks.
 media-tv/xbmc gles
