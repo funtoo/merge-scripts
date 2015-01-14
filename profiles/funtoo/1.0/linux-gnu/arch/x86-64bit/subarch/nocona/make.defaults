@@ -1,0 +1,7 @@
+CFLAGS="-O2 -march=nocona -pipe"
+CXXFLAGS="${CFLAGS}"
+FFLAGS="${CFLAGS}"
+FCFLAGS="${CFLAGS}"
+
+CHOST="x86_64-pc-linux-gnu"
+CPU_FLAGS_X86="mmx mmxext sse sse2"

@@ -1,0 +1,7 @@
+CFLAGS="-march=btver2 -O2 -pipe"
+CXXFLAGS="${CFLAGS}"
+FFLAGS="${CFLAGS}"
+FCFLAGS="${CFLAGS}"
+
+CHOST="x86_64-pc-linux-gnu"
+CPU_FLAGS_X86="aes avx mmx mmxext popcnt sse sse2 sse3 sse4_1 sse4_2 sse4a ssse3"

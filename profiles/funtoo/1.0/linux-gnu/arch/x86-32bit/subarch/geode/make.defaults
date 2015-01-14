@@ -1,0 +1,7 @@
+CFLAGS="-O2 -fomit-frame-pointer -march=geode -pipe"
+CXXFLAGS="${CFLAGS}"
+FFLAGS="${CFLAGS}"
+FCFLAGS="${CFLAGS}"
+
+CHOST="i686-pc-linux-gnu"
+CPU_FLAGS_X86="3dnow mmx mmxext"
