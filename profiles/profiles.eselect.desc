@@ -20,6 +20,8 @@ arch		funtoo/1.0/linux-gnu/arch/arm-32bit/armv7a_hardfp	exp
 arch		funtoo/1.0/linux-gnu/arch/arm-32bit/armv6j_hardfp	exp
 arch		funtoo/1.0/linux-gnu/arch/arm-32bit/armv5te		exp
 
+subarch		funtoo/1.0/linux-gnu/arch/x86-64bit/subarch/core2_64	stable
+
 build		funtoo/1.0/linux-gnu/build/stable			stable
 build		funtoo/1.0/linux-gnu/build/current			stable
 build		funtoo/1.0/linux-gnu/build/experimental			stable

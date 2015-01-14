@@ -1,3 +1,6 @@
+# FL-2136, FL-1943, eselect bump masked for testing
+=app-admin/eselect-1.4.4
+
 # Fl-2033, nginx-1.7.8, masked for testing
 =www-servers/nginx-1.7.8
 
