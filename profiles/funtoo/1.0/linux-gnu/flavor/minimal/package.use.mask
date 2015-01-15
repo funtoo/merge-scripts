@@ -1,1 +1,4 @@
+# FL-1954: mask avx and avx2 USE in media-libs/libvpx
+media-libs/libvpx avx avx2
+
 =dev-lang/python-2* berkdb
