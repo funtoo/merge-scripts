@@ -1,11 +1,11 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI="5"
+EAPI="4"
 
 inherit eutils flag-o-matic toolchain-funcs multilib multilib-minimal
 
 REV="1.7"
-DESCRIPTION="Toolkit for SSL v2/v3 and TLS v1"
+DESCRIPTION="full-strength general purpose cryptography library (including SSL and TLS)"
 HOMEPAGE="http://www.openssl.org/"
 SRC_URI="mirror://openssl/source/${P}.tar.gz
 	http://cvs.pld-linux.org/cgi-bin/cvsweb.cgi/packages/${PN}/${PN}-c_rehash.sh?rev=${REV} -> ${PN}-c_rehash.sh.${REV}"
@@ -122,6 +122,17 @@ multilib_src_configure() {
 	echoit() { echo "$@" ; "$@" ; }
 
 	local krb5=$(has_version app-crypt/mit-krb5 && echo "MIT" || echo "Heimdal")
+
+	# See if our toolchain supports __uint128_t.  If so, it's 64bit
+	# friendly and can use the nicely optimized code paths. #460790
+	local ec_nistp_64_gcc_128
+	# Disable it for now though #469976
+	#if ! use bindist ; then
+	#	echo "__uint128_t i;" > "${T}"/128.c
+	#	if ${CC} ${CFLAGS} -c "${T}"/128.c -o /dev/null >&/dev/null ; then
+	#		ec_nistp_64_gcc_128="enable-ec_nistp_64_gcc_128"
+	#	fi
+	#fi
 
 	local sslout=$(./gentoo.config)
 	einfo "Use configuration ${sslout:-(openssl knows best)}"
