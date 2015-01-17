@@ -1,3 +1,5 @@
+# FL-1956: debian kernel 3.16.7, masked for testing
+
 # FL-1924 add ati-drivers-14.12 masked for testing
 =x11-drivers/ati-drivers-14.12-r2
 
