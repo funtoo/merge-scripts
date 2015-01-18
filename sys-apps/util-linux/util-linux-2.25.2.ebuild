@@ -90,6 +90,7 @@ multilib_src_configure() {
 	econf \
 		--enable-fs-paths-extra="${EPREFIX}/usr/sbin:${EPREFIX}/bin:${EPREFIX}/usr/bin" \
 		--libdir='${prefix}/'"$(get_libdir)" \
+		--docdir='${datarootdir}'/doc/${PF} \
 		$(multilib_native_use_enable nls) \
 		--enable-agetty \
 		--with-bashcompletiondir="$(get_bashcompdir)" \
