@@ -1,6 +1,6 @@
 # FL-1937
 # Cautionary mask dev-lang/swig-3.0.3, failures reported.
-=dev-lang/swig-3.0.3
+>dev-lang/swig-3.0.2
 
 # Protect newest automake and autoconf
 >sys-devel/automake-1.14.1
