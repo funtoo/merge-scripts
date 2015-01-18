@@ -1,5 +1,11 @@
+# This enables power management change in settings menu
+xfce-base/xfce4-settings upower
+
+# This enabled power management in session
+xfce-base/xfce4-session upower
+
 sys-auth/pambase consolekit
 
-# For thunar
-gnome-base/gvfs udisks
+# For thunar. Remove http support from gvfs to not depend on Gnome3 base packages.
+gnome-base/gvfs udisks -http
 xfce-base/thunar udisks
