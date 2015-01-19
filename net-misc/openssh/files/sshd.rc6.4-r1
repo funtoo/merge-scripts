@@ -26,7 +26,6 @@ depend() {
 		done
 		unset x
 		if [ "${warn_addr:+set}" = "set" ]; then
-			need net 
 			ewarn "You are binding an interface in ListenAddress statement in your sshd_config!"
 			ewarn "You must add rc_need=\"netif.foo\" to your /etc/conf.d/sshd"
 			ewarn "where foo is the interface(s) providing the following address(es):"
