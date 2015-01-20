@@ -1,3 +1,6 @@
+# Stabilize guile-www, it's required for gnucach and was stable (tested)
+=dev-scheme/guile-www-2.35 amd64 x86
+
 # stabilize, xdebug-2.2.5. Ebuild now merged from gentoo-x86
 =dev-php/xdebug-2.2.5 amd64 x86
 
