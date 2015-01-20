@@ -1,10 +1,11 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=5
+EAPI="5-progress"
+PYTHON_ABI_TYPE="single"
+PYTHON_DEPEND="monitor? ( <<>> )"
+PYTHON_RESTRICTED_ABIS="3.* *-jython *-pypy"
 
-PYTHON_COMPAT=( python2_7 )
-
-inherit eutils linux-info linux-mod python-single-r1
+inherit eutils linux-info linux-mod python
 
 DESCRIPTION="Production quality, multilayer virtual switch."
 HOMEPAGE="http://openvswitch.org"
@@ -12,59 +13,48 @@ SRC_URI="http://openvswitch.org/releases/${P}.tar.gz"
 
 LICENSE="Apache-2.0 GPL-2"
 SLOT="0"
-KEYWORDS="~amd64"
-IUSE="debug modules monitor +pyside +ssl"
+KEYWORDS="~*"
+IUSE="debug modules monitor +ssl"
 
-RDEPEND=">=sys-apps/openrc-0.10.2
+RDEPEND=">=sys-apps/openrc-0.12.1
 	ssl? ( dev-libs/openssl )
-	monitor? (
-		${PYTHON_DEPS}
-		dev-python/twisted
-		dev-python/twisted-conch
-		dev-python/twisted-web
-		pyside? ( dev-python/pyside[${PYTHON_USEDEP}] )
-		!pyside? ( dev-python/PyQt4[${PYTHON_USEDEP}] )
-		net-zope/zope-interface[${PYTHON_USEDEP}] )
+	monitor? ( $(python_abi_depend dev-python/twisted-core dev-python/twisted-web net-zope/zope.interface) )
 	debug? ( dev-lang/perl )"
 DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
 CONFIG_CHECK="~NET_CLS_ACT ~NET_CLS_U32 ~NET_SCH_INGRESS ~NET_ACT_POLICE ~IPV6 ~TUN"
-MODULE_NAMES="brcompat(net:${S}/datapath/linux) openvswitch(net:${S}/datapath/linux)"
+MODULE_NAMES="openvswitch(net:${S}/datapath/linux)"
 BUILD_TARGETS="all"
 
 pkg_setup() {
-
-	if kernel_is -lt 3 9 ; then
-		if use modules ; then
-			CONFIG_CHECK+=" ~!OPENVSWITCH"
-			linux-mod_pkg_setup
-		fi
+	if use modules ; then
+	        CONFIG_CHECK+=" ~!OPENVSWITCH"
+			kernel_is ge 2 6 32 || die "Linux >=2.6.32 and <3.10 required"
+			kernel_is lt 3 11 || die "Linux >=2.6.32 and <3.11 required"
+		    linux-mod_pkg_setup
 	else
 		CONFIG_CHECK+=" ~OPENVSWITCH"
 		linux-info_pkg_setup
 	fi
-	use monitor && python-single-r1_pkg_setup
+
+	if use monitor; then python_pkg_setup; fi
 }
 
 src_prepare() {
 	# Never build kernelmodules, doing this manually
-	epatch "${FILESDIR}"/"${PN}"-kernel32.patch
 	sed -i \
 		-e '/^SUBDIRS/d' \
 		datapath/Makefile.in || die "sed failed"
 }
+
 src_configure() {
 	set_arch_to_kernel
 	use monitor || export ovs_cv_python="no"
-	use pyside || export ovs_cv_pyuic4="no"
 
-	local linux_config
-	if kernel_is -lt 3 9 ; then
-		use modules && linux_config="--with-linux=${KERNEL_DIR}"
-	fi
-
-	econf ${linux_config} \
+	local linux_config=()
+	use modules && linux_config=("--with-linux=${KERNEL_DIR}")
+	econf "${linux_config[@]}" \	
 		--with-rundir=/var/run/openvswitch \
 		--with-logdir=/var/log/openvswitch \
 		--with-pkidir=/etc/ssl/openvswitch \
@@ -75,57 +65,40 @@ src_configure() {
 
 src_compile() {
 	default
-
-	use monitor && python_fix_shebang \
-		utilities/ovs-{pcap,tcpundump,test,vlan-test} \
-		utilities/bugtool/ovs-bugtool \
-		ovsdb/ovsdbmonitor/ovsdbmonitor
-
-	if kernel_is -lt 3 9 ; then
-		use modules && linux-mod_src_compile
-	fi
+	use modules && linux-mod_src_compile
 }
 
 src_install() {
 	default
-
 	if use monitor ; then
-		python_domodule "${ED}"/usr/share/openvswitch/python/*
+		insinto $(python_get_sitedir)
+		doins -r "${ED}usr/share/openvswitch/python/"*
 		rm -r "${ED}/usr/share/openvswitch/python"
-		python_optimize "${ED}/usr/share/ovsdbmonitor"
+		python_convert_shebangs -r "${PYTHON_ABI}" "${ED}"
 	fi
-	# not working without the brcompat_mod kernel module which did not get
-	# included in the kernel and we can't build it anymore
-	rm "${D}/usr/sbin/ovs-brcompatd" "${D}/usr/share/man/man8/ovs-brcompatd.8"
 
 	keepdir /var/{lib,log}/openvswitch
 	keepdir /etc/ssl/openvswitch
 	fperms 0750 /etc/ssl/openvswitch
-
 	rm -rf "${ED}/var/run"
-	use monitor || rmdir "${ED}/usr/share/ovsdbmonitor"
-	use debug || rm "${ED}/usr/bin/ovs-parse-leaks"
 
-	newconfd "${FILESDIR}/ovsdb-server_conf" ovsdb-server
+	newconfd "${FILESDIR}/openvswitch-2.0.0-ovsdb-server.conf" ovsdb-server
 	newconfd "${FILESDIR}/ovs-vswitchd_conf" ovs-vswitchd
 	newconfd "${FILESDIR}/ovs-controller_conf" ovs-controller
 	newinitd "${FILESDIR}/ovsdb-server-r1" ovsdb-server
 	newinitd "${FILESDIR}/ovs-vswitchd-r1" ovs-vswitchd
 	newinitd "${FILESDIR}/ovs-controller-r1" ovs-controller
-
 	insinto /etc/logrotate.d
 	newins rhel/etc_logrotate.d_openvswitch openvswitch
 
-	if kernel_is -lt 3 9 ; then
-		use modules && linux-mod_src_install
-	fi
+	use modules && linux-mod_src_install
 }
 
 pkg_postinst() {
-	if kernel_is -lt 3 9 ; then
-		use modules && linux-mod_pkg_postinst
-	fi
+	use monitor && python_byte-compile_modules ovs ovstest
+	use modules && linux-mod_pkg_postinst
 
+	local pv
 	for pv in ${REPLACING_VERSIONS}; do
 		if ! version_is_at_least 1.9.0 ${pv} ; then
 			ewarn "The configuration database for Open vSwitch got moved in version 1.9.0 from"
@@ -137,6 +110,8 @@ pkg_postinst() {
 		fi
 	done
 
+	elog "${PN} built against kernels 3.11 and greater must have kernel built modules"
+	elog "   instead of portage built kernel modules"
 	elog "Use the following command to create an initial database for ovsdb-server:"
 	elog "   emerge --config =${CATEGORY}/${PF}"
 	elog "(will create a database in /var/lib/openvswitch/conf.db)"
@@ -154,3 +129,8 @@ pkg_config() {
 		"${EPREFIX}/usr/bin/ovsdb-tool" create "${db}" "${EPREFIX}/usr/share/openvswitch/vswitch.ovsschema" || die "creating database failed"
 	fi
 }
+
+pkg_postrm() {
+	use monitor && python_clean_byte-compiled_modules ovs ovstest
+}
+
