@@ -6,7 +6,7 @@ diff --git a/m4/wm_imgfmt_check.m4 b/m4/wm_imgfmt_check.m4
 index cad2d72..d07e618 100644
 --- a/m4/wm_imgfmt_check.m4
 +++ b/m4/wm_imgfmt_check.m4
- <at>  <at>  -187,14 +187,34  <at>  <at>  AC_DEFUN_ONCE([WM_IMGFMT_CHECK_TIFF],
+ @@ -187,14 +187,34 @@ AC_DEFUN_ONCE([WM_IMGFMT_CHECK_TIFF],
  # the variable 'supported_gfx'
  # When not found, append info to variable 'unsupported'
  AC_DEFUN_ONCE([WM_IMGFMT_CHECK_WEBP],
@@ -29,7 +29,7 @@ index cad2d72..d07e618 100644
 +         wm_save_LIBS="$LIBS"
 +         LIBS="$LIBS -lwebp"
 +         AC_TRY_LINK(
-+             [ <at> %: <at> include <webp/decode.h>],
++             [ @ %: @ include <webp/decode.h>],
 +             [WebPGetFeatures(NULL, 1024, NULL);],
 +             [wm_cv_imgfmt_webp="-lwebp"])
 +         LIBS="$wm_save_LIBS"
