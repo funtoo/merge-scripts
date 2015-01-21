@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+# The names/descriptions should really be better
+Name=GNUStep WindowMaker
+Comment=Use this session to run WindowMaker as your desktop environment
+Exec=/usr/bin/wmaker
+Icon=
+Type=Application
