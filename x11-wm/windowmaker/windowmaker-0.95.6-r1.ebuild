@@ -10,12 +10,13 @@ SRC_URI=" http://windowmaker.org/pub/source/release/${P/windowm/WindowM}.tar.gz
 
 SLOT="0"
 LICENSE="GPL-2"
-IUSE="gif imagemagick jpeg modelock nls png tiff webp xinerama xrandr"
+IUSE="gif imagemagick jpeg modelock nls png tiff webp xinerama +xpm xrandr"
 KEYWORDS="*"
 
 DEPEND="media-libs/fontconfig
 	>=x11-libs/libXft-2.1.0
 	x11-libs/libXmu
+	x11-libs/libXpm
 	x11-libs/libXt
 	x11-libs/libXv
 	gif? ( >=media-libs/giflib-4.1.0-r3 )
@@ -55,7 +56,7 @@ src_configure() {
 
 	# image format types
 	# xpm is provided by X itself
-	myconf="--enable-xpm $(use_enable imagemagick magick) $(use_enable jpeg) $(use_enable gif) $(use_enable png) $(use_enable tiff) $(use_enable webp)"
+	myconf="$(use_enable imagemagick magick) $(use_enable jpeg) $(use_enable gif) $(use_enable png) $(use_enable tiff) $(use_enable webp) $(use_enable xpm)"
 
 	# non required X capabilities
 	myconf="${myconf} $(use_enable modelock) $(use_enable xrandr randr) $(use_enable xinerama)"
