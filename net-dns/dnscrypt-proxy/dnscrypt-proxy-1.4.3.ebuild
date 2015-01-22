@@ -2,18 +2,23 @@
 
 EAPI=5
 
-inherit eutils flag-o-matic user
+inherit eutils user
 
 DESCRIPTION="A tool for securing communications between a client and a DNS resolver"
 HOMEPAGE="http://dnscrypt.org/"
 SRC_URI="http://download.dnscrypt.org/${PN}/${P}.tar.gz"
-RESTRICT="mirror"
 
 LICENSE="ISC"
 SLOT="0"
 KEYWORDS="*"
-IUSE=""
-RDEPEND="dev-libs/libsodium"
+IUSE="+plugins ldns"
+
+DEPEND="dev-libs/libsodium
+	ldns? ( net-libs/ldns )"
+RDEPEND="${DEPEND}"
+
+DOCS=( AUTHORS ChangeLog COPYING NEWS README.markdown README-PLUGINS.markdown
+	TECHNOTES THANKS )
 
 pkg_setup() {
 	enewgroup dnscrypt
@@ -21,16 +26,13 @@ pkg_setup() {
 }
 
 src_configure() {
-	if [[ ! -e configure ]] ; then
-		./autogen.sh || die "autogen failed"
-	fi
-	append-ldflags -Wl,-z,noexecstack
-	econf --enable-nonblocking-random
+	econf \
+		$(use_enable plugins)
 }
 
 src_install() {
 	default
+
 	newinitd "${FILESDIR}/${PN}.initd" ${PN}
 	newconfd "${FILESDIR}/${PN}.confd" ${PN}
-	dodoc {AUTHORS,COPYING,INSTALL,NEWS,README,README.markdown,TECHNOTES,THANKS}
 }
