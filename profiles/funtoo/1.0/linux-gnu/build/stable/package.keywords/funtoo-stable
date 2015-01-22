@@ -1,3 +1,6 @@
+# FL-1958: set stable keywords to windowmaker-0.95.6, unfork, it is now in gentoo-x86
+=x11-wm/windowmaker-095.6 amd64 x86
+
 # Stabilize guile-www, it's required for gnucach and was stable (tested)
 =dev-scheme/guile-www-2.35 amd64 x86
 
