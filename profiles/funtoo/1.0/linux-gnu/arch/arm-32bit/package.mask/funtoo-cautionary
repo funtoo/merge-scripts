@@ -1,3 +1,6 @@
+# Mask sqlite-3.8* ebuilds, breaking stages
+>dev-db/sqlite-3.8.7.4
+
 # Jean-Francis Roy <jeanfrancis@funtoo.org> (6 Jul 2014)
 # FL-1332: Mask =dev-libs/lzo-2.08* as it breaks OpenVPN
 =dev-libs/lzo-2.08*
