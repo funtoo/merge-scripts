@@ -2,9 +2,6 @@
 =sys-kernel/debian-sources-3.18.3
 =sys-kernel/debian-sources-3.16.7
 
-# FL-1924 add ati-drivers-14.12 masked for testing
-=x11-drivers/ati-drivers-14.12-r2
-
 #FL-1767: add bluez-5.27, masked for testing
 =net-wireless/bluez-5.27
 

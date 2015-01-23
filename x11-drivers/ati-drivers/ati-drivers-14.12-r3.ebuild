@@ -12,7 +12,8 @@ SLOT="1"
 INSTALLER="amd-catalyst-omega-14.12-linux-run-installers.zip"
 DRIVERS_URI="http://build.funtoo.org/distfiles/$INSTALLER"
 XVBA_SDK_URI="http://developer.amd.com/wordpress/media/2012/10/xvba-sdk-0.74-404001.tar.gz"
-SRC_URI="${DRIVERS_URI} ${XVBA_SDK_URI}"
+GLES_SDK_URI="http://amd-dev.wpengine.netdna-cdn.com/wordpress/media/2012/10/gles_sdk.zip"
+SRC_URI="${DRIVERS_URI} ${XVBA_SDK_URI} ${GLES_SDK_URI}"
 FOLDER_PREFIX="common/"
 IUSE="debug +modules qt4 static-libs pax_kernel +vaapi"
 
@@ -86,6 +87,8 @@ S="${WORKDIR}"
 # QA Silencing
 QA_TEXTRELS="
 	usr/lib*/opengl/ati/lib/libGL.so.1.2
+	usr/lib*/opengl/ati/lib/libEGL.so
+	usr/lib*/opengl/ati/lib/libGLESv2.so
 	usr/lib*/libatiadlxx.so
 	usr/lib*/xorg/modules/glesx.so
 	usr/lib*/libaticaldd.so
@@ -107,6 +110,8 @@ QA_WX_LOAD="
 QA_PRESTRIPPED="
 	usr/lib\(32\|64\)\?/libXvBAW.so.1.0
 	usr/lib\(32\|64\)\?/opengl/ati/lib/libGL.so.1.2
+	usr/lib\(32\|64\)\?/opengl/ati/lib/libEGL.so
+	usr/lib\(32\|64\)\?/opengl/ati/lib/libGLESv2.so
 	usr/lib\(32\|64\)\?/opengl/ati/extensions/libglx.so
 	usr/lib\(32\|64\)\?/xorg/modules/glesx.so
 	usr/lib\(32\|64\)\?/libAMDXvBA.so.1.0
@@ -153,14 +158,6 @@ QA_DT_HASH="
 	usr/lib\(32\|64\)\?/OpenCL/vendors/amd/libamdocl\(32\|64\)\?.so
 	usr/lib\(32\|64\)\?/OpenCL/vendors/amd/libOpenCL.so.1
 "
-
-pkg_nofetch() {
-	einfo "The driver packages"
-	einfo ${A}
-	einfo "need to be downloaded manually from"
-	einfo "http://support.amd.com/en-us/download/desktop?os=Linux%20x86_64"
-	einfo "and ${XVBA_SDK_URI}"
-}
 
 pkg_pretend() {
 	local CONFIG_CHECK="~MTRR ~!DRM ACPI PCI_MSI !LOCKDEP !PAX_KERNEXEC_PLUGIN_METHOD_OR"
@@ -255,7 +252,7 @@ src_unpack() {
 		fi
 		sh "${RUN}" --extract "${S}" 2>&1 > /dev/null || die
 	fi
-
+	unpack ${GLES_SDK_URI##*/}
 	mkdir xvba_sdk
 	cd xvba_sdk
 	unpack ${XVBA_SDK_DISTFILE}
@@ -471,11 +468,13 @@ src_install-libs() {
 		local pkglibdir=lib64
 		local MY_ARCH_DIR="${S}/arch/x86_64"
 		local oclsuffix=64
+		local gles_sdk_arch="x86-64"
 	else
 		local EX_BASE_DIR="${BASE_DIR}"
 		local pkglibdir=lib
 		local MY_ARCH_DIR="${S}/arch/x86"
 		local oclsuffix=32
+		local gles_sdk_arch="x86"
 	fi
 	einfo "ati tree '${pkglibdir}' -> '$(get_libdir)' on system"
 
@@ -491,6 +490,11 @@ src_install-libs() {
 		libGL.so.${libver}
 	dosym libGL.so.${libver} ${ATI_ROOT}/lib/libGL.so.${libmajor}
 	dosym libGL.so.${libver} ${ATI_ROOT}/lib/libGL.so
+	# Install EGL and GLESv2
+	newexe ${WORKDIR}/gles_sdk/${gles_sdk_arch}/libGLESv2.so libGLESv2.so
+	newexe ${WORKDIR}/gles_sdk/${gles_sdk_arch}/libEGL.so libEGL.so
+	dosym libGLESv2.so ${ATI_ROOT}/lib/libGLESv2.so.1
+	dosym libEGL.so ${ATI_ROOT}/lib/libEGL.so.1
 
 	if multilib_is_native_abi; then
 		exeinto ${ATI_ROOT}/extensions
