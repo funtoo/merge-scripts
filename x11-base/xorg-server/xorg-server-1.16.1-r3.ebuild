@@ -7,13 +7,13 @@ inherit xorg-2 multilib versionator flag-o-matic
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/xserver"
 
 DESCRIPTION="X.Org X servers"
-SLOT="0/1.16.1"
+SLOT="0/${PV}"
 KEYWORDS="~*"
 
 IUSE_SERVERS="dmx kdrive xnest xorg xvfb"
 IUSE="${IUSE_SERVERS} glamor ipv6 minimal nptl selinux +suid systemd tslib +udev unwind wayland"
 
-CDEPEND=">=app-admin/eselect-opengl-1.3.0
+RDEPEND=">=app-admin/eselect-opengl-1.0.8
 	dev-libs/openssl
 	media-libs/freetype
 	>=x11-apps/iceauth-1.0.2
@@ -46,7 +46,7 @@ CDEPEND=">=app-admin/eselect-opengl-1.3.0
 	)
 	glamor? (
 		media-libs/libepoxy
-		>=media-libs/mesa-10.3.4-r1[egl,gbm]
+		media-libs/mesa[egl,gbm]
 		!x11-libs/glamor
 	)
 	kdrive? (
@@ -56,7 +56,7 @@ CDEPEND=">=app-admin/eselect-opengl-1.3.0
 	!minimal? (
 		>=x11-libs/libX11-1.1.5
 		>=x11-libs/libXext-1.0.5
-		>=media-libs/mesa-10.3.4-r1[nptl=]
+		>=media-libs/mesa-9.2.0[nptl=]
 	)
 	tslib? ( >=x11-libs/tslib-1.0 )
 	udev? ( >=virtual/udev-150 )
@@ -66,19 +66,20 @@ CDEPEND=">=app-admin/eselect-opengl-1.3.0
 		media-libs/libepoxy
 	)
 	>=x11-apps/xinit-1.3
+	selinux? ( sec-policy/selinux-xserver )
 	systemd? (
 		sys-apps/dbus
 		sys-apps/systemd
 	)"
 
-DEPEND="${CDEPEND}
+DEPEND="${RDEPEND}
 	sys-devel/flex
 	>=x11-proto/bigreqsproto-1.1.0
 	>=x11-proto/compositeproto-0.4
 	>=x11-proto/damageproto-1.1
 	>=x11-proto/fixesproto-5.0
 	>=x11-proto/fontsproto-2.1.3
-	>=x11-proto/glproto-1.4.17-r1
+	>=x11-proto/glproto-1.4.17
 	>=x11-proto/inputproto-2.2.99.1
 	>=x11-proto/kbproto-1.0.3
 	>=x11-proto/randrproto-1.4.0
@@ -111,10 +112,6 @@ DEPEND="${CDEPEND}
 		>=x11-proto/xf86driproto-2.1.0
 		>=x11-proto/dri2proto-2.8
 	)"
-
-RDEPEND="${CDEPEND}
-	selinux? ( sec-policy/selinux-xserver )
-"
 
 PDEPEND="
 	xorg? ( >=x11-base/xorg-drivers-$(get_version_component_range 1-2) )"
@@ -185,11 +182,24 @@ src_configure() {
 		--with-sha1=libcrypto
 	)
 
+	# Xorg-server requires includes from OS mesa which are not visible for
+	# users of binary drivers.
+	mkdir -p "${T}/mesa-symlinks/GL"
+	for i in gl glx glxmd glxproto glxtokens; do
+		ln -s "${EROOT}usr/$(get_libdir)/opengl/xorg-x11/include/$i.h" "${T}/mesa-symlinks/GL/$i.h" || die
+	done
+	for i in glext glxext; do
+		ln -s "${EROOT}usr/$(get_libdir)/opengl/global/include/$i.h" "${T}/mesa-symlinks/GL/$i.h" || die
+	done
+	append-cppflags "-I${T}/mesa-symlinks"
+
 	xorg-2_src_configure
 }
 
 src_install() {
 	xorg-2_src_install
+
+	dynamic_libgl_install
 
 	server_based_install
 
@@ -199,7 +209,7 @@ src_install() {
 	fi
 
 	newinitd "${FILESDIR}"/xdm-setup.initd-1 xdm-setup
-	newinitd "${FILESDIR}"/xdm.initd-13 xdm
+	newinitd "${FILESDIR}"/xdm.initd-14 xdm
 	newconfd "${FILESDIR}"/xdm.confd-4 xdm
 
 	# install the @x11-module-rebuild set for Portage
@@ -231,6 +241,19 @@ pkg_postrm() {
 	if [[ -z ${REPLACED_BY_VERSION} && -e ${EROOT}/usr/$(get_libdir)/xorg/modules ]]; then
 		rm -rf "${EROOT}"/usr/$(get_libdir)/xorg/modules
 	fi
+}
+
+dynamic_libgl_install() {
+	# next section is to setup the dynamic libGL stuff
+	ebegin "Moving GL files for dynamic switching"
+		dodir /usr/$(get_libdir)/opengl/xorg-x11/extensions
+		local x=""
+		for x in "${ED}"/usr/$(get_libdir)/xorg/modules/extensions/lib{glx,dri,dri2}*; do
+			if [ -f ${x} -o -L ${x} ]; then
+				mv -f ${x} "${ED}"/usr/$(get_libdir)/opengl/xorg-x11/extensions
+			fi
+		done
+	eend 0
 }
 
 server_based_install() {

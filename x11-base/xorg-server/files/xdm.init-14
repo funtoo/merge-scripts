@@ -1,7 +1,5 @@
 #!/sbin/runscript
-# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License, v2
-# $Header: /var/cvsroot/gentoo-x86/x11-base/xorg-server/files/xdm.initd-11,v 1.1 2014/04/14 16:19:25 chithanh Exp $
 
 # This is here to serve as a note to myself, and future developers.
 #
@@ -53,9 +51,16 @@ depend() {
 	before alsasound
 	case ${DISPLAYMANAGER} in
 		gdm|gnome)
-			need consolekit dbus openrc-settingsd
+			need consolekit openrc-settingsd
 			;;
 	esac
+	
+	case ${DISPLAYMANAGER} in
+		kdm|kde)
+			need consolekit
+			;;
+	esac
+	
 	# Start before X
 	use consolekit dbus xfs
 }
