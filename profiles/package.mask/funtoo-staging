@@ -16,7 +16,7 @@
 >app-admin/eselect-opengl-1.2.7
 >app-emulation/emul-linux-x86-opengl-20140508
 >media-libs/mesa-10.3.5
->x11-base/xorg-server-1.16.1-r2
+>x11-base/xorg-server-1.16.1-r3
 >x11-proto/glproto-1.4.17
 
 # FL-1729: eudev update, this ebuild masked, kernel older 2.6.39 version unsupported
