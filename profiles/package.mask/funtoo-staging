@@ -1,4 +1,5 @@
 # FL-1956: debian kernel 3.16.7, masked for testing
+=sys-kernel/debian-sources-3.18.3
 =sys-kernel/debian-sources-3.16.7
 
 # FL-1924 add ati-drivers-14.12 masked for testing
