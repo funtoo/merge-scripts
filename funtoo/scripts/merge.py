@@ -29,6 +29,7 @@ funtoo_toolchain_overlay = GitTree("funtoo-toolchain", "master", "repos@git.funt
 mysql_overlay = GitTree("funtoo-mysql", "master", "repos@git.funtoo.org:funtoo-mysql.git", pull=True)
 ldap_overlay = GitTree("funtoo-ldap", "master", "repos@git.funtoo.org:funtoo-ldap-overlay.git", pull=True)
 funtoo_deadbeef = GitTree("funtoo-deadbeef", "master", "https://github.com/damex/funtoo-deadbeef.git", pull=True)
+funtoo_gambas = GitTree("funtoo-gambas", "master", "https://github.com/damex/funtoo-gambas.git", pull=True)
 funtoo_redhat = GitTree("funtoo-redhat", "master", "https://github.com/damex/funtoo-redhat.git", pull=True)
 funtoo_wmfs = GitTree("funtoo-wmfs", "master", "https://github.com/damex/funtoo-wmfs.git", pull=True)
 faustoo_overlay = GitTree("faustoo", "master", "https://github.com/fmoro/faustoo.git", pull=True)
@@ -118,6 +119,7 @@ ebuild_additions = [
 	InsertEbuilds(bliss_overlay, select="all", skip=["net-p2p/bittorrent-sync"], replace=False),
 	InsertEbuilds(squeezebox_overlay, select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_deadbeef, select="all", skip=None, replace=False),
+	InsertEbuilds(funtoo_gambas, select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_redhat, select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_wmfs, select="all", skip=None, replace=False),
 ]
