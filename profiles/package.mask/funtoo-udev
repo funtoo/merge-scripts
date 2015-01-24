@@ -3,4 +3,3 @@
 >virtual/udev-215
 >sys-apps/hwids-20141110
 >=sys-fs/eudev-1.5.4
->sys-fs/lvm2-2.02.103
