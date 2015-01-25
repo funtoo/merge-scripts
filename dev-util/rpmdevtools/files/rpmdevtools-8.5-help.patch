@@ -1,0 +1,35 @@
+diff -Nuar rpmdevtools-8.5/Makefile.am rpmdevtools-8.5-fix/Makefile.am
+--- rpmdevtools-8.5/Makefile.am	2013-11-20 15:49:55.000000000 +0000
++++ rpmdevtools-8.5-fix/Makefile.am	2015-01-25 13:48:10.296469959 +0000
+@@ -10,7 +10,6 @@
+ 
+ man1_MANS = rpmdev-diff.1 rpmdev-extract.1 rpmdev-bumpspec.1 rpmdev-newinit.1 \
+ 	rpmdev-newspec.1 rpmdev-packager.1 spectool.1
+-man8_MANS = rpmdev-rmdevelrpms.8
+ 
+ dist_pkgsysconf_DATA = curlrc newspec.conf rmdevelrpms.conf \
+ 	spectemplate-lib.spec spectemplate-minimal.spec \
+@@ -24,11 +23,11 @@
+ EXTRA_DIST = rpmdev-newinit.in rpmdev-newspec.in rpmdev-rmdevelrpms.py \
+ 	rpmdevtools.bash-completion.in spectool.in
+ 
+-MOSTLYCLEANFILES = $(bin_SCRIPTS) $(man1_MANS) $(man8_MANS) $(bashcomp_DATA)
++MOSTLYCLEANFILES = $(bin_SCRIPTS) $(man1_MANS) $(bashcomp_DATA)
+ 
+ sums = sum cksum sha1 sha224 sha256 sha384 sha512
+ 
+-all: $(bin_SCRIPTS) $(man1_MANS) $(man8_MANS) $(bashcomp_DATA)
++all: $(bin_SCRIPTS) $(man1_MANS) $(bashcomp_DATA)
+ 
+ %: %.in
+ 	$(SED) -e 's|__SYSCONFDIR__|$(sysconfdir)|g' $< > $@
+@@ -44,9 +43,6 @@
+ %.1: %
+ 	COLUMNS=1000 $(HELP2MAN) -s 1 -N -h -h -v -v $(<D)/$(<F) -o $@
+ 
+-%.8: %
+-	COLUMNS=1000 $(HELP2MAN) -s 8 -N $(<D)/$(<F) -o $@
+-
+ install-exec-hook:
+ 	cd $(DESTDIR)$(bindir) && \
+ 	for sum in $(sums) ; do ln rpmdev-md5 rpmdev-$$sum ; done
