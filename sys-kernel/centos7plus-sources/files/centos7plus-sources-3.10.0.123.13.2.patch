@@ -1,0 +1,11 @@
+--- net/core/neighbour.c	2014-12-30 09:14:24.625796105 +0300
++++ net/core/neighbour.c	2014-12-30 09:14:32.794795659 +0300
+@@ -2863,7 +2863,7 @@
+ {
+ 	struct net_device *dev = ctl->extra1;
+ 	struct neigh_parms *p = ctl->extra2;
+-	struct net *net = p->net;
++	struct net *net = neigh_parms_net(p);
+ 	int index = (int *) ctl->data - p->data;
+ 
+ 	if (!write)
