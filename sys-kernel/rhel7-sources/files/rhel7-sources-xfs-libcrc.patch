@@ -1,0 +1,21 @@
+diff -Nuar linux-3.10.0-rhel7/kernel-3.10.0-x86_64.config linux-3.10.0-rhel7-fix/kernel-3.10.0-x86_64.config
+--- linux-3.10.0-rhel7/kernel-3.10.0-x86_64.config	2014-10-28 17:36:40.000000000 +0000
++++ linux-3.10.0-rhel7-fix/kernel-3.10.0-x86_64.config	2015-01-26 14:47:41.137107724 +0000
+@@ -4544,7 +4544,7 @@
+ CONFIG_FS_MBCACHE=m
+ # CONFIG_REISERFS_FS is not set
+ # CONFIG_JFS_FS is not set
+-CONFIG_XFS_FS=m
++CONFIG_XFS_FS=y
+ CONFIG_XFS_QUOTA=y
+ CONFIG_XFS_POSIX_ACL=y
+ # CONFIG_XFS_RT is not set
+@@ -5190,7 +5190,7 @@
+ # CONFIG_CRC32_SARWATE is not set
+ # CONFIG_CRC32_BIT is not set
+ # CONFIG_CRC7 is not set
+-CONFIG_LIBCRC32C=m
++CONFIG_LIBCRC32C=y
+ CONFIG_CRC8=m
+ CONFIG_ZLIB_INFLATE=y
+ CONFIG_ZLIB_DEFLATE=m

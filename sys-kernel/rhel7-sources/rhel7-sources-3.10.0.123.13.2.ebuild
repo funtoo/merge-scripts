@@ -47,7 +47,8 @@ src_unpack() {
 }
 
 src_prepare() {
-	epatch "${FILESDIR}/${P}.patch"
+	epatch "${FILESDIR}"/${P}.patch
+	epatch "${FILESDIR}"/${PN}-xfs-libcrc.patch
 
 	sed -e "s;^\(EXTRAVERSION =\).*;\1 ${EXTRAVERSION};g" \
 		-i "${S}/Makefile" || die

@@ -1,0 +1,21 @@
+diff -Nuar linux-3.10.0-centos7plus/kernel-3.10.0-x86_64.config linux-3.10.0-centos7plus-fix/kernel-3.10.0-x86_64.config
+--- linux-3.10.0-centos7plus/kernel-3.10.0-x86_64.config	2014-11-13 21:13:47.000000000 +0000
++++ linux-3.10.0-centos7plus-fix/kernel-3.10.0-x86_64.config	2015-01-26 14:57:44.790989769 +0000
+@@ -4663,7 +4663,7 @@
+ # CONFIG_JFS_SECURITY is not set
+ # CONFIG_JFS_DEBUG is not set
+ # CONFIG_JFS_STATISTICS is not set
+-CONFIG_XFS_FS=m
++CONFIG_XFS_FS=y
+ CONFIG_XFS_QUOTA=y
+ CONFIG_XFS_POSIX_ACL=y
+ # CONFIG_XFS_RT is not set
+@@ -5318,7 +5318,7 @@
+ # CONFIG_CRC32_SARWATE is not set
+ # CONFIG_CRC32_BIT is not set
+ # CONFIG_CRC7 is not set
+-CONFIG_LIBCRC32C=m
++CONFIG_LIBCRC32C=y
+ CONFIG_CRC8=m
+ CONFIG_ZLIB_INFLATE=y
+ CONFIG_ZLIB_DEFLATE=m
