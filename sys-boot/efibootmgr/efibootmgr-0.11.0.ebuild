@@ -10,13 +10,13 @@ SRC_URI="https://github.com/vathpela/${PN}/releases/download/${PN}-${PV}/${PN}-$
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE=""
 
 RESTRICT="mirror"
 
 RDEPEND="sys-apps/pciutils
-	sys-boot/efivar"
+	sys-libs/efivar"
 DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
