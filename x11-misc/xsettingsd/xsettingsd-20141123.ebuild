@@ -2,12 +2,13 @@
 
 EAPI="5"
 
-inherit git-2 scons-utils
+inherit scons-utils
+
+GITHUB_COMMIT="2a516a91d8352b3b93a7a1ef5606dbd21fa06b7c"
 
 DESCRIPTION="A daemon that implements the XSETTINGS specification"
 HOMEPAGE="https://code.google.com/p/xsettingsd"
-EGIT_REPO_URI="https://github.com/derat/xsettingsd.git"
-EGIT_COMMIT="b7312ceeb10c382e7889538b4acb5e12a6a16214"
+SRC_URI="https://github.com/derat/xsettingsd/archive/${GITHUB_COMMIT}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="BSD-2"
 SLOT="0"
@@ -18,6 +19,8 @@ RDEPEND="x11-libs/libX11"
 
 DEPEND="${RDEPEND}
 	virtual/pkgconfig"
+
+S="${WORKDIR}/${PN}-${GITHUB_COMMIT}"
 
 src_compile() {
 	escons
