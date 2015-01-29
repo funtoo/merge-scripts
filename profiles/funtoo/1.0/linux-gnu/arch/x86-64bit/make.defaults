@@ -7,6 +7,8 @@ ACCEPT_KEYWORDS="${ARCH}"
 CHOST="x86_64-pc-linux-gnu"
 CFLAGS="-O2 -pipe"
 CXXFLAGS="${CFLAGS}"
+# FL-2051. set sane CPU_FLAGS_X86
+CPU_FLAGS_X86="mmx sse sse2"
 
 # 2006/06/07 - Danny van Dyk <kugelfang@gentoo.org>
 # Multilib settings for all amd64 subprofiles.
