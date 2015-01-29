@@ -26,7 +26,6 @@ sabayon_for_gentoo = GitTree("sabayon-for-gentoo", "master", "git://github.com/S
 #funtoo_gnome_overlay = GitTree("funtoo-gnome", "experimental" if experimental else "master", "repos@git.funtoo.org:funtoo-gnome-overlay.git", pull=True)
 funtoo_gnome_overlay = GitTree("funtoo-gnome", "master", "repos@git.funtoo.org:funtoo-gnome-overlay.git", pull=True)
 funtoo_toolchain_overlay = GitTree("funtoo-toolchain", "master", "repos@git.funtoo.org:funtoo-toolchain-overlay.git", pull=True)
-mysql_overlay = GitTree("funtoo-mysql", "master", "repos@git.funtoo.org:funtoo-mysql.git", pull=True)
 ldap_overlay = GitTree("funtoo-ldap", "master", "repos@git.funtoo.org:funtoo-ldap-overlay.git", pull=True)
 funtoo_deadbeef = GitTree("funtoo-deadbeef", "master", "https://github.com/damex/funtoo-deadbeef.git", pull=True)
 funtoo_gambas = GitTree("funtoo-gambas", "master", "https://github.com/damex/funtoo-gambas.git", pull=True)
@@ -136,7 +135,6 @@ ebuild_modifications = [
 	InsertEbuilds(sabayon_for_gentoo, select=["sci-geosciences/grass", "app-admin/equo", "app-admin/matter", "sys-apps/entropy", "sys-apps/entropy-server", "sys-apps/entropy-client-services","app-admin/rigo", "sys-apps/rigo-daemon", "sys-apps/magneto-core", "x11-misc/magneto-gtk", "x11-misc/magneto-gtk3", "kde-misc/magneto-kde", "app-misc/magneto-loader"], replace=True),
 	InsertEbuilds(progress_overlay, select="all", skip=None, replace=True, merge=False),
 	InsertEbuilds(funtoo_gnome_overlay, select="all", skip=None, replace=True, merge=["dev-python/pyatspi", "dev-python/pygobject", "dev-util/gdbus-codegen", "x11-libs/vte"]),
-	InsertEbuilds(mysql_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(funtoo_media, select="all", skip=None, replace=True),
 	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
 	InsertEbuilds(funtoo_toolchain_overlay, select="all", skip=None, replace=True, merge=False),
@@ -149,7 +147,6 @@ eclass_steps = [
 	SyncDir(funtoo_deadbeef.root,"eclass"),
 	SyncDir(funtoo_gnome_overlay.root,"eclass"),
 	SyncDir(progress_overlay.root, "eclass"),
-	SyncDir(mysql_overlay.root, "eclass"),
 	SyncDir(funtoo_overlay.root, "eclass"),
 ]
 
