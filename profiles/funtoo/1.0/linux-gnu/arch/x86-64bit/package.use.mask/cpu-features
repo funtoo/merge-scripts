@@ -1,6 +1,7 @@
 # Samuli Suominen <ssuominen@gentoo.org> (10 May 2009)
 # Broken SSE2 detection for x86_64 wrt #262405
 media-libs/libsoundtouch sse2
+media-libs/libsoundtouch cpu_flags_x86_sse2
 
 # Jeremy Olexa <darkside@gentoo.org> (24 Dec 2008)
 # unmask USE=bindist on amd64 - also unmasking the other flags that were under a
@@ -14,10 +15,12 @@ sci-misc/boinc -cuda
 # Oct 23th 2006; blubb@gentoo.org
 # the asm is 64bit save, but it doesn't compile anyway
 games-emulation/visualboyadvance mmx
+games-emulation/visualboyadvance cpu_flags_x86_mmx
 
 # Oct 23th 2006; blubb@gentoo.org
 # upstream forces sse2 for amd64; mmx flag does nothing
 app-crypt/johntheripper mmx
+app-crypt/johntheripper cpu_flags_x86_mmx
 
 # Oct 23th 2006; blubb@gentoo.org
 # x86 asm only:
@@ -35,26 +38,44 @@ net-irc/xchat-gnome mmx
 net-misc/asterisk mmx
 x11-terms/eterm mmx
 media-tv/xawtv mmx
+games-emulation/xmame cpu_flags_x86_mmx
+games-emulation/xmess cpu_flags_x86_mmx
+media-gfx/inkscape cpu_flags_x86_mmx
+media-libs/allegro cpu_flags_x86_mmx cpu_flags_x86_sse
+media-libs/libfame cpu_flags_x86_mmx
+media-libs/libmovtar cpu_flags_x86_mmx
+media-libs/sdl-gfx cpu_flags_x86_mmx
+media-libs/smpeg cpu_flags_x86_mmx
+media-video/mjpegtools cpu_flags_x86_mmx
+net-irc/xchat cpu_flags_x86_mmx
+net-irc/xchat-gnome cpu_flags_x86_mmx
+net-misc/asterisk cpu_flags_x86_mmx
+x11-terms/eterm cpu_flags_x86_mmx
+media-tv/xawtv cpu_flags_x86_mmx
 
 
 # x86_64 opts are enabled with USE sse. so masking the rest
 media-sound/mpg123 mmx 3dnow 3dnowext
+media-sound/mpg123 cpu_flags_x86_mmx cpu_flags_x86_3dnow cpu_flags_x86_3dnowext
 
 # Oct 24th 2006; blubb@gentoo.org
 # bug 152646
 x11-themes/polymer mmx sse2
+x11-themes/polymer cpu_flags_x86_mmx cpu_flags_x86_sse2
 
 
 # Apr 25th 2007: Alexis Ballier <aballier@gentoo.org>
 # Mask mmx for media-libs/mlt
 # assembler is not 64bits compliant (yet)
 media-libs/mlt mmx
+media-libs/mlt cpu_flags_x86_mmx
 
 # 8 Aug 2008: Alexis Ballier <aballier@gentoo.org>
 # x86 asm only, it won't be built on amd64 if mmx useflag is enabled but that
 # saves people from needlessly installing nasm
 # Refs bug #93279
 media-sound/lame mmx
+media-sound/lame cpu_flags_x86_mmx
 
 
 
