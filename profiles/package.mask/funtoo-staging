@@ -1,3 +1,6 @@
+# Fl-2033, nginx-1.7.8, masked for testing
+=www-servers/nginx-1.7.8
+
 # FL-1956: debian kernel 3.16.7, masked for testing
 =sys-kernel/debian-sources-3.18.3
 =sys-kernel/debian-sources-3.16.7
