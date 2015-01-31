@@ -17,7 +17,7 @@ SRC_URI="mirror://openssl/source/${MY_P}.tar.gz"
 LICENSE="openssl"
 SLOT="0.9.8"
 KEYWORDS="*"
-IUSE="bindist gmp kerberos sse2 test zlib"
+IUSE="bindist gmp kerberos cpu_flags_x86_sse2 test zlib"
 
 RDEPEND="gmp? ( >=dev-libs/gmp-5.1.3-r1[${MULTILIB_USEDEP}] )
 	zlib? ( >=sys-libs/zlib-1.2.8-r1[${MULTILIB_USEDEP}] )
@@ -111,7 +111,7 @@ multilib_src_configure() {
 	echoit \
 	./${config} \
 		${sslout} \
-		$(use sse2 || echo "no-sse2") \
+		$(use cpu_flags_x86_sse2 || echo "no-sse2") \
 		enable-camellia \
 		$(use_ssl !bindist ec) \
 		enable-idea \
