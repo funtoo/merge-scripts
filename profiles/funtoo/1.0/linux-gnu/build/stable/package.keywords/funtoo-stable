@@ -1,3 +1,8 @@
+## FL-2060: stabilize, xorg-drivers-1.16, fontsproto and xproto:
+=x11-base/xorg-drivers-1.16 amd64 x86
+=x11-proto/xproto-7.0.26 amd64 x86
+=x11-proto/fontsproto-2.1.3 amd64 x86
+
 #Mysql ebuilds unfork, set keywords:
 
 =dev-db/mariadb-10.0.16 amd64 x86
