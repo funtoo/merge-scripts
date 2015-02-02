@@ -1,14 +1,15 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=5
+EAPI="5-progress"
 
 KDE_REQUIRED="optional"
 QT_MINIMAL="4.7.4"
 KDE_SCM="git"
 CMAKE_REQUIRED="never"
 
-PYTHON_COMPAT=( python2_7 python3_3 python3_4 )
-PYTHON_REQ_USE="threads,xml"
+PYTHON_ABI_TYPE="single"
+PYTHON_DEPEND="<<[threads,xml]>>"
+PYTHON_RESTRICTED_ABIS="*-jython *-pypy"
 
 # experimental ; release ; old
 # Usually the tarballs are moved a lot so this should make
@@ -25,7 +26,7 @@ BRANDING="${PN}-branding-gentoo-0.8.tar.xz"
 # PATCHSET="${P}-patchset-01.tar.xz"
 
 [[ ${PV} == *9999* ]] && SCM_ECLASS="git-2"
-inherit base autotools bash-completion-r1 check-reqs eutils java-pkg-opt-2 kde4-base pax-utils python-single-r1 multilib toolchain-funcs flag-o-matic nsplugins ${SCM_ECLASS}
+inherit base autotools bash-completion-r1 check-reqs eutils java-pkg-opt-2 kde4-base pax-utils python multilib toolchain-funcs flag-o-matic nsplugins ${SCM_ECLASS}
 unset SCM_ECLASS
 
 DESCRIPTION="LibreOffice, a full office productivity suite"
@@ -90,7 +91,6 @@ SLOT="0"
 KEYWORDS="*"
 
 COMMON_DEPEND="
-	${PYTHON_DEPS}
 	app-arch/zip
 	app-arch/unzip
 	>=app-text/hunspell-1.3.2-r3
@@ -247,7 +247,6 @@ PATCHES=(
 )
 
 REQUIRED_USE="
-	${PYTHON_REQUIRED_USE}
 	bluetooth? ( dbus )
 	gnome? ( gtk )
 	eds? ( gnome )
@@ -290,7 +289,7 @@ pkg_pretend() {
 pkg_setup() {
 	java-pkg-opt-2_pkg_setup
 	kde4-base_pkg_setup
-	python-single-r1_pkg_setup
+	python_pkg_setup
 
 	[[ ${MERGE_TYPE} != binary ]] && check-reqs_pkg_setup
 }
@@ -334,8 +333,8 @@ src_prepare() {
 	# optimization flags
 	export GMAKE_OPTIONS="${MAKEOPTS}"
 	# System python 2.7 enablement:
-	export PYTHON_CFLAGS=$(python_get_CFLAGS)
-	export PYTHON_LIBS=$(python_get_LIBS)
+	export PYTHON_CFLAGS="-I${EPREFIX}$(python_get_includedir)"
+	export PYTHON_LIBS="$(python_get_library -l)"
 
 	# patchset
 	if [[ -n ${PATCHSET} ]]; then
