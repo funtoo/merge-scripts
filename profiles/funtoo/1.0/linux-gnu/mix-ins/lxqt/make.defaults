@@ -1,1 +1,1 @@
-USE="dbus consolekit policykit qt4"
+USE="dbus consolekit policykit"
