@@ -8,6 +8,8 @@ DESCRIPTION="Pulseaudio Volume Control, GTK based mixer for Pulseaudio"
 HOMEPAGE="http://freedesktop.org/software/pulseaudio/pavucontrol/"
 SRC_URI="http://build.funtoo.org/distfiles/${P}.tar.gz"
 
+RESTRICT="mirror"
+
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="*"
