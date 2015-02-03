@@ -1,3 +1,6 @@
+# FL-2076: oss 4.2.2011, masked for testing
+=media-sound/oss-4.2.2011
+
 # Fl-2033, nginx-1.7.8, masked for testing
 =www-servers/nginx-1.7.8
 
