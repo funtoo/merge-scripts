@@ -90,7 +90,7 @@ unset lo_xt
 LICENSE="|| ( LGPL-3 MPL-1.1 )"
 SLOT="0"
 [[ ${PV} == *9999* ]] || \
-KEYWORDS="~*"
+KEYWORDS="*"
 
 # FIXME: collada? ( media-libs/opencollada )
 #        how to configure system-collada?
