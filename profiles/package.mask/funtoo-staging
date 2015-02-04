@@ -1,3 +1,6 @@
+# FL-2075: pulseaudio 5.99.3, masked for testing
+=media-sound/pulseaudio-5.99.3
+
 # FL-2076: oss 4.2.2011, masked for testing
 =media-sound/oss-4.2.2011
 
