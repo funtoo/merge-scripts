@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-libs/mesa/mesa-10.3.7.ebuild,v 1.1 2015/01/12 18:30:27 mattst88 Exp $
+# $Header: /var/cvsroot/gentoo-x86/media-libs/mesa/mesa-10.3.7.ebuild,v 1.2 2015/02/03 21:43:26 mattst88 Exp $
 
 EAPI=5
 
@@ -205,6 +205,8 @@ src_prepare() {
 		EPATCH_SUFFIX="patch" \
 		epatch
 	fi
+
+	epatch "${FILESDIR}"/${PN}-10.3.7-dont-use-clrsb.patch
 
 	# relax the requirement that r300 must have llvm, bug 380303
 	epatch "${FILESDIR}"/${PN}-10.2-dont-require-llvm-for-r300.patch

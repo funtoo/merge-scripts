@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-libs/mesa/mesa-10.4.2.ebuild,v 1.3 2015/01/13 22:49:58 mattst88 Exp $
+# $Header: /var/cvsroot/gentoo-x86/media-libs/mesa/mesa-10.4.3.ebuild,v 1.1 2015/02/03 21:43:26 mattst88 Exp $
 
 EAPI=5
 
@@ -79,7 +79,7 @@ REQUIRED_USE="
 	video_cards_radeon? ( || ( classic gallium ) )
 	video_cards_r100?   ( classic )
 	video_cards_r200?   ( classic )
-	video_cards_r300?   ( gallium )
+	video_cards_r300?   ( gallium llvm )
 	video_cards_r600?   ( gallium )
 	video_cards_radeonsi?   ( gallium llvm )
 	video_cards_vmware? ( gallium )
@@ -212,6 +212,8 @@ src_prepare() {
 		EPATCH_SUFFIX="patch" \
 		epatch
 	fi
+
+	epatch "${FILESDIR}"/${PN}-10.3.7-dont-use-clrsb.patch
 
 	# fix for hardened pax_kernel, bug 240956
 	[[ ${PV} != 9999* ]] && epatch "${FILESDIR}"/glx_ro_text_segm.patch
