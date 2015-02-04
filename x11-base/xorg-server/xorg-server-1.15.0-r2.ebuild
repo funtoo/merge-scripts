@@ -1,6 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-base/xorg-server/xorg-server-1.15.0.ebuild,v 1.14 2014/07/26 09:31:38 ssuominen Exp $
 
 EAPI=5
 
@@ -10,7 +8,7 @@ EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/xserver"
 
 DESCRIPTION="X.Org X servers"
 SLOT="0/${PV}"
-KEYWORDS="alpha amd64 arm hppa ia64 ~mips ppc ppc64 ~s390 ~sh sparc x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~arm-linux ~x86-linux"
+KEYWORDS="*"
 
 IUSE_SERVERS="dmx kdrive xnest xorg xvfb"
 IUSE="${IUSE_SERVERS} ipv6 minimal nptl selinux +suid tslib +udev unwind"
@@ -194,7 +192,7 @@ src_install() {
 	fi
 
 	newinitd "${FILESDIR}"/xdm-setup.initd-1 xdm-setup
-	newinitd "${FILESDIR}"/xdm.initd-12 xdm
+	newinitd "${FILESDIR}"/xdm.initd-14 xdm
 	newconfd "${FILESDIR}"/xdm.confd-4 xdm
 
 	# install the @x11-module-rebuild set for Portage
