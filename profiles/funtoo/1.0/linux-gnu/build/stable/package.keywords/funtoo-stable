@@ -1,3 +1,7 @@
+# Stabilize =media-gfx/inkscape-0.48.5-r1 until it is stable in gentoo-x86.
+# Older versions fail to build with >=app-text/poppler-0.29.0.
+=media-gfx/inkscape-0.48.5-r1 amd64 x86
+
 ## FL-2060: stabilize, xorg-drivers-1.16, fontsproto and xproto:
 =x11-base/xorg-drivers-1.16 amd64 x86
 =x11-proto/xproto-7.0.26 amd64 x86
