@@ -63,6 +63,7 @@ BIN_COMMON_DEPEND="
 	dev-libs/icu:0/54
 	=media-gfx/graphite2-1.2*
 	media-libs/harfbuzz:0/0.9.18[icu]
+	media-libs/glew:0/1.11
 	media-libs/libpng:0/16
 	>=sys-libs/glibc-2.18
 	virtual/jpeg:62
@@ -111,7 +112,7 @@ COMMON_DEPEND="
 	media-gfx/graphite2
 	>=media-libs/fontconfig-2.8.0
 	media-libs/freetype:2
-	>=media-libs/glew-1.10
+	>=media-libs/glew-1.10:=
 	>=media-libs/harfbuzz-0.9.18:=[icu(+)]
 	media-libs/lcms:2
 	>=media-libs/libpng-1.4
