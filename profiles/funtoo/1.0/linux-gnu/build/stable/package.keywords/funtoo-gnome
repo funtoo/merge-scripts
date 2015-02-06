@@ -1,6 +1,6 @@
 ## FL-2090: set keywords to appstream-glib and appdata-tools ##
-=dev-libs/appstream-glib-0.3.4
-=dev-util/appdata-tools-0.1.8-r1
+=dev-libs/appstream-glib-0.3.4 amd64 x86
+=dev-util/appdata-tools-0.1.8-r1 amd64 x86
 
 ###################################
 =x11-misc/colord-1.2.5-r1 amd64 x86
