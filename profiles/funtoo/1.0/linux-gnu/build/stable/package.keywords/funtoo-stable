@@ -1,3 +1,6 @@
+# Stabilize sys-block/thin-provisionin-tools-0.4.1. FL-2089:
+=sys-block/thin-provisioning-tools-0.4.1 amd64 x86
+
 # Stabilize =media-gfx/inkscape-0.48.5-r1 until it is stable in gentoo-x86.
 # Older versions fail to build with >=app-text/poppler-0.29.0.
 =media-gfx/inkscape-0.48.5-r1 amd64 x86
