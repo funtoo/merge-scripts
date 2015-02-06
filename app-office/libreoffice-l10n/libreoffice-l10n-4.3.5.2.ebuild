@@ -12,7 +12,7 @@ BASE_SRC_URI="http://download.documentfoundation.org/${PN/-l10n/}/stable/${MY_PV
 
 LICENSE="|| ( LGPL-3 MPL-1.1 )"
 SLOT="0"
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="offlinehelp"
 
 #
