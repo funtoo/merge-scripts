@@ -2,9 +2,6 @@
 =sys-kernel/centos7plus-sources-3.10.0.123.20.1
 =sys-kernel/rhel7-sources-3.10.0.123.20.1
 
-# FL-2076: oss 4.2.2011, masked for testing
-=media-sound/oss-4.2.2011
-
 # Fl-2033, nginx-1.7.8, masked for testing
 =www-servers/nginx-1.7.8
 
