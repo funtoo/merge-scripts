@@ -1,3 +1,6 @@
+# Mask the very latest layman, which using a a portage repository configs. Not yet in Funtoo.
+>app-portage/layman-2.2.0-r7
+
 # FL-2020, FL-2015, mask very latest libevent, breaks packages.
 >dev-libs/libevent-2.0.22
 
