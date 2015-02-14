@@ -29,6 +29,7 @@ DEPEND="${RDEPEND}
 	nls? (
 		app-text/po4a
 		sys-devel/gettext
+	virtual/pkgconfig	
 	)"
 
 pkg_setup() {
