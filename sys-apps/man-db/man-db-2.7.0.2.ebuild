@@ -29,8 +29,8 @@ DEPEND="${RDEPEND}
 	nls? (
 		app-text/po4a
 		sys-devel/gettext
-	virtual/pkgconfig	
-	)"
+	)
+	virtual/pkgconfig"	
 
 pkg_setup() {
 	# Create user now as Makefile in src_install does setuid/chown
