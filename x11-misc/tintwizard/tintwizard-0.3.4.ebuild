@@ -8,7 +8,7 @@ inherit python
 
 DESCRIPTION="GUI wizard which generates config files for tint2 panels"
 HOMEPAGE="http://code.google.com/p/tintwizard/"
-ESVN_REPO_URI="http://tintwizard.googlecode.com/svn/trunk"
+SRC_URI="http://tintwizard.googlecode.com/files/${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -19,6 +19,8 @@ RDEPEND="dev-python/pygtk:2
 	x11-misc/tint2"
 
 DEPEND=""
+
+S="${WORKDIR}"
 
 src_prepare() {
 	python_convert_shebangs 2 tintwizard.py
