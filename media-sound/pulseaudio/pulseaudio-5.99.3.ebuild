@@ -26,6 +26,7 @@ REQUIRED_USE="adrian-aec? ( speex )
 	bluetooth? ( dbus )
 	native-headset? ( bluetooth )
 	ofono-headset? ( bluetooth )
+	udev? ( || ( alsa oss ) )
 	webrtc-aec? ( speex )"
 
 # alsa-utils dep is for the alsasound init.d script (see bug #155707)
