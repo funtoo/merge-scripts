@@ -9,16 +9,17 @@ MY_P="${PN}-${PV/_/-}"
 DESCRIPTION="A lightweight panel/taskbar"
 HOMEPAGE="http://code.google.com/p/tint2"
 ESVN_REPO_URI="http://tint2.googlecode.com/svn/trunk"
-ESVN_REVISION="652"
+ESVN_REVISION="725"
 
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~*"
-IUSE="battery examples tint2conf startup-notification"
+IUSE="battery examples tint2conf startup-notification svg"
 
 PDEPEND="tint2conf? ( x11-misc/tintwizard )"
 
 RDEPEND="startup-notification? ( x11-libs/startup-notification )
+	svg? ( gnome-base/librsvg )
 	dev-libs/glib:2
 	media-libs/imlib2[X]
 	x11-libs/cairo
@@ -37,11 +38,7 @@ DEPEND="${RDEPEND}
 S="${WORKDIR}/${MY_P}"
 
 src_prepare() {
-	epatch "${FILESDIR}/${PN}-battery-compile.patch"
-
-	if use tint2conf ; then
-		epatch "${FILESDIR}/${PN}-icon-cache.patch"
-	fi
+	use tint2conf && epatch "${FILESDIR}/${PN}-icon-cache.patch"
 }
 
 src_configure() {
@@ -50,6 +47,7 @@ src_configure() {
 		$(cmake-utils_use_enable examples EXAMPLES)
 		$(cmake-utils_use_enable tint2conf TINT2CONF)
 		$(cmake-utils_use_enable startup-notification SN)
+		$(cmake-utils_use_enable svg RSVG)
 
 		"-DDOCDIR=/usr/share/doc/${PF}"
 	)
