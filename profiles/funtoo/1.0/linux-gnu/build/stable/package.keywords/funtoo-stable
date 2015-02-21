@@ -1,3 +1,6 @@
+# FL-2110: preserve cairo-1.12.18 keywords after unfork in funtoo-gnome-overlay
+=x11-libs/cairo-1.12.18* amd64 x86
+
 # Stabilize sys-block/thin-provisionin-tools-0.4.1. FL-2089:
 =sys-block/thin-provisioning-tools-0.4.1 amd64 x86
 
