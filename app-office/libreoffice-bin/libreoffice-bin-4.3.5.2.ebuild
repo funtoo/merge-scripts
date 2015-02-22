@@ -145,7 +145,7 @@ RDEPEND="${COMMON_DEPEND}
 	!app-office/libreoffice
 	!<app-office/openoffice-bin-3.4.0-r1
 	!app-office/openoffice
-	media-fonts/libertine-ttf
+	media-fonts/libertine
 	media-fonts/liberation-fonts
 	media-fonts/urw-fonts
 	java? ( >=virtual/jre-1.6 )
