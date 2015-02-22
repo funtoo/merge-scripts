@@ -15,8 +15,6 @@ version</longdescription>
     <flag name="jemalloc">Use <pkg>dev-libs/jemalloc</pkg> for allocations</flag>
     <flag name="odk">Build the Office Development Kit</flag>
     <flag name="telepathy">Enable document colaboration features using telepathy communication framework.</flag>
-    <flag name="vba">Enable support for VBA compatibility and ActiveX embedding</flag>
     <flag name="vlc">Use <pkg>media-video/vlc</pkg> for video embedding</flag>
-    <flag name="webdav">Adds support for HTTP content adding via <pkg>net-libs/neon</pkg></flag>
   </use>
 </pkgmetadata>
