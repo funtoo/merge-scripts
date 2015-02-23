@@ -1,3 +1,6 @@
+# preserve pcituils keywords, after unfork from funtoo-overlay
+=sys-apps/pciutils-3.3.0-r2 amd64 x86
+
 # FL-2110: preserve cairo-1.12.18 keywords after unfork in funtoo-gnome-overlay
 =x11-libs/cairo-1.12.18* amd64 x86
 
