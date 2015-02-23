@@ -9,7 +9,7 @@ CMAKE_REQUIRED="never"
 
 PYTHON_ABI_TYPE="single"
 PYTHON_DEPEND="<<[threads,xml]>>"
-PYTHON_RESTRICTED_ABIS="*-jython *-pypy"
+PYTHON_RESTRICTED_ABIS="3.1 3.2 *-jython *-pypy"
 
 # experimental ; release ; old
 # Usually the tarballs are moved a lot so this should make
