@@ -5,32 +5,49 @@ inherit udev eutils
 
 DESCRIPTION="Hardware (PCI, USB, OUI, IAB) IDs databases"
 HOMEPAGE="https://github.com/gentoo/hwids"
-SRC_URI="https://github.com/gentoo/hwids/archive/${P}.tar.gz"
+if [[ ${PV} == "99999999" ]]; then
+	EGIT_REPO_URI="${HOMEPAGE}.git"
+	inherit git-2
+else
+	SRC_URI="${HOMEPAGE}/archive/${P}.tar.gz"
+	KEYWORDS="*"
+fi
 
 LICENSE="|| ( GPL-2 BSD ) public-domain"
 SLOT="0"
-KEYWORDS="*"
-IUSE="+udev"
+IUSE="+net +pci +udev +usb"
 
 DEPEND="udev? (
 	dev-lang/perl
 	>=virtual/udev-206
 )"
+[[ ${PV} == "99999999" ]] && DEPEND+=" udev? ( net-misc/curl )"
 RDEPEND="!<sys-apps/pciutils-3.1.9-r2
 	!<sys-apps/usbutils-005-r1"
 
 S=${WORKDIR}/hwids-${P}
 
 src_prepare() {
+	[[ ${PV} == "99999999" ]] && emake fetch
+
 	sed -i -e '/udevadm hwdb/d' Makefile || die
 }
 
+_emake() {
+	emake \
+		NET=$(usex net) \
+		PCI=$(usex pci) \
+		UDEV=$(usex udev) \
+		USB=$(usex usb) \
+		"$@"
+}
+
 src_compile() {
-	emake UDEV=$(usex udev)
+	_emake
 }
 
 src_install() {
-	emake UDEV=$(usex udev) install \
+	_emake install \
 		DOCDIR="${EPREFIX}/usr/share/doc/${PF}" \
 		MISCDIR="${EPREFIX}/usr/share/misc" \
 		HWDBDIR="${EPREFIX}$(get_udevdir)/hwdb.d" \
