@@ -29,7 +29,7 @@ app-emulation/qemu usb usbredir
 # FL-1093, https://bugs.gentoo.org/show_bug.cgi?id=481316
 # FL-1098, force enable gbm use flag for media-libs/mesa
 # Force enable llvm-shared-libs USE flag for mesa
-media-libs/mesa gbm llvm-shared-libs
+media-libs/mesa gbm
 
 # FL-934, force opengl USE flag to have clean emerge of xvba-video and x11-libs/libva
 x11-libs/libva opengl
