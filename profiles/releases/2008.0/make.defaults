@@ -1,6 +1,0 @@
-# Copyright 1999-2011 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/releases/2008.0/make.defaults,v 1.2 2011/02/13 16:53:40 arfrever Exp $
-
-# Adding this one, since it makes sense.
-USE="bzip2"
