@@ -242,6 +242,9 @@ PATCHES=(
 	# not upstreamable stuff
 	"${FILESDIR}/${PN}-4.4-system-pyuno.patch"
 
+	# from 4.4 branch
+	"${FILESDIR}/${PN}-4.4.0.3-gcc-4.9-Os-link-failure.patch" # bug 538348
+
 	# from master branch
 	"${FILESDIR}/${PN}-4.4.0.3-telepathy-build-fix.patch"
 )
@@ -521,6 +524,11 @@ src_configure() {
 }
 
 src_compile() {
+	# more and more LO stuff tries to use OpenGL, including tests during build
+	# bug 501508, bug 540624 and probably more
+	addpredict /dev/dri
+	addpredict /dev/nvidiactl
+
 	# hack for offlinehelp, this needs fixing upstream at some point
 	# it is broken because we send --without-help
 	# https://bugs.freedesktop.org/show_bug.cgi?id=46506
