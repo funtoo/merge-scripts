@@ -1,7 +1,3 @@
-# FL-2092: centos7plus and rhel7 3.10.0.123.20.1 sources, masked for testing
-=sys-kernel/centos7plus-sources-3.10.0.123.20.1
-=sys-kernel/rhel7-sources-3.10.0.123.20.1
-
 # Fl-2033, nginx-1.7.8, masked for testing
 =www-servers/nginx-1.7.8
 
