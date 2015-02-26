@@ -12,9 +12,6 @@
 #FL-1767: add bluez-5.27, masked for testing
 =net-wireless/bluez-5.27
 
-#FL-1783: sync gentoo eclasses and add mariadb-10.0.15-r1 test need to move it to stable. This should fix FL-1664 aswell
-=dev-db/mariadb-10.0.15-r1
-
 # FL-1761: new rebased Portage, needs a lot of testing
 >=sys-apps/portage-2.3.7
 
