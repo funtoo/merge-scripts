@@ -1,0 +1,5 @@
+CHOST="armv7a-hardfloat-linux-gnueabi"
+CFLAGS="-Os -pipe -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard"
+CXXFLAGS="${CFLAGS}"
+FFLAGS="${CFLAGS}"
+FCFLAGS="${CFLAGS}"
