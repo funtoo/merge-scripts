@@ -248,7 +248,6 @@ PATCHES=(
 
 	# from master branch
 	"${FILESDIR}/${PN}-4.4.0.3-telepathy-build-fix.patch"
-
 	"${FILESDIR}/${PN}-4.4.1.2-add-kde4-open-url-script.patch"
 	"${FILESDIR}/${PN}-4.4.1.2-improve-KDE4FilePicker.patch"
 )
@@ -321,8 +320,7 @@ src_unpack() {
 			EGIT_CHECKOUT_DIR="${WORKDIR}/${P}"
 			[[ ${mod} != core ]] && EGIT_CHECKOUT_DIR="${WORKDIR}/${PN}-${mod}-${PV}"
 			EGIT_REPO_URI="git://anongit.freedesktop.org/${PN}/${mod}"
-			EGIT_NOUNPACK="true"
-			git-3_src_unpack
+			git-r3_src_unpack
 			if [[ ${mod} != core ]]; then
 				mod2=${mod}
 				# mapping does not match on help
