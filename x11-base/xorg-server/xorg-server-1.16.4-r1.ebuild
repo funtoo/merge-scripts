@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-base/xorg-server/xorg-server-1.17.1-r1.ebuild,v 1.1 2015/02/27 21:44:56 mgorny Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-base/xorg-server/xorg-server-1.16.4-r1.ebuild,v 1.2 2015/02/19 15:50:39 chithanh Exp $
 
 EAPI=5
 
@@ -9,10 +9,10 @@ inherit xorg-2 multilib versionator flag-o-matic
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/xserver"
 
 DESCRIPTION="X.Org X servers"
-SLOT="0/${PV}"
+SLOT="0/1.16.1"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~arm-linux ~x86-linux"
 
-IUSE_SERVERS="dmx kdrive xephyr xnest xorg xvfb"
+IUSE_SERVERS="dmx kdrive xnest xorg xvfb"
 IUSE="${IUSE_SERVERS} glamor ipv6 minimal nptl selinux +suid systemd tslib +udev unwind wayland"
 
 CDEPEND=">=app-admin/eselect-opengl-1.3.0
@@ -22,7 +22,7 @@ CDEPEND=">=app-admin/eselect-opengl-1.3.0
 	>=x11-apps/rgb-1.0.3
 	>=x11-apps/xauth-1.0.3
 	x11-apps/xkbcomp
-	>=x11-libs/libdrm-2.4.46
+	>=x11-libs/libdrm-2.4.20
 	>=x11-libs/libpciaccess-0.12.901
 	>=x11-libs/libXau-1.0.4
 	>=x11-libs/libXdmcp-1.0.2
@@ -30,7 +30,7 @@ CDEPEND=">=app-admin/eselect-opengl-1.3.0
 	>=x11-libs/libxkbfile-1.0.4
 	>=x11-libs/libxshmfence-1.1
 	>=x11-libs/pixman-0.27.2
-	>=x11-libs/xtrans-1.3.5
+	>=x11-libs/xtrans-1.3.3
 	>=x11-misc/xbitmaps-1.0.1
 	>=x11-misc/xkeyboard-config-2.4.1-r3
 	dmx? (
@@ -55,14 +55,6 @@ CDEPEND=">=app-admin/eselect-opengl-1.3.0
 		>=x11-libs/libXext-1.0.5
 		x11-libs/libXv
 	)
-	xephyr? (
-		x11-libs/libxcb
-		x11-libs/xcb-util
-		x11-libs/xcb-util-image
-		x11-libs/xcb-util-keysyms
-		x11-libs/xcb-util-renderutil
-		x11-libs/xcb-util-wm
-	)
 	!minimal? (
 		>=x11-libs/libX11-1.1.5
 		>=x11-libs/libXext-1.0.5
@@ -75,7 +67,7 @@ CDEPEND=">=app-admin/eselect-opengl-1.3.0
 		>=dev-libs/wayland-1.3.0
 		media-libs/libepoxy
 	)
-	>=x11-apps/xinit-1.3.3-r1
+	>=x11-apps/xinit-1.3
 	systemd? (
 		sys-apps/dbus
 		sys-apps/systemd
@@ -124,7 +116,6 @@ DEPEND="${CDEPEND}
 
 RDEPEND="${CDEPEND}
 	selinux? ( sec-policy/selinux-xserver )
-	!x11-drivers/xf86-video-modesetting
 "
 
 PDEPEND="
@@ -132,8 +123,7 @@ PDEPEND="
 
 REQUIRED_USE="!minimal? (
 		|| ( ${IUSE_SERVERS} )
-	)
-	xephyr? ( kdrive )"
+	)"
 
 #UPSTREAMED_PATCHES=(
 #	"${WORKDIR}/patches/"
@@ -141,7 +131,7 @@ REQUIRED_USE="!minimal? (
 
 PATCHES=(
 	"${UPSTREAMED_PATCHES[@]}"
-	"${FILESDIR}"/${PN}-1.17-ia64-fix_inx_outx.patch
+	"${FILESDIR}"/${PN}-1.12-ia64-fix_inx_outx.patch
 	"${FILESDIR}"/${PN}-1.12-unloadsubmodule.patch
 	# needed for new eselect-opengl, bug #541232
 	"${FILESDIR}"/${PN}-1.17-support-multiple-Files-sections.patch
@@ -177,7 +167,6 @@ src_configure() {
 		$(use_enable !minimal dri)
 		$(use_enable !minimal dri2)
 		$(use_enable !minimal glx)
-		$(use_enable xephyr)
 		$(use_enable xnest)
 		$(use_enable xorg)
 		$(use_enable xvfb)
