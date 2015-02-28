@@ -250,6 +250,8 @@ PATCHES=(
 	"${FILESDIR}/${PN}-4.4.0.3-telepathy-build-fix.patch"
 	"${FILESDIR}/${PN}-4.4.1.2-add-kde4-open-url-script.patch"
 	"${FILESDIR}/${PN}-4.4.1.2-improve-KDE4FilePicker.patch"
+	"${FILESDIR}/${PN}-4.3.5.2-remove-bashisms.patch" # bug 525454
+
 )
 
 REQUIRED_USE="
