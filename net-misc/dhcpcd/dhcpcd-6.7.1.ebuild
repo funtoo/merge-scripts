@@ -9,13 +9,13 @@ SRC_URI="http://roy.marples.name/downloads/${PN}/${MY_P}.tar.bz2"
 KEYWORDS="*"
 S="${WORKDIR}/${MY_P}"
 
-inherit eutils systemd
+inherit eutils
 
 DESCRIPTION="A fully featured, yet light weight RFC2131 compliant DHCP client"
 HOMEPAGE="http://roy.marples.name/projects/dhcpcd/"
 LICENSE="BSD-2"
 SLOT="0"
-IUSE="elibc_glibc ipv6 kernel_linux +udev +zeroconf"
+IUSE="elibc_glibc +embedded ipv6 kernel_linux +udev +zeroconf"
 
 COMMON_DEPEND="udev? ( virtual/udev )"
 DEPEND="${COMMON_DEPEND}"
@@ -58,7 +58,6 @@ src_install()
 {
 	default
 	newinitd "${FILESDIR}"/${PN}.initd-r3 ${PN}
-	systemd_dounit "${FILESDIR}"/${PN}.service
 }
 
 pkg_postinst()

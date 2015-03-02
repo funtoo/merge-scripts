@@ -1,3 +1,6 @@
+# FL-971: dhcpcd-6.7.1, masked for testing
+=net-misc/dhcpcd-6.7.1
+
 # FL-2136, FL-1943, eselect bump masked for testing
 =app-admin/eselect-1.4.4
 
