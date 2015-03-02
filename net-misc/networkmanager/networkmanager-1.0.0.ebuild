@@ -10,8 +10,7 @@ VALA_USE_DEPEND="vapigen"
 # Tests need python2, https://bugzilla.gnome.org/show_bug.cgi?id=739448
 PYTHON_COMPAT=( python2_7 )
 
-inherit autotools bash-completion-r1 eutils gnome2 linux-info multilib python-any-r1 systemd \
-	user readme.gentoo toolchain-funcs vala versionator virtualx udev
+inherit autotools bash-completion-r1 eutils gnome2 linux-info multilib python-any-r1 user readme.gentoo toolchain-funcs vala versionator virtualx udev
 
 DESCRIPTION="Universal network configuration daemon for laptops, desktops, servers and virtualization hosts"
 HOMEPAGE="https://wiki.gnome.org/Projects/NetworkManager"
@@ -20,7 +19,7 @@ LICENSE="GPL-2+"
 SLOT="0" # add subslot if libnm-util.so.2 or libnm-glib.so.4 bumps soname version
 
 IUSE="bluetooth connection-sharing consolekit dhclient +dhcpcd gnutls introspection \
-kernel_linux +nss modemmanager ncurses policykit +ppp resolvconf selinux systemd teamd test upower \
+kernel_linux +nss modemmanager ncurses policykit +ppp resolvconf selinux teamd test upower \
 vala wext +wifi zeroconf" # wimax
 
 KEYWORDS="*"
@@ -72,7 +71,6 @@ COMMON_DEPEND="
 	policykit? ( >=sys-auth/polkit-0.106 )
 	ppp? ( >=net-dialup/ppp-2.4.5:=[ipv6] )
 	resolvconf? ( net-dns/openresolv )
-	systemd? ( >=sys-apps/systemd-209:0= )
 	teamd? ( >=net-misc/libteam-1.9 )
 	upower? ( || ( sys-power/upower sys-power/upower-pm-utils ) )
 
@@ -159,8 +157,8 @@ src_prepare() {
 
 src_configure() {
 	local myconf
-	if use systemd || use upower ; then
-		myconf="${myconf} --with-suspend-resume=$(usex systemd systemd upower)"
+	if use upower ; then
+		myconf="${myconf} --with-suspend-resume=$(usex upower upower)"
 	fi
 
 	# Same hack as net-dialup/pptpd to get proper plugin dir for ppp, bug #519986
@@ -170,10 +168,6 @@ src_configure() {
 		PPPD_VER=${PPPD_VER%%[_-]*} # main version without beta/pre/patch/revision
 		myconf="${myconf} --with-pppd-plugin-dir=/usr/$(get_libdir)/pppd/${PPPD_VER}"
 	fi
-
-	# unit files directory needs to be passed only when systemd is enabled,
-	# otherwise systemd support is not disabled completely, bug #524534
-	use systemd && myconf="${myconf} "$(systemd_with_unitdir)""
 
 	# TODO: enable wimax when we have a libnl:3 compatible revision of it
 	# wimax will be removed, bug #522822
@@ -187,6 +181,7 @@ src_configure() {
 		--disable-config-plugin-ibft \
 		--disable-ifnet \
 		--without-netconfig \
+		--without-systemd \
 		--with-dbus-sys-dir=/etc/dbus-1/system.d \
 		--with-dhcpcd=/sbin/dhcpcd \
 		--with-udev-dir="$(get_udevdir)" \
@@ -195,8 +190,8 @@ src_configure() {
 		--with-libsoup=yes \
 		--enable-concheck \
 		--with-crypto=$(usex nss nss gnutls) \
-		--with-session-tracking=$(usex systemd systemd $(usex consolekit consolekit no)) \
-		--with-suspend-resume=$(usex systemd systemd upower) \
+		--with-session-tracking=$(usex consolekit consolekit) \
+		--with-suspend-resume=$(usex upower upower) \
 		$(use_enable bluetooth bluez5-dun) \
 		$(use_enable introspection) \
 		$(use_enable ppp) \
@@ -237,6 +232,11 @@ src_install() {
 	keepdir /etc/NetworkManager/system-connections
 	chmod 0600 "${ED}"/etc/NetworkManager/system-connections/.keep* # bug #383765
 
+	# Install default NetworkManager.conf with dhcpcd as default dhcp plugin enabled. FL-2144 reference bug.
+	insinto /etc/NetworkManager
+	doins "${FILESDIR}"/NetworkManager.conf
+
+
 	# Allow users in plugdev group to modify system connections
 	insinto /usr/share/polkit-1/rules.d/
 	doins "${FILESDIR}/01-org.freedesktop.NetworkManager.settings.modify.system.rules"
@@ -274,31 +274,6 @@ pkg_postinst() {
 			elog "without changing its behavior, you may want to remove it."
 			;;
 		esac
-	fi
-
-	# ifnet plugin was disabled for systemd users with 0.9.8.6 version
-	# and for all people with 0.9.10.0-r1 (see ChangeLog for full explanations)
-	if use systemd; then
-		if ! version_is_at_least 0.9.8.6 ${REPLACING_VERSIONS}; then
-			ewarn "Ifnet plugin won't be used with systemd support enabled"
-			ewarn "as it is meant to be used with openRC and can cause collisions"
-			ewarn "(like bug #485658)."
-			ewarn "Because of this, you will likely need to reconfigure some of"
-			ewarn "your networks. To do this you can rely on Gnome control center,"
-			ewarn "nm-connection-editor or nmtui tools for example once updated"
-			ewarn "NetworkManager version is installed."
-		fi
-	else
-		if ! version_is_at_least 0.9.10.0-r1 ${REPLACING_VERSIONS}; then
-			ewarn "Ifnet plugin is now disabled because of it being unattended"
-			ewarn "and unmaintained for a long time, leading to some unfixed bugs"
-			ewarn "and new problems appearing. We will now use upstream 'keyfile'"
-			ewarn "plugin."
-			ewarn "Because of this, you will likely need to reconfigure some of"
-			ewarn "your networks. To do this you can rely on Gnome control center,"
-			ewarn "nm-connection-editor or nmtui tools for example once updated"
-			ewarn "NetworkManager version is installed."
-		fi
 	fi
 
 	# NM fallbacks to plugin specified at compile time (upstream bug #738611)
