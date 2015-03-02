@@ -48,7 +48,6 @@ src_configure()
 		--dbdir="${EPREFIX}/var/lib/dhcpcd" \
 		--localstatedir="${EPREFIX}/var" \
 		${rundir} \
-		$(use_enable embedded) \
 		$(use_enable ipv6) \
 		${dev} \
 		${hooks}
