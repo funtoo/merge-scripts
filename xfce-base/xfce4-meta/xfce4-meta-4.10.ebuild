@@ -19,7 +19,7 @@ RDEPEND=">=x11-themes/gtk-engines-xfce-3:0
 	>=xfce-base/xfce4-settings-4.10
 	>=xfce-base/xfdesktop-4.10
 	>=xfce-base/xfwm4-4.10
-	thunar? ( >=xfce-base/thunar-1.6.3 )
+	thunar? ( >=xfce-base/xfdesktop-4.10[thunar=] )
 	thunar-volman? ( >=xfce-extra/thunar-volman-0.8.0 )
 	terminal? ( >=x11-terms/xfce4-terminal-0.6.3 )
 	ristretto? ( media-gfx/ristretto )
