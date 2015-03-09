@@ -8,7 +8,7 @@ DESCRIPTION="Raspberry Pi userspace tools and libraries"
 HOMEPAGE="https://github.com/raspberrypi/userland"
 EGIT_REPO_URI="https://github.com/${PN/-//}.git"
 
-KEYWORDS=""
+KEYWORDS="~arm -*"
 
 LICENSE="BSD"
 SLOT="0"
@@ -43,14 +43,12 @@ src_configure() {
 }
 
 src_install() {
-	local libdir=$(get_libdir)
-
 	dobin ${S}/build/bin/*
 
-	insinto "/usr/${libdir}/include"
+	insinto "/usr/include"
 	doins -r "${S}/build/include/vcos"
 
-	cd "${S}/build/${libdir}"
+	cd "${S}/build/lib"
 	mkdir -p "opengl/raspberrypi/plugins"
 
 	# This libs should stay at the lib root dir:
@@ -74,5 +72,5 @@ src_install() {
 	touch opengl/raspberrypi/.gles-only
 
 	insinto /usr
-	doins -r "${S}/build/${libdir}"
+	doins -r "${S}/build/lib"
 }
