@@ -14,7 +14,8 @@ LICENSE="ZSH"
 SLOT="0"
 KEYWORDS="*"
 
-RDEPEND=">=app-shells/zsh-4.3.5"
+RDEPEND="!app-shells/gentoo-zsh-completions
+	>=app-shells/zsh-4.3.5"
 
 S="${WORKDIR}/${MY_PN}-${PV}"
 
