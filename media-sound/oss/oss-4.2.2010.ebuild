@@ -109,10 +109,6 @@ src_install() {
 	dosym oss/lib/libOSSlib.so /usr/${libdir}/libOSSlib.so || die
 	dosym oss/lib/libossmix.so /usr/${libdir}/libossmix.so || die
 
-	if use alsa ; then
-		dosym oss/lib/libsalsa.so.2.0.0 /usr/${libdir}/libsalsa.so.2.0.0 || die
-	fi
-
 	dosym /usr/${libdir}/oss/include /usr/include/oss || die
 }
 
