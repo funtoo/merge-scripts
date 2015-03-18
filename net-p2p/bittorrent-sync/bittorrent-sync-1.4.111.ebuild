@@ -41,7 +41,7 @@ src_install() {
 	doins "${FILESDIR}/config"
 
 	# Install the OpenRC init file
-	newinitd "${FILESDIR}/btsync.init" btsyncd
+	newinitd "${FILESDIR}/btsync.init-1" btsyncd
 }
 
 pkg_postinst() {
