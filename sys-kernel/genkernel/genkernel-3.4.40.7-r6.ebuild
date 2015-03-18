@@ -44,7 +44,7 @@ else
 	inherit bash-completion-r1 eutils
 	SRC_URI="https://www.github.com/${GITHUB_USER}/${GITHUB_REPO}/tarball/${GITHUB_TAG} -> ${PN}-${GITHUB_TAG}.tar.gz
 		${COMMON_URI}"
-	KEYWORDS=""
+	KEYWORDS="*"
 fi
 
 DESCRIPTION="Gentoo automatic kernel building scripts"
