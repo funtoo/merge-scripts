@@ -1,5 +1,5 @@
-# FL-2134 -- needs some testing re: rootfstype with real_root (working here)
->=sys-boot/boot-update-1.7.3
+# FL-2135: masked for testing
+=sys-kernel/genkernel-3.4.40.7-r6
 
 # libtool and libltdl bump, masked for testing
 =sys-devel/libtool-2.4.6
