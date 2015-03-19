@@ -23,6 +23,7 @@
 
 # FL-696: FL-1314: FL-1310: FL-1920. Adding latest llvm-3.6.0 to mesa friends list. It compiles fine with latest mesa, but this require an opengl-redesigned ebuilds. It much easier to not yet allow llvm update.
 # masked xorg for new-design opengl. FL-2177 (duplicate report FL-2178).
+>sys-devel/clang-3.5.1-r100
 >sys-devel/llvm-3.5.1
 >app-admin/eselect-opengl-1.2.7
 >app-emulation/emul-linux-x86-opengl-20140508
