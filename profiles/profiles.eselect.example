@@ -10,7 +10,7 @@
 # The 'NoMix' column should contain a comma separated list profiles that should not be mixed with that profile
 # Must specify with path from type. Ex: 'flavor/desktop' , 'arch/x86-32bit' , ect ...
 
-# *** Note that the entries in MoMix are ficticious and only for example of how to use ***
+# *** Note that the entries in NoMix are ficticious and only for example of how to use ***
 
 # Type		Name							Status		NoMix
 
