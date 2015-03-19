@@ -44,9 +44,6 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
-# FL-1716 kmod update
-=sys-apps/kmod-19
-
 # Dantrell B. (22 Aug 2014)
 # Masked for testing
 # Ref FL-1483
