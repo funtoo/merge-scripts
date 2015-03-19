@@ -3,5 +3,4 @@ CXXFLAGS="${CFLAGS}"
 FFLAGS="${CFLAGS}"
 FCFLAGS="${CFLAGS}"
 
-CHOST="x86_64-pc-linux-gnu"
 CPU_FLAGS_X86="3dnow 3dnowext mmx mmxext mmxext popcnt sse sse2 sse3 sse4a ssse3"
