@@ -1,6 +1,7 @@
-when gcc is given a .s file and told to preprocess it, it outputs nothing
-
 https://bugs.gentoo.org/499086
+https://rt.openssl.org/Ticket/Display.html?id=3333&user=guest&pass=guest
+
+when gcc is given a .s file and told to preprocess it, it outputs nothing
 
 From a2976461784ce463fc7f336cd0dce607d21c2fad Mon Sep 17 00:00:00 2001
 From: Mike Frysinger <vapier@gentoo.org>

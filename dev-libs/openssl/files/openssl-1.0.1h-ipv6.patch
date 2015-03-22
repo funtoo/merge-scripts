@@ -1,5 +1,4 @@
-http://rt.openssl.org/Ticket/Display.html?id=2051
-user/pass: guest/guest
+http://rt.openssl.org/Ticket/Display.html?id=2051&user=guest&pass=guest
 
 Forward ported from openssl-1.0.1e-ipv6.patch
 
@@ -641,35 +640,3 @@ Signed-off-by: Lars Wendler <polynomial-c@gentoo.org>
  		if (ret == NULL) return(NULL);
  		/* else add to cache */
  		if(strlen(name) < sizeof ghbn_cache[0].name)
---- openssl-1.0.1h/apps/s_socket.c.rej
-+++ openssl-1.0.1h/apps/s_socket.c.rej
-@@ -0,0 +1,29 @@
-+--- apps/s_socket.c	2 Dec 2011 14:39:40 -0000	1.43.2.3.2.2
-++++ apps/s_socket.c	28 Dec 2011 00:28:14 -0000
-+@@ -546,15 +646,23 @@
-+ 			}
-+ 		BUF_strlcpy(*host,h1->h_name,strlen(h1->h_name)+1);
-+ 
-+-		h2=GetHostByName(*host);
-++#if OPENSSL_USE_IPV6
-++		h2=GetHostByName(*host, from.ss_family);
-++#else
-++		h2=GetHostByName(*host, from.sin_family);
-++#endif
-+ 		if (h2 == NULL)
-+ 			{
-+ 			BIO_printf(bio_err,"gethostbyname failure\n");
-+ 			return(0);
-+ 			}
-+-		if (h2->h_addrtype != AF_INET)
-++#if OPENSSL_USE_IPV6
-++		if (h2->h_addrtype != from.ss_family)
-++#else
-++		if (h2->h_addrtype != from.sin_family)
-++#endif
-+ 			{
-+-			BIO_printf(bio_err,"gethostbyname addr is not AF_INET\n");
-++			BIO_printf(bio_err,"gethostbyname addr address is not correct\n");
-+ 			return(0);
-+ 			}
-+ 		}
