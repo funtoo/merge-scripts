@@ -1,7 +1,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="4"
-inherit eutils user flag-o-matic multilib autotools pam systemd versionator
+inherit eutils user flag-o-matic multilib autotools pam versionator
 
 # Make it more portable between straight releases
 # and _p? releases.
@@ -259,8 +259,6 @@ src_install() {
 	diropts -m 0700
 	dodir /etc/skel/.ssh
 
-	systemd_dounit "${FILESDIR}"/sshd.{service,socket}
-	systemd_newunit "${FILESDIR}"/sshd_at.service 'sshd@.service'
 }
 
 src_test() {
