@@ -1,9 +1,5 @@
 # FL-2197: FL-2198: openssl/openssh updates. Test and update passed ok, just a cautionary test masks.
 =net-misc/openssh-6.8_p1-r1
-=dev-libs/openssl-0.9.8z_p6
-=dev-libs/openssl-1.0.1m
-
-
 
 # libtool and libltdl bump, masked for testing
 =sys-devel/libtool-2.4.6
