@@ -1,3 +1,7 @@
+# Oleg Vinichenko (24.3.15) FL-2197
+# mask hpn USE or openssh, breaks ssh connectivity if openssh compiled with HPN
+=net-misc/openssh-6.8* hpn
+
 # Oleg Vinichenko (10.3.15)
 # mask rdp USE for vlc until freerdp get better shape:
 media-video/vlc rdp

@@ -8,7 +8,7 @@ inherit eutils user flag-o-matic multilib autotools pam versionator
 # and _p? releases.
 PARCH=${P/_}
 
-HPN_PATCH="${PN}-6.8p1-r1-hpnssh14v5.tar.xz"
+HPN_PATCH="${PN}-6.8p1-r3-hpnssh14v5.tar.xz"
 LDAP_PATCH="${PN}-lpk-6.8p1-0.3.14.patch.xz"
 X509_VER="8.3" X509_PATCH="${PARCH}+x509-${X509_VER}.diff.gz"
 
@@ -135,6 +135,7 @@ src_prepare() {
 	fi
 	epatch "${FILESDIR}"/${PN}-4.7_p1-GSSAPI-dns.patch #165444 integrated into gsskex
 	epatch "${FILESDIR}"/${PN}-6.7_p1-openssl-ignore-status.patch
+	epatch "${FILESDIR}"/${PN}-6.8_p1-ssh-keygen-no-ssh1.patch #544078
 	# The X509 patchset fixes this independently.
 	use X509 || epatch "${FILESDIR}"/${PN}-6.8_p1-ssl-engine-configure.patch
 	epatch "${WORKDIR}"/${P}-sctp.patch
