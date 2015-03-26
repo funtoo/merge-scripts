@@ -1,6 +1,0 @@
-CFLAGS="-march=amdfam10 -O2 -pipe"
-CXXFLAGS="${CFLAGS}"
-FFLAGS="${CFLAGS}"
-FCFLAGS="${CFLAGS}"
-
-CPU_FLAGS_X86="3dnow 3dnowext mmx mmxext popcnt sse sse2 sse3 sse4a"
