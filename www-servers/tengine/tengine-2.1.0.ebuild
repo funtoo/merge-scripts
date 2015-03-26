@@ -202,6 +202,14 @@ src_prepare() {
 	if use_if_iuse tengine_external_modules_http_passenger ; then
 	cd ../"${PASSENGER_P}" ;
 
+	# Use proper toolchain-funcs methods
+	sed -e "/^CC/ s/=.*$/= '$(tc-getCC)'/" \
+		-e "/^CXX/ s/=.*$/= '$(tc-getCXX)'/" \
+		-i "build/basics.rb" || die
+
+	# Fix hard-coded use of AR
+	sed -e "s;ar cru;"$(tc-getAR)" cru;" -i "build/cplusplus_support.rb" || die
+
 	epatch "${FILESDIR}"/passenger/passenger-contenthandler.patch
 	epatch "${FILESDIR}"/passenger/passenger-gentoo.patch
 	epatch "${FILESDIR}"/passenger/passenger-ldflags.patch
