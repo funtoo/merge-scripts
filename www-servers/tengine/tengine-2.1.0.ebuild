@@ -332,7 +332,7 @@ src_install() {
 	if use syslog ; then
 		insinto "${EROOT}etc/logrotate.d"
 		newins "${FILESDIR}/${PN}.logrotate" "${PN}"
-		if [[ ! -d "/var/log/${PN}" ]] ; then
+		if [[ -d "/var/log/${PN}" ]] ; then
 			keepdir "${EROOT}var/log/${PN}" ${keepdir_list}
 			fperms 0700 "${EROOT}var/log/${PN}" ${keepdir_list}
 			fowners ${PN}:${PN} "${EROOT}var/log/${PN}" ${keepdir_list}
