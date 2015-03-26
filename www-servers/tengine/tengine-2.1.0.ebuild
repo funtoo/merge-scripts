@@ -4,13 +4,20 @@ EAPI="5"
 
 GENTOO_DEPEND_ON_PERL="no"
 
+# Nginx Development Kit (NDK) module (https://github.com/simpl/ngx_devel_kit)
+EXTERNAL_MODULE_NDK_PV="0.2.19"
+EXTERNAL_MODULE_NDK_P="ngx_devel_kit-${EXTERNAL_MODULE_NDK_PV}"
+EXTERNAL_MODULE_NDK_SHA1="8dd0df5"
+
 inherit eutils perl-module ssl-cert toolchain-funcs user
 
 DESCRIPTION="Robust, small and high performance http and reverse proxy server"
 HOMEPAGE="http://tengine.taobao.org"
-SRC_URI="http://${PN}.taobao.org/download/${P}.tar.gz"
+SRC_URI="http://${PN}.taobao.org/download/${P}.tar.gz
+	tengine_external_modules_http_ndk? ( https://github.com/simpl/ngx_devel_kit/tarball/v${EXTERNAL_MODULE_NDK_PV} -> ${EXTERNAL_MODULE_NDK_P}.tar.gz )"
 
-LICENSE="BSD-2"
+LICENSE="BSD-2
+	tengine_external_modules_http_ndk? ( BSD )"
 
 SLOT="0"
 KEYWORDS="*"
@@ -39,7 +46,7 @@ TENGINE_MODULES_OPTIONAL_SHARED="addition flv geoip image_filter
 
 TENGINE_MODULES_MAIL="imap pop3 smtp"
 
-TENGINE_MODULES_EXTERNAL=""
+TENGINE_MODULES_EXTERNAL="ndk"
 
 IUSE="+dso +http +http-cache +pcre +poll +select +syslog
 	+aio backtrace debug google_perftools ipv6 jemalloc libatomic luajit pcre-jit rtmp
@@ -214,7 +221,12 @@ src_configure() {
 		tengine_configure+=" --with-http_realip_module"
 	fi
 
-	if use http || use http-cache; then
+	if use tengine_external_modules_http_ndk ; then
+		http_enabled=1
+		tengine_configure+=" --add-module=${WORKDIR}/simpl-ngx_devel_kit-${EXTERNAL_MODULE_NDK_SHA1}"
+	fi
+
+	if use http || use http-cache ; then
 		http_enabled=1
 	fi
 
@@ -226,7 +238,7 @@ src_configure() {
 		tengine_configure+=" --without-http --without-http-cache"
 	fi
 
-	for module in $TENGINE_MODULES_MAIL; do
+	for module in $TENGINE_MODULES_MAIL ; do
 		if use_if_iuse tengine_modules_mail_${module}; then
 			mail_enabled=1
 		else
@@ -288,24 +300,25 @@ src_install() {
 
 	emake DESTDIR="${D}" install
 
-	cp "${FILESDIR}/${PN}.conf" "${ED}/etc/${PN}/${PN}.conf" || die
+	insinto "${EROOT}etc/${PN}"
+	doins "${FILESDIR}/${PN}.conf"
 
 	newinitd "${FILESDIR}/${PN}.initd" "${PN}"
 
-	dodir /etc/${PN}/sites-{available,enabled}
-	insinto /etc/${PN}/sites-available
-	doins ${FILESDIR}/sites-available/localhost
-	dodir /usr/share/tengine/html
-	insinto /usr/share/tengine/html
-	doins ${FILESDIR}/example/index.html
-	doins ${FILESDIR}/example/nginx-logo.png
-	doins ${FILESDIR}/example/powered-by-funtoo.png
+	keepdir "${EROOT}etc/${PN}"/sites-{available,enabled}
+	insinto "${EROOT}etc/${PN}/sites-available"
+	doins "${FILESDIR}/sites-available/localhost"
+	dodir "${EROOT}usr/share/tengine/html"
+	insinto "${EROOT}usr/share/tengine/html"
+	doins "${FILESDIR}/example/index.html"
+	doins "${FILESDIR}/example/nginx-logo.png"
+	doins "${FILESDIR}/example/powered-by-funtoo.png"
 
 	newman man/nginx.8 ${PN}.8
 	dodoc CHANGES* README
 
 	# just keepdir. do not copy the default htdocs files (bug #449136)
-	keepdir /var/www/localhost
+	keepdir ${EROOT}var/www/localhost
 	rm -r "${D}/usr/html" || die
 
 	# set up a list of directories to keep
@@ -315,24 +328,31 @@ src_install() {
 		use_if_iuse tengine_static_modules_http_${module} && keepdir_list+=" ${TENGINE_HOME_TMP}/${module}"
 	done
 
-	keepdir /var/log/${PN} ${keepdir_list}
-
-	fperms 0700 ${EROOT}/var/log/${PN} ${keepdir_list}
-	fowners ${PN}:${PN} ${EROOT}/var/log/${PN} ${keepdir_list}
-
 	# logrotate
-	insinto ${EROOT}/etc/logrotate.d
-	newins "${FILESDIR}"/${PN}.logrotate ${PN}
+	if use syslog ; then
+		insinto "${EROOT}etc/logrotate.d"
+		newins "${FILESDIR}/${PN}.logrotate" "${PN}"
+		if [[ ! -d "/var/log/${PN}" ]] ; then
+			keepdir "${EROOT}var/log/${PN}" ${keepdir_list}
+			fperms 0700 "${EROOT}var/log/${PN}" ${keepdir_list}
+			fowners ${PN}:${PN} "${EROOT}var/log/${PN}" ${keepdir_list}
+		fi
+	fi
 
 	if use_if_iuse tengine_static_modules_http_perl ; then
 		cd "${S}/objs/src/http/modules/perl"
 		einstall DESTDIR="${D}" INSTALLDIRS=vendor
 		perl_delete_localpod
 	fi
+
+	if use_if_iuse tengine_external_modules_http_ndk ; then
+		docinto "${EXTERNAL_MODULE_NDK_P}"
+		dodoc "${WORKDIR}/simpl-ngx_devel_kit-${EXTERNAL_MODULE_NDK_SHA1}/README"
+	fi
 }
 
 pkg_preinst() {
-	if [[ ! -d "${EROOT}"/etc/${PN}/sites-available ]] ; then
+	if [[ ! -d "${EROOT}etc/${PN}/sites-available" ]] ; then
 		first_install=yes
 	else
 		first_install=no
@@ -340,16 +360,15 @@ pkg_preinst() {
 }
 
 pkg_postinst() {
-	if [[ "${first_install}" = "yes" ]] && [[ ! -e "${EROOT}/etc/${PN}/sites-enabled/localhost" ]] ; then
+	if [[ "${first_install}" = "yes" ]] && [[ ! -e "${EROOT}etc/${PN}/sites-enabled/localhost" ]] ; then
 		einfo "Enabling example Web site (see http://127.0.0.1)"
-		# enable example Web site (listens on localhost only)
-		ln -s ../sites-available/localhost "${EROOT}/etc/${PN}/sites-enabled/localhost"
+		ln -s "../sites-available/localhost" "${EROOT}etc/${PN}/sites-enabled/localhost"
 	fi
 
 	if use ssl ; then
-		if [[ ! -f "${EROOT}/etc/ssl/${PN}/${PN}.key" ]] ; then
+		if [[ ! -f "${EROOT}etc/ssl/${PN}/${PN}.key" ]] ; then
 			install_cert /etc/ssl/${PN}/${PN}
-			use prefix || chown ${PN}:${PN} "${EROOT}/etc/ssl/${PN}"/${PN}.{crt,csr,key,pem}
+			use prefix || chown ${PN}:${PN} "${EROOT}etc/ssl/${PN}"/${PN}.{crt,csr,key,pem}
 		fi
 	fi
 
@@ -360,10 +379,16 @@ pkg_postinst() {
 
 	# If the tengine user can't change into or read the dir, display a warning.
 	# If su is not available we display the warning nevertheless since we can't check properly
-	su -s /bin/sh -c "cd /var/log/${PN} && ls" ${PN} >&/dev/null
+	su -s /bin/sh -c "cd ${EROOT}var/log/${PN} && ls" ${PN} >&/dev/null
 	if [ $? -ne 0 ] ; then
 		ewarn "Please make sure that the tengine user or group has at least"
 		ewarn "'rx' permissions on /var/log/${PN} (default on a fresh install)"
 		ewarn "Otherwise you end up with empty log files after a logrotate."
+	fi
+}
+
+pkg_prerm() {
+	if [[ -h "${EROOT}etc/${PN}/sites-enabled/localhost" ]] ; then
+		rm ${EROOT}etc/${PN}/sites-enabled/localhost || die
 	fi
 }
