@@ -3,21 +3,35 @@
 EAPI="5"
 
 GENTOO_DEPEND_ON_PERL="no"
+# Passenger have support for jruby and rbx
+USE_RUBY="ruby19 ruby20 ruby21 ruby22"
+RUBY_OPTIONAL="yes"
+
+# Phusion Passenger (https://github.com/phusion/passenger)
+PASSENGER_A="phusion"
+PASSENGER_PN="passenger"
+PASSENGER_PV="5.0.5"
+# PASSENGER_SHA=""
+PASSENGER_P="${PASSENGER_PN}-${PASSENGER_SHA:-release-${PASSENGER_PV}}"
+PASSENGER_URI="https://github.com/${PASSENGER_A}/${PASSENGER_PN}/archive/${PASSENGER_SHA:-release-${PASSENGER_PV}}.tar.gz"
+PASSENGER_WD="${WORKDIR}/${PASSENGER_P}/ext/nginx"
 
 # Nginx Development Kit (NDK) module (https://github.com/simpl/ngx_devel_kit)
-EXTERNAL_MODULE_NDK_PV="0.2.19"
-EXTERNAL_MODULE_NDK_P="ngx_devel_kit-${EXTERNAL_MODULE_NDK_PV}"
-EXTERNAL_MODULE_NDK_SHA1="8dd0df5"
+NDK_PV="0.2.19"
+NDK_P="ngx_devel_kit-${NDK_PV}"
+NDK_SHA1="8dd0df5"
 
-inherit eutils perl-module ssl-cert toolchain-funcs user
+inherit eutils flag-o-matic perl-module ruby-ng ssl-cert toolchain-funcs user
 
 DESCRIPTION="Robust, small and high performance http and reverse proxy server"
 HOMEPAGE="http://tengine.taobao.org"
 SRC_URI="http://${PN}.taobao.org/download/${P}.tar.gz
-	tengine_external_modules_http_ndk? ( https://github.com/simpl/ngx_devel_kit/tarball/v${EXTERNAL_MODULE_NDK_PV} -> ${EXTERNAL_MODULE_NDK_P}.tar.gz )"
+	tengine_external_modules_http_ndk? ( https://github.com/simpl/ngx_devel_kit/tarball/v${NDK_PV} -> ${NDK_P}.tar.gz )
+	tengine_external_modules_http_passenger? ( ${PASSENGER_URI} -> ${PASSENGER_P}.tar.gz )"
 
 LICENSE="BSD-2
-	tengine_external_modules_http_ndk? ( BSD )"
+	tengine_external_modules_http_ndk? ( BSD )
+	tengine_external_modules_http_passenger? ( MIT )"
 
 SLOT="0"
 KEYWORDS="*"
@@ -46,7 +60,7 @@ TENGINE_MODULES_OPTIONAL_SHARED="addition flv geoip image_filter
 
 TENGINE_MODULES_MAIL="imap pop3 smtp"
 
-TENGINE_MODULES_EXTERNAL="ndk"
+TENGINE_MODULES_EXTERNAL="ndk passenger"
 
 IUSE="+dso +http +http-cache +pcre +poll +select +syslog
 	+aio backtrace debug google_perftools ipv6 jemalloc libatomic luajit pcre-jit rtmp
@@ -100,7 +114,14 @@ RDEPEND="http-cache? ( dev-libs/openssl )
 	tengine_static_modules_http_secure_link? ( dev-libs/openssl )
 	tengine_static_modules_http_spdy? ( dev-libs/openssl )
 	tengine_static_modules_http_xslt? ( dev-libs/libxml2 dev-libs/libxslt )
-	tengine_static_modules_http_lua? ( !luajit? ( dev-lang/lua ) luajit? ( dev-lang/luajit ) )"
+	tengine_static_modules_http_lua? ( !luajit? ( dev-lang/lua ) luajit? ( dev-lang/luajit ) )
+	tengine_external_modules_http_passenger? (
+		|| ( $(ruby_implementation_depend ruby19)
+			$(ruby_implementation_depend ruby20)
+			$(ruby_implementation_depend ruby21)
+			$(ruby_implementation_depend ruby22) )
+		dev-ruby/rake
+		!!www-apache/passenger )"
 
 DEPEND="${RDEPEND}
 	arm? ( dev-libs/libatomic_ops )
@@ -114,14 +135,14 @@ for module in $TENGINE_MODULES_{STANDARD,OPTIONAL}_SHARED ; do
 	REQUIRED_USE+=" tengine_shared_modules_http_${module}? ( !tengine_static_modules_http_${module} )"
 done
 
+S="${WORKDIR}/${P}"
+
 pkg_setup() {
-	TENGINE_HOME="/var/lib/${PN}"
+	TENGINE_HOME="${EROOT}var/lib/${PN}"
 	TENGINE_HOME_TMP="${TENGINE_HOME}/tmp"
 
-	ebegin "Creating tengine user and group"
-	enewgroup ${PN}
 	enewuser ${PN} -1 -1 "${TENGINE_HOME}" ${PN}
-	eend $?
+	enewgroup ${PN}
 
 	if use libatomic ; then
 		ewarn "GCC 4.1+ features built-in atomic operations."
@@ -129,10 +150,20 @@ pkg_setup() {
 		ewarn "a different compiler or a GCC prior to 4.1"
 	fi
 
+	if use_if_iuse tengine_external_modules_http_passenger ; then
+		ruby-ng_pkg_setup
+		use debug && append-flags -DPASSENGER_DEBUG
+	fi
+
 	if ! use http ; then
 		ewarn "To actually disable all http-functionality you also have to disable"
 		ewarn "all tengine http modules."
 	fi
+}
+
+src_unpack() {
+	# Prevent ruby-ng.eclass from messing with src_unpack
+	default
 }
 
 src_prepare() {
@@ -167,6 +198,27 @@ src_prepare() {
 			sed -e "/${module}/d" -i auto/install || die
 		fi
 	done
+
+	if use_if_iuse tengine_external_modules_http_passenger ; then
+	cd ../"${PASSENGER_P}" ;
+
+	epatch "${FILESDIR}"/passenger/passenger-contenthandler.patch
+	epatch "${FILESDIR}"/passenger/passenger-gentoo.patch
+	epatch "${FILESDIR}"/passenger/passenger-ldflags.patch
+
+	sed -e "s;/buildout/agents;/agents;" \
+		-i "ext/common/ResourceLocator.h" || die
+
+	sed -e '/passenger-install-apache2-module/d' \
+		-e "/passenger-install-nginx-module/d" \
+		-i "lib/phusion_passenger/packaging.rb" || die
+
+	rm "bin/passenger-install-apache2-module" \
+		"bin/passenger-install-nginx-module" || die "Unable to remove nginx and apache2 installation scripts."
+
+	cd "${PASSENGER_WD}" ;
+	_ruby_each_implementation passenger_premake
+	fi
 }
 
 src_configure() {
@@ -223,13 +275,17 @@ src_configure() {
 
 	if use tengine_external_modules_http_ndk ; then
 		http_enabled=1
-		tengine_configure+=" --add-module=${WORKDIR}/simpl-ngx_devel_kit-${EXTERNAL_MODULE_NDK_SHA1}"
+		tengine_configure+=" --add-module=${WORKDIR}/simpl-ngx_devel_kit-${NDK_SHA1}"
+	fi
+
+	if use tengine_external_modules_http_passenger ; then
+		http_enabled=1
+		tengine_configure+=" --add-module=${PASSENGER_WD}"
 	fi
 
 	if use http || use http-cache ; then
 		http_enabled=1
 	fi
-
 
 	if [[ -n "${http_enabled}" ]] ; then
 		use http-cache || tengine_configure+=" --without-http-cache"
@@ -292,9 +348,37 @@ src_compile() {
 	emake LINK="${CC} ${LDFLAGS}" OTHERLDFLAGS="${LDFLAGS}"
 }
 
+passenger_premake() {
+	# Dirty spike to make passenger compilation each-ruby compatible
+	mkdir -p "${S}"
+	cp -r "${PASSENGER_P}" "${S}"
+	cp -r "${PN}-${PV}" "${S}"
+	cd "${S}/${PASSENGER_P}"
+	sed -e "s%#{PlatformInfo.ruby_command}%${RUBY}%g" -i build/ruby_extension.rb
+	sed -e "s%#{PlatformInfo.ruby_command}%${RUBY}%g" -i lib/phusion_passenger/native_support.rb
+	# Workaround for Passenger QA issues
+	export CFLAGS="${CFLAGS} -fno-strict-aliasing -Wno-unused-result"
+	export CXXFLAGS="${CXXFLAGS} -fno-strict-aliasing -Wno-unused-result"
+	rake nginx || die "Passenger premake for ${RUBY} failed!"
+}
+
+passenger_install() {
+	# Dirty spike to make passenger installation each-ruby compatible
+	cd "${PASSENGER_WD}"
+	rake fakeroot \
+	NATIVE_PACKAGING_METHOD=ebuild \
+	FS_PREFIX="${EPREFIX}usr" \
+	FS_DATADIR="${EPREFIX}usr/libexec" \
+	FS_DOCDIR="${EPREFIX}usr/share/doc/${P}" \
+	FS_LIBDIR="${EPREFIX}usr/$(get_libdir)" \
+	RUBYLIBDIR="$(ruby_rbconfig_value 'archdir')" \
+	RUBYARCHDIR="$(ruby_rbconfig_value 'archdir')" \
+	|| die "Passenger installation for ${RUBY} failed!"
+}
+
 src_install() {
 	if use_if_iuse tengine_static_modules_http_perl ; then
-		sed '/CORE_LINK/{ N; s/CORE_LINK=.\(.*\).$/CORE_LINK="\1"/ }' \
+		sed -e '/CORE_LINK/{ N; s/CORE_LINK=.\(.*\).$/CORE_LINK="\1"/ }' \
 			-i "${S}/objs/dso_tool" || die
 	fi
 
@@ -332,7 +416,7 @@ src_install() {
 	if use syslog ; then
 		insinto "${EROOT}etc/logrotate.d"
 		newins "${FILESDIR}/${PN}.logrotate" "${PN}"
-		if [[ -d "/var/log/${PN}" ]] ; then
+		if [[ -d "${EROOT}var/log/${PN}" ]] ; then
 			keepdir "${EROOT}var/log/${PN}" ${keepdir_list}
 			fperms 0700 "${EROOT}var/log/${PN}" ${keepdir_list}
 			fowners ${PN}:${PN} "${EROOT}var/log/${PN}" ${keepdir_list}
@@ -346,8 +430,12 @@ src_install() {
 	fi
 
 	if use_if_iuse tengine_external_modules_http_ndk ; then
-		docinto "${EXTERNAL_MODULE_NDK_P}"
-		dodoc "${WORKDIR}/simpl-ngx_devel_kit-${EXTERNAL_MODULE_NDK_SHA1}/README"
+		docinto "${NDK_P}"
+		dodoc "${WORKDIR}/simpl-ngx_devel_kit-${NDK_SHA1}/README"
+	fi
+
+	if use_if_iuse tengine_external_modules_http_passenger ; then
+	_ruby_each_implementation passenger_install
 	fi
 }
 
@@ -376,6 +464,13 @@ pkg_postinst() {
 	einfo "that you have a current /etc/security/limits.conf and logout and log back in"
 	einfo "to your system to ensure that the new max open file limits are active. Then"
 	einfo "try restarting tengine again."
+
+
+	if use_if_iuse tengine_external_modules_http_passenger; then
+		ewarn "Please, keep notice, that 'passenger_root' directive"
+		ewarn "should point to exact location of 'locations.ini'"
+		ewarn "file from this package (i.e. it should be full path)"
+	fi
 
 	# If the tengine user can't change into or read the dir, display a warning.
 	# If su is not available we display the warning nevertheless since we can't check properly
