@@ -30,7 +30,8 @@ S=${WORKDIR}/hwids-${P}
 src_prepare() {
 	[[ ${PV} == "99999999" ]] && emake fetch
 
-	epatch "${FILESDIR}/${P}.patch" # FL-2210
+	# FL-2210
+	sed -i -e '/^[ \t][ \t]8564 1000  JetFlash/d' usb.ids || die
 	sed -i -e '/udevadm hwdb/d' Makefile || die
 }
 
