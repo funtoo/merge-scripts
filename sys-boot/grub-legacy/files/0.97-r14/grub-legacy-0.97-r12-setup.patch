@@ -1,0 +1,24 @@
+diff -urN grub-0.97/stage2/builtins.c grub-0.97-patched/stage2/builtins.c
+--- grub-0.97/stage2/builtins.c	2010-06-06 14:49:45.000000000 +0000
++++ grub-0.97-patched/stage2/builtins.c	2010-06-06 14:51:38.000000000 +0000
+@@ -4145,17 +4145,17 @@
+     goto fail;
+ 
+   /* Check if stage1 exists. If the user doesn't specify the option
+-     `--prefix', attempt /boot/grub and /grub.  */
++     `--prefix', attempt /boot/grub-legacy and /grub-legacy.  */
+   /* NOTE: It is dangerous to run this command without `--prefix' in the
+      grub shell, since that affects `--stage2'.  */
+   if (! prefix)
+     {
+-      prefix = "/boot/grub";
++      prefix = "/boot/grub-legacy";
+       grub_sprintf (stage1, "%s%s", prefix, "/stage1");
+       if (! check_file (stage1))
+ 	{
+ 	  errnum = ERR_NONE;
+-	  prefix = "/grub";
++	  prefix = "/grub-legacy";
+ 	  grub_sprintf (stage1, "%s%s", prefix, "/stage1");
+ 	  if (! check_file (stage1))
+ 	    goto fail;
