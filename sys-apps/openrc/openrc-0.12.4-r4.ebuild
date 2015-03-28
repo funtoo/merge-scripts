@@ -23,8 +23,8 @@ DEPEND="ncurses? ( sys-libs/ncurses ) pam? ( virtual/pam ) virtual/os-headers vi
 
 GITHUB_REPO="${PN}"
 GITHUB_USER="funtoo"
-GITHUB_TAG="funtoo-${PF}"
-NETV="1.3.11"
+GITHUB_TAG="funtoo-openrc-0.12.4-r3"
+NETV="1.3.12"
 GITHUB_REPO_CN="corenetwork"
 GITHUB_TAG_CN="$NETV"
 
