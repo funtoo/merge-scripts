@@ -8,7 +8,7 @@ inherit eutils user flag-o-matic multilib autotools pam versionator
 # and _p? releases.
 PARCH=${P/_}
 
-HPN_PATCH="${PN}-6.8p1-r3-hpnssh14v5.tar.xz"
+HPN_PATCH="${PN}-6.8p1-r4-hpnssh14v5.tar.xz"
 LDAP_PATCH="${PN}-lpk-6.8p1-0.3.14.patch.xz"
 X509_VER="8.3" X509_PATCH="${PARCH}+x509-${X509_VER}.diff.gz"
 
@@ -32,7 +32,7 @@ LICENSE="BSD GPL-2"
 SLOT="0"
 KEYWORDS="*"
 # Probably want to drop ssh1/ssl defaulting to on in a future version.
-IUSE="bindist ${HPN_PATCH:++}hpn kerberos kernel_linux ldap ldns libedit pam +pie sctp selinux skey ssh1 +ssl static X X509"
+IUSE="bindist debug ${HPN_PATCH:++}hpn kerberos kernel_linux ldap ldns libedit pam +pie sctp selinux skey ssh1 +ssl static X X509"
 REQUIRED_USE="pie? ( !static )
 	ssh1? ( ssl )
 	static? ( !kerberos !pam )
@@ -97,7 +97,7 @@ pkg_setup() {
 	# Make sure people who are using tcp wrappers are notified of its removal. #531156
 	if grep -qs '^ *sshd *:' "${EROOT}"/etc/hosts.{allow,deny} ; then
 		eerror "Sorry, but openssh no longer supports tcp-wrappers, and it seems like"
-		eerror "you're trying to use it.  Update your ${EROOT}etc/hosts.deny please."
+		eerror "you're trying to use it.  Update your ${EROOT}etc/hosts.{allow,deny} please."
 		die "USE=tcpd no longer works"
 	fi
 }
@@ -175,7 +175,7 @@ src_prepare() {
 src_configure() {
 	addwrite /dev/ptmx
 	addpredict /etc/skey/skeykeys # skey configure code triggers this
-
+	use debug && append-cppflags -DSANDBOX_SECCOMP_FILTER_DEBUG
 	use static && append-ldflags -static
 
 	local myconf=(
