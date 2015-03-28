@@ -70,7 +70,7 @@ RDEPEND=">=sys-devel/libtool-2.4.2
 		bluetooth? ( net-wireless/bluez:= ) )
 	tcpd? ( sys-apps/tcp-wrappers[${MULTILIB_USEDEP}] )
 	udev? ( >=virtual/udev-143[hwdb(+)] )
-	webrtc-aec? ( media-libs/webrtc-audio-processing )
+	webrtc-aec? ( media-libs/webrtc-audio-processing[${MULTILIB_USEDEP}] )
 	xen? ( app-emulation/xen-tools )
 	zeroconf? ( >=net-dns/avahi-0.6.12[dbus] )
 	abi_x86_32? ( !<=app-emulation/emul-linux-x86-soundlibs-20131008-r1
