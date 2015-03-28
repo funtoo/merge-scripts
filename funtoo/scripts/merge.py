@@ -70,6 +70,7 @@ base_steps = [
 
 profile_steps = [
 	SyncDir(funtoo_overlay.root, "profiles", "profiles", exclude=["categories", "updates"]),
+	CopyAndRename(funtoo_overlay.root, "profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/subarch", "profiles/funtoo/1.0/linux-gnu/arch/pure64/subarch", lambda x: os.path.basename(x) + "-pure64"),
 	SyncFiles(gentoo_src.root, {
 		"profiles/package.mask":"profiles/package.mask/00-gentoo",
 		"profiles/arch/amd64/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/package.use.mask/01-gentoo",
