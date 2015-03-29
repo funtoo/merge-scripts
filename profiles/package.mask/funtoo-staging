@@ -24,18 +24,6 @@
 # FL-1761: new rebased Portage, needs a lot of testing
 >=sys-apps/portage-2.3.7
 
-# FL-696: FL-1314: FL-1310: FL-1920. Adding latest llvm-3.6.0 to mesa friends list. It compiles fine with latest mesa, but this require an opengl-redesigned ebuilds. It much easier to not yet allow llvm update.
-# masked xorg for new-design opengl. FL-2177 (duplicate report FL-2178).
->dev-libs/libclc-0.0.1_pre20141027
->sys-devel/clang-3.5.1-r100
->sys-devel/llvm-3.5.1
->app-admin/eselect-opengl-1.2.7
->app-emulation/emul-linux-x86-opengl-20140508
->media-libs/mesa-10.3.5
->x11-base/xorg-server-1.16.1-r4
->x11-proto/glproto-1.4.17
-
-
 # FL-1729: eudev update, this ebuild masked, kernel older 2.6.39 version unsupported
 # openvz require older version of eudev and kmod
 =sys-fs/eudev-2.1.1
