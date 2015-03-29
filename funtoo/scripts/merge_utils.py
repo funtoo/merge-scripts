@@ -171,6 +171,20 @@ class SyncDir(MergeStep):
 		cmd += "%s %s" % ( src, dest )
 		runShell(cmd)
 
+class CopyAndRename(MergeStep):
+	def __init__(self, src, dest, ren_fun):
+		self.src = src
+		self.dest = dest
+		#renaming function ... accepts source file path, and returns destination filename
+		self.ren_fun = ren_fun
+
+	def run(self, tree):
+		srcpath = os.path.join(tree.root,self.src)
+		for f in os.listdir(srcpath):
+			destfile = os.path.join(tree.root,self.dest)
+			destfile = os.path.join(destfile,self.ren_fun(f))
+			runShell("( cp -a %s/%s %s )" % ( srcpath, f, destfile ))
+
 class SyncFiles(MergeStep):
 	def __init__(self, srcroot, files):
 		self.srcroot = srcroot
