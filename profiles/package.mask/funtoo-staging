@@ -4,9 +4,6 @@
 # FL-2220: new grub-legacy ebuild. masked for testing
 =sys-boot/grub-legacy-0.97-r14
 
-# FL-2197: FL-2198: openssl/openssh updates. Test and update passed ok, just a cautionary test masks.
-=net-misc/openssh-6.8_p1-r3
-
 # libtool and libltdl bump, masked for testing
 =sys-devel/libtool-2.4.6
 =dev-libs/libltdl-2.4.6
