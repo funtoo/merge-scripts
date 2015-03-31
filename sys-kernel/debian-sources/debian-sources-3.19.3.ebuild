@@ -146,13 +146,13 @@ src_install() {
 }
 
 pkg_postinst() {
-	if [[ -h "${ROOT}"usr/src/linux ]]; 
-	then 
+	if use binary && [[ -h "${ROOT}"usr/src/linux ]]; then 
 		rm "${ROOT}"usr/src/linux
 	fi
 
-	if [[ ! -e "${ROOT}"usr/src/linux ]];
-	then
+	if use binary && [[ ! -e "${ROOT}"usr/src/linux ]]; then
+		ewarn "With binary use flag enabled /usr/src/linux"
+		ewarn "symlink automatically set to debian kernel"
 		ln -sf linux-${P} "${ROOT}"usr/src/linux
 	fi
 
