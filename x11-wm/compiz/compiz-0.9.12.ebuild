@@ -8,7 +8,7 @@ EAPI=4
 
 # Pick your poison, EITHER the 3 lines above or the 2 lines below
 
-SRC_URI="http://bazaar.launchpad.net/~compiz-team/compiz/0.9.12/tarball/3919 -> ${P}.tgz"
+SRC_URI="http://bazaar.launchpad.net/~compiz-team/compiz/0.9.12/tarball/3932 -> ${P}.tgz"
 inherit cmake-utils eutils gnome2-utils toolchain-funcs python
 
 KEYWORDS="*"
