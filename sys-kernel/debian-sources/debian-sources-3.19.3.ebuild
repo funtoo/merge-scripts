@@ -5,7 +5,7 @@ EAPI=5
 inherit check-reqs eutils mount-boot
 
 SLOT=$PVR
-CKV=3.18.3
+CKV=3.19.3
 KV_FULL=${PN}-${PVR}
 EXTRAVERSION=-1~exp1
 KERNEL_ARCHIVE="linux_${PV}.orig.tar.xz"

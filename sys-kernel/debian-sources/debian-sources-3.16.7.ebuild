@@ -5,10 +5,10 @@ EAPI=5
 inherit check-reqs eutils mount-boot
 
 SLOT=$PVR
-CKV=3.16.7-ckt4
+CKV=3.16.7-ckt7
 KV_FULL=${PN}-${PVR}
-EXTRAVERSION=-ckt4-1
-KERNEL_ARCHIVE="linux_${PV}-ckt4.orig.tar.xz"
+EXTRAVERSION=-ckt7-1
+KERNEL_ARCHIVE="linux_${PV}-ckt7.orig.tar.xz"
 PATCH_ARCHIVE="linux_${PV}${EXTRAVERSION}.debian.tar.xz"
 RESTRICT="binchecks strip mirror"
 # based on : http://packages.ubuntu.com/maverick/linux-image-2.6.35-22-server
