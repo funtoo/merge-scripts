@@ -34,7 +34,7 @@ COMMON_DEP="
 	java-virtuals/servlet-api:2.5
 	readline? ( >=dev-java/libreadline-java-0.8.0:0 )"
 RDEPEND="${COMMON_DEP}
-	>=app-admin/eselect-jython-20130709
+	>=app-eselect/eselect-jython-20130709
 	>=virtual/jre-1.5"
 DEPEND="${COMMON_DEP}
 	>=virtual/jdk-1.5

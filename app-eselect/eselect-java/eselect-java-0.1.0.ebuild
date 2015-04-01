@@ -12,8 +12,8 @@ KEYWORDS="*"
 IUSE=""
 
 RDEPEND="
-	!app-admin/eselect-ecj
-	!app-admin/eselect-maven
+	!app-eselect/eselect-ecj
+	!app-eselect/eselect-maven
 	!<dev-java/java-config-2.2
 	app-admin/eselect"
 

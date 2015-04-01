@@ -12,7 +12,7 @@ KEYWORDS="*"
 IUSE_SERVERS="dmx kdrive xnest xorg xvfb"
 IUSE="${IUSE_SERVERS} glamor ipv6 minimal nptl selinux +suid systemd tslib +udev unwind wayland"
 
-CDEPEND=">=app-admin/eselect-opengl-1.3.0
+CDEPEND=">=app-eselect/eselect-opengl-1.3.0
 	dev-libs/openssl
 	media-libs/freetype
 	>=x11-apps/iceauth-1.0.2

@@ -14,7 +14,7 @@ SLOT="0"
 KEYWORDS="*"
 IUSE=""
 
-RDEPEND="!app-admin/eselect-compiler sys-apps/openrc"
+RDEPEND="!app-eselect/eselect-compiler sys-apps/openrc"
 
 S=${WORKDIR}
 

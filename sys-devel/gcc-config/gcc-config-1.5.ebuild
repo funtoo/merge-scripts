@@ -14,7 +14,7 @@ SLOT="0"
 KEYWORDS="*"
 IUSE=""
 
-RDEPEND="!app-admin/eselect-compiler"
+RDEPEND="!app-eselect/eselect-compiler"
 
 S=${WORKDIR}
 

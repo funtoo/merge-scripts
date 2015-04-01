@@ -58,7 +58,7 @@ src_install() {
 
 pkg_postinst() {
 	# symlink creation here as the links do not belong to gawk, but to any awk
-	if has_version app-admin/eselect && has_version app-admin/eselect-awk ; then
+	if has_version app-admin/eselect && has_version app-eselect/eselect-awk ; then
 		eselect awk update ifunset
 	else
 		local l
@@ -70,7 +70,7 @@ pkg_postinst() {
 }
 
 pkg_postrm() {
-	if has_version app-admin/eselect && has_version app-admin/eselect-awk ; then
+	if has_version app-admin/eselect && has_version app-eselect/eselect-awk ; then
 		eselect awk update ifunset
 	fi
 }

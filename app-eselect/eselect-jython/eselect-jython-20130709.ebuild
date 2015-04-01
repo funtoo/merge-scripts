@@ -7,7 +7,7 @@ SLOT="0"
 KEYWORDS="*"
 IUSE=""
 
-RDEPEND=">=app-admin/eselect-1.3.5"
+RDEPEND=">=app-eselect/eselect-1.3.5"
 
 src_install() {
 	insinto /usr/share/eselect/modules

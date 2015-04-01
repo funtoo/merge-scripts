@@ -46,7 +46,7 @@ DEPEND="${python_dep}
 RDEPEND="${python_dep}
 	!build? ( >=sys-apps/sed-4.0.5
 		|| ( >=app-shells/bash-4.2_p37[readline] ( <app-shells/bash-4.2_p37 >=app-shells/bash-3.2_p17 ) )
-		>=app-admin/eselect-1.2
+		>=app-eselect/eselect-1.2
 		|| ( ${python_dep_ssl} dev-python/python-mhash )
 	)
 	elibc_FreeBSD? ( sys-freebsd/freebsd-bin )

@@ -16,7 +16,7 @@ IUSE="readline source doc"
 CDEPEND="=dev-java/jakarta-oro-2.0*
 	readline? ( >=dev-java/libreadline-java-0.8.0 )"
 #	servlet? ( >=www-servers/tomcat-5.0 )
-RDEPEND=">=app-admin/eselect-jython-20130709
+RDEPEND=">=app-eselect/eselect-jython-20130709
 	>=virtual/jre-1.4
 	${CDEPEND}"
 DEPEND=">=virtual/jdk-1.4
