@@ -1,4 +1,3 @@
-# gentoo pkg-move for eselect
 move app-admin/eselect-audicle app-eselect/eselect-audicle
 move app-admin/eselect-awk app-eselect/eselect-awk
 move app-admin/eselect-bashcomp app-eselect/eselect-bashcomp
