@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-import argparse
 import glob
 import itertools
 import os
@@ -140,7 +139,6 @@ class ApplyPatchSeries(MergeStep):
 			else:
 				runShell( "( cd %s; git apply %s/%s )" % ( tree.root, self.path, line[:-1] ))
 
-
 class SyncDir(MergeStep):
 	def __init__(self,srcroot,srcdir=None,destdir=None,exclude=[],delete=False):
 		self.srcroot = srcroot
@@ -263,10 +261,11 @@ class GitTree(Tree):
 
 	"A Tree (git) that we can use as a source for work jobs, and/or a target for running jobs."
 
-	def __init__(self,name,branch="master",url=None,pull=False,root=None,xml_out=None,initialize=False):
+	def __init__(self,name,branch="master",url=None,commit=None,pull=False,root=None,xml_out=None,initialize=False):
 		self.name = name
 		self.root = root
 		self.branch = branch
+		self.commit = commit
 		self.url = url
 		self.merged = []
 		self.xml_out = xml_out
@@ -314,6 +313,9 @@ class GitTree(Tree):
 							sys.exit(1)
 			else:
 				self.push = True
+		# branch is updated -- now switch to specific commit if one was specified:
+		if self.commit:
+			runShell("(cd %s; git checkout %s)" % ( self.root, self.commit ))
 
 	def gitCommit(self,message="",upstream="origin",branch=None):
 		if branch == None:
@@ -322,10 +324,11 @@ class GitTree(Tree):
 		cmd = "( cd %s; [ -n \"$(git status --porcelain)\" ] && git commit -a -F - << EOF || exit 0\n" % self.root
 		if message != "":
 			cmd += "%s\n\n" % message
-		cmd += "merged: \n\n"
-		for name, sha1 in self.merged:
-			if sha1 != None:
-				cmd += "  %s: %s\n" % ( name, sha1 )
+		if len(self.merged):
+			cmd += "merged: \n\n"
+			for name, sha1 in self.merged:
+				if sha1 != None:
+					cmd += "  %s: %s\n" % ( name, sha1 )
 		cmd += "EOF\n"
 		cmd += ")\n"
 		print("running: %s" % cmd)
@@ -346,14 +349,16 @@ class GitTree(Tree):
 				step.run(self)
 
 	def head(self):
-		return headSHA1(self.root)
+		if self.commit:
+			return self.commit
+		else:
+			return headSHA1(self.root)
 
 	def treelet_update(self, src_tree, select, skip=None):
 		steps = [
 		InsertEbuilds(src_tree, select=select, skip=skip, replace=True),
 		Minify()
 		]
-
 
 	def logTree(self,srctree):
 		# record name and SHA of src tree in dest tree, used for git commit message/auditing:
@@ -366,7 +371,7 @@ class GitTree(Tree):
 				self.merged.append([srctree.name, headSHA1(srctree.origroot)])
 				return
 
-			self.merged.append([srctree.name, headSHA1(srctree.root)])
+			self.merged.append([srctree.name, srctree.head()])
 
 class RsyncTree(Tree):
 	def __init__(self,name,url="rsync://rsync.us.gentoo.org/gentoo-portage/"):
@@ -661,21 +666,19 @@ class Minify(MergeStep):
 		runShell("( cd %s; find -iname Manifest -exec sed -n -i -e \"/DIST/p\" {} \; )" % tree.root )
 
 
-pull = True
 
-parser = argparse.ArgumentParser(description="merge.py checks out funtoo.org's Gentoo tree, some developers overlays and the funtoo-overlay, and merges them to create Funtoo's unified Portage tree.")
-parser.add_argument("--nopush", action="store_true", help="Prevents the script to push the git repositories")
-parser.add_argument("--branch", default="master", help="The funtoo-overlay branch to use. Default: master.")
-parser.add_argument("--experimental", default=False, action="store_true", help="Generate an experimental tree.")
-parser.add_argument("--init",default=False, action="store_true", help="Create new ports repository if it doesn't already exist.")
-parser.add_argument("destination", help="The destination git repository.")
 
-args = parser.parse_args()
+#xorg treelet:
+"""
+xorg_treelet = GitWriteTree(
 
-dest = args.destination
-if dest[0] != "/":
-	print("%s: Please specify destination git tree with an absolute path." % dest)
-	sys.exit(1)
+.treelet_update(gentoo_src, select=[
+	"x11-base/*",
+	"x11-drivers/*",
+	"x11-wm/twm",
+	"x11-terms/xterm"
+])
+"""
 
-branch = args.branch
-experimental = args.experimental
+
+
