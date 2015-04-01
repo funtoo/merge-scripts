@@ -1,18 +1,46 @@
 #!/usr/bin/python3
 
 from merge_utils import *
+import argparse
+import os
+
+pull = True
+
+parser = argparse.ArgumentParser(description="merge.py merges Gentoo-staging and developer's overlays and the funtoo-overlay to create Funtoo's unified Portage tree.")
+parser.add_argument("--nopush", action="store_true", help="Prevents the script to push the git repositories")
+parser.add_argument("--branch", default="master", help="The funtoo-overlay branch to use. Default: master.")
+parser.add_argument("--init",default=False, action="store_true", help="Create new ports repository if it doesn't already exist.")
+parser.add_argument("treetype", help="The type of tree to generate: staged, testing, experimental.")
+parser.add_argument("destination", help="The destination git repository.")
+
+args = parser.parse_args()
+
+dest = args.destination
+if dest[0] != "/":
+	print("%s: Please specify destination git tree with an absolute path." % dest)
+	sys.exit(1)
 
 # Progress overlay merge
 if not os.path.exists("/usr/bin/svn"):
 	print("svn binary not found at /usr/bin/svn. Exiting.")
 	sys.exit(1)
 
-gentoo_use_rsync = False
-if gentoo_use_rsync:
-	gentoo_src = RsyncTree("gentoo")
-else:
-	gentoo_src = CvsTree("gentoo-x86",":pserver:anonymous@anoncvs.gentoo.org:/var/cvsroot")
-	gentoo_glsa = CvsTree("gentoo-glsa",":pserver:anonymous@anoncvs.gentoo.org:/var/cvsroot", path="gentoo/xml/htdocs/security")
+branch = "master"
+commit = None
+treetype = args.treetype
+if treetype not in [ "staged", "testing", "experimental" ]:
+	print("%s: invalid tree type." % treetype)
+	sys.exit(1)
+
+if treetype == "staged":
+	p = os.path.join(os.path.dirname(os.path.realpath(__file__)),"commit-staged")
+	a = open(p,"r")
+	commit = a.readlines()[0].strip()
+	print("Using commit: %s" % commit)
+elif treetype == "experimental":
+	branch = "experimental"
+
+gentoo_src = GitTree("gentoo-staging", "master", "repos@git.funtoo.org:ports/gentoo-staging.git", commit=commit, pull=True)
 funtoo_overlay = GitTree("funtoo-overlay", branch, "repos@git.funtoo.org:funtoo-overlay.git", pull=True)
 foo_overlay = GitTree("foo-overlay", "master", "https://github.com/slashbeast/foo-overlay.git", pull=True)
 bar_overlay = GitTree("bar-overlay", "master", "git://github.com/adessemond/bar-overlay.git", pull=True)
@@ -23,7 +51,7 @@ squeezebox_overlay = GitTree("squeezebox", "master", "git://git.overlays.gentoo.
 progress_overlay = SvnTree("progress", "https://gentoo-progress.googlecode.com/svn/overlays/progress")
 plex_overlay = GitTree("funtoo-plex", "master", "https://github.com/Ghent/funtoo-plex.git", pull=True)
 sabayon_for_gentoo = GitTree("sabayon-for-gentoo", "master", "git://github.com/Sabayon/for-gentoo.git", pull=True)
-#funtoo_gnome_overlay = GitTree("funtoo-gnome", "experimental" if experimental else "master", "repos@git.funtoo.org:funtoo-gnome-overlay.git", pull=True)
+#funtoo_gnome_overlay = GitTree("funtoo-gnome", "experimental" if treetype == "experimental" else "master", "repos@git.funtoo.org:funtoo-gnome-overlay.git", pull=True)
 funtoo_gnome_overlay = GitTree("funtoo-gnome", "master", "repos@git.funtoo.org:funtoo-gnome-overlay.git", pull=True)
 funtoo_toolchain_overlay = GitTree("funtoo-toolchain", "master", "repos@git.funtoo.org:funtoo-toolchain-overlay.git", pull=True)
 ldap_overlay = GitTree("funtoo-ldap", "master", "repos@git.funtoo.org:funtoo-ldap-overlay.git", pull=True)
@@ -34,18 +62,6 @@ faustoo_overlay = GitTree("faustoo", "master", "https://github.com/fmoro/faustoo
 sera_overlay = GitTree("sera", "master", "git://git.overlays.gentoo.org/dev/sera.git", pull=True)
 vmware_overlay = GitTree("vmware", "master", "git://git.overlays.gentoo.org/proj/vmware.git", pull=True)
 
-#xorg treelet:
-"""
-xorg_treelet = GitWriteTree(
-
-.treelet_update(gentoo_src, select=[
-	"x11-base/*",
-	"x11-drivers/*",
-	"x11-wm/twm",
-	"x11-terms/xterm"
-])
-"""
-
 # base_steps define the initial steps that prepare our destination tree for writing. Checking out the correct
 # branch, copying almost the full entirety of Gentoo's portage tree to our destination tree, and copying over
 # funtoo overlay licenses, metadata, and also copying over GLSA's.
@@ -55,9 +71,7 @@ base_steps = [
 	SyncFromTree(gentoo_src, exclude=["/metadata/cache/**", "ChangeLog", "dev-util/metro"]),
 	SyncDir(funtoo_overlay.root,"licenses"),
 	SyncDir(funtoo_overlay.root,"metadata"),
-		# Only include 2012 and up GLSA's:
-	SyncDir(gentoo_glsa.root, "en/glsa", "metadata/glsa", exclude=["glsa-200*.xml","glsa-2010*.xml", "glsa-2011*.xml"]) if not gentoo_use_rsync else None,
-		SyncFiles(funtoo_overlay.root, {
+	SyncFiles(funtoo_overlay.root, {
 		"COPYRIGHT.txt":"COPYRIGHT.txt",
 		"LICENSE.txt":"LICENSE.txt",
 		"README.rst":"README.rst"
@@ -184,29 +198,34 @@ all_steps = [ base_steps, profile_steps, ebuild_additions, ebuild_modifications,
 #	ApplyPatchSeries("%s/funtoo/patches" % funtoo_overlay.root ),
 # ]
 
-xml_out = etree.Element("packages")
-# specify a git tree that we will do all our stuff in. Initialize (create from scratch) if it doesn't exist:
-initialize=False
-if args.init:
-	initialize="funtoo.org"
-	push = False
-elif not os.path.exists(dest):
-	print("Destination Portage tree %s does not exist. Use --init if you want to create a new repo." % dest)
-	sys.exit(1)
-if args.nopush:
-	push = False
-else:
-	push = "funtoo.org"
+def updateTree():
+	xml_out = etree.Element("packages")
+	# specify a git tree that we will do all our stuff in. Initialize (create from scratch) if it doesn't exist:
+	initialize=False
+	if args.init:
+		initialize="funtoo.org"
+		push = False
+	elif not os.path.exists(dest):
+		print("Destination Portage tree %s does not exist. Use --init if you want to create a new repo." % dest)
+		sys.exit(1)
+	if args.nopush:
+		push = False
+	else:
+		push = "funtoo.org"
 
-work = GitTree(os.path.basename(dest), branch="funtoo.org", root=dest, xml_out=xml_out, initialize=initialize)
-# Run various groups of steps to prepare our Portage tree. Ordering is important:
-for step in all_steps:
-    work.run(step)
-work.gitCommit(message="glorious funtoo updates",branch=push)
+	work = GitTree(os.path.basename(dest), branch="funtoo.org", root=dest, xml_out=xml_out, initialize=initialize)
+	# Run various groups of steps to prepare our Portage tree. Ordering is important:
+	for step in all_steps:
+		work.run(step)
+	work.gitCommit(message="glorious funtoo updates",branch=push)
 
-if experimental:
-	a=open("/home/ports/public_html/experimental-packages.xml","wb")
-else:
-	a=open("/home/ports/public_html/packages.xml","wb")
-etree.ElementTree(xml_out).write(a, encoding='utf-8', xml_declaration=True, pretty_print=True)
-a.close()
+	if treetype == "experimental":
+		a=open("/home/ports/public_html/experimental-packages.xml","wb")
+	elif treetype == "testing":
+		a=open("/home/ports/public_html/testing-packages.xml","wb")
+	else:
+		a=open("/home/ports/public_html/packages.xml","wb")
+	etree.ElementTree(xml_out).write(a, encoding='utf-8', xml_declaration=True, pretty_print=True)
+	a.close()
+
+updateTree()
