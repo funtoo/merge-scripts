@@ -31,8 +31,8 @@ RDEPEND=">=app-admin/eselect-1.2.4
 # required by runtime but cause circular depends
 PDEPEND=">=media-libs/mesa-10.3.7-r2
 	>=x11-proto/glproto-1.4.17-r1
-	>=x11-base/xorg-server-1.16.4-r1
-	>=app-emulation/emul-linux-x86-opengl-20140508-r1"
+	>=x11-base/xorg-server-1.16.4-r1"
+	
 
 S=${WORKDIR}
 
