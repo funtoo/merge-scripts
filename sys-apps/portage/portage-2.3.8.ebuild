@@ -34,7 +34,7 @@ RDEPEND="
 	!build? (
 		>=sys-apps/sed-4.0.5
 		app-shells/bash:0[readline]
-		>=app-eselect/eselect-1.2
+		>=app-admin/eselect-1.2
 	)
 	elibc_FreeBSD? ( sys-freebsd/freebsd-bin )
 	elibc_glibc? ( >=sys-apps/sandbox-2.2 )

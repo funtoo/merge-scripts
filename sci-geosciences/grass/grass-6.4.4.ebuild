@@ -20,7 +20,7 @@ KEYWORDS="*"
 IUSE="+X +cairo cxx ffmpeg fftw gmath jpeg motif mysql nls odbc opengl png postgres python readline sqlite +tiff truetype +wxwidgets"
 
 RDEPEND="
-	>=app-eselect/eselect-1.2
+	>=app-admin/eselect-1.2
 	sci-libs/gdal
 	sci-libs/proj
 	sys-libs/gdbm

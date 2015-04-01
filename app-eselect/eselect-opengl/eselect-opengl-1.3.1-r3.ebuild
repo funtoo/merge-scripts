@@ -24,7 +24,7 @@ KEYWORDS="*"
 IUSE=""
 
 DEPEND="app-arch/xz-utils"
-RDEPEND=">=app-eselect/eselect-1.2.4
+RDEPEND=">=app-admin/eselect-1.2.4
 	!<x11-drivers/ati-drivers-14.9-r2
 	!=x11-drivers/ati-drivers-14.12"
 

@@ -25,7 +25,7 @@ TCL_DEPS="
 	>=dev-lang/tk-8.5"
 
 RDEPEND="
-	>=app-eselect/eselect-1.2
+	>=app-admin/eselect-1.2
 	sci-libs/gdal
 	sci-libs/proj
 	sys-libs/gdbm
