@@ -1,6 +1,5 @@
 # Distributed under the terms of the GNU General Public License v2
 
-
 EAPI=5
 
 inherit eutils multilib
@@ -33,7 +32,6 @@ PDEPEND=">=media-libs/mesa-10.3.7-r2
 	>=x11-proto/glproto-1.4.17-r1
 	>=x11-base/xorg-server-1.16.4-r1"
 	
-
 S=${WORKDIR}
 
 pkg_preinst() {
