@@ -4,7 +4,7 @@ EAPI="5"
 
 MY_PN=${PN/tengine-/}
 
-DESCRIPTION="Implementation of an upload progress system, that monitors\
+DESCRIPTION="Is an implementation of an upload progress system, that monitors\
 	RFC1867 POST upload as they are transmitted to upstream servers"
 HOMEPAGE="https://github.com/masterzen/nginx-upload-progress-module"
 SRC_URI="https://github.com/masterzen/nginx-${MY_PN}-module/archive/v${PV}.tar.gz -> ${P}.tar.gz"

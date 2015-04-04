@@ -7,6 +7,15 @@ GENTOO_DEPEND_ON_PERL="no"
 USE_RUBY="ruby19 ruby20 ruby21 ruby22"
 RUBY_OPTIONAL="yes"
 
+# Encrypted Session (https://github.com/openresty/encrypted-session-nginx-module)
+ENCRYPTED_SESSION_A="openresty"
+ENCRYPTED_SESSION_PN="encrypted-session-nginx-module"
+ENCRYPTED_SESSION_PV="0.03"
+ENCRYPTED_SESSION_P="${ENCRYPTED_SESSION_PN}-${ENCRYPTED_SESSION_PV}"
+ENCRYPTED_SESSION_URI="https://github.com/${ENCRYPTED_SESSION_A}/${ENCRYPTED_SESSION_PN}/archive/v${ENCRYPTED_SESSION_PV}.tar.gz"
+ENCRYPTED_SESSION_WD="${WORKDIR}/${ENCRYPTED_SESSION_P}"
+
+
 # MogileFS Client (http://www.grid.net.ru/nginx/mogilefs.en.html)
 MOGILEFS_PN="nginx-mogilefs-module"
 MOGILEFS_PV="1.0.4"
@@ -34,14 +43,18 @@ inherit eutils flag-o-matic perl-module ruby-ng ssl-cert toolchain-funcs user
 DESCRIPTION="Robust, small and high performance http and reverse proxy server"
 HOMEPAGE="http://tengine.taobao.org"
 SRC_URI="http://${PN}.taobao.org/download/${P}.tar.gz
+	tengine_external_modules_http_encrypted_session? ( ${ENCRYPTED_SESSION_URI} -> ${ENCRYPTED_SESSION_P}.tar.gz )
 	tengine_external_modules_http_mogilefs? ( ${MOGILEFS_URI} -> ${MOGILEFS_P}.tar.gz )
 	tengine_external_modules_http_ndk? ( ${NDK_URI} -> ${NDK_P}.tar.gz )
 	tengine_external_modules_http_passenger? ( ${PASSENGER_URI} -> ${PASSENGER_P}.tar.gz )"
 
 LICENSE="BSD-2
+	tengine_external_modules_http_encrypted_session? ( BSD )
 	tengine_external_modules_http_mogilefs? ( BSD-2 )
 	tengine_external_modules_http_ndk? ( BSD )
 	tengine_external_modules_http_passenger? ( MIT )"
+
+RESTRICT="mirror"
 
 SLOT="0"
 KEYWORDS="*"
@@ -70,7 +83,7 @@ TENGINE_MODULES_OPTIONAL_SHARED="
 
 TENGINE_MODULES_MAIL="imap pop3 smtp"
 
-TENGINE_MODULES_EXTERNAL="mogilefs ndk passenger"
+TENGINE_MODULES_EXTERNAL="encrypted_session mogilefs ndk passenger"
 
 IUSE="+dso +http +http-cache +pcre +poll +select +syslog
 	+aio backtrace debug google_perftools ipv6 jemalloc libatomic luajit
@@ -147,7 +160,9 @@ DEPEND="${RDEPEND}
 
 PDEPEND="vim-syntax? ( app-vim/nginx-syntax )"
 
-REQUIRED_USE="pcre-jit? ( pcre )"
+REQUIRED_USE="pcre-jit? ( pcre )
+	tengine_external_modules_http_encrypted_session? ( ssl
+		tengine_external_modules_http_ndk )"
 
 for module in $TENGINE_MODULES_{STANDARD,OPTIONAL}_SHARED ; do
 	REQUIRED_USE+=" tengine_shared_modules_http_${module}? ( !tengine_static_modules_http_${module} )"
@@ -315,6 +330,11 @@ src_configure() {
 		tengine_configure+=" --add-module=${NDK_WD}"
 	fi
 
+	if use tengine_external_modules_http_encrypted_session ; then
+		http_enabled=1
+		tengine_configure+=" --add-module=${ENCRYPTED_SESSION_WD}"
+	fi
+
 	if use tengine_external_modules_http_passenger ; then
 		http_enabled=1
 		tengine_configure+=" --add-module=${PASSENGER_WD}"
@@ -464,6 +484,11 @@ src_install() {
 		cd "${S}/objs/src/http/modules/perl"
 		einstall DESTDIR="${D}" INSTALLDIRS=vendor
 		perl_delete_localpod
+	fi
+
+	if use_if_iuse tengine_external_modules_http_encrypted_session ; then
+		docinto "${ENCRYPTED_SESSION_P}"
+		dodoc "${ENCRYPTED_SESSION_WD}/README"
 	fi
 
 	if use_if_iuse tengine_external_modules_http_ndk ; then

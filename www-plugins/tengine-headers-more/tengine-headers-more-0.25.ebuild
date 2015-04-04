@@ -4,7 +4,8 @@ EAPI="5"
 
 MY_PN=${PN/tengine-/}
 
-DESCRIPTION="${MY_PN} module allows you to add, set, or clear any output or input header that you specify"
+DESCRIPTION="Module that allows you to add, set, or clear any output or\
+	 input header that you specify"
 HOMEPAGE="https://github.com/openresty/headers-more-nginx-module"
 SRC_URI="https://github.com/openresty/${MY_PN}-nginx-module/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 
