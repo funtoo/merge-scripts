@@ -10,7 +10,7 @@ RUBY_OPTIONAL="yes"
 # Phusion Passenger (https://github.com/phusion/passenger)
 PASSENGER_A="phusion"
 PASSENGER_PN="passenger"
-PASSENGER_PV="5.0.5"
+PASSENGER_PV="5.0.6"
 # PASSENGER_SHA=""
 PASSENGER_P="${PASSENGER_PN}-${PASSENGER_SHA:-release-${PASSENGER_PV}}"
 PASSENGER_URI="https://github.com/${PASSENGER_A}/${PASSENGER_PN}/archive/${PASSENGER_SHA:-release-${PASSENGER_PV}}.tar.gz"
