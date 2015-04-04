@@ -37,7 +37,7 @@ SLOT="0"
 KEYWORDS="*"
 
 TENGINE_UPSTREAM="upstream_check upstream_consistent_hash upstream_keepalive
-	upstream-rbtree"
+	upstream_rbtree"
 
 TENGINE_UPSTREAM_SHARED="upstream_ip_hash
 	upstream_least_conn upstream_session_sticky"
@@ -98,11 +98,13 @@ RDEPEND="http-cache? ( dev-libs/openssl )
 
 	tengine_shared_modules_http_geoip? ( dev-libs/geoip )
 	tengine_shared_modules_http_image_filter? ( media-libs/gd[jpeg,png] )
-	tengine_shared_modules_http_lua? ( !luajit? ( dev-lang/lua ) luajit? ( dev-lang/luajit ) )
+	tengine_shared_modules_http_lua? ( !luajit? ( dev-lang/lua )
+		luajit? ( dev-lang/luajit ) )
 	tengine_shared_modules_http_rewrite? ( dev-libs/libpcre )
 	tengine_shared_modules_http_secure_link? ( dev-libs/openssl )
 	tengine_shared_modules_http_tfs? ( dev-libs/yajl )
-	tengine_shared_modules_http_xslt? ( dev-libs/libxml2 dev-libs/libxslt )
+	tengine_shared_modules_http_xslt? ( dev-libs/libxml2
+		dev-libs/libxslt )
 
 	tengine_static_modules_http_geo? ( dev-libs/geoip )
 	tengine_static_modules_http_geoip? ( dev-libs/geoip )
@@ -110,13 +112,15 @@ RDEPEND="http-cache? ( dev-libs/openssl )
 	tengine_static_modules_http_gzip? ( sys-libs/zlib )
 	tengine_static_modules_http_gzip_static? ( sys-libs/zlib )
 	tengine_static_modules_http_image_filter? ( media-libs/gd[jpeg,png] )
-	tengine_static_modules_http_lua? ( !luajit? ( dev-lang/lua ) luajit? ( dev-lang/luajit ) )
+	tengine_static_modules_http_lua? ( !luajit? ( dev-lang/lua )
+		luajit? ( dev-lang/luajit ) )
 	tengine_static_modules_http_perl? ( dev-lang/perl )
 	tengine_static_modules_http_rewrite? ( dev-libs/libpcre )
 	tengine_static_modules_http_secure_link? ( dev-libs/openssl )
 	tengine_static_modules_http_spdy? ( dev-libs/openssl )
 	tengine_static_modules_http_tfs? ( dev-libs/yajl )
-	tengine_static_modules_http_xslt? ( dev-libs/libxml2 dev-libs/libxslt )
+	tengine_static_modules_http_xslt? ( dev-libs/libxml2
+		dev-libs/libxslt )
 	tengine_external_modules_http_passenger? (
 		|| ( $(ruby_implementation_depend ruby19)
 			$(ruby_implementation_depend ruby20)
@@ -181,6 +185,11 @@ src_prepare() {
 
 	if ! use_if_iuse tengine_static_modules_http_userid_filter || ! use_if_iuse tengine_shared_modules_http_userid_filter ; then
 		sed -e "s;--without-http_userid_module;--without-http_userid_filter_module;g" \
+			-i "${S}/auto/options" || die
+	fi
+
+	if ! use_if_iuse tengine_static_modules_http_rbtree ; then
+		sed -e "s;--without-http-upstream-rbtree;--without-http_upstream_rbtree_module;g" \
 			-i "${S}/auto/options" || die
 	fi
 
