@@ -7,29 +7,39 @@ GENTOO_DEPEND_ON_PERL="no"
 USE_RUBY="ruby19 ruby20 ruby21 ruby22"
 RUBY_OPTIONAL="yes"
 
+# MogileFS Client (http://www.grid.net.ru/nginx/mogilefs.en.html)
+MOGILEFS_PN="nginx-mogilefs-module"
+MOGILEFS_PV="1.0.4"
+MOGILEFS_P="${MOGILEFS_PN}-${MOGILEFS_PV}"
+MOGILEFS_URI="https://github.com/vkholodkov/${MOGILEFS_PN}/archive/${MOGILEFS_PV}.tar.gz"
+MOGILEFS_WD="${WORKDIR}/${MOGILEFS_P}"
+
+# Nginx Development Kit (NDK) (https://github.com/simpl/ngx_devel_kit)
+NDK_PN="ngx_devel_kit"
+NDK_PV="0.2.19"
+NDK_P="${NDK_PN}-${NDK_PV}"
+NDK_URI="https://github.com/simpl/${NDK_PN}/archive/v${NDK_PV}.tar.gz"
+NDK_WD="${WORKDIR}/${NDK_P}"
+
 # Phusion Passenger (https://github.com/phusion/passenger)
 PASSENGER_A="phusion"
 PASSENGER_PN="passenger"
 PASSENGER_PV="5.0.6"
-# PASSENGER_SHA=""
-PASSENGER_P="${PASSENGER_PN}-${PASSENGER_SHA:-release-${PASSENGER_PV}}"
-PASSENGER_URI="https://github.com/${PASSENGER_A}/${PASSENGER_PN}/archive/${PASSENGER_SHA:-release-${PASSENGER_PV}}.tar.gz"
+PASSENGER_P="${PASSENGER_PN}-release-${PASSENGER_PV}"
+PASSENGER_URI="https://github.com/${PASSENGER_A}/${PASSENGER_PN}/archive/release-${PASSENGER_PV}.tar.gz"
 PASSENGER_WD="${WORKDIR}/${PASSENGER_P}/ext/nginx"
-
-# Nginx Development Kit (NDK) module (https://github.com/simpl/ngx_devel_kit)
-NDK_PV="0.2.19"
-NDK_P="ngx_devel_kit-${NDK_PV}"
-NDK_SHA1="8dd0df5"
 
 inherit eutils flag-o-matic perl-module ruby-ng ssl-cert toolchain-funcs user
 
 DESCRIPTION="Robust, small and high performance http and reverse proxy server"
 HOMEPAGE="http://tengine.taobao.org"
 SRC_URI="http://${PN}.taobao.org/download/${P}.tar.gz
-	tengine_external_modules_http_ndk? ( https://github.com/simpl/ngx_devel_kit/tarball/v${NDK_PV} -> ${NDK_P}.tar.gz )
+	tengine_external_modules_http_mogilefs? ( ${MOGILEFS_URI} -> ${MOGILEFS_P}.tar.gz )
+	tengine_external_modules_http_ndk? ( ${NDK_URI} -> ${NDK_P}.tar.gz )
 	tengine_external_modules_http_passenger? ( ${PASSENGER_URI} -> ${PASSENGER_P}.tar.gz )"
 
 LICENSE="BSD-2
+	tengine_external_modules_http_mogilefs? ( BSD-2 )
 	tengine_external_modules_http_ndk? ( BSD )
 	tengine_external_modules_http_passenger? ( MIT )"
 
@@ -39,39 +49,40 @@ KEYWORDS="*"
 TENGINE_UPSTREAM="upstream_check upstream_consistent_hash upstream_keepalive
 	upstream_rbtree"
 
-TENGINE_UPSTREAM_SHARED="upstream_ip_hash
-	upstream_least_conn upstream_session_sticky"
+TENGINE_UPSTREAM_SHARED="upstream_ip_hash upstream_least_conn
+	upstream_session_sticky"
 
-TENGINE_MODULES_STANDARD="auth_basic
-	geo gzip proxy
-	ssi ssl stub_status
+TENGINE_MODULES_STANDARD="auth_basic geo gzip proxy ssi ssl stub_status
 	${TENGINE_UPSTREAM}"
 
-TENGINE_MODULES_STANDARD_SHARED="access autoindex browser charset_filter empty_gif fastcgi footer_filter
-	limit_conn limit_req map memcached referer reqstat rewrite scgi split_clients
-	trim_filter userid_filter user_agent uwsgi
+TENGINE_MODULES_STANDARD_SHARED="
+	access autoindex browser charset_filter empty_gif fastcgi footer_filter
+	limit_conn limit_req map memcached referer reqstat rewrite scgi
+	split_clients trim_filter userid_filter user_agent uwsgi
 	${TENGINE_UPSTREAM_SHARED}"
 
-TENGINE_MODULES_OPTIONAL="concat dav degradation gunzip gzip_static
-	perl realip spdy"
+TENGINE_MODULES_OPTIONAL="
+	concat dav degradation gunzip gzip_static perl realip spdy"
 
-TENGINE_MODULES_OPTIONAL_SHARED="addition flv geoip image_filter
-	lua mp4 random_index secure_link slice tfs sub sysguard xslt"
+TENGINE_MODULES_OPTIONAL_SHARED="
+	addition flv geoip image_filter lua mp4 random_index
+	secure_link slice tfs sub sysguard xslt"
 
 TENGINE_MODULES_MAIL="imap pop3 smtp"
 
-TENGINE_MODULES_EXTERNAL="ndk passenger"
+TENGINE_MODULES_EXTERNAL="mogilefs ndk passenger"
 
 IUSE="+dso +http +http-cache +pcre +poll +select +syslog
-	+aio backtrace debug google_perftools ipv6 jemalloc libatomic luajit pcre-jit rtmp
-	rtsig ssl vim-syntax"
+	+aio backtrace debug google_perftools ipv6 jemalloc libatomic luajit
+	pcre-jit rtmp rtsig ssl vim-syntax"
 
 for module in $TENGINE_MODULES_STANDARD ; do
 	IUSE+=" +tengine_static_modules_http_${module}"
 done
 
 for module in $TENGINE_MODULES_STANDARD_SHARED ; do
-	IUSE+=" tengine_shared_modules_http_${module} +tengine_static_modules_http_${module}"
+	IUSE+=" tengine_shared_modules_http_${module}
+		+tengine_static_modules_http_${module}"
 done
 
 for module in $TENGINE_MODULES_OPTIONAL ; do
@@ -79,7 +90,8 @@ for module in $TENGINE_MODULES_OPTIONAL ; do
 done
 
 for module in $TENGINE_MODULES_OPTIONAL_SHARED ; do
-	IUSE+=" tengine_shared_modules_http_${module} tengine_static_modules_http_${module}"
+	IUSE+=" tengine_shared_modules_http_${module}
+		tengine_static_modules_http_${module}"
 done
 
 for module in $TENGINE_MODULES_MAIL ; do
@@ -211,32 +223,33 @@ src_prepare() {
 	done
 
 	if use_if_iuse tengine_external_modules_http_passenger ; then
-	cd ../"${PASSENGER_P}" ;
+		cd ../"${PASSENGER_P}" ;
 
-	# Use proper toolchain-funcs methods
-	sed -e "/^CC/ s/=.*$/= '$(tc-getCC)'/" \
-		-e "/^CXX/ s/=.*$/= '$(tc-getCXX)'/" \
-		-i "build/basics.rb" || die
+		# Use proper toolchain-funcs methods
+		sed -e "/^CC/ s/=.*$/= '$(tc-getCC)'/" \
+			-e "/^CXX/ s/=.*$/= '$(tc-getCXX)'/" \
+			-i "build/basics.rb" || die
 
-	# Fix hard-coded use of AR
-	sed -e "s;ar cru;"$(tc-getAR)" cru;" -i "build/cplusplus_support.rb" || die
+		# Fix hard-coded use of AR
+		sed -e "s;ar cru;"$(tc-getAR)" cru;" \
+			-i "build/cplusplus_support.rb" || die
 
-	epatch "${FILESDIR}"/passenger/passenger-contenthandler.patch
-	epatch "${FILESDIR}"/passenger/passenger-gentoo.patch
-	epatch "${FILESDIR}"/passenger/passenger-ldflags.patch
+		epatch "${FILESDIR}"/passenger/passenger-contenthandler.patch
+		epatch "${FILESDIR}"/passenger/passenger-gentoo.patch
+		epatch "${FILESDIR}"/passenger/passenger-ldflags.patch
 
-	sed -e "s;/buildout/agents;/agents;" \
-		-i "ext/common/ResourceLocator.h" || die
+		sed -e "s;/buildout/agents;/agents;" \
+			-i "ext/common/ResourceLocator.h" || die
 
-	sed -e '/passenger-install-apache2-module/d' \
-		-e "/passenger-install-nginx-module/d" \
-		-i "lib/phusion_passenger/packaging.rb" || die
+		sed -e '/passenger-install-apache2-module/d' \
+			-e "/passenger-install-nginx-module/d" \
+			-i "lib/phusion_passenger/packaging.rb" || die
 
-	rm "bin/passenger-install-apache2-module" \
-		"bin/passenger-install-nginx-module" || die "Unable to remove nginx and apache2 installation scripts."
+		rm "bin/passenger-install-apache2-module" \
+			"bin/passenger-install-nginx-module" || die "Unable to remove nginx and apache2 installation scripts."
 
-	cd "${PASSENGER_WD}" ;
-	_ruby_each_implementation passenger_premake
+		cd "${PASSENGER_WD}" ;
+		_ruby_each_implementation passenger_premake
 	fi
 }
 
@@ -292,9 +305,14 @@ src_configure() {
 		tengine_configure+=" --with-http_realip_module"
 	fi
 
+	if use tengine_external_modules_http_mogilefs ; then
+		http_enabled=1
+		tengine_configure+=" --add-module=${MOGILEFS_WD}"
+	fi
+
 	if use tengine_external_modules_http_ndk ; then
 		http_enabled=1
-		tengine_configure+=" --add-module=${WORKDIR}/simpl-ngx_devel_kit-${NDK_SHA1}"
+		tengine_configure+=" --add-module=${NDK_WD}"
 	fi
 
 	if use tengine_external_modules_http_passenger ; then
@@ -450,7 +468,7 @@ src_install() {
 
 	if use_if_iuse tengine_external_modules_http_ndk ; then
 		docinto "${NDK_P}"
-		dodoc "${WORKDIR}/simpl-ngx_devel_kit-${NDK_SHA1}/README"
+		dodoc "${NDK_WD}/README"
 	fi
 
 	if use_if_iuse tengine_external_modules_http_passenger ; then
