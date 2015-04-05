@@ -15,7 +15,6 @@ ENCRYPTED_SESSION_P="${ENCRYPTED_SESSION_PN}-${ENCRYPTED_SESSION_PV}"
 ENCRYPTED_SESSION_URI="https://github.com/${ENCRYPTED_SESSION_A}/${ENCRYPTED_SESSION_PN}/archive/v${ENCRYPTED_SESSION_PV}.tar.gz"
 ENCRYPTED_SESSION_WD="${WORKDIR}/${ENCRYPTED_SESSION_P}"
 
-
 # MogileFS Client (http://www.grid.net.ru/nginx/mogilefs.en.html)
 MOGILEFS_PN="nginx-mogilefs-module"
 MOGILEFS_PV="1.0.4"
@@ -463,7 +462,7 @@ src_install() {
 	rm -r "${D}/usr/html" || die
 
 	# set up a list of directories to keep
-	local keepdir_list="${TENGINE_HOME_TMP}"/client
+	local keepdir_list="${TENGINE_HOME_TMP}/client"
 	local module
 	for module in proxy fastcgi scgi uwsgi ; do
 		use_if_iuse tengine_static_modules_http_${module} && keepdir_list+=" ${TENGINE_HOME_TMP}/${module}"
@@ -473,12 +472,14 @@ src_install() {
 	if use syslog ; then
 		insinto "${EROOT}etc/logrotate.d"
 		newins "${FILESDIR}/${PN}.logrotate" "${PN}"
-		if [[ -d "${EROOT}var/log/${PN}" ]] ; then
-			keepdir "${EROOT}var/log/${PN}" ${keepdir_list}
-			fperms 0700 "${EROOT}var/log/${PN}" ${keepdir_list}
-			fowners ${PN}:${PN} "${EROOT}var/log/${PN}" ${keepdir_list}
+		if [[ ! -d "${EROOT}var/log/${PN}" ]] ; then
+			keepdir_list+=" ${EROOT}var/log/${PN}"
 		fi
 	fi
+
+	keepdir ${keepdir_list}
+	fperms 0700 ${keepdir_list}
+	fowners ${PN}:${PN} ${keepdir_list}
 
 	if use_if_iuse tengine_static_modules_http_perl ; then
 		cd "${S}/objs/src/http/modules/perl"
@@ -526,7 +527,6 @@ pkg_postinst() {
 	einfo "that you have a current /etc/security/limits.conf and logout and log back in"
 	einfo "to your system to ensure that the new max open file limits are active. Then"
 	einfo "try restarting tengine again."
-
 
 	if use_if_iuse tengine_external_modules_http_passenger; then
 		ewarn "Please, keep notice, that 'passenger_root' directive"
