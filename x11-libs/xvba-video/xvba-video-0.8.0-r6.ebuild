@@ -18,7 +18,7 @@ LICENSE="GPL-2+ MIT"
 SLOT="0"
 # newline is needed for broken ekeyword
 [[ ${PV} = 9999 ]] || \
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="debug +opengl"
 
 RDEPEND="x11-libs/libva[X(+),opengl?,${MULTILIB_USEDEP}]
