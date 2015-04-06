@@ -12,7 +12,7 @@ def qa_build(host,build,arch_desc,subarch,head):
 	success = False
 	exists = subprocess.getoutput("ssh %s '[ -e /home/mirror/funtoo/%s/%s/%s/" % ( host, build, arch_desc, subarch ) + head + "/status ] && echo yep || echo nope'") == "yep"
 	if not exists:
-		status, output = subprocess.getstatusoutput("ssh %s /root/metro/scripts/ezbuild.sh %s %s %s freshen " % ( build, arch_desc, subarch ) + head)
+		status, output = subprocess.getstatusoutput("ssh %s /root/metro/scripts/ezbuild.sh %s %s %s freshen " % ( host, build, arch_desc, subarch ) + head)
 	success = subprocess.getoutput("ssh %s cat /home/mirror/funtoo/%s/%s/%s/" % ( host, build, arch_desc, subarch )  + head + "/status") == "ok"
 	return success
 
