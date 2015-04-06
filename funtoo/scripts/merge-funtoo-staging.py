@@ -14,9 +14,12 @@ funtoo_overlay = GitTree("funtoo-overlay", "master", "repos@git.funtoo.org:funto
 # for our merges. Let's grab the SHA1 hash from that file:
 	
 p = os.path.join(funtoo_overlay.root,"funtoo/scripts/commit-staged")
-a = open(p,"r")
-commit = a.readlines()[0].strip()
-print("Using commit: %s" % commit)
+if os.path.exists(p):
+	a = open(p,"r")
+	commit = a.readlines()[0].strip()
+	print("Using commit: %s" % commit)
+else:
+	commit = None
 
 gentoo_staging_r = GitTree("gentoo-staging", "master", "repos@git.funtoo.org:ports/gentoo-staging.git", commit=commit, pull=True)
 
@@ -55,6 +58,8 @@ other_overlays = {
 funtoo_changes = False
 if funtoo_overlay.changes:
 	funtoo_changes = True
+elif gentoo_staging_r.changes:
+	funtoo_changes = True
 else:
 	for fo in funtoo_overlays:
 		if funtoo_overlays[fo].changes:
@@ -64,7 +69,7 @@ if len(sys.argv) > 1 and sys.argv[1] == "force":
 	print("Updates forced.")
 elif not funtoo_changes:
 	print("No new funtoo changes were detected. Not updating funtoo-staging.")
-	sys.exit(0)
+	sys.exit(2)
 else:
 	print("Changes were detectd in funtoo overlays -- updating funtoo-staging.")
 
