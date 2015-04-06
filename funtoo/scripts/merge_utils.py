@@ -17,13 +17,17 @@ def headSHA1(tree):
 	hfile = os.path.join(tree,".git/HEAD")
 	if os.path.exists(hfile):
 		infile = open(hfile,"r")
-		head = infile.readline().split()[1]
+		line = infile.readline()
 		infile.close()
-		hfile2 = os.path.join(tree,".git")
-		hfile2 = os.path.join(hfile2,head)
-		if os.path.exists(hfile2):
-			infile = open(hfile2,"r")
-			head = infile.readline().split()[0]
+		if len(line.split(":")) == 2:
+			head = line.split()[1]
+			hfile2 = os.path.join(tree,".git")
+			hfile2 = os.path.join(hfile2,head)
+			if os.path.exists(hfile2):
+				infile = open(hfile2,"r")
+				head = infile.readline().split()[0]
+		else:
+			head=line.strip()
 	return head
 
 def runShell(string,abortOnFail=True):
