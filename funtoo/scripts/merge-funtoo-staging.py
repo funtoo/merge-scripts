@@ -1,7 +1,10 @@
 #!/usr/bin/python3
 
 import os
+import sys
 from merge_utils import *
+
+nopush=False
 
 # We treat our Gentoo staging overlay specially, so it's listed separately. This overlay contains all Gentoo
 # ebuilds, in a git repository. We use a special file in the funtoo-overlay/funtoo/scripts directory (next to
@@ -14,11 +17,13 @@ commit = a.readlines()[0].strip()
 print("Using commit: %s" % commit)
 
 gentoo_staging_r = GitTree("gentoo-staging", "master", "repos@git.funtoo.org:ports/gentoo-staging.git", commit=commit, pull=True)
-funtoo_staging_w = GitTree("funtoo-staging", "master", "repos@git.funtoo.org:ports/funtoo-staging.git", root="/var/git/dest-trees/funtoo-staging", pull=False)
+
+xml_out = etree.Element("packages")
+funtoo_staging_w = GitTree("funtoo-staging", "master", "repos@git.funtoo.org:ports/funtoo-staging.git", root="/var/git/dest-trees/funtoo-staging", pull=False, xml_out=xml_out)
 
 # Our special funtoo_overlay also gets special treatment -- so listing it separately as well.
 	
-funtoo_overlay = GitTree("funtoo-overlay", branch, "repos@git.funtoo.org:funtoo-overlay.git", pull=True)
+funtoo_overlay = GitTree("funtoo-overlay", "master", "repos@git.funtoo.org:funtoo-overlay.git", pull=True)
 
 # These overlays are monitored for changes -- if there are changes in these overlays, we regenerate the entire
 # tree. If there aren't changes in these overlays, we don't.
@@ -55,14 +60,16 @@ if funtoo_overlay.changes:
 	funtoo_changes = True
 else:
 	for fo in funtoo_overlays:
-		if fo.changes:
+		if funtoo_overlays[fo].changes:
 			funtoo_changes = True
 			break
-
-if not funtoo_changes:
+if len(sys.argv) > 1 and sys.argv[1] == "force":
+	print("Updates forced.")
+elif not funtoo_changes:
 	print("No new funtoo changes were detected. Not updating funtoo-staging.")
 	sys.exit(1)
-	
+else:
+	print("Changes were detectd in funtoo overlays -- updating funtoo-staging.")
 
 # This next code regenerates the contents of the funtoo-staging tree. Funtoo's tree is itself composed of
 # many different overlays which are merged in an automated fashion. This code does it all.
@@ -85,7 +92,7 @@ else:
 
 base_steps = [
 	GitCheckout("master"),
-	SyncFromTree(gentoo_src, exclude=["/metadata/cache/**", "ChangeLog", "dev-util/metro"]),
+	SyncFromTree(gentoo_staging_r, exclude=["/metadata/cache/**", "ChangeLog", "dev-util/metro"]),
 	SyncDir(funtoo_overlay.root,"licenses"),
 	SyncDir(funtoo_overlay.root,"metadata"),
 	SyncFiles(funtoo_overlay.root, {
@@ -96,13 +103,13 @@ base_steps = [
 ]
 
 # Steps related to generating system profiles. These can be quite order-dependent and should be handled carefully.
-# Generally, the funtoo_overlay sync should be first, then the gentoo_src SyncFiles, which overwrites some stub
+# Generally, the funtoo_overlay sync should be first, then the gentoo_staging_r SyncFiles, which overwrites some stub
 # files in the funtoo overlay.
 
 profile_steps = [
 	SyncDir(funtoo_overlay.root, "profiles", "profiles", exclude=["categories", "updates"]),
 	CopyAndRename("profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/subarch", "profiles/funtoo/1.0/linux-gnu/arch/pure64/subarch", lambda x: os.path.basename(x) + "-pure64"),
-	SyncFiles(gentoo_src.root, {
+	SyncFiles(gentoo_staging_r.root, {
 		"profiles/package.mask":"profiles/package.mask/00-gentoo",
 		"profiles/arch/amd64/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/package.use.mask/01-gentoo",
 		"profiles/features/multilib/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/package.use.mask/02-gentoo",
@@ -162,7 +169,7 @@ ebuild_modifications = [
 	InsertEbuilds(other_overlays["sera_overlay"], select="all", skip=None, replace=True, merge=True),
 	InsertEbuilds(other_overlays["faustoo_overlay"], select=[ "app-office/projectlibre-bin" ], skip=None, replace=True),
 	InsertEbuilds(other_overlays["foo_overlay"], select="all", skip=["sys-fs/mdev-bb", "sys-fs/mdev-like-a-boss", "media-sound/deadbeef", "media-video/handbrake"], replace=["app-shells/rssh","net-misc/unison"]),
-	InsertEbuilds(other_overlays["plex_overlay"], select = [ "media-tv/plex-media-server" ], skip=None, replace=True),
+	InsertEbuilds(funtoo_overlays["plex_overlay"], select = [ "media-tv/plex-media-server" ], skip=None, replace=True),
 	InsertEbuilds(other_overlays["causes_overlay"], select=[ "media-sound/renoise", "media-sound/renoise-demo", "sys-fs/smdev", "x11-wm/dwm" ], skip=None, replace=True),
 	InsertEbuilds(other_overlays["sabayon_for_gentoo"], select=["sci-geosciences/grass", "app-admin/equo", "app-admin/matter", "sys-apps/entropy", "sys-apps/entropy-server", "sys-apps/entropy-client-services","app-admin/rigo", "sys-apps/rigo-daemon", "sys-apps/magneto-core", "x11-misc/magneto-gtk", "x11-misc/magneto-gtk3", "kde-misc/magneto-kde", "app-misc/magneto-loader"], replace=True),
 	InsertEbuilds(other_overlays["progress_overlay"], select="all", skip=None, replace=True, merge=False),
@@ -206,7 +213,6 @@ treeprep_steps = [
 
 all_steps = [ base_steps, profile_steps, ebuild_additions, ebuild_modifications, eclass_steps, treeprep_steps ]
 
-xml_out = etree.Element("packages")
 for step in all_steps:
 	funtoo_staging_w.run(step)
 funtoo_staging_w.gitCommit(message="glorious funtoo updates",branch=push)
