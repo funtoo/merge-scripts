@@ -6,12 +6,14 @@ from merge_utils import *
 
 nopush=False
 
+funtoo_overlay = GitTree("funtoo-overlay", "master", "repos@git.funtoo.org:funtoo-overlay.git", pull=True)
+
 # We treat our Gentoo staging overlay specially, so it's listed separately. This overlay contains all Gentoo
 # ebuilds, in a git repository. We use a special file in the funtoo-overlay/funtoo/scripts directory (next to
 # this file) to provide a SHA1 of the commit of the gentoo-staging overlay that we want to use as a basis
 # for our merges. Let's grab the SHA1 hash from that file:
 	
-p = os.path.join(os.path.dirname(os.path.realpath(__file__)),"commit-staged")
+p = os.path.join(funtoo_overlay.root,"funtoo/scripts/commit-staged")
 a = open(p,"r")
 commit = a.readlines()[0].strip()
 print("Using commit: %s" % commit)
@@ -20,11 +22,6 @@ gentoo_staging_r = GitTree("gentoo-staging", "master", "repos@git.funtoo.org:por
 
 xml_out = etree.Element("packages")
 funtoo_staging_w = GitTree("funtoo-staging", "master", "repos@git.funtoo.org:ports/funtoo-staging.git", root="/var/git/dest-trees/funtoo-staging", pull=False, xml_out=xml_out)
-
-# Our special funtoo_overlay also gets special treatment -- so listing it separately as well.
-	
-funtoo_overlay = GitTree("funtoo-overlay", "master", "repos@git.funtoo.org:funtoo-overlay.git", pull=True)
-
 # These overlays are monitored for changes -- if there are changes in these overlays, we regenerate the entire
 # tree. If there aren't changes in these overlays, we don't.
 
