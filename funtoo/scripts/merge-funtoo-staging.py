@@ -84,7 +84,7 @@ if not os.path.exists("/usr/bin/svn"):
 if nopush:
 	push = False
 else:
-	push = branch
+	push = "master"
 
 # base_steps define the initial steps that prepare our destination tree for writing. Checking out the correct
 # branch, copying almost the full entirety of Gentoo's portage tree to our destination tree, and copying over
