@@ -270,6 +270,7 @@ class GitTree(Tree):
 		self.merged = []
 		self.xml_out = xml_out
 		self.push = False
+		self.changes = True
 		# if we don't specify root destination tree, assume we are source only:
 		if self.root == None:
 			self.writeTree = False
@@ -279,10 +280,13 @@ class GitTree(Tree):
 			base = "/var/git/source-trees"
 			self.root = "%s/%s" % ( base, self.name )
 			if os.path.exists(self.root):
+				self.head_old = self.head()
 				runShell("(cd %s; git fetch origin)" % self.root, abortOnFail=False)
 				runShell("(cd %s; git checkout %s)" % ( self.root, self.branch ))
 				if pull:
 					runShell("(cd %s; git pull -f origin %s)" % ( self.root, self.branch ), abortOnFail=False)
+				self.head_new = self.head()
+				self.changes = self.head_old != self.head_new
 			else:
 				if not os.path.exists(base):
 					os.makedirs(base)
