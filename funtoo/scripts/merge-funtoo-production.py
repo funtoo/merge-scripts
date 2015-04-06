@@ -36,6 +36,4 @@ my_steps = [
 ]
 
 ports_2012.run(my_steps)
-#ports_2012.gitCommit(message="merged from funtoo-staging", branch="funtoo.org")
-ports_2012.gitCommit(message="merged from funtoo-staging", branch=False)
-
+ports_2012.gitCommit(message="merged from funtoo-staging", branch="funtoo.org")
