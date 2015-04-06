@@ -67,7 +67,7 @@ if len(sys.argv) > 1 and sys.argv[1] == "force":
 	print("Updates forced.")
 elif not funtoo_changes:
 	print("No new funtoo changes were detected. Not updating funtoo-staging.")
-	sys.exit(1)
+	sys.exit(0)
 else:
 	print("Changes were detectd in funtoo overlays -- updating funtoo-staging.")
 
