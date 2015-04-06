@@ -18,6 +18,7 @@ IUSE="examples nls static test"
 RDEPEND=">=sys-devel/m4-1.4.16"
 DEPEND="${RDEPEND}
 	sys-devel/flex
+	sys-apps/help2man
 	examples? ( dev-lang/perl )
 	nls? ( sys-devel/gettext )
 	test? ( dev-lang/perl )"
