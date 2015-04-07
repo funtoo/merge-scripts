@@ -25,4 +25,4 @@ def gentoo_staging_update():
 	gentoo_staging_w.run(all_steps)
 	gentoo_staging_w.gitCommit(message="gentoo updates", branch="master")
 
-
+gentoo_staging_update()
