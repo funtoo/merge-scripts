@@ -1,3 +1,6 @@
+# FL-2256. temporarily mask mdds higher than 0.10.3, this make emerge happy with libixion, listed below.
+>dev-util/mdds-0.10.3
+
 # FL-2061
 # This mask is set to prevent library updates required for libreoffice. Update to this should be discussed and reported.
 >app-text/libabw-0.1.1
