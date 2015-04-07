@@ -12,16 +12,19 @@ SRC_URI="http://launchpad.net/${PN}/${PV%.*}/${PV}/+download/${P}.tar.gz"
 
 LICENSE="LGPL-2.1 LGPL-3"
 SLOT="3"
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="gtk +introspection"
 
 RESTRICT="test" # consequence of the -no-mono.patch
 
 RDEPEND=">=dev-libs/dbus-glib-0.100
 	>=dev-libs/glib-2.30
-	>=dev-libs/libdbusmenu-0.6.2:3[gtk?,introspection?]
+	>=dev-libs/libdbusmenu-0.6.2[introspection?]
 	dev-libs/libxml2
-	gtk? ( >=x11-libs/gtk+-3.2:3 )
+	gtk? (
+		dev-libs/libdbusmenu[gtk3]
+		>=x11-libs/gtk+-3.2:3
+	)
 	introspection? ( >=dev-libs/gobject-introspection-1 )
 	!<${CATEGORY}/${PN}-0.6.1-r201"
 EAUTORECONF_DEPEND="dev-util/gtk-doc-am
