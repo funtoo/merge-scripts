@@ -1,4 +1,4 @@
-FL-2161: mask samba-4, until it's deps get better shape
+#FL-2161: mask samba-4, until it's deps get better shape
 >net-fs/samba-3.6.25
 
 # FL-1703: these versions of crossdev is a forkbomb(s)
