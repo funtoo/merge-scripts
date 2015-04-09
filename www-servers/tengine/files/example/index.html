@@ -2,7 +2,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
     <head>
-        <title>Nginx HTTP Server on Funtoo Linux</title>
+        <title>Tengine HTTP Server on Funtoo Linux</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <style type="text/css">
             /*<![CDATA[*/
@@ -74,11 +74,11 @@
     </head>
 
     <body>
-        <h1>Welcome to <strong>nginx</strong> on Funtoo Linux!</h1>
+        <h1>Welcome to <strong>tengine</strong> on Funtoo Linux!</h1>
 
         <div class="content">
             <p>This page is used to test the proper operation of the
-            <strong>nginx</strong> HTTP server after it has been
+            <strong>tengine</strong> HTTP server after it has been
             installed. If you can read this page, it means that the
             web server installed at this site is working
             properly.</p>
@@ -87,39 +87,39 @@
                 <h2>Website Administrator</h2>
                 <div class="content">
                     <p>This is the default <tt>index.html</tt> page that
-                    is distributed with <strong>nginx</strong> on
+                    is distributed with <strong>tengine</strong> on
                     Funtoo Linux. It is located in
-                    <tt>/usr/share/nginx/html</tt>.</p>
+                    <tt>/usr/share/tengine/html</tt>.</p>
 
                     <p>You can now put your content in a location at
 		    <tt>/var/www/<em>vHOST</em>/htdocs</tt> and edit the
 		    <tt>root</tt> configuration directive in the 
-		    <strong>nginx</strong> configuration file
-		    <tt>/etc/nginx/sites-available/localhost</tt> if <em>vHOST</em>
+		    <strong>tengine</strong> configuration file
+		    <tt>/etc/tengine/sites-available/localhost</tt> if <em>vHOST</em>
 		    equals to localhost, else copy it to <em>vHOST</em> and edit that
 		    file. To use the default, comment out the 
-		    <tt>/usr/share/nginx/html</tt> line with a # and uncomment the 
+		    <tt>/usr/share/tengine/html</tt> line with a # and uncomment the 
 		    <tt>/var/www/localhost/htdocs</tt> one by removing the #.</p>
 
-		    <p>Funtoo Linux makes handling your <strong>nginx</strong>
+		    <p>Funtoo Linux makes handling your <strong>tengine</strong>
 		    config files easy: just create a symlink in 
-		    <tt>/etc/nginx/sites-enabled/</tt> to each configuration in 
-		    <tt>/etc/nginx/sites-available/</tt> that you would like to 
+		    <tt>/etc/tengine/sites-enabled/</tt> to each configuration in 
+		    <tt>/etc/tengine/sites-available/</tt> that you would like to 
 		    activate. Please note that you must restart the server or 
 		    reload the configuration for changes to take effect.</p>
 
-		    <p>To restart nginx use <tt>/etc/init.d/nginx restart</tt>,</br>
+		    <p>To restart tengine use <tt>/etc/init.d/tengine restart</tt>,</br>
 		    in most cases a simple reload of config files with
-		    <tt>/etc/init.d/nginx reload</tt> should be enough.</p>
+		    <tt>/etc/init.d/tengine reload</tt> should be enough.</p>
 
                 </div>
             </div>
 
             <div class="logos">
-                <a href="http://nginx.net/"><img
-                    src="nginx-logo.png" 
-                    alt="[ Powered by nginx ]"
-                    width="121" height="32" /></a>
+                <a href="http://tengine.taobao.org/"><img
+                    src="tengine-logo.png" 
+                    alt="[ Powered by Tengine ]"
+                    width="98" height="30" /></a>
 
                 <a href="http://funtoo.org/"><img 
                     src="powered-by-funtoo.png" 
