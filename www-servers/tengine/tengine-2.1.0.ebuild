@@ -175,8 +175,8 @@ pkg_setup() {
 	TENGINE_HOME="${EROOT}var/lib/${PN}"
 	TENGINE_HOME_TMP="${TENGINE_HOME}/tmp"
 
-	enewgroup ${PN}
-	enewuser ${PN} -1 -1 "${TENGINE_HOME}" ${PN}
+	enewgroup ${PN} && elog ${PN} group was created by portage.
+	enewuser ${PN} -1 -1 "${TENGINE_HOME}" ${PN} && elog ${PN} user with ${TENGINE_HOME} home was created by portage.
 
 	if use libatomic ; then
 		ewarn "GCC 4.1+ features built-in atomic operations."
@@ -453,8 +453,8 @@ src_install() {
 	dodir "${EROOT}usr/share/tengine/html"
 	insinto "${EROOT}usr/share/tengine/html"
 	doins "${FILESDIR}/example/index.html"
-	doins "${FILESDIR}/example/nginx-logo.png"
 	doins "${FILESDIR}/example/powered-by-funtoo.png"
+	doins "${FILESDIR}/example/tengine-logo.png"
 
 	newman man/nginx.8 ${PN}.8
 	dodoc CHANGES* README
