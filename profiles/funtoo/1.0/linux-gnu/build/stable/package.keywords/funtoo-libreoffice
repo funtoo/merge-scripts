@@ -1,4 +1,5 @@
 ## FL-2061. list of libraries for libreoffice/libreoffice-bin. Please, do not edit and change the list without coordinating and without bugs.funtoo.org reports.
+=app-office/libreoffice-l10n-4.4.2.2 amd64 x86
 =app-text/libabw-0.1.1 amd64 x86
 =app-text/libebook-0.1.2 amd64 x86
 =app-text/libetonyek-0.1.1 amd64 x86
