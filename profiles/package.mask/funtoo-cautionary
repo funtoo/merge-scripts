@@ -1,6 +1,3 @@
-# FL-2277: masking nettle 3.x because of incompatibility with gnutls-3.3.x
-=dev-libs/nettle-3*
-
 #FL-2265: mask gnutls-3.4. Broken ebuild
 =net-libs/gnutls-3.4.0*
 
