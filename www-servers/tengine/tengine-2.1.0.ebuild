@@ -416,7 +416,7 @@ passenger_premake() {
 	sed -e "s%#{PlatformInfo.ruby_command}%${RUBY}%g" -i lib/phusion_passenger/native_support.rb
 	# Workaround for Passenger QA issues
 	export CFLAGS="${CFLAGS} -fno-strict-aliasing -Wno-unused-result"
-	export CXXFLAGS="${CXXFLAGS} -fno-strict-aliasing -Wno-unused-result"
+	export CXXFLAGS="${CXXFLAGS} -fno-strict-aliasing -Wno-unused-result -fPIC"
 	rake nginx || die "Passenger premake for ${RUBY} failed!"
 }
 
