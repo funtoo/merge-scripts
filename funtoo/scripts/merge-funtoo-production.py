@@ -4,7 +4,7 @@ import os
 import subprocess
 from merge_utils import *
 
-host="root@build.funtoo.org"
+host="root@build.host.funtoo.org"
 arch_desc="x86-64bit"
 subarch="corei7"
 
@@ -22,8 +22,8 @@ print(head)
 success = False
 if qa_build(host,"funtoo-current-next",arch_desc,subarch,head,"freshen"):
 	if qa_build(host,"funtoo-stable-next",arch_desc,subarch,head,"freshen"):
-		if qa_build(host,"funtoo-current-gnome-next",arch_desc,subarch,head,"test"):
-			success = True
+#		if qa_build(host,"funtoo-current-gnome-next",arch_desc,subarch,head,"test"):
+		success = True
 if not success:
 	print("QA builds were not successful.")
 	sys.exit(1)
