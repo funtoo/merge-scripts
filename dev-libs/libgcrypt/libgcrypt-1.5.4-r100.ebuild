@@ -8,6 +8,6 @@ HOMEPAGE="http://www.gnupg.org/"
 LICENSE="LGPL-2.1 MIT"
 SLOT="11/11" # subslot = soname major version
 KEYWORDS="*"
-IUSE=""
+IUSE="abi_x86_32"
 
-RDEPEND="=dev-libs/libgcrypt-compat-$PV*"
+RDEPEND="=dev-libs/libgcrypt-compat-$PV*[abi_x86_32=]"

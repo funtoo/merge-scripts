@@ -19,7 +19,7 @@ IUSE="static-libs"
 # an existing libgcrypt install, and just provide compatibility libs for apps that require
 # older libgcrypt.
 
-RDEPEND=">=dev-libs/libgcrypt-1.6 
+RDEPEND=">=dev-libs/libgcrypt-1.6
 		!dev-libs/libgcrypt:0/11
 		>=dev-libs/libgpg-error-1.12-r2[${MULTILIB_USEDEP}]
 		abi_x86_32? (
@@ -34,6 +34,8 @@ DOCS=( AUTHORS ChangeLog NEWS README THANKS TODO )
 PATCHES=(
 	"${FILESDIR}"/libgcrypt-1.5.0-uscore.patch
 	"${FILESDIR}"/libgcrypt-multilib-syspath.patch
+	"${FILESDIR}"/libgcrypt-1.5.4-CVE-2014-3591.patch
+	"${FILESDIR}"/libgcrypt-1.5.4-double-free.patch
 )
 
 src_configure() {
@@ -52,8 +54,9 @@ src_configure() {
 }
 
 post_src_install() {
-	cd ${D}
 	# We are only installing the .so.x and .so.x.y libs, not the main .so symlink or anything else.
-	# This will be sufficient to allow things like google-chrome to run.
-	rm -rf usr/{lib,lib32,lib64}/*.so usr/bin usr/include usr/share || die
+	rm ${D}/usr/{lib,lib32,lib64}/*.so
+	rm -r ${D}/usr/bin \
+		${D}/usr/include \
+		${D}/usr/share || die
 }

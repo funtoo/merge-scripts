@@ -1,0 +1,31 @@
+* src/hmac256.c (gcry_hmac256_new): if gcry_hmac256_finalize
+fails, avoid double-free of hd.
+--
+
+Signed-off-by: Joshua Rogers <git@internot.info>
+---
+ src/hmac256.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/hmac256.c b/src/hmac256.c
+index 94a26da..7fbd321 100644
+--- a/src/hmac256.c
++++ b/src/hmac256.c
+@@ -496,7 +496,8 @@ _gcry_hmac256_file (void *result, size_t resultsize, const char *filename,
+   digest = _gcry_hmac256_finalize (hd, &digestlen);
+   if (!digest)
+     {
+-      _gcry_hmac256_release (hd);
++      if(hd)
++        _gcry_hmac256_release (hd);
+       return -1;
+     }
+ 
+-- 
+1.9.1
+
+
+_______________________________________________
+Gcrypt-devel mailing list
+Gcrypt-devel@gnupg.org
+http://lists.gnupg.org/mailman/listinfo/gcrypt-devel

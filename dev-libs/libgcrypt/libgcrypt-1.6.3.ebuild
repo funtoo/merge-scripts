@@ -2,30 +2,44 @@
 
 EAPI=5
 AUTOTOOLS_AUTORECONF=1
+WANT_AUTOMAKE=1.14
 
-inherit autotools-utils
+inherit autotools-multilib flag-o-matic
 
 DESCRIPTION="General purpose crypto library based on the code used in GnuPG"
 HOMEPAGE="http://www.gnupg.org/"
-SRC_URI="mirror://gnupg/libgcrypt/${P}.tar.bz2
-	ftp://ftp.gnupg.org/gcrypt/${PN}/${P}.tar.bz2"
+SRC_URI="mirror://gnupg/${PN}/${P}.tar.bz2"
 
 LICENSE="LGPL-2.1 MIT"
-SLOT="0/11" # subslot = soname major version
+SLOT="0/20" # subslot = soname major version
 KEYWORDS="*"
 IUSE="static-libs"
 
-RDEPEND=">=dev-libs/libgpg-error-1.8"
+RDEPEND=">=dev-libs/libgpg-error-1.12[${MULTILIB_USEDEP}]
+	abi_x86_32? (
+		!<=app-emulation/emul-linux-x86-baselibs-20131008-r19
+		!app-emulation/emul-linux-x86-baselibs[-abi_x86_32]
+	)"
 DEPEND="${RDEPEND}"
 
 DOCS=( AUTHORS ChangeLog NEWS README THANKS TODO )
 
 PATCHES=(
-	"${FILESDIR}"/${PN}-1.5.0-uscore.patch
+	"${FILESDIR}"/${PN}-1.6.1-uscore.patch
 	"${FILESDIR}"/${PN}-multilib-syspath.patch
 )
 
-src_configure() {
+MULTILIB_CHOST_TOOLS=(
+	/usr/bin/libgcrypt-config
+)
+
+multilib_src_configure() {
+	if [[ ${CHOST} == *86*-solaris* ]] ; then
+		# ASM code uses GNU ELF syntax, divide in particular, we need to
+		# allow this via ASFLAGS, since we don't have a flag-o-matic
+		# function for that, we'll have to abuse cflags for this
+		append-cflags -Wa,--divide
+	fi
 	local myeconfargs=(
 		--disable-padlock-support # bug 201917
 		--disable-dependency-tracking
