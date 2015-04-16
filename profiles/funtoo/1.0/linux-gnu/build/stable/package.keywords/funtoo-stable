@@ -1,3 +1,6 @@
+# FL-2278: FL-2289: stabilize automake 1.14.1
+=sys-devel/automake-1.14.1 amd64 x86
+
 # preserve pcituils keywords, after unfork from funtoo-overlay
 =sys-apps/pciutils-3.3.0-r2 amd64 x86
 
