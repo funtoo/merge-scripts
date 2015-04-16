@@ -4,5 +4,5 @@ cd /root/funtoo-overlay
 git pull || exit 1
 /root/funtoo-overlay/funtoo/scripts/merge-funtoo-staging.py || exit 0
 # This will only run if previous script returned zero, which only happens on a real regen...
-/root/funtoo-overlay/funtoo/scripts/merge-funtoo-production.py || exit 0
-exit 0
+/root/funtoo-overlay/funtoo/scripts/merge-funtoo-production.py
+exit $?
