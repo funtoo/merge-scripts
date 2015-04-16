@@ -425,10 +425,10 @@ passenger_install() {
 	cd "${PASSENGER_WD}"
 	rake fakeroot \
 	NATIVE_PACKAGING_METHOD=ebuild \
-	FS_PREFIX="${EPREFIX}usr" \
-	FS_DATADIR="${EPREFIX}usr/libexec" \
-	FS_DOCDIR="${EPREFIX}usr/share/doc/${P}" \
-	FS_LIBDIR="${EPREFIX}usr/$(get_libdir)" \
+	FS_PREFIX="${EROOT}usr" \
+	FS_DATADIR="${ROOT}usr/libexec" \
+	FS_DOCDIR="${EROOT}usr/share/doc/${P}" \
+	FS_LIBDIR="${EROOT}usr/$(get_libdir)" \
 	RUBYLIBDIR="$(ruby_rbconfig_value 'archdir')" \
 	RUBYARCHDIR="$(ruby_rbconfig_value 'archdir')" \
 	|| die "Passenger installation for ${RUBY} failed!"
