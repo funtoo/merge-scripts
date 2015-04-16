@@ -15,6 +15,7 @@ app-emulation/emul-linux-x86-xlibs
 
 # Funtoo versions of Raspberry PI software should always be unmasked
 =media-libs/raspberrypi-userland-9999
+=sys-kernel/raspberrypi-image-3.18.11_pre-r20150415
 =sys-kernel/raspberrypi-image-3.18.9_pre-r20150307
 
 ## FL-2101. override gentoo portage mask that also affects out portage versioning.
