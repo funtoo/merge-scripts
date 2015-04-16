@@ -11,7 +11,7 @@ HOMEPAGE="https://github.com/raspberrypi/firmware"
 SRC_URI="https://github.com/${PN/-image//firmware}/archive/${GITHUB_COMMIT}.tar.gz -> ${PN}-${PVR}.tar.gz"
 
 LICENSE="GPL-2"
-SLOT="${PVR}"
+SLOT="0"
 KEYWORDS="~arm -*"
 IUSE="+rpi2 +firmware
 	dtb doc rpi1 rpi1b rpi1bplus"
