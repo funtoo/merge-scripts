@@ -175,8 +175,19 @@ pkg_setup() {
 	TENGINE_HOME="${EROOT}var/lib/${PN}"
 	TENGINE_HOME_TMP="${TENGINE_HOME}/tmp"
 
-	enewgroup ${PN} && elog ${PN} group was created by portage.
-	enewuser ${PN} -1 -1 "${TENGINE_HOME}" ${PN} && elog ${PN} user with ${TENGINE_HOME} home was created by portage.
+	if egetent group ${PN} > /dev/null ; then
+		elog ${PN} group already exist. group creation step skipped.
+	else
+		enewgroup ${PN} > /dev/null && \
+		elog ${PN} group created by portage.
+	fi
+
+	if egetent passwd ${PN} > /dev/null ; then
+		elog ${PN} user already exist. user creation step skipped.
+	else
+		enewuser ${PN} -1 -1 "${TENGINE_HOME}" ${PN} > /dev/null && \
+		elog ${PN} user with ${TENGINE_HOME} home created by portage.
+	fi
 
 	if use libatomic ; then
 		ewarn "GCC 4.1+ features built-in atomic operations."
@@ -394,10 +405,11 @@ src_configure() {
 		$(use_with select select_module) \
 		${tengine_configure} || die
 
-	# A purely cosmetic change that makes tengine -V more readable. This can be
-	# good if people outside the gentoo community would troubleshoot and
-	# question the users setup.
-	sed -i -e "s|${WORKDIR}|external_module|g" objs/ngx_auto_config.h || die
+	# A purely cosmetic change that makes tengine -V more readable.
+	# This can be good if people outside the gentoo community would
+	# troubleshoot and question the user setup.
+	sed -e "s;${WORKDIR};external_module;g" \
+		-i "${S}/objs/ngx_auto_config.h" || die
 }
 
 src_compile() {
@@ -412,21 +424,21 @@ passenger_premake() {
 	cp -r "${PASSENGER_P}" "${S}"
 	cp -r "${PN}-${PV}" "${S}"
 	cd "${S}/${PASSENGER_P}"
-	sed -e "s%#{PlatformInfo.ruby_command}%${RUBY}%g" -i build/ruby_extension.rb
-	sed -e "s%#{PlatformInfo.ruby_command}%${RUBY}%g" -i lib/phusion_passenger/native_support.rb
-	# Workaround for Passenger QA issues
-	export CFLAGS="${CFLAGS} -fno-strict-aliasing -Wno-unused-result"
-	export CXXFLAGS="${CXXFLAGS} -fno-strict-aliasing -Wno-unused-result -fPIC"
-	rake nginx || die "Passenger premake for ${RUBY} failed!"
+	sed -e "s;#{PlatformInfo.ruby_command};${RUBY};g" \
+		-i "build/ruby_extension.rb" \
+		-i "lib/phusion_passenger/native_support.rb" || die
+	append-cflags $(test-flags-CC -fno-strict-aliasing -Wno-unused-result)
+	append-cxxflags $(test-flags-CXX -fno-strict-aliasing -Wno-unused-result -fPIC)
+	rake -m nginx || die "Passenger premake for ${RUBY} failed!"
 }
 
 passenger_install() {
 	# Dirty spike to make passenger installation each-ruby compatible
 	cd "${PASSENGER_WD}"
-	rake fakeroot \
+	rake -m fakeroot \
 	NATIVE_PACKAGING_METHOD=ebuild \
 	FS_PREFIX="${EROOT}usr" \
-	FS_DATADIR="${ROOT}usr/libexec" \
+	FS_DATADIR="${EROOT}usr/libexec" \
 	FS_DOCDIR="${EROOT}usr/share/doc/${P}" \
 	FS_LIBDIR="${EROOT}usr/$(get_libdir)" \
 	RUBYLIBDIR="$(ruby_rbconfig_value 'archdir')" \
