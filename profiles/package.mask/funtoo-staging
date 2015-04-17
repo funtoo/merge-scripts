@@ -1,4 +1,4 @@
-FL-2287: timezone-data update, masked for testing.
+#FL-2287: timezone-data update, masked for testing.
 =sys-libs/timezone-data-2015c-r1
 
 # FL-2232: Not fully-baked version of xorg-server. Masking.
