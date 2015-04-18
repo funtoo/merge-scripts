@@ -15,6 +15,14 @@ ENCRYPTED_SESSION_P="${ENCRYPTED_SESSION_PN}-${ENCRYPTED_SESSION_PV}"
 ENCRYPTED_SESSION_URI="https://github.com/${ENCRYPTED_SESSION_A}/${ENCRYPTED_SESSION_PN}/archive/v${ENCRYPTED_SESSION_PV}.tar.gz"
 ENCRYPTED_SESSION_WD="${WORKDIR}/${ENCRYPTED_SESSION_P}"
 
+# Fancy Index (https://github.com/aperezdc/ngx-fancyindex)
+FANCYINDEX_A="aperezdc"
+FANCYINDEX_PN="ngx-fancyindex"
+FANCYINDEX_PV="0.3.5"
+FANCYINDEX_P="${FANCYINDEX_PN}-${FANCYINDEX_PV}"
+FANCYINDEX_URI="https://github.com/${FANCYINDEX_A}/${FANCYINDEX_PN}/archive/v${FANCYINDEX_PV}.tar.gz"
+FANCYINDEX_WD="${WORKDIR}/${FANCYINDEX_P}"
+
 # MogileFS Client (http://www.grid.net.ru/nginx/mogilefs.en.html)
 MOGILEFS_A="vkholodkov"
 MOGILEFS_PN="nginx-mogilefs-module"
@@ -45,12 +53,14 @@ DESCRIPTION="Robust, small and high performance http and reverse proxy server"
 HOMEPAGE="http://tengine.taobao.org"
 SRC_URI="http://${PN}.taobao.org/download/${P}.tar.gz
 	tengine_external_modules_http_encrypted_session? ( ${ENCRYPTED_SESSION_URI} -> ${ENCRYPTED_SESSION_P}.tar.gz )
+	tengine_external_modules_http_fancyindex? ( ${FANCYINDEX_URI} -> ${FANCYINDEX_P}.tar.gz )
 	tengine_external_modules_http_mogilefs? ( ${MOGILEFS_URI} -> ${MOGILEFS_P}.tar.gz )
 	tengine_external_modules_http_ndk? ( ${NDK_URI} -> ${NDK_P}.tar.gz )
 	tengine_external_modules_http_passenger? ( ${PASSENGER_URI} -> ${PASSENGER_P}.tar.gz )"
 
 LICENSE="BSD-2
 	tengine_external_modules_http_encrypted_session? ( BSD )
+	tengine_external_modules_http_encrypted_fancyindex? ( BSD )
 	tengine_external_modules_http_mogilefs? ( BSD-2 )
 	tengine_external_modules_http_ndk? ( BSD )
 	tengine_external_modules_http_passenger? ( MIT )"
@@ -84,7 +94,7 @@ TENGINE_MODULES_OPTIONAL_SHARED="
 
 TENGINE_MODULES_MAIL="imap pop3 smtp"
 
-TENGINE_MODULES_EXTERNAL="encrypted_session mogilefs ndk passenger"
+TENGINE_MODULES_EXTERNAL="encrypted_session fancyindex mogilefs ndk passenger"
 
 IUSE="+dso +http +http-cache +pcre +poll +select +syslog
 	+aio backtrace debug google_perftools ipv6 jemalloc libatomic luajit
@@ -332,6 +342,11 @@ src_configure() {
 		tengine_configure+=" --with-http_realip_module"
 	fi
 
+	if use tengine_external_modules_http_fancyindex; then
+		http_enabled=1
+		tengine_configure+=" --add-module=${FANCYINDEX_WD}"
+	fi
+
 	if use tengine_external_modules_http_mogilefs ; then
 		http_enabled=1
 		tengine_configure+=" --add-module=${MOGILEFS_WD}"
@@ -504,6 +519,11 @@ src_install() {
 	if use_if_iuse tengine_external_modules_http_encrypted_session ; then
 		docinto "${ENCRYPTED_SESSION_P}"
 		dodoc "${ENCRYPTED_SESSION_WD}/README"
+	fi
+
+	if use_if_iuse tengine_external_modules_http_fancyindex ; then
+		docinto "${FANCYINDEX_P}"
+		dodoc "${FANCYINDEX_WD}/README.rst"
 	fi
 
 	if use_if_iuse tengine_external_modules_http_ndk ; then
