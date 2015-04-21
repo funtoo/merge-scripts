@@ -1,3 +1,6 @@
+# FL-2301: stabilize wine-1.7.41
+=app-emulation/wine-1.7.41 amd64 x86
+
 # FL-2278: FL-2289: stabilize automake 1.14.1
 =sys-devel/automake-1.14.1 amd64 x86
 
