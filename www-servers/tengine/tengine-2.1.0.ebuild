@@ -52,15 +52,20 @@ inherit eutils flag-o-matic perl-module ruby-ng ssl-cert toolchain-funcs user
 DESCRIPTION="Robust, small and high performance http and reverse proxy server"
 HOMEPAGE="http://tengine.taobao.org"
 SRC_URI="http://${PN}.taobao.org/download/${P}.tar.gz
-	tengine_external_modules_http_encrypted_session? ( ${ENCRYPTED_SESSION_URI} -> ${ENCRYPTED_SESSION_P}.tar.gz )
-	tengine_external_modules_http_fancyindex? ( ${FANCYINDEX_URI} -> ${FANCYINDEX_P}.tar.gz )
-	tengine_external_modules_http_mogilefs? ( ${MOGILEFS_URI} -> ${MOGILEFS_P}.tar.gz )
-	tengine_external_modules_http_ndk? ( ${NDK_URI} -> ${NDK_P}.tar.gz )
-	tengine_external_modules_http_passenger? ( ${PASSENGER_URI} -> ${PASSENGER_P}.tar.gz )"
+	tengine_external_modules_http_encrypted_session? (
+		${ENCRYPTED_SESSION_URI} -> ${ENCRYPTED_SESSION_P}.tar.gz )
+	tengine_external_modules_http_fancyindex? (
+		${FANCYINDEX_URI} -> ${FANCYINDEX_P}.tar.gz )
+	tengine_external_modules_http_mogilefs? (
+		${MOGILEFS_URI} -> ${MOGILEFS_P}.tar.gz )
+	tengine_external_modules_http_ndk? (
+		${NDK_URI} -> ${NDK_P}.tar.gz )
+	tengine_external_modules_http_passenger? (
+		${PASSENGER_URI} -> ${PASSENGER_P}.tar.gz )"
 
 LICENSE="BSD-2
 	tengine_external_modules_http_encrypted_session? ( BSD )
-	tengine_external_modules_http_encrypted_fancyindex? ( BSD )
+	tengine_external_modules_http_fancyindex? ( BSD )
 	tengine_external_modules_http_mogilefs? ( BSD-2 )
 	tengine_external_modules_http_ndk? ( BSD )
 	tengine_external_modules_http_passenger? ( MIT )"
@@ -94,10 +99,13 @@ TENGINE_MODULES_OPTIONAL_SHARED="
 
 TENGINE_MODULES_MAIL="imap pop3 smtp"
 
-TENGINE_MODULES_EXTERNAL="encrypted_session fancyindex mogilefs ndk passenger"
+# encrypted_session depend on ndk.
+# place ndk before modules that depend on it.
+TENGINE_MODULES_EXTERNAL="ndk encrypted_session
+	fancyindex mogilefs passenger"
 
-IUSE="+dso +http +http-cache +pcre +poll +select +syslog
-	+aio backtrace debug google_perftools ipv6 jemalloc libatomic luajit
+IUSE="+aio +dso +http +http-cache +pcre +poll +select +syslog
+	backtrace debug google_perftools ipv6 jemalloc libatomic luajit
 	pcre-jit rtmp rtsig ssl vim-syntax"
 
 for module in $TENGINE_MODULES_STANDARD ; do
@@ -254,8 +262,10 @@ src_prepare() {
 	# Don't install to /etc/tengine/ if not in use
 	local module
 	for module in fastcgi scgi uwsgi ; do
-		if ! use_if_iuse tengine_static_modules_http_${module} && ! use_if_iuse tengine_shared_modules_http_${module} ; then
-			sed -e "/${module}/d" -i auto/install || die
+		if ! use_if_iuse tengine_static_modules_http_${module} && \
+			! use_if_iuse tengine_shared_modules_http_${module} ; then
+				sed -e "/${module}/d" \
+					-i auto/install || die
 		fi
 	done
 
@@ -283,7 +293,8 @@ src_prepare() {
 			-i "lib/phusion_passenger/packaging.rb" || die
 
 		rm "bin/passenger-install-apache2-module" \
-			"bin/passenger-install-nginx-module" || die "Unable to remove nginx and apache2 installation scripts."
+			"bin/passenger-install-nginx-module" || \
+			die "Unable to remove nginx and apache2 installation scripts."
 
 		cd "${PASSENGER_WD}" ;
 		_ruby_each_implementation passenger_premake
@@ -308,64 +319,55 @@ src_configure() {
 	use syslog || tengine_configure+=" --without-syslog"
 
 	for module in $TENGINE_MODULES_{STANDARD,STANDARD_SHARED} ; do
-		if use tengine_static_modules_http_${module} && ! use_if_iuse tengine_shared_modules_http_${module} ; then
-			http_enabled=1
+		if use tengine_static_modules_http_${module} && \
+			! use_if_iuse tengine_shared_modules_http_${module} ; then
+				http_enabled=1
 		else
 			tengine_configure+=" --without-http_${module}_module"
 		fi
 	done
 
 	for module in $TENGINE_MODULES_STANDARD_SHARED ; do
-		if use dso && use_if_iuse tengine_shared_modules_http_${module} && ! use_if_iuse tengine_static_modules_http_${module} ; then
-			http_enabled=1
-			tengine_configure+=" --with-http_${module}_module=shared"
-		elif use dso && ! use_if_iuse tengine_shared_modules_http_${module} && ! use_if_iuse tengine_static_modules_http_${module} ; then
-			tengine_configure+=" --without-http_${module}_module"
+		if use dso && \
+			use_if_iuse tengine_shared_modules_http_${module} && \
+			! use_if_iuse tengine_static_modules_http_${module} ; then
+				http_enabled=1
+				tengine_configure+=" --with-http_${module}_module=shared"
+		elif use dso && \
+			! use_if_iuse tengine_shared_modules_http_${module} && \
+			! use_if_iuse tengine_static_modules_http_${module} ; then
+				tengine_configure+=" --without-http_${module}_module"
 		fi
 	done
 
 	for module in $TENGINE_MODULES_{OPTIONAL,OPTIONAL_SHARED} ; do
-		if use_if_iuse tengine_static_modules_http_${module} && ! use_if_iuse tengine_shared_modules_http_${module} ; then
-			http_enabled=1
-			tengine_configure+=" --with-http_${module}_module"
+		if use_if_iuse tengine_static_modules_http_${module} && \
+			! use_if_iuse tengine_shared_modules_http_${module} ; then
+				http_enabled=1
+				tengine_configure+=" --with-http_${module}_module"
 		fi
 	done
 
 	for module in $TENGINE_MODULES_OPTIONAL_SHARED ; do
-		if use dso && use_if_iuse tengine_shared_modules_http_${module} && ! use_if_iuse tengine_static_modules_http_${module} ; then
-			http_enabled=1
-			tengine_configure+=" --with-http_${module}_module=shared"
+		if use dso && use_if_iuse tengine_shared_modules_http_${module} && \
+			! use_if_iuse tengine_static_modules_http_${module} ; then
+				http_enabled=1
+				tengine_configure+=" --with-http_${module}_module=shared"
 		fi
 	done
 
-	if use_if_iuse tengine_static_modules_http_fastcgi || use_if_iuse tengine_static_modules_http_fastcgi ; then
-		tengine_configure+=" --with-http_realip_module"
+	if use_if_iuse tengine_static_modules_http_fastcgi || \
+		use_if_iuse tengine_static_modules_http_fastcgi ; then
+			tengine_configure+=" --with-http_realip_module"
 	fi
 
-	if use tengine_external_modules_http_fancyindex; then
-		http_enabled=1
-		tengine_configure+=" --add-module=${FANCYINDEX_WD}"
-	fi
-
-	if use tengine_external_modules_http_mogilefs ; then
-		http_enabled=1
-		tengine_configure+=" --add-module=${MOGILEFS_WD}"
-	fi
-
-	if use tengine_external_modules_http_ndk ; then
-		http_enabled=1
-		tengine_configure+=" --add-module=${NDK_WD}"
-	fi
-
-	if use tengine_external_modules_http_encrypted_session ; then
-		http_enabled=1
-		tengine_configure+=" --add-module=${ENCRYPTED_SESSION_WD}"
-	fi
-
-	if use tengine_external_modules_http_passenger ; then
-		http_enabled=1
-		tengine_configure+=" --add-module=${PASSENGER_WD}"
-	fi
+	for module in $TENGINE_MODULES_EXTERNAL ; do
+		if use_if_iuse tengine_external_modules_http_${module} ; then
+			http_enabled=1
+			local module_wd=${module^^}_WD
+			tengine_configure+=" --add-module=${!module_wd}"
+		fi
+	done
 
 	if use http || use http-cache ; then
 		http_enabled=1
@@ -494,7 +496,8 @@ src_install() {
 	local keepdir_list="${TENGINE_HOME_TMP}/client"
 	local module
 	for module in proxy fastcgi scgi uwsgi ; do
-		use_if_iuse tengine_static_modules_http_${module} && keepdir_list+=" ${TENGINE_HOME_TMP}/${module}"
+		use_if_iuse tengine_static_modules_http_${module} && \
+			keepdir_list+=" ${TENGINE_HOME_TMP}/${module}"
 	done
 
 	# logrotate
@@ -545,36 +548,45 @@ pkg_preinst() {
 }
 
 pkg_postinst() {
-	if [[ "${first_install}" = "yes" ]] && [[ ! -e "${EROOT}etc/${PN}/sites-enabled/localhost" ]] ; then
-		einfo "Enabling example Web site (see http://127.0.0.1)"
-		ln -s "../sites-available/localhost" "${EROOT}etc/${PN}/sites-enabled/localhost"
+	if [[ "${first_install}" = "yes" ]] && \
+		[[ ! -e "${EROOT}etc/${PN}/sites-enabled/localhost" ]] ; then
+			einfo "Enabling example Web site (see http://127.0.0.1)"
+			ln -s "../sites-available/localhost" \
+				"${EROOT}etc/${PN}/sites-enabled/localhost" || \
+				die
 	fi
 
 	if use ssl ; then
 		if [[ ! -f "${EROOT}etc/ssl/${PN}/${PN}.key" ]] ; then
 			install_cert /etc/ssl/${PN}/${PN}
-			use prefix || chown ${PN}:${PN} "${EROOT}etc/ssl/${PN}"/${PN}.{crt,csr,key,pem}
+			use prefix || chown ${PN}:${PN} \
+				"${EROOT}etc/ssl/${PN}"/${PN}.{crt,csr,key,pem}
 		fi
 	fi
 
-	einfo "If tengine complains about insufficient number of open files at start, ensure"
-	einfo "that you have a current /etc/security/limits.conf and logout and log back in"
-	einfo "to your system to ensure that the new max open file limits are active. Then"
-	einfo "try restarting tengine again."
+	einfo "If tengine complains about insufficient number of open files at"
+	einfo "start, ensure that you have a correct /etc/security/limits.conf"
+	einfo "and then do relogin to your system to ensure that the new max"
+	einfo "open file limits are active. Then try restarting tengine again."
 
-	if use_if_iuse tengine_external_modules_http_passenger; then
+	if use_if_iuse tengine_external_modules_http_passenger ; then
 		ewarn "Please, keep notice, that 'passenger_root' directive"
 		ewarn "should point to exact location of 'locations.ini'"
 		ewarn "file from this package (i.e. it should be full path)"
+		ewarn "It is installed (by default) to"
+		ewarn "${EROOT}usr/libexec/passenger/locations.ini"
 	fi
 
 	# If the tengine user can't change into or read the dir, display a warning.
-	# If su is not available we display the warning nevertheless since we can't check properly
+	# If su is not available we display the warning nevertheless since
+	# we can't check properly
 	su -s /bin/sh -c "cd ${EROOT}var/log/${PN} && ls" ${PN} >&/dev/null
-	if [ $? -ne 0 ] ; then
-		ewarn "Please make sure that the tengine user or group has at least"
-		ewarn "'rx' permissions on /var/log/${PN} (default on a fresh install)"
-		ewarn "Otherwise you end up with empty log files after a logrotate."
+	if [[ $? -ne 0 ]] ; then
+		ewarn "Please make sure that the tengine user or group has"
+		ewarn "at least 'rx' permissions (default on fresh install)"
+		ewarn "on ${EROOT}var/log/${PN} directory."
+		ewarn "Otherwise you end up with empty log files"
+		ewarn "after a logrotate."
 	fi
 }
 
