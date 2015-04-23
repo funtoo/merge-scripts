@@ -1,12 +1,12 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI="5"
+EAPI=5
 
 inherit eutils toolchain-funcs
 
 DESCRIPTION="OpenBSD rewrite of netcat, including support for IPv6, proxies, and Unix sockets"
 HOMEPAGE="http://openbsd.cs.toronto.edu/cgi-bin/cvsweb/src/usr.bin/nc/"
-SRC_URI="http://build.funtoo.org/distfiles/${PN}/${P}.tar.xz"
+SRC_URI="mirror://funtoo/distfiles/${PN}/${P}.tar.xz"
 
 LICENSE="BSD"
 SLOT="0"

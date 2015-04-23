@@ -15,7 +15,7 @@ OVZ_KV=${OVZ_KERNEL}.${OVZ_REV}
 KV_FULL=${PN}-${PVR}
 EXTRAVERSION=-${OVZ_KV}
 KERNEL_ARCHIVE="linux-${CKV}.tar.bz2"
-KERNEL_URI="http://build.funtoo.org/distfiles/${KERNEL_ARCHIVE}"
+KERNEL_URI="mirror://funtoo/distfiles/${KERNEL_ARCHIVE}"
 RESTRICT="binchecks strip mirror"
 
 LICENSE="GPL-2"
@@ -41,7 +41,7 @@ Red Hat typically only ensures that their kernels build using their
 own official kernel configurations. Significant variations from these
 configurations can result in build failures.
 
-For best results, always start with a .config provided by the OpenVZ 
+For best results, always start with a .config provided by the OpenVZ
 team from:
 
 http://wiki.openvz.org/Download/kernel/rhel6/${OVZ_KERNEL}.

@@ -18,7 +18,7 @@ IUSE="binary rt"
 DEPEND="binary? ( >=sys-kernel/genkernel-3.4.40.7 )"
 DESCRIPTION="Debian Sources (and optional binary kernel)"
 HOMEPAGE="http://www.debian.org"
-SRC_URI="http://build.funtoo.org/distfiles/${KERNEL_ARCHIVE} http://build.funtoo.org/distfiles/${PATCH_ARCHIVE}"
+SRC_URI="mirror://funtoo/distfiles/${KERNEL_ARCHIVE} mirror://funtoo/distfiles/${PATCH_ARCHIVE}"
 S="$WORKDIR/linux-${CKV}"
 
 get_patch_list() {
@@ -146,7 +146,7 @@ src_install() {
 }
 
 pkg_postinst() {
-	if use binary && [[ -h "${ROOT}"usr/src/linux ]]; then 
+	if use binary && [[ -h "${ROOT}"usr/src/linux ]]; then
 		rm "${ROOT}"usr/src/linux
 	fi
 

@@ -8,8 +8,8 @@ HOMEPAGE="http://www.funtoo.org/Package:Baselayout"
 GITHUB_REPO="baselayout"
 GITHUB_USER="funtoo"
 GITHUB_TAG="baselayout-2.2.0-r6"
-SRC_URI="https://www.github.com/${GITHUB_USER}/${GITHUB_REPO}/tarball/${GITHUB_TAG} ->  ${GITHUB_TAG}.tar.gz 
-http://build.funtoo.org/distfiles/realdev/realdev-1.0.tar.bz2"
+SRC_URI="https://www.github.com/${GITHUB_USER}/${GITHUB_REPO}/tarball/${GITHUB_TAG} ->  ${GITHUB_TAG}.tar.gz
+mirror://funtoo/distfiles/realdev/realdev-1.0.tar.bz2"
 S=$WORKDIR/$GITHUB_TAG
 S2=$WORKDIR/realdev-1.0
 
@@ -51,12 +51,12 @@ create_lib_dirs() {
 	# This following shell construction will set $libdirs to "lib" if it
 	# is blank:
 
-	: ${libdirs:=lib}	
+	: ${libdirs:=lib}
 
 	# Now, we iterate over our lib dirs, creating one in /, /usr and
 	# /usr/local:
 
-	for dir in ${libdirs} 
+	for dir in ${libdirs}
 	do
 		# If SYMLINK_LIB is set, this means that the "lib" dirs should be
 		# created as  symlinks, so don't create real "lib" dirs in this case.
@@ -102,9 +102,9 @@ modfix() {
 	# earlier baselayouts to the new file name so that config file protection
 	# works correctly when we merge the "new style" filenames.
 
-	for mod in i386 aliases 
+	for mod in i386 aliases
 	do
-		if [ -e $ROOT/etc/modprobe.d/$mod ] 
+		if [ -e $ROOT/etc/modprobe.d/$mod ]
 		then
 			mv $ROOT/etc/modprobe.d/$mod $ROOT/etc/modprobe.d/${mod}.conf || die "mv failed"
 		fi
@@ -228,7 +228,7 @@ src_install() {
 		echo "LDPATH=\"${libdirs_env}\"" > "${T}"/04multilib
 		doenvd "${T}"/04multilib
 	fi
-	#create /var/run symlink	
+	#create /var/run symlink
 	ln -s ../run ${D}/var/run || die
 
 	# rc-scripts version for testing of features that *should* be present

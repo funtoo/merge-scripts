@@ -1,8 +1,6 @@
-# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-apps/iproute2/iproute2-3.16.0-r1.ebuild,v 1.1 2014/08/27 00:40:17 vapier Exp $
 
-EAPI="5"
+EAPI=5
 
 inherit eutils toolchain-funcs flag-o-matic multilib
 

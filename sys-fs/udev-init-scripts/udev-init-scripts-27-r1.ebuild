@@ -10,7 +10,7 @@ HOMEPAGE="http://www.gentoo.org"
 LICENSE="GPL-2"
 SLOT="0"
 IUSE=""
-SRC_URI="http://build.funtoo.org/distfiles/${P}.tar.xz"
+SRC_URI="mirror://funtoo/distfiles/${P}.tar.xz"
 KEYWORDS="*"
 
 
@@ -44,9 +44,9 @@ pkg_postinst()
 				"${ROOT}"etc/runlevels/sysinit/udev-mount
 		fi
 		if [[ -x "${ROOT}"etc/init.d/udev-postmount \
-		    && -d "${ROOT}"etc/runlevels/boot ]]
+			&& -d "${ROOT}"etc/runlevels/boot ]]
 		then
-		    ln -fs /etc/init.d/udev-postmount \
+			ln -fs /etc/init.d/udev-postmount \
 				"${ROOT}"etc/runlevels/boot/udev-postmount
 		fi
 
