@@ -10,7 +10,7 @@ HOMEPAGE="http://www.gentoo.org"
 LICENSE="GPL-2"
 SLOT="0"
 IUSE=""
-SRC_URI="mirror://funtoo/distfiles/${P}.tar.xz"
+SRC_URI="mirror://funtoo/${P}.tar.xz"
 KEYWORDS="*"
 
 

@@ -6,7 +6,7 @@ inherit autotools
 
 DESCRIPTION="Pulseaudio Volume Control, GTK based mixer for Pulseaudio"
 HOMEPAGE="http://freedesktop.org/software/pulseaudio/pavucontrol/"
-SRC_URI="mirror://funtoo/distfiles/${P}.tar.gz"
+SRC_URI="mirror://funtoo/${P}.tar.gz"
 
 RESTRICT="mirror"
 
