@@ -1,3 +1,6 @@
+# FL-2313, postfix update, works fine but added staging mask for testing
+=mail-mta/postfix-3.0.1
+
 #FL-2287: timezone-data update, masked for testing.
 =sys-libs/timezone-data-2015c-r1
 
