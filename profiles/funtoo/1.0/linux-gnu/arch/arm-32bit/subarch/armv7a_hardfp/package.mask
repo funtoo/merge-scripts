@@ -1,0 +1,5 @@
+# FL-1190
+>www-client/firefox-17.0.9
+
+# FL-1191
+>mail-client/thunderbird-17.0.9
