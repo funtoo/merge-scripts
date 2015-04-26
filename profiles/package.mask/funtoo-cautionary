@@ -106,11 +106,6 @@ dev-python/pyxml
 # man-db to merge smoothly:
 sys-apps/man
 
-# Daniel Robbins <drobbins@funtoo.org> (28 Dec 2009)
-# Requested by slashbeast (Piotr Karbowski) in #funtoo due to /etc/cron.hourly
-# running up to 4 times per hour:
-=sys-process/cronbase-0.3.3*
-
 # Ryan Harris
 # Mask paludis and pkgcore. Not supported on funtoo at this time
 sys-apps/paludis
