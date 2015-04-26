@@ -6,7 +6,7 @@ from merge_utils import *
 
 nopush=False
 
-funtoo_overlay = GitTree("funtoo-overlay", "master", "repos@git.funtoo.org:funtoo-overlay.git", pull=True)
+funtoo_overlay = GitTree("funtoo-overlay", "master", "repos@localhost:funtoo-overlay.git", pull=True)
 
 # We treat our Gentoo staging overlay specially, so it's listed separately. This overlay contains all Gentoo
 # ebuilds, in a git repository. We use a special file in the funtoo-overlay/funtoo/scripts directory (next to
@@ -21,19 +21,19 @@ if os.path.exists(p):
 else:
 	commit = None
 
-gentoo_staging_r = GitTree("gentoo-staging", "master", "repos@git.funtoo.org:ports/gentoo-staging.git", commit=commit, pull=True)
+gentoo_staging_r = GitTree("gentoo-staging", "master", "repos@localhost:ports/gentoo-staging.git", commit=commit, pull=True)
 
 xml_out = etree.Element("packages")
-funtoo_staging_w = GitTree("funtoo-staging", "master", "repos@git.funtoo.org:ports/funtoo-staging.git", root="/var/git/dest-trees/funtoo-staging", pull=False, xml_out=xml_out)
+funtoo_staging_w = GitTree("funtoo-staging", "master", "repos@localhost:ports/funtoo-staging.git", root="/var/git/dest-trees/funtoo-staging", pull=False, xml_out=xml_out)
 # These overlays are monitored for changes -- if there are changes in these overlays, we regenerate the entire
 # tree. If there aren't changes in these overlays, we don't.
 
 funtoo_overlays = {
-	"funtoo_media" : GitTree("funtoo-media", "master", "repos@git.funtoo.org:funtoo-media.git", pull=True),
+	"funtoo_media" : GitTree("funtoo-media", "master", "repos@localhost:funtoo-media.git", pull=True),
 	"plex_overlay" : GitTree("funtoo-plex", "master", "https://github.com/Ghent/funtoo-plex.git", pull=True),
-	"funtoo_gnome" : GitTree("funtoo-gnome", "master", "repos@git.funtoo.org:funtoo-gnome-overlay.git", pull=True),
-	"funtoo_toolchain" : GitTree("funtoo-toolchain", "master", "repos@git.funtoo.org:funtoo-toolchain-overlay.git", pull=True),
-	"ldap_overlay" : GitTree("funtoo-ldap", "master", "repos@git.funtoo.org:funtoo-ldap-overlay.git", pull=True),
+	"funtoo_gnome" : GitTree("funtoo-gnome", "master", "repos@localhost:funtoo-gnome-overlay.git", pull=True),
+	"funtoo_toolchain" : GitTree("funtoo-toolchain", "master", "repos@localhost:funtoo-toolchain-overlay.git", pull=True),
+	"ldap_overlay" : GitTree("funtoo-ldap", "master", "repos@localhost:funtoo-ldap-overlay.git", pull=True),
 	"funtoo_deadbeef" : GitTree("funtoo-deadbeef", "master", "https://github.com/damex/funtoo-deadbeef.git", pull=True),
 	"funtoo_gambas" : GitTree("funtoo-gambas", "master", "https://github.com/damex/funtoo-gambas.git", pull=True),
 	"funtoo_wmfs" : GitTree("funtoo-wmfs", "master", "https://github.com/damex/funtoo-wmfs.git", pull=True)
