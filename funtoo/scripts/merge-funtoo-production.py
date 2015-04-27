@@ -16,7 +16,7 @@ def qa_build(host,build,arch_desc,subarch,head,target):
 	success = subprocess.getoutput("ssh %s cat /home/mirror/funtoo/%s/%s/%s/" % ( host, build, arch_desc, subarch )  + head + "/status") == "ok"
 	return success
 
-funtoo_staging_r = GitTree("funtoo-staging", "master", "repos@git.funtoo.org:ports/funtoo-staging.git", pull=True)
+funtoo_staging_r = GitTree("funtoo-staging", "master", "repos@localhost:ports/funtoo-staging.git", pull=True)
 head = funtoo_staging_r.head()
 print(head)
 success = False
@@ -28,7 +28,7 @@ if not success:
 	print("QA builds were not successful.")
 	sys.exit(1)
 
-ports_2012 = GitTree("ports-2012", "funtoo.org", "repos@git.funtoo.org:ports-2012.git", root="/var/git/dest-trees/ports-2012", pull=False)
+ports_2012 = GitTree("ports-2012", "funtoo.org", "repos@localhost:ports-2012.git", root="/var/git/dest-trees/ports-2012", pull=False)
 
 my_steps = [
 	GitCheckout("funtoo.org"),
