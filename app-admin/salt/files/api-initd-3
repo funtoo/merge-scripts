@@ -1,13 +1,13 @@
 #!/sbin/runscript
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-admin/salt/files/syndic-initd-3,v 1.1 2014/02/27 00:02:32 chutzpah Exp $
+# $Header: /var/cvsroot/gentoo-x86/app-admin/salt/files/api-initd-3,v 1.1 2014/12/03 22:10:14 chutzpah Exp $
 
-command="/usr/bin/salt-syndic"
+command="/usr/bin/salt-api"
 command_args="${SALT_OPTS}"
 command_background="1"
-pidfile="/var/run/salt-syndic.pid"
-name="SALT syndic daemon"
+pidfile="/var/run/salt-api.pid"
+name="SALT API daemon"
 
 depend() {
 	use net logger
