@@ -49,7 +49,8 @@ other_overlays = {
 	"bliss_overlay" : GitTree("bliss-overlay", "master", "https://github.com/fearedbliss/bliss-overlay.git", pull=True),
 	"squeezebox_overlay" : GitTree("squeezebox", "master", "git://git.overlays.gentoo.org/user/squeezebox.git", pull=True),
 	"progress_overlay" : SvnTree("progress", "https://gentoo-progress.googlecode.com/svn/overlays/progress"),
-	"sabayon_for_gentoo" : GitTree("sabayon-for-gentoo", "master", "git://github.com/Sabayon/for-gentoo.git", pull=True),
+        "pantheon_overlay" : GitTree("pantheon", "master", "https://github.com/pimvullers/elementary.git", pull=True),
+        "sabayon_for_gentoo" : GitTree("sabayon-for-gentoo", "master", "git://github.com/Sabayon/for-gentoo.git", pull=True),
 	"faustoo_overlay" : GitTree("faustoo", "master", "https://github.com/fmoro/faustoo.git", pull=True),
 	"sera_overlay" : GitTree("sera", "master", "git://git.overlays.gentoo.org/dev/sera.git", pull=True),
 	"vmware_overlay" : GitTree("vmware", "master", "git://git.overlays.gentoo.org/proj/vmware.git", pull=True)
@@ -169,8 +170,9 @@ ebuild_additions = [
 ebuild_modifications = [
 	InsertEbuilds(other_overlays["vmware_overlay"], select=[ "app-emulation/vmware-modules" ], skip=None, replace=True, merge=True),
 	InsertEbuilds(other_overlays["sera_overlay"], select="all", skip=None, replace=True, merge=True),
+        InsertEbuilds(other_overlays["pantheon_overlay"], select=[ "x11-libs/granite", "x11-libs/bamf", "x11-themes/plank-theme-pantheon", "pantheon-base/plank", "x11-wm/gala"], skip=None, replace=True, merge=True),
 	InsertEbuilds(other_overlays["faustoo_overlay"], select=[ "app-office/projectlibre-bin" ], skip=None, replace=True),
-	InsertEbuilds(other_overlays["foo_overlay"], select="all", skip=["sys-fs/mdev-bb", "sys-fs/mdev-like-a-boss", "media-sound/deadbeef", "media-video/handbrake"], replace=["app-shells/rssh","net-misc/unison"]),
+	InsertEbuilds(other_overlays["foo_overlay"], select="all", skip=["sys-fs/mdev-bb", "sys-fs/mdev-like-a-boss", "media-sound/deadbeef", "media-video/handbrake"], replace=["app-shells/rssh"]),
 	InsertEbuilds(funtoo_overlays["plex_overlay"], select = [ "media-tv/plex-media-server" ], skip=None, replace=True),
 	InsertEbuilds(other_overlays["causes_overlay"], select=[ "media-sound/renoise", "media-sound/renoise-demo", "sys-fs/smdev", "x11-wm/dwm" ], skip=None, replace=True),
 	InsertEbuilds(other_overlays["sabayon_for_gentoo"], select=["sci-geosciences/grass", "app-admin/equo", "app-admin/matter", "sys-apps/entropy", "sys-apps/entropy-server", "sys-apps/entropy-client-services","app-admin/rigo", "sys-apps/rigo-daemon", "sys-apps/magneto-core", "x11-misc/magneto-gtk", "x11-misc/magneto-gtk3", "kde-misc/magneto-kde", "app-misc/magneto-loader"], replace=True),
