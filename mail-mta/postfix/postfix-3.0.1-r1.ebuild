@@ -224,7 +224,6 @@ src_install () {
 	# Fix spool removal on upgrade
 	rm -Rf "${D}"/var
 	keepdir /var/spool/postfix
-	fowners root:0 /var/spool/postfix
 
 	# Install rmail for UUCP, closes bug #19127
 	dobin auxiliary/rmail/rmail
@@ -323,6 +322,9 @@ pkg_postinst() {
 		/usr/bin/newaliases
 	fi
 
-add_init default postfix
+	# Change owner of /var/spool/postfix
+	chown root:0 "${ROOT}"var/spool/postfix
+	elog "Correcting permission of spool directory"
+	add_init default postfix
 	ewarn "Postfix automatically added to defaut runlevel. To start daemon, run /sbin/rc"
 }
