@@ -1,4 +1,3 @@
-# Copyright 2015 Funtoo Solutions
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=5
@@ -31,4 +30,5 @@ src_install() {
 	doins $S/modules-info/*
 	dosbin $S/ego
 	dosym ../share/ego/modules/profile.ego /usr/sbin/epro
+	doman ego.8 epro.8
 }
