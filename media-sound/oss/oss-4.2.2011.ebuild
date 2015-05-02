@@ -55,6 +55,9 @@ src_prepare() {
 		epatch "${FILESDIR}/pax_kernel.patch"
 	fi
 
+	# Adding Linux Kernel 4.x support for oss-4.2.2011
+	epatch "${FILESDIR}/${P}-linux-4.x.patch"
+
 	for deprecated_card in ${DEPRECATED_CARDS} ; do
 		ln -s "${S}/attic/drv/oss_${deprecated_card}" "${S}/kernel/drv/oss_${deprecated_card}"
 	done
