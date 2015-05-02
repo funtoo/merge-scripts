@@ -47,13 +47,13 @@ other_overlays = {
 	"bar_overlay" : GitTree("bar-overlay", "master", "git://github.com/adessemond/bar-overlay.git", pull=True),
 	"causes_overlay" : GitTree("causes","master", "https://github.com/causes-/causelay", pull=True),
 	"bliss_overlay" : GitTree("bliss-overlay", "master", "https://github.com/fearedbliss/bliss-overlay.git", pull=True),
-	"squeezebox_overlay" : GitTree("squeezebox", "master", "git://git.overlays.gentoo.org/user/squeezebox.git", pull=True),
+	"squeezebox_overlay" : GitTree("squeezebox", "master", "git://anongit.gentoo.org/user/squeezebox.git", pull=True),
 	"progress_overlay" : SvnTree("progress", "https://gentoo-progress.googlecode.com/svn/overlays/progress"),
         "pantheon_overlay" : GitTree("pantheon", "master", "https://github.com/pimvullers/elementary.git", pull=True),
         "sabayon_for_gentoo" : GitTree("sabayon-for-gentoo", "master", "git://github.com/Sabayon/for-gentoo.git", pull=True),
 	"faustoo_overlay" : GitTree("faustoo", "master", "https://github.com/fmoro/faustoo.git", pull=True),
-	"sera_overlay" : GitTree("sera", "master", "git://git.overlays.gentoo.org/dev/sera.git", pull=True),
-	"vmware_overlay" : GitTree("vmware", "master", "git://git.overlays.gentoo.org/proj/vmware.git", pull=True)
+	"sera_overlay" : GitTree("sera", "master", "git://anongit.gentoo.org/dev/sera.git", pull=True),
+	"vmware_overlay" : GitTree("vmware", "master", "git://anongit.gentoo.org/proj/vmware.git", pull=True)
 }
 
 funtoo_changes = False

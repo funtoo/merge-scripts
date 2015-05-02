@@ -1,3 +1,6 @@
+# FL-2326: enahnce mutt USEs to more suitable defaults
+mail-client/mutt imap mbox sasl smtp
+
 # FL-1948:
 media-video/mjpegtools -v4l
 
