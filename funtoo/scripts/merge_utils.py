@@ -16,7 +16,7 @@ mergeLog = open("/var/tmp/merge.log","w")
 def qa_build(host,build,arch_desc,subarch,head,target):
 	success = False
 	print("Performing remote QA build on %s for %s %s %s %s (%s)" % (host, build, arch_desc, subarch, head, target))
-	build_dir = datetime.now().strftime("%Y-%m-%d") + "-" + head
+	build_dir = datetime.datetime.now().strftime("%Y-%m-%d") + "-" + head
 	exists = subprocess.getoutput("ssh %s '[ -e /home/mirror/funtoo/%s/%s/%s/" % ( host, build, arch_desc, subarch ) + build_dir + "/status ] && echo yep || echo nope'") == "yep"
 	if not exists:
 		status, output = subprocess.getstatusoutput("ssh %s /root/metro/scripts/ezbuild.sh %s %s %s %s " % ( host, build, arch_desc, subarch, target ) + build_dir)
