@@ -19,7 +19,9 @@ def qa_build(host,build,arch_desc,subarch,head,target):
 	build_dir = datetime.datetime.now().strftime("%Y-%m-%d") + "-" + head
 	exists = subprocess.getoutput("ssh %s '[ -e /home/mirror/funtoo/%s/%s/%s/" % ( host, build, arch_desc, subarch ) + build_dir + "/status ] && echo yep || echo nope'") == "yep"
 	if not exists:
-		status, output = subprocess.getstatusoutput("ssh %s /root/metro/scripts/ezbuild.sh %s %s %s %s " % ( host, build, arch_desc, subarch, target ) + build_dir)
+		status = subprocess.call(["/usr/bin/ssh",host,"/root/metro/scripts/ezbuild.sh", build, arch_desc, subarch, target, build_dir])
+		if status:
+			print("ezbuild.sh completed with errors.")
 	success = subprocess.getoutput("ssh %s cat /home/mirror/funtoo/%s/%s/%s/" % ( host, build, arch_desc, subarch )  + build_dir + "/status") == "ok"
 	if success:
 		print("Build successful.")
