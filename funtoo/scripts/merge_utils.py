@@ -6,6 +6,7 @@ import os
 import shutil
 import subprocess
 import sys
+import datetime
 from lxml import etree
 
 debug = False
