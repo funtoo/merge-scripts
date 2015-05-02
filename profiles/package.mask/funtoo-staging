@@ -14,9 +14,6 @@
 # FL-971: dhcpcd-6.8.1, masked for testing
 =net-misc/dhcpcd-6.8.1
 
-# Fl-2033, nginx-1.7.8, masked for testing
-=www-servers/nginx-1.7.8-r1
-
 #FL-1767: add bluez-5.27, masked for testing
 =net-wireless/bluez-5.27
 
