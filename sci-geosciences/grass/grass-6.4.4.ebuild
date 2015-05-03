@@ -124,7 +124,7 @@ src_prepare() {
 }
 
 src_configure() {
-	local myconf 
+	local myconf
 
 	if use X; then
 		myconf+="
@@ -299,10 +299,9 @@ generate_files() {
 	Name=Grass ${PV}
 	Type=Application
 	Comment=GRASS (Geographic Resources Analysis Support System), the original GIS.
-	Exec=${TERM} -T Grass -e /usr/bin/${MY_PM} ${GUI}
-	Path=
+	Exec=grass64
 	Icon=${PN}-48x48.png
 	Categories=Science;Education;
-	Terminal=false
+	Terminal=true
 EOF
 }
