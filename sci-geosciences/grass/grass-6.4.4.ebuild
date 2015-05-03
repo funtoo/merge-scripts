@@ -206,8 +206,7 @@ src_install() {
 
 	pushd "${ED}"/usr/${MY_PM} &> /dev/null
 
-	# fix docs
-	dodoc AUTHORS CHANGES
+
 	dohtml -r docs/html/*
 	rm -rf docs/ || die
 	rm -rf {AUTHORS,CHANGES,COPYING,GPL.TXT,REQUIREMENTS.html} || die
