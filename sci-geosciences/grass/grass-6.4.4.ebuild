@@ -81,7 +81,7 @@ DEPEND="${RDEPEND}
 S="${WORKDIR}/${MY_P}"
 
 PATCHES=(
-	"${FILESDIR}"/${PN}-pkgconf.patch
+	"${FILESDIR}"/patches/000*
 	"${FILESDIR}"/animate-wish.patch
 	"${FILESDIR}"/wxpy3.0-compat.patch
 )
