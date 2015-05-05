@@ -1,3 +1,6 @@
+# QA-7 enable cairo USE for poppler, needed by xfce4-meta
+app-text/poppler cairo
+
 # FL-2159: making xfce-base/xfce4-meta pull in xfce-base/xfdesktop
 # with or without thunar. depending on state of the use flag.
 xfce-base/xfdesktop thunar
