@@ -31,6 +31,7 @@ XORG_CONFIGURE_OPTIONS=(
 	# do not check for runtime deps
 	--disable-runtime-deps
 	--with-xkb-rules-symlink=xorg
+	$(use_enable nls)
 )
 
 src_prepare() {
