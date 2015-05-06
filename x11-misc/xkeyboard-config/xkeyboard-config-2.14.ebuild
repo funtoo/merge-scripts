@@ -12,7 +12,7 @@ HOMEPAGE="http://www.freedesktop.org/wiki/Software/XKeyboardConfig"
 [[ ${PV} == *9999* ]] || SRC_URI="${XORG_BASE_INDIVIDUAL_URI}/data/${PN}/${P}.tar.bz2"
 
 KEYWORDS="*"
-IUSE=""
+IUSE="+nls"
 
 LICENSE="MIT"
 SLOT="0"
@@ -20,7 +20,7 @@ SLOT="0"
 RDEPEND=">=x11-apps/xkbcomp-1.2.3
 	>=x11-libs/libX11-1.4.3"
 DEPEND="${RDEPEND}
-	sys-devel/gettext
+	nls? ( sys-devel/gettext )
 	dev-libs/libxslt
 	dev-util/intltool
 	>=x11-proto/xproto-7.0.20"
