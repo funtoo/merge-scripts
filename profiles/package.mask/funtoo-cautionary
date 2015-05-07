@@ -1,3 +1,6 @@
+#FL-2332: re-mask vlc-2.2.1, broken ebuild.
+=media-video/vlc-2.2.1
+
 # FL2324 FL-2320: mask pf-sources explicitly wanted unstable gcc.
 >sys-kernel/pf-sources-4.0_p1
 
