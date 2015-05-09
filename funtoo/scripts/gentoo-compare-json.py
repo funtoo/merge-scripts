@@ -11,7 +11,6 @@ import json
 
 from merge_utils import *
 dirpath = os.path.dirname(os.path.realpath(__file__))
-portdir = os.path.normpath("/var/work/ports-2012")
 
 print("List of differences between funtoo and gentoo")
 print("=============================================")
@@ -25,11 +24,12 @@ def getKeywords(portdir, ebuild, warn):
 		return a
 	
 
-if len(sys.argv) != 2:
-	print("Please specify portage tree to compare against as first argument.")
+if len(sys.argv) != 3:
+	print("Please specify funtoo tree as first argument, gentoo tree as second argument.")
 	sys.exit(1)
 
-gportdir=sys.argv[1]
+gportdir=sys.argv[2]
+portdir=sys.argv[1]
 
 def filterOnKeywords(portdir, ebuilds, keywords, warn=False):
 	""" 
@@ -91,7 +91,7 @@ def version_compare(portdir,gportdir,keywords,label):
 			continue
 		for pkg in os.listdir(os.path.join(portdir,cat)):
 			ebuilds = get_cpv_in_portdir(portdir,cat,pkg)
-			gebuilds = get_cpv_in_portdir(gportdir,cat,pkg)
+			gebuilds =get_cpv_in_portdir(gportdir,cat,pkg)
 			ebuilds = filterOnKeywords(portdir, ebuilds, keywords, warn=True)
 
 			if len(ebuilds) == 0:
