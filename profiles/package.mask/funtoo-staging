@@ -8,9 +8,6 @@
 =sys-devel/libtool-2.4.6
 =dev-libs/libltdl-2.4.6
 
-# FL-971: dhcpcd-6.8.1, masked for testing
-=net-misc/dhcpcd-6.8.1
-
 #FL-1767: add bluez-5.27, masked for testing
 =net-wireless/bluez-5.27
 
