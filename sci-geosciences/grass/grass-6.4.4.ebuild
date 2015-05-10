@@ -81,7 +81,7 @@ DEPEND="${RDEPEND}
 S="${WORKDIR}/${MY_P}"
 
 PATCHES=(
-	"${FILESDIR}"/${PN}-pkgconf.patch
+	"${FILESDIR}"/patches/000*
 	"${FILESDIR}"/animate-wish.patch
 	"${FILESDIR}"/wxpy3.0-compat.patch
 )
@@ -124,7 +124,7 @@ src_prepare() {
 }
 
 src_configure() {
-	local myconf 
+	local myconf
 
 	if use X; then
 		myconf+="
@@ -206,8 +206,7 @@ src_install() {
 
 	pushd "${ED}"/usr/${MY_PM} &> /dev/null
 
-	# fix docs
-	dodoc AUTHORS CHANGES
+
 	dohtml -r docs/html/*
 	rm -rf docs/ || die
 	rm -rf {AUTHORS,CHANGES,COPYING,GPL.TXT,REQUIREMENTS.html} || die
@@ -299,10 +298,9 @@ generate_files() {
 	Name=Grass ${PV}
 	Type=Application
 	Comment=GRASS (Geographic Resources Analysis Support System), the original GIS.
-	Exec=${TERM} -T Grass -e /usr/bin/${MY_PM} ${GUI}
-	Path=
+	Exec=grass64
 	Icon=${PN}-48x48.png
 	Categories=Science;Education;
-	Terminal=false
+	Terminal=true
 EOF
 }

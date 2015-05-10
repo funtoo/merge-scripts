@@ -3,7 +3,7 @@
 import os
 from merge_utils import *
 
-gentoo_staging_w = GitTree("gentoo-staging", "master", "repos@git.funtoo.org:ports/gentoo-staging.git", root="/var/git/dest-trees/gentoo-staging", pull=False)
+gentoo_staging_w = GitTree("gentoo-staging", "master", "repos@localhost:ports/gentoo-staging.git", root="/var/git/dest-trees/gentoo-staging", pull=False)
 
 # This function updates the gentoo-staging tree with all the latest gentoo updates:
 

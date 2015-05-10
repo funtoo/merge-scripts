@@ -11,15 +11,22 @@
 # Must specify with path from type. Ex: 'flavor/desktop' , 'arch/x86-32bit' , ect ...
 
 
-# Type		Name							Status		NoMix
+# Type		Name									Status		NoMix
 
-arch		funtoo/1.0/linux-gnu/arch/x86-32bit			stable
-arch		funtoo/1.0/linux-gnu/arch/x86-64bit			stable
-arch		funtoo/1.0/linux-gnu/arch/pure64			exp
-arch		funtoo/1.0/linux-gnu/arch/arm-32bit/armv7a_hardfp	exp
-arch		funtoo/1.0/linux-gnu/arch/arm-32bit/armv6j_hardfp	exp
-arch		funtoo/1.0/linux-gnu/arch/arm-32bit/armv5te		exp
+arch		funtoo/1.0/linux-gnu/arch/x86-32bit					stable
+arch		funtoo/1.0/linux-gnu/arch/x86-64bit					stable
+arch		funtoo/1.0/linux-gnu/arch/pure64					exp
+arch		funtoo/1.0/linux-gnu/arch/arm-32bit					exp
 
+subarch		funtoo/1.0/linux-gnu/arch/arm-32bit/subarch/armv7a_vfpv3d32_hardfp	exp
+subarch		funtoo/1.0/linux-gnu/arch/arm-32bit/subarch/armv7a_vfpv3d16_hardfp	exp
+subarch		funtoo/1.0/linux-gnu/arch/arm-32bit/subarch/armv7a_vfpv3_hardfp		exp
+subarch		funtoo/1.0/linux-gnu/arch/arm-32bit/subarch/armv7a_neonvfpv4_hardfp	exp
+subarch		funtoo/1.0/linux-gnu/arch/arm-32bit/subarch/armv7a_neon_hardfp		exp
+subarch		funtoo/1.0/linux-gnu/arch/arm-32bit/subarch/armv7a_hardfp		exp
+subarch		funtoo/1.0/linux-gnu/arch/arm-32bit/subarch/armv6j_vfp_hardfp		exp
+subarch		funtoo/1.0/linux-gnu/arch/arm-32bit/subarch/armv6j_hardfp		exp
+subarch		funtoo/1.0/linux-gnu/arch/arm-32bit/subarch/armv5te			exp
 subarch		funtoo/1.0/linux-gnu/arch/pure64/subarch/amd64-bulldozer-pure64		exp
 subarch		funtoo/1.0/linux-gnu/arch/pure64/subarch/amd64-jaguar-pure64		exp
 subarch		funtoo/1.0/linux-gnu/arch/pure64/subarch/amd64-k10-pure64		exp

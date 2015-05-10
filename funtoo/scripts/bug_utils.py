@@ -57,7 +57,6 @@ class JIRA(object):
 
 	def createSubTask(self,parentkey,project,title,description):
 		return self.createIssue(project=project,title=title,description=description,issuetype="Sub-task",extrafields={'parent' : parentkey})
-
 	def closeDuplicateIssue(self,orig_issue, dup_issue):
 		url = self.url + '/issue/' + dup_issue['key'] + '/transitions'
 		headers = { "Content-type": "application/json", "Accept": "application/json", "Authorization": self.getAuth() }

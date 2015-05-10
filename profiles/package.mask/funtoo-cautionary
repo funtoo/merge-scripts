@@ -1,3 +1,6 @@
+# FL2324 FL-2320: mask pf-sources explicitly wanted unstable gcc.
+>sys-kernel/pf-sources-4.0_p1
+
 # FL-2312: mask gnupg-2.1, breaks gnome apps
 >app-crypt/gnupg-2.0.27-r1
 
@@ -55,12 +58,6 @@
 # Ref FL-970, FL-1351 and FL-1424
 app-text/pdftk
 
-# Dantrell B. (2 Aug 2014)
-# Selectively mask versions of net-irc/hexchat
-# Ref FL-584 and FL-1435
-=net-irc/hexchat-2.10.0*
-=net-irc/hexchat-2.9.6*
-
 # Daniel Robbins (28 Jun 2014)
 # FL-738: can break building of multiple packages (erlang, nginx, glibc, possibly guile (FL-919)
 app-admin/eselect-sh
@@ -105,11 +102,6 @@ dev-python/pyxml
 # mask sys-apps/man as part of a workaround to get
 # man-db to merge smoothly:
 sys-apps/man
-
-# Daniel Robbins <drobbins@funtoo.org> (28 Dec 2009)
-# Requested by slashbeast (Piotr Karbowski) in #funtoo due to /etc/cron.hourly
-# running up to 4 times per hour:
-=sys-process/cronbase-0.3.3*
 
 # Ryan Harris
 # Mask paludis and pkgcore. Not supported on funtoo at this time
