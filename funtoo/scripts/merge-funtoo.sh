@@ -3,10 +3,11 @@ cd /root/funtoo-overlay
 # get latest merge.py and friends
 git pull || exit 1
 /root/funtoo-overlay/funtoo/scripts/merge-funtoo-staging.py
-if [ $? -eq 2 ]; then
+ecode=$?
+if [ $ecode -eq 2 ]; then
 	# no new updates...
 	exit 2
-elif [ $? -ne 0 ]; then
+elif [ $ecode -gt 0 ]; then
 	# some kind of error
 	exit 1	
 fi
