@@ -7,15 +7,15 @@ minute=$(date +%M)
 
 if [ "$( echo $hour % 4 | bc)" -eq 0 ] && [ "$minute" -eq 5 ]; then
 	# run the merge-gentoo script every 4 hours, on the 5th minute.
-	echo $DIR/merge-gentoo-staging.py
+	$DIR/merge-gentoo-staging.py
 fi
 if [ "$( echo $minute % 5 | bc)" -eq 0 ]; then
 	# Then, run the merge-funtoo script every 5 minutes."
-	echo $DIR/merge-funtoo.sh
+	$DIR/merge-funtoo.sh
 fi
 if [ $? -eq 0 ] && [ "$hour" -eq 12 ] && [ "$minute" -eq 30 ]; then
 	# Then, if successful, run QA builds:
-	echo $DIR/qa-builds.py
+	$DIR/qa-builds.py
 fi
 #5 */4 * * *    /root/funtoo-overlay/funtoo/scripts/merge-gentoo-staging.py
 #*/5 * * * *    /root/funtoo-overlay/funtoo/scripts/merge-funtoo.sh
