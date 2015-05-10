@@ -96,13 +96,14 @@ else:
 
 base_steps = [
 	GitCheckout("master"),
-	SyncFromTree(gentoo_staging_r, exclude=["/metadata/cache/**", "ChangeLog", "dev-util/metro"]),
+	SyncFromTree(gentoo_staging_r, exclude=["/metadata/cache/**", "ChangeLog", "dev-util/metro", "skel.ChangeLog"]),
 	SyncDir(funtoo_overlay.root,"licenses"),
 	SyncDir(funtoo_overlay.root,"metadata"),
 	SyncFiles(funtoo_overlay.root, {
 		"COPYRIGHT.txt":"COPYRIGHT.txt",
 		"LICENSE.txt":"LICENSE.txt",
-		"README.rst":"README.rst"
+		"README.rst":"README.rst",
+		"header.txt":"header.txt",
 	}),
 ]
 
@@ -227,3 +228,5 @@ if xmlfile:
 	a=open(xmlfile,"wb")
 	etree.ElementTree(xml_out).write(a, encoding='utf-8', xml_declaration=True, pretty_print=True)
 	a.close()
+print("merge-funtoo-staging.py completed successfully.")
+sys.exit(0)
