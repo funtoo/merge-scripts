@@ -228,3 +228,5 @@ if xmlfile:
 	a=open(xmlfile,"wb")
 	etree.ElementTree(xml_out).write(a, encoding='utf-8', xml_declaration=True, pretty_print=True)
 	a.close()
+print("merge-funtoo-staging.py completed successfully.")
+sys.exit(0)
