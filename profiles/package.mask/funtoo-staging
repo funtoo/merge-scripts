@@ -1,3 +1,6 @@
+# nvidia CUDA tests
+=x11-drivers/nvidia-drivers-349.16-r2
+
 # FL-2232: Not fully-baked version of xorg-server. Masking.
 >=x11-base/xorg-server-1.17
 
