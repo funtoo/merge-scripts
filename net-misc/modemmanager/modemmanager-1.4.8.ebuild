@@ -13,7 +13,7 @@ SRC_URI="http://www.freedesktop.org/software/ModemManager/ModemManager-${PV}.tar
 
 LICENSE="GPL-2+"
 SLOT="0/1" # subslot = dbus interface version, i.e. N in org.freedesktop.ModemManager${N}
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="+introspection mbim policykit +qmi qmi-newest vala"
 REQUIRED_USE="
 	qmi-newest? ( qmi )
@@ -26,7 +26,7 @@ RDEPEND="
 	introspection? ( >=dev-libs/gobject-introspection-0.9.6 )
 	mbim? ( >=net-libs/libmbim-1.10 )
 	policykit? ( >=sys-auth/polkit-0.106[introspection] )
-	qmi? ( >=net-libs/libqmi-1.12.4:= )
+	qmi? ( >=net-libs/libqmi-1.12.4 )
 "
 DEPEND="${RDEPEND}
 	dev-util/gdbus-codegen
