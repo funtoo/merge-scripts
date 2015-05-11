@@ -23,7 +23,7 @@ HOMEPAGE="http://www.kernel.org/pub/linux/utils/util-linux/"
 
 LICENSE="GPL-2 LGPL-2.1 BSD-4 MIT public-domain"
 SLOT="0"
-IUSE="bash-completion caps +cramfs cytune fdformat ncurses nls pam python selinux slang static-libs +suid test +tty-helpers udev unicode"
+IUSE="caps +cramfs fdformat ncurses nls pam python selinux slang +static-libs +suid test +tty-helpers unicode"
 
 RDEPEND="!sys-process/schedutils
 	!sys-apps/setarch
@@ -39,7 +39,6 @@ RDEPEND="!sys-process/schedutils
 	python? ( ${PYTHON_DEPS} )
 	selinux? ( >=sys-libs/libselinux-2.2.2-r4[${MULTILIB_USEDEP}] )
 	slang? ( sys-libs/slang )
-	udev? ( virtual/udev )
 	abi_x86_32? (
 		!<=app-emulation/emul-linux-x86-baselibs-20140406-r2
 		!app-emulation/emul-linux-x86-baselibs[-abi_x86_32]
@@ -59,14 +58,11 @@ pkg_setup() {
 }
 
 src_prepare() {
+	epatch "${FILESDIR}"/${P}-runuser-bash-completion.patch #522288
 	if [[ ${PV} == 9999 ]] ; then
 		po/update-potfiles
 		eautoreconf
 	fi
-	epatch "${FILESDIR}"/${PN}-2.24-last-tests.patch #501408
-	# http://thread.gmane.org/gmane.linux.utilities.util-linux-ng/9237
-	epatch "${FILESDIR}"/${PN}-2.24-fix-fdisk-on-alpha.patch
-	find tests/ -name bigyear -delete #489794
 	elibtoolize
 }
 
@@ -86,17 +82,21 @@ lfs_fallocate_test() {
 multilib_src_configure() {
 	lfs_fallocate_test
 	export ac_cv_header_security_pam_misc_h=$(multilib_native_usex pam) #485486
+	# We manually set --libdir to the default since on prefix, econf will set it to
+	# a value which the configure script does not recognize.  This makes it set the
+	# usrlib_execdir to a bad value. bug #518898#c2, fixed upstream for >2.25
 	ECONF_SOURCE=${S} \
 	econf \
-		--docdir="/usr/share/doc/${PF}" \
-		--enable-fs-paths-extra=/usr/sbin:/bin:/usr/bin \
+		--enable-fs-paths-extra="${EPREFIX}/usr/sbin:${EPREFIX}/bin:${EPREFIX}/usr/bin" \
+		--libdir='${prefix}/'"$(get_libdir)" \
+		--docdir='${datarootdir}'/doc/${PF} \
 		$(multilib_native_use_enable nls) \
 		--enable-agetty \
 		--with-bashcompletiondir="$(get_bashcompdir)" \
-		$(multilib_native_use_enable bash-completion) \
+		--enable-bash-completion \
 		$(multilib_native_use_enable caps setpriv) \
+		--disable-chfn-chsh \
 		$(multilib_native_use_enable cramfs) \
-		$(multilib_native_use_enable cytune) \
 		$(multilib_native_use_enable fdformat) \
 		--with-ncurses=$(multilib_native_usex ncurses $(usex unicode auto yes) no) \
 		--disable-kill \
@@ -110,6 +110,7 @@ multilib_src_configure() {
 		--disable-reset \
 		--enable-schedutils \
 		--disable-su \
+		--without-udev \
 		$(multilib_native_use_enable tty-helpers wall) \
 		$(multilib_native_use_enable tty-helpers write) \
 		$(multilib_native_use_enable suid makeinstall-chown) \
@@ -117,7 +118,6 @@ multilib_src_configure() {
 		$(use_with selinux) \
 		$(multilib_native_use_with slang) \
 		$(use_enable static-libs static) \
-		$(multilib_native_use_with udev) \
 		$(tc-has-tls || echo --disable-tls)
 }
 
@@ -141,12 +141,13 @@ multilib_src_install() {
 	else
 		emake -j1 DESTDIR="${D}" install-usrlib_execLTLIBRARIES \
 			install-pkgconfigDATA install-uuidincHEADERS \
-			install-nodist_blkidincHEADERS install-nodist_mountincHEADERS
+			install-nodist_blkidincHEADERS install-nodist_mountincHEADERS \
+			install-nodist_smartcolsincHEADERS
 	fi
 
 	if multilib_is_native_abi; then
 		# need the libs in /
-		gen_usr_ldscript -a blkid mount uuid
+		gen_usr_ldscript -a blkid mount smartcols uuid
 
 		use python && python_optimize
 	fi
