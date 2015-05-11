@@ -1,3 +1,6 @@
+# Stage3 kernel now getting built with binary flag.
+sys-kernel/debian-sources binary
+
 #FL-1498: enable gtk USE flag for gnash for clean emerge if non-dekstop profile used
 www-plugins/gnash gtk
 
