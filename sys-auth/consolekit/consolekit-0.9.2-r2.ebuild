@@ -101,3 +101,14 @@ src_install() {
 	insinto /etc/logrotate.d
 	newins "${WORKDIR}"/debian/${PN}.logrotate ${PN} #374513
 }
+
+pkg_postinst() {
+	[ -e ${ROOT}/etc/pam.d/system-login ] || return 0
+	if [ -e ${ROOT}/$(get_libdir)/security/pam_ck_connector.so ]; then
+		einfo "Enabling pam_ck_connector in /etc/pam.d/system-login"
+		sed -i -e '/pam_ck_connector/s/^#\(.*\)$/\1/g' ${ROOT}/etc/pam.d/system-login
+	else
+		einfo "Disabling pam_ck_connector in /etc/pam.d/system-login"
+		sed -i -e '/pam_ck_connector/s/^\(.*\)$/#\1/g' ${ROOT}/etc/pam.d/system-login
+	fi
+}
