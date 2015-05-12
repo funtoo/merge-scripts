@@ -1,3 +1,7 @@
+# FL-2366: masked for testing
+>=sys-auth/consolekit-0.9.2
+>=sys-auth/pambase-20150213
+
 # nvidia CUDA tests
 =x11-drivers/nvidia-drivers-349.16-r2
 
