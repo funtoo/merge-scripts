@@ -15,7 +15,7 @@ SLOT="0/20" # subslot = soname major version
 KEYWORDS="*"
 IUSE="static-libs"
 
-RDEPEND=">=dev-libs/libgpg-error-1.12[${MULTILIB_USEDEP}]
+RDEPEND=">=dev-libs/libgpg-error-1.19[${MULTILIB_USEDEP}]
 	abi_x86_32? (
 		!<=app-emulation/emul-linux-x86-baselibs-20131008-r19
 		!app-emulation/emul-linux-x86-baselibs[-abi_x86_32]
