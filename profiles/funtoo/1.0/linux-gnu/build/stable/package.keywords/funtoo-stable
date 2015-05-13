@@ -79,9 +79,6 @@
 # FL-1785, stabilize texinfo-5.2
 =sys-apps/texinfo-5.2 amd64 x86
 
-# FL-1732, stabilize libgpg-error, make stable stages build
-=dev-libs/libgpg-error-1.15 amd64 x86
-
 # stabilize libpipeline to make recently added man-db-2.7.0.2 build
 =dev-libs/libpipeline-1.4.0 amd64 x86
 
