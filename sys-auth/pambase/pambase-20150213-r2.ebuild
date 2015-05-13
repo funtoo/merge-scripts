@@ -10,7 +10,7 @@ SRC_URI="mirror://funtoo/pambase/${P}.tar.xz"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="*"
-IUSE="cracklib debug gnome-keyring minimal mktemp +nullok pam_krb5 pam_ssh passwdqc securetty selinux +sha512 systemd"
+IUSE="consolekit cracklib debug gnome-keyring minimal mktemp +nullok pam_krb5 pam_ssh passwdqc securetty selinux +sha512 systemd"
 
 RESTRICT=binchecks
 
@@ -38,6 +38,7 @@ RDEPEND="
 	!<sys-libs/pam-0.99.9.0-r1"
 DEPEND="app-portage/portage-utils
 	app-arch/xz-utils"
+PDEPEND="consolekit? ( sys-auth/consolekit )"
 
 src_prepare() {
 	epatch "${FILESDIR}"/${P}-selinux-note.patch #540096
@@ -67,7 +68,7 @@ src_compile() {
 		$(use_var debug) \
 		$(use_var cracklib) \
 		$(use_var passwdqc) \
-		CONSOLEKIT=yes \
+		$(use_var consolekit) \
 		$(use_var systemd) \
 		$(use_var GNOME_KEYRING gnome-keyring) \
 		$(use_var selinux) \
@@ -86,15 +87,4 @@ src_test() { :; }
 
 src_install() {
 	emake GIT=true DESTDIR="${ED}" install
-}
-
-pkg_postinst() {
-	[ -e ${ROOT}/etc/pam.d/system-login ] || return 0
-	if [ -e ${ROOT}/$(get_libdir)/security/pam_ck_connector.so ]; then
-		einfo "Enabling pam_ck_connector in /etc/pam.d/system-login"
-		sed -i -e '/pam_ck_connector/s/^#\(.*\)$/\1/g' ${ROOT}/etc/pam.d/system-login
-	else
-		einfo "Disabling pam_ck_connector in /etc/pam.d/system-login"
-		sed -i -e '/pam_ck_connector/s/^\(.*\)$/#\1/g' ${ROOT}/etc/pam.d/system-login
-	fi
 }
