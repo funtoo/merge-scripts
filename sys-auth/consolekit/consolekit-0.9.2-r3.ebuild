@@ -16,12 +16,12 @@ SLOT="0"
 KEYWORDS="*"
 IUSE="acl debug doc kernel_linux pam policykit selinux test"
 
-COMMON_DEPEND=">=dev-libs/dbus-glib-0.100:=
-	>=dev-libs/glib-2.38.2-r1:2=
-	sys-libs/zlib:=
-	x11-libs/libX11:=
+COMMON_DEPEND=">=dev-libs/dbus-glib-0.100
+	>=dev-libs/glib-2.38.2-r1:2
+	sys-libs/zlib
+	x11-libs/libX11
 	acl? (
-		sys-apps/acl:=
+		sys-apps/acl
 		>=virtual/udev-200
 		)
 	pam? ( virtual/pam )
