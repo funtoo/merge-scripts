@@ -1,3 +1,8 @@
+# Mask latest revision of openconnect. We are not yet updated openrc to utilize it
+# new init script. FL-2369
+>net-misc/openconnect-7.06
+
+
 # Require glibc-2.20+
 =dev-java/icedtea-bin-6.1.3.7*
 =dev-java/icedtea-bin-7.2.5.5*
