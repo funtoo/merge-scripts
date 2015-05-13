@@ -26,7 +26,6 @@ app-emulation/emul-linux-x86-xlibs
 app-backup/rdiff-backup
 app-crypt/gpgme
 app-misc/tracker
-dev-libs/libgit2-glib
 dev-scheme/guile
 games-board/aisleriot
 media-libs/aubio
