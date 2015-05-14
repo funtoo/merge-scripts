@@ -1,2 +1,5 @@
+# QA-25: enable both gtk2 and gtk3 flags, as riequired by nvidia-drivers
+x11-drivers/nvidia-drivers gtk2 gtk3
+
 # FL-1868. enale bluetooth USE in pulseaudio
 media-sound/pulseaudio bluetooth
