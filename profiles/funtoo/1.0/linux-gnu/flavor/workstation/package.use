@@ -1,2 +1,8 @@
+# QA-25: enable xa USE in media-libs/mesa, needed for certain video cards.
+media-libs/mesa xa
+
+# QA-25: enable both gtk2 and gtk3 flags, as riequired by nvidia-drivers
+x11-drivers/nvidia-drivers gtk2 gtk3
+
 # FL-1700: enable amdcccle:
 x11-drivers/ati-drivers qt4
