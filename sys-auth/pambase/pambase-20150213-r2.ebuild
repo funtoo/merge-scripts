@@ -22,7 +22,6 @@ RDEPEND="
 		( sys-auth/openpam || ( sys-freebsd/freebsd-pam-modules sys-netbsd/netbsd-pam-modules ) )
 	)
 	cracklib? ( sys-libs/pam[cracklib] )
-	gnome-keyring? ( >=gnome-base/gnome-keyring-2.32[pam] )
 	mktemp? ( sys-auth/pam_mktemp )
 	pam_krb5? (
 		|| ( >=sys-libs/pam-${MIN_PAM_REQ} sys-auth/openpam )
@@ -38,8 +37,9 @@ RDEPEND="
 	!<sys-libs/pam-0.99.9.0-r1"
 DEPEND="app-portage/portage-utils
 	app-arch/xz-utils"
-PDEPEND="consolekit? ( sys-auth/consolekit )"
-
+PDEPEND="consolekit? ( sys-auth/consolekit )
+	gnome-keyring? ( >=gnome-base/gnome-keyring-2.32[pam] )
+"
 src_prepare() {
 	epatch "${FILESDIR}"/${P}-selinux-note.patch #540096
 }
