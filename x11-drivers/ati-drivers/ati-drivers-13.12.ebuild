@@ -149,7 +149,7 @@ QA_DT_HASH="
 	usr/lib\(32\|64\)\?/OpenCL/vendors/amd/libOpenCL.so.1
 "
 
-pkg_pretend() {
+pre_src_compile() {
 	local CONFIG_CHECK="~MTRR ~!DRM ACPI PCI_MSI !LOCKDEP !PAX_KERNEXEC_PLUGIN_METHOD_OR"
 	use amd64 && CONFIG_CHECK+=" COMPAT"
 
