@@ -113,7 +113,7 @@ sysfs_deprecated_check() {
 	eend $?
 }
 
-pkg_pretend() {
+pre_src_compile() {
 	if use kernel_linux; then
 		get_version
 		if linux_config_exists; then

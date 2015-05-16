@@ -91,7 +91,7 @@ DEPEND="${RDEPEND}
 # This is a PDEPEND to avoid a circular dep
 PDEPEND="alsa-plugin? ( >=media-plugins/alsa-plugins-1.0.27-r1[pulseaudio] )"
 
-pkg_pretend() {
+pre_src_compile() {
 	CONFIG_CHECK="~HIGH_RES_TIMERS"
 	WARNING_HIGH_RES_TIMERS="CONFIG_HIGH_RES_TIMERS:\tis not set (required for enabling timer-based scheduling in pulseaudio)\n"
 	check_extra_config
@@ -145,7 +145,7 @@ multilib_src_configure() {
 					$(use_enable native-headset bluez5-native-headset)
 					$(use_enable ofono-headset bluez5-ofono-headset) )
 			fi
- 		fi
+		fi
 
 	else
 		myconf+=( --disable-bluez5 --disable-bluez4 )

@@ -15,10 +15,10 @@ IUSE="selinux systemd"
 
 RDEPEND="selinux? ( sec-policy/selinux-apm )"
 DEPEND="${RDEPEND}
-	    >=sys-kernel/linux-headers-3
-	    systemd? ( sys-apps/systemd )"
+		>=sys-kernel/linux-headers-3
+		systemd? ( sys-apps/systemd )"
 
-pkg_pretend() {
+pre_src_compile() {
 	local CONFIG_CHECK="~INPUT_EVDEV"
 	local WARNING_INPUT_EVDEV="CONFIG_INPUT_EVDEV is required for ACPI button event support."
 	[[ ${MERGE_TYPE} != buildonly ]] && check_extra_config
