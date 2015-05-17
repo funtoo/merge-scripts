@@ -77,9 +77,11 @@ subarch		funtoo/1.0/linux-gnu/arch/x86-64bit/subarch/core2_64			stable
 subarch		funtoo/1.0/linux-gnu/arch/x86-64bit/subarch/core-avx-i			stable
 subarch		funtoo/1.0/linux-gnu/arch/x86-64bit/subarch/corei7			stable
 subarch		funtoo/1.0/linux-gnu/arch/x86-64bit/subarch/generic_64			stable
+subarch		funtoo/1.0/linux-gnu/arch/x86-64bit/subarch/intel64-broadwell		stable
 subarch		funtoo/1.0/linux-gnu/arch/x86-64bit/subarch/intel64-haswell		stable
 subarch		funtoo/1.0/linux-gnu/arch/x86-64bit/subarch/intel64-ivybridge		stable
 subarch		funtoo/1.0/linux-gnu/arch/x86-64bit/subarch/intel64-sandybridge		stable
+subarch		funtoo/1.0/linux-gnu/arch/x86-64bit/subarch/intel64-silvermont		stable
 
 subarch		funtoo/1.0/linux-gnu/arch/x86-64bit/subarch/native_64			stable
 subarch		funtoo/1.0/linux-gnu/arch/x86-64bit/subarch/nocona			stable
