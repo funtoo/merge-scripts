@@ -1,5 +1,7 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
+# FL-2374: mask nginx-1.8.0: release is not tested enough to push
+=www-servers/nginx-1.8.0
 
 # Mask latest revision of openconnect. We are not yet updated openrc to utilize it
 # new init script. FL-2369
