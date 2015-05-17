@@ -535,7 +535,7 @@ src_install() {
 
 	keepdir ${keepdir_list}
 	fperms 0700 ${keepdir_list}
-	fowners ${PN}:${$PN} ${keepdir_list}
+	fowners ${PN}:${PN} ${keepdir_list}
 
 	if use tengine_static_modules_http_perl ; then
 		cd "${S}/objs/src/http/modules/perl"
