@@ -7,10 +7,6 @@
 # new init script. FL-2369
 >net-misc/openconnect-7.06
 
-# Require glibc-2.20+
-=dev-java/icedtea-bin-6.1.3.7*
-=dev-java/icedtea-bin-7.2.5.5*
-
 # nvidia CUDA tests
 =x11-drivers/nvidia-drivers-349.16-r2
 
