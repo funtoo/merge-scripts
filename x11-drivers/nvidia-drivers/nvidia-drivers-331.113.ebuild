@@ -92,19 +92,6 @@ pkg_pretend() {
 		ewarn ""
 		ewarn "Do not file a bug report about this."
 	fi
-
-	# Since Nvidia ships 3 different series of drivers, we need to give the user
-	# some kind of guidance as to what version they should install. This tries
-	# to point the user in the right direction but can't be perfect. check
-	# nvidia-driver.eclass
-	nvidia-driver-check-warning
-
-	# Kernel features/options to check for
-	CONFIG_CHECK="~ZONE_DMA ~MTRR ~SYSVIPC ~!LOCKDEP"
-	use x86 && CONFIG_CHECK+=" ~HIGHMEM"
-
-	# Now do the above checks
-	use kernel_linux && check_extra_config
 }
 
 pkg_setup() {
@@ -184,6 +171,20 @@ src_prepare() {
 
 	# Allow user patches so they can support RC kernels and whatever else
 	epatch_user
+}
+pre_src_compile() {
+	# Since Nvidia ships 3 different series of drivers, we need to give the user
+	# some kind of guidance as to what version they should install. This tries
+	# to point the user in the right direction but can't be perfect. check
+	# nvidia-driver.eclass
+	nvidia-driver-check-warning
+
+	# Kernel features/options to check for
+	CONFIG_CHECK="~ZONE_DMA ~MTRR ~SYSVIPC ~!LOCKDEP"
+	use x86 && CONFIG_CHECK+=" ~HIGHMEM"
+
+	# Now do the above checks
+	use kernel_linux && check_extra_config
 }
 
 src_compile() {
