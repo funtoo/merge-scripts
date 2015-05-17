@@ -1,3 +1,8 @@
+>sys-libs/glibc-2.19
+>sys-kernel/linux-headers-3.17-r1
+>sys-devel/gcc-4.8.4
+>sys-devel/binutils-2.24-r3
+
 # Jean-Francis Roy <jeanfrancis@funtoo.org> (4 Dec 2013)
 # Latest glibc versions break ARM installations.
 # Still investigating...
