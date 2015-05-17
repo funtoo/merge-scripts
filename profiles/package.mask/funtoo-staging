@@ -1,6 +1,9 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
+# FL-2378: add libdrm-2.4.61 Masked for testing.
+=x11-libs/libdrm-2.4.61
+
 # Mask latest revision of openconnect. We are not yet updated openrc to utilize it
 # new init script. FL-2369
 >net-misc/openconnect-7.06
