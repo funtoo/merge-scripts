@@ -609,9 +609,3 @@ pkg_postinst() {
 		ewarn "after a logrotate."
 	fi
 }
-
-pkg_prerm() {
-	if [[ -h "${EROOT}etc/${PN}/sites-enabled/localhost" ]] ; then
-		rm ${EROOT}etc/${PN}/sites-enabled/localhost || die
-	fi
-}
