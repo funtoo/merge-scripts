@@ -1,6 +1,3 @@
-# FL2324 FL-2320: mask pf-sources explicitly wanted unstable gcc.
->sys-kernel/pf-sources-4.0_p1
-
 # FL-2312: mask gnupg-2.1, breaks gnome apps
 >app-crypt/gnupg-2.0.27-r1
 
