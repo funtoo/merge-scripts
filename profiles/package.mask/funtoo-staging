@@ -1,7 +1,9 @@
+# Keep the most recent masks in a reverse chrono order
+# newest on top
+
 # Mask latest revision of openconnect. We are not yet updated openrc to utilize it
 # new init script. FL-2369
 >net-misc/openconnect-7.06
-
 
 # Require glibc-2.20+
 =dev-java/icedtea-bin-6.1.3.7*
@@ -20,18 +22,12 @@
 =sys-devel/libtool-2.4.6
 =dev-libs/libltdl-2.4.6
 
-#FL-1767: add bluez-5.27, masked for testing
-=net-wireless/bluez-5.27
-
 # FL-1761: new rebased Portage, needs a lot of testing
 >=sys-apps/portage-2.3.7
 
 # FL-1729: eudev update, this ebuild masked, kernel older 2.6.39 version unsupported
 # openvz require older version of eudev and kmod
 =sys-fs/eudev-2.1.1
-
-# Keep the most recent masks in a reverse chrono order
-# newest on top
 
 # Dantrell B. (22 Aug 2014)
 # Masked for testing
