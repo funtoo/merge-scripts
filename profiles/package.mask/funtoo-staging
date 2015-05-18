@@ -27,8 +27,3 @@
 # FL-1729: eudev update, this ebuild masked, kernel older 2.6.39 version unsupported
 # openvz require older version of eudev and kmod
 =sys-fs/eudev-2.1.1
-
-# Dantrell B. (22 Aug 2014)
-# Masked for testing
-# Ref FL-1483
->=net-libs/rb_libtorrent-1.0.1
