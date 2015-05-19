@@ -65,7 +65,7 @@ COMMON_DEPEND="
 	modemmanager? ( >=net-misc/modemmanager-0.7.991 )
 	ncurses? ( >=dev-libs/newt-0.52.15 )
 	nss? ( >=dev-libs/nss-3.11:= )
-	dhclient? ( =net-misc/dhcp-4[client] )
+	dhclient? ( >=net-misc/dhcp-4[client] )
 	dhcpcd? ( >=net-misc/dhcpcd-4.0.0_rc3 )
 	introspection? ( >=dev-libs/gobject-introspection-0.10.3 )
 	policykit? ( >=sys-auth/polkit-0.106 )
