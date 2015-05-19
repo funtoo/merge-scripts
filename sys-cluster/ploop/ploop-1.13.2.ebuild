@@ -1,6 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-cluster/ploop/ploop-1.9.ebuild,v 1.3 2014/01/14 13:58:30 ago Exp $
 
 EAPI=5
 
@@ -15,11 +13,17 @@ SLOT="0"
 KEYWORDS="amd64 x86"
 IUSE="debug static-libs"
 
-DEPEND="dev-libs/libxml2"
-RDEPEND="${DEPEND}
-	!<sys-cluster/vzctl-4.5
+DEPEND="
+	dev-libs/libxml2
+	virtual/pkgconfig
+	"
+
+RDEPEND="dev-libs/libxml2
+	!<sys-cluster/vzctl-4.8
 	sys-block/parted
 	sys-fs/e2fsprogs
+	sys-process/lsof
+	sys-apps/findutils
 	"
 
 DOCS=( tools/README )
@@ -50,13 +54,4 @@ src_compile() {
 src_install() {
 	default
 	ldconfig -n "${D}/usr/$(get_libdir)/" || die
-	use static-libs || rm "${D}/usr/$(get_libdir)/libploop.a" || die 'remove static lib failed'
-}
-
-pkg_postinst() {
-	elog "Warning - API changes"
-	elog "1. This version requires running vzkernel >= 2.6.32-042stab79.5 and vzctl-4.5 ot above"
-	elog "2. DiskDescriptor.xml created by older ploop versions are converted to current format"
-	elog "3. If you have eise --diskquota paranetr on gentoo CT, please install sys-fs/quota on CT. "
-	elog "[3] is gentoo specific messages ( due stage3 not contain quta tools) "
 }

@@ -1,6 +1,9 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 
+=sys-cluster/vzctl-4.9.2*
+=sys-cluster/ploop-1.13.2*
+
 # Mask latest revision of openconnect. We are not yet updated openrc to utilize it
 # new init script. FL-2369
 >net-misc/openconnect-7.06
