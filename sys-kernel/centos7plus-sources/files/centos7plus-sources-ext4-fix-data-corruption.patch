@@ -1,0 +1,88 @@
+From d2dc317d564a46dfc683978a2e5a4f91434e9711 Mon Sep 17 00:00:00 2001
+From: Lukas Czerner <lczerner@redhat.com>
+Date: Sat, 2 May 2015 21:36:55 -0400
+Subject: ext4: fix data corruption caused by unwritten and delayed extents
+
+Currently it is possible to lose whole file system block worth of data
+when we hit the specific interaction with unwritten and delayed extents
+in status extent tree.
+
+The problem is that when we insert delayed extent into extent status
+tree the only way to get rid of it is when we write out delayed buffer.
+However there is a limitation in the extent status tree implementation
+so that when inserting unwritten extent should there be even a single
+delayed block the whole unwritten extent would be marked as delayed.
+
+At this point, there is no way to get rid of the delayed extents,
+because there are no delayed buffers to write out. So when a we write
+into said unwritten extent we will convert it to written, but it still
+remains delayed.
+
+When we try to write into that block later ext4_da_map_blocks() will set
+the buffer new and delayed and map it to invalid block which causes
+the rest of the block to be zeroed loosing already written data.
+
+For now we can fix this by simply not allowing to set delayed status on
+written extent in the extent status tree. Also add WARN_ON() to make
+sure that we notice if this happens in the future.
+
+This problem can be easily reproduced by running the following xfs_io.
+
+xfs_io -f -c "pwrite -S 0xaa 4096 2048" \
+          -c "falloc 0 131072" \
+          -c "pwrite -S 0xbb 65536 2048" \
+          -c "fsync" /mnt/test/fff
+
+echo 3 > /proc/sys/vm/drop_caches
+xfs_io -c "pwrite -S 0xdd 67584 2048" /mnt/test/fff
+
+This can be theoretically also reproduced by at random by running fsx,
+but it's not very reliable, though on machines with bigger page size
+(like ppc) this can be seen more often (especially xfstest generic/127)
+
+Signed-off-by: Lukas Czerner <lczerner@redhat.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@vger.kernel.org
+
+diff --git a/fs/ext4/extents_status.c b/fs/ext4/extents_status.c
+index d33d5a6..26724ae 100644
+--- a/fs/ext4/extents_status.c
++++ b/fs/ext4/extents_status.c
+@@ -703,6 +703,14 @@ int ext4_es_insert_extent(struct inode *inode, ext4_lblk_t lblk,
+ 
+ 	BUG_ON(end < lblk);
+ 
++	if ((status & EXTENT_STATUS_DELAYED) &&
++	    (status & EXTENT_STATUS_WRITTEN)) {
++		ext4_warning(inode->i_sb, "Inserting extent [%u/%u] as "
++				" delayed and written which can potentially "
++				" cause data loss.\n", lblk, len);
++		WARN_ON(1);
++	}
++
+ 	newes.es_lblk = lblk;
+ 	newes.es_len = len;
+ 	ext4_es_store_pblock_status(&newes, pblk, status);
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index f6b35d8..4415cea 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -532,6 +532,7 @@ int ext4_map_blocks(handle_t *handle, struct inode *inode,
+ 		status = map->m_flags & EXT4_MAP_UNWRITTEN ?
+ 				EXTENT_STATUS_UNWRITTEN : EXTENT_STATUS_WRITTEN;
+ 		if (!(flags & EXT4_GET_BLOCKS_DELALLOC_RESERVE) &&
++		    !(status & EXTENT_STATUS_WRITTEN) &&
+ 		    ext4_find_delalloc_range(inode, map->m_lblk,
+ 					     map->m_lblk + map->m_len - 1))
+ 			status |= EXTENT_STATUS_DELAYED;
+@@ -636,6 +637,7 @@ found:
+ 		status = map->m_flags & EXT4_MAP_UNWRITTEN ?
+ 				EXTENT_STATUS_UNWRITTEN : EXTENT_STATUS_WRITTEN;
+ 		if (!(flags & EXT4_GET_BLOCKS_DELALLOC_RESERVE) &&
++		    !(status & EXTENT_STATUS_WRITTEN) &&
+ 		    ext4_find_delalloc_range(inode, map->m_lblk,
+ 					     map->m_lblk + map->m_len - 1))
+ 			status |= EXTENT_STATUS_DELAYED;
+-- 
+cgit v0.10.2
+
