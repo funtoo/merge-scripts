@@ -153,7 +153,7 @@ src_compile() {
 	unset KBUILD_OUTPUT # we are using a private copy
 
 	cd "${KS}"
-	emake ${defconfig} CC="${CC}" HOSTCC="${HOSTCC}" ARCH="${KLIBCASMARCH}" || die "No defconfig"
+	emake -j1 ${defconfig} CC="${CC}" HOSTCC="${HOSTCC}" ARCH="${KLIBCASMARCH}" || die "No defconfig"
 	if [[ "${KLIBCARCH/arm}" != "${KLIBCARCH}" ]] && \
 	   [[ "${CHOST/eabi}" != "${CHOST}" ]]; then
 		# The delete and insert are seperate statements
@@ -166,7 +166,7 @@ src_compile() {
 		"${KS}"/.config \
 		"${S}"/defconfig
 	fi
-	emake prepare CC="${CC}" HOSTCC="${HOSTCC}" ARCH="${KLIBCASMARCH}" || die "Failed to prepare kernel sources for header usage"
+	emake -j1 prepare CC="${CC}" HOSTCC="${HOSTCC}" ARCH="${KLIBCASMARCH}" || die "Failed to prepare kernel sources for header usage"
 
 	cd "${S}"
 
@@ -175,7 +175,7 @@ src_compile() {
 	append-ldflags -z noexecstack
 	append-flags -nostdlib
 
-	emake \
+	emake -j1 \
 		EXTRA_KLIBCAFLAGS="-Wa,--noexecstack" \
 		EXTRA_KLIBCLDFLAGS="-z noexecstack" \
 		HOSTLDFLAGS="-z noexecstack" \
@@ -221,7 +221,7 @@ src_install() {
 	unset ABI ARCH # Unset these, because they interfere
 	unset KBUILD_OUTPUT # we are using a private copy
 
-	emake \
+	emake -j1 \
 		EXTRA_KLIBCAFLAGS="-Wa,--noexecstack" \
 		EXTRA_KLIBCLDFLAGS="-z noexecstack" \
 		HOSTLDFLAGS="-z noexecstack" \
