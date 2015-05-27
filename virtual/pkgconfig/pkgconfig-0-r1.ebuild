@@ -12,6 +12,4 @@ LICENSE=""
 SLOT="0"
 KEYWORDS="*"
 IUSE=""
-
-RDEPEND=">=dev-util/pkgconf-0.9.3-r1[pkg-config,${MULTILIB_USEDEP}]"
-
+RDEPEND="dev-util/pkgconf[pkg-config,${MULTILIB_USEDEP}]"
