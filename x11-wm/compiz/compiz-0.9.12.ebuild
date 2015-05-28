@@ -8,7 +8,7 @@ EAPI=4
 
 # Pick your poison, EITHER the 3 lines above or the 2 lines below
 
-SRC_URI="http://bazaar.launchpad.net/~compiz-team/compiz/0.9.12/tarball/3932 -> ${P}.tgz"
+SRC_URI="http://bazaar.launchpad.net/~compiz-team/compiz/0.9.12/tarball/3953 -> ${P}.tgz"
 inherit cmake-utils eutils gnome2-utils toolchain-funcs python
 
 KEYWORDS="*"
@@ -24,61 +24,61 @@ SLOT="0"
 IUSE="+cairo debug dbus fuse gnome gtk kde +svg test"
 
 COMMONDEPEND="
-        dev-libs/boost
-        dev-libs/glib:2
-        dev-cpp/glibmm
-        dev-libs/libxml2
-        dev-libs/libxslt
-        dev-python/pyrex
-        dev-libs/protobuf
-        media-libs/libpng
-        x11-base/xorg-server
-        x11-libs/libX11
-        x11-libs/libXcomposite
-        x11-libs/libXdamage
-        x11-libs/libXext
-        x11-libs/libXrandr
-        x11-libs/libXrender
-        x11-libs/libXinerama
-        x11-libs/libICE
-        x11-libs/libSM
-        x11-libs/startup-notification
-        virtual/opengl
-        virtual/glu
-        cairo? ( x11-libs/cairo[X] )
-        fuse? ( sys-fs/fuse )
-        gtk? (
-                >=x11-libs/gtk+-2.18.0
-                >=x11-libs/libwnck-2.19.4
-                x11-libs/pango
-                gnome? (
-                        gnome-base/gnome-desktop
-                        gnome-base/gconf
-                        x11-wm/metacity
-                )
-        )
-        kde? ( kde-base/kwin:4 )
-        svg? (
-                gnome-base/librsvg:2
-                x11-libs/cairo
-        )
-        dbus? ( sys-apps/dbus )"
+		dev-libs/boost
+		dev-libs/glib:2
+		dev-cpp/glibmm
+		dev-libs/libxml2
+		dev-libs/libxslt
+		dev-python/pyrex
+		dev-libs/protobuf
+		media-libs/libpng
+		x11-base/xorg-server
+		x11-libs/libX11
+		x11-libs/libXcomposite
+		x11-libs/libXdamage
+		x11-libs/libXext
+		x11-libs/libXrandr
+		x11-libs/libXrender
+		x11-libs/libXinerama
+		x11-libs/libICE
+		x11-libs/libSM
+		x11-libs/startup-notification
+		virtual/opengl
+		virtual/glu
+		cairo? ( x11-libs/cairo[X] )
+		fuse? ( sys-fs/fuse )
+		gtk? (
+				>=x11-libs/gtk+-2.18.0
+				>=x11-libs/libwnck-2.19.4
+				x11-libs/pango
+				gnome? (
+						gnome-base/gnome-desktop
+						gnome-base/gconf
+						x11-wm/metacity
+				)
+		)
+		kde? ( kde-base/kwin:4 )
+		svg? (
+				gnome-base/librsvg:2
+				x11-libs/cairo
+		)
+		dbus? ( sys-apps/dbus )"
 
 DEPEND="${COMMONDEPEND}
-        app-admin/chrpath
-        virtual/pkgconfig
-        x11-proto/damageproto
-        x11-proto/xineramaproto
-        test? (
-                dev-cpp/gtest
-                dev-cpp/gmock
-        )"
+		app-admin/chrpath
+		virtual/pkgconfig
+		x11-proto/damageproto
+		x11-proto/xineramaproto
+		test? (
+				dev-cpp/gtest
+				dev-cpp/gmock
+		)"
 
 RDEPEND="${COMMONDEPEND}
-        dev-python/pygtk
-        x11-apps/mesa-progs
-        x11-apps/xvinfo
-        x11-themes/hicolor-icon-theme"
+		dev-python/pygtk
+		x11-apps/mesa-progs
+		x11-apps/xvinfo
+		x11-themes/hicolor-icon-theme"
 
 # TODO:
 # - Remove automagic dependency for coverage report generation tools
