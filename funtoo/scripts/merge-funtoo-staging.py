@@ -158,7 +158,7 @@ profile_steps = [
 
 ebuild_additions = [
 	InsertEbuilds(other_overlays["bar_overlay"], select="all", skip=["app-emulation/qemu"], replace=False),
-	InsertEbuilds(other_overlays["bliss_overlay"], select="all", skip=["net-p2p/bittorrent-sync", "app-bin/firefox", "app-bin/libreoffice"], replace=False),
+	InsertEbuilds(other_overlays["bliss_overlay"], select="all", skip=["net-p2p/bittorrent-sync", "media-tv/plex-media-server", "app-bin/firefox", "app-bin/libreoffice"], replace=False),
 	InsertEbuilds(other_overlays["squeezebox_overlay"], select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_overlays["funtoo_deadbeef"], select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_overlays["funtoo_gambas"], select="all", skip=None, replace=False),

@@ -1,0 +1,12 @@
+diff -Nuar fritzing-app-0.9.2b/fritzing.desktop fritzing-app-0.9.2b-fixed/fritzing.desktop
+--- fritzing-app-0.9.2b/fritzing.desktop	2015-03-17 13:36:55.000000000 +0000
++++ fritzing-app-0.9.2b-fixed/fritzing.desktop	2015-05-27 09:43:37.563561274 +0000
+@@ -2,7 +2,7 @@
+ Name=Fritzing
+ GenericName=Fritzing
+ Comment=Electronic Design Automation software
+-Exec=Fritzing
++Exec=Fritzing -f /usr/share/fritzing
+ Icon=fritzing
+ Terminal=false
+ Type=Application
