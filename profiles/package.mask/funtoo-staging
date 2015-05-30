@@ -1,5 +1,9 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
+
+# Masked for testing
+=app-admin/ego-0.9.8
+
 =sys-cluster/vzctl-4.9.2*
 =sys-cluster/ploop-1.13.2*
 
