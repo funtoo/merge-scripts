@@ -424,7 +424,7 @@ src_prepare() {
 	local m
 	for m in fastcgi scgi uwsgi ; do
 		if ! use nginx_modules_http_${m} ; then
-			sed -e "/${module}/d" \
+			sed -e "/${m}/d" \
 				-i "${S}/auto/install" || die
 		fi
 	done
