@@ -4,42 +4,44 @@ EAPI="5"
 
 inherit eutils java-vm-2 prefix versionator
 
-JDK_URI="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html"
-JCE_URI="http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html"
+JDK_URI="http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html"
+JCE_URI="http://www.oracle.com/technetwork/java/javase/downloads/jce-7-download-432124.html"
 
-if [[ "$(get_version_component_range 4)" == 0 ]] ; then
-	S_PV="$(get_version_component_range 1-3)"
-else
-	MY_PV_EXT="u$(get_version_component_range 4)"
-	S_PV="$(get_version_component_range 1-4)"
-fi
+FX_VERSION="2_2_72"
 
-MY_PV="$(get_version_component_range 2)${MY_PV_EXT}"
+MY_PV="$(get_version_component_range 2)u$(get_version_component_range 4)"
+S_PV="$(replace_version_separator 3 '_')"
 
-AT_amd64="jdk-${MY_PV}-linux-x64.tar.gz"
-#AT_arm="jdk-${MY_PV}-linux-arm-vfp-hflt.tar.gz"
-AT_arm="jdk-8u33-linux-arm-vfp-hflt.tar.gz"
 AT_x86="jdk-${MY_PV}-linux-i586.tar.gz"
+AT_amd64="jdk-${MY_PV}-linux-x64.tar.gz"
+#AT_arm_hflt="jdk-${MY_PV}-linux-arm-vfp-hflt.tar.gz"
+AT_arm_hflt="jdk-7u60-linux-arm-vfp-hflt.tar.gz"
+#AT_arm_sflt="jdk-${MY_PV}-linux-arm-vfp-sflt.tar.gz"
+AT_arm_sflt="jdk-7u60-linux-arm-vfp-sflt.tar.gz"
 
-DEMOS_amd64="jdk-${MY_PV}-linux-x64-demos.tar.gz"
-#DEMOS_arm="jdk-${MY_PV}-linux-arm-vfp-hflt-demos.tar.gz"
-DEMOS_arm="jdk-8u33-linux-arm-vfp-hflt-demos.tar.gz"
-DEMOS_x86="jdk-${MY_PV}-linux-i586-demos.tar.gz"
+FXDEMOS_linux="javafx_samples-${FX_VERSION}-linux.zip"
+
+#DEMOS_x86="jdk-${MY_PV}-linux-i586-demos.tar.gz"
+#DEMOS_amd64="jdk-${MY_PV}-linux-x64-demos.tar.gz"
+#DEMOS_arm_hflt="jdk-${MY_PV}-linux-arm-vfp-hflt-demos.tar.gz"
+#DEMOS_arm_hflt="jdk-7u60-linux-arm-vfp-hflt-demos.tar.gz"
+#DEMOS_arm_sflt="jdk-${MY_PV}-linux-arm-vfp-sflt-demos.tar.gz"
+DEMOS_arm_sflt="jdk-7u60-linux-arm-vfp-sflt-demos.tar.gz"
 
 JCE_DIR="UnlimitedJCEPolicy"
-JCE_FILE="${JCE_DIR}JDK8.zip"
+JCE_FILE="${JCE_DIR}JDK7.zip"
 
 DESCRIPTION="Oracle's Java SE Development Kit"
 HOMEPAGE="http://www.oracle.com/technetwork/java/javase/"
 MIR_URI="mirror://funtoo/oracle-java"
 SRC_URI="
 	amd64? ( ${MIR_URI}/${AT_amd64} )
-	arm? ( ${MIR_URI}/${AT_arm} )
 	x86? ( ${MIR_URI}/${AT_x86} )
+	arm? ( ${MIR_URI}/${AT_arm_sflt} ${MIR_URI}/${AT_arm_hflt} )
 	jce? ( ${MIR_URI}/${JCE_FILE} )"
 
 LICENSE="Oracle-BCLA-JavaSE"
-SLOT="1.8"
+SLOT="1.7"
 KEYWORDS="*"
 IUSE="+X alsa aqua derby doc +fontconfig jce nsplugin pax_kernel selinux source"
 
@@ -50,45 +52,65 @@ COMMON_DEP="
 	selinux? ( sec-policy/selinux-java )"
 RDEPEND="${COMMON_DEP}
 	X? ( !aqua? (
-		x11-libs/libX11:0
-		x11-libs/libXext:0
-		x11-libs/libXi:0
-		x11-libs/libXrender:0
-		x11-libs/libXtst:0
+		x11-libs/libX11
+		x11-libs/libXext
+		x11-libs/libXi
+		x11-libs/libXrender
+		x11-libs/libXtst
 	) )
-	alsa? ( media-libs/alsa-lib:0 )
-	doc? ( dev-java/java-sdk-docs:${SLOT} )
-	fontconfig? ( media-libs/fontconfig:1.0 )
-	!prefix? ( sys-libs/glibc:* )"
-# A PaX header isn't created by scanelf, so depend on paxctl to avoid fallback
-# marking. See bug #427642.
+	alsa? ( media-libs/alsa-lib )
+	doc? ( dev-java/java-sdk-docs:1.7 )
+	fontconfig? ( media-libs/fontconfig )
+	!prefix? ( sys-libs/glibc )"
+# scanelf won't create a PaX header, so depend on paxctl to avoid fallback
+# marking. #427642
 DEPEND="${COMMON_DEP}
-	jce? ( app-arch/unzip:0 )
-	pax_kernel? ( sys-apps/paxctl:0 )"
+	jce? ( app-arch/unzip )
+	pax_kernel? ( sys-apps/paxctl )"
 
-S="${WORKDIR}/jdk"
+S="${WORKDIR}"/jdk${S_PV}
+
+check_tarballs_available() {
+	local uri=$1; shift
+	local dl= unavailable=
+	for dl in "${@}"; do
+		[[ ! -f "${DISTDIR}/${dl}" ]] && unavailable+=" ${dl}"
+	done
+
+	if [[ -n "${unavailable}" ]]; then
+		if [[ -z ${_check_tarballs_available_once} ]]; then
+			einfo
+			einfo "Oracle requires you to download the needed files manually after"
+			einfo "accepting their license through a javascript capable web browser."
+			einfo
+			_check_tarballs_available_once=1
+		fi
+		einfo "Download the following files:"
+		for dl in ${unavailable}; do
+			einfo "  ${dl}"
+		done
+		einfo "at '${uri}'"
+		einfo "and move them to '${DISTDIR}'"
+		einfo
+	fi
+}
 
 src_unpack() {
+	# Special case for ARM soft VS hard float.
 	if use arm ; then
-		# Special case for ARM soft VS hard float.
-		#if [[ ${CHOST} == *-hardfloat-* ]] ; then
+		if [[ ${CHOST} == *-hardfloat-* ]] ; then
 			unpack jdk-${MY_PV}-linux-arm-vfp-hflt.tar.gz
-		#else
-		#	unpack jdk-${MY_PV}-linux-arm-vfp-sflt.tar.gz
-		#fi
+		else
+			unpack jdk-${MY_PV}-linux-arm-vfp-sflt.tar.gz
+		fi
 		use jce && unpack ${JCE_FILE}
 	else
 		default
 	fi
-
-	# Upstream is changing their versioning scheme every release around 1.8.0.*;
-	# to stop having to change it over and over again, just wildcard match and
-	# live a happy life instead of trying to get this new jdk1.8.0_05 to work.
-	mv "${WORKDIR}"/jdk* "${S}" || die
 }
 
 src_prepare() {
-	if use jce ; then
+	if use jce; then
 		mv "${WORKDIR}"/${JCE_DIR} "${S}"/jre/lib/security/ || die
 	fi
 }
@@ -104,16 +126,15 @@ src_install() {
 
 	# We should not need the ancient plugin for Firefox 2 anymore, plus it has
 	# writable executable segments
-	if use x86 ; then
+	if use x86; then
 		rm -vf {,jre/}lib/i386/libjavaplugin_oji.so \
 			{,jre/}lib/i386/libjavaplugin_nscp*.so
 		rm -vrf jre/plugin/i386
 	fi
-
 	# Without nsplugin flag, also remove the new plugin
 	local arch=${ARCH};
 	use x86 && arch=i386;
-	if ! use nsplugin ; then
+	if ! use nsplugin; then
 		rm -vf {,jre/}lib/${arch}/libnpjp2.so \
 			{,jre/}lib/${arch}/libjavaplugin_jni.so
 	fi
@@ -124,11 +145,11 @@ src_install() {
 	dodir "${dest}"
 	cp -pPR bin include jre lib man "${ddest}" || die
 
-	if use derby ; then
-		cp -pPR	db "${ddest}" || die
+	if use derby; then
+		cp -pPR db "${ddest}" || die
 	fi
 
-	if use jce ; then
+	if use jce; then
 		dodir "${dest}"/jre/lib/security/strong-jce
 		mv "${ddest}"/jre/lib/security/US_export_policy.jar \
 			"${ddest}"/jre/lib/security/strong-jce || die
@@ -140,15 +161,15 @@ src_install() {
 			"${dest}"/jre/lib/security/local_policy.jar
 	fi
 
-	if use nsplugin ; then
+	if use nsplugin; then
 		install_mozilla_plugin "${dest}"/jre/lib/${arch}/libnpjp2.so
 	fi
 
-	if use source ; then
+	if use source; then
 		cp -p src.zip "${ddest}" || die
 	fi
 
-	if use !x86-macos && use !x64-macos ; then
+	if use !arm && use !x86-macos && use !x64-macos ; then
 		# Install desktop file for the Java Control Panel.
 		# Using ${PN}-${SLOT} to prevent file collision with jre and or
 		# other slots.  make_desktop_entry can't be used as ${P} would
@@ -167,9 +188,9 @@ src_install() {
 
 	# Prune all fontconfig files so libfontconfig will be used and only install
 	# a Gentoo specific one if fontconfig is disabled.
-	# http://docs.oracle.com/javase/8/docs/technotes/guides/intl/fontconfig.html
+	# http://docs.oracle.com/javase/7/docs/technotes/guides/intl/fontconfig.html
 	rm "${ddest}"/jre/lib/fontconfig.*
-	if ! use fontconfig ; then
+	if ! use fontconfig; then
 		cp "${FILESDIR}"/fontconfig.Gentoo.properties "${T}"/fontconfig.properties || die
 		eprefixify "${T}"/fontconfig.properties
 		insinto "${dest}"/jre/lib/
@@ -196,26 +217,24 @@ src_install() {
 			;;
 	esac
 
-	# Remove empty dirs we might have copied.
+	# Remove empty dirs we might have copied
 	find "${D}" -type d -empty -exec rmdir -v {} + || die
 
 	if use x86-macos || use x64-macos ; then
-		# Fix miscellaneous install_name issues.
+		# fix misc install_name issues
 		pushd "${ddest}"/jre/lib > /dev/null || die
 		local lib needed nlib npath
 		for lib in \
-			decora_sse glass jfx{media,webkit} \
-			javafx_{font,font_t2k,iio} prism_{common,es2,sw} \
-		; do
-			lib=lib${lib}.dylib
+				libJObjC libdecora-sse libglass libjavafx-{font,iio} \
+				libjfxmedia libjfxwebkit libprism-es2 ;
+		do
+			lib=${lib}.dylib
 			einfo "Fixing self-reference of ${lib}"
 			install_name_tool \
 				-id "${EPREFIX}${dest}/jre/lib/${lib}" \
 				"${lib}"
 		done
 		popd > /dev/null
-
-		# TODO: This reads "jdk1{5,6}", what about "jdk1{7,8}"?
 		for nlib in jdk1{5,6} ; do
 			install_name_tool -change \
 				/usr/lib/libgcc_s_ppc64.1.dylib \
