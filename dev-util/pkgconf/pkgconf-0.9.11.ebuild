@@ -7,7 +7,7 @@ if [[ ${PV} == "9999" ]] ; then
 	inherit autotools git-2 multilib-minimal
 else
 	inherit eutils multilib-minimal
-	SRC_URI="http://rabbit.dereferenced.org/~nenolod/distfiles/${P}.tar.bz2"
+	SRC_URI="mirror://funtoo/${P}.tar.bz2"
 	KEYWORDS="*"
 fi
 
