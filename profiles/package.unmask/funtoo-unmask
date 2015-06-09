@@ -1,3 +1,8 @@
+# FL-2493: as of 2015-06-08 gentoo-x86 including evolution and evolution-data-server ebuilds into gentoo-x86 but w# ith masks. Funtoo had this ebuilds added much earlier. We keep override unmasks here
+=mail-client/evolution-3.13.6
+=gnome-extra/evolution-data-server-3.13.6
+
+
 # FL-2190, temporarily revert Gentoo last rites to give us more time
 app-emulation/emul-linux-x86-baselibs
 app-emulation/emul-linux-x86-cpplibs
