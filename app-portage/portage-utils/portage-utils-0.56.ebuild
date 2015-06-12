@@ -14,11 +14,13 @@ SLOT="0"
 KEYWORDS="*"
 IUSE="nls static"
 
-DEPEND="app-arch/xz-utils"
-RDEPEND=""
+DEPEND="app-arch/xz-utils
+	static? ( dev-libs/iniparser[static-libs] )"
+RDEPEND="!static? ( dev-libs/iniparser )"
 
 src_prepare() {
-	epatch "${FILESDIR}/${P}-git-sync.patch"
+	#epatch "${FILESDIR}/${PN}-0.53-git-sync.patch"
+	epatch "${FILESDIR}"/${P}-qcheck-tz.patch
 	epatch_user
 }
 
