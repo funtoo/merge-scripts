@@ -1,5 +1,7 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
+# keep mask for debian-sources-4.0.4. This kernel need test, before it goes to stage3.
+=sys-kernel/debian-sources-4.0.4
 
 # Masked for testing
 =app-admin/ego-0.9.8
