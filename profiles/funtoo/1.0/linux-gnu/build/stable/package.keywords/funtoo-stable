@@ -1,3 +1,6 @@
+# FL-2503: stabilize dev-tcltk/blt-2.4z-r11. Tested on stable
+=dev-tcltk/blt-2.4z-r11 amd64 x86
+
 # FL-2301: stabilize wine-1.7.41
 =app-emulation/wine-1.7.41 amd64 x86
 
