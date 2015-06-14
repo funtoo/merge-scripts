@@ -1,3 +1,7 @@
+# FL-2496:
+# USe xfce's notification daemon:
+virtual/notification-daemon xfce
+
 # QA-7 enable cairo USE for poppler, needed by xfce4-meta
 app-text/poppler cairo
 
