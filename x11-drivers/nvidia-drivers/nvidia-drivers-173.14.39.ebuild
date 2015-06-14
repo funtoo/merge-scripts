@@ -35,14 +35,10 @@ RDEPEND="
 	<x11-base/xorg-server-1.15.99:=
 	acpi? ( sys-power/acpid )
 	multilib? (
-		|| (
-			(
 				>=x11-libs/libX11-1.6.2[abi_x86_32]
 				>=x11-libs/libXext-1.3.2[abi_x86_32]
 			)
-			app-emulation/emul-linux-x86-opengl
-		)
-	)
+
 	tools? (
 		dev-libs/atk
 		dev-libs/glib:2
