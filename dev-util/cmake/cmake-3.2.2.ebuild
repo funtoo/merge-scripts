@@ -11,10 +11,8 @@ SRC_URI="http://www.cmake.org/files/v$(get_version_component_range 1-2)/${P}.tar
 
 LICENSE="CMake"
 SLOT="0"
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="doc emacs ncurses qt4 qt5"
-
-REQUIRED_USE="?? ( qt4 qt5 )"
 
 RDEPEND="
 	>=app-arch/libarchive-2.8.0:=
