@@ -2,22 +2,6 @@
 =mail-client/evolution-3.13.6
 =gnome-extra/evolution-data-server-3.13.6
 
-
-# FL-2190, temporarily revert Gentoo last rites to give us more time
-app-emulation/emul-linux-x86-baselibs
-app-emulation/emul-linux-x86-cpplibs
-app-emulation/emul-linux-x86-db
-app-emulation/emul-linux-x86-gstplugins
-app-emulation/emul-linux-x86-gtklibs
-app-emulation/emul-linux-x86-gtkmmlibs
-app-emulation/emul-linux-x86-medialibs
-app-emulation/emul-linux-x86-motif
-app-emulation/emul-linux-x86-opengl
-app-emulation/emul-linux-x86-qtlibs
-app-emulation/emul-linux-x86-sdl
-app-emulation/emul-linux-x86-soundlibs
-app-emulation/emul-linux-x86-xlibs
-
 # Funtoo versions of Raspberry PI software should always be unmasked
 =media-libs/raspberrypi-userland-9999
 =sys-kernel/raspberrypi-image-3.18.11_pre-r20150415
