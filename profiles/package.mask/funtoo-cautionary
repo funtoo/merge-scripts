@@ -1,3 +1,6 @@
+# mask sys-apps/makedev. This one collides with baselayout, makedev is part of baselayout.
+sys-apps/makedev
+
 # FL-2312: mask gnupg-2.1, breaks gnome apps
 >app-crypt/gnupg-2.0.27-r1
 
