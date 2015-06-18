@@ -35,13 +35,9 @@ SLOT="0"
 KEYWORDS="~*"
 IUSE="custom-cflags ncurses netboot static"
 
-LIB_DEPEND="ncurses? (
-		>=sys-libs/ncurses-5.9-r3[static-libs(+)]
-		amd64? ( || (
-			>=sys-libs/ncurses-5.9-r3[abi_x86_32(-)]
-			app-emulation/emul-linux-x86-baselibs[-abi_x86_32(-)]
-		) )
-	)"
+LIB_DEPEND="ncurses? ( >=sys-libs/ncurses-5.9-r3[static-libs(+)] )
+		amd64? ( >=sys-libs/ncurses-5.9-r3[abi_x86_32(-)] )"
+
 RDEPEND="!static? ( ${LIB_DEPEND//\[static-libs(+)\]/} )"
 DEPEND="${RDEPEND}
 	static? ( ${LIB_DEPEND} )"

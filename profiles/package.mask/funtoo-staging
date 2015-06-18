@@ -19,9 +19,6 @@
 # FL-2232: Not fully-baked version of xorg-server. Masking.
 >=x11-base/xorg-server-1.17
 
-# FL-2220: new grub-legacy ebuild. masked for testing
-=sys-boot/grub-legacy-0.97-r14
-
 # libtool and libltdl bump, masked for testing
 =sys-devel/libtool-2.4.6
 =dev-libs/libltdl-2.4.6
