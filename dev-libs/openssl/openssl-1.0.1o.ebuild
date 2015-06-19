@@ -60,7 +60,6 @@ src_prepare() {
 		epatch "${FILESDIR}"/${PN}-1.0.1m-parallel-build.patch
 		epatch "${FILESDIR}"/${PN}-1.0.1m-x32.patch
 		epatch "${FILESDIR}"/${PN}-1.0.1m-ipv6.patch
-		epatch "${FILESDIR}"/${PN}-1.0.1m-s_client-verify.patch #472584
 		epatch "${FILESDIR}"/${PN}-1.0.1f-revert-alpha-perl-generation.patch #499086
 		epatch_user #332661
 	fi
