@@ -1,3 +1,6 @@
+# QA-80: stabilize libunistring-0.9.5
+=dev-libs/libunistring-0.9.5 amd6 x86
+
 # FL-2503: stabilize dev-tcltk/blt-2.4z-r11. Tested on stable
 =dev-tcltk/blt-2.4z-r11 amd64 x86
 
