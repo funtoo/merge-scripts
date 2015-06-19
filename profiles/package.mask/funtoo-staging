@@ -1,3 +1,6 @@
+# masked for testing
+>sys-kernel/openvz-rhel6-stable-2.6.32.042.106.4
+
 # Keep the most recent masks in a reverse chrono order
 # newest on top
 # keep mask for debian-sources-4.0.4. This kernel need test, before it goes to stage3.
