@@ -14,8 +14,9 @@ KEYWORDS="*"
 IUSE="libopts static-libs"
 
 RDEPEND=">=dev-scheme/guile-1.8:=
+	 >=dev-libs/libunistring-0.9.5
 	dev-libs/libxml2"
-DEPEND="${RDEPEND} >=dev-libs/libunistring-0.9.5"
+DEPEND="${RDEPEND}"
 
 src_prepare() {
 	epatch "${FILESDIR}"/autogen-libguile-find.patch
