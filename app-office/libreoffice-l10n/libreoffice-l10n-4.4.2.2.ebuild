@@ -4,11 +4,11 @@ EAPI=5
 
 inherit rpm eutils multilib versionator
 
-MY_PV=$(get_version_component_range 1-3)
+MY_PV=4.4.2.2
 
 DESCRIPTION="Translations for the Libreoffice suite"
 HOMEPAGE="http://www.libreoffice.org"
-BASE_SRC_URI="http://download.documentfoundation.org/${PN/-l10n/}/stable/${MY_PV}/rpm"
+BASE_SRC_URI="https://download.documentfoundation.org/${PN/-l10n/}/old/${MY_PV}/rpm"
 
 LICENSE="|| ( LGPL-3 MPL-1.1 )"
 SLOT="0"
