@@ -202,7 +202,7 @@ multilib_src_configure() {
 		$(multilib_native_use_with java) \
 		$(use_enable kerberos gssapi) \
 		$(multilib_native_use_enable pam) \
-		$(multilib_native_use_with python python "$(PYTHON -a)") \
+		$(multilib_native_use_with python python "$(use python && PYTHON -a)") \
 		$(use_enable static-libs static) \
 		$(use_enable threads) \
 		$(use_enable ssl gnutls) \
