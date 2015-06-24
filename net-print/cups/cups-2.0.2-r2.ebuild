@@ -1,11 +1,13 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=5
+EAPI="5-progress"
 
-PYTHON_COMPAT=( python{2_6,2_7} )
+PYTHON_ABI_TYPE="single"
+PYTHON_DEPEND="python? ( <<>> )"
+PYTHON_RESTRICTED_ABIS="*-jython *-pypy"
 
 inherit autotools base fdo-mime gnome2-utils flag-o-matic linux-info \
-	multilib multilib-minimal pam python-single-r1 user versionator \
+	multilib multilib-minimal pam python user versionator \
 	java-pkg-opt-2 systemd toolchain-funcs
 
 MY_P=${P/_rc/rc}
@@ -13,8 +15,16 @@ MY_P=${MY_P/_beta/b}
 MY_PV=${PV/_rc/rc}
 MY_PV=${MY_PV/_beta/b}
 
-SRC_URI="http://www.cups.org/software/${MY_PV}/${MY_P}-source.tar.bz2"
-KEYWORDS="~*"
+if [[ ${PV} == *9999 ]]; then
+	inherit git-r3
+	EGIT_REPO_URI="http://www.cups.org/cups.git"
+	if [[ ${PV} != 9999 ]]; then
+		EGIT_BRANCH=branch-${PV/.9999}
+	fi
+else
+	SRC_URI="http://www.cups.org/software/${MY_PV}/${MY_P}-source.tar.bz2"
+	KEYWORDS="*"
+fi
 
 DESCRIPTION="The Common Unix Printing System"
 HOMEPAGE="http://www.cups.org/"
@@ -24,7 +34,7 @@ SLOT="0"
 IUSE="acl dbus debug java kerberos lprng-compat pam
 	python selinux +ssl static-libs systemd +threads usb X xinetd zeroconf"
 
-LANGS="es"
+LANGS="ca cs de es fr it ja pt_BR ru"
 for X in ${LANGS} ; do
 	IUSE="${IUSE} +linguas_${X}"
 done
@@ -42,7 +52,6 @@ CDEPEND="
 	kerberos? ( >=virtual/krb5-0-r1[${MULTILIB_USEDEP}] )
 	!lprng-compat? ( !net-print/lprng )
 	pam? ( virtual/pam )
-	python? ( ${PYTHON_DEPS} )
 	ssl? (
 		>=dev-libs/libgcrypt-1.5.3:0[${MULTILIB_USEDEP}]
 		>=net-libs/gnutls-2.12.23-r6[${MULTILIB_USEDEP}]
@@ -73,7 +82,6 @@ PDEPEND="
 "
 
 REQUIRED_USE="
-	python? ( ${PYTHON_REQUIRED_USE} )
 	usb? ( threads )
 "
 
@@ -82,11 +90,15 @@ RESTRICT="test"
 
 S="${WORKDIR}/${MY_P}"
 
+# systemd-socket.patch from Fedora
 PATCHES=(
 	"${FILESDIR}/${PN}-1.6.0-dont-compress-manpages.patch"
 	"${FILESDIR}/${PN}-1.6.0-fix-install-perms.patch"
 	"${FILESDIR}/${PN}-1.4.4-nostrip.patch"
-	"${FILESDIR}/${P}-rename-systemd-service-files.patch"
+	"${FILESDIR}/${PN}-2.0.2-rename-systemd-service-files.patch"
+	"${FILESDIR}/${PN}-2.0.2-systemd-socket.patch"
+	"${FILESDIR}/${PN}-2.0.1-xinetd-installation-fix.patch"
+	"${FILESDIR}/${PN}-2.0.2-poll-CPU-loop-STR-4605.patch"
 )
 
 MULTILIB_CHOST_TOOLS=(
@@ -98,7 +110,7 @@ pkg_setup() {
 	enewuser lp -1 -1 -1 lp
 	enewgroup lpadmin 106
 
-	use python && python-single-r1_pkg_setup
+	use python && python_pkg_setup
 
 	if use kernel_linux; then
 		linux-info_pkg_setup
@@ -139,6 +151,7 @@ pkg_setup() {
 
 src_prepare() {
 	base_src_prepare
+	epatch_user
 
 	# Remove ".SILENT" rule for verbose output (bug 524338).
 	sed 's#^.SILENT:##g' -i "${S}"/Makedefs.in || die "sed failed"
@@ -191,7 +204,7 @@ multilib_src_configure() {
 		$(multilib_native_use_with java) \
 		$(use_enable kerberos gssapi) \
 		$(multilib_native_use_enable pam) \
-		$(multilib_native_use_with python python "${PYTHON}") \
+		$(multilib_native_use_with python python "$(use python && PYTHON -a)") \
 		$(use_enable static-libs static) \
 		$(use_enable threads) \
 		$(use_enable ssl gnutls) \
@@ -315,7 +328,7 @@ pkg_postinst() {
 	if ! [[ "${REPLACING_VERSIONS}" ]]; then
 		echo
 		elog "For information about installing a printer and general cups setup"
-		elog "take a look at: http://www.gentoo.org/doc/en/printing-howto.xml"
+		elog "take a look at: https://wiki.gentoo.org/wiki/Printing"
 		echo
 	fi
 
