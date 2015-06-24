@@ -18,8 +18,8 @@ RESTRICT="!regex? ( test )"
 DEPEND="
 	!dev-scheme/guile:12
 
-	>=dev-libs/gmp-4.1
-	>=sys-devel/libtool-1.5.6
+	dev-libs/gmp:0=
+	dev-libs/libltdl:0=
 	sys-devel/gettext
 	emacs? ( virtual/emacs )"
 RDEPEND="${DEPEND}"

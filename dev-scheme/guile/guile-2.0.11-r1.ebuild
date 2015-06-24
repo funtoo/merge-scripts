@@ -19,10 +19,10 @@ RDEPEND="
 	!dev-scheme/guile:12
 
 	dev-libs/boehm-gc[threads?]
-	dev-libs/gmp
-	dev-libs/libffi
-	dev-libs/libunistring
-	sys-devel/libtool
+	dev-libs/gmp:0=
+	dev-libs/libltdl:0=
+	dev-libs/libunistring:0=
+	virtual/libffi
 	virtual/libiconv
 	virtual/libintl
 
