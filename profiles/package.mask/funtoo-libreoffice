@@ -1,23 +1,19 @@
-# FL-2256. temporarily mask mdds higher than 0.10.3, this make emerge happy with libixion, listed below.
->dev-util/mdds-0.10.3
-
 # FL-2061
 # This mask is set to prevent library updates required for libreoffice. Update to this should be discussed and reported.
->app-text/libabw-0.1.1
->app-text/libebook-0.1.2
->app-text/libetonyek-0.1.1
->app-text/libmspub-0.1.2
->app-text/libmwaw-0.3.4
->app-text/libodfgen-0.1.3
->app-text/libwpd-0.10.0-r1
->app-text/libwpg-0.3.0
->app-text/libwps-0.3.1
->dev-libs/libixion-0.7.0
->dev-libs/liborcus-0.7.0
->dev-libs/librevenge-0.0.2
->media-libs/glew-1.12.0
->media-libs/glm-0.9.6.1
->media-libs/libcdr-0.1.1
->media-libs/libfreehand-0.1.0
->media-libs/libvisio-0.1.1
->media-libs/libgltf-0.0.2
+>=app-text/libabw-0.2
+>=app-text/libebook-0.2
+>=app-text/libetonyek-0.2
+>=app-text/libmspub-0.2
+>=app-text/libmwaw-0.4
+>=app-text/libodfgen-0.2
+>=app-text/libwpd-0.11
+>=app-text/libwpg-0.4
+>=app-text/libwps-0.4
+>=dev-libs/libixion-0.10
+>=dev-libs/liborcus-0.8
+>=dev-libs/librevenge-0.1
+>=media-libs/glew-1.13
+>=media-libs/libcdr-0.2
+>=media-libs/libfreehand-0.2
+>=media-libs/libgltf-0.1
+>=media-libs/libvisio-0.2
