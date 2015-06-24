@@ -1,3 +1,6 @@
+# mask back autogen-5.18.5. failure at xml2ag compilation. Reported upstream
+=sys-devel/autogen-5.18.5
+
 # masked for testing
 >sys-kernel/openvz-rhel6-stable-2.6.32.042.106.4
 

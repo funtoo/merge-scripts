@@ -13,9 +13,7 @@ SLOT="0"
 KEYWORDS="*"
 IUSE="libopts static-libs"
 
-RDEPEND=">=dev-scheme/guile-1.8:=
-	 >=dev-libs/libunistring-0.9.5
-	dev-libs/libxml2"
+RDEPEND=">=dev-scheme/guile-1.8:= dev-libs/libxml2"
 DEPEND="${RDEPEND}"
 
 src_prepare() {
