@@ -22,7 +22,7 @@ SRC_URI="
 
 LICENSE="GPL-2 NVIDIA-r2"
 SLOT="0"
-KEYWORDS="-* ~amd64 ~x86 ~amd64-fbsd ~x86-fbsd"
+KEYWORDS="*"
 RESTRICT="bindist mirror strip"
 EMULTILIB_PKG="true"
 
