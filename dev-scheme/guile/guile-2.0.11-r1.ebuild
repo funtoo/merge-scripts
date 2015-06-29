@@ -2,7 +2,7 @@
 
 EAPI="5"
 
-inherit eutils
+inherit eutils flag-o-matic
 
 DESCRIPTION="Scheme interpreter. Also The GNU extension language"
 HOMEPAGE="http://www.gnu.org/software/guile/"
@@ -32,6 +32,7 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
 src_configure() {
+	replace-flags -Os -O2
 	econf \
 		--disable-error-on-warning \
 		--disable-rpath \
