@@ -14,7 +14,7 @@
 =sys-kernel/debian-sources-4.0.4
 
 # Masked for testing
-=app-admin/ego-0.9.8
+>=app-admin/ego-0.9.8
 
 =sys-cluster/vzctl-4.9.2*
 =sys-cluster/ploop-1.13.2*
