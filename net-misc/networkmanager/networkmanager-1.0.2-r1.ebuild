@@ -18,7 +18,7 @@ HOMEPAGE="https://wiki.gnome.org/Projects/NetworkManager"
 LICENSE="GPL-2+"
 SLOT="0" # add subslot if libnm-util.so.2 or libnm-glib.so.4 bumps soname version
 
-IUSE="bluetooth connection-sharing consolekit dhclient +dhcpcd gnutls introspection \
+IUSE="bluetooth connection-sharing consolekit dhclient dhcpcd gnutls introspection \
 kernel_linux +nss modemmanager ncurses policykit +ppp resolvconf selinux teamd test \
 vala wext +wifi zeroconf" # wimax
 
@@ -175,7 +175,6 @@ src_configure() {
 		--without-netconfig \
 		--without-systemd \
 		--with-dbus-sys-dir=/etc/dbus-1/system.d \
-		--with-dhcpcd=/sbin/dhcpcd \
 		--with-udev-dir="$(get_udevdir)" \
 		--with-config-plugins-default=keyfile \
 		--with-iptables=/sbin/iptables \
@@ -189,6 +188,7 @@ src_configure() {
 		$(use_enable ppp) \
 		--disable-wimax \
 		$(use_with dhclient) \
+		$(use_with dhcpcd) \
 		$(use_with modemmanager modem-manager-1) \
 		$(use_with ncurses nmtui) \
 		$(use_with resolvconf) \
