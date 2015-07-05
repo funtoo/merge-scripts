@@ -1,8 +1,8 @@
+# FL-2600: rise mask for gnupg.
+>app-crypt/gnupg-2.0.28
+
 # mask sys-apps/makedev. This one collides with baselayout, makedev is part of baselayout.
 sys-apps/makedev
-
-# FL-2312: mask gnupg-2.1, breaks gnome apps
->app-crypt/gnupg-2.0.27-r1
 
 #FL-2265: mask gnutls-3.4. Broken ebuild
 =net-libs/gnutls-3.4.0*
