@@ -224,7 +224,7 @@ src_install() {
 
 	# Install default NetworkManager.conf with internal dhcp client. FL-2372 reference bug.
 	insinto /etc/NetworkManager
-	doins "${FILESDIR}"/NetworkManager.conf-r1
+	doins "${FILESDIR}"/1.0.2/NetworkManager.conf
 
 
 	# Allow users in plugdev group to modify system connections
