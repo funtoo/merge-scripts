@@ -222,9 +222,9 @@ src_install() {
 	keepdir /etc/NetworkManager/system-connections
 	chmod 0600 "${ED}"/etc/NetworkManager/system-connections/.keep* # bug #383765
 
-	# Install default NetworkManager.conf with dhcpcd as default dhcp plugin enabled. FL-2144 reference bug.
+	# Install default NetworkManager.conf with internal dhcp client. FL-2372 reference bug.
 	insinto /etc/NetworkManager
-	doins "${FILESDIR}"/NetworkManager.conf
+	doins "${FILESDIR}"/NetworkManager.conf-r1
 
 
 	# Allow users in plugdev group to modify system connections
