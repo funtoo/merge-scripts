@@ -57,7 +57,7 @@ src_prepare() {
 		epatch "${FILESDIR}"/${PN}-1.0.0a-ldflags.patch #327421
 		epatch "${FILESDIR}"/${PN}-1.0.0d-windres.patch #373743
 		epatch "${FILESDIR}"/${PN}-1.0.0h-pkg-config.patch
-		epatch "${FILESDIR}"/${PN}-1.0.1m-parallel-build.patch
+		epatch "${FILESDIR}"/${PN}-1.0.1p-parallel-build.patch
 		epatch "${FILESDIR}"/${PN}-1.0.1m-x32.patch
 		epatch "${FILESDIR}"/${PN}-1.0.1m-ipv6.patch
 		epatch "${FILESDIR}"/${PN}-1.0.1f-revert-alpha-perl-generation.patch #499086
