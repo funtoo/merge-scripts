@@ -10,7 +10,7 @@ DESCRIPTION="X.Org X servers"
 SLOT="0/${PV}"
 KEYWORDS="*"
 
-IUSE_SERVERS="dmx kdrive xnest xorg xvfb"
+IUSE_SERVERS="dmx kdrive xnest +xorg xvfb"
 IUSE="${IUSE_SERVERS} ipv6 minimal nptl selinux +suid tslib +udev unwind"
 
 RDEPEND=">=app-eselect/eselect-opengl-1.0.8

@@ -9,7 +9,7 @@ EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/xserver"
 DESCRIPTION="X.Org X servers"
 SLOT="0/1.16.1"
 KEYWORDS="*"
-IUSE_SERVERS="dmx kdrive xnest xorg xvfb"
+IUSE_SERVERS="dmx kdrive xnest +xorg xvfb"
 IUSE="${IUSE_SERVERS} glamor ipv6 minimal nptl selinux +suid systemd tslib +udev unwind wayland"
 
 CDEPEND=">=app-eselect/eselect-opengl-1.3.0
