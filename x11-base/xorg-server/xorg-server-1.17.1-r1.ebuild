@@ -9,9 +9,7 @@ EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/xserver"
 DESCRIPTION="X.Org X servers"
 SLOT="0/${PV}"
 KEYWORDS="~*"
-
-IUSE_SERVERS="dmx kdrive xephyr xnest +xorg xvfb"
-IUSE="${IUSE_SERVERS} glamor ipv6 minimal nptl selinux +suid systemd tslib +udev unwind wayland"
+IUSE="dmx kdrive xephyr xnest +xorg xvfb glamor ipv6 minimal nptl selinux +suid systemd tslib +udev unwind wayland"
 
 CDEPEND=">=app-eselect/eselect-opengl-1.3.0
 	dev-libs/openssl
@@ -129,7 +127,7 @@ PDEPEND="
 	xorg? ( >=x11-base/xorg-drivers-$(get_version_component_range 1-2) )"
 
 REQUIRED_USE="!minimal? (
-		|| ( ${IUSE_SERVERS} )
+		|| ( dmx kdrive xephyr xnest xorg xvfb )
 	)
 	xephyr? ( kdrive )"
 
