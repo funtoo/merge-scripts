@@ -1,3 +1,7 @@
+# FL-2631: mask opencv-3.0, breaks certain packages:
+>media-libs/opencv-2.4.10
+
+
 # FL-2621: mask broken version of pstoedit (from last working)
 >media-gfx/pstoedit-3.62
 
@@ -7,7 +11,7 @@
 # mask sys-apps/makedev. This one collides with baselayout, makedev is part of baselayout.
 sys-apps/makedev
 
-#FL-2265: mask gnutls-3.4. Broken ebuild
+#FL-2265: mask gnutls-3.410. Broken ebuild
 =net-libs/gnutls-3.4.0*
 
 #FL-2161: mask samba-4, until it's deps get better shape
