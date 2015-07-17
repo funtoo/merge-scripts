@@ -1,5 +1,5 @@
 # FL-2555, FL-2541, FL-2491, masked version of networkmanager with DNS/resolv.conf fix attempt
-=net-misc/networkmanager-1.0.2-r1
+>net-misc/networkmanager-1.0.2
 
 # mask back autogen-5.18.5. failure at xml2ag compilation. Reported upstream
 =sys-devel/autogen-5.18.5
