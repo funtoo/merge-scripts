@@ -11,7 +11,7 @@ SRC_URI="mirror://gentoo/${MY_P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 arm ppc ppc64 sparc x86"
+KEYWORDS="*"
 IUSE=""
 
 RDEPEND="media-libs/alsa-lib
@@ -24,8 +24,8 @@ S=${WORKDIR}/${MY_P}
 DOCS=( AUTHORS ChangeLog README )
 
 src_prepare() {
-	epatch "${FILESDIR}"/${P}-gcc34.patch
 	epatch "${FILESDIR}"/${PN}-autotools.patch
+	epatch "${FILESDIR}"/${PN}-modernfix.patch
 	epatch "${FILESDIR}"/segfault-on-exit.patch
 	eautoreconf
 }
