@@ -10,7 +10,7 @@ SLOT=$PVR
 CKV=2.6.32
 OKV=$CKV
 OVZ_KERNEL="042stab108"
-OVZ_REV="2"
+OVZ_REV="8"
 OVZ_KV=${OVZ_KERNEL}.${OVZ_REV}
 KV_FULL=${PN}-${PVR}
 EXTRAVERSION=-${OVZ_KV}
@@ -105,6 +105,8 @@ src_prepare() {
 	sed -i -e "s:video4linux/::g" Documentation/Makefile || die
 	sed -i -e "s:^\(EXTRAVERSION =\).*:\1 ${EXTRAVERSION}:" Makefile || die
 	sed	-i -e 's:#export\tINSTALL_PATH:export\tINSTALL_PATH:' Makefile || die
+	# perl 5.22 fix:
+	sed -i -e "s:defined(@val):@val:g" kernel/timeconst.pl || die
 	cp $DISTDIR/config-${CKV}-${OVZ_KV}.i686 arch/x86/configs/i386_defconfig || die
 	cp $DISTDIR/config-${CKV}-${OVZ_KV}.x86_64 arch/x86/configs/x86_64_defconfig || die
 	rm -f .config >/dev/null
