@@ -1,24 +1,30 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI="5"
+EAPI=5
 
-inherit
+inherit toolchain-funcs
 
-DESCRIPTION="Interact with the EFI Boot Manager"
+DESCRIPTION="User-space application to modify the EFI boot manager"
 HOMEPAGE="https://github.com/vathpela/efibootmgr"
-SRC_URI="https://github.com/vathpela/${PN}/releases/download/${PN}-${PV}/${PN}-${PV}.tar.bz2"
+SRC_URI="https://github.com/vathpela/${PN}/releases/download/${P}/${P}.tar.bz2"
 
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="*"
 IUSE=""
 
-RESTRICT="mirror"
-
 RDEPEND="sys-apps/pciutils
 	sys-libs/efivar"
-DEPEND="${RDEPEND}
-	virtual/pkgconfig"
+DEPEND="${RDEPEND}"
+
+src_prepare() {
+	sed -i -e s/-Werror// Makefile || die
+}
+
+src_configure() {
+	tc-export CC
+	export EXTRA_CFLAGS=${CFLAGS}
+}
 
 src_install() {
 	# build system uses perl, so just do it ourselves

@@ -98,7 +98,6 @@ PATCHES=(
 	"${FILESDIR}/${PN}-2.0.2-rename-systemd-service-files.patch"
 	"${FILESDIR}/${PN}-2.0.2-systemd-socket.patch"
 	"${FILESDIR}/${PN}-2.0.1-xinetd-installation-fix.patch"
-	"${FILESDIR}/${PN}-2.0.2-poll-CPU-loop-STR-4605.patch"
 )
 
 MULTILIB_CHOST_TOOLS=(
