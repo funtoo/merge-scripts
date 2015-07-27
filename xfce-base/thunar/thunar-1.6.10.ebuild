@@ -11,7 +11,7 @@ SRC_URI="mirror://xfce/src/xfce/${PN}/${PV%.*}/${MY_P}.tar.bz2"
 
 LICENSE="GPL-2 LGPL-2"
 SLOT="0"
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="+dbus debug exif libnotify pcre test udisks +xfce_plugins_trash"
 
 GVFS_DEPEND=">=gnome-base/gvfs-1.18.3"

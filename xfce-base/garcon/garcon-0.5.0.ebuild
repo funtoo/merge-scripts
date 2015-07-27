@@ -9,7 +9,7 @@ SRC_URI="mirror://xfce/src/libs/${PN}/${PV%.*}/${P}.tar.bz2"
 
 LICENSE="LGPL-2 FDL-1.1"
 SLOT="0"
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="debug"
 
 RDEPEND=">=dev-libs/glib-2.30

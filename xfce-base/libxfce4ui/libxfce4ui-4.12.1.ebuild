@@ -10,7 +10,7 @@ SRC_URI="mirror://xfce/src/xfce/${PN}/${PV%.*}/${P}.tar.bz2"
 
 LICENSE="LGPL-2"
 SLOT="0"
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="debug glade startup-notification"
 
 RDEPEND=">=dev-libs/glib-2.30:2
