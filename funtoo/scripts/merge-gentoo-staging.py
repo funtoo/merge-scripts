@@ -5,6 +5,11 @@ from merge_utils import *
 
 gentoo_staging_w = GitTree("gentoo-staging", "master", "repos@localhost:ports/gentoo-staging.git", root="/var/git/dest-trees/gentoo-staging", pull=False)
 
+# shards are overlays where we collect gentoo's most recent changes. This way, we can merge specific versions rather than always be forced to
+# get the latest.
+
+perl_shard = GitTree("gentoo-perl-shard", "master", "repos@localhost:gentoo-perl-shard.git", root="/var/git/dest-trees/gentoo-perl-shard", pull=False)
+
 # This function updates the gentoo-staging tree with all the latest gentoo updates:
 
 def gentoo_staging_update():
@@ -22,7 +27,18 @@ def gentoo_staging_update():
 		# Only include 2012 and up GLSA's:
 		SyncDir(gentoo_glsa.root, srcdir=None, destdir="metadata/glsa", exclude=["glsa-200*.xml","glsa-2010*.xml", "glsa-2011*.xml"]) if not gentoo_use_rsync else None,
 	]
+	perl_shard_steps = [
+		GitCheckout("master"),
+		CleanTree(),
+		InsertEbuilds(gentoo_staging_w, select=re.compile("dev-perl/.*"), skip=None, replace=True),
+		InsertEbuilds(gentoo_staging_w, select=[ "dev-lang/perl" ], skip=None, replace=True),
+		InsertEbuilds(gentoo_staging_w, select=re.compile("virtual/perl-.*"), skip=None, replace=True),
+	]
 	gentoo_staging_w.run(all_steps)
 	gentoo_staging_w.gitCommit(message="gentoo updates", branch="master")
+	perl_shard.run(perl_shard_steps)
+	perl_shard.gitCommit(message="gentoo updates", branch="master")
 
 gentoo_staging_update()
+
+# vim: ts=4 sw=4 noet

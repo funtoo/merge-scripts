@@ -7,6 +7,7 @@ import shutil
 import subprocess
 import sys
 import datetime
+import re
 from lxml import etree
 
 debug = False
@@ -443,6 +444,8 @@ class CvsTree(Tree):
 		else:
 			runShell("(cd %s; cvs -d %s co %s)" % (base, self.url, path))
 
+regextype = type(re.compile('hello, world'))
+
 class InsertEbuilds(MergeStep):
 
 	"""
@@ -535,12 +538,22 @@ class InsertEbuilds(MergeStep):
 				if not os.path.isdir(pkgdir):
 					# not a valid package dir in source overlay, so skip it
 					continue
-				if isinstance(self.select, list) and (catall not in self.select) and (catpkg not in self.select):
-					# we have a list of pkgs to merge, and this isn't on the list, so skip:
-					continue
-				if isinstance(self.skip, list) and ((catpkg in self.skip) or (catall in self.skip)):
-					# we have a list of pkgs to skip, and this catpkg is on the list, so skip:
-					continue
+				if isinstance(self.select, list):
+					if (catall not in self.select) and (catpkg not in self.select):
+						# we have a list of pkgs to merge, and this isn't on the list, so skip:
+						continue
+				elif isinstance(self.select, regextype):
+					if not self.select.match(catpkg):
+						# no regex match:
+						continue
+				if isinstance(self.skip, list):
+					if ((catpkg in self.skip) or (catall in self.skip)):
+						# we have a list of pkgs to skip, and this catpkg is on the list, so skip:
+						continue
+				elif isinstance(self.skip, regextype):
+					if self.select.match(catpkg):
+						# regex skip match, continue
+						continue
 				dest_cat_set.add(cat)
 				tcatdir = os.path.join(desttree.root,cat)
 				tpkgdir = os.path.join(tcatdir,pkg)
