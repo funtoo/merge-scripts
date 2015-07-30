@@ -11,7 +11,6 @@
 =sys-apps/portage-2.3.6-r9
 
 # Override Gentoo masks
-=media-tv/xbmc-13.2-r1
 app-backup/rdiff-backup
 app-crypt/gpgme
 app-misc/tracker

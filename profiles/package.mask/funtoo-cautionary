@@ -1,3 +1,7 @@
+# FL-2678: mask xbmc. kodi is a new and working version.
+# Users with installed version and not planning to update xbmc need to put this entry to package.unmask
+media-tv/xbmc
+
 # FL-2641: mask damaged libcgroup ebuild.
 =dev-libs/libcgroup-0.41-r1
 

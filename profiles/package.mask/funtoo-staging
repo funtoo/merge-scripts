@@ -1,3 +1,6 @@
+# FL-2515: FL-2648: FL-2674: binutils: gold require plugins enabled. Masked for testing:
+=sys-devel/binutils-2.25-r2
+
 # FL-2401: pulseaudio-6 update. Masked for testing
 =media-sound/pulseaudio-6.0
 
