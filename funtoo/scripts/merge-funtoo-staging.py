@@ -36,8 +36,8 @@ funtoo_overlays = {
 	"ldap_overlay" : GitTree("funtoo-ldap", "master", "repos@localhost:funtoo-ldap-overlay.git", pull=True),
 	"funtoo_deadbeef" : GitTree("funtoo-deadbeef", "master", "https://github.com/damex/funtoo-deadbeef.git", pull=True),
 	"funtoo_gambas" : GitTree("funtoo-gambas", "master", "https://github.com/damex/funtoo-gambas.git", pull=True),
-	"funtoo_wmfs" : GitTree("funtoo-wmfs", "master", "https://github.com/damex/funtoo-wmfs.git", pull=True)
-	"gentoo-perl-shard" : GitTree("gentoo-perl-shard", "master", "repos@localhost:gentoo-perl-shard.git", pull=True)
+	"funtoo_wmfs" : GitTree("funtoo-wmfs", "master", "https://github.com/damex/funtoo-wmfs.git", pull=True),
+	"gentoo-perl-shard" : GitTree("gentoo-perl-shard", "master", "repos@localhost:gentoo-perl-shard.git", pull=True),
 }
 
 # These are other overlays that we merge into the Funtoo tree. However, we just pull in the most recent versions

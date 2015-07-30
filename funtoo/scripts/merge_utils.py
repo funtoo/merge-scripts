@@ -357,9 +357,14 @@ class GitTree(Tree):
 		cmd = "( cd %s; [ -n \"$(git status --porcelain)\" ] && git commit -a -F - << EOF || exit 0\n" % self.root
 		if message != "":
 			cmd += "%s\n\n" % message
+		names = []
 		if len(self.merged):
 			cmd += "merged: \n\n"
 			for name, sha1 in self.merged:
+				if name in names:
+					# don't print dups
+					continue
+				names.append(name)
 				if sha1 != None:
 					cmd += "  %s: %s\n" % ( name, sha1 )
 		cmd += "EOF\n"
@@ -519,9 +524,11 @@ class InsertEbuilds(MergeStep):
 				if os.path.isdir(os.path.join(self.srctree.root,cat)):
 					if "-" in cat or cat == "virtual":
 						src_cat_set.add(cat)
-
-		with open(dest_cat_path, "r") as f:
-			dest_cat_set = set(f.read().splitlines())
+		if os.path.exists(dest_cat_path):
+			with open(dest_cat_path, "r") as f:
+				dest_cat_set = set(f.read().splitlines())
+		else:
+			dest_cat_set = set()
 
 		# Our main loop:
 		print( "# Merging in ebuilds from %s" % self.srctree.root )
@@ -608,42 +615,44 @@ class InsertEbuilds(MergeStep):
 					cpv = "/".join(tpkgdir.split("/")[-2:])
 					mergeLog.write("%s\n" % cpv)
 				# Record source tree of each copied catpkg to XML for later importing...
-					catxml = desttree.xml_out.find("packages/category[@name='%s']" % cat)
-					if catxml == None:
-						catxml = etree.Element("category", name=cat)
-						desttree.xml_out.append(catxml)
-					pkgxml = desttree.xml_out.find("packages/category[@name='%s']/package/[@name='%s']" % ( cat ,pkg ))
-					#remove existing
-					if pkgxml != None:
-						pkgxml.getparent().remove(pkgxml)
-					pkgxml = etree.Element("package", name=pkg, repository=self.srctree.name)
-					doMeta = True
-					try:
-						tpkgmeta = open("%s/metadata.xml" % tpkgdir, 'rb')
+					if desttree.xml_out != None:
+						catxml = desttree.xml_out.find("packages/category[@name='%s']" % cat)
+						if catxml == None:
+							catxml = etree.Element("category", name=cat)
+							desttree.xml_out.append(catxml)
+						pkgxml = desttree.xml_out.find("packages/category[@name='%s']/package/[@name='%s']" % ( cat ,pkg ))
+						#remove existing
+						if pkgxml != None:
+							pkgxml.getparent().remove(pkgxml)
+						pkgxml = etree.Element("package", name=pkg, repository=self.srctree.name)
+						doMeta = True
 						try:
-							metatree=etree.parse(tpkgmeta)
-						except UnicodeDecodeError:
-							doMeta = false
-						tpkgmeta.close()
-						if doMeta:
-							use_vars = []
-							usexml = etree.Element("use")
-							for el in metatree.iterfind('.//flag'):
-								name = el.get("name")
-								if name != None:
-									flag = etree.Element("flag")
-									flag.attrib["name"] = name
-									flag.text = etree.tostring(el, method="text").strip()
-									usexml.append(flag)
-							pkgxml.attrib["use"] = ",".join(use_vars)
-							pkgxml.append(usexml)
-					except IOError:
-						pass
-					catxml.append(pkgxml)
+							tpkgmeta = open("%s/metadata.xml" % tpkgdir, 'rb')
+							try:
+								metatree=etree.parse(tpkgmeta)
+							except UnicodeDecodeError:
+								doMeta = false
+							tpkgmeta.close()
+							if doMeta:
+								use_vars = []
+								usexml = etree.Element("use")
+								for el in metatree.iterfind('.//flag'):
+									name = el.get("name")
+									if name != None:
+										flag = etree.Element("flag")
+										flag.attrib["name"] = name
+										flag.text = etree.tostring(el, method="text").strip()
+										usexml.append(flag)
+								pkgxml.attrib["use"] = ",".join(use_vars)
+								pkgxml.append(usexml)
+						except IOError:
+							pass
+						catxml.append(pkgxml)
 
-
-		with open(dest_cat_path, "w") as f:
-			f.write("\n".join(sorted(dest_cat_set)))
+		if os.path.isdir(os.path.dirname(dest_cat_path)):
+			# only write out if profiles/ dir exists -- it doesn't with shards.
+			with open(dest_cat_path, "w") as f:
+				f.write("\n".join(sorted(dest_cat_set)))
 
 class ProfileDepFix(MergeStep):
 
