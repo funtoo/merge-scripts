@@ -31,8 +31,10 @@ def gentoo_staging_update():
 		GitCheckout("master"),
 		CleanTree(),
 		InsertEbuilds(gentoo_staging_w, select=re.compile("dev-perl/.*"), skip=None, replace=True),
+		InsertEbuilds(gentoo_staging_w, select=re.compile("perl-core/.*"), skip=None, replace=True),
 		InsertEbuilds(gentoo_staging_w, select=[ "dev-lang/perl" ], skip=None, replace=True),
 		InsertEbuilds(gentoo_staging_w, select=re.compile("virtual/perl-.*"), skip=None, replace=True),
+		SyncFiles(gentoo_staging_w.root, { "eclass/perl-app.eclass" : "eclass/perl-app.eclass", "eclass/perl-module.eclass" : "eclass/perl-module.eclass" })
 	]
 	gentoo_staging_w.run(all_steps)
 	gentoo_staging_w.gitCommit(message="gentoo updates", branch="master")

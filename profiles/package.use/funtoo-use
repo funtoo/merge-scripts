@@ -1,3 +1,6 @@
+# FL-2672: set python_single_target_python3.3 in gnome-music.
+media-sound/gnome-music python_single_target_python3_3 -python_single_target_python3_4
+
 # FL-2625: enable virt-network in libvirt to ease networking setup
 app-emulation/libvirt virt-network
 
