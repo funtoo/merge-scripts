@@ -1,0 +1,2 @@
+# QA-85: unmask to resolve internal compiler error bug
+=sys-devel/gcc-4.9.3
