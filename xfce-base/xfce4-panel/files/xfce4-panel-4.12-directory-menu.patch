@@ -1,0 +1,35 @@
+From 361929416c4e9b064085e44ab8a7e2c5d0e315b9 Mon Sep 17 00:00:00 2001
+From: Andrzej <ndrwrdck@gmail.com>
+Date: Thu, 14 May 2015 23:17:13 +0100
+Subject: Directory menu - selected directory not saved, bug #10331
+
+Author: Filipp Andjelo <filipp.andjelo@gmail.com>
+
+Directory Menu's setting panel does not save/show the selected directory and the browsing always starts from the user's home.
+Changing directory name in ..../xfconf/xfce-perchannel-xml/xfce4-panel.xml does nothing with this issue (it's overwritten with the user's home path).
+The only solution (I found) is to change the value in "xfce settings editor".
+
+diff --git a/plugins/directorymenu/directorymenu.c b/plugins/directorymenu/directorymenu.c
+index 069e02a..61d1182 100644
+--- a/plugins/directorymenu/directorymenu.c
++++ b/plugins/directorymenu/directorymenu.c
+@@ -368,7 +368,7 @@ directory_menu_plugin_configure_plugin_file_set (GtkFileChooserButton *button,
+   panel_return_if_fail (GTK_IS_FILE_CHOOSER_BUTTON (button));
+   panel_return_if_fail (XFCE_IS_DIRECTORY_MENU_PLUGIN (plugin));
+ 
+-  uri = gtk_file_chooser_get_current_folder_uri (GTK_FILE_CHOOSER (button));
++  uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (button));
+   g_object_set (G_OBJECT (plugin), "base-directory", uri, NULL);
+   g_free (uri);
+ }
+@@ -434,7 +434,7 @@ directory_menu_plugin_configure_plugin (XfcePanelPlugin *panel_plugin)
+   if (!gtk_file_chooser_set_current_folder_file (GTK_FILE_CHOOSER (object),
+                                                  plugin->base_directory, NULL))
+     gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (object), g_get_home_dir ());
+-  g_signal_connect (G_OBJECT (object), "current-folder-changed",
++  g_signal_connect (G_OBJECT (object), "selection-changed",
+      G_CALLBACK (directory_menu_plugin_configure_plugin_file_set), plugin);
+ 
+   object = gtk_builder_get_object (builder, "icon-button");
+-- 
+cgit v0.10.1
