@@ -1,0 +1,5 @@
+-neon
+-armvfp
+-armv5te
+-armv6
+-armv6t2
