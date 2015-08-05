@@ -25,7 +25,7 @@ sys-apps/makedev
 >net-fs/samba-3.6.25
 
 # FL-1703: these versions of crossdev is a forkbomb(s)
->sys-devel/crossdev-20140917
+>=sys-devel/crossdev-20140917
 
 # Mask the very latest layman, which using a a portage repository configs. Not yet in Funtoo.
 >app-portage/layman-2.2.0-r7
