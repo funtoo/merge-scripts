@@ -12,7 +12,7 @@ fi
 if [ -e /sys/block/$MDEV ]; then
 	SYSDEV=$(readlink -f /sys/block/$MDEV/device)
 	# if /sys device path contains '/usb[0-9]' then we assume its usb
-	# also, if its an usb without partitions we require FAT
+	# also, if it's a usb without partitions we require FAT
 	if [ "${SYSDEV##*/usb[0-9]}" != "$SYSDEV" ]; then
 		# do not create link if there is not FAT
 		dd if=/dev/$MDEV bs=512 count=1 2>/dev/null | strings | grep FAT >/dev/null || exit 0

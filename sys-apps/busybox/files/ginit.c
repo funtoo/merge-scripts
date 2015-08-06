@@ -1,12 +1,12 @@
 /*
  * simple init to bootstrap sep-/usr
  *
- * Copyright (C) 2012 Mike Frysinger <vapier@gentoo.org>
+ * Copyright (C) 2012-2013 Mike Frysinger <vapier@gentoo.org>
  *
  * Licensed under GPLv2 or later
  */
 
-//applet:IF_INIT(APPLET(ginit, BB_DIR_SBIN, BB_SUID_DROP))
+//applet:IF_GINIT(APPLET(ginit, BB_DIR_SBIN, BB_SUID_DROP))
 
 //kbuild:lib-$(CONFIG_GINIT) += ginit.o
 

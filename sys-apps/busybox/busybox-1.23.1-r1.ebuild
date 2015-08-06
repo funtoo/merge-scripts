@@ -1,45 +1,8 @@
 # Distributed under the terms of the GNU General Public License v2
+# See `man savedconfig.eclass` for info on how to use USE=savedconfig.
 
 EAPI="4"
 inherit eutils flag-o-matic savedconfig toolchain-funcs multilib
-
-################################################################################
-# BUSYBOX ALTERNATE CONFIG MINI-HOWTO
-#
-# Busybox can be modified in many different ways. Here's a few ways to do it:
-#
-# (1) Emerge busybox with FEATURES=keepwork so the work directory won't
-#     get erased afterwards. Add a definition like ROOT=/my/root/path to the
-#     start of the line if you're installing to somewhere else than the root
-#     directory. This command will save the default configuration to
-#     ${PORTAGE_CONFIGROOT} (or ${ROOT} if ${PORTAGE_CONFIGROOT} is not
-#     defined), and it will tell you that it has done this. Note the location
-#     where the config file was saved.
-#
-#     FEATURES=keepwork USE=savedconfig emerge busybox
-#
-# (2) Go to the work directory and change the configuration of busybox using its
-#     menuconfig feature.
-#
-#     cd /var/tmp/portage/busybox*/work/busybox-*
-#     make menuconfig
-#
-# (3) Save your configuration to the default location and copy it to the
-#     one of the locations listed in /usr/portage/eclass/savedconfig.eclass
-#
-# (4) Emerge busybox with USE=savedconfig to use the configuration file you
-#     just generated.
-#
-################################################################################
-#
-# (1) Alternatively skip the above steps and simply emerge busybox without
-#     USE=savedconfig.
-#
-# (2) Edit the file it saves by hand. ${ROOT}"/etc/portage/savedconfig/${CATEGORY}/${PF}
-#
-# (3) Remerge busybox as using USE=savedconfig.
-#
-################################################################################
 
 DESCRIPTION="Utilities for rescue and embedded systems"
 HOMEPAGE="http://www.busybox.net/"
@@ -55,27 +18,43 @@ fi
 
 LICENSE="GPL-2"
 SLOT="0"
-IUSE="ipv6 livecd make-symlinks math mdev -pam selinux sep-usr static"
+IUSE="debug ipv6 livecd make-symlinks math mdev -pam selinux sep-usr +static syslog systemd"
 RESTRICT="test"
 
-RDEPEND="selinux? ( sys-libs/libselinux )
+COMMON_DEPEND="!static? ( selinux? ( sys-libs/libselinux ) )
 	pam? ( sys-libs/pam )"
-DEPEND="${RDEPEND}
+DEPEND="${COMMON_DEPEND}
+	static? ( selinux? ( sys-libs/libselinux[static-libs(+)] ) )
 	>=sys-kernel/linux-headers-2.6.39"
+RDEPEND="${COMMON_DEPEND}
+mdev? ( !<sys-apps/openrc-0.13 )"
 
 S=${WORKDIR}/${MY_P}
 
 busybox_config_option() {
-	case $1 in
-		y) sed -i -e "s:.*\<CONFIG_$2\>.*set:CONFIG_$2=y:g" .config;;
-		n) sed -i -e "s:CONFIG_$2=y:# CONFIG_$2 is not set:g" .config;;
-		*) use $1 \
-		       && busybox_config_option y $2 \
-		       || busybox_config_option n $2
-		   return 0
-		   ;;
+	local flag=$1 ; shift
+	if [[ ${flag} != [yn] ]] ; then
+		busybox_config_option $(usex ${flag} y n) "$@"
+		return
+	fi
+	while [[ $# -gt 0 ]] ; do
+		if [[ ${flag} == "y" ]] ; then
+			sed -i -e "s:.*\<CONFIG_$1\>.*set:CONFIG_$1=y:g" .config
+		else
+			sed -i -e "s:CONFIG_$1=y:# CONFIG_$1 is not set:g" .config
+		fi
+		einfo $(grep "CONFIG_$1[= ]" .config || echo Could not find CONFIG_$1 ...)
+		shift
+	done
+}
+
+busybox_config_enabled() {
+	local val=$(sed -n "/^CONFIG_$1=/s:^[^=]*=::p" .config)
+	case ${val} in
+	"") return 1 ;;
+	y)  return 0 ;;
+	*)  echo "${val}" | sed -r 's:^"(.*)"$:\1:' ;;
 	esac
-	einfo $(grep "CONFIG_$2[= ]" .config || echo Could not find CONFIG_$2 ...)
 }
 
 src_prepare() {
@@ -85,7 +64,7 @@ src_prepare() {
 
 	# patches go here!
 	epatch "${FILESDIR}"/${PN}-1.19.0-bb.patch
-	#epatch "${FILESDIR}"/${P}-*.patch
+	epatch "${FILESDIR}"/${P}-*.patch
 	cp "${FILESDIR}"/ginit.c init/ || die
 
 	# flag cleanup
@@ -100,6 +79,7 @@ src_prepare() {
 		-e "/^AR\>/s:=.*:= $(tc-getAR):" \
 		-e "/^CC\>/s:=.*:= $(tc-getCC):" \
 		-e "/^HOSTCC/s:=.*:= $(tc-getBUILD_CC):" \
+		-e "/^PKG_CONFIG\>/s:=.*:= $(tc-getPKG_CONFIG):" \
 		Makefile || die
 	sed -i \
 		-e 's:-static-libgcc::' \
@@ -112,25 +92,28 @@ src_configure() {
 
 	restore_config .config
 	if [ -f .config ]; then
-		yes "" | emake -j1 oldconfig > /dev/null
+		yes "" | emake -j1 -s oldconfig >/dev/null
 		return 0
 	else
 		ewarn "Could not locate user configfile, so we will save a default one"
 	fi
 
 	# setup the config file
-	emake -j1 allyesconfig > /dev/null
+	emake -j1 -s allyesconfig >/dev/null
 	# nommu forces a bunch of things off which we want on #387555
 	busybox_config_option n NOMMU
 	sed -i '/^#/d' .config
-	yes "" | emake -j1 oldconfig >/dev/null
+	yes "" | emake -j1 -s oldconfig >/dev/null
 
 	# now turn off stuff we really don't want
 	busybox_config_option n DMALLOC
 	busybox_config_option n FEATURE_SUID_CONFIG
 	busybox_config_option n BUILD_AT_ONCE
 	busybox_config_option n BUILD_LIBBUSYBOX
+	busybox_config_option n FEATURE_CLEAN_UP
 	busybox_config_option n MONOTONIC_SYSCALL
+	busybox_config_option n START_STOP_DAEMON
+	busybox_config_option n USE_PORTABLE_CODE
 	busybox_config_option n WERROR
 
 	# If these are not set and we are using a uclibc/busybox setup
@@ -143,15 +126,16 @@ src_configure() {
 		busybox_config_option n FEATURE_IPV6
 		busybox_config_option n TRACEROUTE6
 		busybox_config_option n PING6
+		busybox_config_option n UDHCPC6
 	fi
 
 	if use static && use pam ; then
 		ewarn "You cannot have USE='static pam'.  Assuming static is more important."
 	fi
-	use static \
-		&& busybox_config_option n PAM \
-		|| busybox_config_option pam PAM
+	busybox_config_option $(usex static n pam) PAM
 	busybox_config_option static STATIC
+	busybox_config_option syslog {K,SYS}LOGD LOGGER
+	busybox_config_option systemd FEATURE_SYSTEMD
 	busybox_config_option math FEATURE_AWK_LIBM
 
 	# all the debug options are compiler related, so punt them
@@ -159,6 +143,7 @@ src_configure() {
 	busybox_config_option y NO_DEBUG_LIB
 	busybox_config_option n DMALLOC
 	busybox_config_option n EFENCE
+	busybox_config_option $(usex debug y n) TFTP_DEBUG
 
 	busybox_config_option selinux SELINUX
 
@@ -196,18 +181,6 @@ src_compile() {
 	export SKIP_STRIP=y
 
 	emake V=1 busybox
-	if ! use static ; then
-		cp .config{,.bak}
-		mv busybox_unstripped{,.bak}
-		use pam && busybox_config_option n PAM
-		emake CONFIG_STATIC=y busybox
-		mv busybox_unstripped bb
-		mv busybox_unstripped{.bak,}
-		mv .config{.bak,}
-	else
-		# keeps src_install simpler
-		ln busybox_unstripped bb
-	fi
 }
 
 src_install() {
@@ -219,20 +192,12 @@ src_install() {
 	if use sep-usr ; then
 		# install /ginit to take care of mounting stuff
 		exeinto /
-		newexe bb ginit
+		newexe busybox_unstripped ginit
 		dosym /ginit /bin/bb
-		if use static ; then
-			dosym bb /bin/busybox
-		else
-			newbin busybox_unstripped busybox
-		fi
+		dosym bb /bin/busybox
 	else
 		newbin busybox_unstripped busybox
-		if use static ; then
-			dosym busybox /bin/bb
-		else
-			dobin bb
-		fi
+		dosym busybox /bin/bb
 	fi
 	if use mdev ; then
 		dodir /$(get_libdir)/mdev/
@@ -242,15 +207,45 @@ src_install() {
 		exeinto /$(get_libdir)/mdev/
 		doexe "${FILESDIR}"/mdev/*
 
-		newinitd "${FILESDIR}"/mdev.rc.1 mdev
+		newinitd "${FILESDIR}"/mdev.initd mdev
 	fi
 	if use livecd ; then
 		dosym busybox /bin/vi
 	fi
 
+	# add busybox daemon's, bug #444718
+	if busybox_config_enabled FEATURE_NTPD_SERVER; then
+		newconfd "${FILESDIR}/ntpd.confd" "busybox-ntpd"
+		newinitd "${FILESDIR}/ntpd.initd" "busybox-ntpd"
+	fi
+	if busybox_config_enabled SYSLOGD; then
+		newconfd "${FILESDIR}/syslogd.confd" "busybox-syslogd"
+		newinitd "${FILESDIR}/syslogd.initd" "busybox-syslogd"
+	fi
+	if busybox_config_enabled KLOGD; then
+		newconfd "${FILESDIR}/klogd.confd" "busybox-klogd"
+		newinitd "${FILESDIR}/klogd.initd" "busybox-klogd"
+	fi
+	if busybox_config_enabled WATCHDOG; then
+		newconfd "${FILESDIR}/watchdog.confd" "busybox-watchdog"
+		newinitd "${FILESDIR}/watchdog.initd" "busybox-watchdog"
+	fi
+	if busybox_config_enabled UDHCPC; then
+		local path=$(busybox_config_enabled UDHCPC_DEFAULT_SCRIPT)
+		exeinto "${path%/*}"
+		newexe examples/udhcp/simple.script "${path##*/}"
+	fi
+	if busybox_config_enabled UDHCPD; then
+		insinto /etc
+		doins examples/udhcp/udhcpd.conf
+	fi
+
 	# bundle up the symlink files for use later
 	emake DESTDIR="${ED}" install
 	rm _install/bin/busybox
+	# for compatibility, provide /usr/bin/env
+	mkdir -p _install/usr/bin
+	ln -s /bin/env _install/usr/bin/env
 	tar cf busybox-links.tar -C _install . || : #;die
 	insinto /usr/share/${PN}
 	use make-symlinks && doins busybox-links.tar
