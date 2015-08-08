@@ -16,8 +16,8 @@ MY_PV="$(get_version_component_range 2)${MY_PV_EXT}"
 X86_AT="jre-${MY_PV}-linux-i586.tar.gz"
 AMD64_AT="jre-${MY_PV}-linux-x64.tar.gz"
 
-JCE_DIR="UnlimitedJCEPolicy"
-JCE_FILE="${JCE_DIR}JDK8.zip"
+JCE_DIR="UnlimitedJCEPolicyJDK8"
+JCE_FILE="${JCE_DIR}.zip"
 
 DESCRIPTION="Oracle's Java SE Runtime Environment"
 HOMEPAGE="http://www.oracle.com/technetwork/java/javase/"

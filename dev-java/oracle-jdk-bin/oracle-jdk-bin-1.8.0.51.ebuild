@@ -26,8 +26,8 @@ DEMOS_amd64="jdk-${MY_PV}-linux-x64-demos.tar.gz"
 DEMOS_arm="jdk-8u33-linux-arm-vfp-hflt-demos.tar.gz"
 DEMOS_x86="jdk-${MY_PV}-linux-i586-demos.tar.gz"
 
-JCE_DIR="UnlimitedJCEPolicy"
-JCE_FILE="${JCE_DIR}JDK8.zip"
+JCE_DIR="UnlimitedJCEPolicyJDK8"
+JCE_FILE="${JCE_DIR}.zip"
 
 DESCRIPTION="Oracle's Java SE Development Kit"
 HOMEPAGE="http://www.oracle.com/technetwork/java/javase/"
