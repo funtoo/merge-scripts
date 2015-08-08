@@ -1,3 +1,6 @@
+# FL-2704: mask very latet mongodb (and newer), until boost also unmasked.
+>dev-db/mongodb-3.0.4
+
 # FL-2678: mask xbmc. kodi is a new and working version.
 # Users with installed version and not planning to update xbmc need to put this entry to package.unmask
 media-tv/xbmc
