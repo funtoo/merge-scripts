@@ -451,6 +451,47 @@ class CvsTree(Tree):
 
 regextype = type(re.compile('hello, world'))
 
+class InsertFilesFromSubdir(MergeStep):
+
+	def __init__(self,srctree,subdir,suffixfilter=None,select="all",skip=None):
+		self.subdir = subdir
+		self.suffixfilter = suffixfilter
+		self.select = select
+		self.srctree = srctree
+		self.skip = skip 
+
+	def run(self,desttree):
+		desttree.logTree(self.srctree)
+
+		src = os.path.join(self.srctree.root, self.subdir)
+		if not os.path.exists(src):
+			print("Eclass dir %s does not exist; skipping %s insertion..." % (src, subdir))
+			return
+		dst = os.path.join(desttree.root, self.subdir)
+		if not os.path.exists(dst):
+			os.makedirs(dst)
+		for e in os.listdir(src):
+			if self.suffixfilter and not e.endswith(self.suffixfilter):
+				continue
+			if isinstance(self.select, list):
+				if e not in list:
+					continue
+			elif isinstance(self.select, regextype):
+				if not self.select.match(e):
+					continue
+			if isinstance(self.skip, list):
+				if e not in list:
+					continue
+			elif isinstance(self.skip, regextype):
+				if self.skip.match(e):
+					continue
+			runShell("cp -a %s/%s %s" % ( src, e, dst))
+
+class InsertEclasses(InsertFilesFromSubdir):
+
+	def __init__(self,srctree,select="all",skip=None):
+		InsertFilesFromSubdir.__init__(self,srctree,"eclass",".eclass",select=select,skip=skip)
+
 class InsertEbuilds(MergeStep):
 
 	"""
