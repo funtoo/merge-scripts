@@ -7,7 +7,7 @@ inherit linux-info xorg-2
 
 DESCRIPTION="X.Org driver for Intel cards"
 
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="debug +sna +udev uxa xvmc"
 
 REQUIRED_USE="
