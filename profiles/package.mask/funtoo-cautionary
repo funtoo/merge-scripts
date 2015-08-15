@@ -1,3 +1,6 @@
+# QA-88: workaround mask of binutils-config-4-r4 to break block with eselect. Until decided.
+>=sys-devel/binutils-config-4-r4
+
 # Precaution mask for newer ncurses-6.0 (needed tested). gentoo-x86 didn't set mask
 >=sys-libs/ncurses-6.0
 
