@@ -18,7 +18,7 @@ def gentoo_staging_update():
 	if gentoo_use_rsync:
 		gentoo_src = RsyncTree("gentoo")
 	else:
-		gentoo_src = GitTree("gentoo-x86", "master", "https://anongit.gentoo.org/git/repo/gentoo.git")
+		gentoo_src = GitTree("gentoo-x86", "master", "https://anongit.gentoo.org/git/repo/gentoo.git", pull=True)
 		#gentoo_src = CvsTree("gentoo-x86",":pserver:anonymous@anoncvs.gentoo.org:/var/cvsroot")
 		gentoo_glsa = GitTree("gentoo-glsa", "master", "git://anongit.gentoo.org/data/glsa.git", pull=True)
 	# This is the gentoo-staging tree, stored in a different place locally, so we can simultaneously be updating gentoo-staging and reading
