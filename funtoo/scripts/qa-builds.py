@@ -2,7 +2,7 @@
 
 from merge_utils import *
 
-host="root@build.host.funtoo.org"
+host="root@build.funtoo.org"
 arch_desc="x86-64bit"
 subarch="intel64-westmere"
 
