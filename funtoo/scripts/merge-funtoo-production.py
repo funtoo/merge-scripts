@@ -21,7 +21,7 @@ ports_2012 = GitTree("ports-2012", "funtoo.org", "repos@localhost:ports-2012.git
 
 my_steps = [
 	GitCheckout("funtoo.org"),
-	SyncFromTree(funtoo_staging_r),
+	SyncFromTree(funtoo_staging_r, exclude=["metadata/.gitignore"]),
 	GenCache()
 ]
 
