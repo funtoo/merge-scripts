@@ -1,5 +1,7 @@
 # FL-2748: 6.0-r1 breaks metro builds due to breakage when built with high parallelism.
 >=sys-libs/ncurses-6
+# this has the slotmove to 5
+>=sys-libs/ncurses-5.9-r101
 
 # FL-2726: mask kdelibs-4.14.11 in Funtoo too
 =kde-base/kdelibs-4.14.11
