@@ -1,3 +1,6 @@
+# FL-2748: 6.0-r1 breaks metro builds due to breakage when built with high parallelism.
+>=sys-libs/ncurses-6
+
 # FL-2726: mask kdelibs-4.14.11 in Funtoo too
 =kde-base/kdelibs-4.14.11
 
@@ -16,7 +19,6 @@ media-tv/xbmc
 
 # FL-2631: mask opencv-3.0, breaks certain packages:
 >media-libs/opencv-2.4.10
-
 
 # FL-2621: mask broken version of pstoedit (from last working)
 >media-gfx/pstoedit-3.62
