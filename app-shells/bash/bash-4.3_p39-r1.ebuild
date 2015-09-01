@@ -39,7 +39,7 @@ SLOT="0"
 KEYWORDS="*"
 IUSE="afs bashlogger examples mem-scramble +net nls plugins +readline vanilla"
 
-DEPEND=">=sys-libs/ncurses-5.2-r2:0=
+DEPEND=">=sys-libs/ncurses-5.2-r2
 	readline? ( >=sys-libs/readline-${READLINE_VER} )
 	nls? ( virtual/libintl )"
 RDEPEND="${DEPEND}
