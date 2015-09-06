@@ -104,6 +104,7 @@ RDEPEND="
 				) )
 		)
 		<sys-devel/llvm-3.7:=[${MULTILIB_USEDEP}]
+		!>=sys-devel/llvm-3.7
 	)
 	opencl? (
 				app-eselect/eselect-opencl
@@ -139,7 +140,9 @@ DEPEND="${RDEPEND}
 	)
 	opencl? (
 				<sys-devel/llvm-3.7:=[${MULTILIB_USEDEP}]
-				>=sys-devel/clang-3.4.2:=[${MULTILIB_USEDEP}]
+				!>=sys-devel/llvm-3.7
+				<sys-devel/clang-3.7:=[${MULTILIB_USEDEP}]
+				!>=sys-devel/clang-3.7
 				>=sys-devel/gcc-4.6
 	)
 	sys-devel/bison
