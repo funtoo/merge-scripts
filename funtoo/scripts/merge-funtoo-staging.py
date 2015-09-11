@@ -212,9 +212,9 @@ ebuild_modifications = [
 eclass_steps = [
 	SyncDir(funtoo_overlays["funtoo_deadbeef"].root,"eclass"),
 	SyncDir(funtoo_overlays["funtoo_gnome"].root,"eclass"),
-	SyncDir(funtoo_overlays["progress_overlay"].root, "eclass"),
 	SyncDir(funtoo_overlays["gentoo-kde-shard"].root,"eclass"),
 	SyncDir(funtoo_overlays["gentoo-perl-shard"].root,"eclass"),
+	SyncDir(funtoo_overlays["progress_overlay"].root, "eclass"),
 	SyncDir(funtoo_overlay.root, "eclass"),
 ]
 
