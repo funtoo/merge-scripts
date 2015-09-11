@@ -37,6 +37,7 @@ funtoo_overlays = {
 	"funtoo_deadbeef" : GitTree("funtoo-deadbeef", "master", "https://github.com/damex/funtoo-deadbeef.git", pull=True),
 	"funtoo_gambas" : GitTree("funtoo-gambas", "master", "https://github.com/damex/funtoo-gambas.git", pull=True),
 	"funtoo_wmfs" : GitTree("funtoo-wmfs", "master", "https://github.com/damex/funtoo-wmfs.git", pull=True),
+	"progress_overlay" : GitTree("progress", "funtoo", "repos@localhost:progress.git", pull=True),
 	"gentoo-perl-shard" : GitTree("gentoo-perl-shard", "45cac7981765a849a9d23a4c25718ecd7ecf5068", "repos@localhost:gentoo-perl-shard.git", pull=True),
 	"gentoo-kde-shard" : GitTree("gentoo-kde-shard", "089085ae6cc794e684b91a9e33d9d5d82f7cce4d", "repos@localhost:gentoo-kde-shard.git", pull=True),
 }
@@ -50,7 +51,6 @@ other_overlays = {
 	"causes_overlay" : GitTree("causes","master", "https://github.com/causes-/causelay", pull=True),
 	"bliss_overlay" : GitTree("bliss-overlay", "master", "https://github.com/fearedbliss/bliss-overlay.git", pull=True),
 	"squeezebox_overlay" : GitTree("squeezebox", "master", "git://anongit.gentoo.org/user/squeezebox.git", pull=True),
-	"progress_overlay" : SvnTree("progress", "https://gentoo-progress.googlecode.com/svn/overlays/progress"),
 	"pantheon_overlay" : GitTree("pantheon", "master", "https://github.com/pimvullers/elementary.git", pull=True),
 	"pinsard_overlay" : GitTree("pinsard", "master", "https://github.com/apinsard/sapher-overlay.git", pull=True),
 	"sabayon_for_gentoo" : GitTree("sabayon-for-gentoo", "master", "git://github.com/Sabayon/for-gentoo.git", pull=True),
@@ -150,8 +150,8 @@ profile_steps = [
 	SyncFiles(funtoo_overlays["funtoo_wmfs"].root, {
 		"profiles/package.mask":"profiles/package.mask/wmfs-mask"
 	}),
-	SyncDir(other_overlays["progress_overlay"].root, "profiles/unpack_dependencies"),
-	SyncFiles(other_overlays["progress_overlay"].root, {
+	SyncDir(funtoo_overlays["progress_overlay"].root, "profiles/unpack_dependencies"),
+	SyncFiles(funtoo_overlays["progress_overlay"].root, {
 		"profiles/package.mask":"profiles/package.mask/progress",
 		"profiles/use.aliases":"profiles/use.aliases/progress",
 		"profiles/use.mask":"profiles/use.mask/progress"
@@ -199,7 +199,7 @@ ebuild_modifications = [
 	InsertEbuilds(other_overlays["sabayon_for_gentoo"], select=["app-admin/equo", "app-admin/matter", "sys-apps/entropy", "sys-apps/entropy-server", "sys-apps/entropy-client-services","app-admin/rigo", "sys-apps/rigo-daemon", "sys-apps/magneto-core", "x11-misc/magneto-gtk", "x11-misc/magneto-gtk3", "x11-themes/numix-icon-theme", "kde-misc/magneto-kde", "app-misc/magneto-loader"], replace=True),
         InsertEbuilds(other_overlays["tripsix_overlay"], select=["media-sound/rakarrack"], skip=None, replace=True, merge=False),
         InsertEbuilds(other_overlays["pinsard_overlay"], select=["x11-wm/qtile"], skip=None, replace=True, merge=False),
-	InsertEbuilds(other_overlays["progress_overlay"], select="all", skip=["dev-libs/icu", "kde-base/pykde4"], replace=True, merge=False),
+	InsertEbuilds(funtoo_overlays["progress_overlay"], select="all", skip=["dev-libs/icu", "kde-base/pykde4"], replace=True, merge=False),
 	InsertEbuilds(funtoo_overlays["funtoo_gnome"], select="all", skip=None, replace=True, merge=["dev-python/pyatspi", "dev-python/pygobject", "dev-util/gdbus-codegen", "x11-libs/vte"]),
 	InsertEbuilds(funtoo_overlays["funtoo_media"], select="all", skip=None, replace=True),
 	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
@@ -212,7 +212,7 @@ ebuild_modifications = [
 eclass_steps = [
 	SyncDir(funtoo_overlays["funtoo_deadbeef"].root,"eclass"),
 	SyncDir(funtoo_overlays["funtoo_gnome"].root,"eclass"),
-	SyncDir(other_overlays["progress_overlay"].root, "eclass"),
+	SyncDir(funtoo_overlays["progress_overlay"].root, "eclass"),
 	SyncDir(funtoo_overlays["gentoo-kde-shard"].root,"eclass"),
 	SyncDir(funtoo_overlays["gentoo-perl-shard"].root,"eclass"),
 	SyncDir(funtoo_overlay.root, "eclass"),
@@ -224,7 +224,7 @@ eclass_steps = [
 
 treeprep_steps = [
 	SyncDir(funtoo_overlays["plex_overlay"].root,"licenses"),
-	MergeUpdates(other_overlays["progress_overlay"].root),
+	MergeUpdates(funtoo_overlays["progress_overlay"].root),
 	MergeUpdates(funtoo_overlay.root),
 	AutoGlobMask("dev-lang/python", "python*_pre*", "funtoo-python"),
 	ThirdPartyMirrors(),
@@ -233,10 +233,6 @@ treeprep_steps = [
 	# Set name of repository as "gentoo". Unset masters.
 	RunSed(["metadata/layout.conf"], ["s/^repo-name = .*/repo-name = gentoo/", "/^masters =/d"]),
 	RunSed(["profiles/repo_name"], ["s/.*/gentoo/"]),
-	# Set _PYTHON_GLOBALLY_NONDEFAULT_ABIS="3.[4-9]" variable for single-Python-ABI packages.
-	# This value should be kept in synchronization with PYTHON_ABIS variable set in profiles/funtoo/1.0/linux-gnu/make.defaults.
-	# This value should match Python ABIs newer than Python ABIs listed in PYTHON_ABIS variable.
-	RunSed(["eclass/python.eclass"], [r"s/^\(_PYTHON_GLOBALLY_NONDEFAULT_ABIS\)=.*/\1=\"3.[4-9]\"/"]),
 	GenUseLocalDesc()
 ]
 
