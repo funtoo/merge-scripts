@@ -2,7 +2,7 @@
 
 EAPI="4"
 PYTHON_COMPAT=( python{3_3,3_4} )
-WANT_AUTOMAKE="1.4"
+WANT_AUTOMAKE="1.14"
 
 inherit flag-o-matic python-any-r1 toolchain-funcs autotools
 
