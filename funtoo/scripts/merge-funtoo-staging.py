@@ -40,6 +40,7 @@ funtoo_overlays = {
 	"progress_overlay" : GitTree("progress", "funtoo", "repos@localhost:progress.git", pull=True),
 	"gentoo-perl-shard" : GitTree("gentoo-perl-shard", "45cac7981765a849a9d23a4c25718ecd7ecf5068", "repos@localhost:gentoo-perl-shard.git", pull=True),
 	"gentoo-kde-shard" : GitTree("gentoo-kde-shard", "089085ae6cc794e684b91a9e33d9d5d82f7cce4d", "repos@localhost:gentoo-kde-shard.git", pull=True),
+	"gentoo-core-shard" : GitTree("gentoo-core-shard", "d97a7517cd5badf06446f20bc912ed23ff881a1d", "repos@localhost:gentoo-core-shard.git", pull=True),
 }
 
 # These are other overlays that we merge into the Funtoo tree. However, we just pull in the most recent versions
@@ -97,6 +98,12 @@ else:
 # branch, copying almost the full entirety of Gentoo's portage tree to our destination tree, and copying over
 # funtoo overlay licenses, metadata, and also copying over GLSA's.
 
+cpkg_fn = os.path.dirname(os.path.abspath(__file__)) + "/core-packages"
+cpkg = open(cpkg_fn,"r")
+core_patterns = []
+for line in cpkg:
+	core_patterns.append(line.strip())
+
 base_steps = [
 	GitCheckout("master"),
 	SyncFromTree(gentoo_staging_r, exclude=[ 
@@ -114,6 +121,8 @@ base_steps = [
 		"perl-core/**",
 		"dev-lang/perl",
 	]),
+	InsertEbuilds(funtoo_overlays["gentoo-core-shard"], select=core_patterns, skip=None, replace=True),
+	InsertEclasses(funtoo_overlays["gentoo-core-shard"], select=re.compile(".*\.eclass")),
 	SyncDir(funtoo_overlay.root,"licenses"),
 	SyncDir(funtoo_overlay.root,"metadata"),
 	SyncFiles(funtoo_overlay.root, {

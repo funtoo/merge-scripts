@@ -74,7 +74,7 @@ def gentoo_staging_update():
 		GitCheckout("master"),
 		CleanTree(),
 		InsertEbuilds(gentoo_staging_w, select=core_patterns, skip=None, replace=True),
-		InsertEclasses(gentoo_staging_w, select=re.compile(".*\.eclass")
+		InsertEclasses(gentoo_staging_w, select=re.compile(".*\.eclass"))
 	]
 
 	gentoo_staging_w.run(all_steps)
