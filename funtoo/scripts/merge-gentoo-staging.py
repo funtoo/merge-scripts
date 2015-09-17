@@ -11,6 +11,7 @@ gentoo_staging_w = GitTree("gentoo-staging", "master", "repos@localhost:ports/ge
 perl_shard = GitTree("gentoo-perl-shard", "master", "repos@localhost:gentoo-perl-shard.git", root="/var/git/dest-trees/gentoo-perl-shard", pull=False)
 python_shard = GitTree("gentoo-python-shard", "master", "repos@localhost:gentoo-python-shard.git", root="/var/git/dest-trees/gentoo-python-shard", pull=False)
 kde_shard = GitTree("gentoo-kde-shard", "master", "repos@localhost:gentoo-kde-shard.git", root="/var/git/dest-trees/gentoo-kde-shard", pull=False)
+core_shard = GitTree("gentoo-core-shard", "master", "repos@localhost:gentoo-core-shard.git", root="/var/git/dest-trees/gentoo-core-shard", pull=False)
 
 # This function updates the gentoo-staging tree with all the latest gentoo updates:
 
@@ -63,6 +64,19 @@ def gentoo_staging_update():
 		InsertEclasses(gentoo_staging_w, select=re.compile("qt4-.*\.eclass")),
 		InsertEclasses(gentoo_staging_w, select=re.compile("qt5-.*\.eclass")),
 	]
+	cpkg_fn = os.path.dirname(os.path.abspath(__file__)) + "/core-packages"
+	cpkg = open(cpkg_fn,"r")
+	core_patterns = []
+	for line in cpkg:
+		core_patterns.append(line.strip())
+
+	core_shard_steps = [
+		GitCheckout("master"),
+		CleanTree(),
+		InsertEbuilds(gentoo_staging_w, select=core_patterns, skip=None, replace=True),
+		InsertEclasses(gentoo_staging_w, select=re.compile(".*\.eclass")
+	]
+
 	gentoo_staging_w.run(all_steps)
 	gentoo_staging_w.gitCommit(message="gentoo updates", branch="master")
 	perl_shard.run(perl_shard_steps)
@@ -71,6 +85,8 @@ def gentoo_staging_update():
 	python_shard.gitCommit(message="gentoo updates", branch="master")
 	kde_shard.run(kde_shard_steps)
 	kde_shard.gitCommit(message="gentoo updates", branch="master")
+	core_shard.run(core_shard_steps)
+	core_shard.gitCommit(message="gentoo updates", branch="master")
 
 gentoo_staging_update()
 
