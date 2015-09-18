@@ -54,26 +54,16 @@ def gentoo_staging_update():
 	kde_shard_steps = [
 		GitCheckout("master"),
 		CleanTree(),
-		InsertEbuilds(gentoo_staging_w, select=re.compile("dev-qt/.*"), skip=None, replace=True),
-		InsertEbuilds(gentoo_staging_w, select=re.compile("kde-apps/.*"), skip=None, replace=True),
-		InsertEbuilds(gentoo_staging_w, select=re.compile("kde-base/.*"), skip=None, replace=True),
-		InsertEbuilds(gentoo_staging_w, select=re.compile("kde-frameworks/.*"), skip=None, replace=True),
-		InsertEbuilds(gentoo_staging_w, select=re.compile("kde-misc/.*"), skip=None, replace=True),
-		InsertEbuilds(gentoo_staging_w, select=re.compile("kde-plasma/.*"), skip=None, replace=True),
+		InsertEbuilds(gentoo_staging_w, select=get_pkglist("kde-packages"), skip=None, replace=True),
 		InsertEclasses(gentoo_staging_w, select=re.compile("kde.*\.eclass")),
 		InsertEclasses(gentoo_staging_w, select=re.compile("qt4-.*\.eclass")),
 		InsertEclasses(gentoo_staging_w, select=re.compile("qt5-.*\.eclass")),
 	]
-	cpkg_fn = os.path.dirname(os.path.abspath(__file__)) + "/core-packages"
-	cpkg = open(cpkg_fn,"r")
-	core_patterns = []
-	for line in cpkg:
-		core_patterns.append(line.strip())
-
+	
 	core_shard_steps = [
 		GitCheckout("master"),
 		CleanTree(),
-		InsertEbuilds(gentoo_staging_w, select=core_patterns, skip=None, replace=True),
+		InsertEbuilds(gentoo_staging_w, select=get_pkglist("core-packages"), skip=None, replace=True),
 		InsertEclasses(gentoo_staging_w, select=re.compile(".*\.eclass"))
 	]
 
