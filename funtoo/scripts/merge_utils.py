@@ -177,8 +177,8 @@ class ApplyPatchSeries(MergeStep):
 				runShell( "( cd %s; git apply %s/%s )" % ( tree.root, self.path, line[:-1] ))
 
 class RemoveFiles(MergeStep):
-	def __init__(self,globs=[])
-		self.flist = globs
+	def __init__(self,globs=[]):
+		self.globs = globs
 	
 	def run(self,tree):
 		for glob in self.globs:
