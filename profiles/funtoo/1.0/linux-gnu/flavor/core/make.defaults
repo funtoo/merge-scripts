@@ -14,3 +14,4 @@ INPUT_DEVICES="evdev synaptics"  								#FL-159
 # so that PHP_TARGETS always refers to the latest unmasked x.y version
 # of PHP.
 PHP_TARGETS="php5-5"
+PYTHON_SINGLE_TARGET="python3_3"
