@@ -17,7 +17,7 @@ USE_EXPAND="${USE_EXPAND} TENGINE_EXTERNAL_MODULES_HTTP TENGINE_MODULES_MAIL TEN
 # This value should be kept in synchronization with _PYTHON_GLOBALLY_NONDEFAULT_ABIS variable set in python.eclass by funtoo/scripts/merge.py.
 PYTHON_TARGETS="python2_7 python3_3"
 PYTHON_SINGLE_TARGET="python3_3"
-PYTHON_ABIS="2.7 3.3
+PYTHON_ABIS="2.7 3.3"
 
 # This setting should be kept in sync with a >=dev-lang/php-5.x mask,
 # so that PHP_TARGETS always refers to the latest unmasked x.y version
