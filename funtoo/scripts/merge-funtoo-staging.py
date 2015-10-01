@@ -50,9 +50,9 @@ funtoo_overlays = {
 	"funtoo_deadbeef" : GitTree("funtoo-deadbeef", "master", "https://github.com/damex/funtoo-deadbeef.git", pull=True),
 	"funtoo_gambas" : GitTree("funtoo-gambas", "master", "https://github.com/damex/funtoo-gambas.git", pull=True),
 	"funtoo_wmfs" : GitTree("funtoo-wmfs", "master", "https://github.com/damex/funtoo-wmfs.git", pull=True),
-	"gentoo-perl-shard" : GitTree("gentoo-perl-shard", "45cac7981765a849a9d23a4c25718ecd7ecf5068", "repos@localhost:gentoo-perl-shard.git", pull=True),
+	"gentoo-perl-shard" : GitTree("gentoo-perl-shard", "faa495e899e073e307950749f2929dd88be61118", "repos@localhost:gentoo-perl-shard.git", pull=True),
 	"gentoo-kde-shard" : GitTree("gentoo-kde-shard", "089085ae6cc794e684b91a9e33d9d5d82f7cce4d", "repos@localhost:gentoo-kde-shard.git", pull=True),
-	"gentoo-core-shard" : GitTree("gentoo-core-shard", "d97a7517cd5badf06446f20bc912ed23ff881a1d", "repos@localhost:gentoo-core-shard.git", pull=True),
+	"gentoo-core-shard" : GitTree("gentoo-core-shard", "9a11a7dab9e799e74bb6f14a4724a24e8e3cc6ea", "repos@localhost:gentoo-core-shard.git", pull=True),
 }
 funtoo_overlays["progress_overlay"] = GitTree("progress", "funtoo", "repos@localhost:progress.git", pull=True)
 
