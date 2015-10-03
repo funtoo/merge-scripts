@@ -1,0 +1,6 @@
+>=media-libs/clutter-1.22.4 egl
+>=www-servers/apache-2.4.16 apache2_mpms_prefork
+>=gnome-base/gnome-control-center-3.16.3 networkmanager
+>=gnome-base/librsvg-2.40.10 abi_x86_32
+>=dev-libs/libcroco-0.6.8-r1 abi_x86_32
+
