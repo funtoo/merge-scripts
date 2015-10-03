@@ -7,10 +7,9 @@
 # This version of profile.eselect is written for use with Funtoo's
 # multi-profile approach
 
-inherit package-manager output
-
 DESCRIPTION="Manage portage profiles"
 MAINTAINER="drobbins@funtoo.org"
 VERSION="funtoo-2.0"
 
-die "Eselect profile has been replaced with the 'epro' command. Please use it instead.'
+echo "Eselect profile has been replaced with the 'epro' command. Please use it instead."
+exit 1
