@@ -53,6 +53,7 @@ funtoo_overlays = {
 	"gentoo-perl-shard" : GitTree("gentoo-perl-shard", "faa495e899e073e307950749f2929dd88be61118", "repos@localhost:gentoo-perl-shard.git", pull=True),
 	"gentoo-kde-shard" : GitTree("gentoo-kde-shard", "089085ae6cc794e684b91a9e33d9d5d82f7cce4d", "repos@localhost:gentoo-kde-shard.git", pull=True),
 	"gentoo-core-shard" : GitTree("gentoo-core-shard", "9a11a7dab9e799e74bb6f14a4724a24e8e3cc6ea", "repos@localhost:gentoo-core-shard.git", pull=True),
+	"funtoo-tengine" : GitTree("funtoo-tengine", "master", "https://github.com/damex/funtoo-tengine.git", pull=True),
 }
 funtoo_overlays["progress_overlay"] = GitTree("progress", "funtoo", "repos@localhost:progress.git", pull=True)
 
@@ -211,6 +212,7 @@ ebuild_modifications = [
 	InsertEbuilds(other_overlays["sabayon_for_gentoo"], select=["app-admin/equo", "app-admin/matter", "sys-apps/entropy", "sys-apps/entropy-server", "sys-apps/entropy-client-services","app-admin/rigo", "sys-apps/rigo-daemon", "sys-apps/magneto-core", "x11-misc/magneto-gtk", "x11-misc/magneto-gtk3", "x11-themes/numix-icon-theme", "kde-misc/magneto-kde", "app-misc/magneto-loader", "media-video/kazam" ], replace=True),
 	InsertEbuilds(other_overlays["tripsix_overlay"], select=["media-sound/rakarrack"], skip=None, replace=True, merge=False),
 	InsertEbuilds(other_overlays["pinsard_overlay"], select=["x11-wm/qtile"], skip=None, replace=True, merge=False),
+	InsertEbuilds(funtoo_overlays["funtoo-tengine"], select=["www-plugins/*", "www-servers/*"], skip=None, replace=True),
 ]
 
 if "progress" in flags:
