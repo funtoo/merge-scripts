@@ -5,7 +5,7 @@ import sys
 from merge_utils import *
 
 flags = {
-	"progress" : True
+	"progress" : True,
 	"gnome" : True
 }
 
@@ -163,7 +163,7 @@ profile_steps = [
 	}) ]
 
 if "progress" in flags:
-	profile_steps = += [
+	profile_steps += [
 		SyncDir(funtoo_overlays["progress_overlay"].root, "profiles/unpack_dependencies"),
 		SyncFiles(funtoo_overlays["progress_overlay"].root, {
 			"profiles/package.mask":"profiles/package.mask/progress",
@@ -179,7 +179,7 @@ if "gnome" in flags:
 		}),
 	]
 
-profile_steps = profile_steps + [
+profile_steps += [
 	SyncFiles(funtoo_overlays["funtoo_toolchain"].root, {
 		"profiles/package.mask/funtoo-toolchain":"profiles/funtoo/1.0/linux-gnu/build/current/package.mask/funtoo-toolchain",
 	}),
