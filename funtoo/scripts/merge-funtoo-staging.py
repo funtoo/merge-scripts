@@ -54,9 +54,13 @@ funtoo_overlays = {
 	"funtoo_wmfs" : GitTree("funtoo-wmfs", "master", "https://github.com/damex/funtoo-wmfs.git", pull=True),
 	"gentoo-perl-shard" : GitTree("gentoo-perl-shard", "faa495e899e073e307950749f2929dd88be61118", "repos@localhost:gentoo-perl-shard.git", pull=True),
 	"gentoo-kde-shard" : GitTree("gentoo-kde-shard", "089085ae6cc794e684b91a9e33d9d5d82f7cce4d", "repos@localhost:gentoo-kde-shard.git", pull=True),
-	"gentoo-core-shard" : GitTree("gentoo-core-shard", "9a11a7dab9e799e74bb6f14a4724a24e8e3cc6ea", "repos@localhost:gentoo-core-shard.git", pull=True),
 	"funtoo-tengine" : GitTree("funtoo-tengine", "master", "https://github.com/damex/funtoo-tengine.git", pull=True),
 }
+if "unfork" in sys.argv[1:]:	
+	funtoo_overlays["gentoo-core-shard"] = GitTree("gentoo-core-shard", "master", "repos@localhost:gentoo-core-shard.git", pull=True)
+else:
+	funtoo_overlays["gentoo-core-shard"] = GitTree("gentoo-core-shard", "9a11a7dab9e799e74bb6f14a4724a24e8e3cc6ea", "repos@localhost:gentoo-core-shard.git", pull=True)
+
 funtoo_overlays["progress_overlay"] = GitTree("progress", "funtoo", "repos@localhost:progress.git", pull=True)
 
 # These are other overlays that we merge into the Funtoo tree. However, we just pull in the most recent versions
