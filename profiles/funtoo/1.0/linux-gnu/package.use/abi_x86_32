@@ -51,8 +51,10 @@ x11-libs/libxcb abi_x86_32
 x11-libs/libxshmfence abi_x86_32
 x11-libs/pango abi_x86_32
 x11-libs/pixman abi_x86_32
+x11-proto/damageproto abi_x86_32
 x11-proto/dri2proto abi_x86_32
 x11-proto/dri3proto abi_x86_32
+x11-proto/fixesproto abi_x86_32
 x11-proto/glproto abi_x86_32
 x11-proto/inputproto abi_x86_32
 x11-proto/kbproto abi_x86_32
@@ -65,3 +67,8 @@ x11-proto/xf86bigfontproto abi_x86_32
 x11-proto/xf86driproto abi_x86_32
 x11-proto/xf86vidmodeproto abi_x86_32
 x11-proto/xproto abi_x86_32
+
+# gnome
+
+dev-libs/libcroco abi_x86_32
+gnome-base/librsvg abi_x86_32
