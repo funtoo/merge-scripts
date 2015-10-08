@@ -281,7 +281,7 @@ if "progress" in flags:
 
 treeprep_steps += [
 	MergeUpdates(funtoo_overlay.root),
-	AutoGlobMask("dev-lang/python", "python*_pre*", "funtoo-python"),
+	AutoGlobMask("dev-lang/python", "python*_pre*", "funtoo-python_pre"),
 	ThirdPartyMirrors(),
 	ProfileDepFix(),
 	Minify(),
