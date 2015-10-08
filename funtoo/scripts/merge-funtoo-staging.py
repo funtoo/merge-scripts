@@ -6,13 +6,13 @@ from merge_utils import *
 
 flags = {
 	"progress" : True,
-	"gnome" : True
+	"old-gnome" : True
 }
 
 
 if "unfork" in sys.argv[1:]:
 	del flags["progress"]
-	del flags["gnome"]
+	del flags["old-gnome"]
 	funtoo_staging_w = GitTree("funtoo-staging-unfork", "master", "repos@localhost:ports/funtoo-staging-unfork.git", root="/var/git/dest-trees/funtoo-staging-unfork", pull=False, xml_out=None)
 	xmlfile=None
 else:
@@ -47,6 +47,7 @@ funtoo_overlays = {
 	"funtoo_media" : GitTree("funtoo-media", "master", "repos@localhost:funtoo-media.git", pull=True),
 	"plex_overlay" : GitTree("funtoo-plex", "master", "https://github.com/Ghent/funtoo-plex.git", pull=True),
 	"funtoo_gnome" : GitTree("funtoo-gnome", "master", "repos@localhost:funtoo-gnome-overlay.git", pull=True),
+	"gnome_fixups" : GitTree("gnome-3.16-fixups", "master", "repos@localhost:ports/gnome-3.16-fixups.git", pull=True),
 	"funtoo_toolchain" : GitTree("funtoo-toolchain", "master", "repos@localhost:funtoo-toolchain-overlay.git", pull=True),
 	"ldap_overlay" : GitTree("funtoo-ldap", "master", "repos@localhost:funtoo-ldap-overlay.git", pull=True),
 	"funtoo_deadbeef" : GitTree("funtoo-deadbeef", "master", "https://github.com/damex/funtoo-deadbeef.git", pull=True),
@@ -54,6 +55,7 @@ funtoo_overlays = {
 	"funtoo_wmfs" : GitTree("funtoo-wmfs", "master", "https://github.com/damex/funtoo-wmfs.git", pull=True),
 	"gentoo-perl-shard" : GitTree("gentoo-perl-shard", "faa495e899e073e307950749f2929dd88be61118", "repos@localhost:gentoo-perl-shard.git", pull=True),
 	"gentoo-kde-shard" : GitTree("gentoo-kde-shard", "089085ae6cc794e684b91a9e33d9d5d82f7cce4d", "repos@localhost:gentoo-kde-shard.git", pull=True),
+	"gentoo-gnome-shard" : GitTree("gentoo-gnome-shard", "4d5473019d599229cb54edde7f5a7e48df46302f", "repos@localhost:ports/gentoo-gnome-shard.git", pull=True),
 	"funtoo-tengine" : GitTree("funtoo-tengine", "master", "https://github.com/damex/funtoo-tengine.git", pull=True),
 }
 if "unfork" in sys.argv[1:]:	
@@ -176,7 +178,7 @@ if "progress" in flags:
 		}),
 	]
 
-if "gnome" in flags:
+if "old-gnome" in flags:
 	profile_steps += [ 
 		SyncFiles(funtoo_overlays["funtoo_gnome"].root, {
 			"profiles/package.mask":"profiles/funtoo/1.0/linux-gnu/mix-ins/gnome/package.mask"
@@ -228,7 +230,7 @@ ebuild_modifications = [
 if "progress" in flags:
 	ebuild_modifications += [ InsertEbuilds(funtoo_overlays["progress_overlay"], select="all", skip=["dev-libs/icu", "kde-base/pykde4"], replace=True, merge=False) ]
 
-if "gnome" in flags:
+if "old-gnome" in flags:
 	ebuild_modifications += [
 		InsertEbuilds(funtoo_overlays["funtoo_gnome"], select="all", skip=None, replace=True, merge=["dev-python/pyatspi", "dev-python/pygobject", "dev-util/gdbus-codegen", "x11-libs/vte"]),
 	]
@@ -243,13 +245,19 @@ ebuild_modifications += [
 	InsertEbuilds(funtoo_overlays["gentoo-perl-shard"], select="all", skip=None, replace=True),
 ]
 
+if "old-gnome" not in flags:
+	ebuild_modifications += [
+		InsertEbuilds(funtoo_overlays["gentoo-gnome-shard"], select="all", skip=None, replace=True),
+		InsertEbuilds(funtoo_overlays["gnome_fixups"], select="all", skip=None, replace=True)
+	]
+
 # Steps related to eclass copying:
 
 eclass_steps = [
 	SyncDir(funtoo_overlays["funtoo_deadbeef"].root,"eclass"),
 ]
 
-if "gnome" in flags:
+if "old-gnome" in flags:
 	eclass_steps += [
 		SyncDir(funtoo_overlays["funtoo_gnome"].root,"eclass"),
 ]
