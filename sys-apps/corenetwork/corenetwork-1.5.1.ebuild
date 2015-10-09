@@ -22,7 +22,6 @@ src_unpack() {
 }
 
 src_install() {
-	dodoc docs/index.rst || die
 	exeinto /etc/init.d || die
 	doexe init.d/{netif.tmpl,net.lo} || die
 	cp -a netif.d ${D}/etc || die
