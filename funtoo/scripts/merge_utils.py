@@ -22,6 +22,23 @@ def get_pkglist(fname):
 		patterns.append(line.strip())
 	return patterns
 
+def generateShardSteps(name, from_tree, branch="master"):
+	steps = [
+		GitCheckout(branch),
+		CleanTree()
+	]
+	for pattern in get_pkglist("package-sets/%s-packages" % name):
+		if pattern.startswith("@regex@:"):
+			steps += InsertEbuilds(from_tree, select=re.compile(pattern[8:]), skip=None, replace=True)
+		elif pattern.startswith("@eclass@:"):
+			steps += InsertEclasses(from_tree, select=re.compile(pattern[9:]), skip=None, replace=True)
+		else:
+			steps += InsertEbuilds(from_tree, select=[ pattern ], skip=None, replace=True)
+	return steps
+
+
+
+
 def qa_build(host,build,arch_desc,subarch,head,target):
 	success = False
 	print("Performing remote QA build on %s for %s %s %s %s (%s)" % (host, build, arch_desc, subarch, head, target))
