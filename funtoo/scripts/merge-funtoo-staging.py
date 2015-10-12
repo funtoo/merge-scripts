@@ -9,15 +9,12 @@ flags = {
 	"old-gnome" : True
 }
 
-if "unfork" in sys.argv[1:]:
-	del flags["progress"]
-	del flags["old-gnome"]
-	funtoo_staging_w = GitTree("funtoo-staging-unfork", "master", "repos@localhost:ports/funtoo-staging-unfork.git", root="/var/git/dest-trees/funtoo-staging-unfork", pull=False, xml_out=None)
-	xmlfile=None
-else:
-	xml_out = etree.Element("packages")
-	funtoo_staging_w = GitTree("funtoo-staging", "master", "repos@localhost:ports/funtoo-staging.git", root="/var/git/dest-trees/funtoo-staging", pull=False, xml_out=xml_out)
-	xmlfile="/home/ports/public_html/packages.xml"
+del flags["progress"]
+del flags["old-gnome"]
+xml_out = etree.Element("packages")
+funtoo_staging_w = GitTree("funtoo-staging", "master", "repos@localhost:ports/funtoo-staging.git", root="/var/git/dest-trees/funtoo-staging", pull=False, xml_out=xml_out)
+#funtoo_staging_w = GitTree("funtoo-staging-unfork", "master", "repos@localhost:ports/funtoo-staging-unfork.git", root="/var/git/dest-trees/funtoo-staging-unfork", pull=False, xml_out=None)
+xmlfile="/home/ports/public_html/packages.xml"
 
 nopush=False
 
@@ -46,11 +43,8 @@ shards = {
 	"kde" : GitTree("gentoo-kde-shard", "089085ae6cc794e684b91a9e33d9d5d82f7cce4d", "repos@localhost:gentoo-kde-shard.git", pull=True),
 	"gnome" : GitTree("gentoo-gnome-shard", "4d5473019d599229cb54edde7f5a7e48df46302f", "repos@localhost:ports/gentoo-gnome-shard.git", pull=True),
 	"x11" : GitTree("gentoo-x11-shard", "a4dacbfbf36af074cc2bed2185dc696fb1af0cc2", "repos@localhost:ports/gentoo-x11-shard.git", pull=True),
+	"core" : GitTree("gentoo-core-shard", "62af1de1113dc46599807f745788d248dd524d33", "repos@localhost:gentoo-core-shard.git", pull=True)
 }
-if "unfork" in sys.argv[1:]:	
-	shards["core"] = GitTree("gentoo-core-shard", "master", "repos@localhost:gentoo-core-shard.git", pull=True)
-else:
-	shards["core"] = GitTree("gentoo-core-shard", "9a11a7dab9e799e74bb6f14a4724a24e8e3cc6ea", "repos@localhost:gentoo-core-shard.git", pull=True)
 
 funtoo_overlays = {
 	"funtoo_media" : GitTree("funtoo-media", "master", "repos@localhost:funtoo-media.git", pull=True),
@@ -93,14 +87,6 @@ else:
 		if funtoo_overlays[fo].changes:
 			funtoo_changes = True
 			break
-if len(sys.argv) > 1:
-	if "force" in sys.argv[1:]:
-		print("Updates forced.")
-elif not funtoo_changes:
-	print("No new funtoo changes were detected. Not updating funtoo-staging.")
-	sys.exit(2)
-else:
-	print("Changes were detectd in funtoo overlays -- updating funtoo-staging.")
 
 # This next code regenerates the contents of the funtoo-staging tree. Funtoo's tree is itself composed of
 # many different overlays which are merged in an automated fashion. This code does it all.
