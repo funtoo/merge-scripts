@@ -27,17 +27,23 @@ def generateShardSteps(name, from_tree, branch="master"):
 		GitCheckout(branch),
 		CleanTree()
 	]
+	pkglist = []
 	for pattern in get_pkglist("package-sets/%s-packages" % name):
 		if pattern.startswith("@regex@:"):
-			steps += InsertEbuilds(from_tree, select=re.compile(pattern[8:]), skip=None, replace=True)
+			if pkglist:
+				steps += [ InsertEbuilds(from_tree, select=pkglist, skip=None, replace=True) ]
+			pkglist = []
+			steps += [ InsertEbuilds(from_tree, select=re.compile(pattern[8:]), skip=None, replace=True) ]
 		elif pattern.startswith("@eclass@:"):
-			steps += InsertEclasses(from_tree, select=re.compile(pattern[9:]), skip=None, replace=True)
+			if pkglist:
+				steps += [ InsertEbuilds(from_tree, select=pkglist, skip=None, replace=True) ]
+			pkglist = []
+			steps += [ InsertEclasses(from_tree, select=re.compile(pattern[9:])) ]
 		else:
-			steps += InsertEbuilds(from_tree, select=[ pattern ], skip=None, replace=True)
+			pkglist.append(pattern)
+	if pkglist:
+		steps += [ InsertEbuilds(from_tree, select=pkglist, skip=None, replace=True) ]
 	return steps
-
-
-
 
 def qa_build(host,build,arch_desc,subarch,head,target):
 	success = False

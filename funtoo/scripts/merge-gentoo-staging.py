@@ -14,7 +14,7 @@ shard_steps = {}
 
 for s in shard_names:
 	shards[s] = GitTree("gentoo-%s-shard" % s, "master", "repos@localhost:gentoo-%s-shard.git" % s, root="/var/git/dest-trees/gentoo-%s-shard" % s, pull=False)
-	shard_steps[s] = generateShardSteps(s)
+	shard_steps[s] = generateShardSteps(s, gentoo_staging_w)
 
 # This function updates the gentoo-staging tree with all the latest gentoo updates:
 
