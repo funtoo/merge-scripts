@@ -219,7 +219,10 @@ if "old-gnome" not in flags:
 
 # Steps related to eclass copying:
 
-eclass_steps = []
+eclass_steps = [
+		SyncDir(funtoo_overlays["funtoo_deadbeef"].root,"eclass"),
+
+]
 if "old-gnome" in flags:
 	eclass_steps += [
 		SyncDir(funtoo_overlays["funtoo_gnome"].root,"eclass"),
