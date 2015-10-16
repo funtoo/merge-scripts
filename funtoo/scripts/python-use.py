@@ -21,6 +21,6 @@ for pkg in p.cp_all():
         imps = outp[1].split()
         if "python3_3" not in imps:
             if "python2_7" in imps:
-                print("%s python2_7" % pkg)
+                print("%s python_single_target_python2_7" % pkg)
             else:
-                print("%s %s" % (pkg, imps[0]))
+                print("%s python_single_target_%s python_targets_%s" % (pkg, imps[0], imps[0]))
