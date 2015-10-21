@@ -6,6 +6,9 @@
 # While shadow could be in here, it breaks stage 1 and stage 2 building for the
 # releases.  PLEASE DO NOT ENABLE THIS UNLESS YOU HAVE THOROUGHLY TESTED IT!
 
+# adding ncurses-6 to work around a Portage bug in calculating dependencies
+# https://bugs.gentoo.org/show_bug.cgi?id=563034
+=sys-libs/ncurses-6*
 app-arch/bzip2
 app-arch/gzip
 app-arch/tar
