@@ -251,7 +251,8 @@ master_steps = [
 	InsertEbuilds(shards["core"], select="all", skip=None, replace=True),
 	InsertEclasses(shards["core"], select=re.compile(".*\.eclass")),
 	InsertEbuilds(funtoo_overlays["funtoo_toolchain"], select="all", skip=None, replace=True, merge=False),
-	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
+	InsertEbuilds(funtoo_overlay, select="all", skip=["sys-fs/eudev"], replace=True),
+	InsertEbuilds(funtoo_overlay, select=["sys-fs/eudev"], skip=None, replace=True, merge=True),
 	# for now, unconditionally use progress eclasses for compatibility.
 	SyncDir(funtoo_overlays["progress_overlay"].root, "eclass"),
 	SyncDir(funtoo_overlay.root, "eclass"),
