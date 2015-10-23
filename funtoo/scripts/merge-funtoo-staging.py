@@ -250,6 +250,7 @@ master_steps = [
 	InsertEclasses(shards["kde"], select=re.compile(".*\.eclass")),
 	InsertEbuilds(shards["core"], select="all", skip=None, replace=True),
 	InsertEclasses(shards["core"], select=re.compile(".*\.eclass")),
+	InsertEbuilds(shards["core"], select=["sys-fs/eudev"], skip=None, replace=True, branch="059e0dbad40402174ce84ed69a3ee4f8d2d5fe41"),
 	InsertEbuilds(funtoo_overlays["funtoo_toolchain"], select="all", skip=None, replace=True, merge=False),
 	InsertEbuilds(funtoo_overlay, select="all", skip=["sys-fs/eudev"], replace=True),
 	InsertEbuilds(funtoo_overlay, select=["sys-fs/eudev"], skip=None, replace=True, merge=True),
