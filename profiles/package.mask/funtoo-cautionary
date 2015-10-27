@@ -46,8 +46,6 @@ sys-apps/makedev
 # Cautionary mask dev-lang/swig-3.0.3, failures reported.
 >dev-lang/swig-3.0.2
 
-# Protect against beta OpenRC
->=sys-apps/openrc-0.12.5
 # QA-289
 >=dev-db/mysql-init-scripts-2.1_alpha4
 
