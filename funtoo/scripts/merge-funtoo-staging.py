@@ -54,7 +54,7 @@ funtoo_overlays = {
 	"funtoo_deadbeef" : GitTree("funtoo-deadbeef", "master", "https://github.com/damex/funtoo-deadbeef.git", pull=True),
 	"funtoo_gambas" : GitTree("funtoo-gambas", "master", "https://github.com/damex/funtoo-gambas.git", pull=True),
 	"funtoo_wmfs" : GitTree("funtoo-wmfs", "master", "https://github.com/damex/funtoo-wmfs.git", pull=True),
-	"funtoo-tengine" : GitTree("funtoo-tengine-new", "master", "repos@localhost:funtoo-tengine.git", pull=True),
+	"funtoo-tengine" : GitTree("funtoo-tengine-new", "master", "repos@localhost:ports/funtoo-tengine.git", pull=True),
 }
 
 # These are other overlays that we merge into the Funtoo tree. However, we just pull in the most recent versions
