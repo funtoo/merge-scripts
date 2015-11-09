@@ -26,8 +26,8 @@ sys-apps/makedev
 #FL-2265: mask gnutls-3.410. Broken ebuild
 =net-libs/gnutls-3.4.0*
 
-#FL-2161: mask samba-4, until it's deps get better shape
->net-fs/samba-3.6.25
+#FL-2936, FL-2161: mask samba-4.1
+=net-fs/samba-4.1*
 
 # FL-1703: these versions of crossdev is a forkbomb(s)
 >=sys-devel/crossdev-20140917
