@@ -31,7 +31,7 @@ SLOT="1.8"
 KEYWORDS="*"
 IUSE="alsa +awt cups +fontconfig javafx jce nsplugin pax_kernel selinux"
 
-RESTRICT="mirror strip"
+RESTRICT="mirror preserve-libs strip"
 QA_PREBUILT="*"
 
 RDEPEND="!x64-macos? (

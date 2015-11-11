@@ -4,9 +4,6 @@ EAPI="5"
 
 inherit eutils java-vm-2 prefix versionator
 
-JDK_URI="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html"
-JCE_URI="http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html"
-
 if [[ "$(get_version_component_range 4)" == 0 ]] ; then
 	S_PV="$(get_version_component_range 1-3)"
 else
@@ -23,7 +20,7 @@ AT_x86="jdk-${MY_PV}-linux-i586.tar.gz"
 
 DEMOS_amd64="jdk-${MY_PV}-linux-x64-demos.tar.gz"
 #DEMOS_arm="jdk-${MY_PV}-linux-arm-vfp-hflt-demos.tar.gz"
-DEMOS_arm="jdk-8u33-linux-arm-vfp-hflt-demos.tar.gz"
+DEMOS_arm="jdk-8u65-linux-arm32-vfp-hflt-demos.tar.gz"
 DEMOS_x86="jdk-${MY_PV}-linux-i586-demos.tar.gz"
 
 JCE_DIR="UnlimitedJCEPolicyJDK8"
@@ -41,30 +38,46 @@ SRC_URI="
 LICENSE="Oracle-BCLA-JavaSE"
 SLOT="1.8"
 KEYWORDS="*"
-IUSE="+X alsa aqua derby doc +fontconfig jce nsplugin pax_kernel selinux source"
+IUSE="alsa +awt cups derby doc examples +fontconfig javafx jce nsplugin pax_kernel selinux source"
+REQUIRED_USE="javafx? ( alsa fontconfig )"
 
-RESTRICT="mirror strip"
+RESTRICT="mirror preserve-libs strip"
 QA_PREBUILT="*"
 
-COMMON_DEP="
-	selinux? ( sec-policy/selinux-java )"
-RDEPEND="${COMMON_DEP}
-	X? ( !aqua? (
-		x11-libs/libX11:0
-		x11-libs/libXext:0
-		x11-libs/libXi:0
-		x11-libs/libXrender:0
-		x11-libs/libXtst:0
-	) )
-	alsa? ( media-libs/alsa-lib:0 )
+RDEPEND="!x64-macos? (
+		awt? (
+			x11-libs/libX11
+			x11-libs/libXext
+			x11-libs/libXi
+			x11-libs/libXrender
+		)
+		javafx? (
+			dev-libs/glib:2
+			dev-libs/libxml2:2
+			dev-libs/libxslt
+			media-libs/freetype:2
+			x11-libs/cairo
+			x11-libs/gtk+:2
+			x11-libs/libX11
+			x11-libs/libXtst
+			x11-libs/libXxf86vm
+			x11-libs/pango
+			virtual/opengl
+		)
+	)
+	alsa? ( media-libs/alsa-lib )
+	cups? ( net-print/cups )
 	doc? ( dev-java/java-sdk-docs:${SLOT} )
 	fontconfig? ( media-libs/fontconfig:1.0 )
-	!prefix? ( sys-libs/glibc:* )"
-# A PaX header isn't created by scanelf, so depend on paxctl to avoid fallback
-# marking. See bug #427642.
-DEPEND="${COMMON_DEP}
-	jce? ( app-arch/unzip:0 )
-	pax_kernel? ( sys-apps/paxctl:0 )"
+	!prefix? ( sys-libs/glibc:* )
+	selinux? ( sec-policy/selinux-java )"
+
+# A PaX header isn't created by scanelf so depend on paxctl to avoid
+# fallback marking. See bug #427642.
+DEPEND="app-arch/zip
+	jce? ( app-arch/unzip )
+	examples? ( x64-macos? ( app-arch/unzip ) )
+	pax_kernel? ( sys-apps/paxctl )"
 
 S="${WORKDIR}/jdk"
 
@@ -91,41 +104,68 @@ src_prepare() {
 	if use jce ; then
 		mv "${WORKDIR}"/${JCE_DIR} "${S}"/jre/lib/security/ || die
 	fi
+
+	if [[ -n ${JAVA_PKG_STRICT} ]] ; then
+		# Mark this binary early to run it now.
+		pax-mark Cm ./bin/javap
+
+		eqawarn "Ensure that this only calls trackJavaUsage(). If not, see bug #559936."
+		eqawarn
+		eqawarn "$(./bin/javap -J-Duser.home=${T} -c sun.misc.PostVMInitHook || die)"
+	fi
+
+	# Remove the hook that calls Oracle's evil usage tracker. Not just
+	# because it's evil but because it breaks the sandbox during builds
+	# and we can't find any other feasible way to disable it or make it
+	# write somewhere else. See bug #559936 for details.
+	zip -d jre/lib/rt.jar sun/misc/PostVMInitHook.class || die
 }
 
 src_install() {
 	local dest="/opt/${P}"
-	local ddest="${ED}${dest}"
+	local ddest="${ED}${dest#/}"
 
 	# Create files used as storage for system preferences.
 	mkdir jre/.systemPrefs || die
 	touch jre/.systemPrefs/.system.lock || die
 	touch jre/.systemPrefs/.systemRootModFile || die
 
-	# We should not need the ancient plugin for Firefox 2 anymore, plus it has
-	# writable executable segments
-	if use x86 ; then
-		rm -vf {,jre/}lib/i386/libjavaplugin_oji.so \
-			{,jre/}lib/i386/libjavaplugin_nscp*.so
-		rm -vrf jre/plugin/i386
+	if ! use alsa ; then
+		rm -vf jre/lib/*/libjsoundalsa.* || die
 	fi
 
-	# Without nsplugin flag, also remove the new plugin
-	local arch=${ARCH};
-	use x86 && arch=i386;
-	if ! use nsplugin ; then
-		rm -vf {,jre/}lib/${arch}/libnpjp2.so \
-			{,jre/}lib/${arch}/libjavaplugin_jni.so
+	if ! use awt ; then
+		rm -vf {,jre/}lib/*/lib*{[jx]awt,splashscreen}* \
+		   {,jre/}bin/{javaws,policytool} \
+		   bin/appletviewer || die
 	fi
+
+	if ! use javafx ; then
+		rm -vf jre/lib/*/lib*{decora,fx,glass,prism}* \
+		   jre/lib/*/libgstreamer-lite.* {,jre/}lib/{,ext/}*fx* \
+		   bin/*javafx* || die
+	fi
+
+	if ! use nsplugin ; then
+		rm -vf jre/lib/*/libnpjp2.* || die
+	else
+		local nsplugin=$(echo jre/lib/*/libnpjp2.*)
+	fi
+
+	# Even though plugins linked against multiple ffmpeg versions are
+	# provided, they generally lag behind what Gentoo has available.
+	rm -vf jre/lib/*/libavplugin* || die
 
 	dodoc COPYRIGHT
-	dohtml README.html
-
 	dodir "${dest}"
 	cp -pPR bin include jre lib man "${ddest}" || die
 
 	if use derby ; then
 		cp -pPR	db "${ddest}" || die
+	fi
+
+	if use examples && has ${ARCH} "${DEMOS_AVAILABLE[@]}" ; then
+		cp -pPR demo sample "${ddest}" || die
 	fi
 
 	if use jce ; then
@@ -141,14 +181,18 @@ src_install() {
 	fi
 
 	if use nsplugin ; then
-		install_mozilla_plugin "${dest}"/jre/lib/${arch}/libnpjp2.so
+		install_mozilla_plugin "${dest}/${nsplugin}"
 	fi
 
 	if use source ; then
-		cp -p src.zip "${ddest}" || die
+		cp -v src.zip "${ddest}" || die
+
+		if use javafx ; then
+			cp -v javafx-src.zip "${ddest}" || die
+		fi
 	fi
 
-	if use !x86-macos && use !x64-macos ; then
+	if [[ -d jre/lib/desktop ]] ; then
 		# Install desktop file for the Java Control Panel.
 		# Using ${PN}-${SLOT} to prevent file collision with jre and or
 		# other slots.  make_desktop_entry can't be used as ${P} would
@@ -199,7 +243,7 @@ src_install() {
 	# Remove empty dirs we might have copied.
 	find "${D}" -type d -empty -exec rmdir -v {} + || die
 
-	if use x86-macos || use x64-macos ; then
+	if use x64-macos ; then
 		# Fix miscellaneous install_name issues.
 		pushd "${ddest}"/jre/lib > /dev/null || die
 		local lib needed nlib npath
@@ -215,7 +259,8 @@ src_install() {
 		done
 		popd > /dev/null
 
-		# TODO: This reads "jdk1{5,6}", what about "jdk1{7,8}"?
+		# This is still jdk1{5,6}, even on Java 8, so don't change it
+		# until you know different.
 		for nlib in jdk1{5,6} ; do
 			install_name_tool -change \
 				/usr/lib/libgcc_s_ppc64.1.dylib \
