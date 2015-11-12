@@ -35,6 +35,9 @@ def generateShardSteps(name, from_tree, branch="master"):
 			pkglist = []
 			steps += [ InsertEbuilds(from_tree, select=re.compile(pattern[8:]), skip=None, replace=True) ]
 		elif pattern.startswith("@eclass@:"):
+			# The "accumulator" pattern:
+			# we have buffered this pkglist -- add what we have accumulated so far, as a single InsertEbuilds call
+			# (this way, we avoid adding tons of InsertEbuilds calls.
 			if pkglist:
 				steps += [ InsertEbuilds(from_tree, select=pkglist, skip=None, replace=True) ]
 			pkglist = []
