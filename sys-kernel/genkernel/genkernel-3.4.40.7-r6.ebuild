@@ -130,7 +130,7 @@ src_install() {
 		"${DISTDIR}"/e2fsprogs-${VERSION_E2FSPROGS}.tar.gz \
 		"${DISTDIR}"/busybox-${VERSION_BUSYBOX}.tar.bz2 \
 		"${DISTDIR}"/fuse-${VERSION_FUSE}.tar.gz \
-		"${DISTDIR}"/unionfs-fuse-${VERSION_UNIONFS_FUSE}.tar.gz \
+		"${DISTDIR}"/unionfs-fuse-${VERSION_UNIONFS_FUSE}.tar.bz2 \
 		"${DISTDIR}"/gnupg-${VERSION_GPG}.tar.bz2 \
 		"${DISTDIR}"/open-iscsi-${VERSION_ISCSI}.tar.gz \
 		"${D}"/var/cache/genkernel/src || die "Copying distfiles..."
