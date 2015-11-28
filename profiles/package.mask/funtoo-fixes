@@ -1,3 +1,14 @@
+# mask dev-libs/libsigc++-2.6 release. This version require -std=c++11 in numerous reverse deps, which will be broken otherwise
+# This lib update introduced with releasing of gnome-3.18, which is not tested for a building and runtime. Tracker: https://bugs.gentoo.org/show_bug.## cgi?id=566328
+>=dev-libs/libsigc++-2.4.2
+
+# above mask also need mask to newer cairomm
+>=dev-cpp/cairomm-1.10.1
+
+# mask newer appstream-glib release, which is part of gentoo-x86 gnome-3.18 release, introduced multiple breakages.
+# Rationale of mask is to avoid pulling newer libsoup and glib.
+>=dev-libs/appstream-glib-0.5.1
+
 # Requires masked sys-auth/consolekit 0.9.x (see FL-2795)
 >=x11-misc/sddm-0.12.0
 

@@ -26,12 +26,14 @@ app-text/gnome-doc-utils
 app-text/libgxps
 app-text/yelp-tools
 dev-cpp/atkmm
+dev-cpp/cairomm
 dev-cpp/glibmm
 dev-cpp/gtkmm
 dev-cpp/mm-common
 dev-cpp/pangomm
 dev-lang/vala
 dev-libs/atk
+dev-libs/appstream-glib
 dev-libs/folks
 dev-libs/gdl
 dev-libs/gjs
@@ -57,6 +59,7 @@ dev-python/pyatspi
 dev-python/pygobject
 dev-python/pygtk
 dev-util/anjuta
+dev-util/appdata-tools
 dev-util/devhelp
 dev-util/gdbus-codegen
 dev-util/glade
