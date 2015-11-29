@@ -4,11 +4,6 @@ import os
 import sys
 from merge_utils import *
 
-flags = {
-	"old-gnome" : True
-}
-
-del flags["old-gnome"]
 xml_out = etree.Element("packages")
 funtoo_staging_w = GitTree("funtoo-staging", "master", "repos@localhost:ports/funtoo-staging.git", root="/var/git/dest-trees/funtoo-staging", pull=False, xml_out=xml_out)
 #funtoo_staging_w = GitTree("funtoo-staging-unfork", "master", "repos@localhost:ports/funtoo-staging-unfork.git", root="/var/git/dest-trees/funtoo-staging-unfork", pull=False, xml_out=None)
@@ -53,7 +48,6 @@ shards = {
 funtoo_overlays = {
 	"funtoo_media" : GitTree("funtoo-media", "master", "repos@localhost:funtoo-media.git", pull=True),
 	"plex_overlay" : GitTree("funtoo-plex", "master", "https://github.com/Ghent/funtoo-plex.git", pull=True),
-	"funtoo_gnome" : GitTree("funtoo-gnome", "master", "repos@localhost:funtoo-gnome-overlay.git", pull=True),
 	"gnome_fixups" : GitTree("gnome-3.16-fixups", "master", "repos@localhost:ports/gnome-3.16-fixups.git", pull=True),
 	"funtoo_toolchain" : GitTree("funtoo-toolchain", "master", "repos@localhost:funtoo-toolchain-overlay.git", pull=True),
 	"ldap_overlay" : GitTree("funtoo-ldap", "master", "repos@localhost:funtoo-ldap-overlay.git", pull=True),
@@ -142,13 +136,6 @@ profile_steps = [
 		"profiles/package.mask":"profiles/package.mask/wmfs-mask"
 	}) ]
 
-if "old-gnome" in flags:
-	profile_steps += [ 
-		SyncFiles(funtoo_overlays["funtoo_gnome"].root, {
-			"profiles/package.mask":"profiles/funtoo/1.0/linux-gnu/mix-ins/gnome/package.mask"
-		}),
-	]
-
 profile_steps += [
 	SyncFiles(funtoo_overlays["funtoo_toolchain"].root, {
 		"profiles/package.mask/funtoo-toolchain":"profiles/funtoo/1.0/linux-gnu/build/current/package.mask/funtoo-toolchain",
@@ -191,21 +178,10 @@ ebuild_modifications = [
 	InsertEbuilds(funtoo_overlays["funtoo-tengine"], select=["www-plugins/*", "www-servers/*"], skip=None, replace=True),
 ]
 
-if "old-gnome" in flags:
-	ebuild_modifications += [
-		InsertEbuilds(funtoo_overlays["funtoo_gnome"], select="all", skip=None, replace=True, merge=["dev-python/pyatspi", "dev-python/pygobject", "dev-util/gdbus-codegen", "x11-libs/vte"]),
-	]
-
 ebuild_modifications += [
 	InsertEbuilds(funtoo_overlays["funtoo_media"], select="all", skip=None, replace=True),
 	InsertEbuilds(funtoo_overlays["ldap_overlay"], select="all", skip=None, replace=True),
 ]
-
-if "old-gnome" not in flags:
-	ebuild_modifications += [
-		InsertEbuilds(shards["gnome"], select="all", skip=None, replace=True),
-		InsertEbuilds(funtoo_overlays["gnome_fixups"], select="all", skip=None, replace=True)
-	]
 
 # Steps related to eclass copying:
 
@@ -213,11 +189,6 @@ eclass_steps = [
 		SyncDir(funtoo_overlays["funtoo_deadbeef"].root,"eclass"),
 
 ]
-if "old-gnome" in flags:
-	eclass_steps += [
-		SyncDir(funtoo_overlays["funtoo_gnome"].root,"eclass"),
-]
-
 
 # General tree preparation steps -- finishing touches. This is where you should put steps that require all ebuilds
 # from all trees to all be inserted (like AutoGlobMask calls) as well as misc. copying of files like licenses and
@@ -233,6 +204,8 @@ master_steps = [
 	InsertEbuilds(shards["x11"], select="all", skip=None, replace=True),
 	InsertEbuilds(shards["kde"], select="all", skip=None, replace=True),
 	InsertEclasses(shards["kde"], select=re.compile(".*\.eclass")),
+	InsertEbuilds(shards["gnome"], select="all", skip=None, replace=True),
+	InsertEbuilds(funtoo_overlays["gnome_fixups"], select="all", skip=None, replace=True),
 	InsertEbuilds(shards["core"], select="all", skip=None, replace=True),
 	InsertEclasses(shards["core"], select=re.compile(".*\.eclass")),
 	InsertEbuilds(funtoo_overlays["funtoo_toolchain"], select="all", skip=None, replace=True, merge=False),
