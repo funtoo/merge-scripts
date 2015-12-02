@@ -362,8 +362,8 @@ filename.Sazanami_Gothic=@GENTOO_PORTAGE_EPREFIX@/usr/share/fonts/sazanami/sazan
 filename.Sazanami_Mincho=@GENTOO_PORTAGE_EPREFIX@/usr/share/fonts/sazanami/sazanami-mincho.ttf
 
 # media-fonts/arphicfonts
-filename.AR_PL_ShanHeiSun_Uni=@GENTOO_PORTAGE_EPREFIX@/usr/share/fonts/uming.ttc
-filename.AR_PL_ZenKai_Uni=@GENTOO_PORTAGE_EPREFIX@/usr/share/fonts/ukai.ttc
+filename.AR_PL_ShanHeiSun_Uni=@GENTOO_PORTAGE_EPREFIX@/usr/share/fonts/arphicfonts/uming.ttc
+filename.AR_PL_ZenKai_Uni=@GENTOO_PORTAGE_EPREFIX@/usr/share/fonts/arphicfonts/ukai.ttc
 
 # media-fonts/baekmuk-fonts
 filename.Baekmuk_Gulim=@GENTOO_PORTAGE_EPREFIX@/usr/share/fonts/baekmuk-fonts/gulim.ttf
