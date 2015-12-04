@@ -16,8 +16,8 @@ app-arch/deltarpm python_single_target_python2_7
 app-arch/rpm python_single_target_python2_7
 app-arch/threadzip python_single_target_python2_7
 app-arch/unrpa python_single_target_python2_7
-=app-backup/backintime-1.0.40 python_single_target_python2_7
 =app-backup/backintime-1.0.36-r2 python_single_target_python2_7
+=app-backup/backintime-1.0.40 python_single_target_python2_7
 =app-backup/backintime-1.0.24-r2 python_single_target_python2_7
 app-backup/bacula python_single_target_python2_7
 app-backup/bareos python_single_target_python2_7
@@ -78,11 +78,12 @@ app-office/gnucash python_single_target_python2_7
 app-office/gnumeric python_single_target_python2_7
 app-office/gtimelog python_single_target_python2_7
 app-office/hamster-time-tracker python_single_target_python2_7
-=app-office/libreoffice-5.0.3.2 python_single_target_python2_7
+=app-office/libreoffice-4.4.9999 python_single_target_python2_7
 =app-office/libreoffice-5.0.9999 python_single_target_python2_7
 =app-office/libreoffice-9999 python_single_target_python3_4 python_targets_python3_4
 =app-office/libreoffice-4.4.6.3 python_single_target_python2_7
-=app-office/libreoffice-4.4.9999 python_single_target_python2_7
+=app-office/libreoffice-5.0.3.2 python_single_target_python2_7
+=app-office/libreoffice-bin-5.0.3.2 python_single_target_python2_7
 app-office/lyx python_single_target_python2_7
 app-office/openerp python_single_target_python2_7
 app-office/planner python_single_target_python2_7
@@ -90,6 +91,7 @@ app-office/pybliographer python_single_target_python2_7
 app-office/scribus python_single_target_python2_7
 app-portage/portpeek python_single_target_python2_7
 app-text/asciidoc python_single_target_python2_7
+app-text/calibre python_single_target_python2_7
 app-text/chm2pdf python_single_target_python2_7
 app-text/gtranslator python_single_target_python2_7
 app-text/kpaste python_single_target_python2_7
@@ -217,7 +219,6 @@ games-strategy/gwp python_single_target_python2_7
 games-strategy/lightyears python_single_target_python2_7
 gnome-base/libglade python_single_target_python2_7
 gnome-extra/avant-window-navigator python_single_target_python2_7
-gnome-extra/cinnamon python_single_target_python2_7
 gnome-extra/cinnamon-desktop python_single_target_python2_7
 gnome-extra/cinnamon-screensaver python_single_target_python2_7
 gnome-extra/gdesklets-core python_single_target_python2_7
@@ -261,15 +262,17 @@ media-gfx/zbar python_single_target_python2_7
 media-libs/alsa-lib python_single_target_python2_7
 media-libs/avidemux-plugins python_single_target_python2_7
 media-libs/hamlib python_single_target_python2_7
-media-libs/lensfun python_single_target_python2_7
+=media-libs/lensfun-0.3.0 python_single_target_python2_7
+=media-libs/lensfun-0.3.1 python_single_target_python2_7
 media-libs/libcaca python_single_target_python2_7
 media-libs/libgpod python_single_target_python2_7
 media-libs/libiptcdata python_single_target_python2_7
 media-libs/lvtk python_single_target_python2_7
 media-libs/mlt python_single_target_python2_7
 media-libs/opencolorio python_single_target_python2_7
-=media-libs/opencv-2.4.9 python_single_target_python2_7
 =media-libs/opencv-2.4.10 python_single_target_python2_7
+=media-libs/opencv-2.4.11 python_single_target_python2_7
+=media-libs/opencv-2.4.9 python_single_target_python2_7
 media-libs/openimageio python_single_target_python2_7
 media-libs/vigra python_single_target_python2_7
 media-plugins/mythplugins python_single_target_python2_7
@@ -320,6 +323,7 @@ net-libs/ldns python_single_target_python2_7
 net-libs/libgmail python_single_target_python2_7
 net-libs/nfqueue-bindings python_single_target_python2_7
 net-libs/nodejs python_single_target_python2_7
+net-libs/telepathy-glib python_single_target_python2_7
 net-mail/automx python_single_target_python2_7
 net-mail/fetchmail python_single_target_python2_7
 net-mail/mailman python_single_target_python2_7
@@ -337,7 +341,12 @@ net-misc/pssh python_single_target_python2_7
 net-misc/pytvshows python_single_target_python2_7
 net-misc/rabbitmq-server python_single_target_python2_7
 net-misc/ris-linux python_single_target_python2_7
-net-misc/spice-gtk python_single_target_python2_7
+=net-misc/spice-gtk-0.29 python_single_target_python2_7
+=net-misc/spice-gtk-0.28 python_single_target_python2_7
+=net-misc/spice-gtk-0.21 python_single_target_python2_7
+=net-misc/spice-gtk-0.25-r1 python_single_target_python2_7
+=net-misc/spice-gtk-0.20-r1 python_single_target_python2_7
+=net-misc/spice-gtk-0.30-r1 python_single_target_python2_7
 net-misc/vde python_single_target_python2_7
 net-nntp/inn python_single_target_python2_7
 net-p2p/deluge python_single_target_python2_7
