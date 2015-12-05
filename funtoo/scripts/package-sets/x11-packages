@@ -1,6 +1,7 @@
 media-fonts/*
 media-libs/*
 media-plugins/*
+media-sound/*
 media-video/*
 x11-apps/*
 x11-base/*
