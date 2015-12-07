@@ -13,7 +13,7 @@ kde-apps/kdebase-meta minimal -wallpapers
 kde-apps/kdebase-runtime-meta minimal
 kde-apps/kdesu -handbook
 kde-apps/knetattach -handbook
-kde-apps/konsole -handbook minimal
+kde-apps/konsole:4 -handbook minimal
 kde-base/baloo minimal
 kde-base/kde-meta -kdepim minimal
 media-gfx/exiv2 xmp
