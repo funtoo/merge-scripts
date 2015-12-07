@@ -1,0 +1,3 @@
+# Requires kde-base/kdm
+kde-misc/kdmthemegenerator
+
