@@ -10,11 +10,11 @@ kde-apps/kde4-l10n minimal
 kde-apps/kdeartwork-meta minimal
 kde-apps/kdeartwork-styles minimal
 kde-apps/kdebase-meta minimal -wallpapers
-kde-apps/kdebase-runtime-meta:4 minimal
+kde-apps/kdebase-runtime-meta minimal
 kde-apps/kdesu -handbook
 kde-apps/knetattach -handbook
-kde-apps/konsole:4 -handbook minimal
-kde-base/baloo:4 minimal
+kde-apps/konsole -handbook minimal
+kde-base/baloo minimal
 kde-base/kde-meta -kdepim minimal
 media-gfx/exiv2 xmp
 media-libs/harfbuzz -graphite
@@ -49,7 +49,7 @@ dev-python/PyQt5 gui network printsupport webkit
 
 # Required for dev-util/kdevelop with KDE Plasma 5
 <dev-util/kdevelop-4.8.0 -gdbui
->=dev-qt/qtdeclarative-4.8.7:4 webkit
+>=dev-qt/qtdeclarative-4.8.7 webkit
 
 # Required for kde-apps/kdenlive with KDE Plasma 5
 >=media-libs/mlt-0.9.8 -kde kdenlive melt -qt4
@@ -64,7 +64,7 @@ dev-python/PyQt5 gui network printsupport webkit
 net-p2p/ktorrent -plasma
 
 # Required by kde-plasma/polkit-kde-agent with KDE Plasma 5
-sys-auth/polkit-kde-agent:4 minimal
+sys-auth/polkit-kde-agent minimal
 
 # Prevent kde-apps/kdesu
 sys-block/gparted -kde
