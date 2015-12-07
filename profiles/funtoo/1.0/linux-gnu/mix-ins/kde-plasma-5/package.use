@@ -25,10 +25,8 @@ net-wireless/wpa_supplicant -qt4
 x11-libs/libxcb xkb
 
 # Other USE flag changes
-
-# Commented this USE, ark itself does not require zlib with ABI_X86="32". Oleg
-# Required for kde-apps/ark on x86-64bit
-#>=app-arch/xz-utils-5.2.2 abi_x86_32
+# Required for kde-apps/ark on x86-64bit, when lzma USE enabled (on by default)
+>=app-arch/xz-utils-5.2.2 abi_x86_32
 
 # Enable thumbnail support in the Dolphin file manager
 kde-apps/dolphin thumbnail
