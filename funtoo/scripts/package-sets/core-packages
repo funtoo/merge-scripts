@@ -44,7 +44,6 @@ app-shells/bash
 dev-db/sqlite
 dev-libs/elfutils
 dev-libs/expat
-dev-libs/glib
 dev-libs/gmp
 dev-libs/icu
 dev-libs/iniparser
