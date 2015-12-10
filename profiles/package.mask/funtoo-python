@@ -1,2 +1,2 @@
->dev-lang/python-2.7.10-r3
+>=dev-lang/python-2.7.11:2.7
 >=dev-lang/python-3.4
