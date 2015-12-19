@@ -54,7 +54,6 @@ funtoo_overlays = {
 	"funtoo_deadbeef" : GitTree("funtoo-deadbeef", "master", "https://github.com/damex/funtoo-deadbeef.git", pull=True),
 	"funtoo_gambas" : GitTree("funtoo-gambas", "master", "https://github.com/damex/funtoo-gambas.git", pull=True),
 	"funtoo_wmfs" : GitTree("funtoo-wmfs", "master", "https://github.com/damex/funtoo-wmfs.git", pull=True),
-	"funtoo-tengine" : GitTree("funtoo-tengine-new", "master", "repos@localhost:ports/funtoo-tengine.git", pull=True),
 }
 
 # These are other overlays that we merge into the Funtoo tree. However, we just pull in the most recent versions
@@ -175,7 +174,6 @@ ebuild_modifications = [
 	InsertEbuilds(other_overlays["sabayon_for_gentoo"], select=["app-admin/equo", "app-admin/matter", "sys-apps/entropy", "sys-apps/entropy-server", "sys-apps/entropy-client-services","app-admin/rigo", "sys-apps/rigo-daemon", "sys-apps/magneto-core", "x11-misc/magneto-gtk", "x11-misc/magneto-gtk3", "x11-themes/numix-icon-theme", "kde-misc/magneto-kde", "app-misc/magneto-loader", "media-video/kazam" ], replace=True),
 	InsertEbuilds(other_overlays["tripsix_overlay"], select=["media-sound/rakarrack"], skip=None, replace=True, merge=False),
 	InsertEbuilds(other_overlays["pinsard_overlay"], select=["x11-wm/qtile"], skip=None, replace=True, merge=False),
-	InsertEbuilds(funtoo_overlays["funtoo-tengine"], select=["www-plugins/*", "www-servers/*"], skip=None, replace=True),
 ]
 
 ebuild_modifications += [
