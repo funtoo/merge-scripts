@@ -78,11 +78,7 @@ app-office/gnucash python_single_target_python2_7
 app-office/gnumeric python_single_target_python2_7
 app-office/gtimelog python_single_target_python2_7
 app-office/hamster-time-tracker python_single_target_python2_7
-=app-office/libreoffice-4.4.9999 python_single_target_python2_7
-=app-office/libreoffice-5.0.9999 python_single_target_python2_7
-=app-office/libreoffice-9999 python_single_target_python3_4 python_targets_python3_4
-=app-office/libreoffice-4.4.6.3 python_single_target_python2_7
-=app-office/libreoffice-5.0.3.2 python_single_target_python2_7
+app-office/libreoffice python_single_target_python2_7
 =app-office/libreoffice-bin-5.0.3.2 python_single_target_python2_7
 app-office/lyx python_single_target_python2_7
 app-office/openerp python_single_target_python2_7
