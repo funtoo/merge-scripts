@@ -24,9 +24,9 @@ COMMON_URI="${DM_HOME}/dmraid-${VERSION_DMRAID}.tar.bz2
 		${BB_HOME}/busybox-${VERSION_BUSYBOX}.tar.bz2
 		http://www.open-iscsi.org/bits/open-iscsi-${VERSION_ISCSI}.tar.gz
 		mirror://sourceforge/e2fsprogs/e2fsprogs-${VERSION_E2FSPROGS}.tar.gz
-		mirror://sourceforge/fuse/fuse-${VERSION_FUSE}.tar.gz
+		mirror://funtoo/fuse-${VERSION_FUSE}.tar.gz
 		mirror://funtoo/unionfs-fuse-${VERSION_UNIONFS_FUSE}.tar.bz2
-		mirror://gnupg/gnupg/gnupg-${VERSION_GPG}.tar.bz2"
+		mirror://funtoo/gnupg-${VERSION_GPG}.tar.bz2"
 
 GITHUB_REPO="${PN}"
 GITHUB_USER="funtoo"
