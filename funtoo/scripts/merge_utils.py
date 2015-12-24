@@ -166,7 +166,7 @@ class ThirdPartyMirrors(MergeStep):
 	def run(self,tree):
 		orig = "%s/profiles/thirdpartymirrors" % tree.root
 		new = "%s/profiles/thirdpartymirrors.new" % tree.root
-		mirrors = "http://ftp.osuosl.org/pub/funtoo/distfiles http://build.funtoo.org/distfiles"
+		mirrors = "http://build.funtoo.org/distfiles http://ftp.osuosl.org/pub/funtoo/distfiles"
 		a = open(orig, "r")
 		b = open(new, "w")
 		for line in a:
