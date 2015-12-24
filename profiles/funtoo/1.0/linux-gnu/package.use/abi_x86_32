@@ -47,6 +47,7 @@ x11-libs/libXrandr abi_x86_32
 x11-libs/libXrender abi_x86_32
 x11-libs/libXxf86vm abi_x86_32
 x11-libs/libdrm abi_x86_32
+x11-libs/libpciaccess abi_x86_32
 x11-libs/libxcb abi_x86_32
 x11-libs/libxshmfence abi_x86_32
 x11-libs/pango abi_x86_32
