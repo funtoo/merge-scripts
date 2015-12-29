@@ -1,3 +1,6 @@
+# FL-3065: temporarily mask guile USE for graphviz. Need fixes in guile and in swig, which used for guile.
+media-gfx/graphviz guile
+
 # This 2 packages using Gpm_Wgetch, which is what ncurses upstream suggest to avoid.
 media-libs/aalib gpm
 www-client/w3m gpm
