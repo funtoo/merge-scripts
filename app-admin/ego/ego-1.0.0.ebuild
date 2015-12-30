@@ -28,7 +28,7 @@ src_install() {
 	doexe $S/modules/*
 	insinto /usr/share/ego/modules-info
 	doins $S/modules-info/*
-	dosbin $S/ego
+	dobin $S/ego
 	dosym ../share/ego/modules/profile.ego /usr/sbin/epro
 	doman ego.8 epro.8
 }
