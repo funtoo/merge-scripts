@@ -30,5 +30,5 @@ src_install() {
 	doins $S/modules-info/*
 	dobin $S/ego
 	dosym ../share/ego/modules/profile.ego /usr/sbin/epro
-	doman ego.8 epro.8
+	doman ego.1 epro.1
 }
