@@ -1,0 +1,6 @@
+# mask ruby 2.3 until targets also updated to ruby2.3. need tested. Also mask newer eselect ruby, which brings ruby:2.3 support.
+=app-eselect/eselect-ruby-2015*
+dev-lang/ruby:2.3
+
+
+
