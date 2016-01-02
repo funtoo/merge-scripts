@@ -1,4 +1,4 @@
-CFLAGS="-march=core-avx-i -O2 -pipe"
+CFLAGS="-march=ivybridge -O2 -pipe"
 CXXFLAGS="${CFLAGS}"
 FFLAGS="${CFLAGS}"
 FCFLAGS="${CFLAGS}"
