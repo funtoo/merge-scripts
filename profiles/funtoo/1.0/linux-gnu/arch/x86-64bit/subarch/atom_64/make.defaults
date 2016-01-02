@@ -1,4 +1,4 @@
-CFLAGS="-O2 -fomit-frame-pointer -march=atom -pipe"
+CFLAGS="-O2 -fomit-frame-pointer -march=bonnell -pipe"
 CXXFLAGS="${CFLAGS}"
 FFLAGS="${CFLAGS}"
 FCFLAGS="${CFLAGS}"
