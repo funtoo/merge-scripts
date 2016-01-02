@@ -168,7 +168,7 @@ ebuild_additions = [
 ebuild_modifications = [
 	InsertEbuilds(other_overlays["vmware_overlay"], select=[ "app-emulation/vmware-modules" ], skip=None, replace=True, merge=True),
 	InsertEbuilds(other_overlays["pantheon_overlay"], select=[ "x11-libs/granite", "x11-libs/bamf", "x11-themes/plank-theme-pantheon", "pantheon-base/plank", "x11-wm/gala"], skip=None, replace=True, merge=True),
-	InsertEbuilds(other_overlays["faustoo_overlay"], select=[ "app-office/projectlibre-bin" ], skip=None, replace=True),
+	InsertEbuilds(other_overlays["faustoo_overlay"], select="all", skip=None, replace=True, merge=True),
 	InsertEbuilds(other_overlays["foo_overlay"], select="all", skip=["sys-fs/mdev-bb", "sys-fs/mdev-like-a-boss", "media-sound/deadbeef", "media-video/handbrake"], replace=["app-shells/rssh"]),
 	InsertEbuilds(funtoo_overlays["plex_overlay"], select=[ "media-tv/plex-media-server" ], skip=None, replace=True),
 	InsertEbuilds(other_overlays["causes_overlay"], select=[ "media-sound/renoise", "media-sound/renoise-demo", "sys-fs/smdev", "x11-wm/dwm" ], skip=None, replace=True),
