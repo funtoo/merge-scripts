@@ -44,13 +44,13 @@ shards = {
 # gnome: 4d5473019d599229cb54edde7f5a7e48df46302f (Updated 5 Oct 2015)
 # x11: 440c7c69b55c02a3f29379fde20358c8e33a0128 (Updated 30 Dec 2015)
 # core: 4a25cdbce1e664f3472aa0f52ea6c528a26d3045 (Updated 8 Dec 2015)
-# funtoo-toolchain: 87337c590814e10a7b65109bcf008be65720fe7d (Updated 27 Oct 2015)
+# funtoo-toolchain: bec05831b09fb6b1ba64025601c4a4eda6592b97 (Updated 02 Jan 2016)
 
 funtoo_overlays = {
 	"funtoo_media" : GitTree("funtoo-media", "master", "repos@localhost:funtoo-media.git", pull=True),
 	"plex_overlay" : GitTree("funtoo-plex", "master", "https://github.com/Ghent/funtoo-plex.git", pull=True),
 	"gnome_fixups" : GitTree("gnome-3.16-fixups", "master", "repos@localhost:ports/gnome-3.16-fixups.git", pull=True),
-	"funtoo_toolchain" : GitTree("funtoo-toolchain", "87337c590814e10a7b65109bcf008be65720fe7d", "repos@localhost:funtoo-toolchain-overlay.git", pull=True),
+	"funtoo_toolchain" : GitTree("funtoo-toolchain", "bec05831b09fb6b1ba64025601c4a4eda6592b97", "repos@localhost:funtoo-toolchain-overlay.git", pull=True),
 	"ldap_overlay" : GitTree("funtoo-ldap", "master", "repos@localhost:funtoo-ldap-overlay.git", pull=True),
 	"deadbeef_overlay" : GitTree("deadbeef-overlay", "master", "https://github.com/damex/deadbeef-overlay.git", pull=True),
 	"gambas_overlay" : GitTree("gambas-overlay", "master", "https://github.com/damex/gambas-overlay.git", pull=True),
@@ -168,7 +168,7 @@ ebuild_additions = [
 ebuild_modifications = [
 	InsertEbuilds(other_overlays["vmware_overlay"], select=[ "app-emulation/vmware-modules" ], skip=None, replace=True, merge=True),
 	InsertEbuilds(other_overlays["pantheon_overlay"], select=[ "x11-libs/granite", "x11-libs/bamf", "x11-themes/plank-theme-pantheon", "pantheon-base/plank", "x11-wm/gala"], skip=None, replace=True, merge=True),
-	InsertEbuilds(other_overlays["faustoo_overlay"], select=[ "app-office/projectlibre-bin" ], skip=None, replace=True),
+	InsertEbuilds(other_overlays["faustoo_overlay"], select="all", skip=None, replace=True, merge=True),
 	InsertEbuilds(other_overlays["foo_overlay"], select="all", skip=["sys-fs/mdev-bb", "sys-fs/mdev-like-a-boss", "media-sound/deadbeef", "media-video/handbrake"], replace=["app-shells/rssh"]),
 	InsertEbuilds(funtoo_overlays["plex_overlay"], select=[ "media-tv/plex-media-server" ], skip=None, replace=True),
 	InsertEbuilds(other_overlays["causes_overlay"], select=[ "media-sound/renoise", "media-sound/renoise-demo", "sys-fs/smdev", "x11-wm/dwm" ], skip=None, replace=True),

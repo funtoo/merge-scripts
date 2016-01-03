@@ -1,4 +1,4 @@
-CFLAGS="-march=core-avx2 -O2 -pipe"
+CFLAGS="-march=haswell -O2 -pipe"
 CXXFLAGS="${CFLAGS}"
 FFLAGS="${CFLAGS}"
 FCFLAGS="${CFLAGS}"
