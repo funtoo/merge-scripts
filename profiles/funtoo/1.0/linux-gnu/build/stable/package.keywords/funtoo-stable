@@ -1,3 +1,6 @@
+# FL-3074: stabilize gd-2.1.1-r1 to resolve webp deps handle. (on x86 arches only)
+=media-libs/gd-2.1.1* amd64 x86
+
 # QA-80: stabilize libunistring-0.9.5
 =dev-libs/libunistring-0.9.5 amd6 x86
 
