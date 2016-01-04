@@ -22,7 +22,7 @@ BB_HOME="http://www.busybox.net/downloads"
 COMMON_URI="${DM_HOME}/dmraid-${VERSION_DMRAID}.tar.bz2
 		${DM_HOME}/old/dmraid-${VERSION_DMRAID}.tar.bz2
 		${BB_HOME}/busybox-${VERSION_BUSYBOX}.tar.bz2
-		http://www.open-iscsi.org/bits/open-iscsi-${VERSION_ISCSI}.tar.gz
+		mirror://funtoo/open-iscsi-${VERSION_ISCSI}.tar.gz
 		mirror://sourceforge/e2fsprogs/e2fsprogs-${VERSION_E2FSPROGS}.tar.gz
 		mirror://funtoo/fuse-${VERSION_FUSE}.tar.gz
 		mirror://funtoo/unionfs-fuse-${VERSION_UNIONFS_FUSE}.tar.bz2
