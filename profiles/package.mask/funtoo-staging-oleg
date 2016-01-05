@@ -1,3 +1,7 @@
+# temporarily mask dev-util/sysdig, that require, EAPI=6 libb64. It doesnt have reverse deps. Until FL-3010 covered.
+>=dev-util/sysdig-0.5
+
+
 # mask ruby 2.3 until targets also updated to ruby2.3. need tested. Also mask newer eselect ruby, which brings ruby:2.3 support.
 =app-eselect/eselect-ruby-2015*
 dev-lang/ruby:2.3
