@@ -48,10 +48,6 @@ sys-apps/makedev
 # QA-289
 >=dev-db/mysql-init-scripts-2.1_alpha4
 
-# mask latest nfs-utils, there is major change in netmount/nfsmount in latest openrc. nfs-utils using new scripts and has higher openrc dependency. This can be removed with openrc update
-
->net-fs/nfs-utils-1.3.0-r1
-
 # FL-1855, mask usbutils-008, until we sort udev failure.
 
 >sys-apps/usbutils-007
