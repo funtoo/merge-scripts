@@ -1,3 +1,6 @@
+# mask broken versions of libplist until https://bugs.gentoo.org/show_bug.cgi?id=548372 is fixed.
+>=app-pda/libplist-1.11-r2
+
 # temporarily mask dev-util/sysdig, that require, EAPI=6 libb64. It doesnt have reverse deps. Until FL-3010 covered.
 >=dev-util/sysdig-0.5
 
