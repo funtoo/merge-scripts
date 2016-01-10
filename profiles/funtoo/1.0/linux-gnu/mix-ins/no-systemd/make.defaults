@@ -2,4 +2,4 @@
 USE="-systemd"
 
 # Prevent portage from making directories and files here.
-INSTALL_MASK="/usr/lib/systemd/ /lib/systemd/"
+INSTALL_MASK="/etc/systemd/ /usr/lib/systemd/ /lib/systemd/"
