@@ -1,3 +1,6 @@
+# a mask of elfutils that needs new glibc. until FL-3054 is fixed.
+>=dev-libs/elfutils-0.165
+
 # mask broken versions of libplist until https://bugs.gentoo.org/show_bug.cgi?id=548372 is fixed.
 >=app-pda/libplist-1.11-r2
 
