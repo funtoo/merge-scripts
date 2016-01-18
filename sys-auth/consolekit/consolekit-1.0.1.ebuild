@@ -13,7 +13,7 @@ SRC_URI="https://github.com/${MY_PN}/${MY_PN}/releases/download/${PV}/${MY_P}.ta
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~alpha amd64 ~arm ~hppa ~ppc64 ~x86"
+KEYWORDS="*"
 IUSE="acl cgroups debug doc kernel_linux pam +policykit selinux test"
 
 COMMON_DEPEND=">=dev-libs/glib-2.40:2=[dbus]
@@ -101,6 +101,8 @@ src_install() {
 
 	exeinto /etc/X11/xinit/xinitrc.d
 	newexe "${FILESDIR}"/1.0.0-r1/90-consolekit-3 90-consolekit
+	exeinto /usr/lib/ConsoleKit/run-session.d
+	doexe "${FILESDIR}"/pam-foreground-compat.ck
 
 	prune_libtool_files --all # --all for pam_ck_connector.la
 
