@@ -1,2 +1,5 @@
+# unmask SDDM in plasma mix-in. it make no sense to mask SDDM for plasma
+x11-misc/sddm
+
 # FL-3081: add consolekit-1.0.0, required for powerdevil and SDDM. Unmask only in kde-plasma-5 mix-in.
 >=sys-auth/consolekit-1.0.0
