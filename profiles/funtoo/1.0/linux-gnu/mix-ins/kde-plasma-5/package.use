@@ -6,6 +6,7 @@ dev-libs/wayland abi_x86_32
 
 # USE flag changes required for a clean simultaneous merge of kde-base/kde-meta and kde-plasma/plasma-meta
 >=app-crypt/pinentry-0.9.6-r5 -qt4
+>=media-libs/mlt-0.9.8-r1 -kde -qt4
 dev-libs/libpcre pcre16
 dev-python/PyQt4 script sql webkit
 dev-qt/qtgui evdev mng
