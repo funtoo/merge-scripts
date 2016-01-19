@@ -1,2 +1,0 @@
-kde-base/kdebase-meta minimal
-kde-base/kde-meta minimal
