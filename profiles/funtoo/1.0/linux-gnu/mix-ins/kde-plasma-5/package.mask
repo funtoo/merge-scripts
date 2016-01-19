@@ -1,3 +1,6 @@
+# mask nvidia-dirvers versions causing various troubles for plasma
+>=x11-drivers/nvidia-drivers-360
+
 # Requires kde-base/kdm
 kde-misc/kdmthemegenerator
 
