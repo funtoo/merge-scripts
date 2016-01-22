@@ -1,3 +1,6 @@
+# FL-2562: genkernel update with swithing CACHE dir to /usr/share/genkernel. Also mirror all helper tarballs. masked for a testing
+=sys-kernel/genkernel-3.4.40.8
+
 # a mask of elfutils that needs new glibc. until FL-3054 is fixed.
 >=dev-libs/elfutils-0.165
 
