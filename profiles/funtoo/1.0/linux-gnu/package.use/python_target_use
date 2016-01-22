@@ -86,7 +86,7 @@ app-office/planner python_single_target_python2_7
 app-office/pybliographer python_single_target_python2_7
 app-office/scribus python_single_target_python2_7
 app-portage/portpeek python_single_target_python2_7
-app-text/asciidoc python_single_target_python2_7
+app-text/asciidoc python_single_target_python2_7 -python_single_target_pypy
 app-text/calibre python_single_target_python2_7
 app-text/chm2pdf python_single_target_python2_7
 app-text/gtranslator python_single_target_python2_7
@@ -258,8 +258,8 @@ media-gfx/zbar python_single_target_python2_7
 media-libs/alsa-lib python_single_target_python2_7
 media-libs/avidemux-plugins python_single_target_python2_7
 media-libs/hamlib python_single_target_python2_7
-=media-libs/lensfun-0.3.0 python_single_target_python2_7
 =media-libs/lensfun-0.3.1 python_single_target_python2_7
+=media-libs/lensfun-0.3.2 python_single_target_python3_3 python_targets_python3_3
 media-libs/libcaca python_single_target_python2_7
 media-libs/libgpod python_single_target_python2_7
 media-libs/libiptcdata python_single_target_python2_7
