@@ -1,0 +1,8 @@
+[DEFAULT]
+main-repo = gentoo
+
+[gentoo]
+location = /usr/portage
+sync-type = git
+sync-uri = https://github.com/funtoo/ports-2012.git
+auto-sync = yes

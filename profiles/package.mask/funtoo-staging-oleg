@@ -1,3 +1,6 @@
+# FL-3010: update to portage with EAPI=6 support. masked for testing
+=sys-apps/portage-2.4.1
+
 # a mask of elfutils that needs new glibc. until FL-3054 is fixed.
 >=dev-libs/elfutils-0.165
 
