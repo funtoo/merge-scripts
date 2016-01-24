@@ -1,3 +1,6 @@
+# staging mask to xf86-input-evdev-2.10, which giving file collision with xorg-server. This not happening with newer xorg. Can be removed with xorg unmasks
+=xf86-input-evdev-2.10*
+
 # FL-3010: update to portage with EAPI=6 support. masked for testing
 =sys-apps/portage-2.4.1
 
