@@ -63,13 +63,6 @@ media-sound/mpg123 cpu_flags_x86_mmx cpu_flags_x86_3dnow cpu_flags_x86_3dnowext
 x11-themes/polymer mmx sse2
 x11-themes/polymer cpu_flags_x86_mmx cpu_flags_x86_sse2
 
-
-# Apr 25th 2007: Alexis Ballier <aballier@gentoo.org>
-# Mask mmx for media-libs/mlt
-# assembler is not 64bits compliant (yet)
-media-libs/mlt mmx
-media-libs/mlt cpu_flags_x86_mmx
-
 # 8 Aug 2008: Alexis Ballier <aballier@gentoo.org>
 # x86 asm only, it won't be built on amd64 if mmx useflag is enabled but that
 # saves people from needlessly installing nasm
