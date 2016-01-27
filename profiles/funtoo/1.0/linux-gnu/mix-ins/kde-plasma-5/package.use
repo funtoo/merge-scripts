@@ -1,7 +1,7 @@
 # Funtoo Linux KDE Plasma 5 mix-in (see FL-2372, FL-2581)
 
 #FL-3052
-media-libs/mesa wayland
+media-libs/mesa egl wayland
 dev-libs/wayland abi_x86_32
 
 # USE flag changes required for a clean simultaneous merge of kde-base/kde-meta and kde-plasma/plasma-meta
