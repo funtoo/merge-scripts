@@ -1,2 +1,5 @@
+# FL-3102: mask buggy coreutils 8.25. breaks bashrc and TERM
+>=sys-apps/coreutils-8.25
+
 # mask of iptables-1.6 and newer. This is first release in 8 years after 1.4. it brings certain incompatible changes. FL-3093
 >=net-firewall/iptables-1.6
