@@ -1,4 +1,5 @@
 # staging mask to xf86-input-evdev-2.10, which giving file collision with xorg-server. This not happening with newer xorg. Can be removed with xorg unmasks
+>=x11-base/xorg-drivers-1.18
 =x11-drivers/xf86-input-evdev-2.10*
 
 # a mask of elfutils that needs new glibc. until FL-3054 is fixed.
