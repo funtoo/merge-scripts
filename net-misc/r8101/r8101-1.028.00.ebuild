@@ -11,7 +11,7 @@ LICENSE="GPL-2"
 SLOT="0"
 IUSE=""
 
-KEYWORDS=""
+KEYWORDS="amd64 x86"
 
 MODULE_NAMES="r8101(net:${S}/src)"
 BUILD_TARGETS="modules"
