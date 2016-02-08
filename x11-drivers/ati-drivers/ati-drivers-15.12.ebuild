@@ -76,6 +76,8 @@ S="${WORKDIR}"
 # QA Silencing
 QA_TEXTRELS="
 	usr/lib*/opengl/ati/lib/libGL.so.1.2
+	usr/lib*/opengl/ati/lib/libEGL.so
+	usr/lib*/opengl/ati/lib/libGLESv2.so
 	usr/lib*/libatiadlxx.so
 	usr/lib*/xorg/modules/glesx.so
 	usr/lib*/libaticaldd.so
@@ -85,8 +87,6 @@ QA_TEXTRELS="
 QA_EXECSTACK="
 	opt/bin/atiode
 	opt/bin/amdcccle
-	usr/lib*/opengl/ati/lib/libEGL.so
-	usr/lib*/opengl/ati/lib/libGLESv2.so
 	usr/lib*/opengl/ati/lib/libGL.so.1.2
 	usr/lib*/dri/fglrx_dri.so
 "
