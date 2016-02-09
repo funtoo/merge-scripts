@@ -1,3 +1,7 @@
+# updates to mate mix-in::
+app-crypt/pinentry gnome-keyring
+media-plugins/alsa-plugins pulseaudio
+
 media-libs/libcanberra gtk3 gtk
 mate-base/mate-settings-daemon libnotify
 mate-extra/mate-dialogs libnotify
