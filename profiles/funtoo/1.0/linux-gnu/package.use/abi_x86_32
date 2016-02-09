@@ -70,7 +70,7 @@ x11-proto/xf86vidmodeproto abi_x86_32
 x11-proto/xproto abi_x86_32
 
 # gnome
-
+dev-libs/elfutils abi_x86_32
 dev-libs/libcroco abi_x86_32
 gnome-base/librsvg abi_x86_32
 
