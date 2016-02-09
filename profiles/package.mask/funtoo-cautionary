@@ -1,9 +1,6 @@
 # FL-2524
 >=www-servers/nginx-1.9.7
 
-# mask a version of wxGTK-3.0 port of amule, not stable, RAM/CPU hog.
->=net-p2p/amule-2.3.1-r1
-
 # precautionary mask as newer versions appear to break GNOME 3 and other DE's
 >sys-auth/consolekit-0.4.6
 
