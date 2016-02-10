@@ -1,16 +1,1 @@
-# Mask versions of python that are under ongoing migration to PEP-3149
-# https://bugs.funtoo.org/browse/FL-3043
-# https://bugs.gentoo.org/show_bug.cgi?id=567924
-# also mask python-3.5 versions
-# mask python tools
-
 >=dev-lang/python-3.5
->=dev-lang/python-3.3.5-r3:3.3
->=dev-lang/python-3.4.3-r2:3.4
->=dev-lang/python-2.7.10-r2:2.7
->=dev-lang/python-exec-2.1
->=app-eselect/eselect-python-20151117
->=app-admin/python-updater-0.14
-
->=dev-lang/python-2.7.11:2.7
->=dev-lang/python-3.4

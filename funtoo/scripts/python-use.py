@@ -8,7 +8,7 @@ p = portage.db[portage.root]["porttree"].dbapi
 subdir = "output"
 
 def do_package_use_line(pkg, imps):
-    if "python3_3" not in imps:
+    if "python3_4" not in imps:
         if "python2_7" in imps:
             print("%s python_single_target_python2_7" % pkg)
         else:

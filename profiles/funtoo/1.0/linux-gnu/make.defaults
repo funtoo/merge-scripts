@@ -13,8 +13,8 @@ USE_EXPAND="CPU_FLAGS_X86 OSS_CARDS APACHE2_MODULES APACHE2_MPMS FOO2ZJS_DEVICES
 USE_EXPAND="${USE_EXPAND} NGINX_MODULES_EXTERNAL NGINX_MODULES_HTTP NGINX_MODULES_MAIL"
 
 # This value should be kept in synchronization with _PYTHON_GLOBALLY_NONDEFAULT_ABIS variable set in python.eclass by funtoo/scripts/merge.py.
-PYTHON_TARGETS="python2_7 python3_3"
-PYTHON_SINGLE_TARGET="python3_3"
+PYTHON_TARGETS="python2_7 python3_4"
+PYTHON_SINGLE_TARGET="python3_4"
 
 # This setting should be kept in sync with a >=dev-lang/php-5.x mask,
 # so that PHP_TARGETS always refers to the latest unmasked x.y version

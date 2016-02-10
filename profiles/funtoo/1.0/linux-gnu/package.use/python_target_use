@@ -16,9 +16,6 @@ app-arch/deltarpm python_single_target_python2_7
 app-arch/rpm python_single_target_python2_7
 app-arch/threadzip python_single_target_python2_7
 app-arch/unrpa python_single_target_python2_7
-=app-backup/backintime-1.0.36-r2 python_single_target_python2_7
-=app-backup/backintime-1.0.40 python_single_target_python2_7
-=app-backup/backintime-1.0.24-r2 python_single_target_python2_7
 app-backup/bacula python_single_target_python2_7
 app-backup/bareos python_single_target_python2_7
 app-cdr/burn-cd python_single_target_python2_7
@@ -33,7 +30,6 @@ app-crypt/ssh-multiadd python_single_target_python2_7
 app-dicts/opendict python_single_target_python2_7
 app-editors/bluefish python_single_target_python2_7
 app-editors/pluma python_single_target_python2_7
-app-emulation/cloud-init python_single_target_python2_7
 app-emulation/crossover-bin python_single_target_python2_7
 app-emulation/ganeti python_single_target_python2_7
 app-emulation/libvirt-glib python_single_target_python2_7
@@ -78,23 +74,24 @@ app-office/gnucash python_single_target_python2_7
 app-office/gnumeric python_single_target_python2_7
 app-office/gtimelog python_single_target_python2_7
 app-office/hamster-time-tracker python_single_target_python2_7
-app-office/libreoffice python_single_target_python2_7
-=app-office/libreoffice-bin-5.0.3.2 python_single_target_python2_7
 app-office/lyx python_single_target_python2_7
 app-office/openerp python_single_target_python2_7
 app-office/planner python_single_target_python2_7
 app-office/pybliographer python_single_target_python2_7
 app-office/scribus python_single_target_python2_7
+app-office/unoconv python_single_target_python2_7
+app-pda/libimobiledevice python_single_target_python2_7
+app-pda/libplist python_single_target_python2_7
 app-portage/portpeek python_single_target_python2_7
-app-text/asciidoc python_single_target_python2_7 -python_single_target_pypy
+app-text/asciidoc python_single_target_python2_7
 app-text/calibre python_single_target_python2_7
 app-text/chm2pdf python_single_target_python2_7
 app-text/gtranslator python_single_target_python2_7
 app-text/kpaste python_single_target_python2_7
 app-text/pdf2djvu python_single_target_python2_7
 app-text/pylize python_single_target_python2_7
+app-text/referencer python_single_target_python2_7
 app-text/sgmltools-lite python_single_target_python2_7
-app-text/sigil python_single_target_python3_4 python_targets_python3_4
 app-text/txt2tags python_single_target_python2_7
 app-text/xiphos python_single_target_python2_7
 app-vim/automatictexplugin python_single_target_python2_7
@@ -109,27 +106,25 @@ app-vim/youcompleteme python_single_target_python2_7
 dev-db/hyperdex python_single_target_python2_7
 dev-db/metakit python_single_target_python2_7
 dev-db/mysql-workbench python_single_target_python2_7
-dev-db/postgresql python_single_target_python2_7
 dev-games/cegui python_single_target_python2_7
 dev-games/tiled python_single_target_python2_7
-dev-java/antlr python_single_target_python2_7
 dev-libs/beecrypt python_single_target_python2_7
 dev-libs/btparser python_single_target_python2_7
 dev-libs/gobject-introspection python_single_target_python2_7
 dev-libs/hammer python_single_target_python2_7
 dev-libs/keybinder python_single_target_python2_7
 dev-libs/libappindicator python_single_target_python2_7
-dev-libs/libcec python_single_target_python2_7
 dev-libs/libdbusmenu python_single_target_python2_7
 dev-libs/libhid python_single_target_python2_7
-=dev-libs/libixion-0.9.1 python_single_target_python2_7
 =dev-libs/libixion-0.9.0 python_single_target_python2_7
+=dev-libs/libixion-0.9.1 python_single_target_python2_7
 dev-libs/libmacaroons python_single_target_python2_7
 dev-libs/libnatspec python_single_target_python2_7
 dev-libs/qrosspython python_single_target_python2_7
 dev-libs/redland-bindings python_single_target_python2_7
 dev-libs/syck python_single_target_python2_7
 dev-libs/xapian-bindings python_single_target_python2_7
+dev-libs/zziplib python_single_target_python2_7
 dev-python/nautilus-python python_single_target_python2_7
 dev-python/processing python_single_target_python2_7
 dev-python/promise python_single_target_python2_7
@@ -146,6 +141,7 @@ dev-python/rootpy python_single_target_python2_7
 dev-python/simplecv python_single_target_python2_7
 dev-python/storm python_single_target_python2_7
 dev-python/thunarx-python python_single_target_python2_7
+dev-python/visual python_single_target_python2_7
 dev-ruby/pygments_rb python_single_target_python2_7
 dev-util/aap python_single_target_python2_7
 dev-util/anjuta python_single_target_python2_7
@@ -172,7 +168,6 @@ dev-util/osc python_single_target_python2_7
 dev-util/perf python_single_target_python2_7
 dev-util/pida python_single_target_python2_7
 dev-util/qmtest python_single_target_python2_7
-=dev-util/scanmem-0.15.3 python_single_target_python2_7
 dev-util/systemtap python_single_target_python2_7
 dev-util/tailor python_single_target_python2_7
 dev-util/trace-cmd python_single_target_python2_7
@@ -208,7 +203,6 @@ games-rpg/adonthell python_single_target_python2_7
 games-rpg/dragonhunt python_single_target_python2_7
 games-rpg/wastesedge python_single_target_python2_7
 games-server/cyphesis python_single_target_python2_7
-games-simulation/qct python_single_target_python2_7
 games-simulation/singularity python_single_target_python2_7
 games-sports/ski python_single_target_python2_7
 games-strategy/gwp python_single_target_python2_7
@@ -237,11 +231,9 @@ kde-misc/magneto-kde python_single_target_python2_7
 kde-misc/semantik python_single_target_python2_7
 kde-misc/wicd-client-kde python_single_target_python2_7
 mail-client/claws-mail python_single_target_python2_7
-mail-mta/msmtp python_single_target_python2_7
 mate-base/mate-applets python_single_target_python2_7
 mate-extra/caja-dropbox python_single_target_python2_7
 media-gfx/asymptote python_single_target_python2_7
-media-gfx/blender python_single_target_python3_4 python_targets_python3_4
 media-gfx/comix python_single_target_python2_7
 media-gfx/cptutils python_single_target_python2_7
 media-gfx/drqueue python_single_target_python2_7
@@ -259,24 +251,23 @@ media-libs/alsa-lib python_single_target_python2_7
 media-libs/avidemux-plugins python_single_target_python2_7
 media-libs/hamlib python_single_target_python2_7
 =media-libs/lensfun-0.3.1 python_single_target_python2_7
-=media-libs/lensfun-0.3.2 python_single_target_python3_3 python_targets_python3_3
 media-libs/libcaca python_single_target_python2_7
 media-libs/libgpod python_single_target_python2_7
 media-libs/libiptcdata python_single_target_python2_7
 media-libs/lvtk python_single_target_python2_7
 media-libs/mlt python_single_target_python2_7
 media-libs/opencolorio python_single_target_python2_7
-=media-libs/opencv-2.4.10 python_single_target_python2_7
-=media-libs/opencv-2.4.11 python_single_target_python2_7
 =media-libs/opencv-2.4.9 python_single_target_python2_7
+=media-libs/opencv-2.4.11 python_single_target_python2_7
+=media-libs/opencv-2.4.10 python_single_target_python2_7
 media-libs/openimageio python_single_target_python2_7
 media-libs/vigra python_single_target_python2_7
 media-plugins/mythplugins python_single_target_python2_7
 media-radio/KochMorse python_single_target_python2_7
 media-sound/a2jmidid python_single_target_python2_7
 media-sound/csound python_single_target_python2_7
-media-sound/flacon python_single_target_python2_7
 media-sound/gpodder python_single_target_python2_7
+media-sound/idjc python_single_target_python2_7
 media-sound/jokosher python_single_target_python2_7
 media-sound/lash python_single_target_python2_7
 media-sound/lilypond python_single_target_python2_7
@@ -288,7 +279,13 @@ media-sound/soundconverter python_single_target_python2_7
 media-tv/freevo python_single_target_python2_7
 media-tv/kodi python_single_target_python2_7
 media-tv/mythtv python_single_target_python2_7
-media-tv/xbmc python_single_target_python2_7
+=media-tv/xbmc-12.1-r1 python_single_target_python2_7
+=media-tv/xbmc-13.2 python_single_target_python2_7
+=media-tv/xbmc-13.2-r1 python_single_target_python2_7
+=media-tv/xbmc-13.1 python_single_target_python2_7
+=media-tv/xbmc-13.0_p2 python_single_target_python2_7
+=media-tv/xbmc-12.2-r1 python_single_target_python2_7
+=media-tv/xbmc-12.3 python_single_target_python2_7
 media-video/flumotion python_single_target_python2_7
 media-video/griffith python_single_target_python2_7
 media-video/gtk-recordmydesktop python_single_target_python2_7
@@ -302,7 +299,6 @@ net-analyzer/net-snmp python_single_target_python2_7
 net-analyzer/nmap python_single_target_python2_7
 net-analyzer/ntop python_single_target_python2_7
 net-analyzer/rrdtool python_single_target_python2_7
-net-analyzer/scapy python_single_target_python2_7
 net-analyzer/w3af python_single_target_python2_7
 net-dialup/capisuite python_single_target_python2_7
 net-dns/rbldnsd python_single_target_python2_7
@@ -312,7 +308,11 @@ net-im/bitlbee python_single_target_python2_7
 net-im/ekg2 python_single_target_python2_7
 net-im/pyaim-t python_single_target_python2_7
 net-im/pyicq-t python_single_target_python2_7
+=net-irc/irker-2.9 python_single_target_python2_7
+=net-irc/irker-2.11 python_single_target_python2_7
 net-irc/telepathy-idle python_single_target_python2_7
+=net-irc/znc-1.2-r1 python_single_target_python3_3 python_targets_python3_3
+=net-irc/znc-1.4 python_single_target_python3_3 python_targets_python3_3
 net-libs/farstream python_single_target_python2_7
 net-libs/iojs python_single_target_python2_7
 net-libs/ldns python_single_target_python2_7
@@ -323,6 +323,7 @@ net-libs/telepathy-glib python_single_target_python2_7
 net-mail/automx python_single_target_python2_7
 net-mail/fetchmail python_single_target_python2_7
 net-mail/mailman python_single_target_python2_7
+net-mail/mailutils python_single_target_python2_7
 net-mail/mpop python_single_target_python2_7
 net-mail/offlineimap python_single_target_python2_7
 net-misc/arm python_single_target_python2_7
@@ -337,12 +338,11 @@ net-misc/pssh python_single_target_python2_7
 net-misc/pytvshows python_single_target_python2_7
 net-misc/rabbitmq-server python_single_target_python2_7
 net-misc/ris-linux python_single_target_python2_7
-=net-misc/spice-gtk-0.29 python_single_target_python2_7
 =net-misc/spice-gtk-0.28 python_single_target_python2_7
+=net-misc/spice-gtk-0.29 python_single_target_python2_7
+=net-misc/spice-gtk-0.20-r1 python_single_target_python2_7
 =net-misc/spice-gtk-0.21 python_single_target_python2_7
 =net-misc/spice-gtk-0.25-r1 python_single_target_python2_7
-=net-misc/spice-gtk-0.20-r1 python_single_target_python2_7
-=net-misc/spice-gtk-0.30-r1 python_single_target_python2_7
 net-misc/vde python_single_target_python2_7
 net-nntp/inn python_single_target_python2_7
 net-p2p/deluge python_single_target_python2_7
@@ -355,8 +355,7 @@ net-proxy/sshuttle python_single_target_python2_7
 net-voip/telepathy-haze python_single_target_python2_7
 net-voip/telepathy-rakia python_single_target_python2_7
 net-wireless/airpwn python_single_target_python2_7
-=net-wireless/blueman-9999 python_single_target_python2_7
-=net-wireless/blueman-2.0-r1 python_single_target_python2_7
+=net-wireless/blueman-2.0.3 python_single_target_python2_7
 net-wireless/bluez python_single_target_python2_7
 net-wireless/cpyrit-cuda python_single_target_python2_7
 net-wireless/cpyrit-opencl python_single_target_python2_7
@@ -382,8 +381,8 @@ sci-chemistry/ccpn python_single_target_python2_7
 sci-chemistry/coot python_single_target_python2_7
 sci-chemistry/gopenmol python_single_target_python2_7
 sci-chemistry/molequeue python_single_target_python2_7
-=sci-chemistry/pdb-tools-0.2.1-r1 python_single_target_python2_7
 =sci-chemistry/pdb-tools-0.2.1-r2 python_single_target_python2_7
+=sci-chemistry/pdb-tools-0.2.1-r1 python_single_target_python2_7
 sci-chemistry/prodecomp python_single_target_python2_7
 sci-chemistry/relax python_single_target_python2_7
 sci-chemistry/sparky python_single_target_python2_7
@@ -391,10 +390,12 @@ sci-chemistry/vmd python_single_target_python2_7
 sci-electronics/gresistor python_single_target_python2_7
 sci-electronics/kicad python_single_target_python2_7
 sci-geosciences/grass python_single_target_python2_7
+sci-geosciences/mapnik python_single_target_python2_7
 sci-geosciences/qgis python_single_target_python2_7
 sci-libs/cctbx python_single_target_python2_7
 sci-libs/chemkit python_single_target_python2_7
 sci-libs/geos python_single_target_python2_7
+sci-libs/getdata python_single_target_python2_7
 sci-libs/linux-gpib python_single_target_python2_7
 sci-libs/mathgl python_single_target_python2_7
 sci-libs/plplot python_single_target_python2_7
@@ -421,17 +422,20 @@ sys-apps/magneto-core python_single_target_python2_7
 sys-apps/paludis python_single_target_python2_7
 sys-apps/pcsc-lite python_single_target_python2_7
 sys-apps/pyrenamer python_single_target_python2_7
+=sys-apps/razercfg-0.29 python_single_target_python3_3 python_targets_python3_3
 =sys-apps/razercfg-0.23 python_single_target_python2_7
-=sys-apps/razercfg-0.25 python_single_target_python2_7
+=sys-apps/razercfg-0.26 python_single_target_python3_3 python_targets_python3_3
 =sys-apps/razercfg-0.24 python_single_target_python2_7
+=sys-apps/razercfg-0.25 python_single_target_python2_7
 sys-apps/rigo-daemon python_single_target_python2_7
 sys-apps/tuned python_single_target_python2_7
 sys-apps/usbutils python_single_target_python2_7
 sys-apps/yum python_single_target_python2_7
 sys-auth/pam_usb python_single_target_python2_7
-=sys-auth/sssd-1.9.6-r3 python_single_target_python2_7
-=sys-auth/sssd-1.9.7 python_single_target_python2_7
 =sys-auth/sssd-1.12.1 python_single_target_python2_7
+=sys-auth/sssd-1.9.7 python_single_target_python2_7
+=sys-auth/sssd-1.9.6-r3 python_single_target_python2_7
+sys-boot/boot-update python_single_target_python2_7
 sys-cluster/ceph python_single_target_python2_7
 sys-cluster/charm python_single_target_python2_7
 sys-cluster/ganglia python_single_target_python2_7
@@ -440,6 +444,7 @@ sys-cluster/glusterfs python_single_target_python2_7
 sys-cluster/moosefs python_single_target_python2_7
 sys-cluster/pacemaker python_single_target_python2_7
 sys-devel/distcc python_single_target_python2_7
+sys-devel/llvm python_single_target_python2_7
 sys-fs/traydevice python_single_target_python2_7
 sys-libs/ldb python_single_target_python2_7
 sys-libs/libsmbios python_single_target_python2_7
@@ -453,10 +458,12 @@ www-apps/moinmoin python_single_target_python2_7
 www-apps/trac python_single_target_python2_7
 www-client/uzbl python_single_target_python2_7
 www-misc/nx_util python_single_target_python2_7
+www-servers/varnish python_single_target_python2_7
 x11-apps/whyteboard python_single_target_python2_7
 x11-drivers/xf86-video-virtualbox python_single_target_python2_7
 x11-libs/hippo-canvas python_single_target_python2_7
 x11-libs/libdesktop-agnostic python_single_target_python2_7
+x11-libs/libxcb python_single_target_python2_7
 x11-misc/dockmanager python_single_target_python2_7
 x11-misc/icewmcp python_single_target_python2_7
 x11-misc/magick-rotation python_single_target_python2_7
