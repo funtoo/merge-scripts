@@ -52,11 +52,12 @@ HOMEPAGE="http://www.gentoo.org"
 LICENSE="GPL-2"
 SLOT="0"
 RESTRICT="mirror"
-IUSE="+cryptsetup ibm selinux"
+IUSE="btrfs +cryptsetup ibm selinux"
 
 DEPEND="sys-fs/e2fsprogs
 	selinux? ( sys-libs/libselinux )"
 RDEPEND="${DEPEND}
+		btrfs? ( sys-fs/btrfs-progs )
 		cryptsetup? ( sys-fs/cryptsetup )
 		sys-fs/lvm2
 		sys-fs/mdadm
