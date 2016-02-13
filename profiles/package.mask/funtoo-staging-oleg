@@ -1,5 +1,5 @@
 # FL-3123: aff btrfs support in genkernel.Masked.
-=sys-kernel/genkernel-3.4.40.9
+=sys-kernel/genkernel-3.4.40.9-r1
 
 # ati-drivers update. masked for testing:
 =x11-drivers/ati-drivers-15.12
