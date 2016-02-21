@@ -780,14 +780,14 @@ class GenCache(MergeStep):
 	"GenCache runs egencache --update to update metadata."
 
 	def run(self,tree):
-		runShell("egencache --update --portdir=%s --jobs=24" % tree.root, abortOnFail=False)
+		run_command(["egencache", "--update", "--repo", "gentoo", "--repositories-configuration", "[gentoo]\nlocation = %s" % tree.root, "--jobs", "24"], abort_on_failure=False)
 
 class GenUseLocalDesc(MergeStep):
 
 	"GenUseLocalDesc runs egencache to update use.local.desc"
 
 	def run(self,tree):
-		runShell("egencache --update-use-local-desc --portdir=%s" % tree.root, abortOnFail=False)
+		run_command(["egencache", "--update-use-local-desc", "--repo", "gentoo", "--repositories-configuration", "[gentoo]\nlocation = %s" % tree.root], abort_on_failure=False)
 
 class GitCheckout(MergeStep):
 
