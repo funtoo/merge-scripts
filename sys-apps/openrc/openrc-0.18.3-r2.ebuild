@@ -192,9 +192,9 @@ pkg_postinst() {
 			if [ "$sc" == "netif.lo" ]; then
 				einfo "Removing old initscript netif.lo."
 				rm ${EROOT}/etc/runlevels/$r/$sc
-			elif [ ! -e ${EROOT}/etc/runlevels/$r/$sc ]; then
-				einfo "Removing broken symlink for initscript in runlevel $r/$sc"
-				rm ${EROOT}/etc/runlevels/$r/$sc
+			#elif [ ! -e ${EROOT}/etc/runlevels/$r/$sc ]; then
+			#	einfo "Removing broken symlink for initscript in runlevel $r/$sc"
+			#	rm ${EROOT}/etc/runlevels/$r/$sc
 			fi
 			if [ ! -L ${EROOT}/usr/share/openrc/runlevels/$r/$sc ]; then
 				ewarn "Extra script $r/$sc found, possibly from other ebuild."
