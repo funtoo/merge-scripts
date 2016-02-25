@@ -1,1 +1,7 @@
+# Add mask for ongoing works with python-exec and friends. No trust it tested enough to get bumps.
+>=app-eselect/eselect-python-20151117-r3
+>=dev-lang/python-exec-2.2
+>=app-eselect/eselect-python-20160207
+>=dev-lang/python-exec-2.3
+
 >=dev-lang/python-3.5
