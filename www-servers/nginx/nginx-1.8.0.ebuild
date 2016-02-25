@@ -352,6 +352,7 @@ REQUIRED_USE="pcre-jit? ( pcre )
 	nginx_modules_external_dav_ext? ( nginx_modules_http_dav )
 	nginx_modules_external_lua? ( nginx_modules_http_rewrite )
 	nginx_modules_external_metrics? ( nginx_modules_http_stub_status )
+	nginx_modules_external_encrypted_session? ( nginx_modules_external_ndk )
 	nginx_modules_external_modsecurity? ( pcre )
 	nginx_modules_external_naxsi? ( pcre )
 	nginx_modules_external_push_stream? ( ssl )"
