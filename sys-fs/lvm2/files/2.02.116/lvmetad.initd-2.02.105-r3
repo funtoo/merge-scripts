@@ -1,0 +1,16 @@
+#!/sbin/runscript
+# Distributed under the terms of the GNU General Public License v2
+
+pidfile="/run/lvmetad.pid"
+command="/sbin/lvmetad"
+command_args="${LVMETAD_OPTS:=-p ${pidfile}}"
+start_stop_daemon_args="--pidfile ${pidfile}"
+
+depend() {
+	:
+}
+
+start_pre()
+{
+checkpath --directory /run/lvm
+}

@@ -1,0 +1,12 @@
+diff -Nuar LVM2.2.02.111/conf/example.conf.in LVM2.2.02.111-fix/conf/example.conf.in
+--- LVM2.2.02.111/conf/example.conf.in	2014-09-01 00:55:27.000000000 +0000
++++ LVM2.2.02.111-fix/conf/example.conf.in	2014-12-30 11:54:33.029871649 +0000
+@@ -123,7 +123,7 @@
+     # global_filter. The syntax is the same as for normal "filter"
+     # above. Devices that fail the global_filter are not even opened by LVM.
+ 
+-    # global_filter = []
++    global_filter = [ "r|/dev/cdrom|" ]
+ 
+     # The results of the filtering are cached on disk to avoid
+     # rescanning dud devices (which can take a very long time).
