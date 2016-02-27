@@ -263,24 +263,7 @@ src_install() {
 	dodoc README VERSION* WHATS_NEW WHATS_NEW_DM doc/*.{c,txt} conf/*.conf
 }
 
-add_init() {
-	local runl=$1
-	shift
-		if [ ! -e ${ROOT}etc/runlevels/${runl} ]
-		then
-			install -d -m0755 ${ROOT}etc/runlevels/${runl}
-		fi
-		for initd in $*
-		do
-			einfo "Auto-adding '${initd}' service to your ${runl} runlevel"
-			[[ -e ${ROOT}etc/runlevels/${runl}/${initd} ]] && continue
-			[[ ! -e ${ROOT}etc/init.d/${initd} ]] && die "initscript $initd not found; aborting"
-			ln -snf /etc/init.d/${initd} "${ROOT}etc/runlevels/${runl}/${initd}"
-		done
-}
-
 pkg_postinst() {
-	add_init boot device-mapper lvm
 	ewarn "Make sure the \"lvm\" init script is in the runlevels:"
 	ewarn "# rc-update add lvm boot"
 	ewarn
