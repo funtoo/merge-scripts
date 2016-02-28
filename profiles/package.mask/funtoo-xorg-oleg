@@ -1,0 +1,5 @@
+# FL-2232: Not fully-baked version of xorg-server. Masking.
+>=x11-base/xorg-server-1.17
+>=x11-drivers/xf86-video-intel-2.99.917_p20160224
+>=x11-base/xorg-drivers-1.18
+=x11-drivers/xf86-input-evdev-2.10*
