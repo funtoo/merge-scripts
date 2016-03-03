@@ -230,7 +230,7 @@ src_install() {
 	if use !device-mapper-only ; then
 		newinitd "${MYDIR}"/dmeventd.initd-2.02.67-r1 dmeventd
 		newinitd "${MYDIR}"/lvm.rc-2.02.105-r2 lvm
-		newconfd "${MYDIR}"/lvm.confd-2.02.28-r2 lvm
+		newconfd "${MYDIR}"/lvm.confd-2.02.28-r3 lvm
 
 		newinitd "${MYDIR}"/lvm-monitoring.initd-2.02.105-r2 lvm-monitoring
 		newinitd "${MYDIR}"/lvmetad.initd-2.02.105-r3 lvmetad
