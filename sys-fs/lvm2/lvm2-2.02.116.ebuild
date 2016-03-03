@@ -229,7 +229,7 @@ src_install() {
 
 	if use !device-mapper-only ; then
 		newinitd "${MYDIR}"/dmeventd.initd-2.02.67-r1 dmeventd
-		newinitd "${MYDIR}"/lvm.rc-2.02.116 lvm
+		newinitd "${MYDIR}"/lvm.rc-2.02.105-r2 lvm
 		newconfd "${MYDIR}"/lvm.confd-2.02.28-r2 lvm
 
 		newinitd "${MYDIR}"/lvm-monitoring.initd-2.02.105-r2 lvm-monitoring
@@ -271,8 +271,8 @@ pkg_postinst() {
 	ewarn "to enable lvm autoactivation and metadata caching."
 	ewarn
 	ewarn "After enabling or disabling lvmetad in /etc/lvm/lvm.conf you must"
-	ewarn "run the following to update the init script dependencies: "
-	ewarn "# rc-update -u"
+	ewarn "edit lvm's init script configuration in /etc/conf.d/lvm and then:"
+	ewarn "# rc"
 }
 
 src_test() {
