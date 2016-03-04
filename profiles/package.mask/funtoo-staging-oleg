@@ -1,6 +1,3 @@
-# FL-3042: update to lvm2 with lvmetad init script logic changes. Masked for testing
-=sys-fs/lvm2-2.02.116
-
 # basealyout-2.2.1. Minor updates to various etc files. Keep ebuild masked for testing
 =sys-apps/baselayout-2.2.1
 
