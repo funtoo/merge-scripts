@@ -1,7 +1,4 @@
-# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
-# Build written by Andrew John Hughes (gnu_andrew@member.fsf.org)
 
 # *********************************************************
 # * IF YOU CHANGE THIS EBUILD, CHANGE ICEDTEA-6.* AS WELL *
@@ -16,14 +13,13 @@ ICEDTEA_VER=$(get_version_component_range 2-4)
 ICEDTEA_BRANCH=$(get_version_component_range 2-3)
 ICEDTEA_PKG=icedtea-${ICEDTEA_VER}
 ICEDTEA_PRE=$(get_version_component_range _)
-CORBA_TARBALL="a4d55c5cec23.tar.bz2"
-JAXP_TARBALL="f1202fb27695.tar.bz2"
-JAXWS_TARBALL="14c411b1183c.tar.bz2"
-JDK_TARBALL="db69ae53157a.tar.bz2"
-LANGTOOLS_TARBALL="73356b81c5c7.tar.bz2"
-OPENJDK_TARBALL="601ca7147b8c.tar.bz2"
-HOTSPOT_TARBALL="f40363c11191.tar.bz2"
-
+CORBA_TARBALL="2135da66cc53.tar.bz2"
+JAXP_TARBALL="bc6edb6c12a7.tar.bz2"
+JAXWS_TARBALL="271b555de438.tar.bz2"
+JDK_TARBALL="dc86038147b2.tar.bz2"
+LANGTOOLS_TARBALL="fd0a34cb97b4.tar.bz2"
+OPENJDK_TARBALL="4f1e498cad9c.tar.bz2"
+HOTSPOT_TARBALL="19d919ae5506.tar.bz2"
 CACAO_TARBALL="cacao-c182f119eaad.tar.gz"
 JAMVM_TARBALL="jamvm-ec18fb9e49e62dce16c5094ef1527eed619463aa.tar.gz"
 
@@ -57,12 +53,12 @@ SRC_URI="
 	${DROP_URL}/jamvm/${JAMVM_TARBALL} -> ${JAMVM_GENTOO_TARBALL}"
 
 LICENSE="Apache-1.1 Apache-2.0 GPL-1 GPL-2 GPL-2-with-linking-exception LGPL-2 MPL-1.0 MPL-1.1 public-domain W3C"
-KEYWORDS="amd64 x86 ~arm ~ppc"
+KEYWORDS="*"
 RESTRICT="test"
 
 IUSE="+alsa cacao cjk +cups debug doc examples +gtk headless-awt infinality
-	jamvm javascript kerberos +nsplugin nss pax_kernel
-	pulseaudio sctp selinux smartcard source +sunec test zero +webstart"
+	jamvm javascript kerberos nsplugin nss pax_kernel
+	pulseaudio sctp selinux smartcard source +sunec test webstart zero"
 
 REQUIRED_USE="gtk? ( !headless-awt )"
 
@@ -134,9 +130,7 @@ RDEPEND="${COMMON_DEP}
 DEPEND="${COMMON_DEP} ${ALSA_COMMON_DEP} ${CUPS_COMMON_DEP} ${X_COMMON_DEP} ${X_DEPEND}
 	|| (
 		dev-java/icedtea-bin:7
-		dev-java/icedtea-bin:6
 		dev-java/icedtea:7
-		dev-java/icedtea:6
 	)
 	app-arch/cpio
 	app-arch/unzip
@@ -151,8 +145,8 @@ DEPEND="${COMMON_DEP} ${ALSA_COMMON_DEP} ${CUPS_COMMON_DEP} ${X_COMMON_DEP} ${X_
 	virtual/pkgconfig
 	pax_kernel? ( sys-apps/elfix )"
 
-PDEPEND="webstart? ( dev-java/icedtea-web:0[icedtea7] )
-	nsplugin? ( dev-java/icedtea-web:0[icedtea7,nsplugin] )
+PDEPEND="webstart? ( dev-java/icedtea-web:0[icedtea7(+)] )
+	nsplugin? ( dev-java/icedtea-web:0[icedtea7(+),nsplugin] )
 	pulseaudio? ( dev-java/icedtea-sound )"
 
 S="${WORKDIR}"/${ICEDTEA_PKG}
@@ -178,8 +172,8 @@ pkg_setup() {
 
 	JAVA_PKG_WANT_BUILD_VM="
 		icedtea-7 icedtea-bin-7
-		icedtea-6 icedtea-bin-6"
-
+		icedtea-6 icedtea-bin-6
+		gcj-jdk"
 	JAVA_PKG_WANT_SOURCE="1.5"
 	JAVA_PKG_WANT_TARGET="1.5"
 
@@ -257,8 +251,9 @@ src_configure() {
 		cacao_config="--enable-cacao"
 
 		# http://icedtea.classpath.org/bugzilla/show_bug.cgi?id=2612
-		export DISTRIBUTION_PATCHES="${SLOT}-cacao-dynmaxheap.patch"
-		ln -snf "${FILESDIR}/${DISTRIBUTION_PATCHES}" || die
+		# http://icedtea.classpath.org/bugzilla/show_bug.cgi?id=2781
+		export DISTRIBUTION_PATCHES="${SLOT}-cacao-pr-157.patch icedtea-bug-2781.patch"
+		ln -snf "${FILESDIR}"/{${SLOT}-cacao-pr-157,icedtea-bug-2781}.patch . || die
 	fi
 
 	# Turn on Zero if needed (non-HS/CACAO archs) or requested
@@ -363,6 +358,7 @@ src_install() {
 		dosym /usr/libexec/icedtea-web/javaws ${dest}/bin/javaws
 		dosym /usr/libexec/icedtea-web/javaws ${dest}/jre/bin/javaws
 	fi
+	dosym /usr/share/doc/${PF} /usr/share/doc/${PN}${SLOT}
 
 	# Fix the permissions.
 	find "${ddest}" \! -type l \( -perm /111 -exec chmod 755 {} \; -o -exec chmod 644 {} \; \) || die
@@ -377,13 +373,6 @@ src_install() {
 	./generate-cacerts.pl "${ddest}/bin/keytool" all.crt || die
 	cp -vRP cacerts "${ddest}/jre/lib/security/" || die
 	chmod 644 "${ddest}/jre/lib/security/cacerts" || die
-
-	# OpenJDK7 should be able to use fontconfig instead, but wont hurt to
-	# install it anyway. Bug 390663
-	cp "${FILESDIR}"/fontconfig.Gentoo.properties.src "${T}"/fontconfig.Gentoo.properties || die
-	eprefixify "${T}"/fontconfig.Gentoo.properties
-	insinto "${dest}"/jre/lib
-	doins "${T}"/fontconfig.Gentoo.properties
 
 	set_java_env "${FILESDIR}/icedtea.env"
 	java-vm_sandbox-predict /proc/self/coredump_filter
