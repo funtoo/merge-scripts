@@ -1,3 +1,8 @@
+# FL-3138: mask a release of ZFS tools, which brings "new stable API", which is not stable or tested enough.
+>=sys-fs/zfs-0.6.5.4
+>=sys-fs/zfs-kmod-0.6.5.4
+>=sys-kernel/spl-0.6.5.4
+
 # FL-3102: mask buggy coreutils 8.25. breaks bashrc and TERM
 >=sys-apps/coreutils-8.25
 
