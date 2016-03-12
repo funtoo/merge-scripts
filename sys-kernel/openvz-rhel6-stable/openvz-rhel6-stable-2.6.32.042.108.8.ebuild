@@ -13,6 +13,7 @@ OVZ_KERNEL="042stab108"
 OVZ_REV="8"
 OVZ_KV=${OVZ_KERNEL}.${OVZ_REV}
 KV_FULL=${PN}-${PVR}
+MODVER=${CKV}-${OVZ_KV}
 EXTRAVERSION=-${OVZ_KV}
 KERNEL_ARCHIVE="linux-${CKV}.tar.bz2"
 KERNEL_URI="mirror://kernel/linux/kernel/v2.6/${KERNEL_ARCHIVE}"
@@ -185,6 +186,6 @@ pkg_postinst() {
 	fi
 
 	if [ -e ${ROOT}lib/modules ]; then
-		depmod -a ${ROOT}lib/modules
+		depmod -a $MODVER
 	fi
 }

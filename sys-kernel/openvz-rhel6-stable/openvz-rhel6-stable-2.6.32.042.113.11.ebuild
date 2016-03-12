@@ -14,6 +14,7 @@ OVZ_REV="11"
 OVZ_KV=${OVZ_KERNEL}.${OVZ_REV}
 KV_FULL=${PN}-${PVR}
 EXTRAVERSION=-${OVZ_KV}
+MODVER=${CKV}-${OVZ_KV}
 KERNEL_ARCHIVE="linux-${CKV}.tar.bz2"
 KERNEL_URI="mirror://kernel/linux/kernel/v2.6/${KERNEL_ARCHIVE}"
 RESTRICT="binchecks strip mirror"
@@ -187,6 +188,6 @@ pkg_postinst() {
 	fi
 
 	if [ -e ${ROOT}lib/modules ]; then
-		depmod -a ${ROOT}lib/modules
+		depmod -a $MODVER
 	fi
 }

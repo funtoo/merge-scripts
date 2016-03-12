@@ -8,6 +8,7 @@ SLOT=$PVR
 CKV=4.0.4
 KV_FULL=${PN}-${PVR}
 EXTRAVERSION=-1
+MODVER=${CKV}${EXTRAVERSION}
 KERNEL_ARCHIVE="linux_${PV}.orig.tar.xz"
 PATCH_ARCHIVE="linux_${PV}${EXTRAVERSION}.debian.tar.xz"
 RESTRICT="binchecks strip mirror"
@@ -157,6 +158,6 @@ pkg_postinst() {
 	fi
 
 	if [ -e ${ROOT}lib/modules ]; then
-		depmod -a ${ROOT}lib/modules
+		depmod -a $MODVER
 	fi
 }
