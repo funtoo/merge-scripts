@@ -35,14 +35,14 @@ shards = {
 	"perl" : GitTree("gentoo-perl-shard", "1a63c4a8202d85867102d760e1506df4cf924403", "repos@localhost:gentoo-perl-shard.git", pull=True),
 	"kde" : GitTree("gentoo-kde-shard", "e5bc6ef885e5a040634840bdc8b2ddad909eb3ad", "repos@localhost:gentoo-kde-shard.git", pull=True),
 	"gnome" : GitTree("gentoo-gnome-shard", "4d5473019d599229cb54edde7f5a7e48df46302f", "repos@localhost:ports/gentoo-gnome-shard.git", pull=True),
-	"x11" : GitTree("gentoo-x11-shard", "75de0e153eb7d9c1af6e0d4ecdf27812d913f9fe", "repos@localhost:ports/gentoo-x11-shard.git", pull=True),
+	"x11" : GitTree("gentoo-x11-shard", "a8742107ff01b51b312ca58b5ce4ec806b8de15a", "repos@localhost:ports/gentoo-x11-shard.git", pull=True),
 	"core" : GitTree("gentoo-core-shard", "27d2a1910fbf4dfcc2da1d967ed4eab51f8bd0e3", "repos@localhost:gentoo-core-shard.git", pull=True)
 }
 
 # perl: 1a63c4a8202d85867102d760e1506df4cf924403 (Updated 11 March 2016)
 # kde: e5bc6ef885e5a040634840bdc8b2ddad909eb3ad (Updated 8 Mar 2016)
 # gnome: 4d5473019d599229cb54edde7f5a7e48df46302f (Updated 5 Oct 2015)
-# x11: 75de0e153eb7d9c1af6e0d4ecdf27812d913f9fe (Updated 8 Mar 2016)
+# x11: a8742107ff01b51b312ca58b5ce4ec806b8de15a (Updated 15 Mar 2016)
 # core:	27d2a1910fbf4dfcc2da1d967ed4eab51f8bd0e3 (Updated 11 Mar 2016)
 # funtoo-toolchain: 9848903488e25320183422fe6748b4a327076dce (Updated 12 Mar 2016)
 
