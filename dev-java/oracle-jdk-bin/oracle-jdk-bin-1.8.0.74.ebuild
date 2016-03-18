@@ -88,11 +88,11 @@ S="${WORKDIR}/jdk"
 src_unpack() {
 	if use arm ; then
 		# Special case for ARM soft VS hard float.
-		#if [[ ${CHOST} == *-hardfloat-* ]] ; then
-			unpack jdk-${MY_PV}-linux-arm-vfp-hflt.tar.gz
+		if [[ ${CHOST} == *-hardfloat-* ]] ; then
+			unpack $AT_arm
 		#else
 		#	unpack jdk-${MY_PV}-linux-arm-vfp-sflt.tar.gz
-		#fi
+		fi
 		use jce && unpack ${JCE_FILE}
 	else
 		default
