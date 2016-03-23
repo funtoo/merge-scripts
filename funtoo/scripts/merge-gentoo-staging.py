@@ -8,7 +8,7 @@ gentoo_staging_w = GitTree("gentoo-staging", "master", "repos@localhost:ports/ge
 # shards are overlays where we collect gentoo's most recent changes. This way, we can merge specific versions rather than always be forced to
 # get the latest.
 
-shard_names = [ "perl", "python", "kde", "gnome", "core", "x11" ]
+shard_names = [ "perl", "python", "kde", "gnome", "core", "x11", "office" ]
 shards = {}
 shard_steps = {}
 
