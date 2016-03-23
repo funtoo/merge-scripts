@@ -1,0 +1,15 @@
+app-office/libreoffice
+app-office/libreoffice-l10n
+app-text/libabw
+app-text/libebook
+app-text/libetonyek
+app-text/libmspub
+app-text/libmwaw
+app-text/libodfgen
+app-text/libwpd
+app-text/libwpg
+app-text/libwps
+app-text/poppler
+dev-libs/libixion
+dev-libs/liborcus
+dev-libs/librevenge
