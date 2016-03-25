@@ -1,3 +1,6 @@
+# debian kernel 4.4.6 for testing
+=sys-kerenl/debian-sources-4.4.6
+
 # basealyout-2.2.1. Minor updates to various etc files. Keep ebuild masked for testing
 =sys-apps/baselayout-2.2.1
 
