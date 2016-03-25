@@ -36,7 +36,7 @@ shards = {
 	"kde" : GitTree("gentoo-kde-shard", "f873b35e7f7d065678e4fa024caff9e8af605943", "repos@localhost:gentoo-kde-shard.git", pull=True),
 	"gnome" : GitTree("gentoo-gnome-shard", "4d5473019d599229cb54edde7f5a7e48df46302f", "repos@localhost:ports/gentoo-gnome-shard.git", pull=True),
 	"x11" : GitTree("gentoo-x11-shard", "a8742107ff01b51b312ca58b5ce4ec806b8de15a", "repos@localhost:ports/gentoo-x11-shard.git", pull=True),
-        "office" : GitTree("gentoo-office-shard", "1ec5bd93ed65b9c584b111beced29f933f3b7fc3", "repos@localhost:ports/gentoo-office-shard.git", pull=True),
+	"office" : GitTree("gentoo-office-shard", "1ec5bd93ed65b9c584b111beced29f933f3b7fc3", "repos@localhost:ports/gentoo-office-shard.git", pull=True),
 	"core" : GitTree("gentoo-core-shard", "98fd0437a53b8b2fb57dc9cac03ddedb9ab6d3cf", "repos@localhost:gentoo-core-shard.git", pull=True)
 }
 
@@ -205,6 +205,7 @@ master_steps = [
 	InsertEbuilds(shards["perl"], select="all", skip=None, replace=True),
 	InsertEclasses(shards["perl"], select=re.compile(".*\.eclass")),
 	InsertEbuilds(shards["x11"], select="all", skip=None, replace=True),
+	InsertEbuilds(shards["office"], select="all", skip=None, replace=True),
 	InsertEbuilds(shards["kde"], select="all", skip=None, replace=True),
 	InsertEclasses(shards["kde"], select=re.compile(".*\.eclass")),
 	InsertEbuilds(shards["gnome"], select="all", skip=None, replace=True),
