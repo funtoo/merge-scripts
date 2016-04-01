@@ -19,7 +19,7 @@ PYTHON_SINGLE_TARGET="python3_4"
 # This setting should be kept in sync with a >=dev-lang/php-5.x mask,
 # so that PHP_TARGETS always refers to the latest unmasked x.y version
 # of PHP.
-PHP_TARGETS="php5-5"
+PHP_TARGETS="php5-6"
 
 # USE_EXPAND variables whose contents are not shown in package manager
 # output. Changes need discussion on gentoo-dev.
