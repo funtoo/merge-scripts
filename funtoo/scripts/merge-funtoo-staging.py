@@ -183,7 +183,7 @@ ebuild_modifications = [
 
 ebuild_modifications += [
 	InsertEbuilds(funtoo_overlays["funtoo_media"], select="all", skip=None, replace=True),
-	InsertEbuilds(funtoo_overlays["ldap_overlay"], select="all", skip=None, replace=True),
+	InsertEbuilds(funtoo_overlays["ldap_overlay"], select="all", skip=["net-nds/openldap"], replace=True),
 ]
 
 # Steps related to eclass copying:
