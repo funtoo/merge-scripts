@@ -53,7 +53,6 @@ funtoo_overlays = {
 	"plex_overlay" : GitTree("funtoo-plex", "master", "https://github.com/Ghent/funtoo-plex.git", pull=True),
 	"gnome_fixups" : GitTree("gnome-3.16-fixups", "master", "repos@localhost:ports/gnome-3.16-fixups.git", pull=True),
 	"funtoo_toolchain" : GitTree("funtoo-toolchain", "9848903488e25320183422fe6748b4a327076dce", "repos@localhost:funtoo-toolchain-overlay.git", pull=True),
-	"ldap_overlay" : GitTree("funtoo-ldap", "master", "repos@localhost:funtoo-ldap-overlay.git", pull=True),
 	"deadbeef_overlay" : GitTree("deadbeef-overlay", "master", "https://github.com/damex/deadbeef-overlay.git", pull=True),
 	"gambas_overlay" : GitTree("gambas-overlay", "master", "https://github.com/damex/gambas-overlay.git", pull=True),
 	"wmfs_overlay" : GitTree("wmfs-overlay", "master", "https://github.com/damex/wmfs-overlay.git", pull=True),
@@ -183,7 +182,6 @@ ebuild_modifications = [
 
 ebuild_modifications += [
 	InsertEbuilds(funtoo_overlays["funtoo_media"], select="all", skip=None, replace=True),
-	InsertEbuilds(funtoo_overlays["ldap_overlay"], select="all", skip=None, replace=True),
 ]
 
 # Steps related to eclass copying:
