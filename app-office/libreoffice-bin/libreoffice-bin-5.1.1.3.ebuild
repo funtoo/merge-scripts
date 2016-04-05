@@ -100,7 +100,7 @@ COMMON_DEPEND="
 	dev-libs/expat
 	>=dev-libs/hyphen-2.7.1
 	>=dev-libs/icu-4.8.1.1:=
-	=dev-libs/liborcus-0.7*
+	=dev-libs/liborcus-0.9*
 	>=dev-libs/librevenge-0.0.1
 	>=dev-libs/nspr-4.8.8
 	>=dev-libs/nss-3.12.9
