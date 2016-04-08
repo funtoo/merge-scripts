@@ -29,13 +29,13 @@ SRC_URI="
 LICENSE="Oracle-BCLA-JavaSE"
 SLOT="1.8"
 KEYWORDS="*"
-IUSE="alsa headless-awt cups +fontconfig javafx jce nsplugin pax_kernel selinux"
+IUSE="alsa +headless-awt cups +fontconfig javafx jce nsplugin pax_kernel selinux"
 
 RESTRICT="mirror preserve-libs strip"
 QA_PREBUILT="*"
 
 RDEPEND="!x64-macos? (
-		 !headless-awt? (
+		 headless-awt? (
 			x11-libs/libX11
 			x11-libs/libXext
 			x11-libs/libXi
