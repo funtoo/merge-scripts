@@ -29,13 +29,13 @@ SRC_URI="
 LICENSE="Oracle-BCLA-JavaSE"
 SLOT="1.8"
 KEYWORDS="*"
-IUSE="alsa +headless-awt cups +fontconfig javafx jce nsplugin pax_kernel selinux"
+IUSE="alsa +awt cups +fontconfig javafx jce nsplugin pax_kernel selinux"
 
 RESTRICT="mirror preserve-libs strip"
 QA_PREBUILT="*"
 
 RDEPEND="!x64-macos? (
-		 headless-awt? (
+		 awt? (
 			x11-libs/libX11
 			x11-libs/libXext
 			x11-libs/libXi
@@ -104,7 +104,7 @@ src_install() {
 		rm -vf lib/*/libjsoundalsa.* || die
 	fi
 
-	if ! use headless-awt ; then
+	if ! use awt ; then
 		rm -vf lib/*/lib*{[jx]awt,splashscreen}* \
 		   bin/{javaws,policytool} || die
 	fi
