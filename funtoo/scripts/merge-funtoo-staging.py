@@ -32,27 +32,27 @@ gentoo_staging_r = GitTree("gentoo-staging", "master", "repos@localhost:ports/ge
 # tree. If there aren't changes in these overlays, we don't.
 
 shards = {
-	"perl" : GitTree("gentoo-perl-shard", "2ca3d19a71485c0af0a431626afd143d546fabde", "repos@localhost:gentoo-perl-shard.git", pull=True),
-	"kde" : GitTree("gentoo-kde-shard", "5c6cd4de690edfa6523588b5efaaf2757f211831", "repos@localhost:gentoo-kde-shard.git", pull=True),
+	"perl" : GitTree("gentoo-perl-shard", "db055437e3655318c6eb9b09c4409b508f41bb24", "repos@localhost:gentoo-perl-shard.git", pull=True),
+	"kde" : GitTree("gentoo-kde-shard", "a48a6a76256e16389ced7a043cf7d886a7eeaad3", "repos@localhost:gentoo-kde-shard.git", pull=True),
 	"gnome" : GitTree("gentoo-gnome-shard", "4d5473019d599229cb54edde7f5a7e48df46302f", "repos@localhost:ports/gentoo-gnome-shard.git", pull=True),
-	"x11" : GitTree("gentoo-x11-shard", "597b3dc600cc271e253547d8088abadb1db4b475", "repos@localhost:ports/gentoo-x11-shard.git", pull=True),
+	"x11" : GitTree("gentoo-x11-shard", "c3b2bad716343dffcf82e57953da3a67b042ab26", "repos@localhost:ports/gentoo-x11-shard.git", pull=True),
 	"office" : GitTree("gentoo-office-shard", "1ec5bd93ed65b9c584b111beced29f933f3b7fc3", "repos@localhost:ports/gentoo-office-shard.git", pull=True),
-	"core" : GitTree("gentoo-core-shard", "b79052f32219a1e76d272397ad13bc9010fa0e65", "repos@localhost:gentoo-core-shard.git", pull=True)
+	"core" : GitTree("gentoo-core-shard", "ff352cf4487a34f08b9fd5b90e68ff98e8b787ee", "repos@localhost:gentoo-core-shard.git", pull=True)
 }
 
-# perl: 2ca3d19a71485c0af0a431626afd143d546fabde (Updated 26 March 2016)
-# kde: 5c6cd4de690edfa6523588b5efaaf2757f211831 (Updated 6 Apr 2016)
+# perl: db055437e3655318c6eb9b09c4409b508f41bb24 (Updated 12 Apr 2016)
+# kde: a48a6a76256e16389ced7a043cf7d886a7eeaad3 (Updated 12 Apr 2016)
 # gnome: 4d5473019d599229cb54edde7f5a7e48df46302f (Updated 5 Oct 2015)
-# x11: 597b3dc600cc271e253547d8088abadb1db4b475 (Updated 6 Apr 2016)
+# x11: c3b2bad716343dffcf82e57953da3a67b042ab26 (Updated 12 Apr 2016)
 # office: 1ec5bd93ed65b9c584b111beced29f933f3b7fc3 (Updated 24 Mar 2016)
-# core:	b79052f32219a1e76d272397ad13bc9010fa0e65 (Updated 10 Apr 2016)
-# funtoo-toolchain: 9848903488e25320183422fe6748b4a327076dce (Updated 12 Mar 2016)
+# core:	ff352cf4487a34f08b9fd5b90e68ff98e8b787ee (Updated 12 Apr 2016)
+# funtoo-toolchain: 5d438b0aca7ca7ea2e074b38614e4997651729b4 (Updated 12 Apr 2016)
 
 funtoo_overlays = {
 	"funtoo_media" : GitTree("funtoo-media", "master", "repos@localhost:funtoo-media.git", pull=True),
 	"plex_overlay" : GitTree("funtoo-plex", "master", "https://github.com/Ghent/funtoo-plex.git", pull=True),
 	"gnome_fixups" : GitTree("gnome-3.16-fixups", "master", "repos@localhost:ports/gnome-3.16-fixups.git", pull=True),
-	"funtoo_toolchain" : GitTree("funtoo-toolchain", "9848903488e25320183422fe6748b4a327076dce", "repos@localhost:funtoo-toolchain-overlay.git", pull=True),
+	"funtoo_toolchain" : GitTree("funtoo-toolchain", "5d438b0aca7ca7ea2e074b38614e4997651729b4", "repos@localhost:funtoo-toolchain-overlay.git", pull=True),
 	"ldap_overlay" : GitTree("funtoo-ldap", "master", "repos@localhost:funtoo-ldap-overlay.git", pull=True),
 	"deadbeef_overlay" : GitTree("deadbeef-overlay", "master", "https://github.com/damex/deadbeef-overlay.git", pull=True),
 	"gambas_overlay" : GitTree("gambas-overlay", "master", "https://github.com/damex/gambas-overlay.git", pull=True),
