@@ -1,3 +1,6 @@
+# testing mask for new grub. Slot moves needed to check before.
+=sys-boot/grub-2.02_beta3
+
 # staging mask for metworkmamager-1.0.12 which has some troubles in GNome menu.
 >=net-misc/networkmanager-1.0.10-r2
 
