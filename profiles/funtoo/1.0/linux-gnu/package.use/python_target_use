@@ -338,11 +338,7 @@ net-misc/pssh python_single_target_python2_7
 net-misc/pytvshows python_single_target_python2_7
 net-misc/rabbitmq-server python_single_target_python2_7
 net-misc/ris-linux python_single_target_python2_7
-=net-misc/spice-gtk-0.28 python_single_target_python2_7
-=net-misc/spice-gtk-0.29 python_single_target_python2_7
-=net-misc/spice-gtk-0.20-r1 python_single_target_python2_7
-=net-misc/spice-gtk-0.21 python_single_target_python2_7
-=net-misc/spice-gtk-0.25-r1 python_single_target_python2_7
+=net-misc/spice-gtk-0.30-r1 python_single_target_python2_7
 net-misc/vde python_single_target_python2_7
 net-nntp/inn python_single_target_python2_7
 net-p2p/deluge python_single_target_python2_7
