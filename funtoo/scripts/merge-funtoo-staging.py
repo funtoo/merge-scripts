@@ -57,6 +57,7 @@ funtoo_overlays = {
 	"deadbeef_overlay" : GitTree("deadbeef-overlay", "master", "https://github.com/damex/deadbeef-overlay.git", pull=True),
 	"gambas_overlay" : GitTree("gambas-overlay", "master", "https://github.com/damex/gambas-overlay.git", pull=True),
 	"wmfs_overlay" : GitTree("wmfs-overlay", "master", "https://github.com/damex/wmfs-overlay.git", pull=True),
+        "flora" : GitTree("flora", "master", "repos@localhost:flora.git", pull=True),
 }
 
 # These are other overlays that we merge into the Funtoo tree. However, we just pull in the most recent versions
@@ -162,6 +163,7 @@ ebuild_additions = [
 	InsertEbuilds(funtoo_overlays["deadbeef_overlay"], select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_overlays["gambas_overlay"], select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_overlays["wmfs_overlay"], select="all", skip=None, replace=False),
+        InsertEbuilds(funtoo_overlays["flora"], select="all", skip=None, replace=False),
 	]
 
 # Ebuild modifications -- these changes need to be treated more carefully as ordering can be important
