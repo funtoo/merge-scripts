@@ -66,6 +66,7 @@ dev-util/glade
 dev-util/gnome-devel-docs
 dev-util/gtk-builder-convert
 dev-util/gtk-doc
+dev-util/gtk-doc-am
 dev-util/gtk-update-icon-cache
 dev-util/nemiver
 dev-vcs/gitg
