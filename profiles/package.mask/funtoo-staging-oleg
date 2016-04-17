@@ -1,9 +1,6 @@
 # testing mask for new grub. Slot moves needed to check before.
 =sys-boot/grub-2.02_beta3
 
-# staging mask for metworkmamager-1.0.12 which has some troubles in GNome menu.
->=net-misc/networkmanager-1.0.10-r2
-
 # precaution staging mask for newer boost. ~ ebuilds unmasked in gentoo-x86.
 >=dev-libs/boost-1.58.0-r2
 >=dev-util/boost-build-1.59.0
