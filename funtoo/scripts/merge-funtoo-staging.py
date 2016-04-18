@@ -32,20 +32,20 @@ gentoo_staging_r = GitTree("gentoo-staging", "master", "repos@localhost:ports/ge
 # tree. If there aren't changes in these overlays, we don't.
 
 shards = {
-	"perl" : GitTree("gentoo-perl-shard", "db055437e3655318c6eb9b09c4409b508f41bb24", "repos@localhost:gentoo-perl-shard.git", pull=True),
-	"kde" : GitTree("gentoo-kde-shard", "a48a6a76256e16389ced7a043cf7d886a7eeaad3", "repos@localhost:gentoo-kde-shard.git", pull=True),
+	"perl" : GitTree("gentoo-perl-shard", "506b6ae839f946e805b783ebefba8aa470f6d211", "repos@localhost:gentoo-perl-shard.git", pull=True),
+	"kde" : GitTree("gentoo-kde-shard", "8eccbdb282fdba63f2ea07c016fee56250170d12", "repos@localhost:gentoo-kde-shard.git", pull=True),
 	"gnome" : GitTree("gentoo-gnome-shard", "4d5473019d599229cb54edde7f5a7e48df46302f", "repos@localhost:ports/gentoo-gnome-shard.git", pull=True),
-	"x11" : GitTree("gentoo-x11-shard", "c3b2bad716343dffcf82e57953da3a67b042ab26", "repos@localhost:ports/gentoo-x11-shard.git", pull=True),
-	"office" : GitTree("gentoo-office-shard", "eb37f468d62c6e432ba548715d186240da1f4c19", "repos@localhost:ports/gentoo-office-shard.git", pull=True),
-	"core" : GitTree("gentoo-core-shard", "ff352cf4487a34f08b9fd5b90e68ff98e8b787ee", "repos@localhost:gentoo-core-shard.git", pull=True)
+	"x11" : GitTree("gentoo-x11-shard", "2f28c5f4269dfc2406514f6e3a7ed00d255592fb", "repos@localhost:ports/gentoo-x11-shard.git", pull=True),
+	"office" : GitTree("gentoo-office-shard", "e8d2ae2edc7c1dbbbf62df344b4d0caa7d573dd5", "repos@localhost:ports/gentoo-office-shard.git", pull=True),
+	"core" : GitTree("gentoo-core-shard", "51594b9207206e28b15e66d4c8edfc5ce3cf8646", "repos@localhost:gentoo-core-shard.git", pull=True)
 }
 
-# perl: db055437e3655318c6eb9b09c4409b508f41bb24 (Updated 12 Apr 2016)
-# kde: a48a6a76256e16389ced7a043cf7d886a7eeaad3 (Updated 12 Apr 2016)
+# perl: 506b6ae839f946e805b783ebefba8aa470f6d211 (Updated 18 Apr 2016)
+# kde: 8eccbdb282fdba63f2ea07c016fee56250170d12 (Updated 18 Apr 2016)
 # gnome: 4d5473019d599229cb54edde7f5a7e48df46302f (Updated 5 Oct 2015)
-# x11: c3b2bad716343dffcf82e57953da3a67b042ab26 (Updated 12 Apr 2016)
-# office: eb37f468d62c6e432ba548715d186240da1f4c19 (Updated 18 Apr 2016)
-# core:	ff352cf4487a34f08b9fd5b90e68ff98e8b787ee (Updated 12 Apr 2016)
+# x11: 2f28c5f4269dfc2406514f6e3a7ed00d255592fb (Updated 18 Apr 2016)
+# office: e8d2ae2edc7c1dbbbf62df344b4d0caa7d573dd5 (Updated 18 Apr 2016)
+# core:	51594b9207206e28b15e66d4c8edfc5ce3cf8646 (Updated 18 Apr 2016)
 # funtoo-toolchain: 5d438b0aca7ca7ea2e074b38614e4997651729b4 (Updated 12 Apr 2016)
 
 funtoo_overlays = {
