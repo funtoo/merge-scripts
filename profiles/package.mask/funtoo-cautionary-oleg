@@ -1,3 +1,6 @@
+# mask nano-2.5.3. it getting SIGTERM when editing files for yet unknown reason. older versions are ok.
+>=app-editors/nano-2.5.3
+
 # FL-3138: mask a release of ZFS tools, which brings "new stable API", which is not stable or tested enough.
 >=sys-fs/zfs-0.6.5.4
 >=sys-fs/zfs-kmod-0.6.5.4
