@@ -5,7 +5,7 @@ EAPI=6
 BINFONT="unifont-1.0.pf2"
 if [[ ${PV} == 9999  ]]; then
 	PYTHON_COMPAT=( python{2_7,3_3,3_4,3_5} )
-	inherit autotools python-any-r1
+	inherit python-any-r1
 fi
 inherit autotools bash-completion-r1 flag-o-matic mount-boot multibuild pax-utils toolchain-funcs versionator
 
@@ -136,11 +136,6 @@ src_prepare() {
 	if use multislot; then
 		# fix texinfo file name, bug 416035
 		sed -i -e 's/^\* GRUB:/* GRUB2:/' -e 's/(grub)/(grub2)/' docs/grub.texi || die
-	fi
-
-	if [[ ${PV} == 9999 ]]; then
-		python_setup
-		bash autogen.sh || die
 	fi
 		autopoint() { :; }
 		eautoreconf
