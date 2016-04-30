@@ -1,9 +1,6 @@
 # avoid icedtea-bin-7.2.6.6 due to unsatisfied glibc dep.
 >=dev-java/icedtea-bin-7.2.6.6
 
-# testing mask for new grub. Slot moves needed to check before.
-=sys-boot/grub-2.02_beta3
-
 # precaution staging mask for newer boost. ~ ebuilds unmasked in gentoo-x86.
 >=dev-libs/boost-1.58.0-r2
 >=dev-util/boost-build-1.59.0
