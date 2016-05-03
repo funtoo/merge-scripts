@@ -37,7 +37,7 @@ shards = {
 	"gnome" : GitTree("gentoo-gnome-shard", "4d5473019d599229cb54edde7f5a7e48df46302f", "repos@localhost:ports/gentoo-gnome-shard.git", pull=True),
 	"x11" : GitTree("gentoo-x11-shard", "0c65fb2de65c943178b5e2d64524f64f489039a2", "repos@localhost:ports/gentoo-x11-shard.git", pull=True),
 	"office" : GitTree("gentoo-office-shard", "3d80b90b8dba879735f9fe95ac5c45620792da3e", "repos@localhost:ports/gentoo-office-shard.git", pull=True),
-	"core" : GitTree("gentoo-core-shard", "af2561ccb3b736b1549b013b14788f3b1e112947", "repos@localhost:gentoo-core-shard.git", pull=True)
+	"core" : GitTree("gentoo-core-shard", "996b77906982bf5431290cf15c36332c97b4b5cc", "repos@localhost:gentoo-core-shard.git", pull=True)
 }
 
 # perl: ae43c0ed75dc2a197dda239be98be953c26bfba5 (Updated 28 Apr 2016)
@@ -45,7 +45,7 @@ shards = {
 # gnome: 4d5473019d599229cb54edde7f5a7e48df46302f (Updated 5 Oct 2015)
 # x11: 0c65fb2de65c943178b5e2d64524f64f489039a2 (Updated 3 May 2016)
 # office: 3d80b90b8dba879735f9fe95ac5c45620792da3e (Updated 18 Apr 2016)
-# core:	af2561ccb3b736b1549b013b14788f3b1e112947 (Updated 2 May 2016)
+# core:	996b77906982bf5431290cf15c36332c97b4b5cc (Updated 3 May 2016)
 # funtoo-toolchain: 5d438b0aca7ca7ea2e074b38614e4997651729b4 (Updated 12 Apr 2016)
 
 funtoo_overlays = {
