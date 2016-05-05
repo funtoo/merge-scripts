@@ -1,6 +1,3 @@
-# testing debian-sources-4.5.2
-=sys-kernel/debian-sources-4.5.2
-
 # avoid icedtea-bin-7.2.6.6 due to unsatisfied glibc dep.
 >=dev-java/icedtea-bin-7.2.6.6
 
