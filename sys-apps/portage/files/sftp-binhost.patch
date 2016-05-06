@@ -1,0 +1,46 @@
+From daf35fa12de0fd211a79c46cfc047977be21f282 Mon Sep 17 00:00:00 2001
+From: Zac Medico <zmedico@gentoo.org>
+Date: Thu, 5 May 2016 10:12:13 -0700
+Subject: [PATCH] make.globals: fix FETCHCOMMAND_SSH and FETCHCOMMAND_SFTP to
+ respect ssh_config port (bug 499198)
+
+X-Gentoo-bug: 499198
+X-Gentoo-bug-url: https://bugs.gentoo.org/show_bug.cgi?id=499198
+---
+ cnf/make.globals                         | 4 ++--
+ pym/portage/tests/util/test_getconfig.py | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/cnf/make.globals b/cnf/make.globals
+index 836bb5c..18eba94 100644
+--- a/cnf/make.globals
++++ b/cnf/make.globals
+@@ -43,11 +43,11 @@ FETCHCOMMAND_RSYNC="rsync -avP \"\${URI}\" \"\${DISTDIR}/\${FILE}\""
+ RESUMECOMMAND_RSYNC="rsync -avP \"\${URI}\" \"\${DISTDIR}/\${FILE}\""
+ 
+ # NOTE: rsync will evaluate quotes embedded inside PORTAGE_SSH_OPTS
+-FETCHCOMMAND_SSH="bash -c \"x=\\\${2#ssh://} ; host=\\\${x%%/*} ; port=\\\${host##*:} ; host=\\\${host%:*} ; [[ \\\${host} = \\\${port} ]] && port=22 ; exec rsync --rsh=\\\"ssh -p\\\${port} \\\${3}\\\" -avP \\\"\\\${host}:/\\\${x#*/}\\\" \\\"\\\$1\\\"\" rsync \"\${DISTDIR}/\${FILE}\" \"\${URI}\" \"\${PORTAGE_SSH_OPTS}\""
++FETCHCOMMAND_SSH="bash -c \"x=\\\${2#ssh://} ; host=\\\${x%%/*} ; port=\\\${host##*:} ; host=\\\${host%:*} ; [[ \\\${host} = \\\${port} ]] && port= ; exec rsync --rsh=\\\"ssh \\\${port:+-p\\\${port}} \\\${3}\\\" -avP \\\"\\\${host}:/\\\${x#*/}\\\" \\\"\\\$1\\\"\" rsync \"\${DISTDIR}/\${FILE}\" \"\${URI}\" \"\${PORTAGE_SSH_OPTS}\""
+ RESUMECOMMAND_SSH=${FETCHCOMMAND_SSH}
+ 
+ # NOTE: bash eval is used to evaluate quotes embedded inside PORTAGE_SSH_OPTS
+-FETCHCOMMAND_SFTP="bash -c \"x=\\\${2#sftp://} ; host=\\\${x%%/*} ; port=\\\${host##*:} ; host=\\\${host%:*} ; [[ \\\${host} = \\\${port} ]] && port=22 ; eval \\\"declare -a ssh_opts=(\\\${3})\\\" ; exec sftp -P \\\${port} \\\"\\\${ssh_opts[@]}\\\" \\\"\\\${host}:/\\\${x#*/}\\\" \\\"\\\$1\\\"\" sftp \"\${DISTDIR}/\${FILE}\" \"\${URI}\" \"\${PORTAGE_SSH_OPTS}\""
++FETCHCOMMAND_SFTP="bash -c \"x=\\\${2#sftp://} ; host=\\\${x%%/*} ; port=\\\${host##*:} ; host=\\\${host%:*} ; [[ \\\${host} = \\\${port} ]] && port= ; eval \\\"declare -a ssh_opts=(\\\${3})\\\" ; exec sftp \\\${port:+-P \\\${port}} \\\"\\\${ssh_opts[@]}\\\" \\\"\\\${host}:/\\\${x#*/}\\\" \\\"\\\$1\\\"\" sftp \"\${DISTDIR}/\${FILE}\" \"\${URI}\" \"\${PORTAGE_SSH_OPTS}\""
+ 
+ # Default user options
+ FEATURES="assume-digests binpkg-logs
+diff --git a/pym/portage/tests/util/test_getconfig.py b/pym/portage/tests/util/test_getconfig.py
+index b72bd6a..05e3147 100644
+--- a/pym/portage/tests/util/test_getconfig.py
++++ b/pym/portage/tests/util/test_getconfig.py
+@@ -20,8 +20,8 @@ class GetConfigTestCase(TestCase):
+ 	_cases = {
+ 		'FETCHCOMMAND'             : 'wget -t 3 -T 60 --passive-ftp -O "${DISTDIR}/${FILE}" "${URI}"',
+ 		'FETCHCOMMAND_RSYNC'       : 'rsync -avP "${URI}" "${DISTDIR}/${FILE}"',
+-		'FETCHCOMMAND_SFTP'        : 'bash -c "x=\\${2#sftp://} ; host=\\${x%%/*} ; port=\\${host##*:} ; host=\\${host%:*} ; [[ \\${host} = \\${port} ]] && port=22 ; eval \\"declare -a ssh_opts=(\\${3})\\" ; exec sftp -P \\${port} \\"\\${ssh_opts[@]}\\" \\"\\${host}:/\\${x#*/}\\" \\"\\$1\\"" sftp "${DISTDIR}/${FILE}" "${URI}" "${PORTAGE_SSH_OPTS}"',
+-		'FETCHCOMMAND_SSH'         : 'bash -c "x=\\${2#ssh://} ; host=\\${x%%/*} ; port=\\${host##*:} ; host=\\${host%:*} ; [[ \\${host} = \\${port} ]] && port=22 ; exec rsync --rsh=\\"ssh -p\\${port} \\${3}\\" -avP \\"\\${host}:/\\${x#*/}\\" \\"\\$1\\"" rsync "${DISTDIR}/${FILE}" "${URI}" "${PORTAGE_SSH_OPTS}"',
++		'FETCHCOMMAND_SFTP'        : 'bash -c "x=\\${2#sftp://} ; host=\\${x%%/*} ; port=\\${host##*:} ; host=\\${host%:*} ; [[ \\${host} = \\${port} ]] && port= ; eval \\"declare -a ssh_opts=(\\${3})\\" ; exec sftp \\${port:+-P \\${port}} \\"\\${ssh_opts[@]}\\" \\"\\${host}:/\\${x#*/}\\" \\"\\$1\\"" sftp "${DISTDIR}/${FILE}" "${URI}" "${PORTAGE_SSH_OPTS}"',
++		'FETCHCOMMAND_SSH'         : 'bash -c "x=\\${2#ssh://} ; host=\\${x%%/*} ; port=\\${host##*:} ; host=\\${host%:*} ; [[ \\${host} = \\${port} ]] && port= ; exec rsync --rsh=\\"ssh \\${port:+-p\\${port}} \\${3}\\" -avP \\"\\${host}:/\\${x#*/}\\" \\"\\$1\\"" rsync "${DISTDIR}/${FILE}" "${URI}" "${PORTAGE_SSH_OPTS}"',
+ 		'PORTAGE_ELOG_MAILSUBJECT' : '[portage] ebuild log for ${PACKAGE} on ${HOST}'
+ 	}
+ 
