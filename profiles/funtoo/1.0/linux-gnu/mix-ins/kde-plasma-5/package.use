@@ -1,95 +1,99 @@
-# Funtoo Linux KDE Plasma 5 mix-in (see FL-2372, FL-2581)
+# Distributed under the terms of the GNU General Public License v2
 
-#FL-3052
-media-libs/mesa egl wayland
-dev-libs/wayland abi_x86_32
+# Avoid circular dependency when installing from scratch
+dev-util/cmake -qt4 -qt5
 
-# USE flag changes required for a clean simultaneous merge of kde-base/kde-meta and kde-plasma/plasma-meta
->=app-crypt/pinentry-0.9.6-r5 -qt4
->=media-libs/mlt-0.9.8-r1 -kde -qt4
-dev-libs/libpcre pcre16
-dev-python/PyQt4 script sql webkit
-dev-qt/qtgui evdev mng
-dev-qt/qtsql mysql
-kde-apps/kde4-l10n minimal
-kde-apps/kdeartwork-meta minimal
-kde-apps/kdeartwork-styles minimal
-kde-apps/kdebase-meta minimal -wallpapers
-kde-apps/kdebase-runtime-meta minimal
-kde-apps/kdesu -handbook
-kde-apps/knetattach -handbook
-<kde-apps/konsole-15.08.2 -handbook minimal
-kde-base/baloo minimal
-kde-base/kde-meta -kdepim minimal
-media-gfx/exiv2 xmp
-media-libs/harfbuzz -graphite
-media-libs/phonon designer
-media-video/vlc -qt4
-net-libs/libkpeople minimal
-net-wireless/wpa_supplicant -qt4
-x11-libs/libxcb xkb
-
-# Other USE flag changes
-# Required for kde-apps/ark on x86-64bit, when lzma USE enabled (on by default)
->=app-arch/xz-utils-5.2.2 abi_x86_32
-
-# Enable thumbnail support in the Dolphin file manager
-kde-apps/dolphin thumbnail
-
-# Allow KDE to configure GTK look
-kde-plasma/systemsettings gtk
-
-# Not required, but makes life easier with Qt; Gentoo bug 457934
+# Not required, but makes life easier with Qt; bug 457934
 app-arch/unzip natspec
 
-# Required when the bluetooth USE flag is applied globally
-kde-apps/solid-runtime -bluetooth
+# Required by app-office/akonadi-server
+dev-qt/qtsql mysql
 
-# Required for app-arch/p7zip with KDE Plasma 5
-app-arch/p7zip wxwidgets
+# Required by dev-qt/qtcore
+dev-libs/libpcre pcre16
 
-# Required for app-text/calibre with KDE Plasma 5
-dev-qt/qtwebkit printsupport
-dev-python/PyQt5 gui network printsupport webkit
+# Required by media-gfx/graphviz which is required by kde-apps/kcachegrind
+media-libs/gd fontconfig
 
-# Required for dev-util/kdevelop with KDE Plasma 5
+# Required by kde-apps/ktp-text-ui
+kde-apps/ktp-common-internals otr
+
+# Required by kde-apps/libkexiv2
+media-gfx/exiv2 xmp
+
+# Required by kde-apps/okteta
+dev-qt/qtscript scripttools
+
+# Required by kde-base/pykde4
+dev-python/PyQt4 script sql webkit
+
+# Required by kde-frameworks/kactivities
+sys-libs/zlib minizip
+
+# Required by kde-frameworks/kapidox
+media-gfx/graphviz python
+
+# Required by kde-frameworks/kcoreaddons
+dev-qt/qtcore icu
+
+# Required by kde-plasma/kwin
+media-libs/mesa egl wayland
+
+# Required by net-libs/signon-ui
+net-libs/libproxy -kde
+
+# Required by kde-apps/kdenlive
+>=media-libs/mlt-0.9.8-r2 kdenlive melt -kde -qt4
+
+# Allow certain KDE 4 components to be coinstalled with Plasma 5
 <dev-util/kdevelop-4.8.0 -gdbui
->=dev-qt/qtdeclarative-4.8.7 webkit
-
-# Required for kde-apps/kdenlive with KDE Plasma 5
->=media-libs/mlt-0.9.8 -kde kdenlive melt -qt4
-
-# Force the inclusion of the Gtk3-based GUI. The Qt-based GUI currently lacks features present under the Gtk3-based GUI.
->=net-analyzer/wireshark-1.12.8-r1 gtk3 -qt4
-
-# Required for net-libs/kde-telepathy-meta with KDE Plasma 5
->=net-libs/telepathy-qt-0.9.6.1 farstream
-
-# net-p2p/ktorrent wants kde-base/libtaskmanager
-net-p2p/ktorrent -plasma
-
-# Required by kde-plasma/polkit-kde-agent with KDE Plasma 5
+kde-apps/kcontrol -handbook
+kde-apps/kde-meta:4 -kdepim minimal
+kde-apps/kde-wallpapers minimal
+kde-apps/kde4-l10n minimal
+kde-apps/kdeartwork-meta minimal
+kde-apps/kdebase-kioslaves minimal
+kde-apps/kdebase-meta:4 minimal
+kde-apps/kdebase-runtime-meta:4 -crash-reporter minimal
+kde-apps/kdesu -handbook
+kde-apps/knetattach -handbook
+kde-apps/kwalletmanager:4 minimal
+kde-apps/libkipi:4 minimal
+kde-apps/libksane:4 minimal
+kde-apps/solid-runtime -bluetooth
+kde-base/baloo minimal
+kde-base/kactivities minimal
+kde-base/systemsettings -handbook
+net-libs/libkpeople:4 minimal
+net-p2p/ktorrent:4 -plasma
 sys-auth/polkit-kde-agent minimal
 
-# Prevent kde-apps/kdesu
-sys-block/gparted -kde
+# Required by app-office/libreoffice
+media-libs/phonon designer
 
-# USE flag changes required to resolve Qt version conflicts. Default to Qt 5.
+# Fix REQUIRED_USE conflicts: qt5? ( !qt4 )
+>=app-crypt/pinentry-0.9.6-r5 -qt4
+app-office/akonadi-server -qt5
 >=app-office/texmaker-4.4.1 -qt4
 >=app-office/texstudio-2.9.4 -qt4
 app-text/qpdfview -qt4
 dev-db/sqlitebrowser -qt4
 >=dev-games/openscenegraph-3.2.1-r1 -qt4
+>=dev-libs/qcustomplot-1.3.0 -qt4
 >=dev-libs/quazip-0.7.1 -qt4
 >=kde-misc/kdiff3-0.9.98-r1 -kde -qt4
-media-gfx/digikam -qt4
 >=media-libs/opencv-3.0.0 -qt4
+media-video/makemkv -qt4
 >=media-video/smplayer-14.9.0.6690 -qt4
+media-video/vlc -qt4
+net-analyzer/wireshark -qt4
 net-misc/owncloud-client -qt4
 net-news/rssguard -qt4
 >=net-news/quiterss-0.17.7 -qt4
 net-p2p/bitcoin-qt -qt4
 >=net-p2p/qbittorrent-3.2.0 -qt4
+net-p2p/transmission -qt4
+>=net-wireless/wpa_supplicant-2.5 -qt4
 >=sci-geosciences/qlandkartegt-1.8.0 -qt4
 sci-visualization/kst -qt4
 www-client/qupzilla -kde -qt4

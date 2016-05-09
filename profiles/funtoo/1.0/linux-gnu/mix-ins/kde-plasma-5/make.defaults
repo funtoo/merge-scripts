@@ -1,1 +1,3 @@
-USE="consolekit declarative fontconfig introspection kde kipi lzma nls phonon plasma policykit qml qt3support qt4 qt5 sdl semantic-desktop widgets xcomposite xinerama xscreensaver"
+# Distributed under the terms of the GNU General Public License v2
+
+USE="consolekit declarative dri kde kipi phonon plasma policykit qml qt5 semantic-desktop widgets xcomposite xinerama xscreensaver"

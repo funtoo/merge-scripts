@@ -1,1 +1,2 @@
-USE="consolekit introspection kde nls policykit qt3support qt4 semantic-desktop"
+# Distributed under the terms of the GNU General Public License v2
+USE="consolekit declarative dri kde kipi phonon plasma policykit qt3support qt4 semantic-desktop xcomposite xinerama xscreensaver"

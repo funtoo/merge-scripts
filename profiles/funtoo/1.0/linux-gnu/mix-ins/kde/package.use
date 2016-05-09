@@ -1,35 +1,28 @@
-#Disable legacy kde4-l10n localization as required by several KDE Frameworks 5 packages
-kde-apps/kde4-l10n minimal
+# Distributed under the terms of the GNU General Public License v2
 
-# FL-2771. Enable minimal USE flag for kde-base/kactivities to remove block of kde-frameworks/kactivities
-kde-base/kactivities minimal
+# Required by kde-base/pykde4
+dev-python/PyQt4 script sql webkit
 
-# FL-2772. Update kde mix-in to enable clean kde-base/kde-meta install.
-# required by kde-base/pykde4
-dev-python/PyQt4 declarative script sql webkit
-
-# required by kde-apps/kopete
-dev-qt/qtgui mng
-
-# required by app-office/akondai-server
+# Required by app-office/akonadi-server
 dev-qt/qtsql mysql
 
-# useful for reporting bugs on segfaults
-kde-apps/kdebase-runtime-meta crash-reporter
+# Required by media-gfx/graphviz which is required by kde-apps/kcachegrind
+media-libs/gd fontconfig
 
-# https://bugs.gentoo.org/457934
-# Helps with zip files that have corrupted filenames
+# Required by dev-db/virtuoso-server
+sys-libs/zlib minizip
+
+# Not required, but makes life easier with Qt; bug 457934
 app-arch/unzip natspec
 
-# required by kde-apps/libkexiv2
+# Required by kde-apps/libkexiv2
 media-gfx/exiv2 xmp
 
-# FL-2760. Additional USE changes for clean kde-meta install with packages updated to a KDE Frameworks 5 basis.
-# (For kde-plasma/polkit-kde-agent)
-dev-libs/libdbusmenu-qt qt5
-dev-libs/libpcre pcre16
-media-libs/phonon qt5
-media-libs/phonon-vlc qt5
-sys-auth/polkit-kde-agent minimal
-sys-auth/polkit-qt qt5
-x11-libs/libxcb xkb
+# Required by kde-apps/artikulate
+dev-qt/qt-mobility multimedia
+
+# Required by app-office/libreoffice
+media-libs/phonon designer
+
+# Enable crash-reporter here instead of in ebuild
+kde-apps/kdebase-runtime-meta crash-reporter
