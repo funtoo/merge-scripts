@@ -14,6 +14,7 @@ IUSE="hardened"
 DEPEND=""
 RDEPEND="|| (
 		hardened? ( >=sys-kernel/hardened-sources-2.6 )
+		>=sys-kernel/dummy-sources-4.5.3
 		>=sys-kernel/debian-sources-2.6
 		>=sys-kernel/aufs-sources-2.6
 		>=sys-kernel/bliss-kernel-2.6
