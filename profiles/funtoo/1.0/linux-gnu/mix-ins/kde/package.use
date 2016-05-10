@@ -1,5 +1,10 @@
 # Distributed under the terms of the GNU General Public License v2
 
+
+# required by fresh instalaltion of KDE 4 SC
+app-text/poppler cairo
+dev-qt/qtgui mng
+
 # Required by kde-base/pykde4
 dev-python/PyQt4 script sql webkit
 
