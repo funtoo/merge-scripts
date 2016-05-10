@@ -1,5 +1,16 @@
 # Distributed under the terms of the GNU General Public License v2
 
+# plasma 5 builds need wayland with abi_x86_32 USE and libxcb need xkb USE:
+dev-libs/wayland abi_x86_32
+x11-libs/libxcb xkb
+
+# plasma 5 builds still building applications that are qt4 only. Adjust USE flags for them:
+dev-qt/qtopengl qt3support
+dev-qt/qtcore qt3support
+dev-qt/qtdeclarative qt3support
+dev-qt/qtgui qt3support
+dev-qt/qtsql qt3support
+
 # Avoid circular dependency when installing from scratch
 dev-util/cmake -qt4 -qt5
 
