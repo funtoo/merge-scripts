@@ -1,5 +1,8 @@
 # Distributed under the terms of the GNU General Public License v2
 
+# kde-frameworks/networkmanager-qt need plokit compiled with introspection:
+sys-auth/polkit introspection
+
 # plasma 5 builds need wayland with abi_x86_32 USE and libxcb need xkb USE:
 dev-libs/wayland abi_x86_32
 x11-libs/libxcb xkb
