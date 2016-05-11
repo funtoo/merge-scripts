@@ -14,9 +14,6 @@
 # a mask of elfutils that needs new glibc. until FL-3054 is fixed.
 >=dev-libs/elfutils-0.165
 
-# mask broken versions of libplist until https://bugs.gentoo.org/show_bug.cgi?id=548372 is fixed.
->=app-pda/libplist-1.11-r2
-
 # mask ruby 2.3 until targets also updated to ruby2.3. need tested. Also mask newer eselect ruby, which brings ruby:2.3 support.
 =app-eselect/eselect-ruby-2015*
 dev-lang/ruby:2.3
