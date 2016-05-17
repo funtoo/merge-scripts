@@ -6,8 +6,9 @@ KDE_REQUIRED="optional"
 CMAKE_REQUIRED="never"
 
 BASE_PACKAGENAME="bin"
-BASE_AMD64_URI="mirror://funtoo/libreoffice/stable-amd64/amd64-${BASE_PACKAGENAME}-"
-BASE_X86_URI="mirror://funtoo/libreoffice/stable-x86/x86-${BASE_PACKAGENAME}-"
+BASE_AMD64_URI="mirror://funtoo/libreoffice/current-amd64/amd64-${BASE_PACKAGENAME}-"
+BASE_X86_URI="mirror://funtoo/libreoffice/current-x86/x86-${BASE_PACKAGENAME}-"
+
 PYTHON_COMPAT=( python{2_7,3_4,3_5} )
 PYTHON_REQ_USE="threads,xml"
 
@@ -15,7 +16,6 @@ inherit kde4-base java-pkg-opt-2 python-single-r1 pax-utils prefix versionator
 
 DESCRIPTION="A full office productivity suite. Binary package"
 HOMEPAGE="http://www.libreoffice.org"
-
 SRC_URI_AMD64="
 	${BASE_AMD64_URI}libreoffice-${PV}.tar.xz
 	kde? (
@@ -53,16 +53,16 @@ SRC_URI="
 IUSE="gnome java kde"
 LICENSE="LGPL-3"
 SLOT="0"
-KEYWORDS="-* amd64 x86"
+KEYWORDS="-* ~amd64 ~x86"
 
 BIN_COMMON_DEPEND="
 	=app-text/libexttextcat-3.4*
 	=app-text/libmwaw-0.3*
-	app-text/poppler:0/51
-	dev-libs/boost:0/1.56.0
-	dev-libs/icu:0/55
+	app-text/poppler:0/60
+	dev-libs/boost:0/1.58.0
+	dev-libs/icu:0/57
 	>=media-gfx/graphite2-1.2.0
-	media-libs/glew:0/1.10
+	media-libs/glew:0/1.13
 	media-libs/harfbuzz:0/0.9.18[icu]
 	media-libs/libpng:0/16
 	virtual/jpeg:62
@@ -100,7 +100,7 @@ COMMON_DEPEND="
 	dev-libs/expat
 	>=dev-libs/hyphen-2.7.1
 	>=dev-libs/icu-4.8.1.1:=
-	=dev-libs/liborcus-0.7*
+	=dev-libs/liborcus-0.9*
 	>=dev-libs/librevenge-0.0.1
 	>=dev-libs/nspr-4.8.8
 	>=dev-libs/nss-3.12.9
