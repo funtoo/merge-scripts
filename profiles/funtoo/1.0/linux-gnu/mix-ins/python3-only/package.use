@@ -1,1 +1,2 @@
 dev-libs/libxml2 -python
+dev-libs/libxslt -python
