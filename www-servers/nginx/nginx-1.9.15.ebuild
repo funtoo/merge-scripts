@@ -292,13 +292,11 @@ mods[standard]="access auth_basic autoindex browser charset empty_gif fastcgi
 	scgi ssi split_clients userid uwsgi"
 
 mods[optional]="addition auth_request dav degradation flv geoip gunzip gzip_static
-	image_filter mp4 perl random_index realip secure_link ssl v2 stub_status sub xslt"
+	image_filter mp4 perl random_index realip secure_link ssl stub_status sub xslt"
 
 mods[mail]="imap pop3 smtp"
 
-IUSE="+aio +http +http2 +http-cache +pcre +poll +select
-	cpp_test debug google_perftools ipv6 libatomic luajit pcre-jit rtsig
-	ssl threads vim-syntax"
+IUSE="+aio +http +http2 +http-cache +pcre +poll +select	cpp_test debug google_perftools ipv6 libatomic luajit pcre-jit 	ssl threads vim-syntax"
 
 for m in ${mods[upstream]} ; do
 	IUSE+=" +nginx_modules_http_${m}" ; done
@@ -315,7 +313,9 @@ for m in ${mods[mail]} ; do
 for m in ${!mod_a[@]} ; do
 	IUSE+=" nginx_modules_external_${m}" ; done
 
-RDEPEND="http-cache? ( dev-libs/openssl )
+RDEPEND="google_perftools? ( dev-util/google-perftools )
+	http-cache? ( dev-libs/openssl )
+	http2? ( dev-libs/openssl )
 	pcre? ( dev-libs/libpcre )
 	pcre-jit? ( dev-libs/libpcre[jit] )
 	ssl? ( dev-libs/openssl )
@@ -328,9 +328,7 @@ RDEPEND="http-cache? ( dev-libs/openssl )
 	nginx_modules_http_perl? ( dev-lang/perl )
 	nginx_modules_http_rewrite? ( dev-libs/libpcre )
 	nginx_modules_http_secure_link? ( dev-libs/openssl )
-	nginx_modules_http_v2? ( dev-libs/openssl )
-	nginx_modules_http_xslt? ( dev-libs/libxml2
-		dev-libs/libxslt )
+	nginx_modules_http_xslt? ( dev-libs/libxml2 dev-libs/libxslt )
 
 	nginx_modules_external_lua? ( !luajit? ( dev-lang/lua )
 		luajit? ( dev-lang/luajit ) )
@@ -453,11 +451,11 @@ src_configure() {
 	use cpp_test && nginx_configure+=" --with-cpp_test_module"
 	use debug && nginx_configure+=" --with-debug"
 	use google_perftools && nginx_configure+=" --with-google_perftools_module"
+	use http2  && nginx_configure+=" --with-google_perftools_module"
 	use ipv6 && nginx_configure+=" --with-ipv6"
 	use libatomic && nginx_configure+=" --with-libatomic"
 	use pcre && nginx_configure+=" --with-pcre"
 	use pcre-jit && nginx_configure+=" --with-pcre-jit"
-	use rtsig && nginx_configure+=" --with-rtsig_module"
 	use threads && nginx_configure+=" --with-threads"
 
 	for m in ${mods[upstream]}; do
@@ -495,7 +493,7 @@ src_configure() {
 		fi
 	fi
 
-	if use http || use http-cache ; then
+	if use http || use http-cache || use http2; then
 		http_enabled=1
 	fi
 
@@ -644,7 +642,7 @@ pkg_postinst() {
 		fi
 	fi
 
-	if use nginx_modules_external_lua && use nginx_modules_http_v2 ; then
+	if use nginx_modules_external_lua && use http2 ; then
 		ewarn "Lua 3rd party module author warns against using ${PN}"
 		ewarn "with lua and v2 enabled."
 		ewarn "You can check http://git.io/OldLsg for more info."
