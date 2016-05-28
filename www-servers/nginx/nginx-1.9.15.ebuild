@@ -451,7 +451,7 @@ src_configure() {
 	use cpp_test && nginx_configure+=" --with-cpp_test_module"
 	use debug && nginx_configure+=" --with-debug"
 	use google_perftools && nginx_configure+=" --with-google_perftools_module"
-	use http2  && nginx_configure+=" --with-google_perftools_module"
+	use http2  && nginx_configure+=" --with-http_v2_module"
 	use ipv6 && nginx_configure+=" --with-ipv6"
 	use libatomic && nginx_configure+=" --with-libatomic"
 	use pcre && nginx_configure+=" --with-pcre"
