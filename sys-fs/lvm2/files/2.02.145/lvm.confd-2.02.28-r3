@@ -1,0 +1,4 @@
+# LVM should normally only be started after mdraid is available
+# this is because LVM physical volumes are very often MD devices.
+RC_AFTER="mdraid"
+@COMMENT@RC_NEED="lvmetad"

@@ -1,3 +1,6 @@
+# lvm update, masked for testing.
+>=sys-apps/lvm2-2.02.145
+
 # a test mask for lm_sensors
 >=sys-apps/lm_sensors-3.4.0
 

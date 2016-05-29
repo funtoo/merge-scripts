@@ -1,0 +1,11 @@
+diff -Nuar LVM2.2.02.145/conf/example.conf.in LVM2.2.02.145-fixed/conf/example.conf.in
+--- LVM2.2.02.145/conf/example.conf.in	2016-03-04 18:03:29.000000000 +0000
++++ LVM2.2.02.145-fixed/conf/example.conf.in	2016-05-29 10:29:24.905679067 +0000
+@@ -149,6 +149,7 @@
+ 	# global_filter are not opened by LVM.
+ 	# This configuration option has an automatic default value.
+ 	# global_filter = [ "a|.*/|" ]
++        global_filter = [ "r|/dev/cdrom|" ]
+ 
+ 	# Configuration option devices/cache_dir.
+ 	# Directory in which to store the device cache file.
