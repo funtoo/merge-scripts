@@ -1,16 +1,3 @@
-# CVE-2014-3616
-=www-servers/nginx-1.7.4
-=www-servers/nginx-1.7.3
-=www-servers/nginx-1.7.2
-=www-servers/nginx-1.7.1
-=www-servers/nginx-1.7.0
-<www-servers/nginx-1.6.2
-
-# CVE-2014-6271 CVE-2014-7169
-# CVE-2014-7186 CVE-2014-7187
-# CVE-2014-6277 CVE-2014-6278
-<app-shell/bash-4.2_p53
-
 # CVE-2014-1568
 # we do not have =dev-libs/nss-3.16.2.* available
 <dev-libs/nss-3.16.5
