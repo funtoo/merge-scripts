@@ -345,7 +345,7 @@ net-p2p/deluge python_single_target_python2_7
 net-p2p/nicotine+ python_single_target_python2_7
 net-print/cups python_single_target_python2_7
 net-print/foomatic-gui python_single_target_python2_7
-net-print/hplip python_single_target_python2_7
+net-print/hplip python_single_target_python2_7 -python_single_target_python3_4
 net-proxy/sshproxy python_single_target_python2_7
 net-proxy/sshuttle python_single_target_python2_7
 net-voip/telepathy-haze python_single_target_python2_7
