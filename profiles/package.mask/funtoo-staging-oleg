@@ -1,6 +1,3 @@
-# a test mask for lm_sensors
->=sys-apps/lm_sensors-3.4.0
-
 # re-mask gnutls, which is unmasked in gentoo-x86. not tested enough as claimed
 >=net-libs/gnutls-3.4.0
 
