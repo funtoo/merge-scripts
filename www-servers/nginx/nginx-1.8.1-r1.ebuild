@@ -401,6 +401,9 @@ pkg_setup() {
 src_prepare() {
 	epatch "${FILESDIR}/${PN}-fix-perl-install-path.patch"
 
+	# FL-3234
+	epatch "${FILESDIR}"/${PN}-1.8-CVE-2016-4450.patch
+
 	if use nginx_modules_external_upstream_check; then
 		epatch "${mod_wd[upstream_check]}/check_1.7.2+.patch"
 	fi
