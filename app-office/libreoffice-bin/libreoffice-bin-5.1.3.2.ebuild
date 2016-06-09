@@ -84,7 +84,7 @@ COMMON_DEPEND="
 	>=app-text/libabw-0.1.0
 	>=app-text/libexttextcat-3.2
 	>=app-text/libebook-0.1.1
-	>=app-text/libetonyek-12
+	>=app-text/libetonyek-0.1.6
 	app-text/liblangtag
 	>=app-text/libmspub-0.1.0
 	>=app-text/libmwaw-0.3.5
