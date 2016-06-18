@@ -153,6 +153,7 @@ src_install() {
 	keepdir /mnt/floppy
 	keepdir /opt
 	keepdir /sbin
+	keepdir /srv
 	keepdir /usr/bin
 	keepdir /usr/include
 	keepdir /usr/include/asm
