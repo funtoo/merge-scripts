@@ -1,6 +1,3 @@
-# FL-2524
->=www-servers/nginx-1.9.7
-
 # precautionary mask as newer versions appear to break GNOME 3 and other DE's
 >sys-auth/consolekit-0.4.6
 
