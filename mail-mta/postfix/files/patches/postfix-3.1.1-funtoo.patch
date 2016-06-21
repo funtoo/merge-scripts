@@ -1,0 +1,12 @@
+diff -Nuar postfix-3.1.1/conf/master.cf postfix-3.1.1-fixed/conf/master.cf
+--- postfix-3.1.1/conf/master.cf	2015-01-31 22:54:26.000000000 +0000
++++ postfix-3.1.1-fixed/conf/master.cf	2016-06-21 13:29:13.610796280 +0000
+@@ -9,7 +9,7 @@
+ # service type  private unpriv  chroot  wakeup  maxproc command + args
+ #               (yes)   (yes)   (no)    (never) (100)
+ # ==========================================================================
+-smtp      inet  n       -       n       -       -       smtpd
++smtp      unix  n       -       y       -       -       smtpd
+ #smtp      inet  n       -       n       -       1       postscreen
+ #smtpd     pass  -       -       n       -       -       smtpd
+ #dnsblog   unix  -       -       n       -       0       dnsblog
