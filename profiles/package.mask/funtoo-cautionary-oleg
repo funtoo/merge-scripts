@@ -1,3 +1,6 @@
+# mask rc version of readline. Just for precaution
+>=sys-libs/readline-7.0
+
 # FL-3138: mask a release of ZFS tools, which brings "new stable API", which is not stable or tested enough.
 >=sys-fs/zfs-0.6.5.4
 >=sys-fs/zfs-kmod-0.6.5.4
