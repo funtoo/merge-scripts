@@ -2,7 +2,7 @@
 
 EAPI=5
 
-inherit libtool multilib multilib-minimal eutils pam toolchain-funcs flag-o-matic db-use fcaps
+inherit libtool multilib multilib-minimal eutils pam toolchain-funcs flag-o-matic db-use
 
 MY_PN="Linux-PAM"
 MY_P="${MY_PN}-${PV}"
@@ -202,8 +202,4 @@ pkg_postinst() {
 		elog "  chmod -x /var/log/tallylog"
 		elog ""
 	fi
-
-	# The pam_unix module needs to check the password of the user which requires
-	# read access to /etc/shadow only.
-	fcaps cap_dac_override sbin/unix_chkpwd
 }
