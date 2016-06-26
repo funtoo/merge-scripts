@@ -202,4 +202,6 @@ pkg_postinst() {
 		elog "  chmod -x /var/log/tallylog"
 		elog ""
 	fi
+	chmod 4711 ${ROOT}/sbin/unix_chkpwd || die "chmod failed"
+
 }
