@@ -1,3 +1,6 @@
+# mask rkt version that is forced systemd. until sorted.
+>=app-emulation/rkt-1.7.0
+
 # QA-434: temp mask for dev-ruby/rake-11.2.2. This breaks ruby packages that needed for webkit and in turn does not allow merge of gnome and kde.
 >=dev-ruby/rake-11.2.2
 
