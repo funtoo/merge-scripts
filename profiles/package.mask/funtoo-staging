@@ -7,6 +7,3 @@
 # Mask latest revision of openconnect. We are not yet updated openrc to utilize it
 # new init script. FL-2369
 >net-misc/openconnect-7.06
-
-# FL-2232: Not fully-baked version of xorg-server. Masking.
->=x11-base/xorg-server-1.17
