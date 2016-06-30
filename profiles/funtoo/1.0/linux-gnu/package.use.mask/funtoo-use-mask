@@ -1,3 +1,6 @@
+# FL-3253. workaround app-editors/neovim bug with jemalloc, until https://github.com/neovim/neovim/issues/4920 fixed.
+app-editors/neovim -jemalloc
+
 # FL-3065: temporarily mask guile USE for graphviz. Need fixes in guile and in swig, which used for guile.
 media-gfx/graphviz guile
 
