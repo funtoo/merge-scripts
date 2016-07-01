@@ -1,0 +1,12 @@
+diff -Nuar src/wl/sys/wl_cfg80211_hybrid.h src-fix/wl/sys/wl_cfg80211_hybrid.h
+--- src/wl/sys/wl_cfg80211_hybrid.h	2015-09-18 22:47:30.000000000 +0000
++++ src-fix/wl/sys/wl_cfg80211_hybrid.h	2016-05-17 12:56:01.072084340 +0000
+@@ -119,7 +119,7 @@
+ struct wl_cfg80211_event_loop {
+ 	s32(*handler[WLC_E_LAST]) (struct wl_cfg80211_priv *wl, struct net_device *ndev,
+ 	                           const wl_event_msg_t *e, void *data);
+-};
++} __no_const;
+ 
+ struct wl_cfg80211_bss_info {
+ 	u16 band;
