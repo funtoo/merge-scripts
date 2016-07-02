@@ -1,3 +1,6 @@
+# FL-3255: temporary msk of inkscape that pulling new glibmm (and this need newer glib and other libs). no time for update yet.
+>=media-gfx/inkscape-0.91-r3
+
 # mask rkt version that is forced systemd. until sorted.
 >=app-emulation/rkt-1.7.0
 
