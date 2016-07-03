@@ -322,6 +322,9 @@ src_prepare() {
 	epatch "${FILESDIR}/15.9-mtrr.patch"
 
 	epatch "${FILESDIR}/15.12-xstate-fp.patch"
+
+	# linux-4.6 support
+	epatch "${FILESDIR}"/linux-4.6+.patch
 	epatch_user
 
 	cd "${MODULE_DIR}"
