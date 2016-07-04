@@ -65,6 +65,7 @@ DEPEND="${RDEPEND}
 	x11-proto/xineramaproto
 	x11-libs/libXtst
 	sys-apps/findutils
+	=sys-devel/gcc-4.9*
 	app-misc/pax-utils
 	app-arch/unzip
 "
