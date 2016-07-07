@@ -1,3 +1,6 @@
+# ati-drivers update. masked for testing:
+=x11-drivers/ati-drivers-15.12
+
 # FL-2775: mask gcc versions that are untested.
 >=sys-devel/gcc-4.9.3-r4
 
