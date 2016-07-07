@@ -1,11 +1,11 @@
+# mask colord that needs newer glib (and friends)
+>=x11-misc/colord-1.3
+
 # FL-3255: temporary msk of inkscape that pulling new glibmm (and this need newer glib and other libs). no time for update yet.
 >=media-gfx/inkscape-0.91-r3
 
 # mask rkt version that is forced systemd. until sorted.
 >=app-emulation/rkt-1.7.0
-
-# QA-434: temp mask for dev-ruby/rake-11.2.2. This breaks ruby packages that needed for webkit and in turn does not allow merge of gnome and kde.
->=dev-ruby/rake-11.2.2
 
 # re-mask gnutls, which is unmasked in gentoo-x86. not tested enough as claimed
 >=net-libs/gnutls-3.4.0
@@ -19,9 +19,6 @@
 
 # ati-drivers update. masked for testing:
 =x11-drivers/ati-drivers-15.12
-
-# a mask of elfutils that needs new glibc. until FL-3054 is fixed.
->=dev-libs/elfutils-0.165
 
 # mask ruby 2.3 until targets also updated to ruby2.3. need tested. Also mask newer eselect ruby, which brings ruby:2.3 support.
 =app-eselect/eselect-ruby-2015*
