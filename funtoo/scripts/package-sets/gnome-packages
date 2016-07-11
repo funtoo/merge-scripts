@@ -198,7 +198,6 @@ sys-apps/gnome-disk-utility
 sys-libs/libosinfo
 sys-power/upower
 www-client/epiphany
-x11-libs/gdk-pixbuf
 x11-libs/gnome-pty-helper
 x11-libs/gtk+
 x11-libs/gtksourceview
