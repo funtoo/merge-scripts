@@ -32,17 +32,17 @@ gentoo_staging_r = GitTree("gentoo-staging", "master", "repos@localhost:ports/ge
 
 shards = {
 	"perl" : GitTree("gentoo-perl-shard", "498dd3a53a832e52aa6c86d97c735bb6f09f134b", "repos@localhost:gentoo-perl-shard.git", pull=True),
-	"kde" : GitTree("gentoo-kde-shard", "df1ffbf53f2b4164b595d1a7f0aebee349aa8772", "repos@localhost:gentoo-kde-shard.git", pull=True),
+	"kde" : GitTree("gentoo-kde-shard", "d2dc32fb5537e30e6f5355037ae816365db95263", "repos@localhost:gentoo-kde-shard.git", pull=True),
 	"gnome" : GitTree("gentoo-gnome-shard", "4d5473019d599229cb54edde7f5a7e48df46302f", "repos@localhost:ports/gentoo-gnome-shard.git", pull=True),
-	"x11" : GitTree("gentoo-x11-shard", "bebbe1c9837232f2ab187589f54f7b233bebffeb", "repos@localhost:ports/gentoo-x11-shard.git", pull=True),
+	"x11" : GitTree("gentoo-x11-shard", "3ab85643ffae15f8a6454cefb7584cfc8beaf19e", "repos@localhost:ports/gentoo-x11-shard.git", pull=True),
 	"office" : GitTree("gentoo-office-shard", "79b18781dca810406c4f097ee0586bfe6994ebd4", "repos@localhost:ports/gentoo-office-shard.git", pull=True),
 	"core" : GitTree("gentoo-core-shard", "fe7eda80c2e0042d4c0de1cbde28a970b632ebae", "repos@localhost:gentoo-core-shard.git", pull=True)
 }
 
 # perl: 498dd3a53a832e52aa6c86d97c735bb6f09f134b (Updated 5 May 2016)
-# kde: df1ffbf53f2b4164b595d1a7f0aebee349aa8772 (Updated 6 Jul 2016)
+# kde: d2dc32fb5537e30e6f5355037ae816365db95263 (Updated 13 Jul 2016)
 # gnome: 4d5473019d599229cb54edde7f5a7e48df46302f (Updated 5 Oct 2015)
-# x11: bebbe1c9837232f2ab187589f54f7b233bebffeb (Updated 6 Jul 2016)
+# x11: 3ab85643ffae15f8a6454cefb7584cfc8beaf19e (Updated 13 Jul 2016)
 # office: 79b18781dca810406c4f097ee0586bfe6994ebd4 (Updated 8 Jun 2016)
 # core:	fe7eda80c2e0042d4c0de1cbde28a970b632ebae (Updated 8 Jul 2016)
 # funtoo-toolchain: 461fc6ac1ac83ef02435a26dc11b0aa0dfc9d73a (Updated 9 Jul 2016)
