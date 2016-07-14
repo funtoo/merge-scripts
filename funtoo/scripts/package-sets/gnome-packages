@@ -49,7 +49,6 @@ dev-libs/libgee
 dev-libs/libgit2-glib
 dev-libs/libgweather
 dev-libs/libical
-dev-libs/libinput
 dev-libs/liblouis
 dev-libs/libpeas
 dev-libs/libpwquality
