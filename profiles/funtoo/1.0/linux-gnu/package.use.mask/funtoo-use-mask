@@ -1,3 +1,6 @@
+# FL-3241: workaround broken xcb support in xine-lib.
+media-libs/xine-lib xcb
+
 # FL-3253. workaround app-editors/neovim bug with jemalloc, until https://github.com/neovim/neovim/issues/4920 fixed.
 app-editors/neovim -jemalloc
 
