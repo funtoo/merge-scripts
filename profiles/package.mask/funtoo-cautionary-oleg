@@ -1,3 +1,6 @@
+# FL-3267: mask boroken wgetpaste ebuild
+>=app-text/wgetpaste-2.27
+
 # mask rc version of readline. Just for precaution
 >=sys-libs/readline-7.0
 
