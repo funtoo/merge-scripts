@@ -9,7 +9,7 @@ if [[ ${PV} == "9999" ]] ; then
 	inherit git-2
 else
 	SRC_URI="mirror://gentoo/${P}.tar.xz"
-	KEYWORDS="~*"
+	KEYWORDS="*"
 fi
 
 DESCRIPTION="Standard Linux networking tools"
