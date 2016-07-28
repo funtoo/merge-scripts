@@ -20,9 +20,6 @@ media-tv/xbmc
 # mask sys-apps/makedev. This one collides with baselayout, makedev is part of baselayout.
 sys-apps/makedev
 
-#FL-2265: mask gnutls-3.410. Broken ebuild
-=net-libs/gnutls-3.4.0*
-
 #FL-2936, FL-2161: mask samba-4.1
 =net-fs/samba-4.1*
 
