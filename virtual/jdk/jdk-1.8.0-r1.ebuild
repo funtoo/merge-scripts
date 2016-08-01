@@ -8,5 +8,5 @@ KEYWORDS="*"
 
 RDEPEND="|| (
 		=dev-java/oracle-jdk-bin-1.8.0*
-		=dev-java/icedtea-bin:8
+		dev-java/icedtea-bin:8
 		)"
