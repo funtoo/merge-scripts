@@ -1,3 +1,6 @@
+# FL-3287" mask xfce4-notifyd that needs newer gtk+. until gtk+ update.
+>=xfce-extra/xfce4-notifyd-0.3
+
 # mask colord that needs newer glib (and friends)
 >=x11-misc/colord-1.3
 
