@@ -14,9 +14,6 @@
 >=dev-libs/boost-1.58.0-r2
 >=dev-util/boost-build-1.59.0
 
-# basealyout-2.2.1. Minor updates to various etc files. Keep ebuild masked for testing
-=sys-apps/baselayout-2.2.1
-
 # mask ruby 2.3 until targets also updated to ruby2.3. need tested. Also mask newer eselect ruby, which brings ruby:2.3 support.
 =app-eselect/eselect-ruby-2015*
 dev-lang/ruby:2.3
