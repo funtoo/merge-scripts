@@ -150,12 +150,10 @@ media-gfx/gnome-screenshot
 media-gfx/gthumb
 media-gfx/shotwell
 media-gfx/simple-scan
-media-libs/babl
 media-libs/clutter
 media-libs/clutter-gst
 media-libs/clutter-gtk
 media-libs/cogl
-media-libs/gegl
 media-libs/grilo
 media-libs/gsound
 media-libs/libchamplain
