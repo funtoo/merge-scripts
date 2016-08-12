@@ -1,2 +1,2 @@
 # mate-themes upstream now releasing support per each gtk3 version. i.e for 3.16, 3.18. masking a release that is built for 3.18 until we have gtk-3.18.
->=x11-themes/mate-themes-1.10.5-r180
+>=x11-themes/mate-themes-3.18
