@@ -58,11 +58,11 @@ KEYWORDS="-* ~amd64 ~x86"
 BIN_COMMON_DEPEND="
 	=app-text/libexttextcat-3.4*
 	=app-text/libmwaw-0.3*
-	app-text/poppler:0/61
+	app-text/poppler:0/63
 	dev-libs/boost:0/1.58.0
 	dev-libs/icu:0/57
 	>=media-gfx/graphite2-1.2.0
-	media-libs/glew:0/1.13
+	media-libs/glew:0/2.0
 	media-libs/harfbuzz:0/0.9.18[icu]
 	media-libs/libpng:0/16
 	virtual/jpeg:62
@@ -91,7 +91,7 @@ COMMON_DEPEND="
 	>=app-text/libodfgen-0.1.0
 	app-text/libwpd:0.10[tools]
 	app-text/libwpg:0.3
-	=app-text/libwps-0.4*
+	>=app-text/libwps-0.4
 	>=app-text/poppler-0.16:=[cxx]
 	>=dev-cpp/clucene-2.3.3.4-r2
 	=dev-cpp/libcmis-0.5*
