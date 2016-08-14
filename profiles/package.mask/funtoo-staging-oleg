@@ -1,12 +1,3 @@
-# FL-3287" mask xfce4-notifyd that needs newer gtk+. until gtk+ update.
->=xfce-extra/xfce4-notifyd-0.3
-
-# mask colord that needs newer glib (and friends)
->=x11-misc/colord-1.3
-
-# FL-3255: temporary msk of inkscape that pulling new glibmm (and this need newer glib and other libs). no time for update yet.
->=media-gfx/inkscape-0.91-r3
-
 # mask rkt version that is forced systemd. until sorted.
 >=app-emulation/rkt-1.7.0
 
