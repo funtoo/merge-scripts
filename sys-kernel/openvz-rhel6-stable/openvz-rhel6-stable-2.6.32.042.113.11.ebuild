@@ -2,7 +2,7 @@
 
 EAPI=2
 
-inherit mount-boot check-reqs
+inherit mount-boot check-reqs flag-o-matic
 
 CHECKREQS_DISK_BUILD="15G"
 
