@@ -117,6 +117,13 @@ src_prepare() {
 
 src_compile() {
 	! use binary && return
+	replace-cpu-flags nehalem corei7
+	replace-cpu-flags westmere corei7
+	replace-cpu-flags sandybridge corei7-avx
+	replace-cpu-flags ivybridge corei7-avx-i
+	replace-cpu-flags haswell corei7-avx2
+	replace-cpu-flags silvermont atom
+
 	install -d ${WORKDIR}/out/{lib,boot}
 	install -d ${T}/{cache,twork}
 	install -d $WORKDIR/build $WORKDIR/out/lib/firmware
