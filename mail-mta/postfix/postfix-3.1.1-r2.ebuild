@@ -282,6 +282,22 @@ src_install () {
 	fi
 }
 
+add_init() {
+	local runl=$1
+	shift
+	if [ ! -e ${ROOT}etc/runlevels/${runl} ]
+	then
+		install -d -m0755 ${ROOT}etc/runlevels/${runl}
+	fi
+	for initd in $*
+	do
+		einfo "Auto-adding '${initd}' service to your ${runl} runlevel"
+		[[ -e ${ROOT}etc/runlevels/${runl}/${initd} ]] && continue
+		[[ ! -e ${ROOT}etc/init.d/${initd} ]] && die "initscript $initd not found; aborting"
+		ln -snf /etc/init.d/${initd} "${ROOT}etc/runlevels/${runl}/${initd}"
+	done
+}
+
 pkg_postinst() {
 	[ "${EROOT}" == "/" ] && pkg_config
 
@@ -289,6 +305,9 @@ pkg_postinst() {
 		elog "Creating aliases database"
 		/usr/bin/newaliases
 	fi
+
+add_init default postfix
+	ewarn "Postfix automatically added to defaut runlevel. To start daemon, run /sbin/rc"
 }
 
 pkg_config() {
