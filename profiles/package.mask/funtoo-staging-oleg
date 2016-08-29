@@ -1,3 +1,6 @@
+# FL-3261: keep newestt iputils masked.
+>=net-misc/iputils-20160308
+
 # mask rkt version that is forced systemd. until sorted.
 >=app-emulation/rkt-1.7.0
 
