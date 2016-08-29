@@ -6,6 +6,7 @@ dev-libs/glib abi_x86_32
 dev-libs/icu abi_x86_32
 dev-libs/libffi abi_x86_32
 dev-libs/libpthread-stubs abi_x86_32
+dev-libs/libpcre abi_x86_32
 dev-libs/libxml2 abi_x86_32
 dev-libs/lzo abi_x86_32
 dev-util/pkgconf abi_x86_32
@@ -30,6 +31,7 @@ virtual/glu abi_x86_32
 virtual/jpeg abi_x86_32
 virtual/libffi abi_x86_32
 virtual/libiconv abi_x86_32
+virtual/libintl abi_x86_32
 virtual/libudev abi_x86_32
 virtual/opengl abi_x86_32
 virtual/pkgconfig abi_x86_32
