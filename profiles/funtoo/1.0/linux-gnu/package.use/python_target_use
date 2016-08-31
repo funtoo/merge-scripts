@@ -325,7 +325,7 @@ net-mail/fetchmail python_single_target_python2_7
 net-mail/mailman python_single_target_python2_7
 net-mail/mailutils python_single_target_python2_7
 net-mail/mpop python_single_target_python2_7
-net-mail/offlineimap python_single_target_python2_7
+net-mail/offlineimap python_single_target_python2_7 -python_single_target_python3_4
 net-misc/arm python_single_target_python2_7
 net-misc/charm python_single_target_python2_7
 net-misc/chrome-remote-desktop python_single_target_python2_7
