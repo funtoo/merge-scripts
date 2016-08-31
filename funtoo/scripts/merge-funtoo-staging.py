@@ -235,8 +235,7 @@ treeprep_steps += [
 	Minify(),
 	# Set name of repository as "gentoo". Unset masters.
 	RunSed(["metadata/layout.conf"], ["s/^repo-name = .*/repo-name = gentoo/", "/^masters =/d"]),
-	RunSed(["profiles/repo_name"], ["s/.*/gentoo/"]),
-	GenUseLocalDesc()
+	RunSed(["profiles/repo_name"], ["s/.*/gentoo/"])
 ]
 
 all_steps = [ base_steps, profile_steps, ebuild_additions, ebuild_modifications, eclass_steps, master_steps, treeprep_steps ]
