@@ -163,7 +163,7 @@ ebuild_additions = [
 	InsertEbuilds(funtoo_overlays["deadbeef_overlay"], select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_overlays["gambas_overlay"], select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_overlays["wmfs_overlay"], select="all", skip=None, replace=False),
-        InsertEbuilds(funtoo_overlays["flora"], select="all", skip=None, replace=False, merge=True),
+        InsertEbuilds(funtoo_overlays["flora"], select="all", skip=None, replace=True, merge=True),
 	]
 
 # Ebuild modifications -- these changes need to be treated more carefully as ordering can be important
