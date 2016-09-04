@@ -24,9 +24,10 @@ HOMEPAGE="https://wiki.linuxfoundation.org/networking/iputils"
 
 LICENSE="BSD-4"
 SLOT="0"
-IUSE="arping clockdiff doc gcrypt idn ipv6 libressl nettle +openssl rarpd rdisc SECURITY_HAZARD ssl static tftpd tracepath traceroute"
+IUSE="arping caps clockdiff doc gcrypt idn ipv6 libressl nettle +openssl rarpd rdisc SECURITY_HAZARD ssl static tftpd tracepath traceroute"
 
-LIB_DEPEND="idn? ( net-dns/libidn[static-libs(+)] )
+LIB_DEPEND="caps? ( sys-libs/libcap[static-libs(+)] )
+	idn? ( net-dns/libidn[static-libs(+)] )
 	ipv6? ( ssl? (
 		gcrypt? ( dev-libs/libgcrypt:0=[static-libs(+)] )
 		nettle? ( dev-libs/nettle[static-libs(+)] )
@@ -96,6 +97,7 @@ src_configure() {
 src_compile() {
 	tc-export CC
 	emake \
+		USE_CAP=$(usex caps) \
 		USE_IDN=$(usex idn) \
 		IPV4_DEFAULT=$(usex ipv6 'no' 'yes') \
 		TARGETS="${TARGETS[*]}" \
