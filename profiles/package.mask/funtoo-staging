@@ -1,9 +1,2 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
-
-# masked for testing
-=sys-kernel/openvz-rhel6-stable-2.6.32.042.113.11*
-
-# Mask latest revision of openconnect. We are not yet updated openrc to utilize it
-# new init script. FL-2369
->net-misc/openconnect-7.06
