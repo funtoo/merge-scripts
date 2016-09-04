@@ -58,6 +58,7 @@ S=${WORKDIR}/${PN}-s${PV}
 
 PATCHES=(
 	"${FILESDIR}/021109-uclibc-no-ether_ntohost.patch"
+	"${FILESDIR}/iputils-old-kernel.patch"
 )
 
 src_prepare() {
@@ -152,8 +153,10 @@ src_install() {
 	fi
 
 	fperms 4711 /bin/ping
-	use ipv6 && fperms 4711 /bin/ping6 /usr/sbin/tracepath6
-
+	use ipv6 && fperms 4711 /bin/ping6
+	if use tracepath && use ipv6 ; then
+		fperms 4711 /usr/sbin/tracepath6
+	fi
 	dodoc INSTALL RELNOTES
 	use doc && dohtml doc/*.html
 }
