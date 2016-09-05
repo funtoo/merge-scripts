@@ -31,7 +31,7 @@ def gentoo_staging_update():
 
 	all_steps = [
 		GitCheckout("master"),
-		SyncFromTree(gentoo_src, exclude=[".gitignore", "eclass/.gitignore", "metadata/.gitignore", "/metadata/cache/**", "dev-util/metro"]),
+		SyncFromTree(gentoo_src, exclude=["metadata/.gitignore", "/metadata/cache/**", "ChangeLog", "dev-util/metro"]),
 		# Only include 2012 and up GLSA's:
 		SyncDir(gentoo_glsa.root, srcdir=None, destdir="metadata/glsa", exclude=["glsa-200*.xml","glsa-2010*.xml", "glsa-2011*.xml"]) if not gentoo_use_rsync else None,
 	]
