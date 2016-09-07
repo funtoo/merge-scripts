@@ -1,7 +1,3 @@
-
-#FL-3311: switch to python3_4 tagets in boot-update
-=sys-boot/boot-update-1.7.3-r2
-
 # FL-3261: keep newestt iputils masked.
 >=net-misc/iputils-20160308
 
