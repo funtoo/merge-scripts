@@ -1,3 +1,6 @@
+# debian-sources-4.7.2. maksed for testing
+=sys-kernel/debian-sources-4.7.2
+
 # FL-3261: keep newestt iputils masked.
 >=net-misc/iputils-20160308
 
