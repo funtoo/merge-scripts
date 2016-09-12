@@ -1,3 +1,6 @@
+# mask freetype-2.7 update that is reported to break fonts. https://bugs.gentoo.org/show_bug.cgi?id=593340
+>=media-libs/freetype-2.7
+
 # mask xfsprogs-4.7.0, that is causing QA build failures.
 >=sys-fs/xfsprogs-4.7.0
 
