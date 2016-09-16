@@ -1,6 +1,3 @@
-# mask openresolv-3.8.1 for testing
-=net-dns/openresolv-3.8.1
-
 # mask freetype-2.7 update that is reported to break fonts. https://bugs.gentoo.org/show_bug.cgi?id=593340
 >=media-libs/freetype-2.7
 
