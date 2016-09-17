@@ -1,6 +1,3 @@
-# Requires masked sys-auth/consolekit 0.9.x (see FL-2795)
->=x11-misc/sddm-0.12.0
-
 #FL-2930
 >=sys-fs/udev-init-scripts-28
 
