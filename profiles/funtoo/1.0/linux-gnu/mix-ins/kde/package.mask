@@ -1,6 +1,3 @@
-# kde-4 does not need kde-plasma/polkit-kde-agent, but sys-auth/polkit-kde-agent
-kde-plasma/polkit-kde-agent
-
 # Distributed under the terms of the GNU General Public License v2
 
 # Mask to avoid conflicts in kde profile
