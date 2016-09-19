@@ -1,5 +1,13 @@
 # Distributed under the terms of the GNU General Public License v2
 
+# needed for clean kde merge and is also required by deps with qt5 uses, which are in this list below.
+x11-libs/libxcb xkb
+dev-libs/wayland abi_x86_32
+app-text/poppler qt5
+media-libs/mesa wayland
+sys-auth/polkit introspection
+
+
 # Resolve conflicts with slot 5 ebuilds
 kde-base/baloo minimal
 kde-apps/kde4-l10n minimal
