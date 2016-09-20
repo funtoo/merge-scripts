@@ -1,0 +1,4 @@
+-hardened
+-selinux
+systemd
+-openrc-force

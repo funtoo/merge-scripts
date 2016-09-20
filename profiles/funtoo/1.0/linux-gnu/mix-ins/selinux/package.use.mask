@@ -1,0 +1,10 @@
+media-sound/pulseaudio policykit
+
+sys-apps/portage python_targets_pypy python_targets_pypy3
+app-portage/gentoolkit python_targets_pypy python_targets_pypy3
+app-portage/layman python_targets_pypy python_targets_pypy3
+app-admin/webapp-config python_targets_pypy python_targets_pypy3
+app-portage/diffmask python_targets_pypy python_targets_pypy3
+app-portage/flaggie python_targets_pypy python_targets_pypy3
+
+app-emulation/rkt rkt_stage1_src

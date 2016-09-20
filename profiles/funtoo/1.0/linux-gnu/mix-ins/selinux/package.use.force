@@ -1,0 +1,10 @@
+sys-libs/libselinux python
+sys-libs/libsemanage python
+app-admin/setools python
+
+dev-lang/python xml
+
+sys-libs/libselinux static-libs
+dev-libs/libpcre static-libs
+
+
