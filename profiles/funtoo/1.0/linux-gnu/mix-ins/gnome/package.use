@@ -1,3 +1,6 @@
+# QA-459. gegl needs cairo and raw USE's
+media-libs/gegl cairo raw
+
 # for gnome-3.20
 >=virtual/libintl-0-r2 abi_x86_32
 >=dev-libs/libpcre-8.39 abi_x86_32
