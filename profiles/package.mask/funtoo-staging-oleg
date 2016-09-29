@@ -13,9 +13,6 @@
 # FL-3261: keep newestt iputils masked.
 >=net-misc/iputils-20160308
 
-# mask rkt version that is forced systemd. until sorted.
->=app-emulation/rkt-1.7.0
-
 # precaution staging mask for newer boost. ~ ebuilds unmasked in gentoo-x86.
 >=dev-libs/boost-1.58.0-r2
 >=dev-util/boost-build-1.59.0
