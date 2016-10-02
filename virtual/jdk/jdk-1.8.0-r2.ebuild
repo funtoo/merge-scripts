@@ -3,11 +3,11 @@
 EAPI="5"
 
 DESCRIPTION="Virtual for Java Development Kit (JDK)"
-SLOT="1.7"
+SLOT="1.8"
 KEYWORDS="*"
 
 RDEPEND="|| (
-		=dev-java/oracle-jdk-bin-1.7.0*
-		=dev-java/icedtea-bin-7*
-		=dev-java/soylatte-jdk-bin-7*
-	)"
+		=dev-java/oracle-jdk-bin-1.8.0*
+		dev-java/icedtea:8
+		dev-java/icedtea-bin:8
+		)"
