@@ -1,3 +1,6 @@
+# mask gcc-jdk. we do not have gcc[gcj] support.
+dev-java/gcj-jdk
+
 # also mask bash-4.4 that is unmasked in gentoo alongside readline-7.0 (in https://gitweb.gentoo.org/repo/gentoo.git/commit/?id=49dcef88c9b9d94334ae251a8f658739a19ccf3c)
 >=app-shells/bash-4.4
 
