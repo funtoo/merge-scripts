@@ -1,0 +1,28 @@
+From d10bafb2c84be84ee47a2204938df4b3b9f238c0 Mon Sep 17 00:00:00 2001
+From: Zac Medico <zmedico@gentoo.org>
+Date: Mon, 19 Sep 2016 09:39:38 -0700
+Subject: cache.fs_template: set 0o644 defaut perms
+
+Fixes 5652bc88514b ("flat_hash: use mkstemp in _setitem)
+X-Gentoo-Bug: 594358
+X-Gentoo-Bug-URL: https://bugs.gentoo.org/594358
+---
+ pym/portage/cache/fs_template.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/pym/portage/cache/fs_template.py b/pym/portage/cache/fs_template.py
+index fa44abc..e3c3c12 100644
+--- a/pym/portage/cache/fs_template.py
++++ b/pym/portage/cache/fs_template.py
+@@ -24,7 +24,7 @@ class FsBased(template.database):
+ 
+ 	def __init__(self, *args, **config):
+ 
+-		for x, y in (("gid", -1), ("perms", -1)):
++		for x, y in (("gid", -1), ("perms", 0o644)):
+ 			if x in config:
+ 				# Since Python 3.4, chown requires int type (no proxies).
+ 				setattr(self, "_" + x, int(config[x]))
+-- 
+cgit v0.12
+
