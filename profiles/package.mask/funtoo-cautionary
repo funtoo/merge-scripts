@@ -33,9 +33,6 @@ sys-apps/makedev
 # Cautionary mask dev-lang/swig-3.0.3, failures reported.
 >dev-lang/swig-3.0.2
 
-# QA-289
->=dev-db/mysql-init-scripts-2.1_alpha4
-
 # FL-1855, mask usbutils-008, until we sort udev failure.
 
 >sys-apps/usbutils-007
