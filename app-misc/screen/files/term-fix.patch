@@ -1,0 +1,49 @@
+From f3a12f015766becab73d88c5d5c4720c86e14987 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= <amade@asmblr.net>
+Date: Sat, 10 Sep 2016 12:02:34 +0200
+Subject: fix crash with long $TERM
+
+screen-4.4.0 built from source using -D_FORTIFY_SOURCE=1 on Fedora 24 crashes when a new window is created using the -T parameter and a sufficiently long string.
+
+https://bugzilla.redhat.com/show_bug.cgi?id=1350549
+
+Reported-by: Ricardo Garcia
+Bug: 48983
+---
+ src/window.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/window.c b/src/window.c
+index b3733b4..2d16d57 100644
+--- a/src/window.c
++++ b/src/window.c
+@@ -1206,7 +1206,7 @@ struct win *win;
+ char **args, *ttyn;
+ {
+   int pid;
+-  char tebuf[25];
++  char tebuf[MAXTERMLEN + 5 + 1]; /* MAXTERMLEN + strlen("TERM=") + '\0' */
+   char ebuf[20];
+   char shellbuf[7 + MAXPATHLEN];
+   char *proc;
+@@ -1442,7 +1442,7 @@ char **args, *ttyn;
+ 	{
+ 	  char *s1, *s2, tl;
+ 
+-	  sprintf(tebuf, "TERM=%s", win->w_term);
++	  snprintf(tebuf, sizeof(tebuf), "TERM=%s", win->w_term);
+ 	  debug2("Makewindow %d with %s\n", win->w_number, tebuf);
+ 	  tl = strlen(win->w_term);
+ 	  NewEnv[1] = tebuf;
+@@ -1458,7 +1458,7 @@ char **args, *ttyn;
+ 		}
+ 	    }
+ 	}
+-      sprintf(ebuf, "WINDOW=%d", win->w_number);
++      snprintf(ebuf, sizeof(ebuf), "WINDOW=%d", win->w_number);
+       NewEnv[3] = ebuf;
+ 
+       if (*proc == '-')
+-- 
+cgit v1.0
+
