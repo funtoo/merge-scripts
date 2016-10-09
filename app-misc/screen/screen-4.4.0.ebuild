@@ -94,13 +94,8 @@ src_install() {
 
 	dobin screen
 
-	if use multiuser || use prefix
-	then
-		fperms 4755 /usr/bin/screen
-	else
-		fowners root:utmp /usr/bin/screen
-		fperms 2755 /usr/bin/screen
-	fi
+
+	fperms 4755 /usr/bin/screen
 
 	insinto /usr/share/screen
 	doins terminfo/{screencap,screeninfo.src}
