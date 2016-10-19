@@ -1,3 +1,8 @@
+# FL-3351: add vim-8. masked for testing:
+=app-editors/vim-core-8.0.0005
+=app-editors/vim-8.0.0005
+=app-editors/gvim-8.0.0005
+
 # Fl-3333: add new portage that has git sync fixed. masked for testing.
 =sys-apps/portage-2.4.3
 
