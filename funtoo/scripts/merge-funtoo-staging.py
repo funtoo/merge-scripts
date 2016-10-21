@@ -31,7 +31,7 @@ gentoo_staging_r = GitTree("gentoo-staging", "master", "repos@localhost:ports/ge
 # tree. If there aren't changes in these overlays, we don't.
 
 shards = {
-	"perl" : GitTree("gentoo-perl-shard", "498dd3a53a832e52aa6c86d97c735bb6f09f134b", "repos@localhost:gentoo-perl-shard.git", pull=True),
+	"perl" : GitTree("gentoo-perl-shard", "9d5ba72e1bc306199d3814c938bf9e9f35891192", "repos@localhost:gentoo-perl-shard.git", pull=True),
 	"kde" : GitTree("gentoo-kde-shard", "b47e414eccbe72990c58c64703a88476ff094d8d", "repos@localhost:gentoo-kde-shard.git", pull=True),
 	"gnome" : GitTree("gentoo-gnome-shard", "ffabb752f8f4e23a865ffe9caf72f950695e2f26", "repos@localhost:ports/gentoo-gnome-shard.git", pull=True),
 	"x11" : GitTree("gentoo-x11-shard", "ff805ede9209314f16718e60081e6632909b4c16", "repos@localhost:ports/gentoo-x11-shard.git", pull=True),
@@ -39,7 +39,7 @@ shards = {
 	"core" : GitTree("gentoo-core-shard", "f641c7cc9039dc3618ea333fc12f7d8f992f3f88", "repos@localhost:gentoo-core-shard.git", pull=True)
 }
 
-# perl: 498dd3a53a832e52aa6c86d97c735bb6f09f134b (Updated 5 May 2016)
+# perl: 9d5ba72e1bc306199d3814c938bf9e9f35891192 (Updated 21 Oct 2016)
 # kde: b47e414eccbe72990c58c64703a88476ff094d8d  (Updated 19 Oct 2016)
 # gnome: ffabb752f8f4e23a865ffe9caf72f950695e2f26 (Updated 20 Sep 2016)
 # x11: ff805ede9209314f16718e60081e6632909b4c16 (Updated 19 Oct 2016)
