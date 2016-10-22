@@ -5,9 +5,9 @@ EAPI=5
 inherit check-reqs eutils mount-boot
 
 SLOT=$PVR
-CKV=4.7.2
+CKV=4.7.8
 KV_FULL=${PN}-${PVR}
-EXTRAVERSION=-1
+EXTRAVERSION=-1~bpo8+1
 MODVER=${CKV}${EXTRAVERSION}
 KERNEL_ARCHIVE="linux_${PV}.orig.tar.xz"
 PATCH_ARCHIVE="linux_${PV}${EXTRAVERSION}.debian.tar.xz"
