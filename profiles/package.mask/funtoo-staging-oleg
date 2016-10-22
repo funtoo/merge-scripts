@@ -1,5 +1,5 @@
 # QA-460: mask m2crypto that missing dep. Fixing of it is more complex task. Let's wait.
->=dev=python/m2crypto-0.25
+>=dev-python/m2crypto-0.25
 
 # FL-3351: add vim-8. masked for testing:
 =app-editors/vim-core-8.0.0005
