@@ -1,9 +1,6 @@
 # QA-460: mask m2crypto that missing dep. Fixing of it is more complex task. Let's wait.
 >=dev-python/m2crypto-0.25
 
-# Fl-3333: add new portage that has git sync fixed. masked for testing.
-=sys-apps/portage-2.4.3
-
 # mask screen-4.4.0 for testing
 >=app-misc/screen-4.4.0
 
