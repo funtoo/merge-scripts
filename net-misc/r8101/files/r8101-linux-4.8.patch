@@ -1,0 +1,35 @@
+diff -Nuar r8101-1.029.00/src/r8101_n.c r8101-1.029.00-fixed/src/r8101_n.c
+--- r8101-1.029.00/src/r8101_n.c	2016-04-21 17:04:52.000000000 +0300
++++ r8101-1.029.00-fixed/src/r8101_n.c	2016-10-23 17:36:53.660618594 +0300
+@@ -10206,7 +10206,6 @@
+                         dev->hw_features &= ~NETIF_F_IPV6_CSUM;
+                         netif_set_gso_max_size(dev, LSO_32K);
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(3,18,0)
+-                        dev->gso_min_segs = NIC_MIN_PHYS_BUF_COUNT;
+                         dev->gso_max_segs = NIC_MAX_PHYS_BUF_COUNT_LSO_64K;
+ #endif
+                 } else {
+@@ -10214,7 +10213,6 @@
+                         dev->features |=  NETIF_F_IPV6_CSUM | NETIF_F_TSO6;
+                         netif_set_gso_max_size(dev, LSO_64K);
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(3,18,0)
+-                        dev->gso_min_segs = NIC_MIN_PHYS_BUF_COUNT;
+                         dev->gso_max_segs = NIC_MAX_PHYS_BUF_COUNT_LSO2;
+ #endif
+                 }
+@@ -11865,12 +11863,12 @@
+         wmb();
+         txd->opts1 = cpu_to_le32(opts1);
+ 
+-        dev->trans_start = jiffies;
++        netif_trans_update(dev);
+ 
+-        tp->cur_tx += frags + 1;
++	tp->cur_tx += frags + 1;
+ 
+         wmb();
+-
++	
+         RTL_W8(TxPoll, NPQ);    /* set polling bit */
+ 
+         if (TX_BUFFS_AVAIL(tp) < MAX_SKB_FRAGS) {
