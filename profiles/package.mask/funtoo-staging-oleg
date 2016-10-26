@@ -1,3 +1,7 @@
+# mask blender-2.78. needs boost-1.62 unmask, python-3.5 unmask and hence various manual python_targets changes, which is untested. let's keep it masked for awhile.
+>=media-gfx/blender-2.78
+
+
 # QA-460: mask m2crypto that missing dep. Fixing of it is more complex task. Let's wait.
 >=dev-python/m2crypto-0.25
 
