@@ -234,7 +234,6 @@ mail-client/claws-mail python_single_target_python2_7
 mate-base/mate-applets python_single_target_python2_7
 mate-extra/caja-dropbox python_single_target_python2_7
 media-gfx/asymptote python_single_target_python2_7
->=media-gfx/blender-2.78  python_targets_python3_5
 media-gfx/comix python_single_target_python2_7
 media-gfx/cptutils python_single_target_python2_7
 media-gfx/drqueue python_single_target_python2_7

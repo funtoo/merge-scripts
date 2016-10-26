@@ -3,3 +3,5 @@
 >=dev-lang/python-exec-2.2
 >=app-eselect/eselect-python-20160207
 >=dev-lang/python-exec-2.3
+
+>=dev-lang/python-3.5
