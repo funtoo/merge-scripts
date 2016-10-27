@@ -1,9 +1,6 @@
 # mask breaking libcdio version that is found during test.
 >=dev-libs/libcdio-0.94
 
-# FL-3349: mask libXi version that is causing gtk segfaults.
->=x11-libs/libXi-1.7.7
-
 # mask gcc-jdk. we do not have gcc[gcj] support.
 dev-java/gcj-jdk
 
