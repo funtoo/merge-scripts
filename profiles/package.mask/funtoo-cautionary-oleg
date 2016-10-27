@@ -1,3 +1,10 @@
+
+# mask snapshot of xf86-video-intel. causing lot of problems now.
+# https://bugs.gentoo.org/show_bug.cgi?id=598110
+# https://bugs.gentoo.org/show_bug.cgi?id=598174
+# i have laptop hang with locking screen on xfce.
+>=x11-drivers/xf86-video-intel-2.99.917_p20161024
+
 # mask breaking libcdio version that is found during test.
 >=dev-libs/libcdio-0.94
 
