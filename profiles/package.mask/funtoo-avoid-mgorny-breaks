@@ -1,5 +1,6 @@
 # latest llvm changes by gentoo seems causing a lot of troubles.
 # https://www.gentoo.org/support/news-items/2016-10-25-llvm_3_9_with_llvm_targets.html
+>=dev-libs/libclc-0.2.0_pre20160921
 >=sys-devel/clang-3.9.0
 >=sys-devel/clang-runtime-3.9.0
 >=sys-devel/llvm-3.9.0
