@@ -1,0 +1,12 @@
+diff -urN a/samples/powerbtn/powerbtn.sh b/samples/powerbtn/powerbtn.sh
+--- a/samples/powerbtn/powerbtn.sh	2010-06-15 09:39:15.000000000 -0400
++++ b/samples/powerbtn/powerbtn.sh	2014-08-05 01:13:22.458907799 -0400
+@@ -51,7 +51,7 @@
+ getXconsole
+ 
+ # A list of power management system process names.
+-PMS="gnome-power-manager kpowersave xfce4-power-manager"
++PMS="gnome-settings-daemon kpowersave xfce4-power-manager"
+ PMS="$PMS guidance-power-manager.py dalston-power-applet"
+ 
+ # If one of those is running or any of several others,
