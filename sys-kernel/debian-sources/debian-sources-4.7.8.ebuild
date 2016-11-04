@@ -35,7 +35,7 @@ get_patch_list() {
 pkg_pretend() {
 	# Ensure we have enough disk space to compile
 	if use binary ; then
-		CHECKREQS_DISK_BUILD="14G"
+		CHECKREQS_DISK_BUILD="20G"
 
 		check-reqs_pkg_setup
 	fi
