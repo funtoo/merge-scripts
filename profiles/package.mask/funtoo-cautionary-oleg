@@ -1,3 +1,5 @@
+# mask pyelftools-0.24. this version breaks lddtree and hence makes broken initramfs.
+>=dev-python/pyelftools-0.24
 
 # mask snapshot of xf86-video-intel. causing lot of problems now.
 # https://bugs.gentoo.org/show_bug.cgi?id=598110
