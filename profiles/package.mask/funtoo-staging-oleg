@@ -1,3 +1,6 @@
+# FL-3372: add kibana-bin-5.0.0 which requires masked below elasticsearch.
+>=www-apps/kibana-bin-5.0.0
+
 # FL-3363: mask major bump of elastcsearch. Bumped without looking for configuration changes check, which breaks start-up.
 >=app-misc/elasticsearch-5.0.0
 
