@@ -27,7 +27,7 @@ sys-apps/makedev
 >=sys-devel/crossdev-20140917
 
 # FL-2020, FL-2015, mask very latest libevent, breaks packages.
->dev-libs/libevent-2.0.22
+>=dev-libs/libevent-2.1
 
 # FL-1937
 # Cautionary mask dev-lang/swig-3.0.3, failures reported.
