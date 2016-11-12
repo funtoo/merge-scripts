@@ -58,7 +58,7 @@ BIN_COMMON_DEPEND="
 	=app-text/libmwaw-0.3*
 	app-text/poppler:0/64
 	dev-libs/boost:0/1.62.0
-	dev-libs/icu:0/58
+	dev-libs/icu:0/58.1
 	>=media-gfx/graphite2-1.2.0
 	media-libs/glew:0/2.0
 	media-libs/harfbuzz:0/0.9.18[icu]
