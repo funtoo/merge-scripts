@@ -67,7 +67,6 @@ other_overlays = {
 	"foo_overlay" : GitTree("foo-overlay", "master", "https://github.com/slashbeast/foo-overlay.git", pull=True),
 	"bar_overlay" : GitTree("bar-overlay", "master", "git://github.com/adessemond/bar-overlay.git", pull=True),
 	"causes_overlay" : GitTree("causes","master", "https://github.com/causes-/causelay", pull=True),
-	"bliss_overlay" : GitTree("bliss-overlay", "master", "https://github.com/fearedbliss/bliss-overlay.git", pull=True),
 	"squeezebox_overlay" : GitTree("squeezebox", "master", "git://anongit.gentoo.org/user/squeezebox.git", pull=True),
 	"pantheon_overlay" : GitTree("pantheon", "master", "https://github.com/pimvullers/elementary.git", pull=True),
 	"pinsard_overlay" : GitTree("pinsard", "master", "https://github.com/apinsard/sapher-overlay.git", pull=True),
@@ -158,7 +157,6 @@ profile_steps += [
 
 ebuild_additions = [
 	InsertEbuilds(other_overlays["bar_overlay"], select="all", skip=["app-emulation/qemu"], replace=False),
-	InsertEbuilds(other_overlays["bliss_overlay"], select="all", skip=["net-p2p/bittorrent-sync", "media-tv/plex-media-server", "app-bin/firefox", "app-bin/libreoffice"], replace=False),
 	InsertEbuilds(other_overlays["squeezebox_overlay"], select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_overlays["deadbeef_overlay"], select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_overlays["gambas_overlay"], select="all", skip=None, replace=False),
