@@ -73,7 +73,7 @@ prefix_src_archives() {
 	done
 }
 
-TARBALL_PV=2.2.26
+TARBALL_PV=2.3.2
 SRC_URI="mirror://gentoo/${PN}-${TARBALL_PV}.tar.bz2
 	$(prefix_src_archives ${PN}-${TARBALL_PV}.tar.bz2)"
 S=$WORKDIR/portage-$TARBALL_PV
@@ -81,6 +81,8 @@ S=$WORKDIR/portage-$TARBALL_PV
 pkg_setup() {
 	use epydoc && DISTUTILS_ALL_SUBPHASE_IMPLS=( python2.7 )
 }
+
+PATCHES=( "${FILESDIR}"/portage-revert-git-sync.patch )
 
 python_prepare_all() {
 	distutils-r1_python_prepare_all
