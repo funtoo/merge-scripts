@@ -1,3 +1,6 @@
+# QA-465: enable xkb USE for libxcb
+x11-libs/libxcb xkb
+
 # updates to mate mix-in::
 app-crypt/pinentry gnome-keyring
 media-plugins/alsa-plugins pulseaudio
