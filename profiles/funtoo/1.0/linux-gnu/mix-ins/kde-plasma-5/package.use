@@ -1,4 +1,7 @@
 # Distributed under the terms of the GNU General Public License v2
+# QA-466. kwayland and qtgui of SLOT=5 needs egl USE enabled.
+dev-qt/qtgui:5 egl
+dev-qt/qtwayland:5 egl
 
 # kde-frameworks/networkmanager-qt need plokit compiled with introspection:
 sys-auth/polkit introspection
