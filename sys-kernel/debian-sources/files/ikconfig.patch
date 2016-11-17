@@ -1,0 +1,13 @@
+diff -Nuar debian/config/config debian-fixed/config/config
+--- debian/config/config	2016-11-13 04:26:51.000000000 +0000
++++ debian-fixed/config/config	2016-11-17 06:43:19.856109559 +0000
+@@ -5495,7 +5495,8 @@
+ CONFIG_RCU_FANOUT=32
+ CONFIG_RCU_FAST_NO_HZ=y
+ CONFIG_RCU_KTHREAD_PRIO=0
+-# CONFIG_IKCONFIG is not set
++CONFIG_IKCONFIG=y
++CONFIG_IKCONFIG_PROC=y
+ CONFIG_LOG_BUF_SHIFT=17
+ CONFIG_LOG_CPU_MAX_BUF_SHIFT=12
+ CONFIG_NUMA_BALANCING=y
