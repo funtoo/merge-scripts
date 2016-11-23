@@ -1,3 +1,6 @@
+# FL-3392: stabilize libplist-1.12
+=app-pda/libplist-1.12 amd64 x86
+
 # FL-3357: stabilize man2html after man-db unfork
 =sys-apps/man2html-1.6g amd64 x86
 
