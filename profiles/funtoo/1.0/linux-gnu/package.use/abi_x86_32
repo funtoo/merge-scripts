@@ -22,6 +22,7 @@ media-libs/libpng abi_x86_32
 media-libs/mesa abi_x86_32
 media-libs/tiff abi_x86_32
 sys-apps/attr abi_x86_32
+sys-apps/util-linux abi_x86_32
 sys-devel/llvm abi_x86_32
 sys-fs/eudev abi_x86_32
 sys-libs/gpm abi_x86_32
@@ -37,6 +38,7 @@ virtual/opengl abi_x86_32
 virtual/pkgconfig abi_x86_32
 x11-libs/cairo abi_x86_32
 x11-libs/gdk-pixbuf abi_x86_32
+x11-libs/libICE abi_x86_32
 x11-libs/libSM abi_x86_32
 x11-libs/libX11 abi_x86_32
 x11-libs/libXau abi_x86_32
@@ -49,6 +51,7 @@ x11-libs/libXi abi_x86_32
 x11-libs/libXmu abi_x86_32
 x11-libs/libXrandr abi_x86_32
 x11-libs/libXrender abi_x86_32
+x11-libs/libXt abi_x86_32
 x11-libs/libXxf86vm abi_x86_32
 x11-libs/libdrm abi_x86_32
 x11-libs/libpciaccess abi_x86_32
