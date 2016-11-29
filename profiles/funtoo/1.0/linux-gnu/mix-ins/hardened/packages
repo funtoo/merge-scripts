@@ -7,3 +7,6 @@
 *sys-apps/paxctl
 *sys-apps/elfix
 *dev-libs/gmp
+
+# FL-3421. dev-libs/mpc required for plugins.
+*dev-libs/mpc
