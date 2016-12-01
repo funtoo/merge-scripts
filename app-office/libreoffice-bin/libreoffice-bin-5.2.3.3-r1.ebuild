@@ -7,7 +7,7 @@ CMAKE_REQUIRED="never"
 
 BASE_PACKAGENAME="bin"
 BASE_AMD64_URI="mirror://funtoo/libreoffice/current-amd64/amd64-${BASE_PACKAGENAME}-"
-BASE_X86_URI="mirror://funtoo/libreoffice/current-x86/x86-${BASE_PACKAGENAME}-"
+#BASE_X86_URI="mirror://funtoo/libreoffice/current-x86/x86-${BASE_PACKAGENAME}-"
 
 PYTHON_COMPAT=( python{2_7,3_4,3_5} )
 PYTHON_REQ_USE="threads,xml"
@@ -30,37 +30,36 @@ SRC_URI_AMD64="
 		java? ( ${BASE_AMD64_URI}libreoffice-java-${PV}.xd3 )
 	) )
 "
-SRC_URI_X86="
-	${BASE_X86_URI}libreoffice-${PV}.tar.xz
-	kde? (
-		!java? ( ${BASE_X86_URI}libreoffice-kde-${PV}.xd3 )
-		java? ( ${BASE_X86_URI}libreoffice-kde-java-${PV}.xd3 )
-	)
-	gnome? (
-		!java? ( ${BASE_X86_URI}libreoffice-gnome-${PV}.xd3 )
-		java? ( ${BASE_X86_URI}libreoffice-gnome-java-${PV}.xd3 )
-	)
-	!kde? ( !gnome? (
-		java? ( ${BASE_X86_URI}libreoffice-java-${PV}.xd3 )
-	) )
-"
+#SRC_URI_X86="
+#	${BASE_X86_URI}libreoffice-${PV}.tar.xz
+#	kde? (
+#		!java? ( ${BASE_X86_URI}libreoffice-kde-${PV}.xd3 )
+#		java? ( ${BASE_X86_URI}libreoffice-kde-java-${PV}.xd3 )
+#	)
+#	gnome? (
+#		!java? ( ${BASE_X86_URI}libreoffice-gnome-${PV}.xd3 )
+#		java? ( ${BASE_X86_URI}libreoffice-gnome-java-${PV}.xd3 )
+#	)
+#	!kde? ( !gnome? (
+#		java? ( ${BASE_X86_URI}libreoffice-java-${PV}.xd3 )
+#	) )
+#"
 RESTRICT="mirror strip test"
 SRC_URI="
-	amd64? ( ${SRC_URI_AMD64} )
-	x86? ( ${SRC_URI_X86} )
-"
+	amd64? ( ${SRC_URI_AMD64} )"
 
 IUSE="gnome java kde"
 LICENSE="LGPL-3"
 SLOT="0"
-KEYWORDS="-* ~amd64 ~x86"
+KEYWORDS="-* ~amd64"
 
 BIN_COMMON_DEPEND="
+	app-text/hunspell
 	=app-text/libexttextcat-3.4*
 	=app-text/libmwaw-0.3*
-	app-text/poppler:0/63
-	dev-libs/boost:0/1.58.0
-	dev-libs/icu:0/57
+	app-text/poppler:0/64
+	dev-libs/boost:0/1.62.0
+	dev-libs/icu:0/58.1
 	>=media-gfx/graphite2-1.2.0
 	media-libs/glew:0/2.0
 	media-libs/harfbuzz:0/0.9.18[icu]
@@ -100,7 +99,7 @@ COMMON_DEPEND="
 	dev-libs/expat
 	>=dev-libs/hyphen-2.7.1
 	>=dev-libs/icu-4.8.1.1:=
-	=dev-libs/liborcus-0.9*
+	=dev-libs/liborcus-0.11*
 	>=dev-libs/librevenge-0.0.1
 	>=dev-libs/nspr-4.8.8
 	>=dev-libs/nss-3.12.9
