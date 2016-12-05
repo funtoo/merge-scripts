@@ -12,6 +12,7 @@
 *app-shells/bash
 *dev-lang/perl
 *dev-lang/python
+*dev-libs/mpc
 *dev-vcs/git
 *net-dns/openresolv
 *net-misc/bridge-utils
