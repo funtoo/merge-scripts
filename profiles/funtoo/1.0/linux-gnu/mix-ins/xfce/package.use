@@ -1,3 +1,6 @@
+# QA-469. add xkb USE to libxcb
+x11-libs/libxcb xkb
+
 # FL-2496:
 # USe xfce's notification daemon:
 virtual/notification-daemon xfce
