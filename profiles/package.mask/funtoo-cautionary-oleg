@@ -1,6 +1,3 @@
-# we don't want to deal with rc versions of perl
-=dev-lang/perl-5.24.1_rc*
-
 # revert gentoo's unmask of sandbox-2.11. It's unmasked without finishing the debugging in here. https://bugs.gentoo.org/show_bug.cgi?id=578582. this version breaks firefox buildig, found on #funtoo.
 =sys-apps/sandbox-2.11*
 
