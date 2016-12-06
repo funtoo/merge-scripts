@@ -31,18 +31,18 @@ gentoo_staging_r = GitTree("gentoo-staging", "master", "repos@localhost:ports/ge
 # tree. If there aren't changes in these overlays, we don't.
 
 shards = {
-	"perl" : GitTree("gentoo-perl-shard", "1fc10379b04cb4aaa29e824288f3ec22badc6b33", "repos@localhost:gentoo-perl-shard.git", pull=True),
-	"kde" : GitTree("gentoo-kde-shard", "d06ad89d6c5de6a5bb8b3d79b0ae821c0debdb29", "repos@localhost:gentoo-kde-shard.git", pull=True),
+	"perl" : GitTree("gentoo-perl-shard", "fb785906a319908568cf9509760ff47aa6761f65", "repos@localhost:gentoo-perl-shard.git", pull=True),
+	"kde" : GitTree("gentoo-kde-shard", "a87f2ea7686cf79224b42b168beafa7f743ae51c", "repos@localhost:gentoo-kde-shard.git", pull=True),
 	"gnome" : GitTree("gentoo-gnome-shard", "ffabb752f8f4e23a865ffe9caf72f950695e2f26", "repos@localhost:ports/gentoo-gnome-shard.git", pull=True),
-	"x11" : GitTree("gentoo-x11-shard", "64543816ad75a20e77d12e6c72898d87c7a11def", "repos@localhost:ports/gentoo-x11-shard.git", pull=True),
+	"x11" : GitTree("gentoo-x11-shard", "95512fde9ac095f9683a61eb4ff61476f059c851", "repos@localhost:ports/gentoo-x11-shard.git", pull=True),
 	"office" : GitTree("gentoo-office-shard", "9a702057d23e7fa277e9626344671a82ce59442f", "repos@localhost:ports/gentoo-office-shard.git", pull=True),
 	"core" : GitTree("gentoo-core-shard", "6cf8609ffea4c759a882bfe66ba160a828225850", "repos@localhost:gentoo-core-shard.git", pull=True)
 }
 
-# perl: 1fc10379b04cb4aaa29e824288f3ec22badc6b33 (Updated 23 Nov 2016)
-# kde: d06ad89d6c5de6a5bb8b3d79b0ae821c0debdb29 (Updated 3 Dec 2016)
+# perl: fb785906a319908568cf9509760ff47aa6761f65 (Updated 6 Dec 2016)
+# kde: a87f2ea7686cf79224b42b168beafa7f743ae51c (Updated 6 Dec 2016)
 # gnome: ffabb752f8f4e23a865ffe9caf72f950695e2f26 (Updated 20 Sep 2016)
-# x11: 64543816ad75a20e77d12e6c72898d87c7a11def (Updated 3 Dec 2016)
+# x11: 95512fde9ac095f9683a61eb4ff61476f059c851 (Updated 6 Dec 2016)
 # office: 9a702057d23e7fa277e9626344671a82ce59442f (Updated 29 Nov 2016)
 # core:	6cf8609ffea4c759a882bfe66ba160a828225850 (Updated 11 Nov 2016)
 # funtoo-toolchain: e1dc33b5b2669bf3af00caa6ce6741503c38cb93 (Updated 26 Nov 2016)
