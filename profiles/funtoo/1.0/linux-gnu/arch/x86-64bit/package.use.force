@@ -3,10 +3,8 @@
 # $Header: /var/cvsroot/gentoo-x86/profiles/arch/amd64/package.use.force,v 1.6 2011/04/21 10:30:15 flameeyes Exp $
 
 # support of llvm_targets
-llvm_targets_X86
-llvm_targets_BPF
-llvm_targets_AMDGPU
-llvm_targets_NVPTX
+sys-devel/clang llvm_targets_X86
+sys-devel/llvm llvm_targets_X86
 
 # FL-1832; force multilib support on sys-devel/gcc
 sys-devel/gcc abi_x86_32

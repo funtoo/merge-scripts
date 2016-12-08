@@ -1,0 +1,3 @@
+# enable llvm_targets
+sys-devel/clang llvm_targets_AMDGPU llvm_targets_BPF llvm_targets_NVPTX
+sys-devel/llvm llvm_targets_AMDGPU llvm_targets_BPF llvm_targets_NVPTX
