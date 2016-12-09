@@ -1,2 +1,2 @@
-USE=" base cairo caja gdu consolekit extras introspection gtk policykit themes udisks"
+USE="base cairo caja gdu consolekit extras introspection policykit themes udisks"
 USE="$USE openrc-force"
