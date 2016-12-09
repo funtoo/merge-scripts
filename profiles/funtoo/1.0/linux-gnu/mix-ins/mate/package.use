@@ -1,4 +1,5 @@
 # QA-471 enable gtk3
+>=mate-extra/mate-power-manager-1.16.0 gtk3
 >=mate-base/mate-panel-1.16.0 gtk3
 >=mate-base/libmatekbd-1.16.0 gtk3
 >=mate-extra/caja-extensions-1.16.0 gtk3
