@@ -1,12 +1,8 @@
 # QA-471 enable gtk3
->=mate-extra/mate-power-manager-1.16.0 gtk3
->=mate-base/mate-panel-1.16.0 gtk3
->=mate-base/libmatekbd-1.16.0 gtk3
->=mate-extra/caja-extensions-1.16.0 gtk3
->=mate-base/mate-settings-daemon-1.16.0 gtk3
->=mate-base/caja-1.16.1 gtk3
->=mate-base/mate-desktop-1.16.1 gtk3
->=mate-base/mate-control-center-1.16.0 gtk3
+media-gfx/eom -python
+app-editors/pluma -python
+dev-libs/libmateweather -python
+app-crypt/gcr gtk
 
 # QA-465: enable xkb USE for libxcb
 x11-libs/libxcb xkb
