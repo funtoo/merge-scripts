@@ -84,10 +84,10 @@ src_prepare() {
 	touch -r . doc/*
 
 	epatch "${FILESDIR}"/${PN}-4.1-document-system-bashrc.patch
-	epatch "${FILESDIR}"/${PN}-4.3-compat-lvl.patch
-	epatch "${FILESDIR}"/${PN}-4.3-append-process-segfault.patch
 	epatch "${FILESDIR}"/${PN}-4.3-mapfile-improper-array-name-validation.patch
 	epatch "${FILESDIR}"/${PN}-4.3-arrayfunc.patch
+	epatch "${FILESDIR}"/${PN}-4.3-protos.patch
+	epatch "${FILESDIR}"/${PN}-4.4-popd-offset-overflow.patch #600174
 
 	epatch_user
 }
