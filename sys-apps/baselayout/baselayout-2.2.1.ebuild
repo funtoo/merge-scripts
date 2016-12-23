@@ -17,6 +17,7 @@ LICENSE="GPL-2 BSD-2"
 SLOT="0"
 KEYWORDS="*"
 IUSE="build"
+RDEPEND="!sys-apps/makedev"
 PDEPEND="sys-apps/openrc"
 
 src_unpack() {
