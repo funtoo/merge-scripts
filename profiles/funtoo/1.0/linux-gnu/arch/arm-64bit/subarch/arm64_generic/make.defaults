@@ -1,0 +1,5 @@
+CHOST="aarch64-unknown-linux-gnu"
+CFLAGS="-O2 -pipe -march=armv8-a"
+CXXFLAGS="${CFLAGS}"
+FFLAGS="${CFLAGS}"
+FCFLAGS="${CFLAGS}"
