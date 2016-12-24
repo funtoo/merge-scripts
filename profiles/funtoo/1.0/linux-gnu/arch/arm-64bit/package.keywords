@@ -1,0 +1,4 @@
+# Funtoo stages have packages included that do not have arm64 keywords yet. Let's put keywords for them and test.
+=sys-apps/usbutils-007 ~arm64
+=sys-fs/xfsprogs-4.5.0 ~arm64
+=net-misc/ifenslave-1.1.0-r6 ~arm64
