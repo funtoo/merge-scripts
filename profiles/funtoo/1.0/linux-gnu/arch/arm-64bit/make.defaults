@@ -15,3 +15,6 @@ FCFLAGS="${CFLAGS}"
 
 # Defaults for video drivers
 VIDEO_CARDS="fbdev"
+
+#little hack to by-pass makedev/baselayout collision.
+COLLISION_IGNORE="${COLLISION_IGNORE} /sbin/MAKEDEV"
