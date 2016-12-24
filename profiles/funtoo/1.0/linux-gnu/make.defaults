@@ -43,7 +43,7 @@ APACHE2_MODULES="actions alias auth_basic authn_alias authn_anon authn_dbm authn
 NETBEANS="apisupport cnd groovy gsf harness ide identity j2ee java mobility nb php profiler soa visualweb webcommon websvccommon xml"
 
 # Default Ruby build targets
-RUBY_TARGETS="ruby20 ruby21 ruby22"
+RUBY_TARGETS="ruby21 ruby22"
 
 # Small default list of enabled plugins for collectd
 COLLECTD_PLUGINS="df interface irq load memory rrdtool swap syslog"
