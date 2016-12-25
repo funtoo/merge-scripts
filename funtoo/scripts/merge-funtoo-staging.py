@@ -45,14 +45,14 @@ shards = {
 # x11: 12c1bdf9a9bfd28f48d66bccb107c17b5f5af577 (Updated 24 Dec 2016)
 # office: 9a702057d23e7fa277e9626344671a82ce59442f (Updated 29 Nov 2016)
 # core: 56e5b9edff7dc27e828b71010d019dcbd8e176fd (Updated 17 Dec 2016)
-# funtoo-toolchain: e1dc33b5b2669bf3af00caa6ce6741503c38cb93 (Updated 26 Nov 2016)
+# funtoo-toolchain: b97787318b7ffcfeaacde82cd21ddd5e207ad1f4 (Updated 25 Dec 2016)
 
 funtoo_overlays = {
 	"funtoo_media" : GitTree("funtoo-media", "master", "repos@localhost:funtoo-media.git", pull=True),
 	"plex_overlay" : GitTree("funtoo-plex", "master", "https://github.com/Ghent/funtoo-plex.git", pull=True),
 	#"gnome_fixups" : GitTree("gnome-3.16-fixups", "master", "repos@localhost:ports/gnome-3.16-fixups.git", pull=True),
         "gnome_fixups" : GitTree("gnome-3.20-fixups", "master", "repos@localhost:ports/gnome-3.20-fixups.git", pull=True),
-	"funtoo_toolchain" : GitTree("funtoo-toolchain", "e1dc33b5b2669bf3af00caa6ce6741503c38cb93", "repos@localhost:funtoo-toolchain-overlay.git", pull=True),
+	"funtoo_toolchain" : GitTree("funtoo-toolchain", "b97787318b7ffcfeaacde82cd21ddd5e207ad1f4", "repos@localhost:funtoo-toolchain-overlay.git", pull=True),
 	"ldap_overlay" : GitTree("funtoo-ldap", "master", "repos@localhost:funtoo-ldap-overlay.git", pull=True),
 	"deadbeef_overlay" : GitTree("deadbeef-overlay", "master", "https://github.com/damex/deadbeef-overlay.git", pull=True),
 	"gambas_overlay" : GitTree("gambas-overlay", "master", "https://github.com/damex/gambas-overlay.git", pull=True),
