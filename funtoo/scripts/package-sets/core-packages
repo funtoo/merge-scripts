@@ -33,7 +33,6 @@ app-arch/xz-utils
 app-crypt/gnupg
 app-crypt/pinentry
 app-editors/nano
-app-eselect/*
 app-misc/ca-certificates
 app-misc/editor-wrapper
 app-misc/mime-types
