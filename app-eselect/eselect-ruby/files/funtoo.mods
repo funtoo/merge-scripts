@@ -1,0 +1,48 @@
+--- ruby.eselect-20151229	2017-01-07 16:16:47.050161417 -0700
++++ ruby.eselect-20151229.1	2016-08-22 13:21:26.000000000 -0600
+@@ -1,9 +1,11 @@
++# Copyright 1999-2014 Gentoo Foundation
+ # Distributed under the terms of the GNU General Public License v2
++# vim: set ft=sh:
+ 
+ DESCRIPTION="Manage Ruby symlinks"
+-MAINTAINER="drobbins@funtoo.org; Funtoo Stuff"
+-#SVN_DATE="20141227"
+-#VERSION="20141227"
++MAINTAINER="a3li@gentoo.org"
++SVN_DATE="20151229"
++VERSION="20151229"
+ 
+ bindir=/usr/bin
+ man1dir=/usr/share/man/man1
+@@ -41,14 +43,6 @@
+ remove_symlinks() {
+ 	rm -f ${EROOT}${bindir}/{ruby,gem,irb,erb,ri,rdoc,testrb} && \
+ 	rm -f ${EROOT}${man1dir}/{ruby,irb,erb,ri}.1*
+-	# funtoo mod start
+-	for x in ${EROOT}${bindir}/ruby[0-9].[0-9]; do
+-		# remove ruby1.9 -> ruby19 symlink if it exists:
+-		if [ -L "$x" ]; then
+-			rm -f "$x"
+-		fi
+-	done
+-	# funtoo mod end
+ }
+ 
+ create_man_links() {
+@@ -76,15 +70,6 @@
+ 			die -q "Could not set ${f} symlink"
+ 	done
+ 
+-	# funtoo mod start
+-	case $version in
+-	[0-9][0-9])
+-		# create ruby1.9 symlink if we have ruby19, for example:
+-		ln -s "ruby${version}" "${path}/ruby${version:0:1}.${version:1:2}"
+-		;;
+-	esac
+-	# funtoo mod end
+-
+ 	# these can fail
+ 	if [[ -e "${path}gem${version}" ]] ; then
+ 		ln -s "gem${version}" "${path}gem" || \
