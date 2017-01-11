@@ -1,3 +1,8 @@
+# mask dev-util/gperf-3.1 bump. breaks reverse deps, such as eudev and maybe many others.
+# https://bugs.funtoo.org/browse/FL-3469
+# https://bugs.gentoo.org/show_bug.cgi?id=604878
+>=dev-utils/gperf-3.1
+
 # revert gentoo's unmask of sandbox-2.11. It's unmasked without finishing the debugging in here. https://bugs.gentoo.org/show_bug.cgi?id=578582. this version breaks firefox buildig, found on #funtoo.
 =sys-apps/sandbox-2.11*
 
