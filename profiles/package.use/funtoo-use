@@ -1,3 +1,6 @@
+# QA-473: enable text USE for app-text/xmlto
+app-text/xmlto text
+
 # FL-2672: set python_single_target_python3.3 in gnome-music.
 media-sound/gnome-music python_single_target_python3_3 -python_single_target_python3_4
 
