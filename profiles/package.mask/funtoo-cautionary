@@ -1,3 +1,6 @@
+# FL-3474, FL-3465: mask broken flex version until gentoo-core-shard bumped
+=sys-devel/flex-2.6.2
+
 # precautionary mask as newer versions appear to break GNOME 3 and other DE's
 >=sys-auth/consolekit-1.1.0
 
