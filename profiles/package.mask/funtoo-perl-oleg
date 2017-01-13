@@ -31,7 +31,7 @@
 =virtual/perl-Test-1.280.100_rc
 
 # below is the list to mask that is needed on Funtoo stable:
-=dev-lang/perl/perl-5.22.3_rc*
+=dev-lang/perl-5.22.3_rc*
 =virtual/perl-Archive-Tar-2.40.100_rc-r1
 =virtual/perl-CPAN-2.110.100_rc-r1
 =virtual/perl-Digest-SHA-5.950.100_rc-r1
