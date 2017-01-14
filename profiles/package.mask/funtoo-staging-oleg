@@ -1,3 +1,6 @@
+# mask debian-sources for testing:
+=sys-kernel/debian-sources-4.9.2
+
 # FL-3372: add kibana-bin-5.0.0 which requires masked below elasticsearch.
 >=www-apps/kibana-bin-5.0.0
 

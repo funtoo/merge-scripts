@@ -5,9 +5,9 @@ EAPI=5
 inherit check-reqs eutils mount-boot
 
 SLOT=$PVR
-CKV=3.19.3
+CKV=4.9.2
 KV_FULL=${PN}-${PVR}
-EXTRAVERSION=-1~exp1
+EXTRAVERSION=-2
 MODVER=${CKV}${EXTRAVERSION}
 KERNEL_ARCHIVE="linux_${PV}.orig.tar.xz"
 PATCH_ARCHIVE="linux_${PV}${EXTRAVERSION}.debian.tar.xz"
@@ -15,7 +15,7 @@ RESTRICT="binchecks strip mirror"
 # based on : http://packages.ubuntu.com/maverick/linux-image-2.6.35-22-server
 LICENSE="GPL-2"
 KEYWORDS="*"
-IUSE="binary rt"
+IUSE="binary"
 DEPEND="binary? ( >=sys-kernel/genkernel-3.4.40.7 )"
 DESCRIPTION="Debian Sources (and optional binary kernel)"
 HOMEPAGE="http://www.debian.org"
@@ -35,7 +35,7 @@ get_patch_list() {
 pkg_pretend() {
 	# Ensure we have enough disk space to compile
 	if use binary ; then
-		CHECKREQS_DISK_BUILD="14G"
+		CHECKREQS_DISK_BUILD="20G"
 
 		check-reqs_pkg_setup
 	fi
@@ -52,14 +52,10 @@ src_prepare() {
 	for debpatch in $( get_patch_list "${WORKDIR}/debian/patches/series" ); do
 		epatch -p1 "${WORKDIR}/debian/patches/${debpatch}"
 	done
-
-	if use rt ; then
-		for rtpatch in $( get_patch_list "${WORKDIR}/debian/patches/series-rt" ) ; do
-			epatch -p1 "${WORKDIR}/debian/patches/${rtpatch}"
-		done
-	fi
-
 	# end of debian-specific stuff...
+
+	# do not include debian devs certificates
+	rm -rf "${WORKDIR}"/debian/certs
 
 	sed -i -e "s:^\(EXTRAVERSION =\).*:\1 ${EXTRAVERSION}:" Makefile || die
 	sed	-i -e 's:#export\tINSTALL_PATH:export\tINSTALL_PATH:' Makefile || die
@@ -73,8 +69,14 @@ src_prepare() {
 	## XFS LIBCRC kernel config fixes, FL-823
 	epatch "${FILESDIR}"/debian-sources-3.14.4-xfs-libcrc32c-fix.patch
 
+	## do not configure debian devs certs.
+	epatch "${FILESDIR}"/${PN}-4.5.2-certs.patch
+
+	## FL-3381. enable IKCONFIG
+	epatch "${FILESDIR}"/ikconfig.patch
+
 	local opts
-	use rt && opts="rt" || opts="standard"
+	opts="standard"
 	local myarch="amd64"
 	[ "$REAL_ARCH" = "x86" ] && myarch="i386" && opts="$opts 686-pae"
 	cp "${FILESDIR}"/config-extract . || die
@@ -89,15 +91,14 @@ src_compile() {
 	! use binary && return
 	install -d "${WORKDIR}"/out/{lib,boot}
 	install -d "${T}"/{cache,twork}
-	install -d "${WORKDIR}"/build "${WORKDIR}"/out/lib/firmware
-	genkernel \
+	install -d "${WORKDIR}"/build
+	DEFAULT_KERNEL_SOURCE="${S}" CMD_KERNEL_DIR="${S}" genkernel ${GKARGS} \
 		--no-save-config \
 		--kernel-config="${T}"/config \
 		--kernname="${PN}" \
 		--build-src="${S}" \
 		--build-dst="${WORKDIR}"/build \
 		--makeopts="${MAKEOPTS}" \
-		--firmware-dst="${WORKDIR}"/out/lib/firmware \
 		--cachedir="${T}"/cache \
 		--tempdir="${T}"/twork \
 		--logfile="${WORKDIR}"/genkernel.log \
@@ -136,7 +137,7 @@ src_install() {
 	# module strip:
 	find -iname *.ko -exec strip --strip-debug {} \;
 	# back to the symlink fixup:
-	local moddir="$(ls -d [23]*)"
+	local moddir="$(ls -d [234]*)"
 	ln -s /usr/src/linux-${P} "${D}"/lib/modules/${moddir}/source || die
 	ln -s /usr/src/linux-${P} "${D}"/lib/modules/${moddir}/build || die
 
