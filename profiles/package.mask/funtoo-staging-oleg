@@ -1,12 +1,6 @@
 # mask debian-sources for testing:
 =sys-kernel/debian-sources-4.9.2
 
-# FL-3372: add kibana-bin-5.0.0 which requires masked below elasticsearch.
->=www-apps/kibana-bin-5.0.0
-
-# FL-3363: mask major bump of elastcsearch. Bumped without looking for configuration changes check, which breaks start-up.
->=app-misc/elasticsearch-5.0.0
-
 # mask blender-2.78. needs boost-1.62 unmask, python-3.5 unmask and hence various manual python_targets changes, which is untested. let's keep it masked for awhile.
 >=media-gfx/blender-2.78
 
@@ -23,7 +17,6 @@
 >=net-misc/iputils-20160308
 
 # mask ruby 2.3 until targets also updated to ruby2.3. need tested. Also mask newer eselect ruby, which brings ruby:2.3 support.
-=app-eselect/eselect-ruby-2015*
 dev-lang/ruby:2.3
 
 
