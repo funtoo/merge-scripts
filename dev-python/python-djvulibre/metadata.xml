@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<name>Antoine Pinsard</name>
+		<email>antoine.pinsard@gmail.com</email>
+	</maintainer>
+	<longdescription>
+		python-djvulibre is a set of Python bidings for the DjVuLibre (http://djvu.sourceforge.net/)
+		library, an opensource implementation of DjVu (http://djvu.org/)
+	</longdescription>
+	<upstream>
+		<changelog>https://github.com/jwilk/python-djvulibre/blob/master/doc/changelog</changelog>
+		<bugs-to>https://github.com/jwilk/python-djvulibre/issues</bugs-to>
+		<doc>https://pythonhosted.org/python-djvulibre/</doc>
+		<maintainer>
+			<name>Jakub Wilk</name>
+			<email>jwilk@jwilk.net</email>
+		</maintainer>
+	</upstream>
+	<use>
+	</use>
+</pkgmetadata>
