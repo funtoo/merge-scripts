@@ -1,0 +1,19 @@
+diff -Nuar grub-2.02~beta3/util/grub.d/10_linux.in grub-2.02~beta3-fixed/util/grub.d/10_linux.in
+--- grub-2.02~beta3/util/grub.d/10_linux.in	2016-02-11 10:57:41.000000000 +0000
++++ grub-2.02~beta3-fixed/util/grub.d/10_linux.in	2017-01-15 10:44:29.825895501 +0000
+@@ -184,13 +184,13 @@
+   basename=`basename $linux`
+   dirname=`dirname $linux`
+   rel_dirname=`make_system_path_relative_to_its_root $dirname`
+-  version=`echo $basename | sed -e "s,^[^0-9]*-,,g"`
++  version=`echo $basename | sed -e "s,^[^-]*-,,g"`
+   alt_version=`echo $version | sed -e "s,\.old$,,g"`
+   linux_root_device_thisversion="${LINUX_ROOT_DEVICE}"
+ 
+   initrd=
+   for i in "initrd.img-${version}" "initrd-${version}.img" "initrd-${version}.gz" \
+-	   "initrd-${version}" "initramfs-${version}.img" \
++	   "initrd-${version}" "initramfs-${version}.img" "initramfs-${version}" \
+ 	   "initrd.img-${alt_version}" "initrd-${alt_version}.img" \
+ 	   "initrd-${alt_version}" "initramfs-${alt_version}.img" \
+ 	   "initramfs-genkernel-${version}" \
