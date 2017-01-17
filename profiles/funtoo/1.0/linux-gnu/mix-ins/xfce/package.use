@@ -1,3 +1,6 @@
+# QA-474: polkit need introspection enabled
+sys-auth/polkit introspection
+
 # QA-469. add xkb USE to libxcb
 x11-libs/libxcb xkb
 
