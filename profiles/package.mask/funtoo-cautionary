@@ -1,6 +1,3 @@
-# FL-3480: unsure about stability of new ebuild
-=sys-fs/zfs-kmod-0.6.5.8-r1
-
 # FL-3474, FL-3465: mask broken flex version until gentoo-core-shard bumped
 >=sys-devel/flex-2.6.2
 
