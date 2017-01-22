@@ -180,7 +180,7 @@ ebuild_modifications = [
 	InsertEbuilds(other_overlays["pinsard_overlay"], select=["app-portage/chuse", "app-text/zerobinpaste", "dev-python/appi", "dev-python/iwlib", "dev-python/python-sipsimple", "media-sound/pytify", "www-client/brave-bin", "x11-wm/qtile"], skip=None, replace=True, merge=True),
 	InsertEbuilds(other_overlays["wltjr_overlay"], select=["mail-filter/assp", "mail-mta/netqmail"], skip=None, replace=True, merge=False),
 	InsertEbuilds(other_overlays["lisp_overlay"], select=["dev-lisp/ltk"], skip=None, replace=True, merge=False),
-        InsertEbuilds(other_overlays["mcelog"], select=["admin-admin/mcelog"], skip=None, replace=True, merge=True),
+        InsertEbuilds(other_overlays["mcelog_overlay"], select=["admin-admin/mcelog"], skip=None, replace=True, merge=True),
 ]
 
 ebuild_modifications += [
