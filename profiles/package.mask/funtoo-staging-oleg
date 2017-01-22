@@ -1,3 +1,7 @@
+# keep masks for boost-1.63:
+>=dev-util/boost-build-1.63.0
+>=dev-libs/boost-1.63.0
+
 # mask debian-sources for testing:
 =sys-kernel/debian-sources-4.9.2
 
