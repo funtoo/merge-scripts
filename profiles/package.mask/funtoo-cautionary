@@ -14,27 +14,17 @@ media-tv/xbmc
 # FL-2641: mask damaged libcgroup ebuild.
 =dev-libs/libcgroup-0.41-r1
 
-# FL-2621: mask broken version of pstoedit (from last working)
->media-gfx/pstoedit-3.62
-
-# FL-2600: rise mask for gnupg.
->=app-crypt/gnupg-2.1
-
 # mask sys-apps/makedev. This one collides with baselayout, makedev is part of baselayout.
 sys-apps/makedev
+
+# FL-2020, FL-2015, mask very latest libevent, breaks packages.
+>=dev-libs/libevent-2.1
 
 #FL-2936, FL-2161: mask samba-4.1
 =net-fs/samba-4.1*
 
 # FL-1703: these versions of crossdev is a forkbomb(s)
 >=sys-devel/crossdev-20140917
-
-# FL-2020, FL-2015, mask very latest libevent, breaks packages.
->=dev-libs/libevent-2.1
-
-# FL-1937
-# Cautionary mask dev-lang/swig-3.0.3, failures reported.
->dev-lang/swig-3.0.2
 
 # FL-1855, mask usbutils-008, until we sort udev failure.
 
