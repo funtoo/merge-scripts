@@ -11,7 +11,7 @@ SRC_URI="https://www.freedesktop.org/software/${PN}/releases/${P}.tar.gz"
 LICENSE="LGPL-2"
 SLOT="0"
 KEYWORDS="*"
-IUSE="elogind examples gtk jit kde nls pam selinux test"
+IUSE="elogind examples gtk +introspection jit kde nls pam selinux test"
 
 CDEPEND="
 	dev-lang/spidermonkey:0/mozjs185[-debug]
