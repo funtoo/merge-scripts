@@ -29,7 +29,7 @@ SRC_URI="
 LICENSE="Oracle-BCLA-JavaSE"
 SLOT="1.8"
 KEYWORDS="*"
-IUSE="alsa +awt cups +fontconfig javafx jce nsplugin pax_kernel selinux"
+IUSE="alsa +awt commercial cups +fontconfig javafx jce nsplugin selinux"
 
 RESTRICT="mirror preserve-libs strip"
 QA_PREBUILT="*"
@@ -65,8 +65,7 @@ RDEPEND="!x64-macos? (
 # A PaX header isn't created by scanelf so depend on paxctl to avoid
 # fallback marking. See bug #427642.
 DEPEND="app-arch/zip
-	jce? ( app-arch/unzip )
-	pax_kernel? ( sys-apps/paxctl )"
+	jce? ( app-arch/unzip )"
 
 S="${WORKDIR}/jre"
 
@@ -103,11 +102,15 @@ src_install() {
 	if ! use alsa ; then
 		rm -vf lib/*/libjsoundalsa.* || die
 	fi
-
+	
 	if ! use awt ; then
 		rm -vf lib/*/lib*{[jx]awt,splashscreen}* \
 		   bin/{javaws,policytool} || die
 	fi
+	
+	if ! use commercial; then
+		rm -vfr lib/jfr* || die
+	fi	
 
 	if ! use javafx ; then
 		rm -vf lib/*/lib*{decora,fx,glass,prism}* \
@@ -195,6 +198,7 @@ src_install() {
 	find "${D}" -type d -empty -exec rmdir -v {} + || die
 
 	set_java_env
+	java-vm_install-env "${FILESDIR}"/${PN}.env.sh
 	java-vm_revdep-mask
 	java-vm_sandbox-predict /dev/random /proc/self/coredump_filter
 }
