@@ -1,3 +1,6 @@
+# FL-3512: workaround mutt default USE's. Stick to tokyocabinet as per upstream default.
+mail-client/mutt tokyocabinet -berkdb -gdbm
+
 # QA-473: enable text USE for app-text/xmlto
 app-text/xmlto text
 
