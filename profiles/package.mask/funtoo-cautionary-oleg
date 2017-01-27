@@ -1,3 +1,7 @@
+# mask broken version of setuptools-34. previsouly it had circualr dep with appdirs now it failing in a way described in https://bugs.gentoo.org/show_bug.cgi?id=607164. also mask appdirs-1.4.0-r1 which is bumped due to setuptools bump to unbreak circ. dep
+>=dev-python/appdirs-1.4.0-r1
+>=dev-python/setuptools-34
+
 # mask dev-util/gperf-3.1 bump. breaks reverse deps, such as eudev and maybe many others.
 # https://bugs.funtoo.org/browse/FL-3469
 # https://bugs.gentoo.org/show_bug.cgi?id=604878
