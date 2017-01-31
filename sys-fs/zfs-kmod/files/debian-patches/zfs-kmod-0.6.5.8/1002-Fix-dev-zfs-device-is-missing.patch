@@ -1,0 +1,265 @@
+Description: Change /etc/mtab to /proc/self/mounts
+ Fix misleading error message: "The /dev/zfs device is missing and must be created.", if /etc/mtab is missing.
+Author: Eric Desrochers <eric.desrochers@canonical.com>
+Origin: https://github.com/zfsonlinux/zfs/commit/792517389fad5c495a2738b61c2e9c65dedaaa9a
+Bug: https://github.com/zfsonlinux/zfs/issues/4680
+--- a/cmd/mount_zfs/mount_zfs.c
++++ b/cmd/mount_zfs/mount_zfs.c
+@@ -292,11 +292,11 @@
+ 	struct stat st;
+ 	int error, fd;
+ 
+-	error = lstat(MNTTAB, &st);
++	error = lstat("/etc/mtab", &st);
+ 	if (error || S_ISLNK(st.st_mode))
+ 		return (0);
+ 
+-	fd = open(MNTTAB, O_RDWR | O_CREAT, 0644);
++	fd = open("/etc/mtab", O_RDWR | O_CREAT, 0644);
+ 	if (fd < 0)
+ 		return (0);
+ 
+@@ -318,21 +318,21 @@
+ 	mnt.mnt_freq = 0;
+ 	mnt.mnt_passno = 0;
+ 
+-	fp = setmntent(MNTTAB, "a+");
++	fp = setmntent("/etc/mtab", "a+");
+ 	if (!fp) {
+ 		(void) fprintf(stderr, gettext(
+-		    "filesystem '%s' was mounted, but %s "
++		    "filesystem '%s' was mounted, but /etc/mtab "
+ 		    "could not be opened due to error %d\n"),
+-		    dataset, MNTTAB, errno);
++		    dataset, errno);
+ 		return (MOUNT_FILEIO);
+ 	}
+ 
+ 	error = addmntent(fp, &mnt);
+ 	if (error) {
+ 		(void) fprintf(stderr, gettext(
+-		    "filesystem '%s' was mounted, but %s "
++		    "filesystem '%s' was mounted, but /etc/mtab "
+ 		    "could not be updated due to error %d\n"),
+-		    dataset, MNTTAB, errno);
++		    dataset, errno);
+ 		return (MOUNT_FILEIO);
+ 	}
+ 
+--- a/cmd/zfs/zfs_main.c
++++ b/cmd/zfs/zfs_main.c
+@@ -5978,9 +5978,10 @@
+ 		}
+ 
+ 		/*
+-		 * When mount is given no arguments, go through /etc/mtab and
+-		 * display any active ZFS mounts.  We hide any snapshots, since
+-		 * they are controlled automatically.
++		 * When mount is given no arguments, go through
++		 * /proc/self/mounts and display any active ZFS mounts.
++		 * We hide any snapshots, since they are controlled
++		 * automatically.
+ 		 */
+ 
+ 		/* Reopen MNTTAB to prevent reading stale data from open file */
+@@ -6060,8 +6061,8 @@
+ 
+ /*
+  * Convenience routine used by zfs_do_umount() and manual_unmount().  Given an
+- * absolute path, find the entry /etc/mtab, verify that its a ZFS filesystem,
+- * and unmount it appropriately.
++ * absolute path, find the entry /proc/self/mounts, verify that its a
++ * ZFS filesystem, and unmount it appropriately.
+  */
+ static int
+ unshare_unmount_path(int op, char *path, int flags, boolean_t is_manual)
+@@ -6074,7 +6075,7 @@
+ 	ino_t path_inode;
+ 
+ 	/*
+-	 * Search for the path in /etc/mtab.  Rather than looking for the
++	 * Search for the path in /proc/self/mounts.  Rather than looking for the
+ 	 * specific path, which can be fooled by non-standard paths (i.e. ".."
+ 	 * or "//"), we stat() the path and search for the corresponding
+ 	 * (major,minor) device pair.
+@@ -6105,8 +6106,8 @@
+ 			    "currently mounted\n"), cmdname, path);
+ 			return (1);
+ 		}
+-		(void) fprintf(stderr, gettext("warning: %s not in mtab\n"),
+-		    path);
++		(void) fprintf(stderr, gettext("warning: %s not in"
++		    "/proc/self/mounts\n"), path);
+ 		if ((ret = umount2(path, flags)) != 0)
+ 			(void) fprintf(stderr, gettext("%s: %s\n"), path,
+ 			    strerror(errno));
+@@ -6217,9 +6218,9 @@
+ 		/*
+ 		 * We could make use of zfs_for_each() to walk all datasets in
+ 		 * the system, but this would be very inefficient, especially
+-		 * since we would have to linearly search /etc/mtab for each
+-		 * one.  Instead, do one pass through /etc/mtab looking for
+-		 * zfs entries and call zfs_unmount() for each one.
++		 * since we would have to linearly search /proc/self/mounts for
++		 * each one.  Instead, do one pass through /proc/self/mounts
++		 * looking for zfs entries and call zfs_unmount() for each one.
+ 		 *
+ 		 * Things get a little tricky if the administrator has created
+ 		 * mountpoints beneath other ZFS filesystems.  In this case, we
+--- a/cmd/zinject/translate.c
++++ b/cmd/zinject/translate.c
+@@ -120,7 +120,7 @@
+ #else
+ 	if ((fp = fopen(MNTTAB, "r")) == NULL) {
+ #endif
+-		(void) fprintf(stderr, "cannot open /etc/mtab\n");
++		(void) fprintf(stderr, "cannot open %s\n", MNTTAB);
+ 		return (-1);
+ 	}
+ 
+--- a/contrib/initramfs/scripts/zfs
++++ b/contrib/initramfs/scripts/zfs
+@@ -288,9 +288,8 @@
+ 		wait_for_dev
+ 	fi
+ 
+-	# zpool import refuse to import without a valid mtab
+-	[ ! -f /proc/mounts ] && mount proc /proc
+-	[ ! -f /etc/mtab ] && cat /proc/mounts > /etc/mtab
++	# zpool import refuse to import without a valid /proc/self/mounts
++	[ ! -f /proc/self/mounts ] && mount proc /proc
+ 
+ 	# Load the module
+ 	load_module "zfs" || return 1
+@@ -919,7 +918,7 @@
+ 	#
+ 	#   but the MOUNTPOINT prefix is preserved on descendent filesystem
+ 	#   after the pivot into the regular root, which later breaks things
+-	#   like `zfs mount -a` and the /etc/mtab refresh.
++	#   like `zfs mount -a` and the /proc/self/mounts refresh.
+ 	#
+ 	# * Mount additional filesystems required
+ 	#   Such as /usr, /var, /usr/local etc.
+--- a/etc/init.d/zfs-functions.in
++++ b/etc/init.d/zfs-functions.in
+@@ -368,7 +368,7 @@
+ 			# Set the variable.
+ 			eval export MTAB_$mntpnt=\"$fs\"
+ 		fi
+-	done < /proc/mounts
++	done < /proc/self/mounts
+ }
+ 
+ in_mtab()
+--- a/etc/init.d/zfs-mount.in
++++ b/etc/init.d/zfs-mount.in
+@@ -39,7 +39,7 @@
+ 		if [ "$2" = "/" ]; then
+ 			return 0
+ 		fi
+-	done < /etc/mtab
++	done < /proc/self/mounts
+ 
+ 	return 1
+ }
+@@ -178,7 +178,7 @@
+ 
+ 	check_module_loaded "zfs" || exit 0
+ 
+-	# Ensure / exists in /etc/mtab, if not update mtab accordingly.
++	# Ensure / exists in /proc/self/mounts.
+ 	# This should be handled by rc.sysinit but lets be paranoid.
+ 	if ! chkroot
+ 	then
+--- a/lib/libspl/include/sys/mnttab.h
++++ b/lib/libspl/include/sys/mnttab.h
+@@ -38,7 +38,7 @@
+ #undef MNTTAB
+ #endif /* MNTTAB */
+ 
+-#define	MNTTAB		"/etc/mtab"
++#define	MNTTAB		"/proc/self/mounts"
+ #define	MNT_LINE_MAX	4096
+ 
+ #define	MNT_TOOLONG	1	/* entry exceeds MNT_LINE_MAX */
+--- a/lib/libzfs/libzfs_dataset.c
++++ b/lib/libzfs/libzfs_dataset.c
+@@ -1825,9 +1825,9 @@
+  * zfs_prop_get_int() are built using this interface.
+  *
+  * Certain properties can be overridden using 'mount -o'.  In this case, scan
+- * the contents of the /etc/mtab entry, searching for the appropriate options.
+- * If they differ from the on-disk values, report the current values and mark
+- * the source "temporary".
++ * the contents of the /proc/self/mounts entry, searching for the
++ * appropriate options. If they differ from the on-disk values, report the
++ * current values and mark the source "temporary".
+  */
+ static int
+ get_numeric_property(zfs_handle_t *zhp, zfs_prop_t prop, zprop_source_t *src,
+@@ -1898,8 +1898,9 @@
+ 
+ 	/*
+ 	 * Because looking up the mount options is potentially expensive
+-	 * (iterating over all of /etc/mtab), we defer its calculation until
+-	 * we're looking up a property which requires its presence.
++	 * (iterating over all of /proc/self/mounts), we defer its
++	 * calculation until we're looking up a property which requires
++	 * its presence.
+ 	 */
+ 	if (!zhp->zfs_mntcheck &&
+ 	    (mntopt_on != NULL || prop == ZFS_PROP_MOUNTED)) {
+--- a/lib/libzfs/libzfs_mount.c
++++ b/lib/libzfs/libzfs_mount.c
+@@ -346,8 +346,8 @@
+ 		return (0);
+ 
+ 	/*
+-	 * zfs_prop_get_int() to not used to ensure our mount options
+-	 * are not influenced by the current /etc/mtab contents.
++	 * zfs_prop_get_int() is not used to ensure our mount options
++	 * are not influenced by the current /proc/self/mounts contents.
+ 	 */
+ 	value = getprop_uint64(zhp, prop, &source);
+ 
+@@ -1162,8 +1162,8 @@
+  * Unshare and unmount all datasets within the given pool.  We don't want to
+  * rely on traversing the DSL to discover the filesystems within the pool,
+  * because this may be expensive (if not all of them are mounted), and can fail
+- * arbitrarily (on I/O error, for example).  Instead, we walk /etc/mtab and
+- * gather all the filesystems that are currently mounted.
++ * arbitrarily (on I/O error, for example).  Instead, we walk /proc/self/mounts
++ * and gather all the filesystems that are currently mounted.
+  */
+ int
+ zpool_disable_datasets(zpool_handle_t *zhp, boolean_t force)
+--- a/lib/libzfs/libzfs_util.c
++++ b/lib/libzfs/libzfs_util.c
+@@ -67,9 +67,9 @@
+ 		    "loaded.\nTry running '/sbin/modprobe zfs' as root "
+ 		    "to load them.\n"));
+ 	case ENOENT:
+-		return (dgettext(TEXT_DOMAIN, "The /dev/zfs device is "
+-		    "missing and must be created.\nTry running 'udevadm "
+-		    "trigger' as root to create it.\n"));
++		return (dgettext(TEXT_DOMAIN, "/dev/zfs and /proc/self/mounts "
++		    "are required.\nTry running 'udevadm trigger' and 'mount "
++		    "-t proc proc /proc' as root.\n"));
+ 	case ENOEXEC:
+ 		return (dgettext(TEXT_DOMAIN, "The ZFS modules cannot be "
+ 		    "auto-loaded.\nTry running '/sbin/modprobe zfs' as "
+--- a/scripts/ziltest.sh
++++ b/scripts/ziltest.sh
+@@ -185,7 +185,11 @@
+ #
+ # TX_WRITE (small file with ordering)
+ #
+-cp /etc/mtab $ROOT/small_file
++if is_linux; then
++	cp /proc/self/mounts $ROOT/small_file
++else
++	cp /etc/mtab $ROOT/small_file
++fi
+ cp /etc/profile $ROOT/small_file
+ 
+ #

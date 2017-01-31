@@ -1,0 +1,15 @@
+Index: zfs-linux-0.6.5.3/lib/libspl/include/sys/isa_defs.h
+===================================================================
+--- zfs-linux-0.6.5.3.orig/lib/libspl/include/sys/isa_defs.h	2015-10-27 14:36:37.904604893 -0600
++++ zfs-linux-0.6.5.3/lib/libspl/include/sys/isa_defs.h	2015-10-27 14:36:58.008605392 -0600
+@@ -98,8 +98,8 @@
+ #endif
+ #endif
+ 
+-#if !defined(_BIG_ENDIAN)
+-#define	_BIG_ENDIAN
++#if !defined(_BIG_ENDIAN) && !defined(_LITTLE_ENDIAN)
++#error powerpc no endian specified
+ #endif
+ 
+ #define	_SUNOS_VTOC_16

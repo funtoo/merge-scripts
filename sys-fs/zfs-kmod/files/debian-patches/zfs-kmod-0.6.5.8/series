@@ -1,0 +1,14 @@
+#
+0001-Prevent-manual-builds-in-the-DKMS-source.patch
+0002-Check-for-META-and-DCH-consistency-in-autoconf.patch
+0003-Add-libuutil-to-LIBADD-for-libzfs-and-libzfs_core.patch
+1000-ppc64el-endian-support.patch
+enable-zed.patch
+1001-cmd-python-exec-path.patch
+1002-Fix-dev-zfs-device-is-missing.patch
+1014-kernel-lookup-bdev.patch
+0001-Linux-4.9-compat-iops-rename-wants-flags.patch
+0002-Linux-4.9-compat-remove-iops-set-get-remove-xattr.patch
+0003-Linux-4.9-compat-inode_change_ok-renamed-setattr_pre.patch
+0004-Kernel-4.9-compat-file_operations-aio_fsync-removal.patch
+0001-Fix-for-Linux-4.9-compat-iops-rename-wants-flags.patch
