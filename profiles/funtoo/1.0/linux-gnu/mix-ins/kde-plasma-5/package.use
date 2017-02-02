@@ -3,7 +3,10 @@
 dev-qt/qtgui:5 egl
 dev-qt/qtwayland:5 egl
 
-# kde-frameworks/networkmanager-qt need plokit compiled with introspection:
+#  Required by kde-plasma/plasma-pa
+media-sound/pulseaudio gnome
+
+# kde-frameworks/networkmanager-qt need polkit compiled with introspection:
 sys-auth/polkit introspection
 
 # plasma 5 builds need wayland with abi_x86_32 USE and libxcb need xkb USE:
@@ -60,53 +63,31 @@ media-libs/mesa egl wayland
 net-libs/libproxy -kde
 
 # Required by kde-apps/kdenlive
->=media-libs/mlt-0.9.8-r2 kdenlive melt -kde -qt4
+>=media-libs/mlt-0.9.8-r2 kdenlive melt
 
 # Allow certain KDE 4 components to be coinstalled with Plasma 5
-<dev-util/kdevelop-4.8.0 -gdbui
-kde-apps/kde-meta:4 -kdepim minimal
-kde-apps/kde-wallpapers minimal
-kde-apps/kde4-l10n minimal
-kde-apps/kdebase-meta:4 minimal
-kde-apps/kdebase-runtime-meta:4 -crash-reporter minimal
-kde-apps/kwalletmanager:4 minimal
-kde-apps/libkipi:4 minimal
-kde-apps/libksane:4 minimal
 kde-apps/solid-runtime -bluetooth
-kde-base/baloo minimal
-kde-base/kactivities minimal
-net-libs/libkpeople:4 minimal
-net-p2p/ktorrent:4 -plasma
+kde-frameworks/baloo minimal
 sys-auth/polkit-kde-agent minimal
 
 # Required by app-office/libreoffice
 media-libs/phonon designer
 
+#Required by kde-apps/kate[addons]
+dev-libs/libgit2 threads
+
+# FIXME: unnecessary REQUIRED_USE ^^ ( qt4 qt5 )
+<app-office/texmaker-4.5-r1 -qt4
+<dev-libs/quazip-0.7.2-r1 -qt4
+dev-python/qscintilla-python -qt4
+x11-libs/qscintilla -qt4
+
 # Fix REQUIRED_USE conflicts: qt5? ( !qt4 )
 >=app-crypt/pinentry-0.9.6-r5 -qt4
-app-office/akonadi-server -qt5
->=app-office/texmaker-4.4.1 -qt4
->=app-office/texstudio-2.9.4 -qt4
-app-text/qpdfview -qt4
-dev-db/sqlitebrowser -qt4
->=dev-games/openscenegraph-3.2.1-r1 -qt4
->=dev-libs/qcustomplot-1.3.0 -qt4
->=dev-libs/quazip-0.7.1 -qt4
+<dev-games/openscenegraph-3.5.1-r1 -qt4
 >=kde-misc/kdiff3-0.9.98-r1 -kde -qt4
->=media-libs/opencv-3.0.0 -qt4
-media-video/makemkv -qt4
->=media-video/smplayer-14.9.0.6690 -qt4
-media-video/vlc -qt4
+>=media-libs/opencv-2.4.12-r1 -qt4
+<media-video/smplayer-16.4.0-r2 -qt4
 net-analyzer/wireshark -qt4
-net-misc/owncloud-client -qt4
-net-news/rssguard -qt4
->=net-news/quiterss-0.17.7 -qt4
-net-p2p/bitcoin-qt -qt4
->=net-p2p/qbittorrent-3.2.0 -qt4
-net-p2p/transmission -qt4
->=net-wireless/wpa_supplicant-2.5 -qt4
->=sci-geosciences/qlandkartegt-1.8.0 -qt4
-sci-visualization/kst -qt4
-www-client/qupzilla -kde -qt4
->=x11-libs/qtermwidget-0.6.0 -qt4
->=x11-terms/qterminal-0.6.0 -qt4
+<net-print/hplip-3.16.11-r3 -qt4
+<net-wireless/wpa_supplicant-2.6-r1 -qt4
