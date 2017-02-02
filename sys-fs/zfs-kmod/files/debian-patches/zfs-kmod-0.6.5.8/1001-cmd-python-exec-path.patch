@@ -1,0 +1,30 @@
+Index: zfs-linux-0.6.5.8/cmd/arc_summary/arc_summary.py
+===================================================================
+--- zfs-linux-0.6.5.8.orig/cmd/arc_summary/arc_summary.py
++++ zfs-linux-0.6.5.8/cmd/arc_summary/arc_summary.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python
++#!/usr/bin/python3
+ #
+ # $Id: arc_summary.pl,v 388:e27800740aa2 2011-07-08 02:53:29Z jhell $
+ #
+Index: zfs-linux-0.6.5.8/cmd/arcstat/arcstat.py
+===================================================================
+--- zfs-linux-0.6.5.8.orig/cmd/arcstat/arcstat.py
++++ zfs-linux-0.6.5.8/cmd/arcstat/arcstat.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python
++#!/usr/bin/python3
+ #
+ # Print out ZFS ARC Statistics exported via kstat(1)
+ # For a definition of fields, or usage, use arctstat.pl -v
+Index: zfs-linux-0.6.5.8/cmd/dbufstat/dbufstat.py
+===================================================================
+--- zfs-linux-0.6.5.8.orig/cmd/dbufstat/dbufstat.py
++++ zfs-linux-0.6.5.8/cmd/dbufstat/dbufstat.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python
++#!/usr/bin/python3
+ #
+ # Print out statistics for all cached dmu buffers.  This information
+ # is available through the dbufs kstat and may be post-processed as

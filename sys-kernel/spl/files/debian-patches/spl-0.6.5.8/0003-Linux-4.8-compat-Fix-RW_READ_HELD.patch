@@ -1,0 +1,41 @@
+From bb4abd0919f89045af4ddeaad2038dd2dc0eb8a6 Mon Sep 17 00:00:00 2001
+From: tuxoko <tuxoko@gmail.com>
+Date: Fri, 7 Oct 2016 20:53:58 -0700
+Subject: [PATCH 3/5] Linux 4.8 compat: Fix RW_READ_HELD
+
+Linux 4.8, starting from torvalds/linux@19c5d690e, will set owner to 1 when
+read held instead of leave it NULL. So we change the condition to
+`rw_owner(rwp) <= 1` in RW_READ_HELD.
+
+Reviewed-by: Brian Behlendorf <behlendorf1@llnl.gov>
+Signed-off-by: Chunwei Chen <david.chen@osnexus.com>
+Closes zfsonlinux/zfs#5233
+Closes #577
+(cherry picked from commit 2529b3a80e1bf1713c0ecbedb246654a0968b4d2)
+
+Signed-off-by: Tim Gardner <tim.gardner@canonical.com>
+---
+ include/sys/rwlock.h | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/include/sys/rwlock.h b/include/sys/rwlock.h
+index 7e85f59..c8ed223 100644
+--- a/include/sys/rwlock.h
++++ b/include/sys/rwlock.h
+@@ -83,7 +83,12 @@ rw_owner(krwlock_t *rwp)
+ static inline int
+ RW_READ_HELD(krwlock_t *rwp)
+ {
+-	return (spl_rwsem_is_locked(SEM(rwp)) && rw_owner(rwp) == NULL);
++	/*
++	 * Linux 4.8 will set owner to 1 when read held instead of leave it
++	 * NULL. So we check whether owner <= 1.
++	 */
++	return (spl_rwsem_is_locked(SEM(rwp)) &&
++	    (unsigned long)rw_owner(rwp) <= 1);
+ }
+ 
+ static inline int
+-- 
+2.7.4
+

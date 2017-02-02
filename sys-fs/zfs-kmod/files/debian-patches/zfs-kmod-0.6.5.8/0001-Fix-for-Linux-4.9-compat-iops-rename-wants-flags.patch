@@ -1,0 +1,29 @@
+From 255eba94114b14fe2ce81725b6998f613b5f687d Mon Sep 17 00:00:00 2001
+From: Tim Gardner <tim.gardner@canonical.com>
+Date: Wed, 23 Nov 2016 09:32:09 -0700
+Subject: [PATCH] Fix for Linux 4.9 compat: iops->rename() wants flags
+
+Signed-off-by: Tim Gardner <tim.gardner@canonical.com>
+---
+ module/zfs/zpl_inode.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/module/zfs/zpl_inode.c b/module/zfs/zpl_inode.c
+index 6b2cb67..260ceee 100644
+--- a/module/zfs/zpl_inode.c
++++ b/module/zfs/zpl_inode.c
+@@ -662,7 +662,11 @@ const struct inode_operations zpl_inode_operations = {
+ 	.mkdir		= zpl_mkdir,
+ 	.rmdir		= zpl_rmdir,
+ 	.mknod		= zpl_mknod,
++#ifdef HAVE_RENAME_WANTS_FLAGS
++	.rename		= zpl_rename2,
++#else
+ 	.rename		= zpl_rename,
++#endif
+ 	.setattr	= zpl_setattr,
+ 	.getattr	= zpl_getattr,
+ #ifdef HAVE_GENERIC_SETXATTR
+-- 
+2.7.4
+

@@ -65,7 +65,7 @@ pkg_setup() {
 	kernel_is ge 2 6 32 || die "Linux 2.6.32 or newer required"
 
 	[ ${PV} != "9999" ] && \
-		{ kernel_is le 4 8 || die "Linux 4.8 is the latest supported version."; }
+		{ kernel_is le 4 9 || die "Linux 4.9 is the latest supported version."; }
 
 	check_extra_config
 }
@@ -79,9 +79,11 @@ src_prepare() {
 		{ sed -i "s/\(Release:\)\(.*\)1/\1\2${PR}-gentoo/" "${S}/META" || die "Could not set Gentoo release"; }
 	if [ ${PV} != "9999" ]
 	then
-		epatch "${FILESDIR}/debian-patches/${PN}-0.6.5.8/0003-Linux-4.9-compat-inode_change_ok-renamed-setattr_pre.patch"
+		EPATCH_SOURCE="${FILESDIR}/debian-patches/${PN}-0.6.5.8" EPATCH_SUFFIX="patch" \
+		EPATCH_FORCE="yes" epatch
 		eautoreconf
 	fi
+	eautoreconf
 	autotools-utils_src_prepare
 }
 

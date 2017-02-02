@@ -1,0 +1,102 @@
+From 4c73e4d8a11e0046c90f86a67ab58b78df70dd1c Mon Sep 17 00:00:00 2001
+From: Brian Behlendorf <behlendorf1@llnl.gov>
+Date: Tue, 18 Oct 2016 23:49:23 +0000
+Subject: [PATCH 3/4] Linux 4.9 compat: inode_change_ok() renamed
+ setattr_prepare()
+
+In torvalds/linux@31051c8 the inode_change_ok() function was
+renamed setattr_prepare() and updated to take a dentry ratheri
+than an inode.  Update the code to call the setattr_prepare()
+and add a wrapper function which call inode_change_ok() for
+older kernels.
+
+Signed-off-by: Brian Behlendorf <behlendorf1@llnl.gov>
+Signed-off-by: Chunwei Chen <david.chen@osnexus.com>
+Requires-spl: refs/pull/581/head
+(cherry picked from commit 3b0ba3ba99b8a3af0fb532bf264629436b1abd84)
+Signed-off-by: Tim Gardner <tim.gardner@canonical.com>
+---
+ config/kernel-setattr-prepare.m4 | 23 +++++++++++++++++++++++
+ config/kernel.m4                 |  1 +
+ include/linux/vfs_compat.h       | 11 +++++++++++
+ module/zfs/zpl_inode.c           |  2 +-
+ 4 files changed, 36 insertions(+), 1 deletion(-)
+ create mode 100644 config/kernel-setattr-prepare.m4
+
+diff --git a/config/kernel-setattr-prepare.m4 b/config/kernel-setattr-prepare.m4
+new file mode 100644
+index 0000000..32f7deb
+--- /dev/null
++++ b/config/kernel-setattr-prepare.m4
+@@ -0,0 +1,23 @@
++dnl #
++dnl # 4.9 API change
++dnl # The inode_change_ok() function has been renamed setattr_prepare()
++dnl # and updated to take a dentry rather than an inode.
++dnl #
++AC_DEFUN([ZFS_AC_KERNEL_SETATTR_PREPARE],
++	[AC_MSG_CHECKING([whether setattr_prepare() is available])
++	ZFS_LINUX_TRY_COMPILE_SYMBOL([
++		#include <linux/fs.h>
++	], [
++		struct dentry *dentry = NULL;
++		struct iattr *attr = NULL;
++		int error;
++
++		error = setattr_prepare(dentry, attr);
++	], [setattr_prepare], [fs/attr.c], [
++		AC_MSG_RESULT(yes)
++		AC_DEFINE(HAVE_SETATTR_PREPARE, 1,
++		    [setattr_prepare() is available])
++	], [
++		AC_MSG_RESULT(no)
++	])
++])
+diff --git a/config/kernel.m4 b/config/kernel.m4
+index a7b31b2..1b84e1a 100644
+--- a/config/kernel.m4
++++ b/config/kernel.m4
+@@ -71,6 +71,7 @@ AC_DEFUN([ZFS_AC_CONFIG_KERNEL], [
+ 	ZFS_AC_KERNEL_ENCODE_FH_WITH_INODE
+ 	ZFS_AC_KERNEL_COMMIT_METADATA
+ 	ZFS_AC_KERNEL_CLEAR_INODE
++	ZFS_AC_KERNEL_SETATTR_PREPARE
+ 	ZFS_AC_KERNEL_INSERT_INODE_LOCKED
+ 	ZFS_AC_KERNEL_D_MAKE_ROOT
+ 	ZFS_AC_KERNEL_D_OBTAIN_ALIAS
+diff --git a/include/linux/vfs_compat.h b/include/linux/vfs_compat.h
+index b4881a6..6fc1ec5 100644
+--- a/include/linux/vfs_compat.h
++++ b/include/linux/vfs_compat.h
+@@ -362,4 +362,15 @@ static inline struct inode *file_inode(const struct file *f)
+ #define	zpl_follow_up(path)			follow_up(path)
+ #endif
+ 
++/*
++ * 4.9 API change
++ */
++#ifndef HAVE_SETATTR_PREPARE
++static inline int
++setattr_prepare(struct dentry *dentry, struct iattr *ia)
++{
++	return (inode_change_ok(dentry->d_inode, ia));
++}
++#endif
++
+ #endif /* _ZFS_VFS_H */
+diff --git a/module/zfs/zpl_inode.c b/module/zfs/zpl_inode.c
+index 503c807..6b2cb67 100644
+--- a/module/zfs/zpl_inode.c
++++ b/module/zfs/zpl_inode.c
+@@ -320,7 +320,7 @@ zpl_setattr(struct dentry *dentry, struct iattr *ia)
+ 	int error;
+ 	fstrans_cookie_t cookie;
+ 
+-	error = inode_change_ok(ip, ia);
++	error = setattr_prepare(dentry, ia);
+ 	if (error)
+ 		return (error);
+ 
+-- 
+2.7.4
+

@@ -1,0 +1,58 @@
+Index: zfs-linux-0.6.5.8/config/kernel-lookup-bdev.m4
+===================================================================
+--- zfs-linux-0.6.5.8.orig/config/kernel-lookup-bdev.m4
++++ zfs-linux-0.6.5.8/config/kernel-lookup-bdev.m4
+@@ -13,5 +13,16 @@ AC_DEFUN([ZFS_AC_KERNEL_LOOKUP_BDEV],
+ 		AC_DEFINE(HAVE_LOOKUP_BDEV, 1, [lookup_bdev() is available])
+ 	], [
+ 		AC_MSG_RESULT(no)
++		AC_MSG_CHECKING([whether lookup_bdev() is available and wants 2 args])
++		ZFS_LINUX_TRY_COMPILE_SYMBOL([
++			#include <linux/fs.h>
++		], [
++			lookup_bdev(NULL, 0);
++		], [lookup_bdev], [fs/block_dev.c], [
++			AC_MSG_RESULT(yes)
++			AC_DEFINE(HAVE_LOOKUP_BDEV_2ARGS, 1, [lookup_bdev() with 2 args is available])
++		], [
++			AC_MSG_RESULT(no)
++		])
+ 	])
+ ])
+Index: zfs-linux-0.6.5.8/module/zfs/zvol.c
+===================================================================
+--- zfs-linux-0.6.5.8.orig/module/zfs/zvol.c
++++ zfs-linux-0.6.5.8/module/zfs/zvol.c
+@@ -174,7 +174,7 @@ zvol_is_zvol(const char *device)
+ 	struct block_device *bdev;
+ 	unsigned int major;
+ 
+-	bdev = lookup_bdev(device);
++	bdev = zfs_lookup_bdev(device);
+ 	if (IS_ERR(bdev))
+ 		return (B_FALSE);
+ 
+Index: zfs-linux-0.6.5.8/include/linux/blkdev_compat.h
+===================================================================
+--- zfs-linux-0.6.5.8.orig/include/linux/blkdev_compat.h
++++ zfs-linux-0.6.5.8/include/linux/blkdev_compat.h
+@@ -263,9 +263,17 @@ bio_set_flags_failfast(struct block_devi
+  * 2.6.27 API change
+  * The function was exported for use, prior to this it existed by the
+  * symbol was not exported.
++ *
++ * Ubuntu Xenial commit 193fb6a2c94fab8eb8ce70a5da4d21c7d4023bee
++ * ("UBUNTU: SAUCE: block_dev: Support checking inode permissions in lookup_bdev()")
++ * added in a mask parameter which we set as zero.
+  */
+-#ifndef HAVE_LOOKUP_BDEV
+-#define	lookup_bdev(path)		ERR_PTR(-ENOTSUP)
++#ifdef HAVE_LOOKUP_BDEV
++#define zfs_lookup_bdev(path)		lookup_bdev(path)
++#elif defined(HAVE_LOOKUP_BDEV_2ARGS)
++#define zfs_lookup_bdev(path)		lookup_bdev(path, 0)
++#else
++#define	zfs_lookup_bdev(path)		ERR_PTR(-ENOTSUP)
+ #endif
+ 
+ /*

@@ -1,0 +1,122 @@
+From 646d0bc372fb898309e415f13e8f8acdc36c96e2 Mon Sep 17 00:00:00 2001
+From: DeHackEd <DeHackEd@users.noreply.github.com>
+Date: Tue, 15 Nov 2016 12:20:46 -0500
+Subject: [PATCH 4/4] Kernel 4.9 compat: file_operations->aio_fsync removal
+
+Linux kernel commit 723c038475b78 removed this field.
+
+Reviewed-by: Brian Behlendorf <behlendorf1@llnl.gov>
+Signed-off-by: DHE <git@dehacked.net>
+Closes #5393
+(cherry picked from commit 7ca25051b6470e8471b4ed454d8c66ff21338de3)
+
+Signed-off-by: Tim Gardner <tim.gardner@canonical.com>
+---
+ config/kernel-aio-fsync.m4 | 21 +++++++++++++++++++++
+ config/kernel.m4           |  1 +
+ module/zfs/zpl_file.c      | 11 +++++++++++
+ 3 files changed, 33 insertions(+)
+ create mode 100644 config/kernel-aio-fsync.m4
+
+diff --git a/config/kernel-aio-fsync.m4 b/config/kernel-aio-fsync.m4
+new file mode 100644
+index 0000000..41b7a98
+--- /dev/null
++++ b/config/kernel-aio-fsync.m4
+@@ -0,0 +1,21 @@
++dnl #
++dnl # Linux 4.9-rc5+ ABI, removal of the .aio_fsync field
++dnl #
++AC_DEFUN([ZFS_AC_KERNEL_AIO_FSYNC], [
++	AC_MSG_CHECKING([whether fops->aio_fsync() exists])
++	ZFS_LINUX_TRY_COMPILE([
++		#include <linux/fs.h>
++
++		static const struct file_operations
++		    fops __attribute__ ((unused)) = {
++			.aio_fsync = NULL,
++		};
++	],[
++	],[
++		AC_MSG_RESULT(yes)
++		AC_DEFINE(HAVE_FILE_AIO_FSYNC, 1, [fops->aio_fsync() exists])
++	],[
++		AC_MSG_RESULT(no)
++	])
++])
++
+diff --git a/config/kernel.m4 b/config/kernel.m4
+index 1b84e1a..290d71b 100644
+--- a/config/kernel.m4
++++ b/config/kernel.m4
+@@ -61,6 +61,7 @@ AC_DEFUN([ZFS_AC_CONFIG_KERNEL], [
+ 	ZFS_AC_KERNEL_NR_CACHED_OBJECTS
+ 	ZFS_AC_KERNEL_FREE_CACHED_OBJECTS
+ 	ZFS_AC_KERNEL_FALLOCATE
++	ZFS_AC_KERNEL_AIO_FSYNC
+ 	ZFS_AC_KERNEL_MKDIR_UMODE_T
+ 	ZFS_AC_KERNEL_LOOKUP_NAMEIDATA
+ 	ZFS_AC_KERNEL_CREATE_NAMEIDATA
+diff --git a/module/zfs/zpl_file.c b/module/zfs/zpl_file.c
+index a629b59..ccb8f81 100644
+--- a/module/zfs/zpl_file.c
++++ b/module/zfs/zpl_file.c
+@@ -131,12 +131,15 @@ zpl_fsync(struct file *filp, struct dentry *dentry, int datasync)
+ 	return (error);
+ }
+ 
++#ifdef HAVE_FILE_AIO_FSYNC
+ static int
+ zpl_aio_fsync(struct kiocb *kiocb, int datasync)
+ {
+ 	struct file *filp = kiocb->ki_filp;
+ 	return (zpl_fsync(filp, filp->f_path.dentry, datasync));
+ }
++#endif
++
+ #elif defined(HAVE_FSYNC_WITHOUT_DENTRY)
+ /*
+  * Linux 2.6.35 - 3.0 API,
+@@ -162,11 +165,14 @@ zpl_fsync(struct file *filp, int datasync)
+ 	return (error);
+ }
+ 
++#ifdef HAVE_FILE_AIO_FSYNC
+ static int
+ zpl_aio_fsync(struct kiocb *kiocb, int datasync)
+ {
+ 	return (zpl_fsync(kiocb->ki_filp, datasync));
+ }
++#endif
++
+ #elif defined(HAVE_FSYNC_RANGE)
+ /*
+  * Linux 3.1 - 3.x API,
+@@ -197,11 +203,14 @@ zpl_fsync(struct file *filp, loff_t start, loff_t end, int datasync)
+ 	return (error);
+ }
+ 
++#ifdef HAVE_FILE_AIO_FSYNC
+ static int
+ zpl_aio_fsync(struct kiocb *kiocb, int datasync)
+ {
+ 	return (zpl_fsync(kiocb->ki_filp, kiocb->ki_pos, -1, datasync));
+ }
++#endif
++
+ #else
+ #error "Unsupported fops->fsync() implementation"
+ #endif
+@@ -838,7 +847,9 @@ const struct file_operations zpl_file_operations = {
+ #endif
+ 	.mmap		= zpl_mmap,
+ 	.fsync		= zpl_fsync,
++#ifdef HAVE_FILE_AIO_FSYNC
+ 	.aio_fsync	= zpl_aio_fsync,
++#endif
+ #ifdef HAVE_FILE_FALLOCATE
+ 	.fallocate	= zpl_fallocate,
+ #endif /* HAVE_FILE_FALLOCATE */
+-- 
+2.7.4
+

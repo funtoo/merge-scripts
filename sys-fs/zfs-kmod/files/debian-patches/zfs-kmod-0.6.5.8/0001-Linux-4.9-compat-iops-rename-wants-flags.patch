@@ -1,0 +1,170 @@
+From 8df4984bbbaad779ea5a02b9168c5ac0a915a5b3 Mon Sep 17 00:00:00 2001
+From: Chunwei Chen <david.chen@osnexus.com>
+Date: Wed, 19 Oct 2016 11:19:01 -0700
+Subject: [PATCH 1/4] Linux 4.9 compat: iops->rename() wants flags
+
+In Linux 4.9, torvalds/linux@2773bf0, iops->rename() and iops->rename2() are
+merged together into iops->rename(), it now wants flags.
+
+Signed-off-by: Chunwei Chen <david.chen@osnexus.com>
+(back ported from commit b8d9e26440ade0edebfa98af8cb9371810c1aeaf)
+Signed-off-by: Tim Gardner <tim.gardner@canonical.com>
+---
+ config/kernel-rename.m4 | 25 +++++++++++++++++++++++++
+ config/kernel.m4        |  1 +
+ module/zfs/zpl_ctldir.c | 23 ++++++++++++++++++++---
+ module/zfs/zpl_inode.c  | 21 +++++++++++++++++++--
+ 4 files changed, 65 insertions(+), 5 deletions(-)
+ create mode 100644 config/kernel-rename.m4
+
+diff --git a/config/kernel-rename.m4 b/config/kernel-rename.m4
+new file mode 100644
+index 0000000..9f894fb
+--- /dev/null
++++ b/config/kernel-rename.m4
+@@ -0,0 +1,25 @@
++dnl #
++dnl # 4.9 API change,
++dnl # iops->rename2() merged into iops->rename(), and iops->rename() now wants
++dnl # flags.
++dnl #
++AC_DEFUN([ZFS_AC_KERNEL_RENAME_WANTS_FLAGS], [
++	AC_MSG_CHECKING([whether iops->rename() wants flags])
++	ZFS_LINUX_TRY_COMPILE([
++		#include <linux/fs.h>
++		int rename_fn(struct inode *sip, struct dentry *sdp,
++			struct inode *tip, struct dentry *tdp,
++			unsigned int flags) { return 0; }
++
++		static const struct inode_operations
++		    iops __attribute__ ((unused)) = {
++			.rename = rename_fn,
++		};
++	],[
++	],[
++		AC_MSG_RESULT(yes)
++		AC_DEFINE(HAVE_RENAME_WANTS_FLAGS, 1, [iops->rename() wants flags])
++	],[
++		AC_MSG_RESULT(no)
++	])
++])
+diff --git a/config/kernel.m4 b/config/kernel.m4
+index 53720ee..77c7935 100644
+--- a/config/kernel.m4
++++ b/config/kernel.m4
+@@ -98,6 +98,7 @@ AC_DEFUN([ZFS_AC_CONFIG_KERNEL], [
+ 	ZFS_AC_KERNEL_FOLLOW_DOWN_ONE
+ 	ZFS_AC_KERNEL_MAKE_REQUEST_FN
+ 	ZFS_AC_KERNEL_GENERIC_IO_ACCT
++	ZFS_AC_KERNEL_RENAME_WANTS_FLAGS
+ 
+ 	AS_IF([test "$LINUX_OBJ" != "$LINUX"], [
+ 		KERNELMAKE_PARAMS="$KERNELMAKE_PARAMS O=$LINUX_OBJ"
+diff --git a/module/zfs/zpl_ctldir.c b/module/zfs/zpl_ctldir.c
+index 069834e..d691f67 100644
+--- a/module/zfs/zpl_ctldir.c
++++ b/module/zfs/zpl_ctldir.c
+@@ -301,13 +301,17 @@ zpl_snapdir_readdir(struct file *filp, void *dirent, filldir_t filldir)
+ }
+ #endif /* HAVE_VFS_ITERATE */
+ 
+-int
+-zpl_snapdir_rename(struct inode *sdip, struct dentry *sdentry,
+-    struct inode *tdip, struct dentry *tdentry)
++static int
++zpl_snapdir_rename2(struct inode *sdip, struct dentry *sdentry,
++    struct inode *tdip, struct dentry *tdentry, unsigned int flags)
+ {
+ 	cred_t *cr = CRED();
+ 	int error;
+ 
++	/* We probably don't want to support renameat2(2) in ctldir */
++	if (flags)
++		return (-EINVAL);
++
+ 	crhold(cr);
+ 	error = -zfsctl_snapdir_rename(sdip, dname(sdentry),
+ 	    tdip, dname(tdentry), cr, 0);
+@@ -317,6 +321,15 @@ zpl_snapdir_rename(struct inode *sdip, struct dentry *sdentry,
+ 	return (error);
+ }
+ 
++#ifndef HAVE_RENAME_WANTS_FLAGS
++static int
++zpl_snapdir_rename(struct inode *sdip, struct dentry *sdentry,
++    struct inode *tdip, struct dentry *tdentry)
++{
++	return (zpl_snapdir_rename2(sdip, sdentry, tdip, tdentry, 0));
++}
++#endif
++
+ static int
+ zpl_snapdir_rmdir(struct inode *dip, struct dentry *dentry)
+ {
+@@ -405,7 +418,11 @@ const struct file_operations zpl_fops_snapdir = {
+ const struct inode_operations zpl_ops_snapdir = {
+ 	.lookup		= zpl_snapdir_lookup,
+ 	.getattr	= zpl_snapdir_getattr,
++#ifdef HAVE_RENAME_WANTS_FLAGS
++	.rename		= zpl_snapdir_rename2,
++#else
+ 	.rename		= zpl_snapdir_rename,
++#endif
+ 	.rmdir		= zpl_snapdir_rmdir,
+ 	.mkdir		= zpl_snapdir_mkdir,
+ };
+diff --git a/module/zfs/zpl_inode.c b/module/zfs/zpl_inode.c
+index cbdab7d..4f67d0e 100644
+--- a/module/zfs/zpl_inode.c
++++ b/module/zfs/zpl_inode.c
+@@ -349,13 +349,17 @@ zpl_setattr(struct dentry *dentry, struct iattr *ia)
+ }
+ 
+ static int
+-zpl_rename(struct inode *sdip, struct dentry *sdentry,
+-    struct inode *tdip, struct dentry *tdentry)
++zpl_rename2(struct inode *sdip, struct dentry *sdentry,
++    struct inode *tdip, struct dentry *tdentry, unsigned int flags)
+ {
+ 	cred_t *cr = CRED();
+ 	int error;
+ 	fstrans_cookie_t cookie;
+ 
++	/* We don't have renameat2(2) support */
++	if (flags)
++		return (-EINVAL);
++
+ 	crhold(cr);
+ 	cookie = spl_fstrans_mark();
+ 	error = -zfs_rename(sdip, dname(sdentry), tdip, dname(tdentry), cr, 0);
+@@ -366,6 +370,15 @@ zpl_rename(struct inode *sdip, struct dentry *sdentry,
+ 	return (error);
+ }
+ 
++#ifndef HAVE_RENAME_WANTS_FLAGS
++static int
++zpl_rename(struct inode *sdip, struct dentry *sdentry,
++    struct inode *tdip, struct dentry *tdentry)
++{
++	return (zpl_rename2(sdip, sdentry, tdip, tdentry, 0));
++}
++#endif
++
+ static int
+ zpl_symlink(struct inode *dir, struct dentry *dentry, const char *name)
+ {
+@@ -682,7 +695,11 @@ const struct inode_operations zpl_dir_inode_operations = {
+ 	.mkdir		= zpl_mkdir,
+ 	.rmdir		= zpl_rmdir,
+ 	.mknod		= zpl_mknod,
++#ifdef HAVE_RENAME_WANTS_FLAGS
++	.rename		= zpl_rename2,
++#else
+ 	.rename		= zpl_rename,
++#endif
+ 	.setattr	= zpl_setattr,
+ 	.getattr	= zpl_getattr,
+ 	.setxattr	= generic_setxattr,
+-- 
+2.7.4
+

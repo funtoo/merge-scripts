@@ -1,0 +1,120 @@
+From 9f81d81e450f3b59ebdbc845781f3ab9b244bb49 Mon Sep 17 00:00:00 2001
+From: Chunwei Chen <david.chen@osnexus.com>
+Date: Wed, 19 Oct 2016 11:19:17 -0700
+Subject: [PATCH 2/4] Linux 4.9 compat: remove iops->{set,get,remove}xattr
+
+In Linux 4.9, torvalds/linux@fd50eca, iops->{set,get,remove}xattr and
+generic_{set,get,remove}xattr are removed. xattr operations will directly
+go through sb->s_xattr.
+
+Signed-off-by: Chunwei Chen <david.chen@osnexus.com>
+(cherry picked from commit 0fedeedd309eca62d15fffd8bd811e2b12660e21)
+Signed-off-by: Tim Gardner <tim.gardner@canonical.com>
+---
+ config/kernel-xattr-handler.m4 | 25 +++++++++++++++++++++++++
+ config/kernel.m4               |  1 +
+ module/zfs/zpl_inode.c         |  8 ++++++++
+ 3 files changed, 34 insertions(+)
+
+diff --git a/config/kernel-xattr-handler.m4 b/config/kernel-xattr-handler.m4
+index dcffd44..4ac08d8 100644
+--- a/config/kernel-xattr-handler.m4
++++ b/config/kernel-xattr-handler.m4
+@@ -58,6 +58,31 @@ AC_DEFUN([ZFS_AC_KERNEL_XATTR_HANDLER_NAME], [
+ ])
+ 
+ dnl #
++dnl # 4.9 API change,
++dnl # iops->{set,get,remove}xattr and generic_{set,get,remove}xattr are
++dnl # removed. xattr operations will directly go through sb->s_xattr.
++dnl #
++AC_DEFUN([ZFS_AC_KERNEL_HAVE_GENERIC_SETXATTR], [
++	AC_MSG_CHECKING([whether generic_setxattr() exists])
++	ZFS_LINUX_TRY_COMPILE([
++		#include <linux/fs.h>
++		#include <linux/xattr.h>
++
++		static const struct inode_operations
++		    iops __attribute__ ((unused)) = {
++			.setxattr = generic_setxattr
++		};
++	],[
++	],[
++		AC_MSG_RESULT(yes)
++		AC_DEFINE(HAVE_GENERIC_SETXATTR, 1,
++		    [generic_setxattr() exists])
++	],[
++		AC_MSG_RESULT(no)
++	])
++])
++
++dnl #
+ dnl # Supported xattr handler get() interfaces checked newest to oldest.
+ dnl #
+ AC_DEFUN([ZFS_AC_KERNEL_XATTR_HANDLER_GET], [
+diff --git a/config/kernel.m4 b/config/kernel.m4
+index 77c7935..a7b31b2 100644
+--- a/config/kernel.m4
++++ b/config/kernel.m4
+@@ -99,6 +99,7 @@ AC_DEFUN([ZFS_AC_CONFIG_KERNEL], [
+ 	ZFS_AC_KERNEL_MAKE_REQUEST_FN
+ 	ZFS_AC_KERNEL_GENERIC_IO_ACCT
+ 	ZFS_AC_KERNEL_RENAME_WANTS_FLAGS
++	ZFS_AC_KERNEL_HAVE_GENERIC_SETXATTR
+ 
+ 	AS_IF([test "$LINUX_OBJ" != "$LINUX"], [
+ 		KERNELMAKE_PARAMS="$KERNELMAKE_PARAMS O=$LINUX_OBJ"
+diff --git a/module/zfs/zpl_inode.c b/module/zfs/zpl_inode.c
+index 4f67d0e..503c807 100644
+--- a/module/zfs/zpl_inode.c
++++ b/module/zfs/zpl_inode.c
+@@ -665,9 +665,11 @@ const struct inode_operations zpl_inode_operations = {
+ 	.rename		= zpl_rename,
+ 	.setattr	= zpl_setattr,
+ 	.getattr	= zpl_getattr,
++#ifdef HAVE_GENERIC_SETXATTR
+ 	.setxattr	= generic_setxattr,
+ 	.getxattr	= generic_getxattr,
+ 	.removexattr	= generic_removexattr,
++#endif
+ 	.listxattr	= zpl_xattr_list,
+ #ifdef HAVE_INODE_TRUNCATE_RANGE
+ 	.truncate_range = zpl_truncate_range,
+@@ -702,9 +704,11 @@ const struct inode_operations zpl_dir_inode_operations = {
+ #endif
+ 	.setattr	= zpl_setattr,
+ 	.getattr	= zpl_getattr,
++#ifdef HAVE_GENERIC_SETXATTR
+ 	.setxattr	= generic_setxattr,
+ 	.getxattr	= generic_getxattr,
+ 	.removexattr	= generic_removexattr,
++#endif
+ 	.listxattr	= zpl_xattr_list,
+ #if defined(CONFIG_FS_POSIX_ACL)
+ #if defined(HAVE_GET_ACL)
+@@ -729,18 +733,22 @@ const struct inode_operations zpl_symlink_inode_operations = {
+ #endif
+ 	.setattr	= zpl_setattr,
+ 	.getattr	= zpl_getattr,
++#ifdef HAVE_GENERIC_SETXATTR
+ 	.setxattr	= generic_setxattr,
+ 	.getxattr	= generic_getxattr,
+ 	.removexattr	= generic_removexattr,
++#endif
+ 	.listxattr	= zpl_xattr_list,
+ };
+ 
+ const struct inode_operations zpl_special_inode_operations = {
+ 	.setattr	= zpl_setattr,
+ 	.getattr	= zpl_getattr,
++#ifdef HAVE_GENERIC_SETXATTR
+ 	.setxattr	= generic_setxattr,
+ 	.getxattr	= generic_getxattr,
+ 	.removexattr	= generic_removexattr,
++#endif
+ 	.listxattr	= zpl_xattr_list,
+ #if defined(CONFIG_FS_POSIX_ACL)
+ #if defined(HAVE_GET_ACL)
+-- 
+2.7.4
+
