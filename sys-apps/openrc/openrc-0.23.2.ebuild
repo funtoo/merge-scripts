@@ -63,6 +63,7 @@ src_prepare() {
 		local ver="git-${EGIT_VERSION:0:6}"
 		sed -i "/^GITVER[[:space:]]*=/s:=.*:=${ver}:" mk/gitver.mk || die
 	fi
+	epatch "${FILESDIR}"/${P}-remove-rc-warning.patch
 
 	# Allow user patches to be applied without modifying the ebuild
 	epatch_user
@@ -163,6 +164,12 @@ src_install() {
 
 	insinto /etc/conf.d
 	newins "$FILESDIR/hostname.confd" hostname
+
+	#remove old binaries and do symlinks instead
+	rm "${ED}"/sbin/{rc,runscript}
+	dosym /sbin/openrc /sbin/rc
+	dosym /sbin/openrc-run /sbin/runscript
+
 }
 
 pkg_preinst() {
