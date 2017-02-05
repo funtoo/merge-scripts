@@ -1,0 +1,12 @@
+diff -Nuar openrc-0.23.2/src/rc/rc.c openrc-0.23.2-fixed/src/rc/rc.c
+--- openrc-0.23.2/src/rc/rc.c	2017-01-26 16:35:15.000000000 +0000
++++ openrc-0.23.2-fixed/src/rc/rc.c	2017-02-04 16:02:37.753198797 +0000
+@@ -827,8 +827,6 @@
+ 		}
+ 	}
+ 
+-	if (strcmp(applet, "rc") == 0)
+-		ewarn("rc is deprecated, please use openrc instead.");
+ 	newlevel = argv[optind++];
+ 	/* To make life easier, we only have the shutdown runlevel as
+ 	 * nothing really needs to know that we're rebooting.
