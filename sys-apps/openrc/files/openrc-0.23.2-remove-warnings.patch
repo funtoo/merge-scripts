@@ -1,0 +1,25 @@
+diff -Nuar openrc-0.23.2/src/rc/openrc-run.c openrc-0.23.2-fixed/src/rc/openrc-run.c
+--- openrc-0.23.2/src/rc/openrc-run.c	2017-01-26 16:35:15.000000000 +0000
++++ openrc-0.23.2-fixed/src/rc/openrc-run.c	2017-02-05 11:28:30.455103629 +0000
+@@ -1288,9 +1288,6 @@
+ 	applet_list = rc_stringlist_new();
+ 	rc_stringlist_add(applet_list, applet);
+ 
+-	if (runscript)
+-		ewarn("%s uses runscript, please convert to openrc-run.", service);
+-
+ 	/* Now run each option */
+ 	retval = EXIT_SUCCESS;
+ 	while (optind < argc) {
+diff -Nuar openrc-0.23.2/src/rc/rc.c openrc-0.23.2-fixed/src/rc/rc.c
+--- openrc-0.23.2/src/rc/rc.c	2017-01-26 16:35:15.000000000 +0000
++++ openrc-0.23.2-fixed/src/rc/rc.c	2017-02-05 11:27:46.555452000 +0000
+@@ -827,8 +827,6 @@
+ 		}
+ 	}
+ 
+-	if (strcmp(applet, "rc") == 0)
+-		ewarn("rc is deprecated, please use openrc instead.");
+ 	newlevel = argv[optind++];
+ 	/* To make life easier, we only have the shutdown runlevel as
+ 	 * nothing really needs to know that we're rebooting.
