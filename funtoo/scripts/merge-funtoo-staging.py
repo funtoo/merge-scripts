@@ -51,13 +51,13 @@ funtoo_overlays = {
 	"funtoo_media" : GitTree("funtoo-media", "master", "repos@localhost:funtoo-media.git", pull=True),
 	"plex_overlay" : GitTree("funtoo-plex", "master", "https://github.com/Ghent/funtoo-plex.git", pull=True),
 	#"gnome_fixups" : GitTree("gnome-3.16-fixups", "master", "repos@localhost:ports/gnome-3.16-fixups.git", pull=True),
-        "gnome_fixups" : GitTree("gnome-3.20-fixups", "master", "repos@localhost:ports/gnome-3.20-fixups.git", pull=True),
+	"gnome_fixups" : GitTree("gnome-3.20-fixups", "master", "repos@localhost:ports/gnome-3.20-fixups.git", pull=True),
 	"funtoo_toolchain" : GitTree("funtoo-toolchain", "b97787318b7ffcfeaacde82cd21ddd5e207ad1f4", "repos@localhost:funtoo-toolchain-overlay.git", pull=True),
 	"ldap_overlay" : GitTree("funtoo-ldap", "master", "repos@localhost:funtoo-ldap-overlay.git", pull=True),
 	"deadbeef_overlay" : GitTree("deadbeef-overlay", "master", "https://github.com/damex/deadbeef-overlay.git", pull=True),
 	"gambas_overlay" : GitTree("gambas-overlay", "master", "https://github.com/damex/gambas-overlay.git", pull=True),
 	"wmfs_overlay" : GitTree("wmfs-overlay", "master", "https://github.com/damex/wmfs-overlay.git", pull=True),
-        "flora" : GitTree("flora", "master", "repos@localhost:flora.git", pull=True),
+	"flora" : GitTree("flora", "master", "repos@localhost:flora.git", pull=True),
 }
 
 # These are other overlays that we merge into the Funtoo tree. However, we just pull in the most recent versions
@@ -75,7 +75,8 @@ other_overlays = {
 	"wltjr_overlay" : GitTree("wltjr", "master", "https://github.com/Obsidian-StudiosInc/os-xtoo", pull=True),
 	"vmware_overlay" : GitTree("vmware", "master", "git://anongit.gentoo.org/proj/vmware.git", pull=True),
 	"lisp_overlay" : GitTree("lisp", "master", "git://anongit.gentoo.org/proj/lisp.git", pull=True),
-        "mcelog_overlay" : GitTree("mcelog", "master", "https://github.com/benkohler/iamben-overlay.git", pull=True),
+	"mcelog_overlay" : GitTree("mcelog", "master", "https://github.com/benkohler/iamben-overlay.git", pull=True),
+	"atom_overlay" : GitTree("atom", "master", "https://github.com/elprans/atom-overlay.git", pull=True),
 }
 
 funtoo_changes = False
@@ -161,7 +162,7 @@ ebuild_additions = [
 	InsertEbuilds(funtoo_overlays["deadbeef_overlay"], select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_overlays["gambas_overlay"], select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_overlays["wmfs_overlay"], select="all", skip=None, replace=False),
-        InsertEbuilds(funtoo_overlays["flora"], select="all", skip=None, replace=True, merge=True),
+	InsertEbuilds(funtoo_overlays["flora"], select="all", skip=None, replace=True, merge=True),
 	]
 
 # Ebuild modifications -- these changes need to be treated more carefully as ordering can be important
@@ -179,7 +180,8 @@ ebuild_modifications = [
 	InsertEbuilds(other_overlays["pinsard_overlay"], select=["app-portage/chuse", "app-text/zerobinpaste", "dev-python/appi", "dev-python/iwlib", "dev-python/python-sipsimple", "media-sound/pytify", "www-client/brave-bin", "x11-misc/lemonbar", "x11-wm/qtile"], skip=None, replace=True, merge=True),
 	InsertEbuilds(other_overlays["wltjr_overlay"], select=["mail-filter/assp", "mail-mta/netqmail"], skip=None, replace=True, merge=False),
 	InsertEbuilds(other_overlays["lisp_overlay"], select=["dev-lisp/ltk"], skip=None, replace=True, merge=False),
-        InsertEbuilds(other_overlays["mcelog_overlay"], select=["app-admin/mcelog"], skip=None, replace=True, merge=True),
+	InsertEbuilds(other_overlays["mcelog_overlay"], select=["app-admin/mcelog"], skip=None, replace=True, merge=True),
+	InsertEbuilds(other_overlays["atom_overlay"], select=["app-editors/atom", "dev-util/electron"], skip=None, replace=True, merge=True),
 ]
 
 ebuild_modifications += [

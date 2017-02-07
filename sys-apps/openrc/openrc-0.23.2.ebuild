@@ -63,7 +63,7 @@ src_prepare() {
 		local ver="git-${EGIT_VERSION:0:6}"
 		sed -i "/^GITVER[[:space:]]*=/s:=.*:=${ver}:" mk/gitver.mk || die
 	fi
-	epatch "${FILESDIR}"/${P}-remove-rc-warning.patch
+	epatch "${FILESDIR}"/${P}-remove-warnings.patch
 
 	# Allow user patches to be applied without modifying the ebuild
 	epatch_user
