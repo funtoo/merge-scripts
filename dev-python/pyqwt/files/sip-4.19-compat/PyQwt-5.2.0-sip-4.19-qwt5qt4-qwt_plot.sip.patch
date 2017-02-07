@@ -1,0 +1,151 @@
+diff -rupN PyQwt-5.2.0/sip/qwt5qt4/qwt_plot.sip PyQwt-5.2.0-new/sip/qwt5qt4/qwt_plot.sip
+--- PyQwt-5.2.0/sip/qwt5qt4/qwt_plot.sip	2009-04-18 19:15:45.000000000 +0200
++++ PyQwt-5.2.0-new/sip/qwt5qt4/qwt_plot.sip	2017-01-04 19:26:03.803213527 +0100
+@@ -141,9 +141,9 @@ protected:
+ 
+         if (!sipIsErr) {
+             for (int i=0; i<QwtPlot::axisCnt; ++i) {
+-                void *cpp = sipForceConvertToInstance(
+-                    PyList_GET_ITEM(a2, i), sipClass_QwtScaleMap,
+-                    0, SIP_NO_CONVERTORS, 0, &sipIsErr);
++                void *cpp = sipForceConvertToType(
++                    PyList_GET_ITEM(a2, i), sipType_QwtScaleMap,
++                    SIP_NO_CONVERTORS, 0, &sipIsErr);
+                 maps[i] = *reinterpret_cast<QwtScaleMap*>(cpp);
+             }
+         }
+@@ -162,8 +162,8 @@ protected:
+ 
+         if (!sipIsErr) {
+             for (int i=0; i<QwtPlot::axisCnt; ++i) {
+-                PyObject *object = sipConvertFromInstance(
+-                    const_cast<QwtScaleMap*>(&a2[i]), sipClass_QwtScaleMap, 0);
++                PyObject *object = sipConvertFromType(
++                    const_cast<QwtScaleMap*>(&a2[i]), sipType_QwtScaleMap, 0);
+                 if (!object) {
+                     sipIsErr = true;
+                     break;
+@@ -175,10 +175,10 @@ protected:
+         if (!sipIsErr) {
+             PyObject *result = sipCallMethod(
+                 &sipIsErr, sipMethod, "CCSC",
+-                a0, sipClass_QPainter, 0,
+-                &a1, sipClass_QRect, 0,
++                a0, sipType_QPainter, 0,
++                &a1, sipType_QRect, 0,
+                 maps,
+-                &a3, sipClass_QwtPlotPrintFilter, 0);
++                &a3, sipType_QwtPlotPrintFilter, 0);
+ 
+             if (result)
+             {
+@@ -208,8 +208,8 @@ protected:
+ 
+         if (!sipIsErr) {
+             for (int i=0; i<QwtPlot::axisCnt; ++i) {
+-                void *cpp = sipForceConvertToInstance(
+-                    PyList_GET_ITEM(a2, i), sipClass_QwtScaleMap,
++                void *cpp = sipForceConvertToType(
++                    PyList_GET_ITEM(a2, i), sipType_QwtScaleMap,
+                     0, SIP_NO_CONVERTORS, 0, &sipIsErr);
+                 maps[i] = *reinterpret_cast<QwtScaleMap*>(cpp);
+             }
+@@ -230,8 +230,8 @@ End
+ 
+         if (!sipIsErr) {
+             for (int i=0; i<QwtPlot::axisCnt; ++i) {
+-                PyObject *object = sipConvertFromInstance(
+-                    const_cast<QwtScaleMap*>(&a2[i]), sipClass_QwtScaleMap, 0);
++                PyObject *object = sipConvertFromType(
++                    const_cast<QwtScaleMap*>(&a2[i]), sipType_QwtScaleMap, 0);
+                 if (!object) {
+                     sipIsErr = true;
+                     break;
+@@ -243,10 +243,10 @@ End
+         if (!sipIsErr) {
+             PyObject *result = sipCallMethod(
+                 &sipIsErr, sipMethod, "CCSC",
+-                a0, sipClass_QPainter, 0,
+-                &a1, sipClass_QRect, 0,
++                a0, sipType_QPainter, 0,
++                &a1, sipType_QRect, 0,
+                 maps,
+-                &a3, sipClass_QwtPrintFilter, 0);
++                &a3, sipType_QwtPrintFilter, 0);
+ 
+             if (result)
+             {
+@@ -374,8 +374,8 @@ protected:
+ 
+         if (!sipIsErr) {
+             for (int i=0; i<QwtPlot::axisCnt; ++i) {
+-                void *cpp = sipForceConvertToInstance(
+-                    PyList_GET_ITEM(a2, i), sipClass_QwtScaleMap,
++                void *cpp = sipForceConvertToType(
++                    PyList_GET_ITEM(a2, i), sipType_QwtScaleMap,
+                     0, SIP_NO_CONVERTORS, 0, &sipIsErr);
+                 maps[i] = *reinterpret_cast<QwtScaleMap*>(cpp);
+             }
+@@ -395,8 +395,8 @@ protected:
+ 
+         if (!sipIsErr) {
+             for (int i=0; i<QwtPlot::axisCnt; ++i) {
+-                PyObject *object = sipConvertFromInstance(
+-                    const_cast<QwtScaleMap*>(&a2[i]), sipClass_QwtScaleMap, 0);
++                PyObject *object = sipConvertFromType(
++                    const_cast<QwtScaleMap*>(&a2[i]), sipType_QwtScaleMap, 0);
+                 if (!object) {
+                     sipIsErr = true;
+                     break;
+@@ -408,11 +408,10 @@ protected:
+         if (!sipIsErr) {
+             PyObject *result = sipCallMethod(
+                 &sipIsErr, sipMethod, "CCSC",
+-                a0, sipClass_QPainter, 0,
+-                &a1, sipClass_QRect, 0,
++                a0, sipType_QPainter, 0,
++                &a1, sipType_QRect, 0,
+                 maps,
+-                &a3, sipClass_QwtPlotPrintFilter, 0);
+-
++                &a3, sipType_QwtPlotPrintFilter, 0);
+             if (result)
+             {
+                 sipParseResult(&sipIsErr, sipMethod, result, "Z");
+@@ -547,8 +546,8 @@ protected:
+ 
+         if (!sipIsErr) {
+             for (int i=0; i<QwtPlot::axisCnt; ++i) {
+-                void *cpp = sipForceConvertToInstance(
+-                    PyList_GET_ITEM(a2, i), sipClass_QwtScaleMap,
++                void *cpp = sipForceConvertToType(
++                    PyList_GET_ITEM(a2, i), sipType_QwtScaleMap,
+                     0, SIP_NO_CONVERTORS, 0, &sipIsErr);
+                 maps[i] = *reinterpret_cast<QwtScaleMap*>(cpp);
+             }
+@@ -568,8 +567,8 @@ protected:
+ 
+         if (!sipIsErr) {
+             for (int i=0; i<QwtPlot::axisCnt; ++i) {
+-                PyObject *object = sipConvertFromInstance(
+-                    const_cast<QwtScaleMap*>(&a2[i]), sipClass_QwtScaleMap, 0);
++                PyObject *object = sipConvertFromType(
++                    const_cast<QwtScaleMap*>(&a2[i]), sipType_QwtScaleMap, 0);
+                 if (!object) {
+                     sipIsErr = true;
+                     break;
+@@ -581,11 +580,10 @@ protected:
+         if (!sipIsErr) {
+             PyObject *result = sipCallMethod(
+                 &sipIsErr, sipMethod, "CCSC",
+-                a0, sipClass_QPainter, 0,
+-                &a1, sipClass_QRect, 0,
++                a0, sipType_QPainter, 0,
++                &a1, sipType_QRect, 0,
+                 maps,
+-                &a3, sipClass_QwtPlotPrintFilter, 0);
+-
++                &a3, sipType_QwtPlotPrintFilter, 0);
+             if (result)
+             {
+                 sipParseResult(&sipIsErr, sipMethod, result, "Z");

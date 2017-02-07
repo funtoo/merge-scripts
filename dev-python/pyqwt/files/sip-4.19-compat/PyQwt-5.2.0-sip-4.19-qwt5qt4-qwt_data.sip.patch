@@ -1,0 +1,40 @@
+diff -rupN PyQwt-5.2.0/sip/qwt5qt4/qwt_data.sip PyQwt-5.2.0-new/sip/qwt5qt4/qwt_data.sip
+--- PyQwt-5.2.0/sip/qwt5qt4/qwt_data.sip	2009-02-17 10:55:14.000000000 +0100
++++ PyQwt-5.2.0-new/sip/qwt5qt4/qwt_data.sip	2017-01-04 18:43:47.820214720 +0100
+@@ -87,27 +87,27 @@ private:
+ %ConvertToSubClassCode
+     // Walk the inheritance tree depth first in alphabetical order
+     // This code is for Qwt4 and Qwt5
+-#ifdef sipClass_QwtArrayData
++#ifdef sipType_QwtArrayData
+     if (dynamic_cast<const QwtArrayData *>(sipCpp))
+-        sipClass = sipClass_QwtArrayData;
++        sipType = sipType_QwtArrayData;
+     else
+ #endif
+-#ifdef sipClass_QwtDoublePointData
++#ifdef sipType_QwtDoublePointData
+     if (dynamic_cast<const QwtDoublePointData *>(sipCpp))
+-        sipClass = sipClass_QwtDoublePointData;
++        sipType = sipType_QwtDoublePointData;
+     else
+ #endif
+-#ifdef sipClass_QwtPolygonFData
++#ifdef sipType_QwtPolygonFData
+     if (dynamic_cast<const QwtPolygonFData *>(sipCpp))
+-        sipClass = sipClass_QwtPolygonFData;
++        sipType = sipType_QwtPolygonFData;
+     else
+ #endif
+-#ifdef sipClass_QwtData
++#ifdef sipType_QwtData
+     if (dynamic_cast<const QwtData *>(sipCpp))
+-        sipClass = sipClass_QwtData;
++        sipType = sipType_QwtData;
+     else
+ #endif
+-        sipClass = 0;
++        sipType = 0;
+ %End
+ %End
+ 

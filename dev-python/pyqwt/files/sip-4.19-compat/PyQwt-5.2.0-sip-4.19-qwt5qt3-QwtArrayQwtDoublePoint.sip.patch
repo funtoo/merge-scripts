@@ -1,0 +1,27 @@
+diff -rupN PyQwt-5.2.0/sip/qwt5qt3/QwtArrayQwtDoublePoint.sip PyQwt-5.2.0-new/sip/qwt5qt3/QwtArrayQwtDoublePoint.sip
+--- PyQwt-5.2.0/sip/qwt5qt3/QwtArrayQwtDoublePoint.sip	2009-03-29 19:39:25.000000000 +0200
++++ PyQwt-5.2.0-new/sip/qwt5qt3/QwtArrayQwtDoublePoint.sip	2017-01-04 19:28:04.122491264 +0100
+@@ -49,15 +49,6 @@ public:
+     QwtArray<QwtDoublePoint> array(PyList_GET_SIZE(a0));
+ 
+     for (int i = 0; i < PyList_GET_SIZE(a0); ++i) {
+-#if SIP_VERSION < 0x040800
+-        void *cpp = sipForceConvertToInstance(
+-            PyList_GET_ITEM(a0, i),
+-            sipClass_QwtDoublePoint,
+-            NULL,
+-            SIP_NO_CONVERTORS,
+-            NULL,
+-            &sipIsErr);
+-#else
+         void *cpp = sipForceConvertToType(
+             PyList_GET_ITEM(a0, i),
+             sipType_QwtDoublePoint,
+@@ -65,7 +56,6 @@ public:
+             SIP_NO_CONVERTORS,
+             NULL,
+             &sipIsErr);
+-#endif
+         array[i] = *reinterpret_cast<QwtDoublePoint*>(cpp);
+     }
+ 
