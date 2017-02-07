@@ -11,7 +11,7 @@ inherit flag-o-matic python-r1 qmake-utils
 DESCRIPTION="Python bindings for the Qwt library"
 HOMEPAGE="http://pyqwt.sourceforge.net/"
 MY_P="PyQwt-${PV}"
-SRC_URI="mirror://sourceforge/${PN}/${MY_P}.tar.gz"
+SRC_URI="mirror://sourceforge/${PN}/${MY_P}.tar.gz mirror://funtoo/sip-4.19-compat.tar.xz"
 
 SLOT="5"
 LICENSE="GPL-2"
@@ -32,7 +32,7 @@ src_prepare() {
 	sed -i -e "s|configuration.qt_dir, 'bin'|'$(qt4_get_bindir)'|" configure.py || die
 	cd "${S}"
 	cd ..
-	EPATCH_SOURCE="${FILESDIR}/sip-4.19-compat" EPATCH_SUFFIX="patch" \
+	EPATCH_SOURCE="../sip-4.19-compat" EPATCH_SUFFIX="patch" \
 		EPATCH_FORCE="yes" epatch
 	python_copy_sources
 	append-flags -fPIC
