@@ -8,10 +8,9 @@ media-libs/gegl cairo raw
 >=virtual/libintl-0-r2 abi_x86_32
 >=dev-libs/libpcre-8.39 abi_x86_32
 >=media-video/totem-3.18.0 python_single_target_python2_7 -python_single_target_python3_4 -python_single_target_python3_5
-
+x11-wm/mutter -kms +deprecated-background
 
 # for 3.16
-x11-wm/mutter -kms
 >=media-libs/clutter-1.22.4 egl
 >=www-servers/apache-2.4.16 apache2_mpms_prefork apache2_modules_auth_digest
 >=gnome-base/gnome-control-center-3.16.3 networkmanager
