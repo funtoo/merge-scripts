@@ -8,7 +8,7 @@ media-libs/gegl cairo raw
 >=virtual/libintl-0-r2 abi_x86_32
 >=dev-libs/libpcre-8.39 abi_x86_32
 >=media-video/totem-3.18.0 python_single_target_python2_7 -python_single_target_python3_4 -python_single_target_python3_5
-x11-wm/mutter -kms +deprecated-background
+x11-wm/mutter -kms deprecated-background
 
 # for 3.16
 >=media-libs/clutter-1.22.4 egl
