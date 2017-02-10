@@ -1,3 +1,6 @@
+# enable threads USE for dev-libs/boehm-gc as wanted by gnome ebuilds
+dev-libs/boehm-gc threads
+
 # enable client USE for samba
 net-fs/samba client
 
