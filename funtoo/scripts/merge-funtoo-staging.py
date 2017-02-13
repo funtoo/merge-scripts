@@ -231,6 +231,7 @@ master_steps = [
 treeprep_steps += [
 	MergeUpdates(funtoo_overlay.root),
 	AutoGlobMask("dev-lang/python", "python*_pre*", "funtoo-python_pre"),
+	AutoGlobMask("media-libs/mesa", "mesa*_rc*", "funtoo-mesa_rc"),
 	ThirdPartyMirrors(),
 	ProfileDepFix(),
 	Minify(),
