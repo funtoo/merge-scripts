@@ -1,3 +1,6 @@
+# FL-3563: set stable keywords for unforked luate
+=dev-tex/luatex-0.76.0 amd64 x86 arm
+
 # stabilize gentoolkit 0.3.2-r1
 =app-portage/gentoolkit-0.3.2-r1 amd64 x86
 
