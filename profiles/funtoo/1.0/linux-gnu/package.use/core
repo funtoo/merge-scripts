@@ -1,3 +1,6 @@
+# add threads for boehm-gc. needed enabled for stage builds.
+dev-libs/boehm-gc threads
+
 # avoid having a gawk->readline->ncurses dependency, since gawk is used in almost all configure scripts.
 sys-apps/gawk -readline
 sys-apps/util-linux static-libs
