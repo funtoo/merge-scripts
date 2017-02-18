@@ -34,7 +34,7 @@ shards = {
 	"perl" : GitTree("gentoo-perl-shard", "7ffec93dd83b76c06a69484f2d9e6d6831790d7f", "repos@localhost:gentoo-perl-shard.git", pull=True),
 	"kde" : GitTree("gentoo-kde-shard", "f2a171e0bf202dc847d2b49efe5670428cce1227", "repos@localhost:gentoo-kde-shard.git", pull=True),
 	"gnome" : GitTree("gentoo-gnome-shard", "ffabb752f8f4e23a865ffe9caf72f950695e2f26", "repos@localhost:ports/gentoo-gnome-shard.git", pull=True),
-	"x11" : GitTree("gentoo-x11-shard", "0d836d2feea59e99a316ef27279b2ccc968e9624", "repos@localhost:ports/gentoo-x11-shard.git", pull=True),
+	"x11" : GitTree("gentoo-x11-shard", "afbf97491ba8a898b3e2faa718810f839576a360", "repos@localhost:ports/gentoo-x11-shard.git", pull=True),
 	"office" : GitTree("gentoo-office-shard", "e482bdff839aed9b81cd9c62ce435aa4e78c8cab", "repos@localhost:ports/gentoo-office-shard.git", pull=True),
 	"core" : GitTree("gentoo-core-shard", "1e9f42c3cff40b33b447656f47626fbb1c8a5392", "repos@localhost:gentoo-core-shard.git", pull=True)
 }
@@ -42,7 +42,7 @@ shards = {
 # perl: 7ffec93dd83b76c06a69484f2d9e6d6831790d7f (Updated 12 Jan 2017)
 # kde: f2a171e0bf202dc847d2b49efe5670428cce1227 (Updated 02 Feb 2017)
 # gnome: ffabb752f8f4e23a865ffe9caf72f950695e2f26 (Updated 20 Sep 2016)
-# x11: 0d836d2feea59e99a316ef27279b2ccc968e9624 (Updated 13 Feb 2017)
+# x11: afbf97491ba8a898b3e2faa718810f839576a360 (Updated 18 Feb 2017)
 # office: e482bdff839aed9b81cd9c62ce435aa4e78c8cab (Updated 17 Jan 2017)
 # core: 1e9f42c3cff40b33b447656f47626fbb1c8a5392 (Updated 28 Jan 2017)
 # funtoo-toolchain: 8dd8a081406ee499cfca0ab17d5999e59575b28 (Updated 09 Feb 2017)
