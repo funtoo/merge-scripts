@@ -1,3 +1,8 @@
+# FL-3581 mask old backported versions of menulibre overriding new ones
+# they are labeled menulibre-13.x.x which overrides the new 2.x series ones
+
+>=x11-misc/menulibre-13.0.0
+
 # FL-3474, FL-3465: mask broken flex version until gentoo-core-shard bumped
 >=sys-devel/flex-2.6.2
 
