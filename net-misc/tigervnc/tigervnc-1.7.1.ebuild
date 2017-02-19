@@ -8,7 +8,7 @@ CMAKE_IN_SOURCE_BUILD=1
 
 inherit autotools cmake-utils eutils flag-o-matic java-pkg-opt-2 systemd
 
-XSERVER_VERSION="1.19.1"
+XSERVER_VERSION="1.18.4"
 
 DESCRIPTION="Remote desktop viewer display system"
 HOMEPAGE="http://www.tigervnc.org"
@@ -19,7 +19,7 @@ SRC_URI="https://github.com/TigerVNC/tigervnc/archive/v${PV}.tar.gz -> ${P}.tar.
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86"
+KEYWORDS="*"
 IUSE="+drm gnutls java +opengl pam server +xorgmodule"
 
 CDEPEND="virtual/jpeg:0
