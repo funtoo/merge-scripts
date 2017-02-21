@@ -1,8 +1,0 @@
-#Masked until FL-3545 is resolved
->=dev-util/electron-1.4.15
-# FL-3517 zfs ebuilds with ported debian patches for
-# debian-sources-4.9.2 kernel marked for testing and
-# masked in funtoo-staging-oleg
-#unmasked, seems stable. if not, mask again.
-#=sys-kernel/spl-0.6.5.8-r1
-#=sys-fs/zfs-kmod-0.6.5.8-r2
