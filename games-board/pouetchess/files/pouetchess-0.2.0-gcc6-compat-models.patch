@@ -1,0 +1,60 @@
+--- src/models.cpp.orig	2017-02-21 23:39:51.606998542 +0100
++++ src/models.cpp	2017-02-21 23:42:27.514997392 +0100
+@@ -51,49 +51,49 @@
+ {
+ 	if(!objRook.LoadModel(PC_DATA_MODEL_ROOK))
+ 	{
+-		printf("Loading of "PC_DATA_MODEL_ROOK" failed\n");
++		printf("Loading of " PC_DATA_MODEL_ROOK " failed\n");
+ 		return false;
+ 	}
+ 	
+ 	if(!objKnight.LoadModel(PC_DATA_MODEL_KNIGHT)) 	
+ 	{
+-		printf("Loading of "PC_DATA_MODEL_KNIGHT" failed\n");
++		printf("Loading of " PC_DATA_MODEL_KNIGHT " failed\n");
+ 		return false;
+ 	}
+ 	
+ 	if(!objBishop.LoadModel(PC_DATA_MODEL_BISHOP)) 	
+ 	{
+-		printf("Loading of "PC_DATA_MODEL_BISHOP" failed\n");
++		printf("Loading of " PC_DATA_MODEL_BISHOP " failed\n");
+ 		return false;
+ 	}
+ 	
+ 	if(!objQueen.LoadModel(PC_DATA_MODEL_QUEEN)) 	
+ 	{
+-		printf("Loading of "PC_DATA_MODEL_QUEEN" failed\n");
++		printf("Loading of " PC_DATA_MODEL_QUEEN " failed\n");
+ 		return false;
+ 	}
+ 	
+ 	if(!objKing.LoadModel(PC_DATA_MODEL_KING)) 	
+ 	{
+-		printf("Loading of "PC_DATA_MODEL_KING" failed\n");
++		printf("Loading of " PC_DATA_MODEL_KING " failed\n");
+ 		return false;
+ 	}
+ 	
+ 	if(!objPawn.LoadModel(PC_DATA_MODEL_PAWN)) 	
+ 	{
+-		printf("Loading of "PC_DATA_MODEL_PAWN" failed\n");
++		printf("Loading of " PC_DATA_MODEL_PAWN " failed\n");
+ 		return false;
+ 	}
+ 	
+ 	if(!objChessboard.LoadModel(PC_DATA_MODEL_BOARD)) 	
+ 	{
+-		printf("Loading of "PC_DATA_MODEL_BOARD" failed\n");
++		printf("Loading of " PC_DATA_MODEL_BOARD " failed\n");
+ 		return false;
+ 	}
+ 	
+ 	if(!objArrow.LoadModel(PC_DATA_MODEL_ARROW)) 	
+ 	{
+-		printf("Loading of "PC_DATA_MODEL_ARROW" failed\n");
++		printf("Loading of " PC_DATA_MODEL_ARROW " failed\n");
+ 		return false;
+ 	}
+ 	

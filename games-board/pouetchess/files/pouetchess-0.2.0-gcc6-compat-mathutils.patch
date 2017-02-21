@@ -1,0 +1,20 @@
+--- src/sxmlgui/MathUtils.h.orig	2017-02-21 23:36:05.283000212 +0100
++++ src/sxmlgui/MathUtils.h	2017-02-21 23:46:36.762995553 +0100
+@@ -27,13 +27,15 @@
+   return (x < min) ? min : (x > max) ? max : x;
+ }
+ 
++//defined in cmath, used nowhere
++/*
+ inline int round(float f)
+ {
+   return int(f + 0.5f);
+ }
+-
++*/
+ inline float getNextRandom(){
+-  return (float)rand()/(RAND_MAX + 1);
++  return (float)rand()/(RAND_MAX);
+ }
+ 
+ inline int getClosest(int arg, int firstVal, int secondVal)

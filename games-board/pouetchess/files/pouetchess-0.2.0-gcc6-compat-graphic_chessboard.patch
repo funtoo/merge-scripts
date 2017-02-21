@@ -1,0 +1,20 @@
+--- src/graphic_chessboard.cpp.orig	2017-02-21 23:43:24.110996974 +0100
++++ src/graphic_chessboard.cpp	2017-02-21 23:44:14.538996602 +0100
+@@ -113,7 +113,7 @@
+ 	texture_board = new CBasicTexture;
+ 	if (false==texture_board->load(PC_DATA_TEXTURE_BOARD,false))
+ 	{
+-		Logger::writeErrorLog("Loading of :"PC_DATA_TEXTURE_BOARD" failed");
++		Logger::writeErrorLog("Loading of :" PC_DATA_TEXTURE_BOARD " failed");
+ 		return false;
+ 	}
+ 
+@@ -127,7 +127,7 @@
+ 		texture_skybox[i] = new CBasicTexture;
+ 		if (false==texture_skybox[i]->load(texture_filename,false))
+ 		{
+-			printf("Loading of :"PC_DATA_TEXTURE_SKYBOX" failed\n",i);
++			printf("Loading of :" PC_DATA_TEXTURE_SKYBOX " failed\n",i);
+ 			return false;
+ 		}
+ 		
