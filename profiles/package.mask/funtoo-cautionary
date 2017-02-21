@@ -1,3 +1,6 @@
+# FL-3585: mask kino which is dead project and shouldn't be used. http://www.kinodv.org/
+media-video/kino
+
 # FL-3581 mask old backported versions of menulibre overriding new ones
 # they are labeled menulibre-13.x.x which overrides the new 2.x series ones
 

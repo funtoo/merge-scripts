@@ -32,7 +32,7 @@ gentoo_staging_r = GitTree("gentoo-staging", "master", "repos@localhost:ports/ge
 
 shards = {
 	"perl" : GitTree("gentoo-perl-shard", "7ffec93dd83b76c06a69484f2d9e6d6831790d7f", "repos@localhost:gentoo-perl-shard.git", pull=True),
-	"kde" : GitTree("gentoo-kde-shard", "f2a171e0bf202dc847d2b49efe5670428cce1227", "repos@localhost:gentoo-kde-shard.git", pull=True),
+	"kde" : GitTree("gentoo-kde-shard", "72eed34e4e6dfe3464b2cf3a502c00da47fda231", "repos@localhost:gentoo-kde-shard.git", pull=True),
 	"gnome" : GitTree("gentoo-gnome-shard", "ffabb752f8f4e23a865ffe9caf72f950695e2f26", "repos@localhost:ports/gentoo-gnome-shard.git", pull=True),
 	"x11" : GitTree("gentoo-x11-shard", "afbf97491ba8a898b3e2faa718810f839576a360", "repos@localhost:ports/gentoo-x11-shard.git", pull=True),
 	"office" : GitTree("gentoo-office-shard", "e482bdff839aed9b81cd9c62ce435aa4e78c8cab", "repos@localhost:ports/gentoo-office-shard.git", pull=True),
@@ -40,19 +40,19 @@ shards = {
 }
 
 # perl: 7ffec93dd83b76c06a69484f2d9e6d6831790d7f (Updated 12 Jan 2017)
-# kde: f2a171e0bf202dc847d2b49efe5670428cce1227 (Updated 02 Feb 2017)
+# kde: 72eed34e4e6dfe3464b2cf3a502c00da47fda231 (Updated 20 Feb 2017)
 # gnome: ffabb752f8f4e23a865ffe9caf72f950695e2f26 (Updated 20 Sep 2016)
 # x11: afbf97491ba8a898b3e2faa718810f839576a360 (Updated 18 Feb 2017)
 # office: e482bdff839aed9b81cd9c62ce435aa4e78c8cab (Updated 17 Jan 2017)
 # core: 1e9f42c3cff40b33b447656f47626fbb1c8a5392 (Updated 28 Jan 2017)
-# funtoo-toolchain: 8dd8a081406ee499cfca0ab17d5999e59575b28 (Updated 09 Feb 2017)
+# funtoo-toolchain: 40fbab1fd57594f2f313bf2cd62a9c4de646d429 (Updated 21 Feb 2017)
 
 funtoo_overlays = {
 	"funtoo_media" : GitTree("funtoo-media", "master", "repos@localhost:funtoo-media.git", pull=True),
 	"plex_overlay" : GitTree("funtoo-plex", "master", "https://github.com/Ghent/funtoo-plex.git", pull=True),
 	#"gnome_fixups" : GitTree("gnome-3.16-fixups", "master", "repos@localhost:ports/gnome-3.16-fixups.git", pull=True),
 	"gnome_fixups" : GitTree("gnome-3.20-fixups", "master", "repos@localhost:ports/gnome-3.20-fixups.git", pull=True),
-	"funtoo_toolchain" : GitTree("funtoo-toolchain", "8dd8a081406ee499cfca0ab17d5999e59575b28e", "repos@localhost:funtoo-toolchain-overlay.git", pull=True),
+	"funtoo_toolchain" : GitTree("funtoo-toolchain", "40fbab1fd57594f2f313bf2cd62a9c4de646d429", "repos@localhost:funtoo-toolchain-overlay.git", pull=True),
 	"ldap_overlay" : GitTree("funtoo-ldap", "master", "repos@localhost:funtoo-ldap-overlay.git", pull=True),
 	"deadbeef_overlay" : GitTree("deadbeef-overlay", "master", "https://github.com/damex/deadbeef-overlay.git", pull=True),
 	"gambas_overlay" : GitTree("gambas-overlay", "master", "https://github.com/damex/gambas-overlay.git", pull=True),
