@@ -1,0 +1,85 @@
+diff -Nuar xfce4-session-4.12.1/scripts/xflock4 xfce4-session-4.12.1-fixed/scripts/xflock4
+--- xfce4-session-4.12.1/scripts/xflock4	2014-08-30 18:24:02.000000000 +0000
++++ xfce4-session-4.12.1-fixed/scripts/xflock4	2017-02-22 16:04:44.712982134 +0000
+@@ -4,7 +4,7 @@
+ #
+ #  Copyright (C) 1999, 2003 Olivier Fourdan (fourdan@xfce.org)
+ #  Copyright (C) 2011       Guido Berhoerster (guido+xfce.org@berhoerster.name)
+-#  Copyright (C) 2011       Jarno Suni (8@iki.fi)
++#  Copyright (C) 2011, 2016 Jarno Suni (8@iki.fi)
+ #
+ #  This program is free software; you can redistribute it and/or modify
+ #  it under the terms of the GNU General Public License as published by
+@@ -20,28 +20,61 @@
+ #  along with this program; if not, write to the Free Software
+ #  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ #
+-
++\unalias -a
++set -o nounset
++set -o errexit
++set -o xtrace
+ PATH=/bin:/usr/bin
+ export PATH
++ans="$(light-locker-command --query 2>/dev/null)" && true
++if [ $? -eq 1 ]; then
++# --query is unknown option; old version of light-locker
++ light-locker-command --lock 2>/dev/null && exit
++else 
++ [ -n "$ans" ] && light-locker-command --lock && exit
++fi
+ 
+-# Lock by xscreensaver or gnome-screensaver, if a respective daemon is running
++# Lock by a known screensaver, if its daemon is running
++for lock_cmd in \
++  "mate-screensaver" \
++  "cinnamon-screensaver" \
++  "gnome-screensaver"
++do
++  lock_cmd=${lock_cmd}-command
++  [ -n "$($lock_cmd --query 2>/dev/null)" ] &&
++   $lock_cmd --lock &&
++    exit
++done
+ for lock_cmd in \
+-    "xscreensaver-command -lock" \
+-    "gnome-screensaver-command --lock"
++  "xscreensaver-command -lock"
+ do
+-    $lock_cmd >/dev/null 2>&1 && exit
++  $lock_cmd >/dev/null 2>&1 && exit
+ done
+ 
+-# else run another access locking utility, if installed
++# else run another access locking utility, if installed.
++# These commands do not fork.
+ for lock_cmd in \
+-  "xlock -mode blank" \
+-  "slock"
++  "i3lock --nofork" \
++  "xtrlock -b" \
++  "slock" \
++  "slimlock" \
++  "alock -bg blank -auth pam" \
++  "xlock -mode blank"
+   do
+     set -- $lock_cmd
++# Note: command -v is an optional feature in POSIX 2004, but mandatory 
++# in POSIX 2008: http://stackoverflow.com/a/34572831/4414935
++# Maybe better use `which`?
++#   if [ -n "$(which $1)" ]; then 
+     if command -v -- $1 >/dev/null 2>&1; then
+-        $lock_cmd >/dev/null 2>&1 &
+-	# turn off display backlight:
+-	xset dpms force off
++        command-dpms $lock_cmd &
++        PID=$!
++        # Test, if the command is running after small delay;
++        # The command may have exited e.g. due to invalid command line
++        # arguments; e.g. -b option does not work with an old version
++        # of xtrlock.
++        sleep 0.1
++        kill -0 "$PID" 2>/dev/null || continue
+         exit
+     fi
+ done
