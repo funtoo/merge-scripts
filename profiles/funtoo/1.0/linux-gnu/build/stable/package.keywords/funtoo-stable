@@ -1,4 +1,7 @@
-# FL-3563: set stable keywords for unforked luate
+# FL-3571: stabilize dev-libs/zthred-2.3.2-r4:
+=dev-libs/zthread-2.3.2-r4 amd64 x86
+
+# FL-3563: set stable keywords for unforked luatex
 =dev-tex/luatex-0.76.0 amd64 x86 arm
 
 # stabilize gentoolkit 0.3.2-r1
