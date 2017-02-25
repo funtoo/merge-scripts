@@ -32,19 +32,19 @@ gentoo_staging_r = GitTree("gentoo-staging", "master", "repos@localhost:ports/ge
 
 shards = {
 	"perl" : GitTree("gentoo-perl-shard", "7ffec93dd83b76c06a69484f2d9e6d6831790d7f", "repos@localhost:gentoo-perl-shard.git", pull=True),
-	"kde" : GitTree("gentoo-kde-shard", "72eed34e4e6dfe3464b2cf3a502c00da47fda231", "repos@localhost:gentoo-kde-shard.git", pull=True),
+	"kde" : GitTree("gentoo-kde-shard", "d33259410e3eb1b0330698520796cb927ac596e7", "repos@localhost:gentoo-kde-shard.git", pull=True),
 	"gnome" : GitTree("gentoo-gnome-shard", "ffabb752f8f4e23a865ffe9caf72f950695e2f26", "repos@localhost:ports/gentoo-gnome-shard.git", pull=True),
-	"x11" : GitTree("gentoo-x11-shard", "afbf97491ba8a898b3e2faa718810f839576a360", "repos@localhost:ports/gentoo-x11-shard.git", pull=True),
+	"x11" : GitTree("gentoo-x11-shard", "4582f593f6c9bc96f1fcb740e7ace44472707c7f", "repos@localhost:ports/gentoo-x11-shard.git", pull=True),
 	"office" : GitTree("gentoo-office-shard", "e482bdff839aed9b81cd9c62ce435aa4e78c8cab", "repos@localhost:ports/gentoo-office-shard.git", pull=True),
-	"core" : GitTree("gentoo-core-shard", "1e9f42c3cff40b33b447656f47626fbb1c8a5392", "repos@localhost:gentoo-core-shard.git", pull=True)
+	"core" : GitTree("gentoo-core-shard", "4ff408b3de5465c5a63480e01e219ec62fee175e", "repos@localhost:gentoo-core-shard.git", pull=True)
 }
 
 # perl: 7ffec93dd83b76c06a69484f2d9e6d6831790d7f (Updated 12 Jan 2017)
-# kde: 72eed34e4e6dfe3464b2cf3a502c00da47fda231 (Updated 20 Feb 2017)
+# kde: d33259410e3eb1b0330698520796cb927ac596e7 (Updated 25 Feb 2017)
 # gnome: ffabb752f8f4e23a865ffe9caf72f950695e2f26 (Updated 20 Sep 2016)
-# x11: afbf97491ba8a898b3e2faa718810f839576a360 (Updated 18 Feb 2017)
+# x11: 4582f593f6c9bc96f1fcb740e7ace44472707c7f (Updated 25 Feb 2017)
 # office: e482bdff839aed9b81cd9c62ce435aa4e78c8cab (Updated 17 Jan 2017)
-# core: 1e9f42c3cff40b33b447656f47626fbb1c8a5392 (Updated 28 Jan 2017)
+# core: 4ff408b3de5465c5a63480e01e219ec62fee175e (Updated 25 Feb 2017)
 # funtoo-toolchain: 40fbab1fd57594f2f313bf2cd62a9c4de646d429 (Updated 21 Feb 2017)
 
 funtoo_overlays = {
