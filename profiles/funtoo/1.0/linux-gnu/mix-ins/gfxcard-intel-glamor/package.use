@@ -1,0 +1,4 @@
+x11-libs/libva-vdpau-driver abi_x86_32
+x11-libs/libva abi_x86_32
+x11-libs/libva-intel-driver abi_x86_32
+x11-libs/libvdpau abi_x86_32

@@ -1,0 +1,2 @@
+<=x11-base/xorg-server-1.19
+x11-drivers/xf86-video-intel
