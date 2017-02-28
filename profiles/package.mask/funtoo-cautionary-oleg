@@ -1,3 +1,6 @@
+#QA-494: mask man-db-2.7.61-r2 until we sort its configure 
+=sys-apps/man-db-2.7.6.1-r2
+
 # mask release candidates of llvm:
 =sys-devel/lld-4.0_rc*
 =sys-devel/clang-4.0_rc*
