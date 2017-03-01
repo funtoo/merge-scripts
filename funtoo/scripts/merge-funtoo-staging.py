@@ -30,6 +30,13 @@ gentoo_staging_r = GitTree("gentoo-staging", "master", "repos@localhost:ports/ge
 # These overlays are monitored for changes -- if there are changes in these overlays, we regenerate the entire
 # tree. If there aren't changes in these overlays, we don't.
 
+# IMPORTANT ----
+#
+# You are not allowed to update a shard without following our SQA Plan. Currently, that involves doing a detailed analysis of the quality
+# of the EXISTING (active) shard, then identifying issues that need to be addressed, and then defining how a shard bump will FIX or IMPROVE
+# these issues. And you MUST have your analysis reviewed and approved by the BDFL, and just blindly bumping a shard is probably NOT the
+# best solution.
+
 shards = {
 	"perl" : GitTree("gentoo-perl-shard", "7ffec93dd83b76c06a69484f2d9e6d6831790d7f", "repos@localhost:gentoo-perl-shard.git", pull=True),
 	"kde" : GitTree("gentoo-kde-shard", "d33259410e3eb1b0330698520796cb927ac596e7", "repos@localhost:gentoo-kde-shard.git", pull=True),
