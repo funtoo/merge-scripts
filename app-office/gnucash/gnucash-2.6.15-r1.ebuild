@@ -99,8 +99,7 @@ src_configure() {
 
 src_install() {
 	# Parallel installation fails from time to time, bug #359123
-	gnome2_src_install -j1 GNC_DOC_INSTALL_DIR=/usr/share/doc/${PF}
-
+	MAKEOPTS="${MAKEOPTS} -j1" gnome2_src_install GNC_DOC_INSTALL_DIR=/usr/share/doc/${PF}
 	rm -rf "${ED}"/usr/share/doc/${PF}/{examples/,COPYING,INSTALL,*win32-bin.txt,projects.html}
 	mv "${ED}"/usr/share/doc/${PF} "${T}"/cantuseprepalldocs || die
 	dodoc "${T}"/cantuseprepalldocs/*
