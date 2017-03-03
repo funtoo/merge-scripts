@@ -8,7 +8,8 @@ inherit eutils libtool toolchain-funcs pam multilib
 
 DESCRIPTION="Utilities to deal with user accounts"
 HOMEPAGE="http://shadow.pld.org.pl/ http://pkg-shadow.alioth.debian.org/"
-SRC_URI="http://pkg-shadow.alioth.debian.org/releases/${P}.tar.bz2"
+SRC_URI="mirror://funtoo/${P}.tar.bz2"
+RESTRICT="mirror"
 
 LICENSE="BSD GPL-2"
 SLOT="0"
