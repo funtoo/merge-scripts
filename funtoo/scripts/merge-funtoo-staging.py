@@ -185,7 +185,7 @@ ebuild_modifications = [
 	InsertEbuilds(funtoo_overlays["plex_overlay"], select=[ "media-tv/plex-media-server" ], skip=None, replace=True),
 	InsertEbuilds(other_overlays["sabayon_for_gentoo"], select=["app-admin/equo", "app-admin/matter", "sys-apps/entropy", "sys-apps/entropy-server", "sys-apps/entropy-client-services","app-admin/rigo", "sys-apps/rigo-daemon", "sys-apps/magneto-core", "x11-misc/magneto-gtk", "x11-misc/magneto-gtk3", "x11-themes/numix-icon-theme", "kde-misc/magneto-kde", "app-misc/magneto-loader", "media-video/kazam" ], replace=True),
 	InsertEbuilds(other_overlays["tripsix_overlay"], select=["media-sound/rakarrack"], skip=None, replace=True, merge=False),
-	InsertEbuilds(other_overlays["pinsard_overlay"], select=["app-portage/chuse", "app-text/zerobinpaste", "dev-python/appi", "dev-python/iwlib", "dev-python/python-sipsimple", "media-sound/pytify", "www-client/brave-bin", "x11-misc/lemonbar", "x11-wm/qtile"], skip=None, replace=True, merge=True),
+	InsertEbuilds(other_overlays["pinsard_overlay"], select=["app-portage/chuse", "app-text/zerobinpaste", "dev-python/appi", "dev-python/iwlib", "dev-python/python-sipsimple", "media-sound/pytify", "x11-misc/lemonbar", "x11-wm/qtile"], skip=None, replace=True, merge=True),
 	InsertEbuilds(other_overlays["wltjr_overlay"], select=["mail-filter/assp", "mail-mta/netqmail"], skip=None, replace=True, merge=False),
 	InsertEbuilds(other_overlays["lisp_overlay"], select=["dev-lisp/ltk"], skip=None, replace=True, merge=False),
 	InsertEbuilds(other_overlays["mcelog_overlay"], select=["app-admin/mcelog"], skip=None, replace=True, merge=True),
