@@ -62,7 +62,6 @@ funtoo_overlays = {
 	"funtoo_toolchain" : GitTree("funtoo-toolchain", "40fbab1fd57594f2f313bf2cd62a9c4de646d429", "repos@localhost:funtoo-toolchain-overlay.git", pull=True),
 	"ldap_overlay" : GitTree("funtoo-ldap", "master", "repos@localhost:funtoo-ldap-overlay.git", pull=True),
 	"deadbeef_overlay" : GitTree("deadbeef-overlay", "master", "https://github.com/damex/deadbeef-overlay.git", pull=True),
-	"gambas_overlay" : GitTree("gambas-overlay", "master", "https://github.com/damex/gambas-overlay.git", pull=True),
 	"wmfs_overlay" : GitTree("wmfs-overlay", "master", "https://github.com/damex/wmfs-overlay.git", pull=True),
 	"flora" : GitTree("flora", "master", "repos@localhost:flora.git", pull=True),
 }
@@ -168,7 +167,6 @@ ebuild_additions = [
 	InsertEbuilds(other_overlays["bar_overlay"], select="all", skip=["app-emulation/qemu"], replace=False),
 	InsertEbuilds(other_overlays["squeezebox_overlay"], select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_overlays["deadbeef_overlay"], select="all", skip=None, replace=False),
-	InsertEbuilds(funtoo_overlays["gambas_overlay"], select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_overlays["wmfs_overlay"], select="all", skip=None, replace=False),
 	InsertEbuilds(funtoo_overlays["flora"], select="all", skip=None, replace=True, merge=True),
 	]
