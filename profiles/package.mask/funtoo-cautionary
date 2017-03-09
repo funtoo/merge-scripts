@@ -1,6 +1,3 @@
-# FL-3624: mask brave-bin versions requiring --no-sandbox to work
->=www-client/brave-bin-0.13.0
-
 # FL-3585: mask kino which is dead project and shouldn't be used. http://www.kinodv.org/
 media-video/kino
 
