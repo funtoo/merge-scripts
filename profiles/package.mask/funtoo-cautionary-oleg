@@ -1,3 +1,6 @@
+# FL-3637: mask broken ibus-1.5.15
+>=app-i18n/ibus-1.5.15
+
 #QA-494: mask man-db-2.7.61-r2 until we sort its configure 
 =sys-apps/man-db-2.7.6.1-r2
 
