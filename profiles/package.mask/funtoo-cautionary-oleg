@@ -12,6 +12,7 @@
 >=sys-devel/clang-runtime-4.0.0
 >=app-vim/llvm-vim-4.0.0
 >=sys-devel/llvmgold-4
+>=dev-libs/libclc-0.2.0_pre20170118
 
 # mask broken version of setuptools-34. previsouly it had circualr dep with appdirs now it failing in a way described in https://bugs.gentoo.org/show_bug.cgi?id=607164. also mask appdirs-1.4.0-r1 which is bumped due to setuptools bump to unbreak circ. dep
 >=dev-python/appdirs-1.4.0-r1
