@@ -218,7 +218,8 @@ treeprep_steps = [
 master_steps = [
 	InsertEbuilds(shards["perl"], select="all", skip=None, replace=True),
 	InsertEclasses(shards["perl"], select=re.compile(".*\.eclass")),
-	InsertEbuilds(shards["x11"], select="all", skip=None, replace=True),
+	InsertEbuilds(shards["xorg"], select="all", skip=None, replace=True),
+	InsertEbuilds(shards["media"], select="all", skip=None, replace=True),
 	InsertEbuilds(shards["office"], select="all", skip=None, replace=True),
 	InsertEbuilds(shards["kde"], select="all", skip=None, replace=True),
 	InsertEclasses(shards["kde"], select=re.compile(".*\.eclass")),
