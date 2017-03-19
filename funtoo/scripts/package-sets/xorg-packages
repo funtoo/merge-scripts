@@ -1,9 +1,4 @@
-media-fonts/*
-media-libs/*
-media-plugins/*
-media-sound/*
-media-video/*
-x11-apps/*
+@depsincat@:x11-base/xorg-server:x11-apps
 x11-base/*
 x11-drivers/*
 x11-libs/*

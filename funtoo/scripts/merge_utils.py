@@ -9,6 +9,10 @@ import sys
 import datetime
 import re
 from lxml import etree
+import portage
+from portage.dbapi.porttree import portdbapi
+from portage.dep import use_reduce, dep_getkey, flatten
+from portage.versions import catpkgsplit
 
 debug = False
 
@@ -22,18 +26,66 @@ def get_pkglist(fname):
 		patterns.append(line.strip())
 	return patterns
 
+def filterInCategory(pkgset, fil):
+	match = set()
+	nomatch = set()
+	for pkg in list(pkgset):
+		if pkg.startswith(fil):
+			match.add(pkg)
+		else:
+			nomatch.add(pkg)
+	return match, nomatch
+
+def getDependencies(cur_tree, catpkgs, levels=0, cur_level=0):
+	config=portage.config()
+	config["PORTDIR"] = cur_tree
+	p = portdbapi(config)
+	mypkgs = set()
+	for catpkg in list(catpkgs):
+		pkg = p.xmatch("bestmatch-visible", catpkg)
+		if pkg == '':
+			print("No match for %s", catpkg)
+			return mypkgs
+		try:
+			aux = p.aux_get(pkg, ["DEPEND", "RDEPEND"])
+		except portage.exception.PortageKeyError:
+			print("Portage key error for %s" % repr(pkg))
+			return mypkgs
+		for dep in flatten(use_reduce(aux[0]+" "+aux[1], matchall=True)):
+			if len(dep) and dep[0] == "!":
+				continue
+			try:
+				mypkg = dep_getkey(dep)
+			except portage.exception.InvalidAtom:
+				continue
+			if mypkg not in mypkgs:
+				mypkgs.add(mypkg)
+			if levels != cur_level:
+				mypkgs = mypkgs.union(getDependencies(cur_tree, mypkg, levels=levels, cur_level=cur_level+1))
+	return mypkgs
+
 def generateShardSteps(name, from_tree, branch="master"):
 	steps = [
 		GitCheckout(branch),
 		CleanTree()
 	]
 	pkglist = []
+	"@depstartswith@:x11-base/xorg-server:x11-apps"
 	for pattern in get_pkglist("package-sets/%s-packages" % name):
 		if pattern.startswith("@regex@:"):
 			if pkglist:
 				steps += [ InsertEbuilds(from_tree, select=pkglist, skip=None, replace=True) ]
 			pkglist = []
 			steps += [ InsertEbuilds(from_tree, select=re.compile(pattern[8:]), skip=None, replace=True) ]
+		elif pattern.startswith("@depsincat@:"):
+			if pkglist:
+				steps += [ InsertEbuilds(from_tree, select=pkglist, skip=None, replace=True) ]
+			patsplit = pattern.split(":")
+			catpkg = patsplit[1]
+			dep_pkglist = getDependencies(from_tree.root, [ catpkg ] )
+			if len(patsplit) == 3:
+				dep_pkglist, dep_pkglist_nomatch = filterInCategory(dep_pkglist, patsplit[2])
+			steps += [ InsertEbuilds(from_tree, select=list(dep_pkglist), skip=None, replace=True) ]
 		elif pattern.startswith("@eclass@:"):
 			# The "accumulator" pattern:
 			# we have buffered this pkglist -- add what we have accumulated so far, as a single InsertEbuilds call
@@ -588,6 +640,11 @@ class InsertEbuilds(MergeStep):
 		if ebuildloc != None:
 			self.srctree.root = os.path.join(self.srctree.root, ebuildloc)
 
+	def __repr__(self):
+		if self.select:
+			return "<InsertEbuilds: %s>" % " ".join(self.select) if type(self.select) == list else ""
+		else:
+			return "<InsertEbuilds>"
 
 	def run(self,desttree):
 		desttree.logTree(self.srctree)
