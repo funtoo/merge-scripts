@@ -96,6 +96,11 @@ pkg_setup() {
 	if use binary ; then
 		check-reqs_pkg_setup
 	fi
+	
+	#backup current gcc profile as we are going to switch to gcc-4.8.5 for compilation
+	gcc-config -c > ${T}/gcc-config.bak
+	# switch to gcc-4.8.5
+	gcc-config x86_64-pc-linux-gnu-4.8.5
 }
 
 src_prepare() {
@@ -133,8 +138,6 @@ src_compile() {
 		--kernname="${PN}" \
 		--build-src="$S" \
 		--build-dst=${WORKDIR}/build \
-		--kernel-cc=gcc-4.8.5 \
-		--utils-cc=gcc-4.8.5 \
 		--makeopts="${MAKEOPTS}" \
 		--firmware-dst=${WORKDIR}/out/lib/firmware \
 		--cachedir="${T}/cache" \
@@ -147,6 +150,11 @@ src_compile() {
 		--iscsi \
 		--module-prefix="${WORKDIR}/out" \
 		all || die "genkernel failed"
+}
+
+post_src_compile() {
+	#return to gcc profile that we had earlier.
+	gcc-config $(cat "${T}"/gcc-config.bak)
 }
 
 src_install() {
