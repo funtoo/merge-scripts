@@ -1,3 +1,6 @@
+# FL-3628: update to nginx, masked for testing
+=www-servers/nginx-1.11.10
+
 # update pkgconf-1.2.2, masked for testing
 =dev-util/pkgconf-1.2.2
 
