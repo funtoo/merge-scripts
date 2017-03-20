@@ -1,0 +1,23 @@
+diff -Nuar linux-2.6.32/Makefile linux-2.6.32-fixed/Makefile
+--- linux-2.6.32/Makefile	2017-03-20 17:58:17.213495207 +0000
++++ linux-2.6.32-fixed/Makefile	2017-03-20 18:01:38.917478570 +0000
+@@ -232,8 +232,8 @@
+ 	  else if [ -x /bin/bash ]; then echo /bin/bash; \
+ 	  else echo sh; fi ; fi)
+ 
+-HOSTCC       = gcc
+-HOSTCXX      = g++
++HOSTCC       = gcc-4.8.5
++HOSTCXX      = g++-4.8.5
+ HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer
+ HOSTCXXFLAGS = -O2
+ 
+@@ -319,7 +319,7 @@
+ 
+ AS		= $(CROSS_COMPILE)as
+ LD		= $(CROSS_COMPILE)ld
+-CC		= $(CROSS_COMPILE)gcc
++CC		= $(CROSS_COMPILE)gcc-4.8.5
+ CPP		= $(CC) -E
+ AR		= $(CROSS_COMPILE)ar
+ NM		= $(CROSS_COMPILE)nm
