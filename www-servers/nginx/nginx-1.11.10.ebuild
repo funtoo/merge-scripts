@@ -137,7 +137,7 @@ mod_pv["auth_pam"]="1.5.1"
 mod_sha["auth_pam"]="f5d706ac299dc3c517fef644873739e975556e6b"
 mod_lic["auth_pam"]="BSD-2"
 mod_p["auth_pam"]="${mod_pn["auth_pam"]}-${mod_pv["auth_pam"]}"
-mod_uri["auth_pam"]="https://github.com/${mod_a["auth_pam"]}/${mod_pn["auth_pam"]}/archive/${mod_pv["auth_pam"]}.tar.gz"
+mod_uri["auth_pam"]="https://github.com/${mod_a["auth_pam"]}/${mod_pn["auth_pam"]}/archive/v${mod_pv["auth_pam"]}.tar.gz"
 mod_wd["auth_pam"]="${WORKDIR}/${mod_p["auth_pam"]}"
 mod_doc["auth_pam"]="README.md ChangeLog"
 

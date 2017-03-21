@@ -101,6 +101,7 @@ pkg_setup() {
 src_prepare() {
 	apply $DISTDIR/$MAINPATCH -p1
 	apply ${FILESDIR}/rhel5-openvz-sources-2.6.18.028.064.7-bridgemac.patch -p1
+	apply ${FILESDIR}/gcc-4.8.5.patch -p1
 	# disable video4linux version 1 - deprecated as of linux-headers-2.6.38:
 	# http://forums.gentoo.org/viewtopic-t-872167.html?sid=60f2e6e08cf1f2e99b3e61772a1dc276
 	sed -i -e "s:video4linux/::g" Documentation/Makefile || die
