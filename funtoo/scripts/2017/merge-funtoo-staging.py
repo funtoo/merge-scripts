@@ -5,8 +5,10 @@ import sys
 from merge_utils import *
 
 xml_out = etree.Element("packages")
-funtoo_staging_w = GitTree("funtoo-staging", "master", "repos@localhost:ports/funtoo-staging.git", root="/var/git/dest-trees/funtoo-staging", pull=False, xml_out=xml_out)
-#funtoo_staging_w = GitTree("funtoo-staging-unfork", "master", "repos@localhost:ports/funtoo-staging-unfork.git", root="/var/git/dest-trees/funtoo-staging-unfork", pull=False, xml_out=None)
+#
+# write to master branch of funtoo-staging-2017:
+funtoo_staging_w = GitTree("funtoo-staging-2017", "master", "repos@localhost:ports/funtoo-staging-2017.git", root="/var/git/dest-trees/funtoo-staging-2017", pull=False, xml_out=xml_out)
+
 xmlfile="/home/ports/public_html/packages.xml"
 
 nopush=False
@@ -24,6 +26,7 @@ if os.path.exists(p):
 	commit = a.readlines()[0].strip()
 	print("Using commit: %s" % commit)
 else:
+	# use top commit
 	commit = None
 gentoo_staging_r = GitTree("gentoo-staging", "master", "repos@localhost:ports/gentoo-staging.git", commit=commit, pull=True)
 
@@ -41,7 +44,7 @@ shards = {
 	"perl" : GitTree("gentoo-perl-shard", "7ffec93dd83b76c06a69484f2d9e6d6831790d7f", "repos@localhost:ports/gentoo-perl-shard.git", pull=True),
 	"kde" : GitTree("gentoo-kde-shard", "d33259410e3eb1b0330698520796cb927ac596e7", "repos@localhost:ports/gentoo-kde-shard.git", pull=True),
 	"gnome" : GitTree("gentoo-gnome-shard", "ffabb752f8f4e23a865ffe9caf72f950695e2f26", "repos@localhost:ports/gentoo-gnome-shard.git", pull=True),
-	"xorg" : GitTree("xorg-kit", "6852e4e6471b89331481019fc8470a824e83d36d", "repos@localhost:kits/xorg-kit.git", pull=True),
+	"xorg-kit" : GitTree("xorg-kit", branch="1.17-prime", url="repos@localhost:kits/xorg-kit.git", pull=True),
 	"media" : GitTree("gentoo-media-shard", "cb07fcb2f4fd84d5ca8bf57d0eacd99301cc0636", "repos@localhost:ports/gentoo-media-shard.git", pull=True),
 	"office" : GitTree("gentoo-office-shard", "e482bdff839aed9b81cd9c62ce435aa4e78c8cab", "repos@localhost:ports/gentoo-office-shard.git", pull=True),
 	"core" : GitTree("gentoo-core-shard", "4ff408b3de5465c5a63480e01e219ec62fee175e", "repos@localhost:ports/gentoo-core-shard.git", pull=True)
@@ -61,7 +64,6 @@ funtoo_overlays = {
 	"plex_overlay" : GitTree("funtoo-plex", "master", "https://github.com/Ghent/funtoo-plex.git", pull=True),
 	#"gnome_fixups" : GitTree("gnome-3.16-fixups", "master", "repos@localhost:ports/gnome-3.16-fixups.git", pull=True),
 	"gnome_fixups" : GitTree("gnome-3.20-fixups", "master", "repos@localhost:ports/gnome-3.20-fixups.git", pull=True),
-	"tmp-shard-fixups" : GitTree("tmp-shard-fixups", "master", "repos@localhost:ports/tmp-shard-fixups.git", pull=True),
 	"funtoo_toolchain" : GitTree("funtoo-toolchain", "40fbab1fd57594f2f313bf2cd62a9c4de646d429", "repos@localhost:funtoo-toolchain-overlay.git", pull=True),
 	"ldap_overlay" : GitTree("funtoo-ldap", "master", "repos@localhost:funtoo-ldap-overlay.git", pull=True),
 	"deadbeef_overlay" : GitTree("deadbeef-overlay", "master", "https://github.com/damex/deadbeef-overlay.git", pull=True),
@@ -88,7 +90,6 @@ other_overlays = {
 	"atom_overlay" : GitTree("atom", "master", "https://github.com/elprans/atom-overlay.git", pull=True),
 	"bhenc_overlay" : GitTree("bhenc", "master", "https://github.com/antematherian/archive-overlay.git", pull=True),
 	"vim_overlay" : GitTree("vim", "master", "https://github.com/fusion809/vim-overlay.git", pull=True),
-	"fusion809_overlay" : GitTree("fusion809", "master", "https://github.com/fusion809/sabayon-tools", pull=True),
 }
 
 funtoo_changes = False
@@ -195,7 +196,6 @@ ebuild_modifications = [
 	InsertEbuilds(other_overlays["atom_overlay"], select=["app-editors/atom", "dev-util/electron"], skip=None, replace=True, merge=True),
 	InsertEbuilds(other_overlays["bhenc_overlay"], select=["dev-python/pyqwt", "games-board/pouetchess", "media-gfx/iscan", "www-apps/joomla", "x11-drivers/nvidia-drivers"], skip=None, replace=True, merge=True),
 	InsertEbuilds(other_overlays["vim_overlay"], select=["app-editors/vim", "app-editors/vim-core", "app-editors/gvim"], skip=None, replace=True, merge=True),
-	InsertEbuilds(other_overlays["fusion809_overlay"], select=["app-editors/atom-bin"], skip=None, replace=True, merge=True),
 ]
 
 ebuild_modifications += [
@@ -221,14 +221,13 @@ treeprep_steps = [
 master_steps = [
 	InsertEbuilds(shards["perl"], select="all", skip=None, replace=True),
 	InsertEclasses(shards["perl"], select=re.compile(".*\.eclass")),
-	InsertEbuilds(shards["xorg"], select="all", skip=None, replace=True),
+	ZapMatchingEbuilds(shards["xorg-kit"], select="all"),
 	InsertEbuilds(shards["media"], select="all", skip=None, replace=True),
 	InsertEbuilds(shards["office"], select="all", skip=None, replace=True),
 	InsertEbuilds(shards["kde"], select="all", skip=None, replace=True),
 	InsertEclasses(shards["kde"], select=re.compile(".*\.eclass")),
 	InsertEbuilds(shards["gnome"], select="all", skip=None, replace=True),
 	InsertEbuilds(funtoo_overlays["gnome_fixups"], select="all", skip=None, replace=True),
-	InsertEbuilds(funtoo_overlays["tmp-shard-fixups"], select="all", skip=None, replace=True),
 	InsertEbuilds(shards["core"], select="all", skip=None, replace=True),
 	InsertEclasses(shards["core"], select=re.compile(".*\.eclass")),
 	InsertEbuilds(funtoo_overlays["funtoo_toolchain"], select="all", skip=None, replace=True, merge=False),
