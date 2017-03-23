@@ -87,7 +87,6 @@ other_overlays = {
 	"mcelog_overlay" : GitTree("mcelog", "master", "https://github.com/benkohler/iamben-overlay.git", pull=True),
 	"atom_overlay" : GitTree("atom", "master", "https://github.com/elprans/atom-overlay.git", pull=True),
 	"bhenc_overlay" : GitTree("bhenc", "master", "https://github.com/antematherian/archive-overlay.git", pull=True),
-	"vim_overlay" : GitTree("vim", "master", "https://github.com/fusion809/vim-overlay.git", pull=True),
 	"fusion809_overlay" : GitTree("fusion809", "master", "https://github.com/fusion809/sabayon-tools", pull=True),
 }
 
@@ -194,8 +193,7 @@ ebuild_modifications = [
 	InsertEbuilds(other_overlays["mcelog_overlay"], select=["app-admin/mcelog"], skip=None, replace=True, merge=True),
 	InsertEbuilds(other_overlays["atom_overlay"], select=["app-editors/atom", "dev-util/electron"], skip=None, replace=True, merge=True),
 	InsertEbuilds(other_overlays["bhenc_overlay"], select=["dev-python/pyqwt", "games-board/pouetchess", "media-gfx/iscan", "www-apps/joomla", "x11-drivers/nvidia-drivers"], skip=None, replace=True, merge=True),
-	InsertEbuilds(other_overlays["vim_overlay"], select=["app-editors/vim", "app-editors/vim-core", "app-editors/gvim"], skip=None, replace=True, merge=True),
-	InsertEbuilds(other_overlays["fusion809_overlay"], select=["app-editors/atom-bin"], skip=None, replace=True, merge=True),
+	InsertEbuilds(other_overlays["fusion809_overlay"], select=["app-editors/*"], skip=None, replace=True, merge=True),
 ]
 
 ebuild_modifications += [
