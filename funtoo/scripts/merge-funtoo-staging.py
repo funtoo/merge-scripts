@@ -193,7 +193,7 @@ ebuild_modifications = [
 	InsertEbuilds(other_overlays["mcelog_overlay"], select=["app-admin/mcelog"], skip=None, replace=True, merge=True),
 	InsertEbuilds(other_overlays["atom_overlay"], select=["app-editors/atom", "dev-util/electron"], skip=None, replace=True, merge=True),
 	InsertEbuilds(other_overlays["bhenc_overlay"], select=["dev-python/pyqwt", "games-board/pouetchess", "media-gfx/iscan", "www-apps/joomla", "x11-drivers/nvidia-drivers"], skip=None, replace=True, merge=True),
-	InsertEbuilds(other_overlays["fusion809_overlay"], select=["app-editors/*"], skip=None, replace=True, merge=True),
+	InsertEbuilds(other_overlays["fusion809_overlay"], select=["app-editors/atom-bin", "app-editors/gvim", "app-editors/vim", "app-editors/vim-core", "app-editors/sublime-text"], skip=None, replace=True, merge=True),
 ]
 
 ebuild_modifications += [
