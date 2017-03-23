@@ -87,7 +87,7 @@ other_overlays = {
 	"mcelog_overlay" : GitTree("mcelog", "master", "https://github.com/benkohler/iamben-overlay.git", pull=True),
 	"atom_overlay" : GitTree("atom", "master", "https://github.com/elprans/atom-overlay.git", pull=True),
 	"bhenc_overlay" : GitTree("bhenc", "master", "https://github.com/antematherian/archive-overlay.git", pull=True),
-	"fusion809_overlay" : GitTree("fusion809", "master", "https://github.com/fusion809/sabayon-tools", pull=True),
+	"fusion809_overlay" : GitTree("fusion809", "master", "https://github.com/fusion809/fusion809-overlay.git", pull=True),
 }
 
 funtoo_changes = False
