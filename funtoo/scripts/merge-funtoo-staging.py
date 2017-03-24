@@ -217,7 +217,7 @@ treeprep_steps = [
 ]
 
 master_steps = [
-	InsertEbuilds(shards["perl"], select="all", skip=None, replace=True),
+	InsertEbuilds(shards["perl"], select="all", skip=["dev-perl/gtk2-perl", "dev-perl/Gtk2"], replace=True),
 	InsertEclasses(shards["perl"], select=re.compile(".*\.eclass")),
 	InsertEbuilds(shards["xorg"], select="all", skip=None, replace=True),
 	InsertEbuilds(shards["media"], select="all", skip=None, replace=True),
