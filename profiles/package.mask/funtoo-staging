@@ -1,2 +1,5 @@
 # Keep the most recent masks in a reverse chrono order
 # newest on top
+
+# update net-dns/avahi-0.6.32, masked for testing
+=net-dns/avahi-0.6.32
