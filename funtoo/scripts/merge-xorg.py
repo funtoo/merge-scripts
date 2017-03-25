@@ -3,7 +3,7 @@
 import os
 from merge_utils import *
 # gentoo-1.19-snap: 355a7986f9f7c86d1617de98d6bf11906729f108
-# gentoo-1.17-snap: d422f9aee8cba87a4d8ba8cfc6f49175be38a353
+# gentoo-1.17-snap: Nov 18th, 2016: a56abf6b7026dae27f9ca30ed4c564a16ca82685
 branch = "gentoo-1.17-snap"
 gentoo_staging_w = GitTree("gentoo-staging", "d422f9aee8cba87a4d8ba8cfc6f49175be38a353", "repos@localhost:ports/gentoo-staging.git", root="/var/git/dest-trees/gentoo-staging", pull=False)
 
