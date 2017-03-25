@@ -88,7 +88,7 @@ def generateShardSteps(name, from_tree, branch="master"):
 		GitCheckout(branch),
 		CleanTree()
 	]
-	"@depstartswith@:x11-base/xorg-server:x11-apps"
+	pkglist = []
 	for pattern in get_pkglist("package-sets/%s-packages" % name):
 		if pattern.startswith("@regex@:"):
 			if pkglist:
