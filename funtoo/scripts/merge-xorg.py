@@ -2,10 +2,10 @@
 
 import os
 from merge_utils import *
-# 4582f593f6c9bc96f1fcb740e7ace44472707c7f
-# d422f9aee8cba87a4d8ba8cfc6f49175be38a353
-branch = "1.17-gentoo-snap"
-gentoo_staging_w = GitTree("gentoo-staging", "4582f593f6c9bc96f1fcb740e7ace44472707c7f", "repos@localhost:ports/gentoo-staging.git", root="/var/git/dest-trees/gentoo-staging", pull=False)
+# gentoo-1.19-snap: 355a7986f9f7c86d1617de98d6bf11906729f108
+# gentoo-1.17-snap: d422f9aee8cba87a4d8ba8cfc6f49175be38a353
+branch = "gentoo-1.17-snap"
+gentoo_staging_w = GitTree("gentoo-staging", "d422f9aee8cba87a4d8ba8cfc6f49175be38a353", "repos@localhost:ports/gentoo-staging.git", root="/var/git/dest-trees/gentoo-staging", pull=False)
 
 # shards are overlays where we collect gentoo's most recent changes. This way, we can merge specific versions rather than always be forced to
 # get the latest.
