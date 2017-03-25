@@ -41,7 +41,7 @@ shards = {
 	"perl" : GitTree("gentoo-perl-shard", "7ffec93dd83b76c06a69484f2d9e6d6831790d7f", "repos@localhost:ports/gentoo-perl-shard.git", pull=True),
 	"kde" : GitTree("gentoo-kde-shard", "d33259410e3eb1b0330698520796cb927ac596e7", "repos@localhost:ports/gentoo-kde-shard.git", pull=True),
 	"gnome" : GitTree("gentoo-gnome-shard", "ffabb752f8f4e23a865ffe9caf72f950695e2f26", "repos@localhost:ports/gentoo-gnome-shard.git", pull=True),
-	"xorg" : GitTree("xorg-kit", "6852e4e6471b89331481019fc8470a824e83d36d", "repos@localhost:kits/xorg-kit.git", pull=True),
+	"xorg" : GitTree("xorg-kit", "gentoo-1.19-snap", "repos@localhost:kits/xorg-kit.git", pull=True),
 	"media" : GitTree("gentoo-media-shard", "cb07fcb2f4fd84d5ca8bf57d0eacd99301cc0636", "repos@localhost:ports/gentoo-media-shard.git", pull=True),
 	"office" : GitTree("gentoo-office-shard", "e482bdff839aed9b81cd9c62ce435aa4e78c8cab", "repos@localhost:ports/gentoo-office-shard.git", pull=True),
 	"core" : GitTree("gentoo-core-shard", "4ff408b3de5465c5a63480e01e219ec62fee175e", "repos@localhost:ports/gentoo-core-shard.git", pull=True)
@@ -50,7 +50,6 @@ shards = {
 # perl: 7ffec93dd83b76c06a69484f2d9e6d6831790d7f (Updated 12 Jan 2017)
 # kde: d33259410e3eb1b0330698520796cb927ac596e7 (Updated 25 Feb 2017)
 # gnome: ffabb752f8f4e23a865ffe9caf72f950695e2f26 (Updated 20 Sep 2016)
-# xorg: 6852e4e6471b89331481019fc8470a824e83d36d (Updated 25 Feb 2017)
 # media: cb07fcb2f4fd84d5ca8bf57d0eacd99301cc0636 (Update 25 Feb 2017)
 # office: e482bdff839aed9b81cd9c62ce435aa4e78c8cab (Updated 17 Jan 2017)
 # core: 4ff408b3de5465c5a63480e01e219ec62fee175e (Updated 25 Feb 2017)
