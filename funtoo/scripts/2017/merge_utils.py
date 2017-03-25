@@ -414,6 +414,7 @@ class GitTree(Tree):
 		self.name = name
 		self.root = root
 		self.branch = branch
+		print("SET BRANCH TO", self.branch)
 		self.commit = commit
 		self.url = url
 		self.merged = []
@@ -471,7 +472,6 @@ class GitTree(Tree):
 			runShell("(cd %s; git checkout %s)" % ( self.root, self.commit ))
 
 	def gitCheckout(self,branch="master"):
-		self.branch = branch
 		runShell("(cd %s; git checkout %s)" % ( self.root, self.branch ))
 
 	def gitCommit(self,message="",upstream="origin",branch=None):
