@@ -1,7 +1,13 @@
-@depsincat@:x11-base/xorg-server:x11-apps
+@depsincat@:x11-base/xorg-x11:x11-apps
+@depsincat@:x11-base/xorg-x11:x11-misc
+@depsincat@:x11-base/xorg-x11:x11-themes
+@depsincat@:x11-base/xorg-x11:media-fonts
 x11-base/*
 x11-drivers/*
-x11-libs/*
-x11-misc/*
+@depsincat@:x11-base/xorg-server:x11-apps
+@depsincat@:x11-base/xorg-server:x11-libs
+@depsincat@:x11-base/xorg-server:x11-misc
+@depsincat@:x11-base/xorg-server:media-libs
+@depsincat@:x11-base/xorg-server:dev-libs
 x11-proto/*
 app-emulation/virtualbox-guest-additions
