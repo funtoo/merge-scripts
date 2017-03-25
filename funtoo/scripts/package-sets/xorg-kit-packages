@@ -5,9 +5,9 @@
 x11-base/*
 x11-drivers/*
 @depsincat@:x11-base/xorg-server:x11-apps
-@depsincat@:x11-base/xorg-server:x11-libs
 @depsincat@:x11-base/xorg-server:x11-misc
 @depsincat@:x11-base/xorg-server:media-libs
 @depsincat@:x11-base/xorg-server:dev-libs
 x11-proto/*
 app-emulation/virtualbox-guest-additions
+@cat_has_eclass@:x11-libs:xorg-2

@@ -44,7 +44,7 @@ def getDependencies(cur_tree, catpkgs, levels=0, cur_level=0):
 	for catpkg in list(catpkgs):
 		pkg = p.xmatch("bestmatch-visible", catpkg)
 		if pkg == '':
-			print("No match for %s", catpkg)
+			print("No match for %s" % catpkg)
 			return mypkgs
 		try:
 			aux = p.aux_get(pkg, ["DEPEND", "RDEPEND"])
@@ -64,12 +64,30 @@ def getDependencies(cur_tree, catpkgs, levels=0, cur_level=0):
 				mypkgs = mypkgs.union(getDependencies(cur_tree, mypkg, levels=levels, cur_level=cur_level+1))
 	return mypkgs
 
+def getPackagesInCatWithEclass(cur_tree, cat, eclass):
+	config=portage.config()
+	config["PORTDIR"] = cur_tree
+	p = portdbapi(config)
+	mypkgs = set()
+	for catpkg in p.cp_all(categories=[cat]):
+		pkg = p.xmatch("bestmatch-visible", catpkg)
+		if pkg == '':
+			print("No match for %s" % catpkg)
+			return mypkgs
+		try:
+			aux = p.aux_get(pkg, ["INHERITED"])
+		except portage.exception.PortageKeyError:
+			print("Portage key error for %s" % repr(pkg))
+			return mypkgs
+		if eclass in aux[0].split():
+			mypkgs.add(catpkg)
+	return mypkgs
+
 def generateShardSteps(name, from_tree, branch="master"):
 	steps = [
 		GitCheckout(branch),
 		CleanTree()
 	]
-	pkglist = []
 	"@depstartswith@:x11-base/xorg-server:x11-apps"
 	for pattern in get_pkglist("package-sets/%s-packages" % name):
 		if pattern.startswith("@regex@:"):
@@ -86,6 +104,13 @@ def generateShardSteps(name, from_tree, branch="master"):
 			if len(patsplit) == 3:
 				dep_pkglist, dep_pkglist_nomatch = filterInCategory(dep_pkglist, patsplit[2])
 			steps += [ InsertEbuilds(from_tree, select=list(dep_pkglist), skip=None, replace=True) ]
+		elif pattern.startswith("@cat_has_eclass@:"):
+			if pkglist:
+				steps += [ InsertEbuilds(from_tree, select=pkglist, skip=None, replace=True) ]
+			patsplit = pattern.split(":")
+			cat, eclass = patsplit[1:]
+			pkglist = getPackagesInCatWithEclass(from_tree.root, cat, eclass )
+			steps += [ InsertEbuilds(from_tree, select=list(pkglist), skip=None, replace=True) ]
 		elif pattern.startswith("@eclass@:"):
 			# The "accumulator" pattern:
 			# we have buffered this pkglist -- add what we have accumulated so far, as a single InsertEbuilds call
