@@ -45,7 +45,7 @@ def getDependencies(cur_tree, catpkgs, levels=0, cur_level=0):
 		pkg = p.xmatch("bestmatch-visible", catpkg)
 		if pkg == '':
 			print("No match for %s" % catpkg)
-			return mypkgs
+			continue
 		try:
 			aux = p.aux_get(pkg, ["DEPEND", "RDEPEND"])
 		except portage.exception.PortageKeyError:
@@ -73,12 +73,12 @@ def getPackagesInCatWithEclass(cur_tree, cat, eclass):
 		pkg = p.xmatch("bestmatch-visible", catpkg)
 		if pkg == '':
 			print("No match for %s" % catpkg)
-			return mypkgs
+			continue
 		try:
 			aux = p.aux_get(pkg, ["INHERITED"])
 		except portage.exception.PortageKeyError:
 			print("Portage key error for %s" % repr(pkg))
-			return mypkgs
+			continue
 		if eclass in aux[0].split():
 			mypkgs.add(catpkg)
 	return mypkgs
@@ -109,8 +109,8 @@ def generateShardSteps(name, from_tree, branch="master"):
 				steps += [ InsertEbuilds(from_tree, select=pkglist, skip=None, replace=True) ]
 			patsplit = pattern.split(":")
 			cat, eclass = patsplit[1:]
-			pkglist = getPackagesInCatWithEclass(from_tree.root, cat, eclass )
-			steps += [ InsertEbuilds(from_tree, select=list(pkglist), skip=None, replace=True) ]
+			cat_pkglist = getPackagesInCatWithEclass(from_tree.root, cat, eclass )
+			steps += [ InsertEbuilds(from_tree, select=list(cat_pkglist), skip=None, replace=True) ]
 		elif pattern.startswith("@eclass@:"):
 			# The "accumulator" pattern:
 			# we have buffered this pkglist -- add what we have accumulated so far, as a single InsertEbuilds call

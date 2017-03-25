@@ -5,9 +5,13 @@
 x11-base/*
 x11-drivers/*
 @depsincat@:x11-base/xorg-server:x11-apps
+@cat_has_eclass@:x11-apps:xorg-2
 @depsincat@:x11-base/xorg-server:x11-misc
+@cat_has_eclass@:x11-misc:xorg-2
 @depsincat@:x11-base/xorg-server:media-libs
-@depsincat@:x11-base/xorg-server:dev-libs
 x11-proto/*
-app-emulation/virtualbox-guest-additions
 @cat_has_eclass@:x11-libs:xorg-2
+@cat_has_eclass@:x11-wm:xorg-2
+dev-libs/wayland
+dev-libs/wayland-protocols
+app-emulation/virtualbox-guest-additions
