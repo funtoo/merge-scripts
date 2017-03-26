@@ -83,7 +83,21 @@ def getPackagesInCatWithEclass(cur_tree, cat, eclass):
 			mypkgs.add(catpkg)
 	return mypkgs
 
-def generateShardSteps(name, from_tree, branch="master"):
+def getAllEclasses(cur_tree):
+	config=portage.config()
+	config["PORTDIR"] = cur_tree
+	p = portdbapi(config)
+	myeclasses = set()
+	for pkg in p.cpv_all():
+		try:
+			aux = p.aux_get(pkg, ["INHERITED"])
+		except portage.exception.PortageKeyError:
+			print("Portage key error for %s" % repr(pkg))
+			continue
+		myeclasses.update(aux[0])
+	return myeclasses
+
+def generateShardSteps(name, from_tree, to_tree, branch="master"):
 	steps = [
 		GitCheckout(branch),
 		CleanTree()
@@ -98,6 +112,7 @@ def generateShardSteps(name, from_tree, branch="master"):
 		elif pattern.startswith("@depsincat@:"):
 			if pkglist:
 				steps += [ InsertEbuilds(from_tree, select=pkglist, skip=None, replace=True) ]
+			pkglist = []
 			patsplit = pattern.split(":")
 			catpkg = patsplit[1]
 			dep_pkglist = getDependencies(from_tree.root, [ catpkg ] )
@@ -107,10 +122,18 @@ def generateShardSteps(name, from_tree, branch="master"):
 		elif pattern.startswith("@cat_has_eclass@:"):
 			if pkglist:
 				steps += [ InsertEbuilds(from_tree, select=pkglist, skip=None, replace=True) ]
+			pkglist = []
 			patsplit = pattern.split(":")
 			cat, eclass = patsplit[1:]
 			cat_pkglist = getPackagesInCatWithEclass(from_tree.root, cat, eclass )
 			steps += [ InsertEbuilds(from_tree, select=list(cat_pkglist), skip=None, replace=True) ]
+		elif pattern == "@all_eclasses@":
+			# copy over all eclasses used by all ebuilds
+			if pkglist:
+				steps += [ InsertEbuilds(from_tree, select=pkglist, skip=None, replace=True) ]
+			pkglist = []
+			# get all eclasses used in ebuilds in to_tree, and copy them from from_tree to to_tree
+			steps += InsertEclasses(from_tree, select=list(getAllEclasses(to_tree.root)))
 		elif pattern.startswith("@eclass@:"):
 			# The "accumulator" pattern:
 			# we have buffered this pkglist -- add what we have accumulated so far, as a single InsertEbuilds call

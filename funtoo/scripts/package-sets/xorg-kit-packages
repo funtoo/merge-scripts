@@ -16,3 +16,4 @@ dev-libs/wayland
 dev-libs/wayland-protocols
 app-emulation/virtualbox-guest-additions
 media-libs/fontconfig
+@all_eclasses@
