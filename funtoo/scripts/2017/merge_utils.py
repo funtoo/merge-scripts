@@ -13,6 +13,7 @@ import portage
 from portage.dbapi.porttree import portdbapi
 from portage.dep import use_reduce, dep_getkey, flatten
 from portage.versions import catpkgsplit
+from portage.repository.config import RepoConfigLoader
 
 debug = False
 
@@ -36,72 +37,120 @@ def filterInCategory(pkgset, fil):
 			nomatch.add(pkg)
 	return match, nomatch
 
-def getDependencies(cur_tree, catpkgs, levels=0, cur_level=0):
-	config=portage.config()
-	config["PORTDIR"] = cur_tree
-	p = portdbapi(config)
+def getDependencies(cur_overlay, catpkgs, levels=0, cur_level=0):
+	cur_tree = cur_overlay.root
+	try:
+		with open(os.path.join(cur_tree, 'profiles/repo_name')) as f:
+			cur_name = f.readline().strip()
+	except FileNotFoundError:
+			cur_name = cur_overlay.name
+	env = os.environ.copy()
+	env['PORTAGE_REPOSITORIES'] = '''
+[DEFAULT]
+main-repo = %s 
+
+[%s]
+location = %s
+''' % (cur_name, cur_name, cur_tree)
+	p = portage.portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
 	mypkgs = set()
+	print(cur_tree)
 	for catpkg in list(catpkgs):
-		pkg = p.xmatch("bestmatch-visible", catpkg)
-		if pkg == '':
-			print("No match for %s" % catpkg)
-			continue
-		try:
-			aux = p.aux_get(pkg, ["DEPEND", "RDEPEND"])
-		except portage.exception.PortageKeyError:
-			print("Portage key error for %s" % repr(pkg))
-			return mypkgs
-		for dep in flatten(use_reduce(aux[0]+" "+aux[1], matchall=True)):
-			if len(dep) and dep[0] == "!":
+		for pkg in p.cp_list(catpkg):
+			if pkg == '':
+				print("No match for %s" % catpkg)
 				continue
 			try:
-				mypkg = dep_getkey(dep)
-			except portage.exception.InvalidAtom:
-				continue
-			if mypkg not in mypkgs:
-				mypkgs.add(mypkg)
-			if levels != cur_level:
-				mypkgs = mypkgs.union(getDependencies(cur_tree, mypkg, levels=levels, cur_level=cur_level+1))
+				aux = p.aux_get(pkg, ["DEPEND", "RDEPEND"])
+			except portage.exception.PortageKeyError:
+				print("Portage key error for %s" % repr(pkg))
+				return mypkgs
+			for dep in flatten(use_reduce(aux[0]+" "+aux[1], matchall=True)):
+				if len(dep) and dep[0] == "!":
+					continue
+				try:
+					mypkg = dep_getkey(dep)
+				except portage.exception.InvalidAtom:
+					continue
+				if mypkg not in mypkgs:
+					mypkgs.add(mypkg)
+				if levels != cur_level:
+					mypkgs = mypkgs.union(getDependencies(cur_tree, mypkg, levels=levels, cur_level=cur_level+1))
 	return mypkgs
 
-def getPackagesInCatWithEclass(cur_tree, cat, eclass):
-	config=portage.config()
-	config["PORTDIR"] = cur_tree
-	p = portdbapi(config)
+def getPackagesInCatWithEclass(cur_overlay, cat, eclass):
+	cur_tree = cur_overlay.root
+	try:
+		with open(os.path.join(cur_tree, 'profiles/repo_name')) as f:
+			cur_name = f.readline().strip()
+	except FileNotFoundError:
+			cur_name = cur_overlay.name
+	env = os.environ.copy()
+	env['PORTAGE_REPOSITORIES'] = '''
+[DEFAULT]
+main-repo = %s
+
+[%s]
+location = %s
+''' % (cur_name, cur_name, cur_tree)
+	p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
 	mypkgs = set()
 	for catpkg in p.cp_all(categories=[cat]):
-		pkg = p.xmatch("bestmatch-visible", catpkg)
-		if pkg == '':
-			print("No match for %s" % catpkg)
-			continue
-		try:
-			aux = p.aux_get(pkg, ["INHERITED"])
-		except portage.exception.PortageKeyError:
-			print("Portage key error for %s" % repr(pkg))
-			continue
-		if eclass in aux[0].split():
-			mypkgs.add(catpkg)
+		for pkg in p.cp_list(catpkg):
+			if pkg == '':
+				print("No match for %s" % catpkg)
+				continue
+			try:
+				aux = p.aux_get(pkg, ["INHERITED"])
+			except portage.exception.PortageKeyError:
+				print("Portage key error for %s" % repr(pkg))
+				continue
+			if eclass in aux[0].split():
+				if eclass not in mypkgs:
+					mypkgs.add(catpkg)
 	return mypkgs
 
-def getAllEclasses(cur_tree):
-	config=portage.config()
-	config["PORTDIR"] = cur_tree
-	p = portdbapi(config)
+def getAllEclasses(cur_overlay):
+	cur_tree = cur_overlay.root
+	try:
+		with open(os.path.join(cur_tree, 'profiles/repo_name')) as f:
+			cur_name = f.readline().strip()
+	except FileNotFoundError:
+			cur_name = cur_overlay.name
+	env = os.environ.copy()
+	env['PORTAGE_REPOSITORIES'] = '''
+[DEFAULT]
+main-repo = gentoo
+
+[gentoo]
+location = /var/git/source-trees/funtoo-staging-2017
+
+[%s]
+location = %s
+''' % ( cur_name, cur_tree)
+	p = portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
 	myeclasses = set()
-	for pkg in p.cpv_all():
-		try:
-			aux = p.aux_get(pkg, ["INHERITED"])
-		except portage.exception.PortageKeyError:
-			print("Portage key error for %s" % repr(pkg))
-			continue
-		myeclasses.update(aux[0])
+	for cp in p.cp_all(trees=[cur_tree]):
+		for cpv in p.cp_list(cp, mytree=cur_tree):
+			try:
+				aux = p.aux_get(cpv, ["INHERITED"], mytree=cur_tree)
+			except portage.exception.PortageKeyError:
+				print("Portage key error for %s" % repr(cpv))
+				raise
+			for eclass in aux[0].split():
+				key = eclass + ".eclass"
+				if key not in myeclasses:
+					myeclasses.add(key)
 	return myeclasses
 
 def generateShardSteps(name, from_tree, to_tree, branch="master"):
 	steps = [
 		GitCheckout(branch),
-		CleanTree()
 	]
+	if name.endswith("-kit"):
+		steps += [ CleanTree(exclude=['metadata', 'profiles']) ]
+	else:
+		steps += [ CleanTree() ]
 	pkglist = []
 	for pattern in get_pkglist("package-sets/%s-packages" % name):
 		if pattern.startswith("@regex@:"):
@@ -110,12 +159,13 @@ def generateShardSteps(name, from_tree, to_tree, branch="master"):
 			pkglist = []
 			steps += [ InsertEbuilds(from_tree, select=re.compile(pattern[8:]), skip=None, replace=True) ]
 		elif pattern.startswith("@depsincat@:"):
+			print('depsincat', pattern)
 			if pkglist:
 				steps += [ InsertEbuilds(from_tree, select=pkglist, skip=None, replace=True) ]
 			pkglist = []
 			patsplit = pattern.split(":")
 			catpkg = patsplit[1]
-			dep_pkglist = getDependencies(from_tree.root, [ catpkg ] )
+			dep_pkglist = getDependencies(from_tree, [ catpkg ] )
 			if len(patsplit) == 3:
 				dep_pkglist, dep_pkglist_nomatch = filterInCategory(dep_pkglist, patsplit[2])
 			steps += [ InsertEbuilds(from_tree, select=list(dep_pkglist), skip=None, replace=True) ]
@@ -125,7 +175,7 @@ def generateShardSteps(name, from_tree, to_tree, branch="master"):
 			pkglist = []
 			patsplit = pattern.split(":")
 			cat, eclass = patsplit[1:]
-			cat_pkglist = getPackagesInCatWithEclass(from_tree.root, cat, eclass )
+			cat_pkglist = getPackagesInCatWithEclass(from_tree, cat, eclass )
 			steps += [ InsertEbuilds(from_tree, select=list(cat_pkglist), skip=None, replace=True) ]
 		elif pattern == "@all_eclasses@":
 			# copy over all eclasses used by all ebuilds
@@ -133,7 +183,8 @@ def generateShardSteps(name, from_tree, to_tree, branch="master"):
 				steps += [ InsertEbuilds(from_tree, select=pkglist, skip=None, replace=True) ]
 			pkglist = []
 			# get all eclasses used in ebuilds in to_tree, and copy them from from_tree to to_tree
-			steps += InsertEclasses(from_tree, select=list(getAllEclasses(to_tree.root)))
+			a = getAllEclasses(to_tree)
+			steps += [ InsertEclasses(from_tree, select=list(a)) ]
 		elif pattern.startswith("@eclass@:"):
 			# The "accumulator" pattern:
 			# we have buffered this pkglist -- add what we have accumulated so far, as a single InsertEbuilds call
@@ -302,6 +353,31 @@ class ApplyPatchSeries(MergeStep):
 			else:
 				runShell( "( cd %s; git apply %s/%s )" % ( tree.root, self.path, line[:-1] ))
 
+class GenerateRepoMetadata(MergeStep):
+	def __init__(self,name):
+		self.name = name
+
+	def run(self,tree):
+		meta_path = os.path.join(tree.root, "metadata")
+		if not os.path.exists(meta_path):
+			os.makedir(meta_path)
+		a = open(meta_path + '/layout.conf','w')
+		a.write('''
+repo-name = %s
+masters = gentoo
+thin-manifests = true
+sign-manifests = false
+profile-formats = portage-2
+cache-formats = md5-dict
+''' % self.name)
+		a.close()
+		rn_path = os.path.join(tree.root, "profiles")
+		if not os.path.exists(rn_path):
+			os.makedir(rn_path)
+		a = open(rn_path + '/repo_name', 'w')
+		a.write(self.name)
+		a.close() 
+
 class RemoveFiles(MergeStep):
 	def __init__(self,globs=[]):
 		self.globs = globs
@@ -406,9 +482,14 @@ class MergeUpdates(MergeStep):
 
 class CleanTree(MergeStep):
 	# remove all files from tree, except dotfiles/dirs.
+
+	def __init__(self,exclude=[]):
+		self.exclude = exclude
 	def run(self,tree):
 		for fn in os.listdir(tree.root):
 			if fn[:1] == ".":
+				continue
+			if fn in self.exclude:
 				continue
 			runShell("rm -rf %s/%s" % (tree.root, fn))
 
@@ -615,13 +696,13 @@ class InsertFilesFromSubdir(MergeStep):
 			if self.suffixfilter and not e.endswith(self.suffixfilter):
 				continue
 			if isinstance(self.select, list):
-				if e not in list:
+				if e not in self.select:
 					continue
 			elif isinstance(self.select, regextype):
 				if not self.select.match(e):
 					continue
 			if isinstance(self.skip, list):
-				if e not in list:
+				if e in self.skip:
 					continue
 			elif isinstance(self.skip, regextype):
 				if self.skip.match(e):
