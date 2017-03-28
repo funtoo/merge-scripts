@@ -70,6 +70,7 @@ funtoo_overlays = {
 
 # These are other overlays that we merge into the Funtoo tree. However, we just pull in the most recent versions
 # of these when we regenerate our tree.
+# fusion809_overlay: 83565b6befb42a7771894f3dd8b30a8b3e418656 (Updated, 28 Mar 2017)
 
 other_overlays = {
 	"foo_overlay" : GitTree("foo-overlay", "master", "https://github.com/slashbeast/foo-overlay.git", pull=True),
@@ -86,7 +87,7 @@ other_overlays = {
 	"mcelog_overlay" : GitTree("mcelog", "master", "https://github.com/benkohler/iamben-overlay.git", pull=True),
 	"atom_overlay" : GitTree("atom", "master", "https://github.com/elprans/atom-overlay.git", pull=True),
 	"bhenc_overlay" : GitTree("bhenc", "master", "https://github.com/antematherian/archive-overlay.git", pull=True),
-	"fusion809_overlay" : GitTree("fusion809", "master", "https://github.com/fusion809/fusion809-overlay.git", pull=True),
+	"fusion809_overlay" : GitTree("fusion809", "83565b6befb42a7771894f3dd8b30a8b3e418656", "https://github.com/fusion809/fusion809-overlay.git", pull=True),
 }
 
 funtoo_changes = False
