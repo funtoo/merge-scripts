@@ -17,4 +17,5 @@ dev-libs/wayland-protocols
 app-emulation/virtualbox-guest-additions
 media-libs/freetype
 media-libs/fontconfig
+x11-misc/bumblebee
 @all_eclasses@
