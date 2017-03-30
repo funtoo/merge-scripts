@@ -10,6 +10,7 @@
 >=app-vim/llvm-vim-4.0.0
 >=sys-devel/llvmgold-4
 >=dev-libs/libclc-0.2.0_pre20170118
+>=sys-libs/libcxx-4.0.0
 
 # mask dev-util/gperf-3.1 bump. breaks reverse deps, such as eudev and maybe many others.
 # https://bugs.funtoo.org/browse/FL-3469
