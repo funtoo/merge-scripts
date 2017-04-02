@@ -4,16 +4,16 @@ EAPI=5
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/vaapi/xvba-driver"
 [[ ${PV} = 9999 ]] && inherit git-2
-PYTHON_COMPAT=( python{2_6,2_7} )
+PYTHON_COMPAT=( python2_7 )
 AUTOTOOLS_AUTORECONF="yes"
 inherit eutils autotools-multilib python-any-r1
 
 DESCRIPTION="XVBA Backend for Video Acceleration (VA) API"
 HOMEPAGE="http://www.freedesktop.org/wiki/Software/vaapi"
-SRC_URI="http://dev.gentooexperimental.org/~scarabeus/xvba-driver-${PV}.tar.bz2"
+SRC_URI="mirror://funtoo/xvba-driver-${PV}.tar.bz2"
 # No source release yet, the src_uri is theoretical at best right now
 #[[ ${PV} = 9999 ]] || SRC_URI="http://www.freedesktop.org/software/vaapi/releases/${PN}/${P}.tar.bz2"
-
+RESTRICT="mirror"
 LICENSE="GPL-2+ MIT"
 SLOT="0"
 # newline is needed for broken ekeyword
