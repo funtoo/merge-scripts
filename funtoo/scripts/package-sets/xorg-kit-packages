@@ -1,8 +1,8 @@
+x11-base/*
 @depsincat@:x11-base/xorg-x11:x11-apps
 @depsincat@:x11-base/xorg-x11:x11-misc
 @depsincat@:x11-base/xorg-x11:x11-themes
 @depsincat@:x11-base/xorg-x11:media-fonts
-x11-base/*
 x11-drivers/*
 @depsincat@:x11-base/xorg-server:x11-apps
 @cat_has_eclass@:x11-apps:xorg-2
@@ -15,5 +15,7 @@ x11-proto/*
 dev-libs/wayland
 dev-libs/wayland-protocols
 app-emulation/virtualbox-guest-additions
+media-libs/freetype
 media-libs/fontconfig
+x11-misc/bumblebee
 @all_eclasses@
