@@ -1,0 +1,5 @@
+app-editors/*
+app-emacs/*
+app-xemacs/*
+app-vim/*
+@all_classes@
