@@ -9,7 +9,7 @@
 >=dev-libs/boost-1.63.0
 
 # mask debian-sources for testing:
-=sys-kernel/debian-sources-4.9.2
+>=sys-kernel/debian-sources-4.9.2
 
 # mask blender-2.78. needs boost-1.62 unmask, python-3.5 unmask and hence various manual python_targets changes, which is untested. let's keep it masked for awhile.
 >=media-gfx/blender-2.78
