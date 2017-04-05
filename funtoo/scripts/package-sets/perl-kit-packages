@@ -1,5 +1,5 @@
 dev-perl/*
 perl-core/*
 dev-lang/perl
-@regex@:virtual/perl-.*
+@regex@:virtual/perl.*
 @all_eclasses@
