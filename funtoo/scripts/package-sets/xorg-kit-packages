@@ -14,6 +14,8 @@ x11-proto/*
 @cat_has_eclass@:x11-wm:xorg-2
 dev-libs/wayland
 dev-libs/wayland-protocols
+x11-libs/libva
+x11-libs/libva-intel-driver
 app-emulation/virtualbox-guest-additions
 media-libs/freetype
 media-libs/fontconfig

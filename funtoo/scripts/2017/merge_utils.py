@@ -54,7 +54,6 @@ location = %s
 ''' % (cur_name, cur_name, cur_tree)
 	p = portage.portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
 	mypkgs = set()
-	print(cur_tree)
 	for catpkg in list(catpkgs):
 		for pkg in p.cp_list(catpkg):
 			if pkg == '':
@@ -75,7 +74,7 @@ location = %s
 				if mypkg not in mypkgs:
 					mypkgs.add(mypkg)
 				if levels != cur_level:
-					mypkgs = mypkgs.union(getDependencies(cur_tree, mypkg, levels=levels, cur_level=cur_level+1))
+					mypkgs = mypkgs.union(getDependencies(cur_overlay, mypkg, levels=levels, cur_level=cur_level+1))
 	return mypkgs
 
 def getPackagesInCatWithEclass(cur_overlay, cat, eclass):
