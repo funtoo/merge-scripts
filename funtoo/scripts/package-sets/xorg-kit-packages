@@ -16,6 +16,7 @@ dev-libs/wayland
 dev-libs/wayland-protocols
 x11-libs/libva
 x11-libs/libva-intel-driver
+x11-libs/libvdpau
 x11-libs/libva-vdpau-driver
 app-emulation/virtualbox-guest-additions
 media-libs/freetype
