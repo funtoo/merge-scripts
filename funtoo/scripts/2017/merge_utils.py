@@ -21,11 +21,29 @@ mergeLog = open("/var/tmp/merge.log","w")
 
 def get_pkglist(fname):
 	cpkg_fn = os.path.dirname(os.path.abspath(__file__)) + "/" + fname
-	cpkg = open(cpkg_fn,"r")
+	if not os.path.isdir(cpkg_fn):
+		# single file specified
+		files = [ cpkg_fn ]
+	else:
+		# directory specifed -- we will grab the file contents of the dir:
+		fn_list = os.listdir(cpkg_fn)
+		fn_list.sort()
+		files = []
+		for fn in fn_list:
+			files.append(cpkg_fn + "/" + fn)
 	patterns = []
-	for line in cpkg:
-		patterns.append(line.strip())
-	return patterns
+	for cpkg_fn in files:
+		with open(cpkg_fn,"r") as cpkg:
+			for line in cpkg:
+				line = line.strip()
+				if line == "":
+					continue
+				ls = line.split("#")
+				if len(ls) >=2:
+					line = ls[0]
+				patterns.append(line)
+	else:
+		return patterns
 
 def filterInCategory(pkgset, fil):
 	match = set()
