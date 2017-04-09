@@ -21,5 +21,6 @@ x11-libs/libva-vdpau-driver
 app-emulation/virtualbox-guest-additions
 media-libs/freetype
 media-libs/fontconfig
+media-libs/vulkan-loader
 x11-misc/bumblebee
 @all_eclasses@
