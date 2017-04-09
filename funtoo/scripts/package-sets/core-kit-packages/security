@@ -39,5 +39,3 @@ dev-libs/npth
 
 app-crypt/mit-krb5
 virtual/krb5
-
-@all_eclasses@

@@ -113,4 +113,3 @@ virtual/pager
 virtual/pkgconfig
 virtual/service-manager
 virtual/udev
-@all_eclasses@

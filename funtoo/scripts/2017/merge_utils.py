@@ -14,13 +14,17 @@ from portage.dbapi.porttree import portdbapi
 from portage.dep import use_reduce, dep_getkey, flatten
 from portage.versions import catpkgsplit
 from portage.repository.config import RepoConfigLoader
+from portage.exception import PortageKeyError
 
 debug = False
 
 mergeLog = open("/var/tmp/merge.log","w")
 
 def get_pkglist(fname):
-	cpkg_fn = os.path.dirname(os.path.abspath(__file__)) + "/" + fname
+	if fname[0] == "/":
+		cpkg_fn = fname
+	else:
+		cpkg_fn = os.path.dirname(os.path.abspath(__file__)) + "/" + fname
 	if not os.path.isdir(cpkg_fn):
 		# single file specified
 		files = [ cpkg_fn ]
@@ -71,6 +75,7 @@ main-repo = %s
 location = %s
 ''' % (cur_name, cur_name, cur_tree)
 	p = portage.portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
+	p.frozen = False
 	mypkgs = set()
 	for catpkg in list(catpkgs):
 		for pkg in p.cp_list(catpkg):
@@ -79,7 +84,7 @@ location = %s
 				continue
 			try:
 				aux = p.aux_get(pkg, ["DEPEND", "RDEPEND"])
-			except portage.exception.PortageKeyError:
+			except PortageKeyError:
 				print("Portage key error for %s" % repr(pkg))
 				return mypkgs
 			for dep in flatten(use_reduce(aux[0]+" "+aux[1], matchall=True)):
@@ -111,6 +116,7 @@ main-repo = %s
 location = %s
 ''' % (cur_name, cur_name, cur_tree)
 	p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
+	p.frozen = False
 	mypkgs = set()
 	for catpkg in p.cp_all(categories=[cat]):
 		for pkg in p.cp_list(catpkg):
@@ -119,7 +125,7 @@ location = %s
 				continue
 			try:
 				aux = p.aux_get(pkg, ["INHERITED"])
-			except portage.exception.PortageKeyError:
+			except PortageKeyError:
 				print("Portage key error for %s" % repr(pkg))
 				continue
 			if eclass in aux[0].split():
@@ -127,49 +133,94 @@ location = %s
 					mypkgs.add(catpkg)
 	return mypkgs
 
-def getAllEclasses(cur_overlay):
+def repoName(cur_overlay):
 	cur_tree = cur_overlay.root
 	try:
 		with open(os.path.join(cur_tree, 'profiles/repo_name')) as f:
 			cur_name = f.readline().strip()
 	except FileNotFoundError:
 			cur_name = cur_overlay.name
+	return cur_name
+
+def getAllEclasses(ebuild_repo, super_repo=None):
+	return getAllMeta("INHERITED", ebuild_repo=ebuild_repo, super_repo=super_repo)
+
+def getAllLicenses(ebuild_repo, super_repo=None):
+	return getAllMeta("LICENSE", ebuild_repo=ebuild_repo, super_repo=super_repo)
+
+
+def getAllMeta(metadata, ebuild_repo, super_repo=None):
+
+	metadict = { "LICENSE" : 0, "INHERITED" : 1 }
+	metapos = metadict[metadata]
+
+	# ebuild_repo is where we get the set of all packages for our loop:
+	eb_name = ebuild_repo.reponame if ebuild_repo.reponame else repoName(ebuild_repo)
 	env = os.environ.copy()
-	env['PORTAGE_REPOSITORIES'] = '''
+	# super_repo contains all ebuilds in ebuild_repo AND eclasses
+	if super_repo:
+		super_name = super_repo.reponame if super_repo.reponame else repoName(super_repo)
+		env['PORTAGE_REPOSITORIES'] = '''
 [DEFAULT]
 main-repo = gentoo
 
 [gentoo]
-location = /var/git/source-trees/funtoo-staging-2017
+location = %s
 
 [%s]
 location = %s
-''' % ( cur_name, cur_tree)
+eclass-overrides = gentoo 
+aliases = -gentoo
+masters = gentoo 
+	''' % ( super_repo.root, eb_name, ebuild_repo.root)
+	else:
+		env['PORTAGE_REPOSITORIES'] = '''
+[DEFAULT]
+main-repo = %s
+
+[%s]
+location = %s
+	''' % ( eb_name, eb_name, eb_name, ebuild_repo.root )
+	print(env['PORTAGE_REPOSITORIES'])
 	p = portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
+	p.frozen = False
 	myeclasses = set()
-	for cp in p.cp_all(trees=[cur_tree]):
-		for cpv in p.cp_list(cp, mytree=cur_tree):
+	for cp in p.cp_all(trees=[ebuild_repo.root]):
+		print("CP",cp)
+		for cpv in p.cp_list(cp, mytree=ebuild_repo.root):
+			print("DOING", cpv)
 			try:
-				aux = p.aux_get(cpv, ["INHERITED"], mytree=cur_tree)
-			except portage.exception.PortageKeyError:
+				aux = p.aux_get(cpv, ["LICENSE","INHERITED"], mytree=ebuild_repo.root)
+			except PortageKeyError:
 				print("Portage key error for %s" % repr(cpv))
 				raise
-			for eclass in aux[0].split():
-				key = eclass + ".eclass"
-				if key not in myeclasses:
-					myeclasses.add(key)
+			if metadata == "INHERITED":
+				for eclass in aux[metapos].split():
+					print("GOT", eclass)
+					key = eclass + ".eclass"
+					if key not in myeclasses:
+						myeclasses.add(key)
+			elif metadata == "LICENSE":
+				for lic in aux[metapos].split():
+					if lic not in myeclasses:
+						myeclasses.add(lic)
 	return myeclasses
 
-def generateShardSteps(name, from_tree, to_tree, branch="master"):
+def generateShardSteps(name, from_tree, to_tree, pkgdir=None, clean=True, branch="master"):
 	steps = [
 		GitCheckout(branch),
 	]
-	if name.endswith("-kit"):
-		steps += [ CleanTree(exclude=['metadata', 'profiles']) ]
-	else:
-		steps += [ CleanTree() ]
+	if clean:
+		if name.endswith("-kit"):
+			steps += [ CleanTree(exclude=['metadata', 'profiles']) ]
+		else:
+			steps += [ CleanTree() ]
 	pkglist = []
-	for pattern in get_pkglist("package-sets/%s-packages" % name):
+	pkgf = "package-sets/%s-packages" % name
+	if pkgdir != None:
+		pkgf = pkgdir + "/" + pkgf
+	for pattern in get_pkglist(pkgf):
+		print("Processing pattern", pattern)
 		if pattern.startswith("@regex@:"):
 			if pkglist:
 				steps += [ InsertEbuilds(from_tree, select=pkglist, skip=None, replace=True) ]
@@ -200,7 +251,7 @@ def generateShardSteps(name, from_tree, to_tree, branch="master"):
 				steps += [ InsertEbuilds(from_tree, select=pkglist, skip=None, replace=True) ]
 			pkglist = []
 			# get all eclasses used in ebuilds in to_tree, and copy them from from_tree to to_tree
-			a = getAllEclasses(to_tree)
+			a = getAllEclasses(ebuild_repo=to_tree, super_repo=from_tree)
 			steps += [ InsertEclasses(from_tree, select=list(a)) ]
 		elif pattern.startswith("@eclass@:"):
 			# The "accumulator" pattern:
@@ -371,28 +422,33 @@ class ApplyPatchSeries(MergeStep):
 				runShell( "( cd %s; git apply %s/%s )" % ( tree.root, self.path, line[:-1] ))
 
 class GenerateRepoMetadata(MergeStep):
-	def __init__(self,name):
+	def __init__(self, name, masters=[], aliases=[]):
 		self.name = name
+		self.aliases = aliases
+		self.masters = masters
 
 	def run(self,tree):
 		meta_path = os.path.join(tree.root, "metadata")
 		if not os.path.exists(meta_path):
-			os.makedir(meta_path)
+			os.makedirs(meta_path)
 		a = open(meta_path + '/layout.conf','w')
-		a.write('''
-repo-name = %s
-masters = gentoo
+		out = '''repo-name = %s
 thin-manifests = true
 sign-manifests = false
 profile-formats = portage-2
 cache-formats = md5-dict
-''' % self.name)
+''' % self.name
+		if self.aliases:
+			out += "aliases = %s\n" % " ".join(self.aliases)
+		if self.masters:
+			out += "masters = %s\n" % " ".join(self.masters)
+		a.write(out)
 		a.close()
 		rn_path = os.path.join(tree.root, "profiles")
 		if not os.path.exists(rn_path):
-			os.makedir(rn_path)
+			os.makedirs(rn_path)
 		a = open(rn_path + '/repo_name', 'w')
-		a.write(self.name)
+		a.write(self.name + "\n")
 		a.close() 
 
 class RemoveFiles(MergeStep):
@@ -531,7 +587,7 @@ class GitTree(Tree):
 
 	"A Tree (git) that we can use as a source for work jobs, and/or a target for running jobs."
 
-	def __init__(self,name,branch="master",url=None,commit=None,pull=False,root=None,xml_out=None,initialize=False):
+	def __init__(self,name, branch="master",url=None,commit=None,pull=False,root=None,xml_out=None,initialize=False,reponame=None):
 		self.name = name
 		self.root = root
 		self.branch = branch
@@ -542,6 +598,7 @@ class GitTree(Tree):
 		self.xml_out = xml_out
 		self.push = False
 		self.changes = True
+		self.reponame = reponame
 		# if we don't specify root destination tree, assume we are source only:
 		if self.root == None:
 			self.writeTree = False
@@ -627,8 +684,10 @@ class GitTree(Tree):
 
 
 	def run(self,steps):
+		print("Starting run")
 		for step in steps:
 			if step != None:
+				print("Running step", step.__class__.__name__)
 				step.run(self)
 
 	def head(self):
@@ -730,6 +789,27 @@ class InsertEclasses(InsertFilesFromSubdir):
 
 	def __init__(self,srctree,select="all",skip=None):
 		InsertFilesFromSubdir.__init__(self,srctree,"eclass",".eclass",select=select,skip=skip)
+
+class InsertLicenses(InsertFilesFromSubdir):
+
+	def __init__(self,srctree,select="all",skip=None):
+		InsertFilesFromSubdir.__init__(self,srctree,"licenses",select=select,skip=skip)
+
+class CreateCategories(MergeStep):
+
+	def __init__(self,srctree):
+		self.srctree = srctree
+
+	def run(self,desttree):
+		catset = set()
+		with open(self.srctree.root + "/profiles/categories", "r") as f:
+			cats = f.read().split()
+			for cat in cats:
+				if os.path.isdir(desttree.root + "/" + cat):
+					catset.add(cat)
+			with open(desttree.root + "/profiles/categories", "w") as g:
+				for cat in sorted(list(catset)):
+					g.write(cat+"\n")
 
 class ZapMatchingEbuilds(MergeStep):
 	def __init__(self,srctree,select="all",branch=None):
@@ -1015,14 +1095,14 @@ class GenCache(MergeStep):
 	"GenCache runs egencache --update to update metadata."
 
 	def run(self,tree):
-		run_command(["egencache", "--update", "--repo", "gentoo", "--repositories-configuration", "[gentoo]\nlocation = %s" % tree.root, "--jobs", "24"], abort_on_failure=False)
+		run_command(["egencache", "--update", "--repo", tree.reponame if tree.reponame else tree.name, "--repositories-configuration", "[%s]\nlocation = %s" % (tree.reponame if tree.reponame else tree.name, tree.root), "--load-average", "1"], abort_on_failure=False)
 
 class GenUseLocalDesc(MergeStep):
 
 	"GenUseLocalDesc runs egencache to update use.local.desc"
 
 	def run(self,tree):
-		run_command(["egencache", "--update-use-local-desc", "--repo", "gentoo", "--repositories-configuration", "[gentoo]\nlocation = %s" % tree.root], abort_on_failure=False)
+		run_command(["egencache", "--update-use-local-desc", "--repo", tree.reponame if tree.reponame else tree.name, "--repositories-configuration", "[%s]\nlocation = %s" % (tree.reponame if tree.reponame else tree.name, tree.root)], abort_on_failure=False)
 
 class GitCheckout(MergeStep):
 
