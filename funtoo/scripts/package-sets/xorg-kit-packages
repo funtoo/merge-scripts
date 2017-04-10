@@ -12,6 +12,7 @@ x11-drivers/*
 x11-proto/*
 @cat_has_eclass@:x11-libs:xorg-2
 @cat_has_eclass@:x11-wm:xorg-2
+@cat_has_eclass@:dev-libs:xorg-2
 dev-libs/wayland
 dev-libs/wayland-protocols
 x11-libs/libva

@@ -22,6 +22,8 @@ dev-libs/check
 dev-libs/expat
 dev-libs/icu
 dev-libs/iniparser
+dev-libs/jansson
+dev-libs/libbsd
 dev-libs/libintl
 dev-libs/libltdl
 dev-libs/libpcre
@@ -30,8 +32,8 @@ dev-libs/libusb
 dev-libs/libusb-compat
 dev-libs/libxml2
 dev-libs/libxslt
+dev-libs/libyaml
 dev-libs/popt
-dev-util/intltool
 dev-vcs/git
 mail-mta/postfix
 net-dns/openresolv
@@ -65,7 +67,6 @@ sys-apps/iproute2
 sys-apps/kbd
 sys-apps/kmod
 sys-apps/less
-sys-apps/man-db
 sys-apps/man-pages
 sys-apps/man-pages-posix
 sys-apps/more
@@ -98,7 +99,6 @@ sys-libs/zlib
 sys-process/procps
 sys-process/psmisc
 sys-process/runit
-virtual/ada
 virtual/awk
 virtual/dev-manager
 virtual/libiconv
@@ -110,6 +110,5 @@ virtual/modutils
 virtual/mta
 virtual/package-manager
 virtual/pager
-virtual/pkgconfig
 virtual/service-manager
 virtual/udev

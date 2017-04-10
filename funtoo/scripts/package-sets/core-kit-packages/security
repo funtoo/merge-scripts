@@ -35,7 +35,4 @@ dev-libs/libgpg-error
 dev-libs/libksba
 dev-libs/npth
 
-# KERBEROS:
 
-app-crypt/mit-krb5
-virtual/krb5

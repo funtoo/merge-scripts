@@ -1,0 +1,14 @@
+# core net apps - WIP
+
+net-misc/ntp
+net-dns/avahi
+net-misc/openntpd
+net-analyzer/snmp
+
+# deps
+
+dev-libs/libevent
+sys-libs/libcap
+net-misc/pps-tools
+sec-policy/selinux-ntp
+

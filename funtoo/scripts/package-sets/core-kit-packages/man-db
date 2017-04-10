@@ -1,0 +1,8 @@
+app-text/build-docbook-catalog
+app-text/docbook-xml-dtd
+app-text/docbook-xsl-stylesheets
+app-text/openjade
+app-text/opensp
+app-text/po4a
+app-text/sgml-common
+sys-apps/man-db

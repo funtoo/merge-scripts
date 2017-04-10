@@ -9,12 +9,12 @@ from merge_utils import *
 # and funtoo-toolchain will override if catpkg is there.
 # etc.
 ports_2012 = GitTree("ports-2012", "funtoo.org", "repos@localhost:funtoo-overlay.git", reponame="biggy", root="/var/git/dest-trees/ports-2012", pull=True)
-core_kit = GitTree("core-kit", "master", "repos@localhost:kits/core-kit.git", reponame="funtoo", root="/var/git/dest-trees/core-kit", pull=True)
+core_kit = GitTree("core-kit", "master", "repos@localhost:kits/core-kit.git", root="/var/git/dest-trees/core-kit", pull=True)
 
 steps = [
 	GitCheckout("master"),
 	CleanTree(),
-	GenerateRepoMetadata("funtoo", aliases=["gentoo"]),
+	GenerateRepoMetadata("core-kit", aliases=["gentoo"]),
 	SyncDir(ports_2012.root, "profiles", exclude=["repo_name"]),
 	SyncDir(ports_2012.root,"metadata", exclude=["cache","md5-cache","layout.conf"]),
 	SyncFiles(ports_2012.root, {
@@ -44,5 +44,6 @@ steps3 = [
 ]
 
 core_kit.run(steps3)
+core_kit.gitCommit(message="auto-generated updates",branch=False)
 
 # vim: ts=4 sw=4 noet
