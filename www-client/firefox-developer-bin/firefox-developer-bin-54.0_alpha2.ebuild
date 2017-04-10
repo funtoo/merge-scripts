@@ -35,6 +35,7 @@ RDEPEND="dev-libs/atk
 	gnome-base/gconf
 	>=media-libs/alsa-lib-1.0.16
 	media-libs/fontconfig
+	media-sound/pulseaudio
 	>=media-libs/freetype-2.4.10
 	net-misc/curl
 	>=x11-libs/cairo-1.10[X]
