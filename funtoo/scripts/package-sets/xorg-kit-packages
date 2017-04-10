@@ -25,3 +25,4 @@ media-libs/fontconfig
 media-libs/vulkan-loader
 x11-misc/bumblebee
 @all_eclasses@
+sys-libs/mtdev

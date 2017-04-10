@@ -3,6 +3,7 @@ dev-libs/gmp
 dev-libs/libffi
 dev-libs/mpc
 dev-libs/mpfr
+dev-util/cmake
 dev-util/ctags
 dev-util/gperf
 dev-util/gtk-doc-am
@@ -24,6 +25,7 @@ sys-devel/gcc-config
 sys-devel/gettext
 sys-devel/gnuconfig
 sys-devel/libtool
+sys-devel/llvm
 sys-devel/m4
 sys-devel/make
 sys-devel/patch

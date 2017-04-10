@@ -3,6 +3,8 @@ app-admin/eselect
 app-arch/bzip2
 app-arch/cpio
 app-arch/gzip
+app-arch/libarchive
+app-arch/lz4
 app-arch/tar
 app-arch/unzip
 app-arch/xz-utils
@@ -23,6 +25,7 @@ dev-libs/expat
 dev-libs/icu
 dev-libs/iniparser
 dev-libs/jansson
+dev-libs/jsoncpp
 dev-libs/libbsd
 dev-libs/libintl
 dev-libs/libltdl
@@ -30,6 +33,7 @@ dev-libs/libpcre
 dev-libs/libpipeline
 dev-libs/libusb
 dev-libs/libusb-compat
+dev-libs/libuv
 dev-libs/libxml2
 dev-libs/libxslt
 dev-libs/libyaml
