@@ -44,6 +44,6 @@ steps3 = [
 ]
 
 core_kit.run(steps3)
-core_kit.gitCommit(message="auto-generated updates",branch=False)
+core_kit.gitCommit(message="auto-generated updates",branch="master")
 
 # vim: ts=4 sw=4 noet

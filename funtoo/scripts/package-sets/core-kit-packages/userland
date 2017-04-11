@@ -13,3 +13,13 @@ sys-fs/mdadm
 sys-fs/udev-init-scripts
 sys-fs/xfsprogs
 sys-fs/zfs
+app-admin/metalog
+app-admin/mcelog
+sys-process/cronbase
+sys-process/fcron
+sys-process/htop
+sys-process/at
+sys-process/vixie-cron
+app-misc/screen
+app-misc/tmux
+
