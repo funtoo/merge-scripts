@@ -3,4 +3,4 @@ CXXFLAGS="${CFLAGS}"
 FFLAGS="${CFLAGS}"
 FCFLAGS="${CFLAGS}"
 
-CPU_FLAGS_X86="aes avx fma3 fma4 mmx mmxext popcnt sse sse2 sse3 sse4_1 sse4_2 sse4a ssse3 xop"
+CPU_FLAGS_X86="aes avx avx2 fma3 fma4 mmx mmxext popcnt sse sse2 sse3 sse4_1 sse4_2 sse4a ssse3 xop"

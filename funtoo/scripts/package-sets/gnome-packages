@@ -112,6 +112,7 @@ gnome-base/nautilus
 gnome-extra/california
 gnome-extra/cinnamon-session
 gnome-extra/docky
+gnome-extra/evolution-ews
 gnome-extra/evolution-data-server
 gnome-extra/gnome-boxes
 gnome-extra/gnome-calculator

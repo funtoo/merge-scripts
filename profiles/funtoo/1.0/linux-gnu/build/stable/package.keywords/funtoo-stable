@@ -1,4 +1,8 @@
-# FL-3571: stabilize dev-libs/zthred-2.3.2-r4:
+# FL-3697: keyword dev-libs/glib and it's dependee
+=dev-libs/glib-2.48.2 amd64 x86
+=dev-util/gdbus-codegen-2.48.2 amd64 x86
+
+#FL-3571: stabilize dev-libs/zthred-2.3.2-r4:
 =dev-libs/zthread-2.3.2-r4 amd64 x86
 
 # FL-3563: set stable keywords for unforked luatex

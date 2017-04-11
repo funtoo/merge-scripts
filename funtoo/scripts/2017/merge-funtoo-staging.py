@@ -221,7 +221,6 @@ treeprep_steps = [
 master_steps = [
 	InsertEbuilds(shards["perl"], select="all", skip=None, replace=True),
 	InsertEclasses(shards["perl"], select=re.compile(".*\.eclass")),
-	ZapMatchingEbuilds(shards["xorg-kit"], select="all"),
 	InsertEbuilds(shards["media"], select="all", skip=None, replace=True),
 	InsertEbuilds(shards["office"], select="all", skip=None, replace=True),
 	InsertEbuilds(shards["kde"], select="all", skip=None, replace=True),
@@ -232,6 +231,7 @@ master_steps = [
 	InsertEclasses(shards["core"], select=re.compile(".*\.eclass")),
 	InsertEbuilds(funtoo_overlays["funtoo_toolchain"], select="all", skip=None, replace=True, merge=False),
 	InsertEbuilds(funtoo_overlay, select="all", skip=None, replace=True),
+	ZapMatchingEbuilds(shards["xorg-kit"], select="all"),
 	SyncDir(funtoo_overlay.root, "eclass"),
 	SyncDir(funtoo_overlay.root,"licenses"),
 	SyncDir(funtoo_overlay.root,"metadata"),
@@ -246,7 +246,7 @@ master_steps = [
 treeprep_steps += [
 	MergeUpdates(funtoo_overlay.root),
 	AutoGlobMask("dev-lang/python", "python*_pre*", "funtoo-python_pre"),
-	AutoGlobMask("media-libs/mesa", "mesa*_rc*", "funtoo-mesa_rc"),
+#	AutoGlobMask("media-libs/mesa", "mesa*_rc*", "funtoo-mesa_rc"),
 	ThirdPartyMirrors(),
 	ProfileDepFix(),
 	Minify(),

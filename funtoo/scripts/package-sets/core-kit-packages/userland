@@ -1,0 +1,15 @@
+sys-fs/aufs3
+sys-fs/aufs4
+sys-fs/btrfs-progs
+sys-fs/cramfs
+sys-fs/dmraid
+sys-fs/dosfstools
+sys-fs/e2fsprogs
+sys-libs/e2fsprogs-libs
+sys-fs/eudev
+sys-fs/fuse
+sys-fs/lvm2
+sys-fs/mdadm
+sys-fs/udev-init-scripts
+sys-fs/xfsprogs
+sys-fs/zfs

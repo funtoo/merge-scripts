@@ -1,0 +1,8 @@
+app-editors/*
+app-emacs/*
+app-xemacs/*
+app-vim/*
+app-misc/editor-wrapper
+virtual/emacs
+virtual/editor
+@all_classes@

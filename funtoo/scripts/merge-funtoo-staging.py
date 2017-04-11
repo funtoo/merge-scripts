@@ -41,7 +41,7 @@ shards = {
 	"perl" : GitTree("gentoo-perl-shard", "7ffec93dd83b76c06a69484f2d9e6d6831790d7f", "repos@localhost:ports/gentoo-perl-shard.git", pull=True),
 	"kde" : GitTree("gentoo-kde-shard", "d33259410e3eb1b0330698520796cb927ac596e7", "repos@localhost:ports/gentoo-kde-shard.git", pull=True),
 	"gnome" : GitTree("gentoo-gnome-shard", "ffabb752f8f4e23a865ffe9caf72f950695e2f26", "repos@localhost:ports/gentoo-gnome-shard.git", pull=True),
-	"xorg" : GitTree("xorg-kit", "6852e4e6471b89331481019fc8470a824e83d36d", "repos@localhost:kits/xorg-kit.git", pull=True),
+	"xorg" : GitTree("xorg-kit", "gentoo-1.19-snap", "repos@localhost:kits/xorg-kit.git", pull=True),
 	"media" : GitTree("gentoo-media-shard", "cb07fcb2f4fd84d5ca8bf57d0eacd99301cc0636", "repos@localhost:ports/gentoo-media-shard.git", pull=True),
 	"office" : GitTree("gentoo-office-shard", "e482bdff839aed9b81cd9c62ce435aa4e78c8cab", "repos@localhost:ports/gentoo-office-shard.git", pull=True),
 	"core" : GitTree("gentoo-core-shard", "4ff408b3de5465c5a63480e01e219ec62fee175e", "repos@localhost:ports/gentoo-core-shard.git", pull=True)
@@ -50,7 +50,6 @@ shards = {
 # perl: 7ffec93dd83b76c06a69484f2d9e6d6831790d7f (Updated 12 Jan 2017)
 # kde: d33259410e3eb1b0330698520796cb927ac596e7 (Updated 25 Feb 2017)
 # gnome: ffabb752f8f4e23a865ffe9caf72f950695e2f26 (Updated 20 Sep 2016)
-# xorg: 6852e4e6471b89331481019fc8470a824e83d36d (Updated 25 Feb 2017)
 # media: cb07fcb2f4fd84d5ca8bf57d0eacd99301cc0636 (Update 25 Feb 2017)
 # office: e482bdff839aed9b81cd9c62ce435aa4e78c8cab (Updated 17 Jan 2017)
 # core: 4ff408b3de5465c5a63480e01e219ec62fee175e (Updated 25 Feb 2017)
@@ -60,9 +59,6 @@ funtoo_overlays = {
 	"funtoo_media" : GitTree("funtoo-media", "master", "repos@localhost:funtoo-media.git", pull=True),
 	"plex_overlay" : GitTree("funtoo-plex", "master", "https://github.com/Ghent/funtoo-plex.git", pull=True),
 	#"gnome_fixups" : GitTree("gnome-3.16-fixups", "master", "repos@localhost:ports/gnome-3.16-fixups.git", pull=True),
-	"gnome_fixups" : GitTree("gnome-3.20-fixups", "master", "repos@localhost:ports/gnome-3.20-fixups.git", pull=True),
-	"tmp-shard-fixups" : GitTree("tmp-shard-fixups", "master", "repos@localhost:ports/tmp-shard-fixups.git", pull=True),
-	"funtoo_toolchain" : GitTree("funtoo-toolchain", "40fbab1fd57594f2f313bf2cd62a9c4de646d429", "repos@localhost:funtoo-toolchain-overlay.git", pull=True),
 	"ldap_overlay" : GitTree("funtoo-ldap", "master", "repos@localhost:funtoo-ldap-overlay.git", pull=True),
 	"deadbeef_overlay" : GitTree("deadbeef-overlay", "master", "https://github.com/damex/deadbeef-overlay.git", pull=True),
 	"wmfs_overlay" : GitTree("wmfs-overlay", "master", "https://github.com/damex/wmfs-overlay.git", pull=True),
@@ -71,6 +67,7 @@ funtoo_overlays = {
 
 # These are other overlays that we merge into the Funtoo tree. However, we just pull in the most recent versions
 # of these when we regenerate our tree.
+# fusion809_overlay: 9daec531a164d89ba52d906900d871fddfb92e63 (Updated, 28 Mar 2017)
 
 other_overlays = {
 	"foo_overlay" : GitTree("foo-overlay", "master", "https://github.com/slashbeast/foo-overlay.git", pull=True),
@@ -87,7 +84,7 @@ other_overlays = {
 	"mcelog_overlay" : GitTree("mcelog", "master", "https://github.com/benkohler/iamben-overlay.git", pull=True),
 	"atom_overlay" : GitTree("atom", "master", "https://github.com/elprans/atom-overlay.git", pull=True),
 	"bhenc_overlay" : GitTree("bhenc", "master", "https://github.com/antematherian/archive-overlay.git", pull=True),
-	"fusion809_overlay" : GitTree("fusion809", "master", "https://github.com/fusion809/fusion809-overlay.git", pull=True),
+	"fusion809_overlay" : GitTree("fusion809", "9daec531a164d89ba52d906900d871fddfb92e63", "https://github.com/fusion809/fusion809-overlay.git", pull=True),
 }
 
 funtoo_changes = False
@@ -192,7 +189,7 @@ ebuild_modifications = [
 	InsertEbuilds(other_overlays["lisp_overlay"], select=["dev-lisp/ltk"], skip=None, replace=True, merge=False),
 	InsertEbuilds(other_overlays["mcelog_overlay"], select=["app-admin/mcelog"], skip=None, replace=True, merge=True),
 	InsertEbuilds(other_overlays["atom_overlay"], select=["app-editors/atom", "dev-util/electron"], skip=None, replace=True, merge=True),
-	InsertEbuilds(other_overlays["bhenc_overlay"], select=["dev-python/pyqwt", "games-board/pouetchess", "media-gfx/iscan", "www-apps/joomla", "x11-drivers/nvidia-drivers"], skip=None, replace=True, merge=True),
+	InsertEbuilds(other_overlays["bhenc_overlay"], select=["app-text/mdia", "app-text/mpaste", "dev-python/pyqwt", "media-gfx/iscan", "www-apps/joomla", "x11-drivers/nvidia-drivers"], skip=["games-board/pouetchess"], replace=True, merge=True),
 	InsertEbuilds(other_overlays["fusion809_overlay"], select=["app-editors/atom-bin", "app-editors/gvim", "app-editors/vim", "app-editors/vim-core", "app-editors/sublime-text"], skip=None, replace=True, merge=True),
 ]
 
