@@ -497,6 +497,11 @@ src_install-libs() {
 	# create VDPAU symlinks
 	dosym /usr/$(get_libdir)/libvdpau_nvidia.so.${NV_SOVER} /usr/$(get_libdir)/vdpau/libvdpau_nvidia.so
 	dosym /usr/$(get_libdir)/libvdpau_nvidia.so.${NV_SOVER} /usr/$(get_libdir)/vdpau/libvdpau_nvidia.so.1
+
+	# FL-2219. install nouveau blacklist file.
+	insinto $(get_libdir)/modprobe.d
+	doins ${FILESDIR}/blacklist-nouveau.conf
+
 }
 
 pkg_preinst() {
