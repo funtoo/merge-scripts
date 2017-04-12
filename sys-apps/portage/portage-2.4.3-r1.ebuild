@@ -62,20 +62,20 @@ PDEPEND="
 
 REQUIRED_USE="epydoc? ( $(python_gen_useflags 'python2*') )"
 
-SRC_ARCHIVES="https://dev.gentoo.org/~dolsen/releases/portage"
+#SRC_ARCHIVES="https://dev.gentoo.org/~dolsen/releases/portage"
 
-prefix_src_archives() {
-	local x y
-	for x in ${@}; do
-		for y in ${SRC_ARCHIVES}; do
-			echo ${y}/${x}
-		done
-	done
-}
+#prefix_src_archives() {
+#	local x y
+#	for x in ${@}; do
+#		for y in ${SRC_ARCHIVES}; do
+#			echo ${y}/${x}
+#		done
+#	done
+#}
 
 TARBALL_PV=2.3.2
-SRC_URI="mirror://gentoo/${PN}-${TARBALL_PV}.tar.bz2
-	$(prefix_src_archives ${PN}-${TARBALL_PV}.tar.bz2)"
+SRC_URI="mirror://funtoo/${PN}-${TARBALL_PV}.tar.bz2"
+RESTRICT="mirror"
 S=$WORKDIR/portage-$TARBALL_PV
 
 pkg_setup() {
