@@ -207,9 +207,9 @@ location = %s
 	return myeclasses
 
 def generateShardSteps(name, from_tree, to_tree, pkgdir=None, clean=True, branch="master", catpkg_dict=None):
-	steps = [
-		GitCheckout(branch),
-	]
+	steps = []
+	if branch:
+		steps += [ GitCheckout(branch) ]
 	if clean:
 		if name.endswith("-kit"):
 			steps += [ CleanTree(exclude=['metadata', 'profiles']) ]
@@ -402,10 +402,11 @@ class ApplyPatchSeries(MergeStep):
 				runShell( "( cd %s; git apply %s/%s )" % ( tree.root, self.path, line[:-1] ))
 
 class GenerateRepoMetadata(MergeStep):
-	def __init__(self, name, masters=[], aliases=[]):
+	def __init__(self, name, masters=[], aliases=[], priority=None):
 		self.name = name
 		self.aliases = aliases
 		self.masters = masters
+		self.priority = priority
 
 	def run(self,tree):
 		meta_path = os.path.join(tree.root, "metadata")
@@ -628,6 +629,21 @@ class GitTree(Tree):
 		# branch is updated -- now switch to specific commit if one was specified:
 		if self.commit:
 			runShell("(cd %s; git checkout %s)" % ( self.root, self.commit ))
+
+	def getAllCatPkgs(self):
+		self.gitCheckout()
+		with open(self.root + "/profiles/categories","r") as a:
+			cats = a.read().split()
+		catpkgs = {} 
+		for cat in cats:
+			if not os.path.exists(self.root + "/" + cat):
+				continue
+			pkgs = os.listdir(self.root + "/" + cat)
+			for pkg in pkgs:
+				if not os.path.isdir(self.root + "/" + cat + "/" + pkg):
+					continue
+				catpkgs[cat + "/" + pkg] = self.name
+		return catpkgs
 
 	def gitCheckout(self,branch="master"):
 		runShell("(cd %s; git checkout %s)" % ( self.root, self.branch ))
@@ -869,6 +885,8 @@ class InsertEbuilds(MergeStep):
 		self.merge = merge
 		self.categories = categories
 		self.catpkg_dict = catpkg_dict
+		if self.catpkg_dict == None:
+			self.catpkg_dict = {}
 
 		if branch != None:
 			# Allow dynamic switching to different branches/commits to grab things we want:
@@ -924,6 +942,9 @@ class InsertEbuilds(MergeStep):
 			for pkg in os.listdir(catdir):
 				catpkg = "%s/%s" % (cat,pkg)
 				pkgdir = os.path.join(catdir, pkg)
+				if catpkg in self.catpkg_dict:
+					#already copied
+					continue
 				if not os.path.isdir(pkgdir):
 					# not a valid package dir in source overlay, so skip it
 					continue
@@ -946,7 +967,6 @@ class InsertEbuilds(MergeStep):
 				dest_cat_set.add(cat)
 				tcatdir = os.path.join(desttree.root,cat)
 				tpkgdir = os.path.join(tcatdir,pkg)
-				copy = False
 				copied = False
 				if self.replace == True or (isinstance(self.replace, list) and ((catpkg in self.replace) or (catall in self.replace))):
 					if not os.path.exists(tcatdir):
@@ -993,9 +1013,6 @@ class InsertEbuilds(MergeStep):
 						os.makedirs(tcatdir)
 					runShell("[ ! -e %s ] && cp -a %s %s || echo \"# skipping %s/%s\"" % (tpkgdir, pkgdir, tpkgdir, cat, pkg ))
 				if copied:
-					# log to catpkg_dict:
-					if self.catpkg_dict != None:
-						self.catpkg_dict[catpkg] = self.srctree.name
 					# log XML here.
 					cpv = "/".join(tpkgdir.split("/")[-2:])
 					mergeLog.write("%s\n" % cpv)
@@ -1076,10 +1093,16 @@ class RunSed(MergeStep):
 
 class GenCache(MergeStep):
 
+	def __init__(self,cache_dir=None):
+		self.cache_dir = cache_dir
+
 	"GenCache runs egencache --update to update metadata."
 
 	def run(self,tree):
-		run_command(["egencache", "--update", "--repo", tree.reponame if tree.reponame else tree.name, "--repositories-configuration", "[%s]\nlocation = %s" % (tree.reponame if tree.reponame else tree.name, tree.root), "--load-average", "1"], abort_on_failure=False)
+		cmd = ["egencache", "--update", "--repo", tree.reponame if tree.reponame else tree.name, "--repositories-configuration", "[%s]\nlocation = %s" % (tree.reponame if tree.reponame else tree.name, tree.root), "--jobs", "36"]
+		if self.cache_dir:
+			cmd += [ "--cache-dir", self.cache_dir ]
+		run_command(cmd, abort_on_failure=False)
 
 class GenUseLocalDesc(MergeStep):
 
@@ -1095,6 +1118,15 @@ class GitCheckout(MergeStep):
 
 	def run(self,tree):
 		runShell("( cd %s; git checkout %s )" % ( tree.root, self.branch ))
+
+class CreateBranch(MergeStep):
+
+	def __init__(self,branch):
+		self.branch = branch
+
+	def run(self,tree):
+		runShell("( cd %s; git checkout -b %s --track origin/%s )" % ( tree.root, self.branch, self.branch ))
+
 
 class Minify(MergeStep):
 
