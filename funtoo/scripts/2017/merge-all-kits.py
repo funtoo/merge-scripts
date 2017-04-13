@@ -1,8 +1,9 @@
 #!/usr/bin/python3
-print("HIYO")
 
 import os
 from merge_utils import *
+
+fo_path = os.path.realpath(os.path.join(__file__,"../../../.."))
 
 # This script will update all kits listed below and ensure that proper sets of licenses and eclasses are included in the kit.
 # It will also ensure the use.local.desc and profiles/categories are generated properly.
@@ -20,15 +21,15 @@ prime_kits = [
 # The non-prime branches can be updated frequently as they will pull in changes from gentoo:
 
 gentoo_kits = [
-	{ 'name' : 'core', 'branch' : 'master', 'source' : 'gentoo' },
-	{ 'name' : 'editors', 'branch' : 'master', 'source': 'gentoo' },
-	{ 'name' : 'perl', 'branch' : 'master', 'source': 'gentoo' },
-	{ 'name' : 'python', 'branch' : 'master', 'source': 'gentoo' },
+#	{ 'name' : 'core', 'branch' : 'master', 'source' : 'gentoo' },
+#	{ 'name' : 'editors', 'branch' : 'master', 'source': 'gentoo' },
+#	{ 'name' : 'perl', 'branch' : 'master', 'source': 'gentoo' },
+#	{ 'name' : 'python', 'branch' : 'master', 'source': 'gentoo' },
 	{ 'name' : 'xorg', 'branch' : 'master', 'source': 'gentoo' },
-	{ 'name' : 'security', 'branch' : 'master', 'source': 'gentoo' },
+#	{ 'name' : 'security', 'branch' : 'master', 'source': 'gentoo' },
 ]
 
-def updateKit(name, branch, source_repo):
+def updateKit(kname, branch, source_repo, kitted_catpkgs):
 	kit = GitTree("%s-kit" % kname, branch, "repos@localhost:kits/%s-kit.git" % kname, root="/var/git/dest-trees/%s-kit" % kname, pull=True)
 
 	steps = [
@@ -36,17 +37,16 @@ def updateKit(name, branch, source_repo):
 		CleanTree(),
 	]
 
-	if name == "core":
+	if kname == "core":
 		# special extra steps for core-kit:
 		steps += [
 			GenerateRepoMetadata("core-kit", aliases=["gentoo"]),
 			SyncDir(source_repo.root, "profiles", exclude=["repo_name"]),
-			SyncDir(source_repo.root,"metadata", exclude=["cache","md5-cache","layout.conf"]),
-			SyncFiles(source_repo.root, {
+			SyncDir(source_repo.root, "metadata", exclude=["cache","md5-cache","layout.conf"]),
+			# grab from the funtoo_overlay that this script is in:
+			SyncFiles(fo_path, {
 				"COPYRIGHT.txt":"COPYRIGHT.txt",
 				"LICENSE.txt":"LICENSE.txt",
-				"README.rst":"README.rst",
-				"header.txt":"header.txt",
 			})
 		]
 	else:
@@ -56,7 +56,7 @@ def updateKit(name, branch, source_repo):
 	# from here on in, kit steps should be the same for core-kit and others:
 
 	kit.run(steps)
-	steps2 = generateShardSteps("%s-kit" % kname, source_repo, kit, clean=False, pkgdir="/root/funtoo-overlay/funtoo/scripts", branch=branch)
+	steps2 = generateShardSteps("%s-kit" % kname, source_repo, kit, clean=False, pkgdir="/root/funtoo-overlay/funtoo/scripts", branch=branch, catpkg_dict=kitted_catpkgs)
 
 	kit.run(steps2)
 
@@ -68,9 +68,12 @@ def updateKit(name, branch, source_repo):
 		InsertLicenses(source_repo, select=list(l)),
 		InsertEclasses(source_repo, select=list(a)),
 		CreateCategories(source_repo),
-		GenCache(),
 		GenUseLocalDesc()
 	]
+		
+	if branch != 'master':
+		# only generate metadata cache for prime branches
+		steps3 += [ GenCache() ]
 
 	kit.run(steps3)
 	kit.gitCommit(message="updates",branch=branch)
@@ -79,17 +82,20 @@ if __name__ == "__main__":
 
 	import sys
 
-	if len(sys.argv) != 2 or sys.argv[1] not in [ "prime", "gentoo" ]:
-		print("Please specify either 'prime' for funtoo prime kits, or 'gentoo' for updating master branches using gentoo.")
+	if len(sys.argv) != 2 or sys.argv[1] not in [ "init", "update" ]:
+		print("Please specify either 'init' for funtoo prime kits, or 'update' for updating master branches using gentoo.")
 		sys.exit(1)
-	elif sys.argv[1] == "prime":
+	elif sys.argv[1] == "init":
 		kits = prime_kits
-	elif sys.argv[2] == "gentoo"
+	elif sys.argv[1] == "update":
 		kits = gentoo_kits
+
+	# kitted_catpkgs will store the names of all ebuilds that were moved into kits. We want to remove these from the underlying gentoo repo.
+	kitted_catpkgs = {}
 	
 	for kitdict in kits:
 		branch = kitdict['branch']
-		name = kitdict['name']
+		kname = kitdict['name']
 		source = kitdict['source']
 
 		source_repo = GitTree("ports-2012", "funtoo.org", "repos@localhost:funtoo-overlay.git", reponame="biggy", root="/var/git/dest-trees/ports-2012", pull=True)
@@ -99,6 +105,8 @@ if __name__ == "__main__":
 			src_repo = gentoo_staging
 		else:
 			src_repo = source_repo
-		updateKit(name, branch, src_repo)
+		updateKit(kname, branch, src_repo, kitted_catpkgs)
+
+	print(kitted_catpkgs.keys())
 
 # vim: ts=4 sw=4 noet

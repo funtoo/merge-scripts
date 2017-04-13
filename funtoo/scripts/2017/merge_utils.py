@@ -206,7 +206,7 @@ location = %s
 						myeclasses.add(lic)
 	return myeclasses
 
-def generateShardSteps(name, from_tree, to_tree, pkgdir=None, clean=True, branch="master"):
+def generateShardSteps(name, from_tree, to_tree, pkgdir=None, clean=True, branch="master", catpkg_dict=None):
 	steps = [
 		GitCheckout(branch),
 	]
@@ -220,51 +220,31 @@ def generateShardSteps(name, from_tree, to_tree, pkgdir=None, clean=True, branch
 	if pkgdir != None:
 		pkgf = pkgdir + "/" + pkgf
 	for pattern in get_pkglist(pkgf):
-		print("Processing pattern", pattern)
 		if pattern.startswith("@regex@:"):
-			if pkglist:
-				steps += [ InsertEbuilds(from_tree, select=pkglist, skip=None, replace=True) ]
-			pkglist = []
-			steps += [ InsertEbuilds(from_tree, select=re.compile(pattern[8:]), skip=None, replace=True) ]
+			steps += [ InsertEbuilds(from_tree, select=re.compile(pattern[8:]), skip=None, replace=True, catpkg_dict=catpkg_dict) ]
 		elif pattern.startswith("@depsincat@:"):
-			print('depsincat', pattern)
-			if pkglist:
-				steps += [ InsertEbuilds(from_tree, select=pkglist, skip=None, replace=True) ]
-			pkglist = []
 			patsplit = pattern.split(":")
 			catpkg = patsplit[1]
 			dep_pkglist = getDependencies(from_tree, [ catpkg ] )
 			if len(patsplit) == 3:
 				dep_pkglist, dep_pkglist_nomatch = filterInCategory(dep_pkglist, patsplit[2])
-			steps += [ InsertEbuilds(from_tree, select=list(dep_pkglist), skip=None, replace=True) ]
+			pkglist += list(dep_pkglist)
 		elif pattern.startswith("@cat_has_eclass@:"):
-			if pkglist:
-				steps += [ InsertEbuilds(from_tree, select=pkglist, skip=None, replace=True) ]
-			pkglist = []
 			patsplit = pattern.split(":")
 			cat, eclass = patsplit[1:]
 			cat_pkglist = getPackagesInCatWithEclass(from_tree, cat, eclass )
-			steps += [ InsertEbuilds(from_tree, select=list(cat_pkglist), skip=None, replace=True) ]
+			pkglist += list(cat_pkglist)
 		elif pattern == "@all_eclasses@":
 			# copy over all eclasses used by all ebuilds
-			if pkglist:
-				steps += [ InsertEbuilds(from_tree, select=pkglist, skip=None, replace=True) ]
-			pkglist = []
 			# get all eclasses used in ebuilds in to_tree, and copy them from from_tree to to_tree
 			a = getAllEclasses(ebuild_repo=to_tree, super_repo=from_tree)
 			steps += [ InsertEclasses(from_tree, select=list(a)) ]
 		elif pattern.startswith("@eclass@:"):
-			# The "accumulator" pattern:
-			# we have buffered this pkglist -- add what we have accumulated so far, as a single InsertEbuilds call
-			# (this way, we avoid adding tons of InsertEbuilds calls.
-			if pkglist:
-				steps += [ InsertEbuilds(from_tree, select=pkglist, skip=None, replace=True) ]
-			pkglist = []
 			steps += [ InsertEclasses(from_tree, select=re.compile(pattern[9:])) ]
 		else:
 			pkglist.append(pattern)
 	if pkglist:
-		steps += [ InsertEbuilds(from_tree, select=pkglist, skip=None, replace=True) ]
+		steps += [ InsertEbuilds(from_tree, select=pkglist, skip=None, replace=True, catpkg_dict=catpkg_dict) ]
 	return steps
 
 def qa_build(host,build,arch_desc,subarch,head,target):
@@ -881,13 +861,14 @@ class InsertEbuilds(MergeStep):
 	
 	
 	"""
-	def __init__(self,srctree,select="all",skip=None,replace=False,merge=None,categories=None,ebuildloc=None,branch=None):
+	def __init__(self,srctree,select="all",skip=None,replace=False,merge=None,categories=None,ebuildloc=None,branch=None,catpkg_dict=None):
 		self.select = select
 		self.skip = skip
 		self.srctree = srctree
 		self.replace = replace
 		self.merge = merge
 		self.categories = categories
+		self.catpkg_dict = catpkg_dict
 
 		if branch != None:
 			# Allow dynamic switching to different branches/commits to grab things we want:
@@ -1012,7 +993,10 @@ class InsertEbuilds(MergeStep):
 						os.makedirs(tcatdir)
 					runShell("[ ! -e %s ] && cp -a %s %s || echo \"# skipping %s/%s\"" % (tpkgdir, pkgdir, tpkgdir, cat, pkg ))
 				if copied:
-					# log here.
+					# log to catpkg_dict:
+					if self.catpkg_dict != None:
+						self.catpkg_dict[catpkg] = self.srctree.name
+					# log XML here.
 					cpv = "/".join(tpkgdir.split("/")[-2:])
 					mergeLog.write("%s\n" % cpv)
 				# Record source tree of each copied catpkg to XML for later importing...

@@ -18,7 +18,7 @@ if not success:
 	print("QA builds were not successful.")
 	sys.exit(1)
 
-ports_2012 = GitTree("ports-2012", "funtoo.org", "repos@localhost:ports-2012.git", root="/var/git/dest-trees/ports-2012", pull=False)
+ports_2012 = GitTree("gentoo", branch="funtoo.org", url="repos@localhost:ports-2012.git", root="/var/git/dest-trees/ports-2012", pull=False)
 
 my_steps = [
 	GitCheckout("funtoo.org"),
