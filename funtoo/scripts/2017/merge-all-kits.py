@@ -35,7 +35,7 @@ prime_kits = [
 	{ 'prime' : True,  'name' : 'python', 'branch' : '3.4-prime', 'source': 'funtoo' },
 	{ 'prime' : True,  'name' : 'editors', 'branch' : '1.0-prime', 'source': 'funtoo' },
 	{ 'prime' : True,  'name' : 'xorg', 'branch' : '1.17-prime', 'source': 'funtoo', 'update' : False },
-	{  'prime' : True, 'name' : 'media', 'branch' : '1.0-prime', 'source': 'funtoo' },
+	{ 'prime' : True, 'name' : 'media', 'branch' : '1.0-prime', 'source': 'funtoo' },
 ]
 
 # The non-prime branches can be updated frequently as they will pull in changes from gentoo:
@@ -57,7 +57,7 @@ def updateKit(mode, kit_dict, source_repo, kitted_catpkgs):
 	if not prime:
 		update = True
 	else:
-		update = kit_dict['update'] if 'update' in kit_dict else False
+		update = kit_dict['update'] if 'update' in kit_dict else True
 	kit = GitTree("%s-kit" % kname, branch, "repos@localhost:kits/%s-kit.git" % kname, root="/var/git/dest-trees/%s-kit" % kname, pull=True)
 
 	steps = [
@@ -101,7 +101,7 @@ def updateKit(mode, kit_dict, source_repo, kitted_catpkgs):
 		GenUseLocalDesc()
 	]
 		
-	if mode == 'init':
+	if mode == 'prime':
 		# only generate metadata cache for prime branches
 		steps3 += [ GenCache( cache_dir="/var/cache/git/edb-prime" ) ]
 
@@ -117,18 +117,18 @@ def updateNokitRepo(source_repo):
 
 	nokit = GitTree('nokit', 'master', 'repos@localhost:kits/nokit.git', root="/var/git/dest-trees/nokit", pull=True)
 
-	catpkgs = []
+	catpkgs = {} 
 
 	for kit_dict in prime_kits:
 		kname = kit_dict['name']
 		branch = kit_dict['branch']
 		kit = GitTree("%s-kit" % kname, branch, "repos@localhost:kits/%s-kit.git" % kname, root="/var/git/dest-trees/%s-kit" % kname, pull=True)
-		catpkgs += kit.getAllCatPkgs()
+		catpkgs.update(kit.getAllCatPkgs())
 		
 	steps = [
 		SyncDir(source_repo.root),
-		GenerateRepoMetadata("nokit", priority=-2000),
-		RemoveFiles(catpkgs),
+		GenerateRepoMetadata("nokit", masters=["core-kit"], priority=-2000),
+		RemoveFiles(list(catpkgs.keys())),
 		CreateCategories(source_repo),
 		GenUseLocalDesc(),
 		GenCache( cache_dir="/var/cache/git/edb-prime" )
@@ -141,10 +141,10 @@ if __name__ == "__main__":
 
 	import sys
 
-	if len(sys.argv) != 2 or sys.argv[1] not in [ "init", "update" ]:
-		print("Please specify either 'init' for funtoo prime kits, or 'update' for updating master branches using gentoo.")
+	if len(sys.argv) != 2 or sys.argv[1] not in [ "prime", "update" ]:
+		print("Please specify either 'prime' for funtoo prime kits, or 'update' for updating master branches using gentoo.")
 		sys.exit(1)
-	elif sys.argv[1] == "init":
+	elif sys.argv[1] == "prime":
 		kits = prime_kits
 	elif sys.argv[1] == "update":
 		kits = gentoo_kits

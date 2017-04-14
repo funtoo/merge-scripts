@@ -87,6 +87,7 @@ sys-apps/util-linux
 sys-apps/which
 sys-boot/boot-update
 sys-boot/efibootmgr
+sys-libs/efivar
 sys-boot/grub
 sys-firmware/*
 sys-kernel/debian-sources

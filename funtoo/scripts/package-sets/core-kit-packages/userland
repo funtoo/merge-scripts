@@ -22,4 +22,7 @@ sys-process/at
 sys-process/vixie-cron
 app-misc/screen
 app-misc/tmux
-
+net-misc/mosh
+# deps for mosh
+dev-libs/protobuf
+sys-libs/utempter

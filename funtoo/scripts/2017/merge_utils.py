@@ -181,14 +181,11 @@ main-repo = %s
 [%s]
 location = %s
 	''' % ( eb_name, eb_name, eb_name, ebuild_repo.root )
-	print(env['PORTAGE_REPOSITORIES'])
 	p = portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
 	p.frozen = False
 	myeclasses = set()
 	for cp in p.cp_all(trees=[ebuild_repo.root]):
-		print("CP",cp)
 		for cpv in p.cp_list(cp, mytree=ebuild_repo.root):
-			print("DOING", cpv)
 			try:
 				aux = p.aux_get(cpv, ["LICENSE","INHERITED"], mytree=ebuild_repo.root)
 			except PortageKeyError:
@@ -196,7 +193,6 @@ location = %s
 				raise
 			if metadata == "INHERITED":
 				for eclass in aux[metapos].split():
-					print("GOT", eclass)
 					key = eclass + ".eclass"
 					if key not in myeclasses:
 						myeclasses.add(key)
