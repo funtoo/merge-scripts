@@ -53,7 +53,7 @@ shards = {
 # media: cb07fcb2f4fd84d5ca8bf57d0eacd99301cc0636 (Update 25 Feb 2017)
 # office: e482bdff839aed9b81cd9c62ce435aa4e78c8cab (Updated 17 Jan 2017)
 # core: 4ff408b3de5465c5a63480e01e219ec62fee175e (Updated 25 Feb 2017)
-# funtoo-toolchain: 667a6959494cefa16ff4154411c41cb34c9068b0 (Updated 14 Mar 2017)
+# funtoo-toolchain: 667a6959494cefa16ff4154411c41cb34c9068b0 (Updated 14 Apr 2017)
 
 funtoo_overlays = {
 	"funtoo_media" : GitTree("funtoo-media", "master", "repos@localhost:funtoo-media.git", pull=True),
