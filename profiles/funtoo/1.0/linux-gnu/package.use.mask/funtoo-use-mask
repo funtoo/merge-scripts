@@ -1,3 +1,6 @@
+# FL-3588: mask go USE for gcc ebuilds, where it enabled. gcc-5.4.0 has no go USE.
+sys-devel/gcc go
+
 # QA-445: mask udev USE in util-linux. This allows to break circ dep with udev/eudev. Workaround without fork necessity.
 sys-apps/util-linux udev
 
