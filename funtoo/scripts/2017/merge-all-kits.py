@@ -50,6 +50,35 @@ gentoo_kits = [
 	{ 'name' : 'media', 'branch' : 'master', 'source': 'gentoo' },
 ]
 
+def auditKit(kit_dict, source_repo, kitted_catpkgs):
+	kname = kit_dict['name']
+	branch = kit_dict['branch']
+	prime = kit_dict['prime'] if 'prime' in kit_dict else False
+	if not prime:
+		update = True
+	else:
+		update = kit_dict['update'] if 'update' in kit_dict else True
+	kit = GitTree("%s-kit" % kname, branch, "repos@localhost:kits/%s-kit.git" % kname, root="/var/git/dest-trees/%s-kit" % kname, pull=True)
+
+	steps = [
+		GitCheckout(branch),
+	]
+
+	kit.run(steps)
+
+	actual_catpkgs = set(kit.getAllCatPkgs().keys())
+	select_catpkgs = generateAuditSet("%s-kit" % kname, source_repo, pkgdir="/root/funtoo-overlay/funtoo/scripts", branch=branch, catpkg_dict=kitted_catpkgs)
+
+	print("%s : catpkgs selected that are not yet in kit" % kname)
+	for catpkg in list(select_catpkgs - actual_catpkgs):
+		print(" " + catpkg)
+	print()
+	print("%s : catpkgs in kit that current do not have a match" % kname)
+	for catpkg in list(actual_catpkgs - select_catpkgs):
+		print(" " + catpkg)
+	print()
+
+
 def updateKit(mode, kit_dict, source_repo, kitted_catpkgs):
 	kname = kit_dict['name']
 	branch = kit_dict['branch']
@@ -141,13 +170,15 @@ if __name__ == "__main__":
 
 	import sys
 
-	if len(sys.argv) != 2 or sys.argv[1] not in [ "prime", "update" ]:
+	if len(sys.argv) != 2 or sys.argv[1] not in [ "prime", "update", "audit" ]:
 		print("Please specify either 'prime' for funtoo prime kits, or 'update' for updating master branches using gentoo.")
 		sys.exit(1)
 	elif sys.argv[1] == "prime":
 		kits = prime_kits
 	elif sys.argv[1] == "update":
 		kits = gentoo_kits
+	elif sys.argv[1] == "audit":
+		kits = prime_kits
 
 	# kitted_catpkgs will store the names of all ebuilds that were moved into kits. We want to remove these from the underlying gentoo repo.
 	kitted_catpkgs = {}
@@ -160,7 +191,10 @@ if __name__ == "__main__":
 			src_repo = gentoo_staging
 		else:
 			src_repo = source_repo
-		updateKit(sys.argv[1], kitdict, src_repo, kitted_catpkgs)
+		if sys.argv[1] == "audit":
+			auditKit(kitdict, src_repo, kitted_catpkgs)
+		else:
+			updateKit(sys.argv[1], kitdict, src_repo, kitted_catpkgs)
 
 	if sys.argv[1] == "update":
 

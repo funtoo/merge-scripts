@@ -202,6 +202,62 @@ location = %s
 						myeclasses.add(lic)
 	return myeclasses
 
+def generateAuditSet(name, from_tree, pkgdir=None, branch="master", catpkg_dict=None):
+
+	# This function is similar to generateShardSteps, but it doesn't actually generate steps. Instead
+	# it runs through the same package list, and generates a set of catpkgs (ignoring eclass commands)
+	# that would be copied. Then we can compare against the catpkgs that actually exist in a repository
+	# and see if any are missing. 
+
+	all_pats = []
+	pkgf = "package-sets/%s-packages" % name
+	if pkgdir != None:
+		pkgf = pkgdir + "/" + pkgf
+	for pattern in get_pkglist(pkgf):
+		if pattern.startswith("@regex@:"):
+			all_pats.append(re.compile(pattern[8:]))
+		elif pattern.startswith("@depsincat@:"):
+			patsplit = pattern.split(":")
+			catpkg = patsplit[1]
+			dep_pkglist = getDependencies(from_tree, [ catpkg ] )
+			if len(patsplit) == 3:
+				dep_pkglist, dep_pkglist_nomatch = filterInCategory(dep_pkglist, patsplit[2])
+			all_pats += list(dep_pkglist)
+		elif pattern.startswith("@cat_has_eclass@:"):
+			patsplit = pattern.split(":")
+			cat, eclass = patsplit[1:]
+			cat_pkglist = getPackagesInCatWithEclass(from_tree, cat, eclass )
+			all_pats += list(cat_pkglist)
+		elif pattern == "@all_eclasses@":
+			pass
+		elif pattern.startswith("@eclass@:"):
+			pass
+		else:
+			all_pats.append(pattern)
+	catpkgs = set()
+	all_catpkgs = from_tree.getAllCatPkgs()
+	all_catpkgs_set = set(all_catpkgs)
+	prev_catpkgs = set(catpkg_dict.keys())
+	for pat in all_pats:
+		if isinstance(pat, regextype):
+			for cp in all_catpkgs:
+				m = pat.match(cp)
+				if m and cp not in prev_catpkgs:
+					catpkgs.add(cp)
+		elif pat.endswith("/*"):
+			ps = pat.split("/")
+			cat = ps[0]
+			for cp in all_catpkgs:
+				cps = cp.split("/")
+				if len(cps) and cps[0] == cat and cp not in prev_catpkgs:
+					catpkgs.add(cp)
+		else:
+			if pat in all_catpkgs_set and pat not in prev_catpkgs:
+				catpkgs.add(pat)
+	for cp in list(catpkgs):
+		catpkg_dict[cp] = name
+	return catpkgs
+
 def generateShardSteps(name, from_tree, to_tree, pkgdir=None, clean=True, branch="master", catpkg_dict=None):
 	steps = []
 	if branch:
