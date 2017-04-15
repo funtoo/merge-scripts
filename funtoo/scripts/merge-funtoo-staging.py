@@ -69,7 +69,7 @@ funtoo_overlays = {
 
 # These are other overlays that we merge into the Funtoo tree. However, we just pull in the most recent versions
 # of these when we regenerate our tree.
-# fusion809_overlay: 9daec531a164d89ba52d906900d871fddfb92e63 (Updated, 28 Mar 2017)
+# fusion809_overlay: 739dced1f09cfcd59c8fc573b15e06a170e5c0b1 (Updated, 15 Apr 2017)
 
 other_overlays = {
 	"foo_overlay" : GitTree("foo-overlay", "master", "https://github.com/slashbeast/foo-overlay.git", pull=True),
@@ -86,7 +86,7 @@ other_overlays = {
 	"mcelog_overlay" : GitTree("mcelog", "master", "https://github.com/benkohler/iamben-overlay.git", pull=True),
 	"atom_overlay" : GitTree("atom", "master", "https://github.com/elprans/atom-overlay.git", pull=True),
 	"bhenc_overlay" : GitTree("bhenc", "master", "https://github.com/antematherian/archive-overlay.git", pull=True),
-	"fusion809_overlay" : GitTree("fusion809", "9daec531a164d89ba52d906900d871fddfb92e63", "https://github.com/fusion809/fusion809-overlay.git", pull=True),
+	"fusion809_overlay" : GitTree("fusion809", "739dced1f09cfcd59c8fc573b15e06a170e5c0b1", "https://github.com/fusion809/fusion809-overlay.git", pull=True),
 }
 
 funtoo_changes = False
@@ -192,7 +192,7 @@ ebuild_modifications = [
 	InsertEbuilds(other_overlays["mcelog_overlay"], select=["app-admin/mcelog"], skip=None, replace=True, merge=True),
 	InsertEbuilds(other_overlays["atom_overlay"], select=["app-editors/atom", "dev-util/electron"], skip=None, replace=True, merge=True),
 	InsertEbuilds(other_overlays["bhenc_overlay"], select=["app-text/mdia", "app-text/mpaste", "dev-python/pyqwt", "media-gfx/iscan", "www-apps/joomla"], skip=["games-board/pouetchess"], replace=True, merge=True),
-	InsertEbuilds(other_overlays["fusion809_overlay"], select=["app-editors/atom-bin", "app-editors/gvim", "app-editors/vim", "app-editors/vim-core", "app-editors/sublime-text"], skip=None, replace=True, merge=True),
+	InsertEbuilds(other_overlays["fusion809_overlay"], select=["app-editors/atom-bin", "app-editors/notepadqq", "app-editors/bluefish", "app-editors/textadept", "app-editors/scite", "app-editors/gvim", "app-editors/vim", "app-editors/vim-core", "app-editors/sublime-text"], skip=None, replace=True, merge=True),
 ]
 
 ebuild_modifications += [
