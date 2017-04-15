@@ -35,4 +35,7 @@ dev-libs/libgpg-error
 dev-libs/libksba
 dev-libs/npth
 
+#MISC STUFF
+sys-apps/paxctl
+
 
