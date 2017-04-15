@@ -24,5 +24,9 @@ media-libs/freetype
 media-libs/fontconfig
 media-libs/vulkan-loader
 x11-misc/bumblebee
-@all_eclasses@
+virtual/ttf-fonts
+virtual/opengl
+virtual/glu
 sys-libs/mtdev
+x11-apps/mesa-progs
+@all_eclasses@

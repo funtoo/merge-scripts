@@ -8,6 +8,9 @@ app-arch/lz4
 app-arch/tar
 app-arch/unzip
 app-arch/xz-utils
+app-arch/pax
+app-arch/rpm2targz
+app-arch/zip
 app-editors/nano
 app-eselect/*
 app-misc/editor-wrapper
@@ -17,6 +20,7 @@ app-misc/realpath
 app-portage/elt-patches
 app-portage/gentoolkit
 app-portage/portage-utils
+dev-util/ccache
 app-shells/bash
 app-text/manpager
 dev-db/sqlite
@@ -76,6 +80,7 @@ sys-apps/man-pages-posix
 sys-apps/more
 sys-apps/net-tools
 sys-apps/openrc
+app-admin/openrc-settingsd
 sys-apps/pciutils
 sys-apps/portage
 sys-apps/sandbox
@@ -88,11 +93,16 @@ sys-apps/which
 sys-boot/boot-update
 sys-boot/efibootmgr
 sys-libs/efivar
+sys-libs/binutils-libs
 sys-boot/grub
 sys-firmware/*
 sys-kernel/debian-sources
 sys-kernel/genkernel
 sys-kernel/linux-headers
+sys-kernel/linux-firmware
+sys-power/pm-quirks
+sys-power/pm-utils
+sys-power/upower
 sys-libs/db
 sys-libs/gdbm
 sys-libs/glibc
@@ -116,4 +126,5 @@ virtual/mta
 virtual/package-manager
 virtual/pager
 virtual/service-manager
+app-text/wgetpaste
 virtual/udev
