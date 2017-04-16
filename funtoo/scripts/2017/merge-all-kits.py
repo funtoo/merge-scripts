@@ -1,38 +1,49 @@
 #!/usr/bin/python3
 
-# TODO:
-#
-# recreate: unkit, core, editors, perl, python, security kits
-# create: media-kit, master + 1.0-prime branch (from funtoo)
-# create: core-kit, master + 1.0-prime branch (from funtoo)
-# create: editors-kit, master + 1.0-prime branch (from funtoo)
-# create: security-kit, master + 1.0-prime branch (from funtoo)
-# create: nokit: master branch only (from funtoo)
-# perl and python kits are ok. editors kit could be ok.
-# mirror to github
-# create master repo with github mirrors as submodules
-
-
 import os
 from merge_utils import *
 
 fo_path = os.path.realpath(os.path.join(__file__,"../../../.."))
 
-# This script will update all kits listed below and ensure that proper sets of licenses and eclasses are included in the kit.
-# It will also ensure the use.local.desc and profiles/categories are generated properly.
-
-# In theory, we should generate the prime kits only once, to initialize them:
-
-# CONCERN: since the nokit is generated from matching catpkgs in non-prime branches (coming from Gentoo), is it possible
-# that nokit could be a tiny bit out of sync from the prime repos? Ideally, should we have nokit be a copy of funtoo but
-# remove all catpkgs that are in the prime kits?
-
 init_kits = [
 	{ 'name' : 'gnome', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : '44677858bd088805aa59fd56610ea4fb703a2fcd' },
 ]
 
-# master, if it exists, contains 'current' stuff?
+# KIT DESIGN AND DEVELOPER DOCS
 
+# The maintainable model for kits is to have a 'fixups' repository that contains our changes. Then, this file is used to
+# automatically generate the kits. Rather than commit directly to the kits, we just maintain fix-ups and this file's meta-
+# data.
+
+# We record the source sha1 for creating the fixup from Gentoo. Kit generation should be automated. We simply maintain thei
+# fix-ups and the source sha1's from gentoo for each branch, and then can have this script regenerate the branches with the
+# latest fix-ups. That way, we don't get our changes mixed up with Gentoo's ebuilds.
+
+# A kit is generated from:
+
+# 1. a list of ebuilds, eclasses, licenses to select
+# 2. a source repository and SHA1 (we want to map to Gentoo's gentoo-staging repo)
+# 3. a collection of fix-ups (from a fix-up repository) that are applied on top (generally, we will replace catpkgs underneath)
+
+# Below, the kits and branches should be defined in a way that includes all this information. It is also possible to
+# have a kit that simply is a collection of ebuilds but tracks the latest gentoo-staging. It may or may not have additional
+# fix-ups.
+
+# Kits have benefits over shards, in that because they exist on the user's system, they can control which branch they are running
+# for each kit. And the goal of the kits is to have a very well-curated selection of relevant packages. At first, we may just
+# have a few kits that are carefully selected, and we may have larger collections that we create just to get the curation process
+# started. Examples below are text-kit and net-kit, which are very large groups of ebuilds.
+
+# When setting up a kit repository, the 'master' branch is used to store an 'unfrozen' kit that just tracks upstream
+# Gentoo. Kits are not required to have a master branch -- we only create one if the kit is designed to offer unfrozen
+# ebuilds to Funtoo users.  Examples below are: science-kit, games-kit, text-kit, net-kit.
+
+# If we have a frozen enterprise branch that we are backporting security fixes to only, we want this to be an
+# 'x.y-prime' branch. This branch's source sha1 isn't supposed to change and we will just augment it with fix-ups as
+# needed.
+
+# THE CODE BELOW CURRENTLY DOESN'T WORK AS DESCRIBED ABOVE! BUT I WANTED TO DOCUMENT THE PLAN FIRST. CODE BELOW NEEDS
+# UPDATES TO IMPLEMENT THE DESIGN DEFINED ABOVE.
 
 prime_kits = [
 	# true prime kits:
