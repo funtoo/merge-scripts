@@ -15,7 +15,7 @@ init_kits = [
 # automatically generate the kits. Rather than commit directly to the kits, we just maintain fix-ups and this file's meta-
 # data.
 
-# We record the source sha1 for creating the fixup from Gentoo. Kit generation should be automated. We simply maintain thei
+# We record the source sha1 for creating the fixup from Gentoo. Kit generation should be automated. We simply maintain the
 # fix-ups and the source sha1's from gentoo for each branch, and then can have this script regenerate the branches with the
 # latest fix-ups. That way, we don't get our changes mixed up with Gentoo's ebuilds.
 
@@ -66,12 +66,13 @@ init_kits = [
 #    has a 'dev-python/*' selector in its catpkg list.
 #
 # HOW KITS ARE GENERATED
-#
-# Currently, kits are regenerated in a particluar order, such as: "first, core-kit, then security-kit, then perl-kit", etc.
-# This script keeps a running list of catpkgs that are inserted into each kit. Once a catpkg is inserted into a kit, it is
-# not available to be inserted into the next kit. This design is intended to prevent multiple copies of catpkgs existing in
-# multiple kits in parallel. At the end of kit generation, this master list of inserted catpkgs is used to prune the 'nokit'
-# repository of catpkgs, so that 'nokit' contains the set of all ebuilds that were not inserted into kits.
+
+# Currently, kits are regenerated in a particluar order, such as: "first, core-kit, then security-kit, then perl-kit",
+# etc. This script keeps a running list of catpkgs that are inserted into each kit. Once a catpkg is inserted into a
+# kit, it is not available to be inserted into successive kits. This design is intended to prevent multiple copies of
+# catpkgs existing in multiple kits in parallel. At the end of kit generation, this master list of inserted catpkgs is
+# used to prune the 'nokit' repository of catpkgs, so that 'nokit' contains the set of all ebuilds that were not
+# inserted into kits.
 
 # THE CODE BELOW CURRENTLY DOESN'T WORK EXACTLY AS DESCRIBED ABOVE! BUT I WANTED TO DOCUMENT THE PLAN FIRST. CODE BELOW NEEDS
 # UPDATES TO IMPLEMENT THE DESIGN DEFINED ABOVE.
