@@ -64,7 +64,14 @@ init_kits = [
 # 7. The 'catpkg ignore list' of kits can be changed (Not yet implemented.) This would allow python-kit to include all
 #    dev-python/* catpkgs except for one or two that should be logically grouped with the gnome-kit, even if python-kit
 #    has a 'dev-python/*' selector in its catpkg list.
-#
+
+# 8. A kit git repository may be destroyed and recreated, but keep the same clone URL. This is very likely to happen
+#    during the beta period but may also happen in production. Any tool that manages meta-repo submodules should have the
+#    ability to detect when a stale repo has been cloned and remove it and replace it with a current clone. I am not sure
+#    if git has this functionality built-in, but it could be implemented by our repo management tool by manually recording
+#    the SHA1 of the first commit in a branch which can be used to verify whether the repo is in fact current or needs to
+#    be re-cloned from the source.
+
 # HOW KITS ARE GENERATED
 
 # Currently, kits are regenerated in a particluar order, such as: "first, core-kit, then security-kit, then perl-kit",
