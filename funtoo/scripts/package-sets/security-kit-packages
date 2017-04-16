@@ -1,0 +1,10 @@
+sec-policy/*
+# KERBEROS:
+
+dev-libs/libverto
+sys-apps/keyutils
+app-crypt/mit-krb5
+virtual/krb5
+
+sys-apps/paxctl
+net-libs/liboauth

@@ -27,18 +27,36 @@ fo_path = os.path.realpath(os.path.join(__file__,"../../../.."))
 # that nokit could be a tiny bit out of sync from the prime repos? Ideally, should we have nokit be a copy of funtoo but
 # remove all catpkgs that are in the prime kits?
 
+init_kits = [
+	{ 'name' : 'gnome', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : '44677858bd088805aa59fd56610ea4fb703a2fcd' },
+]
+
+# master, if it exists, contains 'current' stuff?
+
 
 prime_kits = [
+	# true prime kits:
 	{ 'prime' : True, 'name' : 'core', 'branch' : '1.0-prime', 'source' : 'funtoo' },
 	{ 'prime' : True,  'name' : 'security', 'branch' : '1.0-prime', 'source': 'funtoo' },
 	{ 'prime' : True,  'name' : 'perl', 'branch' : '5.24-prime', 'source': 'funtoo' },
 	{ 'prime' : True,  'name' : 'python', 'branch' : '3.4-prime', 'source': 'funtoo' },
+	# TODO: dev, tcltk, ruby....
+	# not necessarily a 'prime' kit -- this could be a master branch only:
 	{ 'prime' : True,  'name' : 'editors', 'branch' : '1.0-prime', 'source': 'funtoo' },
+	# really prime:
 	{ 'prime' : True,  'name' : 'xorg', 'branch' : '1.17-prime', 'source': 'funtoo', 'update' : False },
+	{ 'prime' : True, 'name' : 'gnome', 'branch' : '3.20-prime', 'source': 'funtoo', 'update' : False },
+	# here because it needs to be:
 	{ 'prime' : True, 'name' : 'media', 'branch' : '1.0-prime', 'source': 'funtoo' },
+	# these are just groupings right now:
+	{ 'prime' : True, 'name' : 'text', 'branch' : 'master', 'source': 'gentoo' },
+	{ 'prime' : True, 'name' : 'net', 'branch' : 'master', 'source': 'gentoo' },
+	{ 'prime' : True, 'name' : 'science', 'branch' : 'master', 'source': 'gentoo' },
+	{ 'prime' : True, 'name' : 'games', 'branch' : 'master', 'source': 'gentoo' },
 ]
 
 # The non-prime branches can be updated frequently as they will pull in changes from gentoo:
+# not sure if I want this....
 
 gentoo_kits = [
 	{ 'name' : 'core', 'branch' : 'master', 'source' : 'gentoo' },
@@ -48,6 +66,7 @@ gentoo_kits = [
 	{ 'name' : 'editors', 'branch' : 'master', 'source': 'gentoo' },
 	{ 'name' : 'xorg', 'branch' : 'master', 'source': 'gentoo' },
 	{ 'name' : 'media', 'branch' : 'master', 'source': 'gentoo' },
+	{ 'name' : 'gnome', 'branch' : 'master', 'source': 'gentoo' },
 ]
 
 def auditKit(kit_dict, source_repo, kitted_catpkgs):
@@ -73,7 +92,7 @@ def auditKit(kit_dict, source_repo, kitted_catpkgs):
 	for catpkg in list(select_catpkgs - actual_catpkgs):
 		print(" " + catpkg)
 	print()
-	print("%s : catpkgs in kit that current do not have a match" % kname)
+	print("%s : catpkgs in kit that current do not have a match (possibly because they were pulled in by an earlier kit)" % kname)
 	for catpkg in list(actual_catpkgs - select_catpkgs):
 		print(" " + catpkg)
 	print()
@@ -83,6 +102,8 @@ def updateKit(mode, kit_dict, source_repo, kitted_catpkgs):
 	kname = kit_dict['name']
 	branch = kit_dict['branch']
 	prime = kit_dict['prime'] if 'prime' in kit_dict else False
+	if 'src_branch' in kit_dict:
+		source_repo.run([GitCheckout(kit_dict['src_branch'])])
 	if not prime:
 		update = True
 	else:
@@ -184,6 +205,9 @@ if __name__ == "__main__":
 	kitted_catpkgs = {}
 	
 	for kitdict in kits:
+		if not os.path.exists("/var/git/dest-trees/%s-kit" % kitdict['name']):
+			print("%s-kit repo not found, skipping..." % kitdict['name'])
+			continue
 		source_repo = GitTree("ports-2012", "funtoo.org", "repos@localhost:funtoo-overlay.git", reponame="biggy", root="/var/git/dest-trees/ports-2012", pull=True)
 		gentoo_staging = GitTree("gentoo-staging", "master", "repos@localhost:ports/gentoo-staging.git", root="/var/git/dest-trees/gentoo-staging", pull=False)
 

@@ -26,3 +26,7 @@ net-misc/mosh
 # deps for mosh
 dev-libs/protobuf
 sys-libs/utempter
+
+sys-block/parted
+sys-power/pm-utils
+

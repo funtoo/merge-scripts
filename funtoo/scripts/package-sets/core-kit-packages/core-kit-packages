@@ -42,9 +42,11 @@ dev-libs/libxml2
 dev-libs/libxslt
 dev-libs/libyaml
 dev-libs/popt
+dev-util/itstool
 dev-vcs/git
 mail-mta/postfix
 net-dns/openresolv
+net-dns/bind-tools
 net-firewall/ebtables
 net-firewall/iptables
 net-firewall/nftables
@@ -56,6 +58,7 @@ net-misc/ifenslave
 net-misc/iputils
 net-misc/rsync
 net-misc/wget
+net-misc/whois
 sys-apps/busybox
 sys-apps/corenetwork
 sys-apps/coreutils
@@ -90,6 +93,7 @@ sys-apps/texinfo
 sys-apps/usbutils
 sys-apps/util-linux
 sys-apps/which
+sys-apps/dbus
 sys-boot/boot-update
 sys-boot/efibootmgr
 sys-libs/efivar
