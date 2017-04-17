@@ -61,7 +61,6 @@ funtoo_overlays = {
 	"gnome_fixups" : GitTree("gnome-3.20-fixups", "master", "repos@localhost:ports/gnome-3.20-fixups.git", pull=True),
 	"tmp-shard-fixups" : GitTree("tmp-shard-fixups", "master", "repos@localhost:ports/tmp-shard-fixups.git", pull=True),
 	"funtoo_toolchain" : GitTree("funtoo-toolchain", "0ea91caf10eab4ca160b56a653f929f65cdf35fb", "repos@localhost:funtoo-toolchain-overlay.git", pull=True),
-	"ldap_overlay" : GitTree("funtoo-ldap", "master", "repos@localhost:funtoo-ldap-overlay.git", pull=True),
 	"deadbeef_overlay" : GitTree("deadbeef-overlay", "master", "https://github.com/damex/deadbeef-overlay.git", pull=True),
 	"wmfs_overlay" : GitTree("wmfs-overlay", "master", "https://github.com/damex/wmfs-overlay.git", pull=True),
 	"flora" : GitTree("flora", "master", "repos@localhost:flora.git", pull=True),
@@ -197,7 +196,6 @@ ebuild_modifications = [
 
 ebuild_modifications += [
 	InsertEbuilds(funtoo_overlays["funtoo_media"], select="all", skip=None, replace=True),
-	InsertEbuilds(funtoo_overlays["ldap_overlay"], select="all", skip=["net-nds/openldap"], replace=True),
 ]
 
 # Steps related to eclass copying:
