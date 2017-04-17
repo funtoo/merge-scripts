@@ -92,8 +92,6 @@ kit_groups = {
 		{ 'name' : 'gnome-kit', 'branch' : '3.20-prime', 'source': 'gentoo', 'src_branch' : '44677858bd088805aa59fd56610ea4fb703a2fcd', 'date' : '08 Sep 2016' },
 		{ 'name' : 'python-kit', 'branch' : '3.4-prime', 'source': 'gentoo', 'src_branch' : '7fcbdbd8461e5491c89eb18db4ab7a0ec9fa4da6', 'date' : '16 Apr 2017' },
 		{ 'name' : 'php-kit', 'branch' : '7.1.3-prime', 'source': 'gentoo', 'src_branch' : '7fcbdbd8461e5491c89eb18db4ab7a0ec9fa4da6', 'date' : '16 Apr 2017' },
-		{ 'name' : 'core-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-		{ 'name' : 'security-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
 		{ 'name' : 'java-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
 		{ 'name' : 'dev-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
 		{ 'name' : 'kde-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
