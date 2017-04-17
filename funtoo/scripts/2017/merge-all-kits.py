@@ -6,7 +6,24 @@ from merge_utils import *
 fo_path = os.path.realpath(os.path.join(__file__,"../../../.."))
 
 init_kits = [
-	{ 'name' : 'gnome', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : '44677858bd088805aa59fd56610ea4fb703a2fcd' },
+	{ 'name' : 'core', 'branch' : '1.0-prime', 'source': 'gentoo', 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017' },
+	{ 'name' : 'security', 'branch' : '1.0-prime', 'source': 'gentoo', 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017' },
+	{ 'name' : 'xorg', 'branch' : '1.17-prime', 'source': 'gentoo', 'src_branch' : 'a56abf6b7026dae27f9ca30ed4c564a16ca82685', 'date' : '18 Nov 2016'  },
+	{ 'name' : 'xorg', 'branch' : '1.19-snap', 'source': 'gentoo', 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017' },
+	{ 'name' : 'media', 'branch' : '1.0-prime', 'source': 'gentoo', 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017' },
+	{ 'name' : 'gnome', 'branch' : '3.20-prime', 'source': 'gentoo', 'src_branch' : '44677858bd088805aa59fd56610ea4fb703a2fcd', 'date' : '08 Sep 2016' },
+	{ 'name' : 'perl', 'branch' : '5.24-prime', 'source': 'gentoo', 'src_branch' : 'fc74d3206fa20caa19b7703aa051ff6de95d5588', 'date' : '11 Jan 2017' },
+	{ 'name' : 'python', 'branch' : '3.4-prime', 'source': 'gentoo', 'src_branch' : '7fcbdbd8461e5491c89eb18db4ab7a0ec9fa4da6', 'date' : '16 Apr 2017' },
+	{ 'name' : 'php', 'branch' : '7.1.3-prime', 'source': 'gentoo', 'src_branch' : '7fcbdbd8461e5491c89eb18db4ab7a0ec9fa4da6', 'date' : '16 Apr 2017' },
+	{ 'name' : 'java', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+	{ 'name' : 'dev', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+	{ 'name' : 'kde', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+	{ 'name' : 'desktop', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+	{ 'name' : 'editors', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+	{ 'name' : 'net', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+	{ 'name' : 'text', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+	{ 'name' : 'science', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+	{ 'name' : 'games', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
 ]
 
 # KIT DESIGN AND DEVELOPER DOCS
@@ -83,41 +100,6 @@ init_kits = [
 
 # THE CODE BELOW CURRENTLY DOESN'T WORK EXACTLY AS DESCRIBED ABOVE! BUT I WANTED TO DOCUMENT THE PLAN FIRST. CODE BELOW NEEDS
 # UPDATES TO IMPLEMENT THE DESIGN DEFINED ABOVE.
-
-prime_kits = [
-	# true prime kits:
-	{ 'prime' : True, 'name' : 'core', 'branch' : '1.0-prime', 'source' : 'funtoo' },
-	{ 'prime' : True,  'name' : 'security', 'branch' : '1.0-prime', 'source': 'funtoo' },
-	{ 'prime' : True,  'name' : 'perl', 'branch' : '5.24-prime', 'source': 'funtoo' },
-	{ 'prime' : True,  'name' : 'python', 'branch' : '3.4-prime', 'source': 'funtoo' },
-	# TODO: dev, tcltk, ruby....
-	# not necessarily a 'prime' kit -- this could be a master branch only:
-	{ 'prime' : True,  'name' : 'editors', 'branch' : '1.0-prime', 'source': 'funtoo' },
-	# really prime:
-	{ 'prime' : True,  'name' : 'xorg', 'branch' : '1.17-prime', 'source': 'funtoo', 'update' : False },
-	{ 'prime' : True, 'name' : 'gnome', 'branch' : '3.20-prime', 'source': 'funtoo', 'update' : False },
-	# here because it needs to be:
-	{ 'prime' : True, 'name' : 'media', 'branch' : '1.0-prime', 'source': 'funtoo' },
-	# these are just groupings right now:
-	{ 'prime' : True, 'name' : 'text', 'branch' : 'master', 'source': 'gentoo' },
-	{ 'prime' : True, 'name' : 'net', 'branch' : 'master', 'source': 'gentoo' },
-	{ 'prime' : True, 'name' : 'science', 'branch' : 'master', 'source': 'gentoo' },
-	{ 'prime' : True, 'name' : 'games', 'branch' : 'master', 'source': 'gentoo' },
-]
-
-# The non-prime branches can be updated frequently as they will pull in changes from gentoo:
-# not sure if I want this....
-
-gentoo_kits = [
-	{ 'name' : 'core', 'branch' : 'master', 'source' : 'gentoo' },
-	{ 'name' : 'security', 'branch' : 'master', 'source': 'gentoo' },
-	{ 'name' : 'perl', 'branch' : 'master', 'source': 'gentoo' },
-	{ 'name' : 'python', 'branch' : 'master', 'source': 'gentoo' },
-	{ 'name' : 'editors', 'branch' : 'master', 'source': 'gentoo' },
-	{ 'name' : 'xorg', 'branch' : 'master', 'source': 'gentoo' },
-	{ 'name' : 'media', 'branch' : 'master', 'source': 'gentoo' },
-	{ 'name' : 'gnome', 'branch' : 'master', 'source': 'gentoo' },
-]
 
 def auditKit(kit_dict, source_repo, kitted_catpkgs):
 	kname = kit_dict['name']
