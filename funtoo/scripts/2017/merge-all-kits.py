@@ -3,65 +3,6 @@
 import os
 from merge_utils import *
 
-funtoo_overlay = GitTree("funtoo-overlay", "master", "repos@localhost:funtoo-overlay.git", pull=True)
-gentoo_staging = GitTree("gentoo-staging", "master", "repos@localhost:ports/gentoo-staging.git", root="/var/git/dest-trees/gentoo-staging", pull=False)
-
-fo_path = os.path.realpath(os.path.join(__file__,"../../../.."))
-
-init_kits = [
-	{ 'name' : 'core-kit', 'branch' : '1.0-prime', 'source': 'gentoo', 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017', 'extra-steps' : [ 'core-kit' ] },
-	{ 'name' : 'core-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master', 'extra-steps' : [ 'core-kit' ] },
-	{ 'name' : 'security-kit', 'branch' : '1.0-prime', 'source': 'gentoo', 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017' },
-	{ 'name' : 'security-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-	{ 'name' : 'xorg-kit', 'branch' : '1.17-prime', 'source': 'gentoo', 'src_branch' : 'a56abf6b7026dae27f9ca30ed4c564a16ca82685', 'date' : '18 Nov 2016'  },
-	{ 'name' : 'xorg-kit', 'branch' : '1.19-snap', 'source': 'gentoo', 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017', 'extra-steps' : [ 'xorg-kit' ] },
-	{ 'name' : 'media-kit', 'branch' : '1.0-prime', 'source': 'gentoo', 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017' },
-	{ 'name' : 'gnome-kit', 'branch' : '3.20-prime', 'source': 'gentoo', 'src_branch' : '44677858bd088805aa59fd56610ea4fb703a2fcd', 'date' : '08 Sep 2016' },
-	{ 'name' : 'perl-kit', 'branch' : '5.24-prime', 'source': 'gentoo', 'src_branch' : 'fc74d3206fa20caa19b7703aa051ff6de95d5588', 'date' : '11 Jan 2017' },
-	{ 'name' : 'python-kit', 'branch' : '3.4-prime', 'source': 'gentoo', 'src_branch' : '7fcbdbd8461e5491c89eb18db4ab7a0ec9fa4da6', 'date' : '16 Apr 2017' , 'extra-steps' : [ 'python-kit' ]},
-	{ 'name' : 'php-kit', 'branch' : '7.1.3-prime', 'source': 'gentoo', 'src_branch' : '7fcbdbd8461e5491c89eb18db4ab7a0ec9fa4da6', 'date' : '16 Apr 2017' },
-	{ 'name' : 'java-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-	{ 'name' : 'dev-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-	{ 'name' : 'kde-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-	{ 'name' : 'desktop-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-	{ 'name' : 'editors-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-	{ 'name' : 'net-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-	{ 'name' : 'text-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-	{ 'name' : 'science-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-	{ 'name' : 'games-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-]
-
-kit_steps = {
-	'core-kit' : [
-		SyncDir(funtoo_overlay.root, "profiles", "profiles", exclude=["categories", "updates"]),
-		ThirdPartyMirrors(),
-		RunSed(["profiles/base/make.defaults"], ["/^PYTHON_TARGETS=/d", "/^PYTHON_SINGLE_TARGET=/d"]),
-		CopyAndRename("profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/subarch", "profiles/funtoo/1.0/linux-gnu/arch/pure64/subarch", lambda x: os.path.basename(x) + "-pure64"),
-		SyncFiles(gentoo_staging.root, {
-			"profiles/package.mask":"profiles/package.mask/00-gentoo",
-			"profiles/arch/amd64/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/package.use.mask/01-gentoo",
-			"profiles/arch/amd64/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/use.mask/01-gentoo",
-			"profiles/arch/x86/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-32bit/package.use.mask/01-gentoo",
-			"profiles/arch/x86/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-32bit/use.mask/01-gentoo",
-			"profiles/default/linux/package.use.mask":"profiles/funtoo/1.0/linux-gnu/package.use.mask/01-gentoo",
-			"profiles/default/linux/use.mask":"profiles/funtoo/1.0/linux-gnu/use.mask/01-gentoo",
-			"profiles/arch/amd64/no-multilib/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/pure64/package.use.mask/01-gentoo",
-			"profiles/arch/amd64/no-multilib/package.mask":"profiles/funtoo/1.0/linux-gnu/arch/pure64/package.mask/01-gentoo",
-			"profiles/arch/amd64/no-multilib/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/pure64/use.mask/01-gentoo"
-		}),
-		ProfileDepFix()
-	],
-	'python-kit' : [
-		AutoGlobMask("dev-lang/python", "python*_pre*", "funtoo-python_pre"),
-	],
-	'xorg-kit' : [
-		AutoGlobMask("media-libs/mesa", "mesa*_rc*", "funtoo-mesa_rc"),
-	],
-	'global' : [
-		Minify()
-	],
-}
-
 # KIT DESIGN AND DEVELOPER DOCS
 
 # The maintainable model for kits is to have a 'fixups' repository that contains our changes. Then, this file is used to
@@ -134,165 +75,180 @@ kit_steps = {
 # used to prune the 'nokit' repository of catpkgs, so that 'nokit' contains the set of all ebuilds that were not
 # inserted into kits.
 
-# THE CODE BELOW CURRENTLY DOESN'T WORK EXACTLY AS DESCRIBED ABOVE! BUT I WANTED TO DOCUMENT THE PLAN FIRST. CODE BELOW NEEDS
-# UPDATES TO IMPLEMENT THE DESIGN DEFINED ABOVE.
-
-def auditKit(kit_dict, source_repo, kitted_catpkgs):
-	kname = kit_dict['name']
-	branch = kit_dict['branch']
-	prime = kit_dict['prime'] if 'prime' in kit_dict else False
-	if not prime:
-		update = True
-	else:
-		update = kit_dict['update'] if 'update' in kit_dict else True
-	kit = GitTree("%s-kit" % kname, branch, "repos@localhost:kits/%s-kit.git" % kname, root="/var/git/dest-trees/%s-kit" % kname, pull=True)
-
-	steps = [
-		GitCheckout(branch),
+kit_groups = {
+	'prime' : [
+		{ 'name' : 'core-kit', 'branch' : '1.0-prime', 'source': 'gentoo', 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017' },
+		{ 'name' : 'security-kit', 'branch' : '1.0-prime', 'source': 'gentoo', 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017' },
+		{ 'name' : 'xorg-kit', 'branch' : '1.17-prime', 'source': 'gentoo', 'src_branch' : 'a56abf6b7026dae27f9ca30ed4c564a16ca82685', 'date' : '18 Nov 2016'  },
+	],
+	'current' : [
+		{ 'name' : 'core-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+		{ 'name' : 'security-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+		{ 'name' : 'xorg-kit', 'branch' : '1.19-snap', 'source': 'gentoo', 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017'  },
+	],
+	'shared' : [
+		{ 'name' : 'media-kit', 'branch' : '1.0-prime', 'source': 'gentoo', 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017' },
+		{ 'name' : 'perl-kit', 'branch' : '5.24-prime', 'source': 'gentoo', 'src_branch' : 'fc74d3206fa20caa19b7703aa051ff6de95d5588', 'date' : '11 Jan 2017' },
+		{ 'name' : 'gnome-kit', 'branch' : '3.20-prime', 'source': 'gentoo', 'src_branch' : '44677858bd088805aa59fd56610ea4fb703a2fcd', 'date' : '08 Sep 2016' },
+		{ 'name' : 'python-kit', 'branch' : '3.4-prime', 'source': 'gentoo', 'src_branch' : '7fcbdbd8461e5491c89eb18db4ab7a0ec9fa4da6', 'date' : '16 Apr 2017' },
+		{ 'name' : 'php-kit', 'branch' : '7.1.3-prime', 'source': 'gentoo', 'src_branch' : '7fcbdbd8461e5491c89eb18db4ab7a0ec9fa4da6', 'date' : '16 Apr 2017' },
+		{ 'name' : 'core-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+		{ 'name' : 'security-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+		{ 'name' : 'java-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+		{ 'name' : 'dev-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+		{ 'name' : 'kde-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+		{ 'name' : 'desktop-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+		{ 'name' : 'editors-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+		{ 'name' : 'net-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+		{ 'name' : 'text-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+		{ 'name' : 'science-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+		{ 'name' : 'games-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+		{ 'name' : 'nokit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
 	]
+}
 
-	kit.run(steps)
+# The following kit_order setting will be used to determine how kitted_catpkgs is generated. The 'prime' kit_group will be generated in order, and
+# kitted_catpkgs will accumulate. Then the 'shared' kit group will be generated, using the previous kitted_catpkgs. The 'None' will tell our code to
+# reset kitted_catpkgs to empty prior to generating the 'current' kit_group. This will allow the 'current' kit_group to include catpkgs that were
+# previously included in the 'prime' kit group. By default, once a catpkg is added to a kit, it can't be added to a successive kit. This is our way
+# around that.
 
-	actual_catpkgs = set(kit.getAllCatPkgs().keys())
-	select_catpkgs = generateAuditSet("%s-kit" % kname, source_repo, pkgdir="/root/funtoo-overlay/funtoo/scripts", branch=branch, catpkg_dict=kitted_catpkgs)
+kit_order = [ 'prime', 'shared', None, 'current' ]
 
-	print("%s : catpkgs selected that are not yet in kit" % kname)
-	for catpkg in list(select_catpkgs - actual_catpkgs):
-		print(" " + catpkg)
-	print()
-	print("%s : catpkgs in kit that current do not have a match (possibly because they were pulled in by an earlier kit)" % kname)
-	for catpkg in list(actual_catpkgs - select_catpkgs):
-		print(" " + catpkg)
-	print()
-
-
-def updateKit(mode, kit_dict, source_repo, kitted_catpkgs):
-	kname = kit_dict['name']
-	branch = kit_dict['branch']
-	prime = kit_dict['prime'] if 'prime' in kit_dict else False
-	if 'src_branch' in kit_dict:
-		source_repo.run([GitCheckout(kit_dict['src_branch'])])
-	if not prime:
-		update = True
-	else:
-		update = kit_dict['update'] if 'update' in kit_dict else True
-	kit = GitTree("%s-kit" % kname, branch, "repos@localhost:kits/%s-kit.git" % kname, root="/var/git/dest-trees/%s-kit" % kname, pull=True)
-
-	steps = [
-		GitCheckout(branch),
-	]
-
-	if update:
-		steps += [ CleanTree() ]
-
-	if kname == "core":
-		# special extra steps for core-kit:
-		steps += [
+def getKitPrepSteps(kit_dict):
+	kit_steps = {
+		'core-kit' : [
 			GenerateRepoMetadata("core-kit", aliases=["gentoo"], priority=1000),
-			SyncDir(source_repo.root, "profiles", exclude=["repo_name"]),
-			SyncDir(source_repo.root, "metadata", exclude=["cache","md5-cache","layout.conf"]),
-			# grab from the funtoo_overlay that this script is in:
-			SyncFiles(fo_path, {
-				"COPYRIGHT.txt":"COPYRIGHT.txt",
-				"LICENSE.txt":"LICENSE.txt",
-			})
+			SyncDir(gentoo_staging.root, "profiles", exclude=["repo_name"]),
+			SyncDir(funtoo_overlay.root, "profiles", "profiles", exclude=["categories", "updates"]),
+			SyncDir(gentoo_staging.root, "metadata", exclude=["cache","md5-cache","layout.conf"]),
+			SyncFiles(funtoo_overlay.root, {
+					"COPYRIGHT.txt":"COPYRIGHT.txt",
+					"LICENSE.txt":"LICENSE.txt",
+				}),
+			ThirdPartyMirrors(),
+			RunSed(["profiles/base/make.defaults"], ["/^PYTHON_TARGETS=/d", "/^PYTHON_SINGLE_TARGET=/d"]),
+			CopyAndRename("profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/subarch", "profiles/funtoo/1.0/linux-gnu/arch/pure64/subarch", lambda x: os.path.basename(x) + "-pure64"),
+			SyncFiles(gentoo_staging.root, {
+				"profiles/package.mask":"profiles/package.mask/00-gentoo",
+				"profiles/arch/amd64/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/package.use.mask/01-gentoo",
+				"profiles/arch/amd64/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/use.mask/01-gentoo",
+				"profiles/arch/x86/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-32bit/package.use.mask/01-gentoo",
+				"profiles/arch/x86/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-32bit/use.mask/01-gentoo",
+				"profiles/default/linux/package.use.mask":"profiles/funtoo/1.0/linux-gnu/package.use.mask/01-gentoo",
+				"profiles/default/linux/use.mask":"profiles/funtoo/1.0/linux-gnu/use.mask/01-gentoo",
+				"profiles/arch/amd64/no-multilib/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/pure64/package.use.mask/01-gentoo",
+				"profiles/arch/amd64/no-multilib/package.mask":"profiles/funtoo/1.0/linux-gnu/arch/pure64/package.mask/01-gentoo",
+				"profiles/arch/amd64/no-multilib/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/pure64/use.mask/01-gentoo"
+			}),
+			ProfileDepFix()
+		],
+		'python-kit' : [
+			AutoGlobMask("dev-lang/python", "python*_pre*", "funtoo-python_pre"),
+		],
+		'xorg-kit' : [
+			AutoGlobMask("media-libs/mesa", "mesa*_rc*", "funtoo-mesa_rc"),
+		],
+		'regular-kits' : [
+			GenerateRepoMetadata(kit_dict['name'], masters=["core-kit"], priority=500),
+		],
+		'nokit' : [
+			SyncDir(gentoo_staging.root),
+			GenerateRepoMetadata("nokit", masters=["core-kit"], priority=-2000),
 		]
-	else:
-		# non-core repos have slightly different metadata
-		steps += GenerateRepoMetadata("%s-kit" % kname, masters=["core-kit"], priority=500),
+	}
+
+	out_steps = []
+
+	if kit_dict['name'] in kit_steps:
+		out_steps += kit_steps[kit_dict['name']]
+
+	if kit_dict['name'] not in [ 'core-kit', 'nokit' ] and 'regular_kits' in kit_steps:
+		out_steps += kit_steps['regular_kits']
+
+	return kit_steps
+
+def updateKit(kit_dict, kitted_catpkgs):
+
+	gentoo_staging.run([GitCheckout(kit_dict['src_branch'])])
+	# TODO : create branch if it doesn't yet exist in the kit.
+	kit = GitTree(kit_dict['name'], kit_dict['branch'], "repos@localhost:kits/%s.git" % kit_dict['name'], root="/var/git/dest-trees/%s" % kit_dict['name'], pull=True)
 	
-	# from here on in, kit steps should be the same for core-kit and others:
+	# Phase 1: prep the kit
+	steps = [
+		GitCheckout(branch),
+		CleanTree()
+	]
+	
+	steps += getKitPrepSteps(kit_dict)
+
+	# SPECIAL NOKIT STEPS START
+	if kit_dict['name'] == 'nokit':
+		# perform these steps only, then return from this function. nokit has a special set of steps
+		steps += [
+			RemoveFiles(list(kitted_catpkgs.keys())),
+			CreateCategories(gentoo_staging),
+			GenUseLocalDesc(),
+			GenCache( cache_dir="/var/cache/git/edb-prime" )
+		]
+		kit.run(steps)
+		return
+	# SPECIAL NOKIT STEPS END
 
 	kit.run(steps)
-	if update:
-		steps2 = generateShardSteps("%s-kit" % kname, source_repo, kit, clean=False, pkgdir="/root/funtoo-overlay/funtoo/scripts", branch=branch, catpkg_dict=kitted_catpkgs)
-		kit.run(steps2)
 
-	a = getAllEclasses(ebuild_repo=kit, super_repo=source_repo)
-	l = getAllLicenses(ebuild_repo=kit, super_repo=source_repo)
-	# we must ensure all ebuilds are copied ^^^ before we grab all eclasses used:
+	# Phase 2: copy core set of ebuilds
+	steps = generateShardSteps(kit_dict['name'], gentoo_staging, kit, clean=False, pkgdir=funtoo_overlay.root+"/funtoo/scripts", branch=kit_dict['branch'], catpkg_dict=kitted_catpkgs)
+	kit.run(steps)
 
-	steps3 = [
-		InsertLicenses(source_repo, select=list(l)),
-		InsertEclasses(source_repo, select=list(a)),
-		CreateCategories(source_repo),
-		GenUseLocalDesc()
+	# Phase 3: insert funtoo fixups - copy ebuilds and eclasses over, replacing if needed
+	steps = []
+	if os.path.exists(fixup_repo.root + "/eclass"):
+		steps += [
+			InsertEclasses(fixup_repo, select="all", skip=None, replace=True)
+		]
+	for fixup_dir in [ "global", kit_dict["branch"] ]:
+		fixup_path = kit_dict['name'] + "/" + fixup_dir
+		if os.path.exists(fixup_repo.root + "/" + fixup_path):
+			if os.path.exists(fixup_repo.root + "/" + fixup_path + "/eclass"):
+				steps += [
+					InsertFilesFromSubdir(fixup_repo,fixup_path+"/eclass", ".eclass", select="all", skip=None)
+				]
+			steps += [
+				# add a new parameter called 'prefix'
+				InsertEbuilds(fixup_repo, ebuildloc=fixup_path, select="all", skip=None, replace=True )
+			]
+	kit.run(steps)
+
+	# Phase 4: finalize and commit
+	# TODO: create and dynamic-alize cache_dir below.
+	steps = [
+		InsertLicenses(gentoo_staging, select=list(getAllLicenses(ebuild_repo=kit, super_repo=gentoo_staging))),
+		InsertEclasses(gentoo_staging, select=list(getAllEclasses(ebuild_repo=kit, super_repo=gentoo_staging))),
+		CreateCategories(gentoo_staging),
+		Minify(),
+		GenUseLocalDesc(),
+		GenCache( cache_dir="/var/cache/git/edb-prime" ),
 	]
-		
-	if mode == 'prime':
-		# only generate metadata cache for prime branches
-		steps3 += [ GenCache( cache_dir="/var/cache/git/edb-prime" ) ]
-
-	kit.run(steps3)
+	kit.run(steps)
 
 	kitted_catpkgs.update(kit.getAllCatPkgs())
-
 	kit.gitCommit(message="updates",branch=branch)
-
-def updateNokitRepo(source_repo):
-
-	# will copy ports-2012 but remove unkitted ebuilds
-
-	nokit = GitTree('nokit', 'master', 'repos@localhost:kits/nokit.git', root="/var/git/dest-trees/nokit", pull=True)
-
-	catpkgs = {} 
-
-	for kit_dict in prime_kits:
-		kname = kit_dict['name']
-		branch = kit_dict['branch']
-		kit = GitTree("%s-kit" % kname, branch, "repos@localhost:kits/%s-kit.git" % kname, root="/var/git/dest-trees/%s-kit" % kname, pull=True)
-		catpkgs.update(kit.getAllCatPkgs())
-		
-	steps = [
-		SyncDir(source_repo.root),
-		GenerateRepoMetadata("nokit", masters=["core-kit"], priority=-2000),
-		RemoveFiles(list(catpkgs.keys())),
-		CreateCategories(source_repo),
-		GenUseLocalDesc(),
-		GenCache( cache_dir="/var/cache/git/edb-prime" )
-	]
-
-	nokit.run(steps)
-	nokit.gitCommit(message="updates",branch="master")
 
 if __name__ == "__main__":
 
-	import sys
+	funtoo_overlay = GitTree("funtoo-overlay", "master", "repos@localhost:funtoo-overlay.git", pull=True)
+	gentoo_staging = GitTree("gentoo-staging", "master", "repos@localhost:ports/gentoo-staging.git", pull=True)
+	kit_fixups = GitTree("kit-fixups", "master", "repos@localhost:kits/kit-fixups.git", pull=True)
 
-	if len(sys.argv) != 2 or sys.argv[1] not in [ "prime", "update", "audit" ]:
-		print("Please specify either 'prime' for funtoo prime kits, or 'update' for updating master branches using gentoo.")
-		sys.exit(1)
-	elif sys.argv[1] == "prime":
-		kits = prime_kits
-	elif sys.argv[1] == "update":
-		kits = gentoo_kits
-	elif sys.argv[1] == "audit":
-		kits = prime_kits
-
-	# kitted_catpkgs will store the names of all ebuilds that were moved into kits. We want to remove these from the underlying gentoo repo.
 	kitted_catpkgs = {}
-	
-	for kitdict in kits:
-		if not os.path.exists("/var/git/dest-trees/%s-kit" % kitdict['name']):
-			print("%s-kit repo not found, skipping..." % kitdict['name'])
-			continue
-		source_repo = GitTree("ports-2012", "funtoo.org", "repos@localhost:funtoo-overlay.git", reponame="biggy", root="/var/git/dest-trees/ports-2012", pull=True)
 
-		if kitdict['source'] == 'gentoo':
-			src_repo = gentoo_staging
+	for kit_group in kit_order:
+		if kit_group == None:
+			kitted_catpkgs = {}
 		else:
-			src_repo = source_repo
-		if sys.argv[1] == "audit":
-			auditKit(kitdict, src_repo, kitted_catpkgs)
-		else:
-			updateKit(sys.argv[1], kitdict, src_repo, kitted_catpkgs)
+			for kit_dict in kit_groups[kit_group]:
+				print("Regenerating kit ",kit_dict)
+				updateKit(kit_dict, kitted_catpkgs)
 
-	if sys.argv[1] == "update":
-
-		updateNokitRepo(source_repo)
-		k = sorted(kitted_catpkgs.keys())
-		with open("kitted_catpkgs.txt", "w") as a:
-			for ki in k:
-				a.write(ki+"\n")
-
-# vim: ts=4 sw=4 noet
+# vim: ts=4 sw=4 noet tw=140

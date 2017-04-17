@@ -258,22 +258,22 @@ def generateAuditSet(name, from_tree, pkgdir=None, branch="master", catpkg_dict=
 		catpkg_dict[cp] = name
 	return catpkgs
 
-def generateShardSteps(name, from_tree, to_tree, pkgdir=None, clean=True, branch="master", catpkg_dict=None):
+def generateShardSteps(name, from_tree, to_tree, pkgdir=None, branch="master", catpkg_dict=None):
 	steps = []
 	if branch:
 		steps += [ GitCheckout(branch) ]
-	if clean:
-		if name.endswith("-kit"):
-			steps += [ CleanTree(exclude=['metadata', 'profiles']) ]
-		else:
-			steps += [ CleanTree() ]
 	pkglist = []
 	pkgf = "package-sets/%s-packages" % name
+	pkgf_skip = "package-sets/%s-skip" % name
 	if pkgdir != None:
 		pkgf = pkgdir + "/" + pkgf
+		pkgf_skip = pkgdir + "/" + pkgf_skip
+	skip = []
+	if os.path.exists(pkgf_skip):
+		skip = get_pkglist(pkgf_skip)
 	for pattern in get_pkglist(pkgf):
 		if pattern.startswith("@regex@:"):
-			steps += [ InsertEbuilds(from_tree, select=re.compile(pattern[8:]), skip=None, replace=True, catpkg_dict=catpkg_dict) ]
+			steps += [ InsertEbuilds(from_tree, select=re.compile(pattern[8:]), skip=skip, replace=True, catpkg_dict=catpkg_dict) ]
 		elif pattern.startswith("@depsincat@:"):
 			patsplit = pattern.split(":")
 			catpkg = patsplit[1]
@@ -296,7 +296,7 @@ def generateShardSteps(name, from_tree, to_tree, pkgdir=None, clean=True, branch
 		else:
 			pkglist.append(pattern)
 	if pkglist:
-		steps += [ InsertEbuilds(from_tree, select=pkglist, skip=None, replace=True, catpkg_dict=catpkg_dict) ]
+		steps += [ InsertEbuilds(from_tree, select=pkglist, skip=skip, replace=True, catpkg_dict=catpkg_dict) ]
 	return steps
 
 def qa_build(host,build,arch_desc,subarch,head,target):
