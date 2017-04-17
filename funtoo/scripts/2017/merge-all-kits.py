@@ -3,28 +3,64 @@
 import os
 from merge_utils import *
 
+funtoo_overlay = GitTree("funtoo-overlay", "master", "repos@localhost:funtoo-overlay.git", pull=True)
+gentoo_staging = GitTree("gentoo-staging", "master", "repos@localhost:ports/gentoo-staging.git", root="/var/git/dest-trees/gentoo-staging", pull=False)
+
 fo_path = os.path.realpath(os.path.join(__file__,"../../../.."))
 
 init_kits = [
-	{ 'name' : 'core', 'branch' : '1.0-prime', 'source': 'gentoo', 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017' },
-	{ 'name' : 'security', 'branch' : '1.0-prime', 'source': 'gentoo', 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017' },
-	{ 'name' : 'xorg', 'branch' : '1.17-prime', 'source': 'gentoo', 'src_branch' : 'a56abf6b7026dae27f9ca30ed4c564a16ca82685', 'date' : '18 Nov 2016'  },
-	{ 'name' : 'xorg', 'branch' : '1.19-snap', 'source': 'gentoo', 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017' },
-	{ 'name' : 'media', 'branch' : '1.0-prime', 'source': 'gentoo', 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017' },
-	{ 'name' : 'gnome', 'branch' : '3.20-prime', 'source': 'gentoo', 'src_branch' : '44677858bd088805aa59fd56610ea4fb703a2fcd', 'date' : '08 Sep 2016' },
-	{ 'name' : 'perl', 'branch' : '5.24-prime', 'source': 'gentoo', 'src_branch' : 'fc74d3206fa20caa19b7703aa051ff6de95d5588', 'date' : '11 Jan 2017' },
-	{ 'name' : 'python', 'branch' : '3.4-prime', 'source': 'gentoo', 'src_branch' : '7fcbdbd8461e5491c89eb18db4ab7a0ec9fa4da6', 'date' : '16 Apr 2017' },
-	{ 'name' : 'php', 'branch' : '7.1.3-prime', 'source': 'gentoo', 'src_branch' : '7fcbdbd8461e5491c89eb18db4ab7a0ec9fa4da6', 'date' : '16 Apr 2017' },
-	{ 'name' : 'java', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-	{ 'name' : 'dev', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-	{ 'name' : 'kde', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-	{ 'name' : 'desktop', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-	{ 'name' : 'editors', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-	{ 'name' : 'net', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-	{ 'name' : 'text', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-	{ 'name' : 'science', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-	{ 'name' : 'games', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+	{ 'name' : 'core-kit', 'branch' : '1.0-prime', 'source': 'gentoo', 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017', 'extra-steps' : [ 'core-kit' ] },
+	{ 'name' : 'core-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master', 'extra-steps' : [ 'core-kit' ] },
+	{ 'name' : 'security-kit', 'branch' : '1.0-prime', 'source': 'gentoo', 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017' },
+	{ 'name' : 'security-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+	{ 'name' : 'xorg-kit', 'branch' : '1.17-prime', 'source': 'gentoo', 'src_branch' : 'a56abf6b7026dae27f9ca30ed4c564a16ca82685', 'date' : '18 Nov 2016'  },
+	{ 'name' : 'xorg-kit', 'branch' : '1.19-snap', 'source': 'gentoo', 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017', 'extra-steps' : [ 'xorg-kit' ] },
+	{ 'name' : 'media-kit', 'branch' : '1.0-prime', 'source': 'gentoo', 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017' },
+	{ 'name' : 'gnome-kit', 'branch' : '3.20-prime', 'source': 'gentoo', 'src_branch' : '44677858bd088805aa59fd56610ea4fb703a2fcd', 'date' : '08 Sep 2016' },
+	{ 'name' : 'perl-kit', 'branch' : '5.24-prime', 'source': 'gentoo', 'src_branch' : 'fc74d3206fa20caa19b7703aa051ff6de95d5588', 'date' : '11 Jan 2017' },
+	{ 'name' : 'python-kit', 'branch' : '3.4-prime', 'source': 'gentoo', 'src_branch' : '7fcbdbd8461e5491c89eb18db4ab7a0ec9fa4da6', 'date' : '16 Apr 2017' , 'extra-steps' : [ 'python-kit' ]},
+	{ 'name' : 'php-kit', 'branch' : '7.1.3-prime', 'source': 'gentoo', 'src_branch' : '7fcbdbd8461e5491c89eb18db4ab7a0ec9fa4da6', 'date' : '16 Apr 2017' },
+	{ 'name' : 'java-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+	{ 'name' : 'dev-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+	{ 'name' : 'kde-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+	{ 'name' : 'desktop-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+	{ 'name' : 'editors-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+	{ 'name' : 'net-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+	{ 'name' : 'text-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+	{ 'name' : 'science-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+	{ 'name' : 'games-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
 ]
+
+kit_steps = {
+	'core-kit' : [
+		SyncDir(funtoo_overlay.root, "profiles", "profiles", exclude=["categories", "updates"]),
+		ThirdPartyMirrors(),
+		RunSed(["profiles/base/make.defaults"], ["/^PYTHON_TARGETS=/d", "/^PYTHON_SINGLE_TARGET=/d"]),
+		CopyAndRename("profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/subarch", "profiles/funtoo/1.0/linux-gnu/arch/pure64/subarch", lambda x: os.path.basename(x) + "-pure64"),
+		SyncFiles(gentoo_staging.root, {
+			"profiles/package.mask":"profiles/package.mask/00-gentoo",
+			"profiles/arch/amd64/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/package.use.mask/01-gentoo",
+			"profiles/arch/amd64/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/use.mask/01-gentoo",
+			"profiles/arch/x86/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-32bit/package.use.mask/01-gentoo",
+			"profiles/arch/x86/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-32bit/use.mask/01-gentoo",
+			"profiles/default/linux/package.use.mask":"profiles/funtoo/1.0/linux-gnu/package.use.mask/01-gentoo",
+			"profiles/default/linux/use.mask":"profiles/funtoo/1.0/linux-gnu/use.mask/01-gentoo",
+			"profiles/arch/amd64/no-multilib/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/pure64/package.use.mask/01-gentoo",
+			"profiles/arch/amd64/no-multilib/package.mask":"profiles/funtoo/1.0/linux-gnu/arch/pure64/package.mask/01-gentoo",
+			"profiles/arch/amd64/no-multilib/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/pure64/use.mask/01-gentoo"
+		}),
+		ProfileDepFix()
+	],
+	'python-kit' : [
+		AutoGlobMask("dev-lang/python", "python*_pre*", "funtoo-python_pre"),
+	],
+	'xorg-kit' : [
+		AutoGlobMask("media-libs/mesa", "mesa*_rc*", "funtoo-mesa_rc"),
+	],
+	'global' : [
+		Minify()
+	],
+}
 
 # KIT DESIGN AND DEVELOPER DOCS
 
@@ -241,7 +277,6 @@ if __name__ == "__main__":
 			print("%s-kit repo not found, skipping..." % kitdict['name'])
 			continue
 		source_repo = GitTree("ports-2012", "funtoo.org", "repos@localhost:funtoo-overlay.git", reponame="biggy", root="/var/git/dest-trees/ports-2012", pull=True)
-		gentoo_staging = GitTree("gentoo-staging", "master", "repos@localhost:ports/gentoo-staging.git", root="/var/git/dest-trees/gentoo-staging", pull=False)
 
 		if kitdict['source'] == 'gentoo':
 			src_repo = gentoo_staging
