@@ -1,0 +1,14 @@
+# Mask new versions for caution, and these should all
+# be tested and upgraded together. This helps ensure that
+# any new glibc upgrade will be built against any upgraded
+# linux-headers.
+
+# Also note that these new masks are relatively "loose".
+# They will allow for rev bumps to get to users, but not
+# wholesale new ${PV}.
+
+>=sys-libs/glibc-2.24
+>=sys-kernel/linux-headers-4.10
+>=sys-devel/gcc-5.4.0
+=sys-devel/gcc-4.9.4
+>=sys-devel/binutils-2.25-r3

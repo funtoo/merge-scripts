@@ -1,0 +1,9 @@
+# Mask new versions for caution, and these should all
+# be tested and upgraded together. This helps ensure that
+# any new glibc upgrade will be built against any upgraded
+# linux-headers.
+
+>=sys-libs/glibc-2.24
+>=sys-kernel/linux-headers-4.10
+>=sys-devel/gcc-6.4.0
+>=sys-devel/binutils-2.26
