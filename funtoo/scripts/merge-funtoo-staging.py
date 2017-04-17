@@ -151,10 +151,10 @@ profile_steps = [
 	}) ]
 
 profile_steps += [
-	SyncFiles(funtoo_overlays["funtoo_toolchain"].root, {
+	SyncFiles(funtoo_overlay.root, {
 		"profiles/package.mask/funtoo-toolchain":"profiles/funtoo/1.0/linux-gnu/build/current/package.mask/funtoo-toolchain",
 	}),
-	SyncFiles(funtoo_overlays["funtoo_toolchain"].root, {
+	SyncFiles(funtoo_overlay.root, {
 		"profiles/package.mask/funtoo-toolchain":"profiles/funtoo/1.0/linux-gnu/build/stable/package.mask/funtoo-toolchain",
 		"profiles/package.mask/funtoo-toolchain-experimental":"profiles/funtoo/1.0/linux-gnu/build/experimental/package.mask/funtoo-toolchain",
 	}),
