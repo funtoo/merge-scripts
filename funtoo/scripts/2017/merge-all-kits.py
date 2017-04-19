@@ -171,15 +171,21 @@ def getKitPrepSteps(kit_dict):
 
 	return kit_steps
 
-def updateKit(kit_dict, kitted_catpkgs):
+def updateKit(kit_dict, kitted_catpkgs, create=False):
 
 	gentoo_staging.run([GitCheckout(kit_dict['src_branch'])])
 	# TODO : create branch if it doesn't yet exist in the kit.
-	kit = GitTree(kit_dict['name'], kit_dict['branch'], "repos@localhost:kits/%s.git" % kit_dict['name'], root="/var/git/dest-trees/%s" % kit_dict['name'], pull=True)
+
+	if not create:
+		kit = GitTree(kit_dict['name'], kit_dict['branch'], "repos@localhost:kits/%s.git" % kit_dict['name'], root="/var/git/dest-trees/%s" % kit_dict['name'], pull=True)
+	else:
+		if not os.path.exists('/var/git/dest-trees/%s' % kit_dict['name']):
+			os.makedirs('/var/git/dest-trees/%s' % kit_dict['name'])
+			os.system('cd /var/git/dest-trees/%s' % kit_dict['name'] + ' ;git init; touch README; git add README; git commit -a -m "first commit"')
 	
 	# Phase 1: prep the kit
 	steps = [
-		GitCheckout(branch),
+		GitCheckout(kit_dict['branch']),
 		CleanTree()
 	]
 	
@@ -240,9 +246,9 @@ def updateKit(kit_dict, kitted_catpkgs):
 
 if __name__ == "__main__":
 
-	funtoo_overlay = GitTree("funtoo-overlay", "master", "repos@localhost:funtoo-overlay.git", pull=True)
-	gentoo_staging = GitTree("gentoo-staging", "master", "repos@localhost:ports/gentoo-staging.git", pull=True)
-	kit_fixups = GitTree("kit-fixups", "master", "repos@localhost:kits/kit-fixups.git", pull=True)
+	funtoo_overlay = GitTree("funtoo-overlay", "master", "repos@ports.funtoo.org:funtoo-overlay.git", pull=True)
+	gentoo_staging = GitTree("gentoo-staging", "master", "repos@ports.funtoo.org:gentoo-staging.git", pull=True)
+	kit_fixups = GitTree("kit-fixups", "master", "repos@ports.funtoo.org:kits/kit-fixups.git", pull=True)
 
 	kitted_catpkgs = {}
 
@@ -252,6 +258,6 @@ if __name__ == "__main__":
 		else:
 			for kit_dict in kit_groups[kit_group]:
 				print("Regenerating kit ",kit_dict)
-				updateKit(kit_dict, kitted_catpkgs)
+				updateKit(kit_dict, kitted_catpkgs, create=True)
 
 # vim: ts=4 sw=4 noet tw=140
