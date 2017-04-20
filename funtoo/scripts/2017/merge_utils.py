@@ -150,7 +150,7 @@ def getAllLicenses(ebuild_repo, super_repo=None):
 
 
 def getAllMeta(metadata, ebuild_repo, super_repo=None):
-
+	print("EBUILD REPO", ebuild_repo.root, "SUPER_REPO", super_repo.root)
 	metadict = { "LICENSE" : 0, "INHERITED" : 1 }
 	metapos = metadict[metadata]
 
@@ -181,6 +181,7 @@ main-repo = %s
 [%s]
 location = %s
 	''' % ( eb_name, eb_name, eb_name, ebuild_repo.root )
+	print(env['PORTAGE_REPOSITORIES'])
 	p = portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
 	p.frozen = False
 	myeclasses = set()
@@ -404,6 +405,8 @@ class AutoGlobMask(MergeStep):
 		self.maskdest = maskdest
 
 	def run(self,tree):
+		if not os.path.exists(tree.root + "/profiles/package.mask"):
+			os.makedirs(tree.root + "/profiles/package.mask")
 		f = open(os.path.join(tree.root,"profiles/package.mask", self.maskdest), "w")
 		os.chdir(os.path.join(tree.root,self.catpkg))
 		cat = self.catpkg.split("/")[0]
@@ -700,7 +703,7 @@ class GitTree(Tree):
 	def gitCheckout(self,branch="master"):
 		runShell("(cd %s; git checkout %s)" % ( self.root, self.branch ))
 
-	def gitCommit(self,message="",upstream="origin",branch=None):
+	def gitCommit(self,message="",upstream="origin",branch=None,push=True):
 		if branch == None:
 			branch = self.branch
 		runShell("( cd %s; git add . )" % self.root )
@@ -725,7 +728,7 @@ class GitTree(Tree):
 		if retval != 0:
 			print("Commit failed.")
 			sys.exit(1)
-		if branch != False:
+		if branch != False and push == True:
 			runShell("(cd %s; git push %s %s)" % ( self.root, upstream, branch ))
 		else:	 
 			print("Pushing disabled.")
@@ -811,7 +814,7 @@ class InsertFilesFromSubdir(MergeStep):
 
 		src = os.path.join(self.srctree.root, self.subdir)
 		if not os.path.exists(src):
-			print("Eclass dir %s does not exist; skipping %s insertion..." % (src, subdir))
+			print("Eclass dir %s does not exist; skipping %s insertion..." % (src, self.subdir))
 			return
 		dst = os.path.join(desttree.root, self.subdir)
 		if not os.path.exists(dst):
@@ -855,6 +858,8 @@ class CreateCategories(MergeStep):
 			for cat in cats:
 				if os.path.isdir(desttree.root + "/" + cat):
 					catset.add(cat)
+			if not os.path.exists(desttree.root + "/profiles"):
+				os.makedirs(desttree.root + "/profiles")
 			with open(desttree.root + "/profiles/categories", "w") as g:
 				for cat in sorted(list(catset)):
 					g.write(cat+"\n")

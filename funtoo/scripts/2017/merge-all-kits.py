@@ -114,107 +114,121 @@ kit_groups = {
 kit_order = [ 'prime', 'shared', None, 'current' ]
 
 def getKitPrepSteps(kit_dict):
+
 	kit_steps = {
-		'core-kit' : [
-			GenerateRepoMetadata("core-kit", aliases=["gentoo"], priority=1000),
-			SyncDir(gentoo_staging.root, "profiles", exclude=["repo_name"]),
-			SyncDir(funtoo_overlay.root, "profiles", "profiles", exclude=["categories", "updates"]),
-			SyncDir(gentoo_staging.root, "metadata", exclude=["cache","md5-cache","layout.conf"]),
-			SyncFiles(funtoo_overlay.root, {
-					"COPYRIGHT.txt":"COPYRIGHT.txt",
-					"LICENSE.txt":"LICENSE.txt",
+		'core-kit' : { 'pre' : [
+				GenerateRepoMetadata("core-kit", aliases=["gentoo"], priority=1000),
+				SyncDir(gentoo_staging.root, "profiles", exclude=["repo_name"]),
+				SyncDir(funtoo_overlay.root, "profiles", "profiles", exclude=["repo_name", "categories", "updates"]),
+				SyncDir(gentoo_staging.root, "metadata", exclude=["cache","md5-cache","layout.conf"]),
+				SyncFiles(funtoo_overlay.root, {
+						"COPYRIGHT.txt":"COPYRIGHT.txt",
+						"LICENSE.txt":"LICENSE.txt",
+					}),
+				ThirdPartyMirrors(),
+				RunSed(["profiles/base/make.defaults"], ["/^PYTHON_TARGETS=/d", "/^PYTHON_SINGLE_TARGET=/d"]),
+				CopyAndRename("profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/subarch", "profiles/funtoo/1.0/linux-gnu/arch/pure64/subarch", lambda x: os.path.basename(x) + "-pure64"),
+				SyncFiles(gentoo_staging.root, {
+					"profiles/package.mask":"profiles/package.mask/00-gentoo",
+					"profiles/arch/amd64/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/package.use.mask/01-gentoo",
+					"profiles/arch/amd64/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/use.mask/01-gentoo",
+					"profiles/arch/x86/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-32bit/package.use.mask/01-gentoo",
+					"profiles/arch/x86/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-32bit/use.mask/01-gentoo",
+					"profiles/default/linux/package.use.mask":"profiles/funtoo/1.0/linux-gnu/package.use.mask/01-gentoo",
+					"profiles/default/linux/use.mask":"profiles/funtoo/1.0/linux-gnu/use.mask/01-gentoo",
+					"profiles/arch/amd64/no-multilib/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/pure64/package.use.mask/01-gentoo",
+					"profiles/arch/amd64/no-multilib/package.mask":"profiles/funtoo/1.0/linux-gnu/arch/pure64/package.mask/01-gentoo",
+					"profiles/arch/amd64/no-multilib/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/pure64/use.mask/01-gentoo"
 				}),
-			ThirdPartyMirrors(),
-			RunSed(["profiles/base/make.defaults"], ["/^PYTHON_TARGETS=/d", "/^PYTHON_SINGLE_TARGET=/d"]),
-			CopyAndRename("profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/subarch", "profiles/funtoo/1.0/linux-gnu/arch/pure64/subarch", lambda x: os.path.basename(x) + "-pure64"),
-			SyncFiles(gentoo_staging.root, {
-				"profiles/package.mask":"profiles/package.mask/00-gentoo",
-				"profiles/arch/amd64/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/package.use.mask/01-gentoo",
-				"profiles/arch/amd64/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/use.mask/01-gentoo",
-				"profiles/arch/x86/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-32bit/package.use.mask/01-gentoo",
-				"profiles/arch/x86/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-32bit/use.mask/01-gentoo",
-				"profiles/default/linux/package.use.mask":"profiles/funtoo/1.0/linux-gnu/package.use.mask/01-gentoo",
-				"profiles/default/linux/use.mask":"profiles/funtoo/1.0/linux-gnu/use.mask/01-gentoo",
-				"profiles/arch/amd64/no-multilib/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/pure64/package.use.mask/01-gentoo",
-				"profiles/arch/amd64/no-multilib/package.mask":"profiles/funtoo/1.0/linux-gnu/arch/pure64/package.mask/01-gentoo",
-				"profiles/arch/amd64/no-multilib/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/pure64/use.mask/01-gentoo"
-			}),
-			SyncFiles(funtoo_overlay.root, {
-				"profiles/package.mask/funtoo-toolchain":"profiles/funtoo/1.0/linux-gnu/build/current/package.mask/funtoo-toolchain",
-				"profiles/package.mask/funtoo-toolchain":"profiles/funtoo/1.0/linux-gnu/build/stable/package.mask/funtoo-toolchain",
-				"profiles/package.mask/funtoo-toolchain-experimental":"profiles/funtoo/1.0/linux-gnu/build/experimental/package.mask/funtoo-toolchain",
-			}),
-			ProfileDepFix()
-		],
-		'python-kit' : [
-			AutoGlobMask("dev-lang/python", "python*_pre*", "funtoo-python_pre"),
-		],
-		'xorg-kit' : [
-			AutoGlobMask("media-libs/mesa", "mesa*_rc*", "funtoo-mesa_rc"),
-		],
-		'regular-kits' : [
+				SyncFiles(funtoo_overlay.root, {
+					"profiles/package.mask/funtoo-toolchain":"profiles/funtoo/1.0/linux-gnu/build/current/package.mask/funtoo-toolchain",
+					"profiles/package.mask/funtoo-toolchain":"profiles/funtoo/1.0/linux-gnu/build/stable/package.mask/funtoo-toolchain",
+					"profiles/package.mask/funtoo-toolchain-experimental":"profiles/funtoo/1.0/linux-gnu/build/experimental/package.mask/funtoo-toolchain",
+				}),
+				ProfileDepFix()
+			]
+		},
+		'python-kit' : { 'post' : [
+				AutoGlobMask("dev-lang/python", "python*_pre*", "funtoo-python_pre"),
+			]
+		},
+		'xorg-kit' : { 'post' : [
+				AutoGlobMask("media-libs/mesa", "mesa*_rc*", "funtoo-mesa_rc"),
+			]
+		},
+		'regular-kits' : { 'pre' : [
 			GenerateRepoMetadata(kit_dict['name'], masters=["core-kit"], priority=500),
-		],
-		'nokit' : [
-			SyncDir(gentoo_staging.root),
-			GenerateRepoMetadata("nokit", masters=["core-kit"], priority=-2000),
-		]
+			]
+		},
+		'nokit' : { 'pre' : [
+				SyncDir(gentoo_staging.root),
+				GenerateRepoMetadata("nokit", masters=["core-kit"], priority=-2000),
+			]
+		}
 	}
 
-	out_steps = []
+	out_pre_steps = []
+	out_post_steps = []
 
-	if kit_dict['name'] in kit_steps:
-		out_steps += kit_steps[kit_dict['name']]
+	kd = kit_dict['name']
+	if kd in kit_steps:
+		if 'pre' in kit_steps[kd]:
+			out_pre_steps += kit_steps[kd]['pre']
+		if 'post' in kit_steps[kd]:
+			out_post_steps += kit_steps[kd]['post']
 
-	if kit_dict['name'] not in [ 'core-kit', 'nokit' ] and 'regular_kits' in kit_steps:
-		out_steps += kit_steps['regular_kits']
+	if kit_dict['name'] not in [ 'core-kit', 'nokit' ] and 'regular-kits' in kit_steps:
+		if 'pre' in kit_steps['regular-kits']:
+			out_pre_steps += kit_steps['regular-kits']['pre']
+		if 'post' in kit_steps['regular-kits']:
+			out_post_steps += kit_steps['regular-kits']['post']
 
-	return kit_steps
+	return ( out_pre_steps, out_post_steps )
 
 def updateKit(kit_dict, kitted_catpkgs, create=False):
 
 	gentoo_staging.run([GitCheckout(kit_dict['src_branch'])])
 	# TODO : create branch if it doesn't yet exist in the kit.
 
-	if not create:
-		kit = GitTree(kit_dict['name'], kit_dict['branch'], "repos@localhost:kits/%s.git" % kit_dict['name'], root="/var/git/dest-trees/%s" % kit_dict['name'], pull=True)
-	else:
-		if not os.path.exists('/var/git/dest-trees/%s' % kit_dict['name']):
+	if create and not os.path.exists('/var/git/dest-trees/%s' % kit_dict['name']):
 			os.makedirs('/var/git/dest-trees/%s' % kit_dict['name'])
 			os.system('cd /var/git/dest-trees/%s' % kit_dict['name'] + ' ;git init; touch README; git add README; git commit -a -m "first commit"')
+			if kit_dict['branch'] != 'master':
+				# create branch
+				os.system('cd /var/git/dest-trees/%s' % kit_dict['name'] + ' ;git checkout -b %s' % kit_dict['branch'])
+	kit = GitTree(kit_dict['name'], kit_dict['branch'], "repos@git.funtoo.org:kits/%s.git" % kit_dict['name'], root="/var/git/dest-trees/%s" % kit_dict['name'], pull=True)
 	
 	# Phase 1: prep the kit
-	steps = [
+	pre_steps = [
 		GitCheckout(kit_dict['branch']),
 		CleanTree()
 	]
 	
-	steps += getKitPrepSteps(kit_dict)
+	prep_steps = getKitPrepSteps(kit_dict)
+	pre_steps += prep_steps[0]
+	post_steps = prep_steps[1]
 
 	# SPECIAL NOKIT STEPS START
 	if kit_dict['name'] == 'nokit':
 		# perform these steps only, then return from this function. nokit has a special set of steps
-		steps += [
+		pre_steps += [
 			RemoveFiles(list(kitted_catpkgs.keys())),
 			CreateCategories(gentoo_staging),
 			GenUseLocalDesc(),
 			GenCache( cache_dir="/var/cache/git/edb-prime" )
 		]
-		kit.run(steps)
+		kit.run(pre_steps)
 		return
 	# SPECIAL NOKIT STEPS END
-
-	kit.run(steps)
+	kit.run(pre_steps)
 
 	# Phase 2: copy core set of ebuilds
-	steps = generateShardSteps(kit_dict['name'], gentoo_staging, kit, clean=False, pkgdir=funtoo_overlay.root+"/funtoo/scripts", branch=kit_dict['branch'], catpkg_dict=kitted_catpkgs)
-	kit.run(steps)
+	steps = generateShardSteps(kit_dict['name'], gentoo_staging, kit, pkgdir=funtoo_overlay.root+"/funtoo/scripts", branch=kit_dict['branch'], catpkg_dict=kitted_catpkgs)
 
 	# Phase 3: insert funtoo fixups - copy ebuilds and eclasses over, replacing if needed
-	steps = []
 	if os.path.exists(fixup_repo.root + "/eclass"):
 		steps += [
-			InsertEclasses(fixup_repo, select="all", skip=None, replace=True)
+			InsertEclasses(fixup_repo, select="all", skip=None)
 		]
 	for fixup_dir in [ "global", kit_dict["branch"] ]:
 		fixup_path = kit_dict['name'] + "/" + fixup_dir
@@ -231,7 +245,7 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 
 	# Phase 4: finalize and commit
 	# TODO: create and dynamic-alize cache_dir below.
-	steps = [
+	post_steps += [
 		InsertLicenses(gentoo_staging, select=list(getAllLicenses(ebuild_repo=kit, super_repo=gentoo_staging))),
 		InsertEclasses(gentoo_staging, select=list(getAllEclasses(ebuild_repo=kit, super_repo=gentoo_staging))),
 		CreateCategories(gentoo_staging),
@@ -239,16 +253,17 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 		GenUseLocalDesc(),
 		GenCache( cache_dir="/var/cache/git/edb-prime" ),
 	]
-	kit.run(steps)
+	kit.run(post_steps)
 
 	kitted_catpkgs.update(kit.getAllCatPkgs())
-	kit.gitCommit(message="updates",branch=branch)
+	kit.gitCommit(message="updates",branch=kit_dict['branch'],push=False)
 
 if __name__ == "__main__":
 
-	funtoo_overlay = GitTree("funtoo-overlay", "master", "repos@ports.funtoo.org:funtoo-overlay.git", pull=True)
-	gentoo_staging = GitTree("gentoo-staging", "master", "repos@ports.funtoo.org:gentoo-staging.git", pull=True)
-	kit_fixups = GitTree("kit-fixups", "master", "repos@ports.funtoo.org:kits/kit-fixups.git", pull=True)
+	funtoo_overlay = GitTree("funtoo-overlay", "master", "repos@git.funtoo.org:funtoo-overlay.git", pull=True)
+	gentoo_staging = GitTree("gentoo-staging", "master", "repos@git.funtoo.org:ports/gentoo-staging.git", pull=True)
+	fixup_repo = GitTree("kit-fixups", "master", "repos@git.funtoo.org:kits/kit-fixups.git", pull=True)
+	kit_fixups = GitTree("kit-fixups", "master", "repos@git.funtoo.org:kits/kit-fixups.git", pull=True)
 
 	kitted_catpkgs = {}
 
