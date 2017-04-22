@@ -949,10 +949,7 @@ class InsertEbuilds(MergeStep):
 			# Allow dynamic switching to different branches/commits to grab things we want:
 			self.srctree.gitCheckout(branch)
 
-		# ebuildloc is the path to the tree relative to srctree.root.
-		# This is for overlays where the tree is not located at root of overlay. Use wth VarLocTree
-		if ebuildloc != None:
-			self.srctree.root = os.path.join(self.srctree.root, ebuildloc)
+		self.ebuildloc = ebuildloc
 
 	def __repr__(self):
 		if self.select:
@@ -961,9 +958,13 @@ class InsertEbuilds(MergeStep):
 			return "<InsertEbuilds>"
 
 	def run(self,desttree):
+		if self.ebuildloc:
+			srctree_root = self.srctree.root + "/" + self.ebuildloc
+		else:
+			srctree_root = self.srctree.root
 		desttree.logTree(self.srctree)
 		# Figure out what categories to process:
-		src_cat_path = os.path.join(self.srctree.root, "profiles/categories")
+		src_cat_path = os.path.join(srctree_root, "profiles/categories")
 		dest_cat_path = os.path.join(desttree.root, "profiles/categories")
 		if self.categories != None:
 			# categories specified in __init__:
@@ -975,10 +976,10 @@ class InsertEbuilds(MergeStep):
 				with open(src_cat_path, "r") as f:
 					src_cat_set.update(f.read().splitlines())
 			# auto-detect additional categories:
-			cats = os.listdir(self.srctree.root)
+			cats = os.listdir(srctree_root)
 			for cat in cats:
 				# All categories have a "-" in them and are directories:
-				if os.path.isdir(os.path.join(self.srctree.root,cat)):
+				if os.path.isdir(os.path.join(srctree_root,cat)):
 					if "-" in cat or cat == "virtual":
 						src_cat_set.add(cat)
 		if os.path.exists(dest_cat_path):
@@ -988,9 +989,9 @@ class InsertEbuilds(MergeStep):
 			dest_cat_set = set()
 
 		# Our main loop:
-		print( "# Merging in ebuilds from %s" % self.srctree.root )
+		print( "# Merging in ebuilds from %s" % srctree_root )
 		for cat in src_cat_set:
-			catdir = os.path.join(self.srctree.root,cat)
+			catdir = os.path.join(srctree_root, cat)
 			if not os.path.isdir(catdir):
 				# not a valid category in source overlay, so skip it
 				continue

@@ -77,21 +77,21 @@ from merge_utils import *
 
 kit_groups = {
 	'prime' : [
-		{ 'name' : 'core-kit', 'branch' : '1.0-prime', 'source': 'gentoo', 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017' },
-		{ 'name' : 'security-kit', 'branch' : '1.0-prime', 'source': 'gentoo', 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017' },
+		{ 'name' : 'core-kit', 'branch' : '1.0-prime', 'source': 'gentoo', 'src_branch' : '06a1fd99a3ce1dd33724e11ae9f81c5d0364985e', 'date' : '21 Apr 2017' },
+		{ 'name' : 'security-kit', 'branch' : '1.0-prime', 'source': 'gentoo', 'src_branch' : '06a1fd99a3ce1dd33724e11ae9f81c5d0364985e', 'date' : '21 Apr 2017' },
 		{ 'name' : 'xorg-kit', 'branch' : '1.17-prime', 'source': 'gentoo', 'src_branch' : 'a56abf6b7026dae27f9ca30ed4c564a16ca82685', 'date' : '18 Nov 2016'  },
 	],
 	'current' : [
 		{ 'name' : 'core-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
 		{ 'name' : 'security-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-		{ 'name' : 'xorg-kit', 'branch' : '1.19-snap', 'source': 'gentoo', 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017'  },
+		{ 'name' : 'xorg-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017'  },
 	],
 	'shared' : [
+		{ 'name' : 'gnome-kit', 'branch' : '3.20-prime', 'source': 'gentoo', 'src_branch' : '44677858bd088805aa59fd56610ea4fb703a2fcd', 'date' : '18 Sep 2016' },
 		{ 'name' : 'media-kit', 'branch' : '1.0-prime', 'source': 'gentoo', 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017' },
 		{ 'name' : 'perl-kit', 'branch' : '5.24-prime', 'source': 'gentoo', 'src_branch' : 'fc74d3206fa20caa19b7703aa051ff6de95d5588', 'date' : '11 Jan 2017' },
-		{ 'name' : 'gnome-kit', 'branch' : '3.20-prime', 'source': 'gentoo', 'src_branch' : '44677858bd088805aa59fd56610ea4fb703a2fcd', 'date' : '08 Sep 2016' },
-		{ 'name' : 'python-kit', 'branch' : '3.4-prime', 'source': 'gentoo', 'src_branch' : '7fcbdbd8461e5491c89eb18db4ab7a0ec9fa4da6', 'date' : '16 Apr 2017' },
-		{ 'name' : 'php-kit', 'branch' : '7.1.3-prime', 'source': 'gentoo', 'src_branch' : '7fcbdbd8461e5491c89eb18db4ab7a0ec9fa4da6', 'date' : '16 Apr 2017' },
+		{ 'name' : 'python-kit', 'branch' : '3.4-prime', 'source': 'gentoo', 'src_branch' : '06a1fd99a3ce1dd33724e11ae9f81c5d0364985e', 'date' : '21 Apr 2017' },
+		{ 'name' : 'php-kit', 'branch' : '7.1.3-prime', 'source': 'gentoo', 'src_branch' : '06a1fd99a3ce1dd33724e11ae9f81c5d0364985e', 'date' : '21 Apr 2017' },
 		{ 'name' : 'java-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
 		{ 'name' : 'dev-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
 		{ 'name' : 'kde-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
@@ -196,7 +196,7 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 			if kit_dict['branch'] != 'master':
 				# create branch
 				os.system('cd /var/git/dest-trees/%s' % kit_dict['name'] + ' ;git checkout -b %s' % kit_dict['branch'])
-	kit = GitTree(kit_dict['name'], kit_dict['branch'], "repos@git.funtoo.org:kits/%s.git" % kit_dict['name'], root="/var/git/dest-trees/%s" % kit_dict['name'], pull=True)
+	kit_dict['kit'] = kit = GitTree(kit_dict['name'], kit_dict['branch'], "repos@git.funtoo.org:kits/%s.git" % kit_dict['name'], root="/var/git/dest-trees/%s" % kit_dict['name'], pull=True)
 	
 	# Phase 1: prep the kit
 	pre_steps = [
@@ -227,9 +227,7 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 
 	# Phase 3: insert funtoo fixups - copy ebuilds and eclasses over, replacing if needed
 	if os.path.exists(fixup_repo.root + "/eclass"):
-		steps += [
-			InsertEclasses(fixup_repo, select="all", skip=None)
-		]
+		steps += [ InsertEclasses(fixup_repo, select="all", skip=None) ]
 	for fixup_dir in [ "global", kit_dict["branch"] ]:
 		fixup_path = kit_dict['name'] + "/" + fixup_dir
 		if os.path.exists(fixup_repo.root + "/" + fixup_path):
@@ -274,5 +272,9 @@ if __name__ == "__main__":
 			for kit_dict in kit_groups[kit_group]:
 				print("Regenerating kit ",kit_dict)
 				updateKit(kit_dict, kitted_catpkgs, create=True)
+
+	print("Checking out prime versions of kits.")
+	for kit_dict in kit_groups['prime']:
+		kit_dict['kit'].run([GitCheckout(branch=kit_dict['branch'])])
 
 # vim: ts=4 sw=4 noet tw=140
