@@ -1,3 +1,6 @@
+# FL-3730: mask CUDA use for media-video/mpv
+media-video/mpv cuda
+
 # FL-3588: mask go USE for gcc ebuilds, where it enabled. gcc-5.4.0 has no go USE.
 sys-devel/gcc go
 
