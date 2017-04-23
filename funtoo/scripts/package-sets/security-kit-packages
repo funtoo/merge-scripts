@@ -5,6 +5,6 @@ dev-libs/libverto
 sys-apps/keyutils
 app-crypt/mit-krb5
 virtual/krb5
-
+dev-libs/nettle
 sys-apps/paxctl
 net-libs/liboauth

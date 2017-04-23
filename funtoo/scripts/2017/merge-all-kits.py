@@ -223,9 +223,34 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 	kit.run(pre_steps)
 
 	# Phase 2: copy core set of ebuilds
-	steps = generateShardSteps(kit_dict['name'], gentoo_staging, kit, pkgdir=funtoo_overlay.root+"/funtoo/scripts", branch=kit_dict['branch'], catpkg_dict=kitted_catpkgs)
 
-	# Phase 3: insert funtoo fixups - copy ebuilds and eclasses over, replacing if needed
+	# Here we generate our main set of ebuild copy steps, based on the contents of the package-set file for the kit:
+
+	steps = generateShardSteps(kit_dict['name'], gentoo_staging, kit, pkgdir=funtoo_overlay.root+"/funtoo/scripts", branch=kit_dict['branch'], catpkg_dict=kitted_catpkgs)
+	kit.run(steps)
+
+	# Phase 3: copy eclasses, licenses, and ebuild/eclass fixups from the kit-fixups repository. 
+
+	# First, we will auto-detect the eclasses and licenses used by the ebuilds we copied over, and ensure these are copied over
+	# to the kit. We will use the gentoo-staging SHA1 as a source for these:
+
+	steps += [
+		InsertLicenses(gentoo_staging, select=list(getAllLicenses(ebuild_repo=kit, super_repo=gentoo_staging))),
+		InsertEclasses(gentoo_staging, select=list(getAllEclasses(ebuild_repo=kit, super_repo=gentoo_staging))),
+	]
+
+	# Next, we are going to process the kit-fixups repository and look for ebuilds and eclasses to replace. Eclasses can be
+	# overridden by using the following paths inside kit-fixups:
+
+	# kit-fixups/eclass <--------------------- global eclasses, get installed to all kits unconditionally (overrides those above)
+	# kit-fixups/<kit>/global/eclass <-------- global eclasses for a particular kit, goes in all branches (overrides those above)
+	# kit-fixups/<kit>/<branch>/eclass <------ eclasses to install in just a specific branch of a specific kit (overrides those above)
+
+	# Ebuilds can be installed to kits by putting them in the following location(s):
+
+	# kit-fixups/<kit>/global/cat/pkg <------- install cat/pkg into all branches of a particular kit
+	# kit-fixups/<kit>/<branch>/cat/pkg <----- install cat/pkg into a particular branch of a kit
+
 	if os.path.exists(fixup_repo.root + "/eclass"):
 		steps += [ InsertEclasses(fixup_repo, select="all", skip=None) ]
 	for fixup_dir in [ "global", kit_dict["branch"] ]:
@@ -239,13 +264,14 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 				# add a new parameter called 'prefix'
 				InsertEbuilds(fixup_repo, ebuildloc=fixup_path, select="all", skip=None, replace=True )
 			]
+
+	# All fix-up steps have been generated. Now let's run them:
+
 	kit.run(steps)
 
 	# Phase 4: finalize and commit
 	# TODO: create and dynamic-alize cache_dir below.
 	post_steps += [
-		InsertLicenses(gentoo_staging, select=list(getAllLicenses(ebuild_repo=kit, super_repo=gentoo_staging))),
-		InsertEclasses(gentoo_staging, select=list(getAllEclasses(ebuild_repo=kit, super_repo=gentoo_staging))),
 		CreateCategories(gentoo_staging),
 		Minify(),
 		GenUseLocalDesc(),

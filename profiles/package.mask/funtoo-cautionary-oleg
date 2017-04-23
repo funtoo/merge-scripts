@@ -5,6 +5,7 @@
 =sys-devel/lld-4.0.0_rc*
 =sys-devel/clang-4.0.0_rc*
 =sys-devel/llvm-4.0.0_rc*
+>=sys-devel/llvm-4.0.0
 =sys-devel/clang-runtime-4.0.0_rc*
 >=sys-devel/clang-runtime-4.0.0
 >=app-vim/llvm-vim-4.0.0
