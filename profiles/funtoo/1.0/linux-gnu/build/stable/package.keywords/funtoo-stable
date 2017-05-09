@@ -1,3 +1,6 @@
+# FL-3757: stabilize glfw:
+=media-libs/glfw-3.2.1 amd64 x86
+
 # FL-3697: keyword dev-libs/glib and it's dependee
 =dev-libs/glib-2.48.2 amd64 x86
 =dev-util/gdbus-codegen-2.48.2 amd64 x86
