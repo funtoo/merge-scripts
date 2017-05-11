@@ -1,9 +1,6 @@
 # FL-3722: FL-3671: add genkernel, masked for testing
 =sys-kernel/genkernel-3.4.40.15
 
-# FL-3628: update to nginx, masked for testing
-=www-servers/nginx-1.11.10
-
 # update pkgconf-1.2.2, masked for testing
 =dev-util/pkgconf-1.2.2
 
