@@ -1,3 +1,6 @@
+# stbilize libosinfo
+=sys-libs/libosinfo-0.3.1 amd64 x86
+
 # FL-3757: stabilize glfw:
 =media-libs/glfw-3.2.1 amd64 x86
 
