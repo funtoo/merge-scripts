@@ -1,3 +1,6 @@
+# FL-3772: stabilize shotwell-0.23.7
+=media-gfk/shotwell-0.23.7 amd64 x86
+
 # stbilize libosinfo
 =sys-libs/libosinfo-0.3.1 amd64 x86
 
