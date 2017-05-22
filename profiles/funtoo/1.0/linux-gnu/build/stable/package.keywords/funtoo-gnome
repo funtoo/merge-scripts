@@ -1,3 +1,5 @@
+# FL-3782: stabilize app-misc/tracker-1.8.0 on gnome.
+=app-misc/tracker-1.8.0 amd64 x86
 # FL-2157: stabilize packages required for multilib updates:
 
 =dev-libs/libsigc++-2.4.1 amd64 x86
