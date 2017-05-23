@@ -1,3 +1,8 @@
+# FL-3778: mask kde-apps/*-17* which should not be in tree yet. As a workaround for now.
+=kde-apps/k3b-17.04.0
+=kde-apps/kdav-17.04.1
+=kde-apps/libkcddb-17.04.0
+
 # FL-3722: FL-3671: add genkernel, masked for testing
 =sys-kernel/genkernel-3.4.40.15
 
