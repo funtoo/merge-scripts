@@ -1,3 +1,7 @@
+# FL-3789: stabilize vala-0.32
+=dev-lang/vala-0.32.1 amd64 x86
+=dev-libs/vala-common-0.32.1 amd64 x86
+
 # FL-3772: stabilize shotwell-0.23.7
 =media-gfk/shotwell-0.23.7 amd64 x86
 
