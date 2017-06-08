@@ -1,0 +1,74 @@
+From 3ec804490a265f4c418a321428c12f3f18b7eff5 Mon Sep 17 00:00:00 2001
+From: Jeff King <peff@peff.net>
+Date: Sat, 29 Apr 2017 08:36:44 -0400
+Subject: [PATCH] shell: disallow repo names beginning with dash
+
+When a remote server uses git-shell, the client side will
+connect to it like:
+
+  ssh server "git-upload-pack 'foo.git'"
+
+and we literally exec ("git-upload-pack", "foo.git"). In
+early versions of upload-pack and receive-pack, we took a
+repository argument and nothing else. But over time they
+learned to accept dashed options. If the user passes a
+repository name that starts with a dash, the results are
+confusing at best (we complain of a bogus option instead of
+a non-existent repository) and malicious at worst (the user
+can start an interactive pager via "--help").
+
+We could pass "--" to the sub-process to make sure the
+user's argument is interpreted as a branch name. I.e.:
+
+  git-upload-pack -- -foo.git
+
+But adding "--" automatically would make us inconsistent
+with a normal shell (i.e., when git-shell is not in use),
+where "-foo.git" would still be an error. For that case, the
+client would have to specify the "--", but they can't do so
+reliably, as existing versions of git-shell do not allow
+more than a single argument.
+
+The simplest thing is to simply disallow "-" at the start of
+the repo name argument. This hasn't worked either with or
+without git-shell since version 1.0.0, and nobody has
+complained.
+
+Note that this patch just applies to do_generic_cmd(), which
+runs upload-pack, receive-pack, and upload-archive. There
+are two other types of commands that git-shell runs:
+
+  - do_cvs_cmd(), but this already restricts the argument to
+    be the literal string "server"
+
+  - admin-provided commands in the git-shell-commands
+    directory. We'll pass along arbitrary arguments there,
+    so these commands could have similar problems. But these
+    commands might actually understand dashed arguments, so
+    we cannot just block them here. It's up to the writer of
+    the commands to make sure they are safe. With great
+    power comes great responsibility.
+
+Reported-by: Timo Schmid <tschmid@ernw.de>
+Signed-off-by: Jeff King <peff@peff.net>
+Signed-off-by: Junio C Hamano <gitster@pobox.com>
+---
+ shell.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/shell.c b/shell.c
+index ace62e4b65..c3bf8ec38a 100644
+--- a/shell.c
++++ b/shell.c
+@@ -13,7 +13,7 @@ static int do_generic_cmd(const char *me, char *arg)
+ 	const char *my_argv[4];
+ 
+ 	setup_path();
+-	if (!arg || !(arg = sq_dequote(arg)))
++	if (!arg || !(arg = sq_dequote(arg)) || *arg == '-')
+ 		die("bad argument");
+ 	if (!starts_with(me, "git-"))
+ 		die("bad command");
+-- 
+2.13.0.rc2.291.g57267f2277
+
