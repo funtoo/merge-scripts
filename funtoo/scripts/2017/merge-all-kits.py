@@ -215,7 +215,7 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 			RemoveFiles(list(kitted_catpkgs.keys())),
 			CreateCategories(gentoo_staging),
 			GenUseLocalDesc(),
-			GenCache( cache_dir="/var/cache/git/edb-prime" )
+			GenCache( cache_dir="/var/cache/edb/%s-%s" % ( kit_dict['name'], kit_dict['branch'] ) )
 		]
 		kit.run(pre_steps)
 		return
@@ -275,7 +275,7 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 		CreateCategories(gentoo_staging),
 		Minify(),
 		GenUseLocalDesc(),
-		GenCache( cache_dir="/var/cache/git/edb-prime" ),
+		GenCache( cache_dir="/var/cache/edb/%s-%s" % ( kit_dict['name'], kit_dict['branch'] ) )
 	]
 	kit.run(post_steps)
 
@@ -287,11 +287,12 @@ if __name__ == "__main__":
 	funtoo_overlay = GitTree("funtoo-overlay", "master", "repos@git.funtoo.org:funtoo-overlay.git", pull=True)
 	gentoo_staging = GitTree("gentoo-staging", "master", "repos@git.funtoo.org:ports/gentoo-staging.git", pull=True)
 	fixup_repo = GitTree("kit-fixups", "master", "repos@git.funtoo.org:kits/kit-fixups.git", pull=True)
-	kit_fixups = GitTree("kit-fixups", "master", "repos@git.funtoo.org:kits/kit-fixups.git", pull=True)
 
 	kitted_catpkgs = {}
 
-	for kit_group in kit_order:
+	#for kit_group in kit_order: 
+	# for testing, we're using this:
+	for kit_group in [ "prime" ]:
 		if kit_group == None:
 			kitted_catpkgs = {}
 		else:
