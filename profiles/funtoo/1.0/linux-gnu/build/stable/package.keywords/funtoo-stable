@@ -1,3 +1,19 @@
+# FL-3834: stabilize media-plugins/live for stable builds:
+=media-pluigns/live-2017.01.26 amd64 x86
+
+# FL-3789: stabilize vala-0.32
+=dev-lang/vala-0.32.1 amd64 x86
+=dev-libs/vala-common-0.32.1 amd64 x86
+
+# FL-3772: stabilize shotwell-0.23.7
+=media-gfk/shotwell-0.23.7 amd64 x86
+
+# stbilize libosinfo
+=sys-libs/libosinfo-0.3.1 amd64 x86
+
+# FL-3757: stabilize glfw:
+=media-libs/glfw-3.2.1 amd64 x86
+
 # FL-3697: keyword dev-libs/glib and it's dependee
 =dev-libs/glib-2.48.2 amd64 x86
 =dev-util/gdbus-codegen-2.48.2 amd64 x86

@@ -68,14 +68,13 @@ funtoo_overlays = {
 
 # These are other overlays that we merge into the Funtoo tree. However, we just pull in the most recent versions
 # of these when we regenerate our tree.
-# fusion809_overlay: 739dced1f09cfcd59c8fc573b15e06a170e5c0b1 (Updated, 15 Apr 2017)
+# fusion809_overlay: 8322bcd79d47ef81f7417c324a1a2b4772020985 (Updated, 1 Jun 2017)
 
 other_overlays = {
 	"foo_overlay" : GitTree("foo-overlay", "master", "https://github.com/slashbeast/foo-overlay.git", pull=True),
 	"bar_overlay" : GitTree("bar-overlay", "master", "git://github.com/adessemond/bar-overlay.git", pull=True),
 	"squeezebox_overlay" : GitTree("squeezebox", "master", "git://anongit.gentoo.org/user/squeezebox.git", pull=True),
 	"pantheon_overlay" : GitTree("pantheon", "master", "https://github.com/pimvullers/elementary.git", pull=True),
-	"pinsard_overlay" : GitTree("pinsard", "master", "https://github.com/apinsard/sapher-overlay.git", pull=True),
 	"sabayon_for_gentoo" : GitTree("sabayon-for-gentoo", "master", "git://github.com/Sabayon/for-gentoo.git", pull=True),
 	"tripsix_overlay" : GitTree("tripsix", "master", "https://github.com/666threesixes666/tripsix.git", pull=True),
 	"faustoo_overlay" : GitTree("faustoo", "master", "https://github.com/fmoro/faustoo.git", pull=True),
@@ -84,7 +83,7 @@ other_overlays = {
 	"lisp_overlay" : GitTree("lisp", "master", "git://anongit.gentoo.org/proj/lisp.git", pull=True),
 	"atom_overlay" : GitTree("atom", "master", "https://github.com/elprans/atom-overlay.git", pull=True),
 	"bhenc_overlay" : GitTree("bhenc", "master", "https://github.com/antematherian/archive-overlay.git", pull=True),
-	"fusion809_overlay" : GitTree("fusion809", "739dced1f09cfcd59c8fc573b15e06a170e5c0b1", "https://github.com/fusion809/fusion809-overlay.git", pull=True),
+	"fusion809_overlay" : GitTree("fusion809", "8322bcd79d47ef81f7417c324a1a2b4772020985", "https://github.com/fusion809/fusion809-overlay.git", pull=True),
 }
 
 funtoo_changes = False
@@ -184,12 +183,11 @@ ebuild_modifications = [
 	InsertEbuilds(funtoo_overlays["plex_overlay"], select=[ "media-tv/plex-media-server" ], skip=None, replace=True),
 	InsertEbuilds(other_overlays["sabayon_for_gentoo"], select=["x11-themes/numix-icon-theme", "media-video/kazam" ], replace=True),
 	InsertEbuilds(other_overlays["tripsix_overlay"], select=["media-sound/rakarrack"], skip=None, replace=True, merge=False),
-	InsertEbuilds(other_overlays["pinsard_overlay"], select=["app-portage/chuse", "app-text/zerobinpaste", "dev-python/appi", "dev-python/iwlib", "dev-python/python-sipsimple", "media-sound/pytify", "x11-misc/lemonbar"], skip=None, replace=True, merge=True),
 	InsertEbuilds(other_overlays["wltjr_overlay"], select=["mail-filter/assp", "mail-mta/netqmail"], skip=None, replace=True, merge=False),
 	InsertEbuilds(other_overlays["lisp_overlay"], select=["dev-lisp/ltk"], skip=None, replace=True, merge=False),
 	InsertEbuilds(other_overlays["atom_overlay"], select=["app-editors/atom", "dev-util/electron"], skip=None, replace=True, merge=True),
-	InsertEbuilds(other_overlays["bhenc_overlay"], select=["app-text/mdia", "app-text/mpaste", "dev-python/pyqwt", "media-gfx/iscan", "www-apps/joomla"], skip=["games-board/pouetchess"], replace=True, merge=True),
-	InsertEbuilds(other_overlays["fusion809_overlay"], select=["app-editors/atom-bin", "app-editors/notepadqq", "app-editors/bluefish", "app-editors/textadept", "app-editors/scite", "app-editors/gvim", "app-editors/vim", "app-editors/vim-core", "app-editors/sublime-text"], skip=None, replace=True, merge=True),
+	InsertEbuilds(other_overlays["bhenc_overlay"], select=["app-text/mdia", "app-text/mpaste",  "dev-libs/klibc", "dev-python/pyqwt", "media-gfx/iscan", "media-libs/ftgl", "sys-apps/v86d", "www-apps/joomla"], skip=["games-board/pouetchess"], replace=True, merge=True),
+	InsertEbuilds(other_overlays["fusion809_overlay"], select=["app-editors/atom-bin", "app-editors/notepadqq", "app-editors/bluefish", "app-editors/textadept", "app-editors/scite", "app-editors/gvim", "app-editors/vim", "app-editors/vim-core", "app-editors/visual-studio-code", "app-editors/sublime-text"], skip=None, replace=True, merge=True),
 ]
 
 ebuild_modifications += [

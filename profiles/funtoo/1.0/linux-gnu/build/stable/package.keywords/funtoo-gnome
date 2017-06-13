@@ -1,3 +1,14 @@
+# stabilize a list of gnome ebuilds:
+=gnome-extra/nautilus-tracker-tags-1.8.0 amd64 x86
+=x11-libs/gtk+-3.20.9 amd64 x86
+=media-libs/grilo-0.3.2 amd64 x86
+=x11-themes/adwaita-icon-theme-3.20 amd64 x86
+=gnome-base/gnome-desktop-3.20.2 amd64 x86
+=gnome-base/gsettings-desktop-schemas-3.20.0 amd64 x86
+=media-libs/clutter-1.26.0 amd64 x86
+
+# FL-3782: stabilize app-misc/tracker-1.8.0 on gnome.
+=app-misc/tracker-1.8.0 amd64 x86
 # FL-2157: stabilize packages required for multilib updates:
 
 =dev-libs/libsigc++-2.4.1 amd64 x86

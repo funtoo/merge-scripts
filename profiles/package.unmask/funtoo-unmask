@@ -1,3 +1,18 @@
+# FL-3759: unmask list of kde-apps/* ebuilds that are not removed in Funtoo (for a sake of not getting emerge warnings):
+=kde-apps/kquitapp-16.04.3
+=kde-apps/kdebase-desktoptheme-16.04.3
+=kde-apps/kdebugdialog-16.04.3
+=kde-apps/kdesu-16.04.3
+=kde-apps/kiconfinder-16.04.3
+=kde-apps/libkonq-16.08.3
+=kde-apps/kimgio-16.04.3
+=kde-apps/kdebase-menu-16.04.3
+=kde-apps/solid-runtime-16.04.3
+=kde-apps/kdebase-menu-icons-16.04.3
+=kde-apps/kpasswdserver-16.04.3
+=kde-apps/renamedlg-plugins-16.04.3
+=kde-apps/kurifilter-plugins-16.04.3
+
 # unmask btparse until its removed in ~30 days. this should sort kde-misc/tellico dependency problem.
 dev-libs/btparse
 
