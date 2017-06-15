@@ -270,6 +270,8 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 		InsertEclasses(gentoo_staging, select=list(getAllEclasses(ebuild_repo=kit, super_repo=gentoo_staging))),
 	]
 
+	kit.run(copy_steps)
+
 	# The "getAll" functions above run immediately, so we need to execute these steps AFTER 'steps' completes:
 	
 	# Phase 4: finalize and commit
@@ -295,7 +297,7 @@ if __name__ == "__main__":
 
 	#for kit_group in kit_order: 
 	# for testing, we're using this:
-	for kit_group in [ "prime" ]:
+	for kit_group in kit_groups.keys():
 		if kit_group == None:
 			kitted_catpkgs = {}
 		else:

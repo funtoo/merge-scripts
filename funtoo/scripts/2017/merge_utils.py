@@ -411,10 +411,11 @@ class AutoGlobMask(MergeStep):
 		if not os.path.exists(tree.root + "/profiles/package.mask"):
 			os.makedirs(tree.root + "/profiles/package.mask")
 		f = open(os.path.join(tree.root,"profiles/package.mask", self.maskdest), "w")
-		os.chdir(os.path.join(tree.root,self.catpkg))
+		#os.chdir(os.path.join(tree.root,self.catpkg))
 		cat = self.catpkg.split("/")[0]
-		for item in glob.glob(self.glob+".ebuild"):
-			f.write("=%s/%s\n" % (cat,item[:-7]))
+		for item in glob.glob(os.path.join(tree.root,self.catpkg) + "/" + self.glob+".ebuild"):
+			s_split = item.split("/")
+			f.write("=%s/%s\n" % (cat,"/".join(s_split[-2:])[:-7]))
 		f.close()
 
 class ThirdPartyMirrors(MergeStep):
