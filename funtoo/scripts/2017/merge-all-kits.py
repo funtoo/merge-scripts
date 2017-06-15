@@ -234,11 +234,6 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 	# First, we will auto-detect the eclasses and licenses used by the ebuilds we copied over, and ensure these are copied over
 	# to the kit. We will use the gentoo-staging SHA1 as a source for these:
 
-	steps += [
-		InsertLicenses(gentoo_staging, select=list(getAllLicenses(ebuild_repo=kit, super_repo=gentoo_staging))),
-		InsertEclasses(gentoo_staging, select=list(getAllEclasses(ebuild_repo=kit, super_repo=gentoo_staging))),
-	]
-
 	# Next, we are going to process the kit-fixups repository and look for ebuilds and eclasses to replace. Eclasses can be
 	# overridden by using the following paths inside kit-fixups:
 
@@ -265,10 +260,18 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 				InsertEbuilds(fixup_repo, ebuildloc=fixup_path, select="all", skip=None, replace=True )
 			]
 
+	
 	# All fix-up steps have been generated. Now let's run them:
 
 	kit.run(steps)
 
+	copy_steps = [
+		InsertLicenses(gentoo_staging, select=list(getAllLicenses(ebuild_repo=kit, super_repo=gentoo_staging))),
+		InsertEclasses(gentoo_staging, select=list(getAllEclasses(ebuild_repo=kit, super_repo=gentoo_staging))),
+	]
+
+	# The "getAll" functions above run immediately, so we need to execute these steps AFTER 'steps' completes:
+	
 	# Phase 4: finalize and commit
 	# TODO: create and dynamic-alize cache_dir below.
 	post_steps += [

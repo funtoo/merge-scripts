@@ -15,6 +15,8 @@ from portage.dep import use_reduce, dep_getkey, flatten
 from portage.versions import catpkgsplit
 from portage.repository.config import RepoConfigLoader
 from portage.exception import PortageKeyError
+import grp
+import pwd
 
 debug = False
 
@@ -75,7 +77,8 @@ main-repo = %s
 location = %s
 ''' % (cur_name, cur_name, cur_tree)
 	p = portage.portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
-	p.frozen = False
+	#p.frozen = False
+	p.melt()
 	mypkgs = set()
 	for catpkg in list(catpkgs):
 		for pkg in p.cp_list(catpkg):
@@ -183,7 +186,7 @@ location = %s
 	''' % ( eb_name, eb_name, eb_name, ebuild_repo.root )
 	print(env['PORTAGE_REPOSITORIES'])
 	p = portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
-	p.frozen = False
+	p.melt()
 	myeclasses = set()
 	for cp in p.cp_all(trees=[ebuild_repo.root]):
 		for cpv in p.cp_list(cp, mytree=ebuild_repo.root):
@@ -1160,6 +1163,9 @@ class GenCache(MergeStep):
 		cmd = ["egencache", "--update", "--repo", tree.reponame if tree.reponame else tree.name, "--repositories-configuration", "[%s]\nlocation = %s" % (tree.reponame if tree.reponame else tree.name, tree.root), "--jobs", "36"]
 		if self.cache_dir:
 			cmd += [ "--cache-dir", self.cache_dir ]
+			if not os.path.exists(self.cache_dir):
+				os.makedirs(self.cache_dir)
+				os.chown(self.cache_dir, pwd.getpwnam('portage').pw_uid, grp.getgrnam('portage').gr_gid)
 		run_command(cmd, abort_on_failure=False)
 
 class GenUseLocalDesc(MergeStep):
