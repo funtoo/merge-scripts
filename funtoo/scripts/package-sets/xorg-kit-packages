@@ -29,4 +29,3 @@ virtual/opengl
 virtual/glu
 sys-libs/mtdev
 x11-apps/mesa-progs
-@all_eclasses@

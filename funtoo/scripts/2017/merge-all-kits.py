@@ -215,7 +215,7 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 			RemoveFiles(list(kitted_catpkgs.keys())),
 			CreateCategories(gentoo_staging),
 			GenUseLocalDesc(),
-			GenCache( cache_dir="/var/cache/git/edb-prime" )
+			GenCache( cache_dir="/var/cache/edb/%s-%s" % ( kit_dict['name'], kit_dict['branch'] ) )
 		]
 		kit.run(pre_steps)
 		return
@@ -233,11 +233,6 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 
 	# First, we will auto-detect the eclasses and licenses used by the ebuilds we copied over, and ensure these are copied over
 	# to the kit. We will use the gentoo-staging SHA1 as a source for these:
-
-	steps += [
-		InsertLicenses(gentoo_staging, select=list(getAllLicenses(ebuild_repo=kit, super_repo=gentoo_staging))),
-		InsertEclasses(gentoo_staging, select=list(getAllEclasses(ebuild_repo=kit, super_repo=gentoo_staging))),
-	]
 
 	# Next, we are going to process the kit-fixups repository and look for ebuilds and eclasses to replace. Eclasses can be
 	# overridden by using the following paths inside kit-fixups:
@@ -265,17 +260,27 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 				InsertEbuilds(fixup_repo, ebuildloc=fixup_path, select="all", skip=None, replace=True )
 			]
 
+	
 	# All fix-up steps have been generated. Now let's run them:
 
 	kit.run(steps)
 
+	copy_steps = [
+		InsertLicenses(gentoo_staging, select=list(getAllLicenses(ebuild_repo=kit, super_repo=gentoo_staging))),
+		InsertEclasses(gentoo_staging, select=list(getAllEclasses(ebuild_repo=kit, super_repo=gentoo_staging))),
+	]
+
+	kit.run(copy_steps)
+
+	# The "getAll" functions above run immediately, so we need to execute these steps AFTER 'steps' completes:
+	
 	# Phase 4: finalize and commit
 	# TODO: create and dynamic-alize cache_dir below.
 	post_steps += [
 		CreateCategories(gentoo_staging),
 		Minify(),
 		GenUseLocalDesc(),
-		GenCache( cache_dir="/var/cache/git/edb-prime" ),
+		GenCache( cache_dir="/var/cache/edb/%s-%s" % ( kit_dict['name'], kit_dict['branch'] ) )
 	]
 	kit.run(post_steps)
 
@@ -287,11 +292,12 @@ if __name__ == "__main__":
 	funtoo_overlay = GitTree("funtoo-overlay", "master", "repos@git.funtoo.org:funtoo-overlay.git", pull=True)
 	gentoo_staging = GitTree("gentoo-staging", "master", "repos@git.funtoo.org:ports/gentoo-staging.git", pull=True)
 	fixup_repo = GitTree("kit-fixups", "master", "repos@git.funtoo.org:kits/kit-fixups.git", pull=True)
-	kit_fixups = GitTree("kit-fixups", "master", "repos@git.funtoo.org:kits/kit-fixups.git", pull=True)
 
 	kitted_catpkgs = {}
 
-	for kit_group in kit_order:
+	#for kit_group in kit_order: 
+	# for testing, we're using this:
+	for kit_group in kit_groups.keys():
 		if kit_group == None:
 			kitted_catpkgs = {}
 		else:
