@@ -106,7 +106,6 @@ sys-kernel/linux-headers
 sys-kernel/linux-firmware
 sys-power/pm-quirks
 sys-power/pm-utils
-sys-power/upower
 sys-libs/db
 sys-libs/gdbm
 sys-libs/glibc
