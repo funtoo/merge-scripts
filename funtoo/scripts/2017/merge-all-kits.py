@@ -273,6 +273,7 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 	# Phase 4: finalize and commit
 	# TODO: create and dynamic-alize cache_dir below.
 	post_steps += [
+                ELTSymlinkWorkaround(),
 		CreateCategories(gentoo_staging),
 		Minify(),
 		GenUseLocalDesc(),

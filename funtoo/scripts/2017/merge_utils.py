@@ -17,6 +17,7 @@ from portage.repository.config import RepoConfigLoader
 from portage.exception import PortageKeyError
 import grp
 import pwd
+import multiprocessing
 
 debug = False
 
@@ -571,6 +572,13 @@ class SyncFiles(MergeStep):
 				os.makedirs(dest_dir)
 			print("copying %s to final location %s" % (src, dest))
 			shutil.copyfile(src, dest)
+
+class ELTSymlinkWorkaround(MergeStep):
+
+	def run(self, tree):
+		dest = os.path.join(tree.root + "/eclass/ELT-patches")
+		if not os.path.lexists(dest):
+			os.makedirs(dest)
 
 class MergeUpdates(MergeStep):
 	def __init__(self, srcroot):
@@ -1161,7 +1169,7 @@ class GenCache(MergeStep):
 	"GenCache runs egencache --update to update metadata."
 
 	def run(self,tree):
-		cmd = ["egencache", "--update", "--repo", tree.reponame if tree.reponame else tree.name, "--repositories-configuration", "[%s]\nlocation = %s" % (tree.reponame if tree.reponame else tree.name, tree.root), "--jobs", "4"]
+		cmd = ["egencache", "--update", "--repo", tree.reponame if tree.reponame else tree.name, "--repositories-configuration", "[%s]\nlocation = %s" % (tree.reponame if tree.reponame else tree.name, tree.root), "--jobs", repr(multiprocessing.cpu_count()+1)]
 		if self.cache_dir:
 			cmd += [ "--cache-dir", self.cache_dir ]
 			if not os.path.exists(self.cache_dir):
