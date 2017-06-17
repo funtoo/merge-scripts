@@ -25,6 +25,7 @@ media-libs/fontconfig
 media-libs/vulkan-loader
 x11-misc/bumblebee
 virtual/ttf-fonts
+@depsincat@:virtual/ttf-fonts:media-fonts
 virtual/opengl
 virtual/glu
 sys-libs/mtdev
