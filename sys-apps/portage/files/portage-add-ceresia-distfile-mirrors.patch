@@ -1,0 +1,15 @@
+--- a/cnf/make.globals	2017-06-12 20:33:34.800084256 +0000
++++ b/cnf/make.globals	2017-06-12 20:37:41.264085651 +0000
+@@ -23,6 +23,11 @@
+ # Approved by the mirror-admin team.
+ GENTOO_MIRRORS="http://distfiles.gentoo.org"
+ 
++# Added mirrors by Funtoo Linux for increased quality of service 
++# Please see FL-3755.
++
++GENTOO_MIRRORS="${GENTOO_MIRRORS} https://distmirror.ceresia.ch:81 https://distfiles.ceresia.ch"
++
+ ACCEPT_LICENSE="* -@EULA"
+ ACCEPT_PROPERTIES="*"
+ ACCEPT_RESTRICT="*"
+
