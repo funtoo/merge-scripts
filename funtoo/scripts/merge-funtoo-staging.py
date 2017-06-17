@@ -176,7 +176,7 @@ ebuild_additions = [
 
 
 ebuild_modifications = [
-	InsertEbuilds(other_overlays["vmware_overlay"], select=[ "app-emulation/vmware-modules" ], skip=None, replace=True, merge=True),
+	InsertEbuilds(other_overlays["vmware_overlay"], select=[ "app-emulation/vmware-modules", "app-emulation/vmware-player", "app-emulation/vmware-workstation" ], skip=None, replace=True, merge=True),
 	InsertEbuilds(other_overlays["pantheon_overlay"], select=[ "x11-libs/granite", "x11-libs/bamf", "x11-themes/plank-theme-pantheon", "pantheon-base/plank", "x11-wm/gala"], skip=None, replace=True, merge=True),
 	InsertEbuilds(other_overlays["faustoo_overlay"], select="all", skip=None, replace=True, merge=True),
 	InsertEbuilds(other_overlays["foo_overlay"], select="all", skip=["sys-fs/mdev-bb", "sys-fs/mdev-like-a-boss", "media-sound/deadbeef", "media-video/handbrake"], replace=["app-shells/rssh"]),
