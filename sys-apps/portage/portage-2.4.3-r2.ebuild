@@ -82,11 +82,10 @@ pkg_setup() {
 	use epydoc && DISTUTILS_ALL_SUBPHASE_IMPLS=( python2.7 )
 }
 
-#patch without explanation that removes error checking code
-#still present in Gentoo portage. What exactly does it do?
-#I'm removing this from my working version until somebody
-#explains what in the world this patch thinks it does.
-#PATCHES=( "${FILESDIR}"/portage-revert-git-sync.patch )
+#The patches fix the following issues, in the following order:
+#FL-3333
+#FL-3687
+#FL-3755
 
 PATCHES=(
 	"${FILESDIR}/${PN}-revert-git-sync.patch"
