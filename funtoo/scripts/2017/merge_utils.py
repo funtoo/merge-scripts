@@ -300,18 +300,18 @@ def generateShardSteps(name, from_tree, to_tree, pkgdir=None, branch="master", c
 			steps += [ InsertEclasses(from_tree, select=re.compile(pattern[9:])) ]
 		else:
 			pkglist.append(pattern)
-        if not insert_kwargs:
-            insert_kwargs = { "replace" : True }
-        else: 
-            # only allow a sub-set of catpkgs to be inserted -- no more than specified in insert_kwargs
-            if "select" in insert_kwargs:
-                s_set = set(insert_kwargs["select"])
-                p_set = set(pkglist)
-                f_set = s_set & p_set
-            insert_kwargs = list(f_set)
+		if not insert_kwargs:
+			insert_kwargs = { "replace" : True }
+		else:
+			# only allow a sub-set of catpkgs to be inserted -- no more than specified in insert_kwargs
+			if "select" in insert_kwargs:
+				s_set = set(insert_kwargs["select"])
+				p_set = set(pkglist)
+				f_set = s_set & p_set
+			insert_kwargs = list(f_set)
 
 	if pkglist:
-		steps += [ InsertEbuilds(from_tree, select=pkglist, skip=skip, **insert_kwargs, catpkg_dict=catpkg_dict) ]
+		steps += [ InsertEbuilds(from_tree, select=pkglist, skip=skip, catpkg_dict=catpkg_dict, **insert_kwargs) ]
 	return steps
 
 def qa_build(host,build,arch_desc,subarch,head,target):
@@ -1113,7 +1113,7 @@ class InsertEbuilds(MergeStep):
 							try:
 								metatree=etree.parse(tpkgmeta)
 							except UnicodeDecodeError:
-								doMeta = false
+								doMeta = False
 							tpkgmeta.close()
 							if doMeta:
 								use_vars = []
