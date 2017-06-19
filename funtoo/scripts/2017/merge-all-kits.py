@@ -82,8 +82,8 @@ from merge_utils import *
 # or SHA1 here, as this may depend on other factors. See KIT SOURCES, below.
 
 overlays = {
-	"gentoo_staging" : { "type" : GitTree, "url" : "repos@git.funtoo.org:ports/gentoo-staging.git" }
-	"faustoo_overlay" : { "type" GitTree, "url" : "https://github.com/fmoro/faustoo.git" }, # add select ebuilds here?
+	"gentoo_staging" : { "type" : GitTree, "url" : "repos@git.funtoo.org:ports/gentoo-staging.git" },
+	"faustoo_overlay" : { "type" : GitTree, "url" : "https://github.com/fmoro/faustoo.git" }, # add select ebuilds here?
 	"fusion809_overlay" : { "type" : GitTree, "url" : "https://github.com/fusion809/fusion809-overlay.git", "select" : [
 			"app-editors/atom-bin", 
 			"app-editors/notepadqq", 
@@ -110,6 +110,14 @@ overlays = {
 	},
 }
 
+# SUPPLEMENTAL REPOSITORIES: These are overlays that we are using but are not in KIT SOURCES. funtoo_overlay is something
+# we are using only for profiles and other misc. things and may get phased out in the future:
+
+funtoo_overlay = GitTree("funtoo-overlay", "master", "repos@git.funtoo.org:funtoo-overlay.git", pull=True)
+fixup_repo = GitTree("kit-fixups", "master", "repos@git.funtoo.org:kits/kit-fixups.git", pull=True)
+
+# meta_repo = GitTree("meta-repo", "master", "repos@git.funtoo.org:kits/meta-repo.git", pull=True)
+
 # KIT SOURCES - kit sources are a combination of overlays, arranged in a python list [ ]. Order is important -- they
 # are processed in order and the last overlay listed will have the ability to overwrite catpkgs from previous overlays.
 # A KIT SOURCE serves as a unified collection of source catpkgs for a particular kit. Each kit can have one KIT SOURCE.
@@ -120,8 +128,8 @@ overlays = {
 kit_sources = {
 	"gentoo_current" : [
 		{ "repo" : "gentoo_staging", "src_branch" : 'master'},
-		{ "repo" : "faustoo", "src_branch" : 'master', }
-		{ "repo" : "fusion809", "src_branch" : 'master', }
+		{ "repo" : "faustoo", "src_branch" : 'master' },
+		{ "repo" : "fusion809", "src_branch" : 'master' }
 	],
 	"gentoo_prime" : [
 		{ "repo" : "gentoo_staging", "src_branch" : '06a1fd99a3ce1dd33724e11ae9f81c5d0364985e', 'date' : '21 Apr 2017'},
@@ -131,7 +139,7 @@ kit_sources = {
 	],
 	"gentoo_prime_xorg" : [
 		{ "repo" : "gentoo_staging", 'src_branch' : 'a56abf6b7026dae27f9ca30ed4c564a16ca82685', 'date' : '18 Nov 2016' }
-	]
+	],
 	"gentoo_prime_gnome" : [
 		{ "repo" : "gentoo_staging", 'src_branch' : '44677858bd088805aa59fd56610ea4fb703a2fcd', 'date' : '18 Sep 2016' }
 	],
@@ -188,7 +196,10 @@ kit_order = [ 'prime', 'shared', None, 'current' ]
 # resetting kitted_catpkgs), then the None tells the code to reset kitted_catpkgs, so when 'current' kits are generated,
 # they can include from all possible catpkgs.
 
-def getKitPrepSteps(kit_dict):
+def getKitPrepSteps(sources, kit_dict):
+
+	global funtoo_overlay
+	gentoo_staging = sources["gentoo_staging"]["repo"]
 
 	kit_steps = {
 		'core-kit' : { 'pre' : [
@@ -203,7 +214,7 @@ def getKitPrepSteps(kit_dict):
 				ThirdPartyMirrors(),
 				RunSed(["profiles/base/make.defaults"], ["/^PYTHON_TARGETS=/d", "/^PYTHON_SINGLE_TARGET=/d"]),
 				CopyAndRename("profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/subarch", "profiles/funtoo/1.0/linux-gnu/arch/pure64/subarch", lambda x: os.path.basename(x) + "-pure64"),
-				SyncFiles(gentoo_staging.root, {
+				SyncFiles(sources["gentoo_staging"]["repo"].root, {
 					"profiles/package.mask":"profiles/package.mask/00-gentoo",
 					"profiles/arch/amd64/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/package.use.mask/01-gentoo",
 					"profiles/arch/amd64/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/use.mask/01-gentoo",
@@ -236,7 +247,7 @@ def getKitPrepSteps(kit_dict):
 			]
 		},
 		'nokit' : { 'pre' : [
-				SyncDir(gentoo_staging.root),
+				SyncDir(sources["gentoo_staging"]["repo"].root),
 				GenerateRepoMetadata("nokit", masters=["core-kit"], priority=-2000),
 			]
 		}
@@ -274,6 +285,7 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 
 	source_name = kit_dict['source']
 	sources = kit_sources[source_name]
+	gentoo_staging = sources["gentoo_staging"]["repo"]
 
 	for source_dict in sources:
 
@@ -306,7 +318,7 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 		CleanTree()
 	]
 	
-	prep_steps = getKitPrepSteps(kit_dict)
+	prep_steps = getKitPrepSteps(sources, kit_dict)
 	pre_steps += prep_steps[0]
 	copy_steps = prep_steps[1]
 	post_steps = prep_steps[2]
@@ -393,10 +405,6 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 	kit.gitCommit(message="updates",branch=kit_dict['branch'],push=False)
 
 if __name__ == "__main__":
-
-	funtoo_overlay = GitTree("funtoo-overlay", "master", "repos@git.funtoo.org:funtoo-overlay.git", pull=True)
-	fixup_repo = GitTree("kit-fixups", "master", "repos@git.funtoo.org:kits/kit-fixups.git", pull=True)
-	#meta_repo = GitTree("meta-repo", "master", "repos@git.funtoo.org:kits/meta-repo.git", pull=True)
 
 	kitted_catpkgs = {}
 
