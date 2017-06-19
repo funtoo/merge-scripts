@@ -5,9 +5,9 @@ EAPI=5
 inherit check-reqs eutils mount-boot
 
 SLOT=$PVR
-CKV=4.5.2
+CKV=4.9.30
 KV_FULL=${PN}-${PVR}
-EXTRAVERSION=-1
+EXTRAVERSION=-2
 MODVER=${CKV}${EXTRAVERSION}
 KERNEL_ARCHIVE="linux_${PV}.orig.tar.xz"
 PATCH_ARCHIVE="linux_${PV}${EXTRAVERSION}.debian.tar.xz"
@@ -35,7 +35,7 @@ get_patch_list() {
 pkg_pretend() {
 	# Ensure we have enough disk space to compile
 	if use binary ; then
-		CHECKREQS_DISK_BUILD="14G"
+		CHECKREQS_DISK_BUILD="20G"
 
 		check-reqs_pkg_setup
 	fi
@@ -70,7 +70,10 @@ src_prepare() {
 	epatch "${FILESDIR}"/debian-sources-3.14.4-xfs-libcrc32c-fix.patch
 
 	## do not configure debian devs certs.
-	epatch "${FILESDIR}"/${P}-certs.patch
+	epatch "${FILESDIR}"/${PN}-4.5.2-certs.patch
+
+	## FL-3381. enable IKCONFIG
+	epatch "${FILESDIR}"/ikconfig.patch
 
 	local opts
 	opts="standard"
