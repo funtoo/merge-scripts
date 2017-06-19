@@ -75,43 +75,118 @@ from merge_utils import *
 # used to prune the 'nokit' repository of catpkgs, so that 'nokit' contains the set of all ebuilds that were not
 # inserted into kits.
 
-kit_groups = {
-	'prime' : [
-		{ 'name' : 'core-kit', 'branch' : '1.0-prime', 'source': 'gentoo', 'src_branch' : '06a1fd99a3ce1dd33724e11ae9f81c5d0364985e', 'date' : '21 Apr 2017' },
-		{ 'name' : 'security-kit', 'branch' : '1.0-prime', 'source': 'gentoo', 'src_branch' : '06a1fd99a3ce1dd33724e11ae9f81c5d0364985e', 'date' : '21 Apr 2017' },
-		{ 'name' : 'xorg-kit', 'branch' : '1.17-prime', 'source': 'gentoo', 'src_branch' : 'a56abf6b7026dae27f9ca30ed4c564a16ca82685', 'date' : '18 Nov 2016'  },
+
+# OVERLAYS - lists sources for catpkgs, along with properties which can include "select" - a list of catpkgs to include.
+# When "select" is specified, only these ebuilds will be included. If no "select" is specified, then by default all
+# available catpkgs could be included, if they match patterns, etc. in package sets. Note that we do not specify branch
+# or SHA1 here, as this may depend on other factors. See KIT SOURCES, below.
+
+overlays = {
+	"gentoo_staging" : { "type" : GitTree, "url" : "repos@git.funtoo.org:ports/gentoo-staging.git" }
+	"faustoo_overlay" : { "type" GitTree, "url" : "https://github.com/fmoro/faustoo.git" }, # add select ebuilds here?
+	"fusion809_overlay" : { "type" : GitTree, "url" : "https://github.com/fusion809/fusion809-overlay.git", "select" : [
+			"app-editors/atom-bin", 
+			"app-editors/notepadqq", 
+			"app-editors/bluefish", 
+			"app-editors/textadept", 
+			"app-editors/scite", 
+			"app-editors/gvim", 
+			"app-editors/vim", 
+			"app-editors/vim-core", 
+			"app-editors/visual-studio-code", 
+			"app-editors/sublime-text"
+		],
+	}, # FL-3633, FL-3663, FL-3776
+	"bhenc_overlay" : { "type" : GitTree, "url" : "https://github.com/antemarherian/archive-overlay.git", "select" : [
+			"app-text/mdia", 
+			"app-text/mpaste",  
+			"dev-libs/klibc", 
+			"dev-python/pyqwt", 
+			"media-gfx/iscan", 
+			"media-libs/ftgl", 
+			"sys-apps/v86d", 
+			"www-apps/joomla"
+		],
+	},
+}
+
+# KIT SOURCES - kit sources are a combination of overlays, arranged in a python list [ ]. Order is important -- they
+# are processed in order and the last overlay listed will have the ability to overwrite catpkgs from previous overlays.
+# A KIT SOURCE serves as a unified collection of source catpkgs for a particular kit. Each kit can have one KIT SOURCE.
+# KIT SOURCEs can be shared among kits to avoid duplication and to help organization. Note that this is where we specify
+# branch or SHA1.
+
+
+kit_sources = {
+	"gentoo_current" : [
+		{ "repo" : "gentoo_staging", "src_branch" : 'master'},
+		{ "repo" : "faustoo", "src_branch" : 'master', }
+		{ "repo" : "fusion809", "src_branch" : 'master', }
 	],
-	'current' : [
-		{ 'name' : 'core-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-		{ 'name' : 'security-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-		{ 'name' : 'xorg-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017'  },
+	"gentoo_prime" : [
+		{ "repo" : "gentoo_staging", "src_branch" : '06a1fd99a3ce1dd33724e11ae9f81c5d0364985e', 'date' : '21 Apr 2017'},
+		{ "repo" : "faustoo", "src_branch" : "58c805ec0df34cfc699e6555bf317590ff9dee15", },
+		{ "repo" : "fusion809", "src_branch" : "8322bcd79d47ef81f7417c324a1a2b4772020985", "options" : { "merge" : True }},
+		{ "repo" : "bhenc_overlay", "src_branch" : "???", 'date' : '???',  "options" : { "merge" : True }},
 	],
-	'shared' : [
-		{ 'name' : 'gnome-kit', 'branch' : '3.20-prime', 'source': 'gentoo', 'src_branch' : '44677858bd088805aa59fd56610ea4fb703a2fcd', 'date' : '18 Sep 2016' },
-		{ 'name' : 'media-kit', 'branch' : '1.0-prime', 'source': 'gentoo', 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017' },
-		{ 'name' : 'perl-kit', 'branch' : '5.24-prime', 'source': 'gentoo', 'src_branch' : 'fc74d3206fa20caa19b7703aa051ff6de95d5588', 'date' : '11 Jan 2017' },
-		{ 'name' : 'python-kit', 'branch' : '3.4-prime', 'source': 'gentoo', 'src_branch' : '06a1fd99a3ce1dd33724e11ae9f81c5d0364985e', 'date' : '21 Apr 2017' },
-		{ 'name' : 'php-kit', 'branch' : '7.1.3-prime', 'source': 'gentoo', 'src_branch' : '06a1fd99a3ce1dd33724e11ae9f81c5d0364985e', 'date' : '21 Apr 2017' },
-		{ 'name' : 'java-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-		{ 'name' : 'dev-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-		{ 'name' : 'kde-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-		{ 'name' : 'desktop-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-		{ 'name' : 'editors-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-		{ 'name' : 'net-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-		{ 'name' : 'text-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-		{ 'name' : 'science-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-		{ 'name' : 'games-kit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
-		{ 'name' : 'nokit', 'branch' : 'master', 'source': 'gentoo', 'src_branch' : 'master' },
+	"gentoo_prime_xorg" : [
+		{ "repo" : "gentoo_staging", 'src_branch' : 'a56abf6b7026dae27f9ca30ed4c564a16ca82685', 'date' : '18 Nov 2016' }
+	]
+	"gentoo_prime_gnome" : [
+		{ "repo" : "gentoo_staging", 'src_branch' : '44677858bd088805aa59fd56610ea4fb703a2fcd', 'date' : '18 Sep 2016' }
+	],
+	"gentoo_prime_media" : [
+		{ "repo" : "gentoo_staging", 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017' }
+	],
+	"gentoo_prime_perl" : [
+		{ "repo" : "gentoo_staging", 'src_branch' : 'fc74d3206fa20caa19b7703aa051ff6de95d5588', 'date' : '11 Jan 2017' }
 	]
 }
 
-# The following kit_order setting will be used to determine how kitted_catpkgs is generated. The 'prime' kit_group will be generated in order, and
-# kitted_catpkgs will accumulate. Then the 'shared' kit group will be generated, using the previous kitted_catpkgs. The 'None' will tell our code to
-# reset kitted_catpkgs to empty prior to generating the 'current' kit_group. This will allow the 'current' kit_group to include catpkgs that were
-# previously included in the 'prime' kit group. By default, once a catpkg is added to a kit, it can't be added to a successive kit. This is our way
-# around that.
+# KIT GROUPS - this is where kits are actually defined. They are organized by GROUP: 'prime', 'current', or 'shared'.
+# 'prime' kits are production-quality kits. Current kits are bleeding-edge kits. 'shared' kits are used by both 'prime'
+# and 'current' -- they can have some "prime" kits as well as some "current" kits depending on what we want to stabilize.
+# Note that we specify a 'source' which points to a name of a kit_source to use as a source of ebuilds.
+
+kit_groups = {
+	'prime' : [
+		{ 'name' : 'core-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime' },
+		{ 'name' : 'security-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime' },
+		{ 'name' : 'xorg-kit', 'branch' : '1.17-prime', 'source': 'gentoo_prime_xorg' },
+	],
+	'current' : [
+		{ 'name' : 'core-kit', 'branch' : 'master', 'source': 'gentoo_current' },
+		{ 'name' : 'security-kit', 'branch' : 'master', 'source': 'gentoo_current' },
+		{ 'name' : 'xorg-kit', 'branch' : 'master', 'source': 'gentoo_current' },
+	],
+	'shared' : [
+		{ 'name' : 'gnome-kit', 'branch' : '3.20-prime', 'source': 'gentoo_prime_gnome' },
+		{ 'name' : 'media-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime_media' },
+		{ 'name' : 'perl-kit', 'branch' : '5.24-prime', 'source': 'gentoo_prime_perl' },
+		{ 'name' : 'python-kit', 'branch' : '3.4-prime', 'source': 'gentoo_prime' },
+		{ 'name' : 'php-kit', 'branch' : '7.1.3-prime', 'source': 'gentoo_prime' },
+		{ 'name' : 'java-kit', 'branch' : 'master', 'source': 'gentoo_current' },
+		{ 'name' : 'dev-kit', 'branch' : 'master', 'source': 'gentoo_current' },
+		{ 'name' : 'kde-kit', 'branch' : 'master', 'source': 'gentoo_current' },
+		{ 'name' : 'desktop-kit', 'branch' : 'master', 'source': 'gentoo_current' },
+		{ 'name' : 'editors-kit', 'branch' : 'master', 'source': 'gentoo_current' },
+		{ 'name' : 'net-kit', 'branch' : 'master', 'source': 'gentoo_current' },
+		{ 'name' : 'text-kit', 'branch' : 'master', 'source': 'gentoo_current' },
+		{ 'name' : 'science-kit', 'branch' : 'master', 'source': 'gentoo_current' },
+		{ 'name' : 'games-kit', 'branch' : 'master', 'source': 'gentoo_current' },
+		{ 'name' : 'nokit', 'branch' : 'master', 'source': 'gentoo_current' }
+	]
+}
 
 kit_order = [ 'prime', 'shared', None, 'current' ]
+
+# When we update kits, we keep a record of catpkgs inserted into each kit, in a dict called "kitted_catpkgs". Once a
+# catpkg is inserted into a kit, it's no longer 'available' to be inserted into successive kits, to avoid duplicates.
+
+# We want to reset 'kitted_catpkgs' at certain points. The 'kit_order' variable below is used to control this, and
+# we normally don't want to touch it. 'kitted_catpkgs' below tells the code to generate 'prime', then 'shared' (without
+# resetting kitted_catpkgs), then the None tells the code to reset kitted_catpkgs, so when 'current' kits are generated,
+# they can include from all possible catpkgs.
 
 def getKitPrepSteps(kit_dict):
 
@@ -168,6 +243,7 @@ def getKitPrepSteps(kit_dict):
 	}
 
 	out_pre_steps = []
+	out_copy_steps = []
 	out_post_steps = []
 
 	kd = kit_dict['name']
@@ -176,20 +252,45 @@ def getKitPrepSteps(kit_dict):
 			out_pre_steps += kit_steps[kd]['pre']
 		if 'post' in kit_steps[kd]:
 			out_post_steps += kit_steps[kd]['post']
+		if 'copy' in kit_steps[kd]:
+			out_copy_steps += kit_steps[kd]['copy']
 
-	# a 'regular kit' is not core-kit or nokit -- if we have steps for them, append these steps:
+	# a 'regular kit' is not core-kit or nokit -- if we have pre or post steps for them, append these steps:
 	if kit_dict['name'] not in [ 'core-kit', 'nokit' ] and 'regular-kits' in kit_steps:
 		if 'pre' in kit_steps['regular-kits']:
 			out_pre_steps += kit_steps['regular-kits']['pre']
 		if 'post' in kit_steps['regular-kits']:
 			out_post_steps += kit_steps['regular-kits']['post']
 
-	return ( out_pre_steps, out_post_steps )
+	return ( out_pre_steps, out_copy_steps, out_post_steps )
 
 def updateKit(kit_dict, kitted_catpkgs, create=False):
 
-	gentoo_staging.run([GitCheckout(kit_dict['src_branch'])])
-	# TODO : create branch if it doesn't yet exist in the kit.
+	# combine all our metadata and initialize source repositories used by this kit:
+
+	repos = []
+
+	# we'll use repos later in the code ^^
+
+	source_name = kit_dict['source']
+	sources = kit_sources[source_name]
+
+	for source_dict in sources:
+
+		repo_name = source_dict['repo']
+		repo_branch = source_dict['src_branch']
+		repo_obj = overlays[repo_name]["type"]
+		repo_url = overlays[repo_name]["url"]
+
+		repo = repo_obj(repo_name, url=repo_url, branch=repo_branch)
+		repo.run([GitCheckout(repo_branch)])
+		if "options" in source_dict:
+			sro = source_dict["options"].copy()
+		else:
+			sro = {}
+		if "select" in overlays[repo_name]:
+			sro["select"] = overlays[repo_name]["select"]
+		repos.append( { "name" : repo_name, "repo" : repo, "options" : sro } )
 
 	if create and not os.path.exists('/var/git/dest-trees/%s' % kit_dict['name']):
 			os.makedirs('/var/git/dest-trees/%s' % kit_dict['name'])
@@ -207,7 +308,8 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 	
 	prep_steps = getKitPrepSteps(kit_dict)
 	pre_steps += prep_steps[0]
-	post_steps = prep_steps[1]
+	copy_steps = prep_steps[1]
+	post_steps = prep_steps[2]
 
 	if kit_dict['name'] == 'nokit':
 		# SPECIAL NOKIT STEPS START
@@ -224,8 +326,15 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 
 		# Here we generate our main set of ebuild copy steps, based on the contents of the package-set file for the kit:
 
-		steps = generateShardSteps(kit_dict['name'], gentoo_staging, kit, pkgdir=funtoo_overlay.root+"/funtoo/scripts", branch=kit_dict['branch'], catpkg_dict=kitted_catpkgs)
+		steps = []
+
+		for repo_dict in repos:
+			steps += generateShardSteps(kit_dict['name'], repo_dict["repo"], kit, pkgdir=funtoo_overlay.root+"/funtoo/scripts", branch=kit_dict['branch'], insert_kwargs=repo_dict["options"], catpkg_dict=kitted_catpkgs)
 		kit.run(steps)
+
+		# copy additional ebuilds from other overlays:
+		
+		steps += copy_steps
 
 		# Phase 3: copy eclasses, licenses, and ebuild/eclass fixups from the kit-fixups repository. 
 
@@ -243,7 +352,7 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 
 		# kit-fixups/<kit>/global/cat/pkg <------- install cat/pkg into all branches of a particular kit
 		# kit-fixups/<kit>/<branch>/cat/pkg <----- install cat/pkg into a particular branch of a kit
-
+		
 		if os.path.exists(fixup_repo.root + "/eclass"):
 			steps += [ InsertEclasses(fixup_repo, select="all", skip=None) ]
 		for fixup_dir in [ "global", kit_dict["branch"] ]:
@@ -258,22 +367,22 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 					InsertEbuilds(fixup_repo, ebuildloc=fixup_path, select="all", skip=None, replace=True )
 				]
 
-		
+
 		# All fix-up steps have been generated. Now let's run them:
 
 		kit.run(steps)
 
-		copy_steps = [
+		eclass_steps = [
 			InsertLicenses(gentoo_staging, select=list(getAllLicenses(ebuild_repo=kit, super_repo=gentoo_staging))),
 			InsertEclasses(gentoo_staging, select=list(getAllEclasses(ebuild_repo=kit, super_repo=gentoo_staging))),
 		]
 
-		kit.run(copy_steps)
+		kit.run(eclass_steps)
 
 	# Phase 4: finalize and commit
 	# TODO: create and dynamic-alize cache_dir below.
 	post_steps += [
-                ELTSymlinkWorkaround(),
+		ELTSymlinkWorkaround(),
 		CreateCategories(gentoo_staging),
 		Minify(),
 		GenUseLocalDesc(),
@@ -281,13 +390,11 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 	]
 	kit.run(post_steps)
 
-	kitted_catpkgs.update(kit.getAllCatPkgs())
 	kit.gitCommit(message="updates",branch=kit_dict['branch'],push=False)
 
 if __name__ == "__main__":
 
 	funtoo_overlay = GitTree("funtoo-overlay", "master", "repos@git.funtoo.org:funtoo-overlay.git", pull=True)
-	gentoo_staging = GitTree("gentoo-staging", "master", "repos@git.funtoo.org:ports/gentoo-staging.git", pull=True)
 	fixup_repo = GitTree("kit-fixups", "master", "repos@git.funtoo.org:kits/kit-fixups.git", pull=True)
 	#meta_repo = GitTree("meta-repo", "master", "repos@git.funtoo.org:kits/meta-repo.git", pull=True)
 
