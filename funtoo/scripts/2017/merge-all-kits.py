@@ -82,9 +82,9 @@ from merge_utils import *
 # or SHA1 here, as this may depend on other factors. See KIT SOURCES, below.
 
 overlays = {
-	"gentoo_staging" : { "type" : GitTree, "url" : "repos@git.funtoo.org:ports/gentoo-staging.git" },
-	"faustoo_overlay" : { "type" : GitTree, "url" : "https://github.com/fmoro/faustoo.git" }, # add select ebuilds here?
-	"fusion809_overlay" : { "type" : GitTree, "url" : "https://github.com/fusion809/fusion809-overlay.git", "select" : [
+	"gentoo-staging" : { "type" : GitTree, "url" : "repos@git.funtoo.org:ports/gentoo-staging.git" },
+	"faustoo" : { "type" : GitTree, "url" : "https://github.com/fmoro/faustoo.git" }, # add select ebuilds here?
+	"fusion809" : { "type" : GitTree, "url" : "https://github.com/fusion809/fusion809-overlay.git", "select" : [
 			"app-editors/atom-bin", 
 			"app-editors/notepadqq", 
 			"app-editors/bluefish", 
@@ -97,7 +97,7 @@ overlays = {
 			"app-editors/sublime-text"
 		],
 	}, # FL-3633, FL-3663, FL-3776
-	"bhenc_overlay" : { "type" : GitTree, "url" : "https://github.com/antemarherian/archive-overlay.git", "select" : [
+	"bhenc" : { "type" : GitTree, "url" : "https://github.com/antemarherian/archive-overlay.git", "select" : [
 			"app-text/mdia", 
 			"app-text/mpaste",  
 			"dev-libs/klibc", 
@@ -127,27 +127,27 @@ fixup_repo = GitTree("kit-fixups", "master", "repos@git.funtoo.org:kits/kit-fixu
 
 kit_sources = {
 	"gentoo_current" : [
-		{ "repo" : "gentoo_staging", "src_branch" : 'master'},
+		{ "repo" : "gentoo-staging", "src_branch" : 'master'},
 		{ "repo" : "faustoo", "src_branch" : 'master' },
 		{ "repo" : "fusion809", "src_branch" : 'master' }
 	],
 	"gentoo_prime" : [
-		{ "repo" : "gentoo_staging", "src_branch" : '06a1fd99a3ce1dd33724e11ae9f81c5d0364985e', 'date' : '21 Apr 2017'},
+		{ "repo" : "gentoo-staging", "src_branch" : '06a1fd99a3ce1dd33724e11ae9f81c5d0364985e', 'date' : '21 Apr 2017'},
 		{ "repo" : "faustoo", "src_branch" : "58c805ec0df34cfc699e6555bf317590ff9dee15", },
 		{ "repo" : "fusion809", "src_branch" : "8322bcd79d47ef81f7417c324a1a2b4772020985", "options" : { "merge" : True }},
-		{ "repo" : "bhenc_overlay", "src_branch" : "???", 'date' : '???',  "options" : { "merge" : True }},
+		{ "repo" : "bhenc", "src_branch" : "???", 'date' : '???',  "options" : { "merge" : True }},
 	],
 	"gentoo_prime_xorg" : [
-		{ "repo" : "gentoo_staging", 'src_branch' : 'a56abf6b7026dae27f9ca30ed4c564a16ca82685', 'date' : '18 Nov 2016' }
+		{ "repo" : "gentoo-staging", 'src_branch' : 'a56abf6b7026dae27f9ca30ed4c564a16ca82685', 'date' : '18 Nov 2016' }
 	],
 	"gentoo_prime_gnome" : [
-		{ "repo" : "gentoo_staging", 'src_branch' : '44677858bd088805aa59fd56610ea4fb703a2fcd', 'date' : '18 Sep 2016' }
+		{ "repo" : "gentoo-staging", 'src_branch' : '44677858bd088805aa59fd56610ea4fb703a2fcd', 'date' : '18 Sep 2016' }
 	],
 	"gentoo_prime_media" : [
-		{ "repo" : "gentoo_staging", 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017' }
+		{ "repo" : "gentoo-staging", 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017' }
 	],
 	"gentoo_prime_perl" : [
-		{ "repo" : "gentoo_staging", 'src_branch' : 'fc74d3206fa20caa19b7703aa051ff6de95d5588', 'date' : '11 Jan 2017' }
+		{ "repo" : "gentoo-staging", 'src_branch' : 'fc74d3206fa20caa19b7703aa051ff6de95d5588', 'date' : '11 Jan 2017' }
 	]
 }
 
@@ -196,10 +196,10 @@ kit_order = [ 'prime', 'shared', None, 'current' ]
 # resetting kitted_catpkgs), then the None tells the code to reset kitted_catpkgs, so when 'current' kits are generated,
 # they can include from all possible catpkgs.
 
-def getKitPrepSteps(sources, kit_dict):
+def getKitPrepSteps(repos, kit_dict):
 
 	global funtoo_overlay
-	gentoo_staging = sources["gentoo_staging"]["repo"]
+	gentoo_staging = next((x for x in repos if x["name"] == "gentoo-staging"), None)["repo"]
 
 	kit_steps = {
 		'core-kit' : { 'pre' : [
@@ -214,7 +214,7 @@ def getKitPrepSteps(sources, kit_dict):
 				ThirdPartyMirrors(),
 				RunSed(["profiles/base/make.defaults"], ["/^PYTHON_TARGETS=/d", "/^PYTHON_SINGLE_TARGET=/d"]),
 				CopyAndRename("profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/subarch", "profiles/funtoo/1.0/linux-gnu/arch/pure64/subarch", lambda x: os.path.basename(x) + "-pure64"),
-				SyncFiles(sources["gentoo_staging"]["repo"].root, {
+				SyncFiles(gentoo_staging.root, {
 					"profiles/package.mask":"profiles/package.mask/00-gentoo",
 					"profiles/arch/amd64/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/package.use.mask/01-gentoo",
 					"profiles/arch/amd64/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/use.mask/01-gentoo",
@@ -247,7 +247,7 @@ def getKitPrepSteps(sources, kit_dict):
 			]
 		},
 		'nokit' : { 'pre' : [
-				SyncDir(sources["gentoo_staging"]["repo"].root),
+				SyncDir(gentoo_staging.root),
 				GenerateRepoMetadata("nokit", masters=["core-kit"], priority=-2000),
 			]
 		}
@@ -285,7 +285,6 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 
 	source_name = kit_dict['source']
 	sources = kit_sources[source_name]
-	gentoo_staging = sources["gentoo_staging"]["repo"]
 
 	for source_dict in sources:
 
@@ -304,6 +303,8 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 			sro["select"] = overlays[repo_name]["select"]
 		repos.append( { "name" : repo_name, "repo" : repo, "options" : sro } )
 
+	gentoo_staging = next((x for x in repos if x["name"] == "gentoo-staging"), None)["repo"]
+	
 	if create and not os.path.exists('/var/git/dest-trees/%s' % kit_dict['name']):
 			os.makedirs('/var/git/dest-trees/%s' % kit_dict['name'])
 			os.system('cd /var/git/dest-trees/%s' % kit_dict['name'] + ' ;git init; touch README; git add README; git commit -a -m "first commit"')
@@ -318,7 +319,7 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 		CleanTree()
 	]
 	
-	prep_steps = getKitPrepSteps(sources, kit_dict)
+	prep_steps = getKitPrepSteps(repos, kit_dict)
 	pre_steps += prep_steps[0]
 	copy_steps = prep_steps[1]
 	post_steps = prep_steps[2]
