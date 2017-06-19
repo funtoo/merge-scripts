@@ -26,7 +26,7 @@ SRC_URI="
 
 LICENSE="GPL-2 NVIDIA-r2"
 SLOT="0/${PV%.*}"
-KEYWORDS=""
+KEYWORDS="~*"
 RESTRICT="bindist mirror"
 EMULTILIB_PKG="true"
 
