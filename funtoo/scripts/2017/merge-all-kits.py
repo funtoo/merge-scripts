@@ -97,17 +97,6 @@ overlays = {
 			"app-editors/sublime-text"
 		],
 	}, # FL-3633, FL-3663, FL-3776
-	"bhenc" : { "type" : GitTree, "url" : "https://github.com/antemarherian/archive-overlay.git", "select" : [
-			"app-text/mdia", 
-			"app-text/mpaste",  
-			"dev-libs/klibc", 
-			"dev-python/pyqwt", 
-			"media-gfx/iscan", 
-			"media-libs/ftgl", 
-			"sys-apps/v86d", 
-			"www-apps/joomla"
-		],
-	},
 }
 
 # SUPPLEMENTAL REPOSITORIES: These are overlays that we are using but are not in KIT SOURCES. funtoo_overlay is something
@@ -135,7 +124,6 @@ kit_sources = {
 		{ "repo" : "gentoo-staging", "src_branch" : '06a1fd99a3ce1dd33724e11ae9f81c5d0364985e', 'date' : '21 Apr 2017'},
 		{ "repo" : "faustoo", "src_branch" : "58c805ec0df34cfc699e6555bf317590ff9dee15", },
 		{ "repo" : "fusion809", "src_branch" : "8322bcd79d47ef81f7417c324a1a2b4772020985", "options" : { "merge" : True }},
-		{ "repo" : "bhenc", "src_branch" : "???", 'date' : '???',  "options" : { "merge" : True }},
 	],
 	"gentoo_prime_xorg" : [
 		{ "repo" : "gentoo-staging", 'src_branch' : 'a56abf6b7026dae27f9ca30ed4c564a16ca82685', 'date' : '18 Nov 2016' }
