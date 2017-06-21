@@ -2,4 +2,3 @@ dev-lang/python
 dev-lang/python-exec
 dev-python/*
 @regex@:virtual/py.*
-@all_eclasses@

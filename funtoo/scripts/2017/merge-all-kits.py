@@ -128,8 +128,13 @@ fixup_repo = GitTree("kit-fixups", "master", "repos@git.funtoo.org:kits/kit-fixu
 # KIT SOURCEs can be shared among kits to avoid duplication and to help organization. Note that this is where we specify
 # branch or SHA1.
 
+# It is important to note that we support three kinds of kit sources -- the first kind is a repository which not not have
+# another master repository that it uses. The second kind is a special case of the first, where we are copying from the
+# 'gentoo' repository. The third case we support is copying from an overlay that is designed to have 'gentoo' as master.
+# We only support these specific combinations. The gentoo repository should appear first in the list, with other overlays
+# appearing after.
 
-kit_sources = {
+kit_source_defs = {
 	"gentoo_current" : [
 		{ "repo" : "gentoo-staging", "src_branch" : 'master'},
 		{ "repo" : "flora", "src_branch" : 'master' },
@@ -155,6 +160,8 @@ kit_sources = {
 		{ "repo" : "gentoo-staging", 'src_branch' : 'fc74d3206fa20caa19b7703aa051ff6de95d5588', 'date' : '11 Jan 2017' }
 	]
 }
+
+kit_source_instances = { }
 
 # KIT GROUPS - this is where kits are actually defined. They are organized by GROUP: 'prime', 'current', or 'shared'.
 # 'prime' kits are production-quality kits. Current kits are bleeding-edge kits. 'shared' kits are used by both 'prime'
@@ -279,42 +286,69 @@ def getKitPrepSteps(repos, kit_dict, gentoo_staging):
 
 	return ( out_pre_steps, out_copy_steps, out_post_steps )
 
-def updateKit(kit_dict, kitted_catpkgs, create=False):
+def getKitSourceInstance(kit_dict):
 
-	# combine all our metadata and initialize source repositories used by this kit:
+	global kit_source_instances
+	global kit_source_defs
+	
+	source_name = kit_dict['source']
+
+	if source_name in kit_source_instances:
+		return kit_source_instances[source_name]
 
 	repos = []
 
-	# we'll use repos later in the code ^^
+	source_defs = kit_source_defs[source_name]
 
-	source_name = kit_dict['source']
-	sources = kit_sources[source_name]
+	for source_def in source_defs:
 
-	for source_dict in sources:
-
-		repo_name = source_dict['repo']
-		repo_branch = source_dict['src_branch']
+		repo_name = source_def['repo']
+		repo_branch = source_def['src_branch']
 		repo_obj = overlays[repo_name]["type"]
 		repo_url = overlays[repo_name]["url"]
 
 		repo = repo_obj(repo_name, url=repo_url, branch=repo_branch)
 		repo.run([GitCheckout(repo_branch)])
-		if "options" in source_dict:
-			sro = source_dict["options"].copy()
+
+		if "options" in source_def:
+			sro = source_def["options"].copy()
 		else:
 			sro = {}
 		if "select" in overlays[repo_name]:
 			sro["select"] = overlays[repo_name]["select"]
+
 		repos.append( { "name" : repo_name, "repo" : repo, "options" : sro } )
 
-	gentoo_staging = next((x for x in repos if x["name"] == "gentoo-staging"), None)["repo"]
-	
+	kit_source_instances[source_name] = repos
+	return repos
+
+def updateKit(kit_dict, kitted_catpkgs, create=False):
+
+	# get set of source repos used to grab catpkgs from:
+
+	repos = getKitSourceInstance(kit_dict)
+	print("MY REPOS")
+	for repo in repos:
+		print(repo["name"])
+
+	gentoo_staging = None
+	for x in repos:
+		if x["name"] == "gentoo-staging":
+			gentoo_staging = x["repo"]
+			break
+	if gentoo_staging == None:
+		print("Couldn't find source gentoo staging repo")
+	elif gentoo_staging.name != "gentoo-staging":
+		print("Gentoo staging mismatch -- name is %s" % gentoo_staging["name"])
+
+	# create kit repo if it doesn't exist
+
 	if create and not os.path.exists('/var/git/dest-trees/%s' % kit_dict['name']):
-			os.makedirs('/var/git/dest-trees/%s' % kit_dict['name'])
-			os.system('cd /var/git/dest-trees/%s' % kit_dict['name'] + ' ;git init; touch README; git add README; git commit -a -m "first commit"')
-			if kit_dict['branch'] != 'master':
-				# create branch
-				os.system('cd /var/git/dest-trees/%s' % kit_dict['name'] + ' ;git checkout -b %s' % kit_dict['branch'])
+		os.makedirs('/var/git/dest-trees/%s' % kit_dict['name'])
+		os.system('cd /var/git/dest-trees/%s' % kit_dict['name'] + ' ;git init; touch README; git add README; git commit -a -m "first commit"')
+		if kit_dict['branch'] != 'master':
+			# create branch
+			os.system('cd /var/git/dest-trees/%s' % kit_dict['name'] + ' ;git checkout -b %s' % kit_dict['branch'])
 	kit_dict['kit'] = kit = GitTree(kit_dict['name'], kit_dict['branch'], "repos@git.funtoo.org:kits/%s.git" % kit_dict['name'], root="/var/git/dest-trees/%s" % kit_dict['name'], pull=True)
 	
 	# Phase 1: prep the kit
@@ -345,7 +379,7 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 
 		cat_dict_count = len(kitted_catpkgs.keys())
 		for repo_dict in repos:
-			steps = generateShardSteps(kit_dict['name'], repo_dict["repo"], kit, pkgdir=funtoo_overlay.root+"/funtoo/scripts", branch=kit_dict['branch'], insert_kwargs=repo_dict["options"], catpkg_dict=kitted_catpkgs)
+			steps = generateShardSteps(kit_dict['name'], repo_dict["repo"], kit, gentoo_staging, pkgdir=funtoo_overlay.root+"/funtoo/scripts", branch=kit_dict['branch'], insert_kwargs=repo_dict["options"], catpkg_dict=kitted_catpkgs)
 			kit.run(steps)
 			new_cat_dict_count = len(kitted_catpkgs.keys())
 			if cat_dict_count != new_cat_dict_count and "copyfiles" in overlays[[repo_dict]["name"]]:
@@ -396,10 +430,15 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 
 		kit.run(steps)
 
-		eclass_steps = [
-			InsertLicenses(gentoo_staging, select=list(getAllLicenses(ebuild_repo=kit, super_repo=gentoo_staging))),
-			InsertEclasses(gentoo_staging, select=list(getAllEclasses(ebuild_repo=kit, super_repo=gentoo_staging))),
-		]
+		# Now we want to see what eclasses and licenses we need to copy in from our parent repos:
+
+		eclass_steps = []
+
+		for repo, elist in getAllLicenses(kit, parent_repo, super_repo=gentoo_staging):
+			eclass_steps += InsertLicenses(repo, select=elist)
+
+		for repo, elist in getAllEclasses(ebuild_repo=kit, super_repo=gentoo_staging):
+			eclass_steps += InsertEclasses(repo, select=elist)
 
 		kit.run(eclass_steps)
 

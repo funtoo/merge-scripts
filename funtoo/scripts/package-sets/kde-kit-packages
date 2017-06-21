@@ -3,4 +3,3 @@ kde-base/*
 kde-frameworks/*
 kde-misc/*
 kde-plasma/*
-@all_eclasses@
