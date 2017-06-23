@@ -53,14 +53,14 @@ shards = {
 # media: cb07fcb2f4fd84d5ca8bf57d0eacd99301cc0636 (Update 25 Feb 2017)
 # office: e482bdff839aed9b81cd9c62ce435aa4e78c8cab (Updated 17 Jan 2017)
 # core: 4ff408b3de5465c5a63480e01e219ec62fee175e (Updated 25 Feb 2017)
-# funtoo-toolchain: 0ea91caf10eab4ca160b56a653f929f65cdf35fb (Updated 15 Apr 2017)
+# funtoo-toolchain: 52a94a7456d01585e8e8d6f980891bdc514f8b56 (Updated 23 Jun 2017)
 
 funtoo_overlays = {
 	"funtoo_media" : GitTree("funtoo-media", "master", "repos@localhost:funtoo-media.git", pull=True),
 	"plex_overlay" : GitTree("funtoo-plex", "master", "https://github.com/Ghent/funtoo-plex.git", pull=True),
 	"gnome_fixups" : GitTree("gnome-3.20-fixups", "master", "repos@localhost:ports/gnome-3.20-fixups.git", pull=True),
 	"tmp-shard-fixups" : GitTree("tmp-shard-fixups", "master", "repos@localhost:ports/tmp-shard-fixups.git", pull=True),
-	"funtoo_toolchain" : GitTree("funtoo-toolchain", "0ea91caf10eab4ca160b56a653f929f65cdf35fb", "repos@localhost:funtoo-toolchain-overlay.git", pull=True),
+	"funtoo_toolchain" : GitTree("funtoo-toolchain", "52a94a7456d01585e8e8d6f980891bdc514f8b56", "repos@localhost:funtoo-toolchain-overlay.git", pull=True),
 	"deadbeef_overlay" : GitTree("deadbeef-overlay", "master", "https://github.com/damex/deadbeef-overlay.git", pull=True),
 	"wmfs_overlay" : GitTree("wmfs-overlay", "master", "https://github.com/damex/wmfs-overlay.git", pull=True),
 	"flora" : GitTree("flora", "master", "repos@localhost:flora.git", pull=True),
