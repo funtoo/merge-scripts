@@ -146,59 +146,57 @@ def repoName(cur_overlay):
 			cur_name = cur_overlay.name
 	return cur_name
 
-# getAllEclasses uses the function getAllMeta() below to do all heavy lifting.  What getAllMeta() returns is a list of eclasses
-# that are used by our kit, but this list doesn't indicate what repository holds the eclasses. 
+# getAllEclasses() and getAllLicenses() uses the function getAllMeta() below to do all heavy lifting.  What getAllMeta() returns
+# is a list of eclasses that are used by our kit, but this list doesn't indicate what repository holds the eclasses. 
 
-# So we don't know if the eclass exists in the super-repo or the parent-repo, or maybe it was already copied into our dest-kit
-# as an eclass 'fixup'. getAllEclasses() is designed to locate the actual eclass that we care about so we know what repo it lives
-# in.
+# So we don't know if the eclass is in the dest_kit or in the parent_repo and still needs to be copied over.  as an eclass
+# 'fixup'. getAllEclasses() is designed to locate the actual eclass that we care about so we know what repo it lives in and what
+# steps need to be taken, if any.
 
 # First, we will look in our dest-kit repository. If it exists there, then it was already copied into place by a kit-fixup and
-# we do not want to overwrite it with another eclass! After that, we'll look in our super_repo (overlay) to see if the eclass
-# exists there. This may seem counter-intuitive since the parent-repo is the next highest priority repository, but we want to
-# try to use the super-repo's eclasses if they exist instead of one-off versions in the third-party overlay if possible. If you
-# specifically want to use a third-party overlay's eclass, you will want to add it to kit-fixups for your kit.
+# we do not want to overwrite it with another eclass! Then we will look in the parent_repo (which is designed to be 'gentoo'),
+# and see if the eclass is there. We expect to find it there. If we don't, it is a MISSING eclass (or license).
 
-# Then, and only then, do we look in the parent_overlay, if we have not yet found the eclass, to try to find the eclass.
+# getAllEclasses and getAllLicenses return a dictionary with the following keys, and with a list of files relative to the
+# repo root as the dictionary value:
+#
+# 'parent_repo' : list of all eclasses that should be copied from parent repo
+# 'dest_kit'    : list of all eclasses that were found in our kit and don't need to be copied (they are already in place)
+# None          : list of all eclasses that were NOT found. This is an error and indicates we need some kit-fixups or
+#                 overlay-specific eclasses.
 
-# getAllEclasses and getAllLicenses return a dictionary, that has repository objects as keys, and has a list of files (with path
-# relative to repo root) of the files that are mapped to each repo. There is also a dictionary key of None that contains all
-# licenses or eclasses that were not found at all (this should not happen but is included in the code for testing and verification
-# purposes)
-
-def _getAllDriver(metadata, path_prefix, dest_kit, parent_repo, super_repo=None):
+def _getAllDriver(metadata, path_prefix, dest_kit, parent_repo):
 	# these may be eclasses or licenses -- we use the term 'eclass' here:
-	eclasses = getAllMeta(metadata, dest_kit, parent_repo=parent_repo, super_repo=super_repo)
-	out = { None: [], dest_kit["repo"] : [], parent_repo : [], super_repo: []}
+	eclasses = getAllMeta(metadata, dest_kit, parent_repo)
+	out = { None: [], "dest_kit" : [] }
+	if parent_repo != None:
+		out["parent_repo"] = []
 	for eclass in eclasses:
-		ep = dest_kit["repo"].root + path_prefix + eclass
+		ep = os.path.join(dest_kit.root, path_prefix, eclass)
 		if os.path.exists(ep):
-			out[dest_kit["repo"]].append(ep)
-		if super_repo:
-			ep = super_repo.root + path_prefix + eclass
+			out["dest_kit"].append(eclass)
+			continue
+		if parent_repo != None:
+			ep = os.path.join(parent_repo.root, path_prefix, eclass)
 			if os.path.exists(ep):
-				out[super_repo].append(ep)
+				out["parent_repo"].append(eclass)
 				continue
-		if parent_repo:
-			ep = parent_repo.root + path_prefix + eclass
-			if os.path.exists(ep):
-				out[parent_repo].append(ep)
-				continue
+			# not found!
 		out[None].append(eclass)
 	return out
 
-def getAllEclasses(dest_kit, parent_repo, super_repo=None):
-	return _getAllDriver("INHERITED", "/eclass/", dest_kit, parent_repo, super_repo)
+def getAllEclasses(dest_kit, parent_repo=None):
+	return _getAllDriver("INHERITED", "eclass", dest_kit, parent_repo)
 
-def getAllLicenses(dest_kit, parent_repo, super_repo=None):
-	return _getAllDriver("LICENSES", "/licenses/", dest_kit, parent_repo, super_repo)
+def getAllLicenses(dest_kit, parent_repo):
+	return _getAllDriver("LICENSE", "licenses", dest_kit, parent_repo)
 
 # getAllMeta uses the Portage API to query metadata out of a set of repositories. It is designed to be used to figure
 # out what licenses or eclasses to copy from a parent repository to the current kit so that the current kit contains a
 # set of all eclasses (and licenses) it needs within itself, without any external dependencies on other repositories 
 # for these items -- this is a key design feature of kits to improve stability.
 
-# There are two different use cases for this function:
+# It supports being called this way:
 #
 #  (parent_repo) -- all eclasses/licenses here
 #    |
@@ -206,90 +204,51 @@ def getAllLicenses(dest_kit, parent_repo, super_repo=None):
 #    \-------------------------(dest_kit) -- no eclasses/licenses here yet
 #                                            (though some may exist due to being copied by fixups) 
 #
-#  ^^ In this case above, (dest_kit) is our kit that is missing eclasses and licenses, and (repo) is where they all
-#     exist. For this, call getAllMeta("LICENSE", dest_kit, parent_repo) where parent_repo is a "gentoo" repository
-#     that contains all the goodies. Here is another possible way to use this function: 
-#
-#  (super_repo) -- most eclasses/licenses here
-#    |
-#    |
-#    \-------------------------(parent_repo) -- some could be here too 
-#                                |
-#                                |
-#                                \-------------------------(dest_kit) -- no eclasses/licenses here yet 
-#                                                          (though some may exist due to being copied by fixups) 
-#
-#  ^^ In this case, (super_repo) would be the gentoo repo, and (parent_repo) would be a third-party overlay that
-#  is designed to sit on top of the (super_repo) and may also have eclasses or licenses, though typically most would
-#  come from the (super_repo). For this arrangement, call getAllMeta("LICENSE", dest_kit, parent_repo, super_repo)
-#
-#  In either use case, we ensure that our (dest_kit) eclasses have highest priority and override any eclasses that
-#  may exist in the (parent_repo) or (super_repo) when we recursively descend and see what eclasses are used. This
-#  is important as it allows eclasses that we've added to kit-fixups to override any existing eclasses.
-#
 #  getAllMeta() returns a set of actual files (without directories) that are used, so [ 'foo.eclass', 'bar.eclass'] 
 #  or [ 'GPL-2', 'bleh' ].
 #
-#  And generally, just pass gentoo_staging as the super_repo argument, and if getAllMeta sees that super_repo ==
-#  parent_repo, then it will understand that it is running use case 1 above.
-
-def getAllMeta(metadata, dest_kit, parent_repo, super_repo=None):
+def getAllMeta(metadata, dest_kit, parent_repo=None):
 	metadict = { "LICENSE" : 0, "INHERITED" : 1 }
 	metapos = metadict[metadata]
 	
 	env = os.environ.copy()
-
-	parent_name = parent_repo.reponame if parent_repo.reponame else repoName(parent_repo)
-	if parent_repo == super_repo:
-		super_repo == None
-	else:
-		super_name = super_repo.reponame if super_repo.reponame else repoName(super_repo)
 	
-	env['PORTAGE_DEPCACHEDIR'] = '/var/cache/edb/%s-%s-meta' % ( dest_kit["name"], dest_kit["branch"] )
-
-	if parent_repo and super_repo == None:
+	if parent_repo != None:
+		parent_name = parent_repo.reponame if parent_repo.reponame else repoName(parent_repo)
+	
+	env['PORTAGE_DEPCACHEDIR'] = '/var/cache/edb/%s-%s-meta' % ( dest_kit.name, dest_kit.branch )
+	if parent_repo != None:
 		env['PORTAGE_REPOSITORIES'] = '''
-[DEFAULT]
-main-repo = gentoo
+	[DEFAULT]
+	main-repo = gentoo
 
-[gentoo]
-location = %s
+	[gentoo]
+	location = %s
 
-[%s]
-location = %s
-eclass-overrides = gentoo 
-aliases = -gentoo
-masters = gentoo 
-	''' % ( parent_repo.root, dest_kit["name"], dest_kit["repo"].root)
-	elif parent_repo and super_repo:
-		env['PORTAGE_REPOSITORIES'] = '''
-[DEFAULT]
-main-repo = gentoo
-
-[gentoo]
-location = %s
-
-[%s]
-location = %s
-
-[%s]
-location = %s
-	''' % ( super_repo.root, parent_name, parent_repo.root, dest_kit["name"], dest_kit["repo"].root)
+	[%s]
+	location = %s
+	eclass-overrides = gentoo 
+	aliases = -gentoo
+	masters = gentoo 
+		''' % ( parent_repo.root, dest_kit.name, dest_kit.root)
 	else:
+		# we are testing a stand-alone kit that should have everything it needs included
 		env['PORTAGE_REPOSITORIES'] = '''
-[DEFAULT]
-main-repo = %s
+	[DEFAULT]
+	main-repo = gentoo
 
-[%s]
-location = %s
-	''' % ( dest_kit["name"], dest_kit["name"], dest_kit["name"], dest_kit["repo"].root )
+	[%s]
+	location = %s
+	eclass-overrides = gentoo 
+	aliases = gentoo
+		''' % ( dest_kit.name, dest_kit.root )
 	p = portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
 	p.melt()
 	myeclasses = set()
-	for cp in p.cp_all(trees=[ebuild_repo.root]):
-		for cpv in p.cp_list(cp, mytree=ebuild_repo.root):
+	for cp in p.cp_all(trees=[dest_kit.root]):
+		for cpv in p.cp_list(cp, mytree=dest_kit.root):
 			try:
-				aux = p.aux_get(cpv, ["LICENSE","INHERITED"], mytree=ebuild_repo.root)
+				aux = p.aux_get(cpv, ["LICENSE","INHERITED"], mytree=dest_kit.root)
 			except PortageKeyError:
 				print("Portage key error for %s" % repr(cpv))
 				raise
@@ -300,6 +259,8 @@ location = %s
 						myeclasses.add(key)
 			elif metadata == "LICENSE":
 				for lic in aux[metapos].split():
+					if lic in [ ")", "(", "||" ] or lic.endswith("?"):
+						continue
 					if lic not in myeclasses:
 						myeclasses.add(lic)
 	return myeclasses
@@ -859,21 +820,26 @@ regextype = type(re.compile('hello, world'))
 
 class InsertFilesFromSubdir(MergeStep):
 
-	def __init__(self,srctree,subdir,suffixfilter=None,select="all",skip=None):
+	def __init__(self,srctree,subdir,suffixfilter=None,select="all",skip=None, src_offset=None):
 		self.subdir = subdir
 		self.suffixfilter = suffixfilter
 		self.select = select
 		self.srctree = srctree
 		self.skip = skip 
+		self.src_offset = src_offset
 
 	def run(self,desttree):
 		desttree.logTree(self.srctree)
-
-		src = os.path.join(self.srctree.root, self.subdir)
+		src = self.srctree.root
+		if self.src_offset:
+			src = os.path.join(src, self.src_offset)
+		if self.subdir:
+			src = os.path.join(src, self.subdir)
 		if not os.path.exists(src):
-			print("Eclass dir %s does not exist; skipping %s insertion..." % (src, self.subdir))
 			return
-		dst = os.path.join(desttree.root, self.subdir)
+		dst = desttree.root
+		if self.subdir:
+			dst = os.path.join(dst, self.subdir)
 		if not os.path.exists(dst):
 			os.makedirs(dst)
 		for e in os.listdir(src):
@@ -891,6 +857,7 @@ class InsertFilesFromSubdir(MergeStep):
 			elif isinstance(self.skip, regextype):
 				if self.skip.match(e):
 					continue
+			real_dst = os.path.basename(os.path.join(dst, e))
 			runShell("cp -a %s/%s %s" % ( src, e, dst))
 
 class InsertEclasses(InsertFilesFromSubdir):

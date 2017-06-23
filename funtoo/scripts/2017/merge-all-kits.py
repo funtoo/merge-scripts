@@ -75,7 +75,6 @@ from merge_utils import *
 # used to prune the 'nokit' repository of catpkgs, so that 'nokit' contains the set of all ebuilds that were not
 # inserted into kits.
 
-
 # OVERLAYS - lists sources for catpkgs, along with properties which can include "select" - a list of catpkgs to include.
 # When "select" is specified, only these ebuilds will be included. If no "select" is specified, then by default all
 # available catpkgs could be included, if they match patterns, etc. in package sets. Note that we do not specify branch
@@ -83,7 +82,10 @@ from merge_utils import *
 
 overlays = {
 	"gentoo-staging" : { "type" : GitTree, "url" : "repos@git.funtoo.org:ports/gentoo-staging.git" },
-	"faustoo" : { "type" : GitTree, "url" : "https://github.com/fmoro/faustoo.git" }, # add select ebuilds here?
+	"faustoo" : { "type" : GitTree, "url" : "https://github.com/fmoro/faustoo.git", "eclasses" : [
+		"waf",
+		"googlecode"
+	] }, # add select ebuilds here?
 	"fusion809" : { "type" : GitTree, "url" : "https://github.com/fusion809/fusion809-overlay.git", "select" : [
 			"app-editors/atom-bin", 
 			"app-editors/notepadqq", 
@@ -95,7 +97,7 @@ overlays = {
 			"app-editors/vim-core", 
 			"app-editors/visual-studio-code", 
 			"app-editors/sublime-text"
-		],
+		]
 	}, # FL-3633, FL-3663, FL-3776
 	"plex" : { "type" : GitTree, "url" : "https://github.com/Ghent/funtoo-plex.git", "select" : [
 			"media-tv/plex-media-server",
@@ -111,7 +113,10 @@ overlays = {
 			"profiles/package.mask": "profiles/package.mask/wmfs.mask" 
 		},
 	},
-	"flora" : { "type" : GitTree, "url" : "https://github.com/funtoo/flora.git" },
+	"flora" : { "type" : GitTree, "url" : "https://github.com/funtoo/flora.git", "copyfiles" : {
+			"licenses/renoise-EULA": "licenses/renoise-EULA"
+		},
+	},
 }
 
 # SUPPLEMENTAL REPOSITORIES: These are overlays that we are using but are not in KIT SOURCES. funtoo_overlay is something
@@ -254,12 +259,12 @@ def getKitPrepSteps(repos, kit_dict, gentoo_staging):
 			]
 		},
 		'regular-kits' : { 'pre' : [
-			GenerateRepoMetadata(kit_dict['name'], masters=["core-kit"], priority=500),
+			GenerateRepoMetadata(kit_dict['name'], masters=[], priority=500),
 			]
 		},
 		'nokit' : { 'pre' : [
 				SyncDir(gentoo_staging.root),
-				GenerateRepoMetadata("nokit", masters=["core-kit"], priority=-2000),
+				GenerateRepoMetadata("nokit", masters=[], priority=-2000),
 			]
 		}
 	}
@@ -349,7 +354,7 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 		if kit_dict['branch'] != 'master':
 			# create branch
 			os.system('cd /var/git/dest-trees/%s' % kit_dict['name'] + ' ;git checkout -b %s' % kit_dict['branch'])
-	kit_dict['kit'] = kit = GitTree(kit_dict['name'], kit_dict['branch'], "repos@git.funtoo.org:kits/%s.git" % kit_dict['name'], root="/var/git/dest-trees/%s" % kit_dict['name'], pull=True)
+	kit_dict['tree'] = tree = GitTree(kit_dict['name'], kit_dict['branch'], "repos@git.funtoo.org:kits/%s.git" % kit_dict['name'], root="/var/git/dest-trees/%s" % kit_dict['name'], pull=True)
 	
 	# Phase 1: prep the kit
 	pre_steps = [
@@ -368,38 +373,50 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 		pre_steps += [
 			RemoveFiles(list(kitted_catpkgs.keys())),
 		]
-		kit.run(pre_steps)
+		tree.run(pre_steps)
 		# SPECIAL NOKIT STEPS END
 	else:
-		kit.run(pre_steps)
+		tree.run(pre_steps)
 
 		# Phase 2: copy core set of ebuilds
 
-		# Here we generate our main set of ebuild copy steps, based on the contents of the package-set file for the kit:
+		# Here we generate our main set of ebuild copy steps, based on the contents of the package-set file for the kit. The logic works as
+		# follows. We apply our package-set logic to each repo in succession. If copy ebuilds were actually copied (we detect this by
+		# looking for changed catpkg count in our dest_kit,) then we also run additional steps: "copyfiles" and "eclasses". "copyfiles"
+		# specifies files like masks to copy over to the dest_kit, and "eclasses" specifies eclasses from the overlay that we need to
+		# copy over to the dest_kit. We don't need to specify eclasses that we need from gentoo_staging -- these are automatically detected
+		# and copied, but if there are any special eclasses from the overlay then we want to copy these over initially.
+
+		steps = []
 
 		cat_dict_count = len(kitted_catpkgs.keys())
 		for repo_dict in repos:
-			steps = generateShardSteps(kit_dict['name'], repo_dict["repo"], kit, gentoo_staging, pkgdir=funtoo_overlay.root+"/funtoo/scripts", branch=kit_dict['branch'], insert_kwargs=repo_dict["options"], catpkg_dict=kitted_catpkgs)
-			kit.run(steps)
+			steps += generateShardSteps(kit_dict['name'], repo_dict["repo"], tree, gentoo_staging, pkgdir=funtoo_overlay.root+"/funtoo/scripts", branch=kit_dict['branch'], insert_kwargs=repo_dict["options"], catpkg_dict=kitted_catpkgs)
 			new_cat_dict_count = len(kitted_catpkgs.keys())
-			if cat_dict_count != new_cat_dict_count and "copyfiles" in overlays[[repo_dict]["name"]]:
-				# new ebuilds have been copied, so automatically trigger "copyfiles" logic if such is defined:
-				steps = []
-				for src, dest in overlays[repo_dict["name"]]["copyfiles"]:
-					steps += SyncFiles(repo_dict["repo"].root, overlays[repo_dict["name"]["copyfiles"]])
-					kit.run(steps)
-			cat_dict_count = new_cat_dict_count
+			if cat_dict_count != new_cat_dict_count:
+				# this means some catpkgs were installed from the repo we are currently processing. This means we also want to execute
+				# 'copyfiles' and 'eclasses' copy logic:
+				
+				ov = overlays[repo_dict["name"]]
 
-		# copy additional ebuilds from other overlays:
-		
-		steps = copy_steps
+				if "copyfiles" in ov and len(ov["copyfiles"]):
+					# since we copied over some ebuilds, we also want to make sure we copy over things like masks, etc:
+					steps += SyncFiles(repo_dict["repo"].root, ov["copyfiles"])
+				if "eclasses" in ov:
+					# we have eclasses to copy over, too:
+					ec_files = []
+					for eclass in ov["eclasses"]:
+						ec_files = "/eclass/" + eclass + ".eclass"
+						steps += SyncFiles(repo_dict["repo"].root, ec_files)
+
+			# update catpkg count for detecting new catpkgs on next iteration of our main 'for' loop:
+			cat_dict_count = new_cat_dict_count
+			
+		tree.run(steps)
 
 		# Phase 3: copy eclasses, licenses, and ebuild/eclass fixups from the kit-fixups repository. 
 
-		# First, we will auto-detect the eclasses and licenses used by the ebuilds we copied over, and ensure these are copied over
-		# to the kit. We will use the gentoo-staging SHA1 as a source for these:
-
-		# Next, we are going to process the kit-fixups repository and look for ebuilds and eclasses to replace. Eclasses can be
+		# First, we are going to process the kit-fixups repository and look for ebuilds and eclasses to replace. Eclasses can be
 		# overridden by using the following paths inside kit-fixups:
 
 		# kit-fixups/eclass <--------------------- global eclasses, get installed to all kits unconditionally (overrides those above)
@@ -410,7 +427,16 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 
 		# kit-fixups/<kit>/global/cat/pkg <------- install cat/pkg into all branches of a particular kit
 		# kit-fixups/<kit>/<branch>/cat/pkg <----- install cat/pkg into a particular branch of a kit
-		
+	
+		# Remember that at this point, we may be missing a lot of eclasses and licenses from Gentoo. We will then perform a final sweep
+		# of all catpkgs in the dest_kit and auto-detect missing eclasses from Gentoo and copy them to our dest_kit. Remember that if you
+		# need a custom eclass from a third-party overlay, you will need to specify it in the overlay's overlays["ov_name"]["eclasses"]
+		# list. Or alternatively you can copy the eclasses you need to kit-fixups and maintain them there :)
+
+		steps = []
+
+		# Here is the core logic that copies all the fix-ups from kit-fixups (eclasses and ebuilds) into place:
+
 		if os.path.exists(fixup_repo.root + "/eclass"):
 			steps += [ InsertEclasses(fixup_repo, select="all", skip=None) ]
 		for fixup_dir in [ "global", kit_dict["branch"] ]:
@@ -418,32 +444,117 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 			if os.path.exists(fixup_repo.root + "/" + fixup_path):
 				if os.path.exists(fixup_repo.root + "/" + fixup_path + "/eclass"):
 					steps += [
-						InsertFilesFromSubdir(fixup_repo,fixup_path+"/eclass", ".eclass", select="all", skip=None)
+						InsertFilesFromSubdir(fixup_repo, "eclass", ".eclass", select="all", skip=None, src_offset=fixup_path)
+					]
+				if os.path.exists(fixup_repo.root + "/" + fixup_path + "/licenses"):
+					steps += [
+						InsertFilesFromSubdir(fixup_repo, "licenses", None, select="all", skip=None, src_offset=fixup_path)
 					]
 				steps += [
 					# add a new parameter called 'prefix'
 					InsertEbuilds(fixup_repo, ebuildloc=fixup_path, select="all", skip=None, replace=True )
 				]
+		tree.run(steps)
+
+		# Now we want to perform a scan of any eclasses in the Gentoo repo that we need to copy over to our dest_kit so that it contains all
+		# eclasses and licenses it needs within itself, without having to reference any in the Gentoo repo.
+
+		copy_steps = []
+
+		# For eclasses we perform a much more conservative scan. We will only scour missing eclasses from gentoo-staging, not
+		# eclasses. If you need a special eclass, you need to specify it in the eclasses list for the overlay explicitly.
+
+		last_count = None
+		iterations = 0
+		max_iterations = 16
+		keep_going = True
+		missing_eclasses = []
+
+		# This loop is rather complicated to handle the case where we copy an eclass into our dest-kit, and this eclass in
+		# turn requires additional eclasses, thus creating additional missing eclasses. So we need a super-loop to drive the
+		# whole thing, and we keep going until the number of missing eclasses is zero.
+
+		while keep_going:
+			print("Starting missing eclass stuff")
+			for repo, elist in getAllEclasses(tree, gentoo_staging).items():
+				repo_obj = None
+				print("missing eclass iteration")
+				print(repo, elist)
+				if repo == "dest_kit":
+					# already where we want them
+					continue
+				elif repo == "parent_repo":
+					repo_obj = gentoo_staging
+				elif repo == None:
+					if len(elist) == 0:
+						keep_going = False
+					elif len(elist) == last_count:
+						iterations += 1
+						if iterations > max_iterations:
+							missing_eclasses = elist
+							keep_going = False
+				if repo_obj != None:
+					copy_steps += [ InsertEclasses(repo_obj, select=elist) ]
 
 
-		# All fix-up steps have been generated. Now let's run them:
+		if iterations > max_iterations and len(missing_eclasses):
+			print("!!! Error: The following eclasses were not found:")
+			print("!!!      : " + " ".join(missing_eclasses))
+			print("!!!      : Please be sure to use kit-fixups or the overlay's eclass list to copy these necessary eclasses into place.")
+			sys.exit(1)
 
-		kit.run(steps)
+		# we need to get all the eclasses in place right away so that the following license extraction code has a 
+		# chance of working correctly:
 
-		# Now we want to see what eclasses and licenses we need to copy in from our parent repos:
+		tree.run(copy_steps)
+		copy_steps = []
 
-		eclass_steps = []
+		# for licenses, we are going to aggressively scan all source repos for any missing licenses. We don't need to
+		# be as anal about licenses as eclasses where slight differences can cause problems:
 
-		for repo, elist in getAllLicenses(kit, parent_repo, super_repo=gentoo_staging):
-			eclass_steps += InsertLicenses(repo, select=elist)
+		not_found_licenses = {}
 
-		for repo, elist in getAllEclasses(ebuild_repo=kit, super_repo=gentoo_staging):
-			eclass_steps += InsertEclasses(repo, select=elist)
+		for repo_dict in repos:
+			for repo, elist in getAllLicenses(tree, repo_dict["repo"]).items():
+				repo_obj = None
+				if repo == "dest_kit":
+					# already where we want them
+					continue
+				elif repo == "parent_repo":
+					# found license in the parent repo/overlay
+					repo_obj = repo_dict["repo"]
+				elif repo == None:
+					for license in elist:
+						not_found_licenses[license] = repo_dict["repo"]
+				for license in elist:
+					if license in not_found_licenses:
+						del not_found_licenses[license]
+				if repo_obj:
+					copy_steps += [ InsertLicenses(repo_obj, select=elist) ]
 
-		kit.run(eclass_steps)
+		if len(list(not_found_licenses)):
+			# we scoured all our source repositories and these licenses were not found:
+			print("!!! Error: The following eclasses were not found:")
+			for license, repo in not_found_licenses.items():
+				print("!!! %s license in %s" % (license, repo.name))
+			print("!!!      : Please be sure to install these licenses in the source repository.")
+			sys.exit(1)
+
+		tree.run(copy_steps)
+
+	# QA check: all eclasses should be in place. Let's confirm. if egencache is run without all eclasses in place, it hangs.
+
+	result = getAllEclasses(tree)
+	if None in result and len(result[None]):
+		# we have some missing eclasses
+		print("!!! Error: QA check on kit failed -- missing eclasses:")
+		print("!!!      : " + " ".join(result[None]))
+		print("!!!      : Please be sure to use kit-fixups or the overlay's eclass list to copy these necessary eclasses into place.")
+		sys.exit(1)
+	
 
 	# Phase 4: finalize and commit
-	# TODO: create and dynamic-alize cache_dir below.
+
 	post_steps += [
 		ELTSymlinkWorkaround(),
 		CreateCategories(gentoo_staging),
@@ -451,9 +562,8 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 		GenUseLocalDesc(),
 		GenCache( cache_dir="/var/cache/edb/%s-%s" % ( kit_dict['name'], kit_dict['branch'] ) )
 	]
-	kit.run(post_steps)
-
-	kit.gitCommit(message="updates",branch=kit_dict['branch'],push=False)
+	tree.run(post_steps)
+	tree.gitCommit(message="updates",branch=kit_dict['branch'],push=False)
 
 if __name__ == "__main__":
 
