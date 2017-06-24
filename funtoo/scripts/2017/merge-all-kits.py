@@ -265,8 +265,6 @@ def getKitPrepSteps(repos, kit_dict, gentoo_staging):
 			]
 		},
 		'nokit' : { 'pre' : [
-				# TODO: sync all kit sources, not just gentoo-staging. Something more sophisticated here.
-				SyncDir(gentoo_staging.root),
 				GenerateRepoMetadata("nokit", masters=[], priority=-2000),
 			]
 		}
@@ -342,10 +340,7 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 
 	# get set of source repos used to grab catpkgs from:
 
-	repos = getKitSourceInstance(kit_dict)
-	print("MY REPOS")
-	for repo in repos:
-		print(repo["name"])
+	repos = kit_dict["repo_obj"] = getKitSourceInstance(kit_dict)
 
 	gentoo_staging = None
 	for x in repos:
@@ -402,23 +397,27 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 
 		cat_dict_count = len(kitted_catpkgs.keys())
 		for repo_dict in repos:
-			steps += generateShardSteps(kit_dict['name'], repo_dict["repo"], tree, gentoo_staging, pkgdir=funtoo_overlay.root+"/funtoo/scripts", branch=kit_dict['branch'], insert_kwargs=repo_dict["options"], catpkg_dict=kitted_catpkgs)
-			new_cat_dict_count = len(kitted_catpkgs.keys())
-			if cat_dict_count != new_cat_dict_count:
-				# this means some catpkgs were installed from the repo we are currently processing. This means we also want to execute
-				# 'copyfiles' and 'eclasses' copy logic:
-				
-				ov = overlays[repo_dict["name"]]
+			if kit_dict["name"] == "nokit":
+				# grab all ebuilds to put in nokit
+				steps += InsertEbuilds(repo_dict["repo"], select="all", skip=None, catpkg_dict=kitted_catpkgs)
+			else:
+				steps += generateShardSteps(kit_dict['name'], repo_dict["repo"], tree, gentoo_staging, pkgdir=funtoo_overlay.root+"/funtoo/scripts", branch=kit_dict['branch'], insert_kwargs=repo_dict["options"], catpkg_dict=kitted_catpkgs)
+				new_cat_dict_count = len(kitted_catpkgs.keys())
+				if cat_dict_count != new_cat_dict_count:
+					# this means some catpkgs were installed from the repo we are currently processing. This means we also want to execute
+					# 'copyfiles' and 'eclasses' copy logic:
+					
+					ov = overlays[repo_dict["name"]]
 
-				if "copyfiles" in ov and len(ov["copyfiles"]):
-					# since we copied over some ebuilds, we also want to make sure we copy over things like masks, etc:
-					steps += SyncFiles(repo_dict["repo"].root, ov["copyfiles"])
-				if "eclasses" in ov:
-					# we have eclasses to copy over, too:
-					ec_files = []
-					for eclass in ov["eclasses"]:
-						ec_files = "/eclass/" + eclass + ".eclass"
-						steps += SyncFiles(repo_dict["repo"].root, ec_files)
+					if "copyfiles" in ov and len(ov["copyfiles"]):
+						# since we copied over some ebuilds, we also want to make sure we copy over things like masks, etc:
+						steps += SyncFiles(repo_dict["repo"].root, ov["copyfiles"])
+					if "eclasses" in ov:
+						# we have eclasses to copy over, too:
+						ec_files = []
+						for eclass in ov["eclasses"]:
+							ec_files = "/eclass/" + eclass + ".eclass"
+							steps += SyncFiles(repo_dict["repo"].root, ec_files)
 
 			# update catpkg count for detecting new catpkgs on next iteration of our main 'for' loop:
 			cat_dict_count = new_cat_dict_count
@@ -586,10 +585,11 @@ if __name__ == "__main__":
 		else:
 			for kit_dict in kit_groups[kit_group]:
 				print("Regenerating kit ",kit_dict)
+				print("KITTED_CATPKGS", kitted_catpkgs)
 				updateKit(kit_dict, kitted_catpkgs, create=True)
 
 	print("Checking out prime versions of kits.")
 	for kit_dict in kit_groups['prime']:
-		kit_dict['kit'].run([GitCheckout(branch=kit_dict['branch'])])
+		kit_dict["tree"].run([GitCheckout(branch=kit_dict['branch'])])
 
 # vim: ts=4 sw=4 noet tw=140

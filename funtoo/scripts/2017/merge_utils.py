@@ -227,7 +227,6 @@ def getAllMeta(metadata, dest_kit, parent_repo=None):
 
 	[%s]
 	location = %s
-	eclass-overrides = gentoo 
 	aliases = -gentoo
 	masters = gentoo 
 		''' % ( parent_repo.root, dest_kit.name, dest_kit.root)
@@ -1096,6 +1095,7 @@ class InsertEbuilds(MergeStep):
 					runShell("[ ! -e %s ] && cp -a %s %s || echo \"# skipping %s/%s\"" % (tpkgdir, pkgdir, tpkgdir, cat, pkg ))
 				if copied:
 					# log XML here.
+					self.catpkg_dict[catpkg] = True
 					cpv = "/".join(tpkgdir.split("/")[-2:])
 					mergeLog.write("%s\n" % cpv)
 				# Record source tree of each copied catpkg to XML for later importing...
