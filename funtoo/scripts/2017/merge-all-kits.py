@@ -5,20 +5,25 @@ from merge_utils import *
 
 # KIT DESIGN AND DEVELOPER DOCS
 
-# The maintainable model for kits is to have a 'fixups' repository that contains our changes. Then, this file is used to
-# automatically generate the kits. Rather than commit directly to the kits, we just maintain fix-ups. We use the
-# 'kit-fixups' repo for this.
+# The maintainable model for kits is to have several source repositories that contain most of our source ebuilds/
+# catpkgs, which are identified by SHA1 to point to a specific snapshot. Then, we combine that with a Funtoo 'kit-fixups'
+# repository that contains only our forked ebuilds. Then this script, merge-all-kits.py, is used to automatically
+# generate the kits. We don't commit directly to kits themselves -- this script automatically generates commits with
+# updated ebuilds. 
 
 # A kit is generated from:
 
-# 1. a selection of catpkgs (ebuilds) that are selected using package-sets files in ../package-sets/*-kit for each kit (it
-#    is also possible to have a dir of files like in the case of core-kit.
-# 2. a collection of repositories and SHA1 commit to specify a snapshot of each repository to serve as a source for catpkgs,
-#    eclasses, licenses. It is also possible to speciyf a branch name instead of SHA1 (typically 'master') although this
+# 1. a collection of repositories and SHA1 commit to specify a snapshot of each repository to serve as a source for catpkgs,
+#    eclasses, licenses. It is also possible to specify a branch name instead of SHA1 (typically 'master') although this
 #    shouldn't ever be done for 'prime' branches of kits.
+
+# 1. a selection of catpkgs (ebuilds) that are selected from source repositories. Each kit has a package-set file located 
+#    in ../package-sets/*-kit relative to this file which contains patterns of catpkgs to select from each source 
+#    repository and copy into the kit when regenerating it.
+
 # 3. a collection of fix-ups (from the kit-fixups repository) that can be used to replace catpkgs in various kits globally,
 #    or in a specific branch of a kit. There is also an option to provide eclasses that get copied globally to each kit,
-#    to a particular kit, or to a branch of a particular kit.
+#    to a particular kit, or to a branch of a particular kit. This is the where we fork ebuilds to fix specific issues.
 
 # Below, the kits and branches should be defined in a way that includes all this information. It is also possible to
 # have a kit that simply is a collection of ebuilds but tracks the latest gentoo-staging. It may or may not have
