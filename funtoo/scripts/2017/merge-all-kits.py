@@ -341,7 +341,7 @@ def getKitSourceInstance(kit_dict):
 # regenerating it. The kitted_catpkgs argument is a dictionary which is also written to and used to keep track of
 # catpkgs copied between runs of updateKit.
 
-def updateKit(kit_dict, kitted_catpkgs, create=False):
+def updateKit(kit_dict, kitted_catpkgs, create=False, push=False):
 
 	# get set of source repos used to grab catpkgs from:
 
@@ -582,6 +582,11 @@ def updateKit(kit_dict, kitted_catpkgs, create=False):
 
 if __name__ == "__main__":
 
+	if len(sys.argv) != 2 or sys.argv[1] not in [ "push", "nopush" ]:
+		print("Please specify push or nopush as an argument.")
+	else:
+		push = True if sys.argv[1] == "push" else False
+
 	kitted_catpkgs = {}
 
 	for kit_group in kit_order: 
@@ -591,7 +596,7 @@ if __name__ == "__main__":
 			for kit_dict in kit_groups[kit_group]:
 				print("Regenerating kit ",kit_dict)
 				print("KITTED_CATPKGS", kitted_catpkgs)
-				updateKit(kit_dict, kitted_catpkgs, create=True)
+				updateKit(kit_dict, kitted_catpkgs, create=not push, push=push)
 
 	print("Checking out prime versions of kits.")
 	for kit_dict in kit_groups['prime']:
