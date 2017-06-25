@@ -1,3 +1,7 @@
+# FL-3854: mask biber and biblatex (these are perl based apps) due to new perl requirement. Not forget to remove the mask.
+>=dev-tex/biber-2.7
+>=dev-tex/biblatex-3.7
+
 # this is a list of packages to mask that is now needed to not allow rc-candidates of perl update, such as perl-5.24.1_rc4
 # this file mask can be removed after 5.24.1 (not rc) available.
 # reason is that perl shard update needed for FL-3454 will bring rc version of perl that is probably make sense to avoid atm. this list can change

@@ -1,3 +1,6 @@
+# mask autotrace USE for imagemagick. https://bugs.funtoo.org/browse/FL-3861
+media-gfx/imagemagick autotrace
+
 # FL-3730: mask CUDA use for media-video/mpv
 media-video/mpv cuda
 

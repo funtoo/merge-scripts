@@ -1,4 +1,10 @@
-#QA-494: mask man-db-2.7.61-r2 until we sort its configure 
+# mask vulenrable and discontinued autotrace
+# https://bugs.funtoo.org/browse/FL-3861
+# https://bugs.gentoo.org/show_bug.cgi?id=620802
+# https://bugs.gentoo.org/show_bug.cgi?id=619040
+media-gfx/autotrace
+
+#QA-494: mask man-db-2.7.61-r2 until we sort its configure
 =sys-apps/man-db-2.7.6.1-r2
 
 # mask release candidates of llvm:
