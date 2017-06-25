@@ -584,6 +584,7 @@ if __name__ == "__main__":
 
 	if len(sys.argv) != 2 or sys.argv[1] not in [ "push", "nopush" ]:
 		print("Please specify push or nopush as an argument.")
+		sys.exit(1)
 	else:
 		push = True if sys.argv[1] == "push" else False
 
