@@ -293,7 +293,7 @@ def generateShardSteps(name, from_tree, to_tree, super_tree, pkgdir=None, branch
 			cat_pkglist = getPackagesInCatWithEclass( from_tree, cat, eclass )
 			pkglist += list(cat_pkglist)
 		elif pattern.endswith("/*"):
-			steps += [ InsertEbuilds(from_tree, select=re.compile(pattern), skip=skip, replace=True, cpm_logger=cpm_logger) ]
+			steps += [ InsertEbuilds(from_tree, select=re.compile(pattern[-1:]+".*"), skip=skip, replace=True, cpm_logger=cpm_logger) ]
 		else:
 			pkglist.append(pattern)
 
