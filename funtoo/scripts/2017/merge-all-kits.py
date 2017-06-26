@@ -415,13 +415,12 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 				steps += [ SyncFiles(repo_dict["repo"].root, ov["copyfiles"]) ]
 			if "eclasses" in ov:
 				# we have eclasses to copy over, too:
-				ec_files = []
+				ec_files = {}
 				for eclass in ov["eclasses"]:
-					ec_files = "/eclass/" + eclass + ".eclass"
-					steps += [ SyncFiles(repo_dict["repo"].root, ec_files) ]
+					ecf = "/eclass/" + eclass + ".eclass"
+					ec_files[ecf] = ecf
+				steps += [ SyncFiles(repo_dict["repo"].root, ec_files) ]
 		copycount = cpm_logger.copycount
-		# now activate any regexes recorded so that they will be matched against for successive kits:
-		cpm_logger.nextKit()
 
 	# Phase 3: copy eclasses, licenses, and ebuild/eclass fixups from the kit-fixups repository. 
 
@@ -570,6 +569,10 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 	]
 	tree.run(post_steps)
 	tree.gitCommit(message="updates",branch=kit_dict['branch'],push=False)
+	
+	# now activate any regexes recorded so that they will be matched against for successive kits:
+		
+	cpm_logger.nextKit()
 
 if __name__ == "__main__":
 
