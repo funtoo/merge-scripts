@@ -344,6 +344,9 @@ class CatPkgMatchLogger(object):
 		self._matchdict = {}
 		# for regex matches
 		self._regexdict = {}
+		# we don't want to match regexes against catpkgs in the CURRENT KIT. Otherwise we will only copy the first match
+		# of a regex! So accumulate regexes here and only add them to our match list when the caller calls .nextKit()
+		self._regexdict_curkit = {}
 
 	# Another feature of the CatPkgMatchLoggger is that it records how many catpkgs actually were copied -- 1 for each catpkg
 	# literal, and a caller-specified number of matches for regexes. This tally is used by merge-all-kits.py to determine the
@@ -367,10 +370,14 @@ class CatPkgMatchLogger(object):
 
 	def record(self, match):
 		if isinstance(match, regextype):
-			self._regexdict[match.pattern] = match
+			self._regexdict_curkit[match.pattern] = match
 		else:
 			self._matchdict[match] = True
-		self._copycount += 1 
+		self._copycount += 1
+
+	def nextKit(self):
+		self._regexdict.update(self._regexdict_curkit)
+		self._regexdict_curkit = {}
 
 def qa_build(host,build,arch_desc,subarch,head,target):
 	success = False

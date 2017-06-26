@@ -420,6 +420,8 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 					ec_files = "/eclass/" + eclass + ".eclass"
 					steps += SyncFiles(repo_dict["repo"].root, ec_files)
 		copycount = cpm_logger.copycount
+		# now activate any regexes recorded so that they will be matched against for successive kits:
+		cpm_logger.nextKit()
 
 	# Phase 3: copy eclasses, licenses, and ebuild/eclass fixups from the kit-fixups repository. 
 
