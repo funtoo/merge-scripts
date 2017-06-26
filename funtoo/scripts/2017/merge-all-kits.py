@@ -412,13 +412,13 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 
 			if "copyfiles" in ov and len(ov["copyfiles"]):
 				# since we copied over some ebuilds, we also want to make sure we copy over things like masks, etc:
-				steps += SyncFiles(repo_dict["repo"].root, ov["copyfiles"])
+				steps += [ SyncFiles(repo_dict["repo"].root, ov["copyfiles"]) ]
 			if "eclasses" in ov:
 				# we have eclasses to copy over, too:
 				ec_files = []
 				for eclass in ov["eclasses"]:
 					ec_files = "/eclass/" + eclass + ".eclass"
-					steps += SyncFiles(repo_dict["repo"].root, ec_files)
+					steps += [ SyncFiles(repo_dict["repo"].root, ec_files) ]
 		copycount = cpm_logger.copycount
 		# now activate any regexes recorded so that they will be matched against for successive kits:
 		cpm_logger.nextKit()
