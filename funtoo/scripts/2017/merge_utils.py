@@ -264,7 +264,7 @@ def getAllMeta(metadata, dest_kit, parent_repo=None):
 						myeclasses.add(lic)
 	return myeclasses
 
-def generateShardSteps(name, from_tree, to_tree, super_tree, pkgdir=None, branch="master", catpkg_dict=None, insert_kwargs=None):
+def generateShardSteps(name, from_tree, to_tree, super_tree, pkgdir=None, branch="master", cpm_logger=None, insert_kwargs=None):
 	steps = []
 	if branch:
 		steps += [ GitCheckout(branch) ]
@@ -279,19 +279,21 @@ def generateShardSteps(name, from_tree, to_tree, super_tree, pkgdir=None, branch
 		skip = get_pkglist(pkgf_skip)
 	for pattern in get_pkglist(pkgf):
 		if pattern.startswith("@regex@:"):
-			steps += [ InsertEbuilds(from_tree, select=re.compile(pattern[8:]), skip=skip, replace=True, catpkg_dict=catpkg_dict) ]
+			steps += [ InsertEbuilds(from_tree, select=re.compile(pattern[8:]), skip=skip, replace=True, cpm_logger=cpm_logger) ]
 		elif pattern.startswith("@depsincat@:"):
 			patsplit = pattern.split(":")
 			catpkg = patsplit[1]
-			dep_pkglist = getDependencies(from_tree, [ catpkg ] )
+			dep_pkglist = getDependencies( from_tree, [ catpkg ] )
 			if len(patsplit) == 3:
 				dep_pkglist, dep_pkglist_nomatch = filterInCategory(dep_pkglist, patsplit[2])
 			pkglist += list(dep_pkglist)
 		elif pattern.startswith("@cat_has_eclass@:"):
 			patsplit = pattern.split(":")
 			cat, eclass = patsplit[1:]
-			cat_pkglist = getPackagesInCatWithEclass(from_tree, cat, eclass )
+			cat_pkglist = getPackagesInCatWithEclass( from_tree, cat, eclass )
 			pkglist += list(cat_pkglist)
+		elif pattern.endswith("/*"):
+			steps += [ InsertEbuilds(from_tree, select=re.compile(pattern), skip=skip, replace=True, cpm_logger=cpm_logger) ]
 		else:
 			pkglist.append(pattern)
 
@@ -306,8 +308,69 @@ def generateShardSteps(name, from_tree, to_tree, super_tree, pkgdir=None, branch
 			insert_kwargs["select"] = list(f_set)
 
 	if pkglist:
-		steps += [ InsertEbuilds(from_tree, skip=skip, catpkg_dict=catpkg_dict, **insert_kwargs) ]
+		steps += [ InsertEbuilds(from_tree, skip=skip, cpm_logger=cpm_logger, **insert_kwargs) ]
 	return steps
+
+# CatPkgMatchLogger is an object that is used to keep a running record of catpkgs that were copied to kits via package-set rules.
+# As catpkgs are called, a CatPkgMatchLogger() object is called as follows:
+#
+# logger.record("sys-foo/bar")					# catpkg foo/bar was merged.
+# logger.record(regex("sys-bar/*"))				# a "sys-bar/*" was specified in the package set.
+#
+# Then, prior to copying a catpkg to a kit, we can check to see if maybe this catpkg was already copied to another kit. If so, we
+# should not copy it to a new kit which would cause a duplicate catpkg to exist between two kits. The "should we copy this catpkg"
+# question is answered by calling the match() method, as follows:
+#
+# logger.match("sys-foo/bar")	: True --   this matches a previously copied catpkg atom, so don't copy it to the kit.
+# logger.match("sys-foo/oni")   : False --  we have no record of this catpkg being copied, so it's safe to copy.
+# logger.match("sys-bar/bleh")  : True --   this catpkg matches a wildcard regex that was used previously, so don't copy.
+#
+# The support for regex matches fixes a kit problem called "kit overflow". Here's an example of kit overflow. Let's say
+# we have a snapshot of our python-kit, but since our snapshot, many dev-python catpkgs have been added. Without regex support
+# in CatPkgMatchLogger, these new catpkgs will "overflow" to nokit. When we eventually bump our python-kit to a newer snapshot
+# and these newer catpkgs start to appear in python-kit instead of our unsnapshotted nokit, this will result in dev-python
+# downgrades.
+#
+# To work around this, when we encounter a pattern or regex like "dev-python/*", we record a regex in CatPkgMatchLogger. If the
+# catpkg we are considering copying WOULD have matched a previously-used pattern, we can know that it should NOT be copied to
+# nokit. If we were to just track literal catpkgs and not regexes, then the overflow to nokit would occur.
+
+class CatPkgMatchLogger(object):
+
+	def __init__(self):
+		self._copycount = 0	
+		self._matchcount = 0	
+		# for string matches
+		self._matchdict = {}
+		# for regex matches
+		self._regexdict = {}
+
+	# Another feature of the CatPkgMatchLoggger is that it records how many catpkgs actually were copied -- 1 for each catpkg
+	# literal, and a caller-specified number of matches for regexes. This tally is used by merge-all-kits.py to determine the
+	# total number of catpkgs copied to each kit.
+
+	@property
+	def copycount(self):
+		return self._copycount
+
+	@property
+	def matchcount(self):
+		return self._matchcount
+
+	def match(self, catpkg):
+		if catpkg in self._matchdict:
+			return True
+		for pat, regex in self._regexdict.items():
+			if regex.match(catpkg):
+				return True
+		return False
+
+	def record(self, match):
+		if isinstance(match, regextype):
+			self._regexdict[match.pattern] = match
+		else:
+			self._matchdict[match] = True
+		self._copycount += 1 
 
 def qa_build(host,build,arch_desc,subarch,head,target):
 	success = False
@@ -483,7 +546,8 @@ thin-manifests = true
 sign-manifests = false
 profile-formats = portage-2
 cache-formats = md5-dict
-''' % self.name
+masters = %s
+''' % ( self.name, " ".join(self.masters) )
 		if self.aliases:
 			out += "aliases = %s\n" % " ".join(self.aliases)
 		if self.masters:
@@ -957,16 +1021,14 @@ class InsertEbuilds(MergeStep):
 	
 	
 	"""
-	def __init__(self,srctree,select="all",skip=None,replace=False,merge=None,categories=None,ebuildloc=None,branch=None,catpkg_dict=None):
+	def __init__(self,srctree,select="all",skip=None,replace=False,merge=None,categories=None,ebuildloc=None,branch=None,cpm_logger=None):
 		self.select = select
 		self.skip = skip
 		self.srctree = srctree
 		self.replace = replace
 		self.merge = merge
 		self.categories = categories
-		self.catpkg_dict = catpkg_dict
-		if self.catpkg_dict == None:
-			self.catpkg_dict = {}
+		self.cpm_logger = cpm_logger
 
 		if branch != None:
 			# Allow dynamic switching to different branches/commits to grab things we want:
@@ -1019,18 +1081,17 @@ class InsertEbuilds(MergeStep):
 				# not a valid category in source overlay, so skip it
 				continue
 			#runShell("install -d %s" % catdir)
-			catall = "%s/*" % cat
 			for pkg in os.listdir(catdir):
 				catpkg = "%s/%s" % (cat,pkg)
 				pkgdir = os.path.join(catdir, pkg)
-				if catpkg in self.catpkg_dict:
+				if self.cpm_logger and self.cpm_logger.match(catpkg):
 					#already copied
 					continue
 				if not os.path.isdir(pkgdir):
 					# not a valid package dir in source overlay, so skip it
 					continue
 				if isinstance(self.select, list):
-					if (catall not in self.select) and (catpkg not in self.select):
+					if catpkg not in self.select:
 						# we have a list of pkgs to merge, and this isn't on the list, so skip:
 						continue
 				elif isinstance(self.select, regextype):
@@ -1038,7 +1099,7 @@ class InsertEbuilds(MergeStep):
 						# no regex match:
 						continue
 				if isinstance(self.skip, list):
-					if ((catpkg in self.skip) or (catall in self.skip)):
+					if catpkg in self.skip:
 						# we have a list of pkgs to skip, and this catpkg is on the list, so skip:
 						continue
 				elif isinstance(self.skip, regextype):
@@ -1049,10 +1110,10 @@ class InsertEbuilds(MergeStep):
 				tcatdir = os.path.join(desttree.root,cat)
 				tpkgdir = os.path.join(tcatdir,pkg)
 				copied = False
-				if self.replace == True or (isinstance(self.replace, list) and ((catpkg in self.replace) or (catall in self.replace))):
+				if self.replace == True or (isinstance(self.replace, list) and (catpkg in self.replace)):
 					if not os.path.exists(tcatdir):
 						os.makedirs(tcatdir)
-					if self.merge is True or (isinstance(self.merge, list) and ((catpkg in self.merge) or (catall in self.merge)) and os.path.isdir(tpkgdir)):
+					if self.merge is True or (isinstance(self.merge, list) and (catpkg in self.merge) and os.path.isdir(tpkgdir)):
 						# We are being told to merge, and the destination catpkg dir exists... so merging is required! :)
 						# Manifests must be processed and combined:
 						try:
@@ -1095,7 +1156,13 @@ class InsertEbuilds(MergeStep):
 					runShell("[ ! -e %s ] && cp -a %s %s || echo \"# skipping %s/%s\"" % (tpkgdir, pkgdir, tpkgdir, cat, pkg ))
 				if copied:
 					# log XML here.
-					self.catpkg_dict[catpkg] = True
+					if self.cpm_logger:
+						if isinstance(self.select, regextype):
+							# If a regex was used to match the copied catpkg, record the regex and number of matches
+							self.cpm_logger.record(self.select)
+						else:
+							# otherwise, record the literal catpkg matched.
+							self.cpm_logger.record(catpkg)
 					cpv = "/".join(tpkgdir.split("/")[-2:])
 					mergeLog.write("%s\n" % cpv)
 				# Record source tree of each copied catpkg to XML for later importing...
