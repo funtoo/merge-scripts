@@ -1,3 +1,6 @@
+# disable gnome use for x11-misc/notification-daemon, when enabled this trigger a block with mate-notification, which is what mate desktop using.
+x11-misc/notification-daemon -gnome
+
 # QA-471 enable gtk3
 media-gfx/eom -python
 app-editors/pluma -python
