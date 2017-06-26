@@ -711,11 +711,10 @@ class GitTree(Tree):
 
 	"A Tree (git) that we can use as a source for work jobs, and/or a target for running jobs."
 
-	def __init__(self,name, branch="master",url=None,commit=None,pull=False,root=None,xml_out=None,initialize=False,reponame=None):
+	def __init__(self,name, branch="master",url=None,commit=None,pull=False,root=None,xml_out=None, create=False,reponame=None):
 		self.name = name
 		self.root = root
 		self.branch = branch
-		print("SET BRANCH TO", self.branch)
 		self.commit = commit
 		self.url = url
 		self.merged = []
@@ -751,22 +750,18 @@ class GitTree(Tree):
 		else:
 			self.writeTree = True
 			if not os.path.isdir("%s/.git" % self.root):
-				if not initialize:
+				if not create:
 					print("Error: repository does not exist at %s. Exiting." % self.root)
 					sys.exit(1)
 				else:
-					if os.path.exists(self.root):
-						print("Repository %s: --init specified but path already exists. Exiting.")
-						sys.exit(1)
 					os.makedirs(self.root)
 					runShell("( cd %s; git init )" % self.root )
 					runShell("echo 'created by merge.py' > %s/README" % self.root )
 					runShell("( cd %s; git add README; git commit -a -m 'initial commit by merge.py' )" % self.root )
-					if isinstance(initialize, str):
-						if not runShell("( cd %s; git checkout -b %s; git rm -f README; git commit -a -m 'initial %s commit' )" % (self.root,initialize,initialize),abortOnFail=False ):
-							print("Git repository creation failed, removing.")
-							runShell("( rm -f %s )" % self.root)
-							sys.exit(1)
+					runShell("( cd %s; git remote add origin %s )", ( self.root, self.url ))
+					# now repo exists, but local branch may not:
+					if not os.path.exists('%s/.git/refs/heads/%s' % ( self.root, self.branch )):
+						runShell('( cd %s; git checkout -b %s --track origin/%s' % ( self.root, self.branch, self.branch ))
 			else:
 				self.push = True
 		# branch is updated -- now switch to specific commit if one was specified:

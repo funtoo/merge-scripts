@@ -363,20 +363,8 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 	elif gentoo_staging.name != "gentoo-staging":
 		print("Gentoo staging mismatch -- name is %s" % gentoo_staging["name"])
 
-	# create kit repo if it doesn't exist
-
-	if create and not os.path.exists('/var/git/dest-trees/%s' % kit_dict['name']):
-		# create repo dir, perform first commit, and add origin:
-		os.makedirs('/var/git/dest-trees/%s' % kit_dict['name'])
-		os.system('cd /var/git/dest-trees/%s' % kit_dict['name'] + ' ;git init; touch README; git add README; git commit -a -m "first commit"')
-		os.system('cd /var/git/dest-trees/%s' % kit_dict['name'] + ' ;git remote add origin %s' % overlays[kit_dict['name']]['url'])
-	
-	# kit repo may exist, but local branch may not:
-	if not os.path.exists('/var/git/dest-trees/%s/.git/refs/heads/%s' % (kit_dict['name'], kit_dict['branch'])):
-		os.system('cd /var/git/dest-trees/%s' % kit_dict['name'] + ' ;git checkout -b %s --track origin/%s' % ( kit_dict['branch'], kit_dict['branch'])) 
-
 	# we should now be OK to use the repo and the local branch:
-	kit_dict['tree'] = tree = GitTree(kit_dict['name'], kit_dict['branch'], "repos@git.funtoo.org:kits/%s.git" % kit_dict['name'], root="/var/git/dest-trees/%s" % kit_dict['name'], pull=True)
+	kit_dict['tree'] = tree = GitTree(kit_dict['name'], kit_dict['branch'], "repos@git.funtoo.org:kits/%s.git" % kit_dict['name'], create=create, root="/var/git/dest-trees/%s" % kit_dict['name'], pull=True)
 	
 	# Phase 1: prep the kit
 	pre_steps = [
