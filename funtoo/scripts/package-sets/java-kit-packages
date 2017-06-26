@@ -1,4 +1,4 @@
-jdev-java/*
+dev-java/*
 java-virtuals/*
 virtual/jdk
 virtual/jre
