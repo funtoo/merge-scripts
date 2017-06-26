@@ -369,7 +369,7 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 		# create repo dir, perform first commit, and add origin:
 		os.makedirs('/var/git/dest-trees/%s' % kit_dict['name'])
 		os.system('cd /var/git/dest-trees/%s' % kit_dict['name'] + ' ;git init; touch README; git add README; git commit -a -m "first commit"')
-		os.system('cd /var/git/dest-trees/%s' % kit_dict['name'] + ' ;git remote add origin %s' % kit_dict['url'])
+		os.system('cd /var/git/dest-trees/%s' % kit_dict['name'] + ' ;git remote add origin %s' % overlays[kit_dict['name']]['url'])
 	
 	# kit repo may exist, but local branch may not:
 	if not os.path.exists('/var/git/dest-trees/%s/.git/refs/heads/%s' % (kit_dict['name'], kit_dict['branch'])):
