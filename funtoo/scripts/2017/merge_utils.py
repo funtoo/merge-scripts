@@ -758,7 +758,7 @@ class GitTree(Tree):
 					runShell("( cd %s; git init )" % self.root )
 					runShell("echo 'created by merge.py' > %s/README" % self.root )
 					runShell("( cd %s; git add README; git commit -a -m 'initial commit by merge.py' )" % self.root )
-					runShell("( cd %s; git remote add origin %s )", ( self.root, self.url ))
+					runShell("( cd %s; git remote add origin %s )" % ( self.root, self.url ))
 					# now repo exists, but local branch may not:
 					if not os.path.exists('%s/.git/refs/heads/%s' % ( self.root, self.branch )):
 						runShell('( cd %s; git checkout -b %s --track origin/%s' % ( self.root, self.branch, self.branch ))
