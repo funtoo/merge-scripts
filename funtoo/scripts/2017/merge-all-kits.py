@@ -451,6 +451,14 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 				steps += [
 					InsertFilesFromSubdir(fixup_repo, "licenses", None, select="all", skip=None, src_offset=fixup_path)
 				]
+			# copy appropriate kit readme into place:
+			readme_path = fixup_path + "/README.rst"
+			if os.path.exists(fixup_repo.root + "/" + readme_path ):
+				steps += [
+					SyncFiles(fixup_repo, {
+						readme_path : "README.rst"
+					} 
+				]
 			steps += [
 				# add a new parameter called 'prefix'
 				InsertEbuilds(fixup_repo, ebuildloc=fixup_path, select="all", skip=None, replace=True )
