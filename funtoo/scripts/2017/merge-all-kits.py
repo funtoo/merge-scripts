@@ -455,7 +455,7 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 			readme_path = fixup_path + "/README.rst"
 			if os.path.exists(fixup_repo.root + "/" + readme_path ):
 				steps += [
-					SyncFiles(fixup_repo, {
+					SyncFiles(fixup_repo.root, {
 						readme_path : "README.rst"
 					})
 				]
