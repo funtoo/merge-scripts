@@ -457,7 +457,7 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 				steps += [
 					SyncFiles(fixup_repo, {
 						readme_path : "README.rst"
-					} 
+					})
 				]
 			steps += [
 				# add a new parameter called 'prefix'
