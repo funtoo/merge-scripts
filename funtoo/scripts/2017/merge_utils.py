@@ -777,10 +777,10 @@ class GitTree(Tree):
 		if sha1 == None:
 			s, sha1 = subprocess.getstatusoutput("( cd %s; git rev-parse HEAD )" % tree.root)
 			sha1 = sha1.strip()
-		destpath = "%s/%s" % (self.root, path )
+		destpath = os.path.join(self.root, path)
 		if not os.path.exists(destpath):
-			runShell("( cd %s; git submodule add %s %s )" % ( os.path.basename(destpath), tree.url, tree.name ))
-		runShell("( cd %s/%s; git fetch; git checkout %s )" % ( self.root, path, sha1 ))
+			runShell("( cd %s; git submodule add %s %s )" % ( os.path.dirname(destpath), tree.url, tree.name ))
+		runShell("( cd %s; git fetch; git checkout %s )" % ( destpath, sha1 ))
 
 	def getAllCatPkgs(self):
 		self.gitCheckout()
