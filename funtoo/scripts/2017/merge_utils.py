@@ -711,11 +711,10 @@ class GitTree(Tree):
 
 	"A Tree (git) that we can use as a source for work jobs, and/or a target for running jobs."
 
-	def __init__(self,name, branch="master",url=None,commit=None,pull=False,root=None,xml_out=None, create=False,reponame=None):
+	def __init__(self,name, branch="master",url=None,pull=False,root=None,xml_out=None, clone=True, create=False,reponame=None):
 		self.name = name
 		self.root = root
 		self.branch = branch
-		self.commit = commit
 		self.url = url
 		self.merged = []
 		self.xml_out = xml_out
@@ -750,7 +749,17 @@ class GitTree(Tree):
 		else:
 			self.writeTree = True
 			if not os.path.isdir("%s/.git" % self.root):
-				if not create:
+				base = os.path.dirname(self.root)
+				if pull:
+					if not os.path.exists(base):
+						os.makedirs(base)
+					if url:
+						runShell("(cd %s; git clone %s %s)" % ( base, self.url, self.name ))
+						runShell("(cd %s; git checkout %s || git checkout -b %s --track origin/%s || git checkout -b %s)" % ( self.root, self.branch, self.branch, self.branch, self.branch ))
+					else:
+						print("Error: tree %s does not exist, but no clone URL specified. Exiting." % self.root)
+						sys.exit(1)
+				elif not create:
 					print("Error: repository does not exist at %s. Exiting." % self.root)
 					sys.exit(1)
 				else:
@@ -760,13 +769,18 @@ class GitTree(Tree):
 					runShell("( cd %s; git add README; git commit -a -m 'initial commit by merge.py' )" % self.root )
 					runShell("( cd %s; git remote add origin %s )" % ( self.root, self.url ))
 					# now repo exists, but local branch may not:
-					if not os.path.exists('%s/.git/refs/heads/%s' % ( self.root, self.branch )):
-						runShell('( cd %s; git checkout -b %s --track origin/%s' % ( self.root, self.branch, self.branch ))
+					runShell("(cd %s; git checkout %s || git checkout -b %s --track origin/%s || git checkout -b %s)" % ( self.root, self.branch, self.branch, self.branch, self.branch ))
 			else:
 				self.push = True
-		# branch is updated -- now switch to specific commit if one was specified:
-		if self.commit:
-			runShell("(cd %s; git checkout %s)" % ( self.root, self.commit ))
+
+	def gitSubmoduleAddOrUpdate(self, tree, path, sha1=None):
+		if sha1 == None:
+			s, sha1 = subprocess.getstatusoutput("( cd %s; git rev-parse HEAD )" % tree.root)
+			sha1 = sha1.strip()
+		destpath = "%s/%s" % (self.root, path )
+		if not os.path.exists(destpath):
+			runShell("( cd %s; git submodule add %s %s )" % ( os.path.basename(destpath), tree.url, tree.name ))
+		runShell("( cd %s/%s; git checkout %s )" % ( self.root, path, sha1 ))
 
 	def getAllCatPkgs(self):
 		self.gitCheckout()
@@ -825,10 +839,7 @@ class GitTree(Tree):
 				step.run(self)
 
 	def head(self):
-		if self.commit:
-			return self.commit
-		else:
-			return headSHA1(self.root)
+		return headSHA1(self.root)
 
 	def logTree(self,srctree):
 		# record name and SHA of src tree in dest tree, used for git commit message/auditing:
@@ -1271,7 +1282,7 @@ class GitCheckout(MergeStep):
 		self.branch = branch
 
 	def run(self,tree):
-		runShell("( cd %s; git checkout %s )" % ( tree.root, self.branch ))
+		runShell("(cd %s; git checkout %s || git checkout -b %s --track origin/%s || git checkout -b %s)" % ( tree.root, self.branch, self.branch, self.branch, self.branch ))
 
 class CreateBranch(MergeStep):
 

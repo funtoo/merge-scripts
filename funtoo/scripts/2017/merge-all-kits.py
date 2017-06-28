@@ -116,7 +116,7 @@ overlays = {
 funtoo_overlay = GitTree("funtoo-overlay", "master", "repos@git.funtoo.org:funtoo-overlay.git", pull=True)
 fixup_repo = GitTree("kit-fixups", "master", "repos@git.funtoo.org:kits/kit-fixups.git", pull=True)
 
-# meta_repo = GitTree("meta-repo", "master", "repos@git.funtoo.org:kits/meta-repo.git", pull=True)
+meta_repo = GitTree("meta-repo", "master", "repos@git.funtoo.org:meta-repo.git", pull=True)
 
 # 2. KIT SOURCES - kit sources are a combination of overlays, arranged in a python list [ ]. A KIT SOURCE serves as a
 # unified collection of source catpkgs for a particular kit. Each kit can have one KIT SOURCE. KIT SOURCEs MAY be
@@ -550,7 +550,6 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 		print("!!!      : Please be sure to use kit-fixups or the overlay's eclass list to copy these necessary eclasses into place.")
 		sys.exit(1)
 	
-
 	# Phase 4: finalize and commit
 
 	post_steps += [
@@ -586,7 +585,10 @@ if __name__ == "__main__":
 				updateKit(kit_dict, cpm_logger, create=not push, push=push)
 
 	print("Checking out prime versions of kits.")
-	for kit_dict in kit_groups['prime']:
+	for kit_dict in kit_groups['prime'] + kit_groups['shared']:
 		kit_dict["tree"].run([GitCheckout(branch=kit_dict['branch'])])
+		if push:
+			meta_repo.gitSubmoduleAddOrUpdate(kit_dict["tree"], "kits/%s" % kit_dict["name"])
+		meta_repo.gitCommit()
 
 # vim: ts=4 sw=4 noet tw=140
