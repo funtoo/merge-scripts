@@ -780,7 +780,7 @@ class GitTree(Tree):
 		destpath = "%s/%s" % (self.root, path )
 		if not os.path.exists(destpath):
 			runShell("( cd %s; git submodule add %s %s )" % ( os.path.basename(destpath), tree.url, tree.name ))
-		runShell("( cd %s/%s; git checkout %s )" % ( self.root, path, sha1 ))
+		runShell("( cd %s/%s; git fetch; git checkout %s )" % ( self.root, path, sha1 ))
 
 	def getAllCatPkgs(self):
 		self.gitCheckout()
@@ -826,7 +826,7 @@ class GitTree(Tree):
 			print("Commit failed.")
 			sys.exit(1)
 		if branch != False and push == True:
-			runShell("(cd %s; git push %s %s)" % ( self.root, upstream, branch ))
+			runShell("(cd %s; git push --mirror)" % self.root )
 		else:	 
 			print("Pushing disabled.")
 
