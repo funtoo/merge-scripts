@@ -773,13 +773,15 @@ class GitTree(Tree):
 			else:
 				self.push = True
 
-	def gitSubmoduleAddOrUpdate(self, tree, path, sha1=None):
+	def gitSubmoduleAddOrUpdate(self, tree, path, url=None, sha1=None):
+		if url == None:
+			url = tree.url
 		if sha1 == None:
 			s, sha1 = subprocess.getstatusoutput("( cd %s; git rev-parse HEAD )" % tree.root)
 			sha1 = sha1.strip()
 		destpath = os.path.join(self.root, path)
 		if not os.path.exists(destpath):
-			runShell("( cd %s; git submodule add %s %s )" % ( os.path.dirname(destpath), tree.url, tree.name ))
+			runShell("( cd %s; git submodule add %s %s )" % ( os.path.dirname(destpath), url, tree.name ))
 		runShell("( cd %s; git fetch; git checkout %s )" % ( destpath, sha1 ))
 
 	def getAllCatPkgs(self):

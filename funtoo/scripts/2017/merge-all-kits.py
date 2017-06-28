@@ -588,7 +588,8 @@ if __name__ == "__main__":
 	for kit_dict in kit_groups['prime'] + kit_groups['shared']:
 		kit_dict["tree"].run([GitCheckout(branch=kit_dict['branch'])])
 		if push:
-			meta_repo.gitSubmoduleAddOrUpdate(kit_dict["tree"], "kits/%s" % kit_dict["name"])
+			# use the github url for the submodule, for public consumption.
+			meta_repo.gitSubmoduleAddOrUpdate(kit_dict["tree"], "kits/%s" % kit_dict["name"], "https://github.com/funtoo/%s.git" % kit_dict["name"])
 	if push:
 		meta_repo.gitCommit(message="kit updates", branch="master", push=push)
 
