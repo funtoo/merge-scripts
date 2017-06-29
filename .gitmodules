@@ -1,0 +1,3 @@
+[submodule "funtoo/scripts/2017/gnome-kit"]
+	path = funtoo/scripts/2017/gnome-kit
+	url = repos@git.funtoo.org:kits/gnome-kit.git

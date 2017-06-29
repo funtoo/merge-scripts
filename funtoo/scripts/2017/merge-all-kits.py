@@ -116,7 +116,7 @@ overlays = {
 funtoo_overlay = GitTree("funtoo-overlay", "master", "repos@git.funtoo.org:funtoo-overlay.git", pull=True)
 fixup_repo = GitTree("kit-fixups", "master", "repos@git.funtoo.org:kits/kit-fixups.git", pull=True)
 
-# meta_repo = GitTree("meta-repo", "master", "repos@git.funtoo.org:kits/meta-repo.git", pull=True)
+meta_repo = GitTree("meta-repo", "master", "repos@git.funtoo.org:meta-repo.git", root="/var/git/dest-trees/meta-repo", create=False, pull=True)
 
 # 2. KIT SOURCES - kit sources are a combination of overlays, arranged in a python list [ ]. A KIT SOURCE serves as a
 # unified collection of source catpkgs for a particular kit. Each kit can have one KIT SOURCE. KIT SOURCEs MAY be
@@ -451,6 +451,14 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 				steps += [
 					InsertFilesFromSubdir(fixup_repo, "licenses", None, select="all", skip=None, src_offset=fixup_path)
 				]
+			# copy appropriate kit readme into place:
+			readme_path = fixup_path + "/README.rst"
+			if os.path.exists(fixup_repo.root + "/" + readme_path ):
+				steps += [
+					SyncFiles(fixup_repo.root, {
+						readme_path : "README.rst"
+					})
+				]
 			steps += [
 				# add a new parameter called 'prefix'
 				InsertEbuilds(fixup_repo, ebuildloc=fixup_path, select="all", skip=None, replace=True )
@@ -550,7 +558,6 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 		print("!!!      : Please be sure to use kit-fixups or the overlay's eclass list to copy these necessary eclasses into place.")
 		sys.exit(1)
 	
-
 	# Phase 4: finalize and commit
 
 	post_steps += [
@@ -561,7 +568,7 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 		GenCache( cache_dir="/var/cache/edb/%s-%s" % ( kit_dict['name'], kit_dict['branch'] ) )
 	]
 	tree.run(post_steps)
-	tree.gitCommit(message="updates",branch=kit_dict['branch'],push=False)
+	tree.gitCommit(message="updates",branch=kit_dict['branch'],push=push)
 	
 	# now activate any regexes recorded so that they will be matched against for successive kits:
 		
@@ -586,7 +593,12 @@ if __name__ == "__main__":
 				updateKit(kit_dict, cpm_logger, create=not push, push=push)
 
 	print("Checking out prime versions of kits.")
-	for kit_dict in kit_groups['prime']:
+	for kit_dict in kit_groups['prime'] + kit_groups['shared']:
 		kit_dict["tree"].run([GitCheckout(branch=kit_dict['branch'])])
+		if push:
+			# use the github url for the submodule, for public consumption.
+			meta_repo.gitSubmoduleAddOrUpdate(kit_dict["tree"], "kits/%s" % kit_dict["name"], "https://github.com/funtoo/%s.git" % kit_dict["name"])
+	if push:
+		meta_repo.gitCommit(message="kit updates", branch="master", push=push)
 
 # vim: ts=4 sw=4 noet tw=140
