@@ -131,3 +131,5 @@ virtual/pager
 virtual/service-manager
 app-text/wgetpaste
 virtual/udev
+sys-process/lsof
+sys-process/cronie
