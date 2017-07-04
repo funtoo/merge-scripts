@@ -377,7 +377,17 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 	copy_steps = prep_steps[1]
 	post_steps = prep_steps[2]
 
+	# for core-kit, we want to grab CURRENT masks, etc, which is done by the pre_steps. But we want to grab eclasses and catpkgs from
+	# the snapshot. So we temporarily switch to "master" for grabbing masks so they are current, and then switch back to the snapshot.
+
+	if kit_dict["name"] == "core-kit":
+		prev_branch = gentoo_staging.branch
+		gentoo_staging.run([GitCheckout("master")])
+
 	tree.run(pre_steps)
+
+	if kit_dict["name"] == "core-kit":
+		gentoo_staging.run([GitCheckout(prev_branch)])
 
 	# Phase 2: copy core set of ebuilds
 
