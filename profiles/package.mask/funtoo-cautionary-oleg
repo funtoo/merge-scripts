@@ -8,6 +8,8 @@ media-gfx/autotrace
 =sys-apps/man-db-2.7.6.1-r2
 
 # mask release candidates of llvm:
+>=dev-util/lldb-4.0.0
+>=sys-devel/llvm-common-4.0.0
 =sys-devel/lld-4.0.0_rc*
 =sys-devel/clang-4.0.0_rc*
 =sys-devel/llvm-4.0.0_rc*
