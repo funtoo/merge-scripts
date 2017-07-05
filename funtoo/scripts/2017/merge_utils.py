@@ -62,6 +62,81 @@ def filterInCategory(pkgset, fil):
 			nomatch.add(pkg)
 	return match, nomatch
 
+def do_package_use_line(pkg, def_python, bk_python, imps):
+	if def_python not in imps:
+		if bk_python in imps:
+			return "%s python_single_target_%s" % (pkg, bk_python)
+		else:
+			return "%s python_single_target_%s python_targets_%s" % (pkg, imps[0], imps[0])
+	return None
+
+class GenPythonUse(MergeStep):
+
+	def __init__(self,def_python,bk_python):
+		self.def_python = def_python
+		self.bk_python = bk_python
+	
+	def run(self, cur_overlay):
+		cur_tree = cur_overlay.root
+		try:
+			with open(os.path.join(cur_tree, 'profiles/repo_name')) as f:
+				cur_name = f.readline().strip()
+		except FileNotFoundError:
+			cur_name = cur_overlay.name
+		env = os.environ.copy()
+		env['PORTAGE_REPOSITORIES'] = '''
+	[DEFAULT]
+	main-repo = %s
+
+	[%s]
+	location = %s
+	''' % (cur_name, cur_name, cur_tree)
+		p = portage.portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
+
+		pkg_use = []
+
+		for pkg in p.cp_all():
+			cp = portage.catpkgsplit(pkg)
+			ebs = {}
+			for a in p.xmatch("match-all", pkg):
+				if len(a) == 0:
+					continue
+				aux = p.aux_get(a, ["INHERITED"])
+				eclasses=aux[0].split()
+				if "python-single-r1" not in eclasses:
+					continue
+				else:
+					px = portage.catsplit(a)
+					cmd = '( eval $(cat %s/%s/%s/%s.ebuild | grep ^PYTHON_COMPAT); echo "${PYTHON_COMPAT[@]}" )' % ( cur_tree, cp[0], cp[1], px[1] )
+					outp = subprocess.getstatusoutput(cmd)
+					imps = outp[1].split()
+					ebs[a] = imps
+			if len(ebs.keys()) == 0:
+				continue
+			# ebs now is a dict containing catpkg -> PYTHON_COMPAT settings for each ebuild in the catpkg. We want to see if they are identical
+			oldval = None
+			split = False
+			for key,val in ebs.items():
+				if oldval == None:
+					oldval = val
+				else:
+					if oldval != val:
+						split = True
+						break
+			if not split:
+				do_package_use_line(pkg, oldval)
+			else:
+				for key,val in ebs.items():
+					pkg_use += [ do_package_use_line("=%s" % key, self.def_python, self.bk_python, val) ]
+		outpath = cur_tree + '/profiles/package.use'
+		if not os.path.exists(outpath):
+			os.makedirs(outpath)
+		a = open(outpath + "/python-use", "w")
+		for l in pkg_use:
+			if l != None:
+				a.write(l + "\n")
+		a.close()
+
 def getDependencies(cur_overlay, catpkgs, levels=0, cur_level=0):
 	cur_tree = cur_overlay.root
 	try:
@@ -161,9 +236,9 @@ def repoName(cur_overlay):
 # repo root as the dictionary value:
 #
 # 'parent_repo' : list of all eclasses that should be copied from parent repo
-# 'dest_kit'    : list of all eclasses that were found in our kit and don't need to be copied (they are already in place)
-# None          : list of all eclasses that were NOT found. This is an error and indicates we need some kit-fixups or
-#                 overlay-specific eclasses.
+# 'dest_kit'	: list of all eclasses that were found in our kit and don't need to be copied (they are already in place)
+# None			: list of all eclasses that were NOT found. This is an error and indicates we need some kit-fixups or
+#				  overlay-specific eclasses.
 
 def _getAllDriver(metadata, path_prefix, dest_kit, parent_repo):
 	# these may be eclasses or licenses -- we use the term 'eclass' here:
@@ -199,10 +274,10 @@ def getAllLicenses(dest_kit, parent_repo):
 # It supports being called this way:
 #
 #  (parent_repo) -- all eclasses/licenses here
-#    |
-#    |
-#    \-------------------------(dest_kit) -- no eclasses/licenses here yet
-#                                            (though some may exist due to being copied by fixups) 
+#	 |
+#	 |
+#	 \-------------------------(dest_kit) -- no eclasses/licenses here yet
+#											 (though some may exist due to being copied by fixups) 
 #
 #  getAllMeta() returns a set of actual files (without directories) that are used, so [ 'foo.eclass', 'bar.eclass'] 
 #  or [ 'GPL-2', 'bleh' ].
@@ -321,9 +396,9 @@ def generateShardSteps(name, from_tree, to_tree, super_tree, pkgdir=None, branch
 # should not copy it to a new kit which would cause a duplicate catpkg to exist between two kits. The "should we copy this catpkg"
 # question is answered by calling the match() method, as follows:
 #
-# logger.match("sys-foo/bar")	: True --   this matches a previously copied catpkg atom, so don't copy it to the kit.
-# logger.match("sys-foo/oni")   : False --  we have no record of this catpkg being copied, so it's safe to copy.
-# logger.match("sys-bar/bleh")  : True --   this catpkg matches a wildcard regex that was used previously, so don't copy.
+# logger.match("sys-foo/bar")	: True --	this matches a previously copied catpkg atom, so don't copy it to the kit.
+# logger.match("sys-foo/oni")	: False --	we have no record of this catpkg being copied, so it's safe to copy.
+# logger.match("sys-bar/bleh")	: True --	this catpkg matches a wildcard regex that was used previously, so don't copy.
 #
 # The support for regex matches fixes a kit problem called "kit overflow". Here's an example of kit overflow. Let's say
 # we have a snapshot of our python-kit, but since our snapshot, many dev-python catpkgs have been added. Without regex support

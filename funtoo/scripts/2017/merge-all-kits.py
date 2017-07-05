@@ -573,6 +573,7 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 	post_steps += [
 		ELTSymlinkWorkaround(),
 		CreateCategories(gentoo_staging),
+		GenPythonUse("python3_4", "python2_7"),
 		Minify(),
 		GenUseLocalDesc(),
 		GenCache( cache_dir="/var/cache/edb/%s-%s" % ( kit_dict['name'], kit_dict['branch'] ) )
