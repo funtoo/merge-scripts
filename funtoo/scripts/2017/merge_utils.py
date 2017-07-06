@@ -23,6 +23,10 @@ debug = False
 
 mergeLog = open("/var/tmp/merge.log","w")
 
+class MergeStep(object):
+	pass
+
+
 def get_pkglist(fname):
 	if fname[0] == "/":
 		cpkg_fn = fname
@@ -84,6 +88,7 @@ class GenPythonUse(MergeStep):
 		except FileNotFoundError:
 			cur_name = cur_overlay.name
 		env = os.environ.copy()
+		env['PORTAGE_DEPCACHEDIR'] = '/var/cache/edb/%s-%s-meta' % ( cur_overlay.name, cur_overlay.branch )
 		env['PORTAGE_REPOSITORIES'] = '''
 	[DEFAULT]
 	main-repo = %s
@@ -96,9 +101,11 @@ class GenPythonUse(MergeStep):
 		pkg_use = []
 
 		for pkg in p.cp_all():
-			cp = portage.catpkgsplit(pkg)
+			
+			cp = portage.catsplit(pkg)
 			ebs = {}
 			for a in p.xmatch("match-all", pkg):
+				print("a",a)
 				if len(a) == 0:
 					continue
 				aux = p.aux_get(a, ["INHERITED"])
@@ -107,6 +114,8 @@ class GenPythonUse(MergeStep):
 					continue
 				else:
 					px = portage.catsplit(a)
+					print("px",px)
+					print("cp",cp)
 					cmd = '( eval $(cat %s/%s/%s/%s.ebuild | grep ^PYTHON_COMPAT); echo "${PYTHON_COMPAT[@]}" )' % ( cur_tree, cp[0], cp[1], px[1] )
 					outp = subprocess.getstatusoutput(cmd)
 					imps = outp[1].split()
@@ -124,7 +133,7 @@ class GenPythonUse(MergeStep):
 						split = True
 						break
 			if not split:
-				do_package_use_line(pkg, oldval)
+				pkg_use += [ do_package_use_line(pkg, self.def_python, self.bk_python, oldval) ]
 			else:
 				for key,val in ebs.items():
 					pkg_use += [ do_package_use_line("=%s" % key, self.def_python, self.bk_python, val) ]
@@ -531,9 +540,6 @@ def run_command(args, *, abort_on_failure=True, **kwargs):
 			else:
 				return False
 	return True
-
-class MergeStep(object):
-	pass
 
 class AutoGlobMask(MergeStep):
 
