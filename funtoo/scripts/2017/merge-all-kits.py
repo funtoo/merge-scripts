@@ -173,6 +173,7 @@ kit_source_instances = { }
 kit_groups = {
 	'prime' : [
 		{ 'name' : 'core-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime' },
+		{ 'name' : 'core-hw-kit', 'branch' : 'master', 'source': 'gentoo_current' },
 		{ 'name' : 'security-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime' },
 		{ 'name' : 'xorg-kit', 'branch' : '1.17-prime', 'source': 'gentoo_prime_xorg' },
 	],

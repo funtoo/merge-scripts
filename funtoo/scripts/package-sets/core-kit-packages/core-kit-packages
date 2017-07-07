@@ -99,11 +99,9 @@ sys-boot/efibootmgr
 sys-libs/efivar
 sys-libs/binutils-libs
 sys-boot/grub
-sys-firmware/*
 sys-kernel/debian-sources
 sys-kernel/genkernel
 sys-kernel/linux-headers
-sys-kernel/linux-firmware
 sys-power/pm-quirks
 sys-power/pm-utils
 sys-libs/db

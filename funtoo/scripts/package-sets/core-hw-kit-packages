@@ -1,0 +1,3 @@
+sys-firmware/*
+sys-kernel/linux-firmware
+@regex@:.*-firmware
