@@ -812,8 +812,7 @@ class GitTree(Tree):
 				if not os.path.exists(base):
 					os.makedirs(base)
 				if url:
-					runShell("(cd %s; git clone %s %s)" % ( base, self.url, self.name ))
-					runShell("(cd %s; git checkout %s || git checkout -b %s --track origin/%s || git checkout -b %s)" % ( self.root, self.branch, self.branch, self.branch, self.branch ))
+					runShell("(cd %s; git clone %s %s)" % ( base, self.url, os.path.basename(self.root) ))
 				else:
 					print("Error: tree %s does not exist, but no clone URL specified. Exiting." % self.root)
 					sys.exit(1)
@@ -827,9 +826,9 @@ class GitTree(Tree):
 				runShell("( cd %s; git add README; git commit -a -m 'initial commit by merge.py' )" % self.root )
 				runShell("( cd %s; git remote add origin %s )" % ( self.root, self.url ))
 				# now repo exists, but local branch may not:
-				runShell("(cd %s; git checkout %s || git checkout -b %s --track origin/%s || git checkout -b %s)" % ( self.root, self.branch, self.branch, self.branch, self.branch ))
 		else:
 			self.push = True
+		runShell("(cd %s; git checkout %s || git checkout -b %s --track origin/%s || git checkout -b %s)" % ( self.root, self.branch, self.branch, self.branch, self.branch ))
 
 	def gitSubmoduleAddOrUpdate(self, tree, path, url=None, sha1=None):
 		if url == None:

@@ -331,7 +331,7 @@ def getKitSourceInstance(kit_dict):
 			path = overlays[repo_name]["dirname"]
 		else:
 			path = None
-		repo = repo_obj(repo_name, url=repo_url, root="/var/git/source-trees/%s" % path, branch=repo_branch)
+		repo = repo_obj(repo_name, url=repo_url, root="/var/git/source-trees/%s" % path, branch=repo_branch, pull=True)
 		repo.run([GitCheckout(repo_branch)])
 
 		if "options" in source_def:
