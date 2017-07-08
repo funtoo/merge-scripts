@@ -72,7 +72,8 @@ from merge_utils import *
 # (see KIT SOURCES, below.)
 
 overlays = {
-	"gentoo-staging" : { "type" : GitTree, "url" : "repos@git.funtoo.org:ports/gentoo-staging.git" },
+	# use gentoo-staging-2017 dirname to avoid conflicts with ports-2012 generation
+	"gentoo-staging" : { "type" : GitTree, "url" : "repos@git.funtoo.org:ports/gentoo-staging.git", "dirname" : "gentoo-staging-2017" },
 	"faustoo" : { "type" : GitTree, "url" : "https://github.com/fmoro/faustoo.git", "eclasses" : [
 		"waf",
 		"googlecode"
@@ -326,8 +327,11 @@ def getKitSourceInstance(kit_dict):
 		repo_branch = source_def['src_branch']
 		repo_obj = overlays[repo_name]["type"]
 		repo_url = overlays[repo_name]["url"]
-
-		repo = repo_obj(repo_name, url=repo_url, branch=repo_branch)
+		if "dirname" in overlays[repo_name]:
+			path = overlays[repo_name]["dirname"]
+		else:
+			path = None
+		repo = repo_obj(repo_name, url=repo_url, root="/var/git/source-trees/%s" % path, branch=repo_branch)
 		repo.run([GitCheckout(repo_branch)])
 
 		if "options" in source_def:

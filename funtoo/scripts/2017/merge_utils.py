@@ -804,55 +804,32 @@ class GitTree(Tree):
 		self.reponame = reponame
 		# if we don't specify root destination tree, assume we are source only:
 		if self.root == None:
-			self.writeTree = False
-			if self.url == None:
-				print("Error: please specify root or url for GitTree.")
-				sys.exit(1)
 			base = "/var/git/source-trees"
 			self.root = "%s/%s" % ( base, self.name )
-			if os.path.exists(self.root):
-				self.head_old = self.head()
-				runShell("(cd %s; git fetch origin)" % self.root, abortOnFail=False)
-				runShell("(cd %s; git checkout %s)" % ( self.root, self.branch ))
-				if pull:
-					runShell("(cd %s; git pull -f origin %s)" % ( self.root, self.branch ), abortOnFail=False)
-				self.head_new = self.head()
-				self.changes = self.head_old != self.head_new
-			else:
+		if not os.path.isdir("%s/.git" % self.root):
+			base = os.path.dirname(self.root)
+			if pull:
 				if not os.path.exists(base):
 					os.makedirs(base)
 				if url:
 					runShell("(cd %s; git clone %s %s)" % ( base, self.url, self.name ))
-					runShell("(cd %s; git checkout %s)" % ( self.root, self.branch ))
+					runShell("(cd %s; git checkout %s || git checkout -b %s --track origin/%s || git checkout -b %s)" % ( self.root, self.branch, self.branch, self.branch, self.branch ))
 				else:
 					print("Error: tree %s does not exist, but no clone URL specified. Exiting." % self.root)
 					sys.exit(1)
-		else:
-			self.writeTree = True
-			if not os.path.isdir("%s/.git" % self.root):
-				base = os.path.dirname(self.root)
-				if pull:
-					if not os.path.exists(base):
-						os.makedirs(base)
-					if url:
-						runShell("(cd %s; git clone %s %s)" % ( base, self.url, self.name ))
-						runShell("(cd %s; git checkout %s || git checkout -b %s --track origin/%s || git checkout -b %s)" % ( self.root, self.branch, self.branch, self.branch, self.branch ))
-					else:
-						print("Error: tree %s does not exist, but no clone URL specified. Exiting." % self.root)
-						sys.exit(1)
-				elif not create:
-					print("Error: repository does not exist at %s. Exiting." % self.root)
-					sys.exit(1)
-				else:
-					os.makedirs(self.root)
-					runShell("( cd %s; git init )" % self.root )
-					runShell("echo 'created by merge.py' > %s/README" % self.root )
-					runShell("( cd %s; git add README; git commit -a -m 'initial commit by merge.py' )" % self.root )
-					runShell("( cd %s; git remote add origin %s )" % ( self.root, self.url ))
-					# now repo exists, but local branch may not:
-					runShell("(cd %s; git checkout %s || git checkout -b %s --track origin/%s || git checkout -b %s)" % ( self.root, self.branch, self.branch, self.branch, self.branch ))
+			elif not create:
+				print("Error: repository does not exist at %s. Exiting." % self.root)
+				sys.exit(1)
 			else:
-				self.push = True
+				os.makedirs(self.root)
+				runShell("( cd %s; git init )" % self.root )
+				runShell("echo 'created by merge.py' > %s/README" % self.root )
+				runShell("( cd %s; git add README; git commit -a -m 'initial commit by merge.py' )" % self.root )
+				runShell("( cd %s; git remote add origin %s )" % ( self.root, self.url ))
+				# now repo exists, but local branch may not:
+				runShell("(cd %s; git checkout %s || git checkout -b %s --track origin/%s || git checkout -b %s)" % ( self.root, self.branch, self.branch, self.branch, self.branch ))
+		else:
+			self.push = True
 
 	def gitSubmoduleAddOrUpdate(self, tree, path, url=None, sha1=None):
 		if url == None:
