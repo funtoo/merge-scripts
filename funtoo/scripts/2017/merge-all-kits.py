@@ -333,7 +333,6 @@ def getKitSourceInstance(kit_dict):
 		else:
 			path = repo_name
 		repo = repo_obj(repo_name, url=repo_url, root="/var/git/source-trees/%s" % path, branch=repo_branch, commit_sha1=repo_sha1, pull=True)
-		repo.run([GitCheckout(repo_branch)])
 
 		if "options" in source_def:
 			sro = source_def["options"].copy()
