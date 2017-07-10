@@ -388,12 +388,13 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 
 	if kit_dict["name"] == "core-kit":
 		prev_branch = gentoo_staging.branch
-		gentoo_staging.run([GitCheckout("master")])
+		prev_sha1 = gentoo_staging.commit_sha1
+		gentoo_staging.initializeTree("master")
 
 	tree.run(pre_steps)
 
 	if kit_dict["name"] == "core-kit":
-		gentoo_staging.run([GitCheckout(prev_branch)])
+		gentoo_staging.initializeTree(prev_branch, prev_sha1)
 
 	# Phase 2: copy core set of ebuilds
 
@@ -411,7 +412,7 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 			# grab all ebuilds to put in nokit
 			steps += [ InsertEbuilds(repo_dict["repo"], select="all", skip=None, replace=True, cpm_logger=cpm_logger) ]
 		else:
-			steps += generateShardSteps(kit_dict['name'], repo_dict["repo"], tree, gentoo_staging, pkgdir=funtoo_overlay.root+"/funtoo/scripts", branch=kit_dict['branch'], insert_kwargs=repo_dict["options"], cpm_logger=cpm_logger)
+			steps += generateShardSteps(kit_dict['name'], repo_dict["repo"], tree, gentoo_staging, pkgdir=funtoo_overlay.root+"/funtoo/scripts", insert_kwargs=repo_dict["options"], cpm_logger=cpm_logger)
 		tree.run(steps)
 		if copycount != cpm_logger.copycount:
 			# this means some catpkgs were installed from the repo we are currently processing. This means we also want to execute

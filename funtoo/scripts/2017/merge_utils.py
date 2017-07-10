@@ -345,10 +345,8 @@ def getAllMeta(metadata, dest_kit, parent_repo=None):
 						myeclasses.add(lic)
 	return myeclasses
 
-def generateShardSteps(name, from_tree, to_tree, super_tree, pkgdir=None, branch="master", cpm_logger=None, insert_kwargs=None):
+def generateShardSteps(name, from_tree, to_tree, super_tree, pkgdir=None, cpm_logger=None, insert_kwargs=None):
 	steps = []
-	if branch:
-		steps += [ GitCheckout(branch) ]
 	pkglist = []
 	pkgf = "package-sets/%s-packages" % name
 	pkgf_skip = "package-sets/%s-skip" % name
@@ -780,9 +778,6 @@ class GitTree(Tree):
 
 		self.name = name
 		self.root = root
-		self.branch = branch
-		self.commit_sha1 = commit_sha1
-		print("COMMIT_SHA1", self.commit_sha1)
 		self.url = url
 		self.merged = []
 		self.xml_out = xml_out
@@ -790,8 +785,14 @@ class GitTree(Tree):
 		self.reponame = reponame
 		self.create = create
 
-		# if we don't specify root destination tree, assume we are source only:
+		self.initializeTree(branch, commit_sha1)
 
+
+		# if we don't specify root destination tree, assume we are source only:
+	
+	def initializeTree(self, branch, commit_sha1=None):
+		self.branch = branch
+		self.commit_sha1 = commit_sha1
 		if self.root == None:
 			base = "/var/git/source-trees"
 			self.root = "%s/%s" % ( base, self.name )
@@ -818,11 +819,13 @@ class GitTree(Tree):
 				print("Error: tree %s does not exist, but no clone URL specified. Exiting." % self.root)
 				sys.exit(1)
 		
-		# if we've gotten here, we can assume that the repo exists at self.root. Now we need to make sure it's on the correct
-		# branch and commit sha1, if specified.
+		# if we've gotten here, we can assume that the repo exists at self.root. 
 
-		runShell("(cd %s; git fetch )" % self.root )
-		# first try to switch to local branch, or if doesn't exist, try to create local to track remote, or if no go just create a local branch with this name
+		# first, we will clean up any messes:
+		runShell("(cd %s; git reset --hard; git clean -fd )" % self.root )
+
+		# Now we need to make sure it's on the correct branch and commit sha1, if specified.
+
 		# Let's make sure we have a local branch first:
 		if not self.localBranchExists(self.branch):
 			if not create:
