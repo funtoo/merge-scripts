@@ -72,7 +72,8 @@ from merge_utils import *
 # (see KIT SOURCES, below.)
 
 overlays = {
-	"gentoo-staging" : { "type" : GitTree, "url" : "repos@git.funtoo.org:ports/gentoo-staging.git" },
+	# use gentoo-staging-2017 dirname to avoid conflicts with ports-2012 generation
+	"gentoo-staging" : { "type" : GitTree, "url" : "repos@git.funtoo.org:ports/gentoo-staging.git", "dirname" : "gentoo-staging-2017" },
 	"faustoo" : { "type" : GitTree, "url" : "https://github.com/fmoro/faustoo.git", "eclasses" : [
 		"waf",
 		"googlecode"
@@ -113,10 +114,10 @@ overlays = {
 # SUPPLEMENTAL REPOSITORIES: These are overlays that we are using but are not in KIT SOURCES. funtoo_overlay is something
 # we are using only for profiles and other misc. things and may get phased out in the future:
 
-funtoo_overlay = GitTree("funtoo-overlay", "master", "repos@git.funtoo.org:funtoo-overlay.git", pull=True)
-fixup_repo = GitTree("kit-fixups", "master", "repos@git.funtoo.org:kits/kit-fixups.git", pull=True)
+funtoo_overlay = GitTree("funtoo-overlay", "master", "repos@git.funtoo.org:funtoo-overlay.git")
+fixup_repo = GitTree("kit-fixups", "master", "repos@git.funtoo.org:kits/kit-fixups.git")
 
-meta_repo = GitTree("meta-repo", "master", "repos@git.funtoo.org:meta-repo.git", root="/var/git/dest-trees/meta-repo", create=False, pull=True)
+meta_repo = GitTree("meta-repo", "master", "repos@git.funtoo.org:meta-repo.git", root="/var/git/dest-trees/meta-repo")
 
 # 2. KIT SOURCES - kit sources are a combination of overlays, arranged in a python list [ ]. A KIT SOURCE serves as a
 # unified collection of source catpkgs for a particular kit. Each kit can have one KIT SOURCE. KIT SOURCEs MAY be
@@ -136,32 +137,30 @@ meta_repo = GitTree("meta-repo", "master", "repos@git.funtoo.org:meta-repo.git",
 
 kit_source_defs = {
 	"gentoo_current" : [
-		{ "repo" : "gentoo-staging", "src_branch" : 'master'},
-		{ "repo" : "flora", "src_branch" : 'master' },
-		{ "repo" : "faustoo", "src_branch" : 'master' },
-		{ "repo" : "fusion809", "src_branch" : 'master' }
+		{ "repo" : "gentoo-staging" },
+		{ "repo" : "flora" },
+		{ "repo" : "faustoo" },
+		{ "repo" : "fusion809" }
 	],
 	"gentoo_prime" : [
-		{ "repo" : "gentoo-staging", "src_branch" : '06a1fd99a3ce1dd33724e11ae9f81c5d0364985e', 'date' : '21 Apr 2017'},
-		{ "repo" : "flora", "src_branch" : 'master' },
-		{ "repo" : "faustoo", "src_branch" : "58c805ec0df34cfc699e6555bf317590ff9dee15", },
-		{ "repo" : "fusion809", "src_branch" : "8322bcd79d47ef81f7417c324a1a2b4772020985", "options" : { "merge" : True }},
+		{ "repo" : "gentoo-staging", "src_sha1" : '06a1fd99a3ce1dd33724e11ae9f81c5d0364985e', 'date' : '21 Apr 2017'},
+		{ "repo" : "flora", },
+		{ "repo" : "faustoo", "src_sha1" : "58c805ec0df34cfc699e6555bf317590ff9dee15", },
+		{ "repo" : "fusion809", "src_sha1" : "8322bcd79d47ef81f7417c324a1a2b4772020985", "options" : { "merge" : True }},
 	],
 	"gentoo_prime_xorg" : [
-		{ "repo" : "gentoo-staging", 'src_branch' : 'a56abf6b7026dae27f9ca30ed4c564a16ca82685', 'date' : '18 Nov 2016' }
+		{ "repo" : "gentoo-staging", 'src_sha1' : 'a56abf6b7026dae27f9ca30ed4c564a16ca82685', 'date' : '18 Nov 2016' }
 	],
 	"gentoo_prime_gnome" : [
-		{ "repo" : "gentoo-staging", 'src_branch' : '44677858bd088805aa59fd56610ea4fb703a2fcd', 'date' : '18 Sep 2016' }
+		{ "repo" : "gentoo-staging", 'src_sha1' : '44677858bd088805aa59fd56610ea4fb703a2fcd', 'date' : '18 Sep 2016' }
 	],
 	"gentoo_prime_media" : [
-		{ "repo" : "gentoo-staging", 'src_branch' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017' }
+		{ "repo" : "gentoo-staging", 'src_sha1' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017' }
 	],
 	"gentoo_prime_perl" : [
-		{ "repo" : "gentoo-staging", 'src_branch' : 'fc74d3206fa20caa19b7703aa051ff6de95d5588', 'date' : '11 Jan 2017' }
+		{ "repo" : "gentoo-staging", 'src_sha1' : 'fc74d3206fa20caa19b7703aa051ff6de95d5588', 'date' : '11 Jan 2017' }
 	]
 }
-
-kit_source_instances = { }
 
 # 2. KIT GROUPS - this is where kits are actually defined. They are organized by GROUP: 'prime', 'current', or 'shared'.
 # 'prime' kits are production-quality kits. Current kits are bleeding-edge kits. 'shared' kits are used by both 'prime'
@@ -308,13 +307,9 @@ def getKitPrepSteps(repos, kit_dict, gentoo_staging):
 
 def getKitSourceInstance(kit_dict):
 
-	global kit_source_instances
 	global kit_source_defs
 	
 	source_name = kit_dict['source']
-
-	if source_name in kit_source_instances:
-		return kit_source_instances[source_name]
 
 	repos = []
 
@@ -323,12 +318,17 @@ def getKitSourceInstance(kit_dict):
 	for source_def in source_defs:
 
 		repo_name = source_def['repo']
-		repo_branch = source_def['src_branch']
+		repo_branch = source_def['src_branch'] if "src_branch" in source_def else "master"
+		repo_sha1 = source_def["src_sha1"] if "src_sha1" in source_def else None
 		repo_obj = overlays[repo_name]["type"]
 		repo_url = overlays[repo_name]["url"]
-
-		repo = repo_obj(repo_name, url=repo_url, branch=repo_branch)
-		repo.run([GitCheckout(repo_branch)])
+		if "dirname" in overlays[repo_name]:
+			path = overlays[repo_name]["dirname"]
+		else:
+			path = repo_name
+		print("INITIALIZING Git Repo", repo_url, repo_branch, repo_sha1)
+		repo = repo_obj(repo_name, url=repo_url, root="/var/git/source-trees/%s" % path, branch=repo_branch, commit_sha1=repo_sha1)
+		print("DEBUG: ", repo.currentLocalBranch, headSHA1(repo.root))
 
 		if "options" in source_def:
 			sro = source_def["options"].copy()
@@ -339,7 +339,6 @@ def getKitSourceInstance(kit_dict):
 
 		repos.append( { "name" : repo_name, "repo" : repo, "options" : sro } )
 
-	kit_source_instances[source_name] = repos
 	return repos
 
 # UPDATE KIT. This function does the heavy lifting of taking a kit specification included in a kit_dict, and
@@ -383,12 +382,13 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 
 	if kit_dict["name"] == "core-kit":
 		prev_branch = gentoo_staging.branch
-		gentoo_staging.run([GitCheckout("master")])
+		prev_sha1 = gentoo_staging.commit_sha1
+		gentoo_staging.initializeTree("master")
 
 	tree.run(pre_steps)
 
 	if kit_dict["name"] == "core-kit":
-		gentoo_staging.run([GitCheckout(prev_branch)])
+		gentoo_staging.initializeTree(prev_branch, prev_sha1)
 
 	# Phase 2: copy core set of ebuilds
 
@@ -406,7 +406,7 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 			# grab all ebuilds to put in nokit
 			steps += [ InsertEbuilds(repo_dict["repo"], select="all", skip=None, replace=True, cpm_logger=cpm_logger) ]
 		else:
-			steps += generateShardSteps(kit_dict['name'], repo_dict["repo"], tree, gentoo_staging, pkgdir=funtoo_overlay.root+"/funtoo/scripts", branch=kit_dict['branch'], insert_kwargs=repo_dict["options"], cpm_logger=cpm_logger)
+			steps += generateShardSteps(kit_dict['name'], repo_dict["repo"], tree, gentoo_staging, pkgdir=funtoo_overlay.root+"/funtoo/scripts", insert_kwargs=repo_dict["options"], cpm_logger=cpm_logger)
 		tree.run(steps)
 		if copycount != cpm_logger.copycount:
 			# this means some catpkgs were installed from the repo we are currently processing. This means we also want to execute

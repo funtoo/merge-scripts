@@ -105,7 +105,6 @@ class GenPythonUse(MergeStep):
 			cp = portage.catsplit(pkg)
 			ebs = {}
 			for a in p.xmatch("match-all", pkg):
-				print("a",a)
 				if len(a) == 0:
 					continue
 				aux = p.aux_get(a, ["INHERITED"])
@@ -114,8 +113,6 @@ class GenPythonUse(MergeStep):
 					continue
 				else:
 					px = portage.catsplit(a)
-					print("px",px)
-					print("cp",cp)
 					cmd = '( eval $(cat %s/%s/%s/%s.ebuild | grep ^PYTHON_COMPAT); echo "${PYTHON_COMPAT[@]}" )' % ( cur_tree, cp[0], cp[1], px[1] )
 					outp = subprocess.getstatusoutput(cmd)
 					imps = outp[1].split()
@@ -348,10 +345,8 @@ def getAllMeta(metadata, dest_kit, parent_repo=None):
 						myeclasses.add(lic)
 	return myeclasses
 
-def generateShardSteps(name, from_tree, to_tree, super_tree, pkgdir=None, branch="master", cpm_logger=None, insert_kwargs=None):
+def generateShardSteps(name, from_tree, to_tree, super_tree, pkgdir=None, cpm_logger=None, insert_kwargs=None):
 	steps = []
-	if branch:
-		steps += [ GitCheckout(branch) ]
 	pkglist = []
 	pkgf = "package-sets/%s-packages" % name
 	pkgf_skip = "package-sets/%s-skip" % name
@@ -462,22 +457,6 @@ class CatPkgMatchLogger(object):
 	def nextKit(self):
 		self._regexdict.update(self._regexdict_curkit)
 		self._regexdict_curkit = {}
-
-def qa_build(host,build,arch_desc,subarch,head,target):
-	success = False
-	print("Performing remote QA build on %s for %s %s %s %s (%s)" % (host, build, arch_desc, subarch, head, target))
-	build_dir = datetime.datetime.now().strftime("%Y-%m-%d") + "-" + head
-	exists = subprocess.getoutput("ssh %s '[ -e /home/mirror/funtoo/%s/%s/%s/" % ( host, build, arch_desc, subarch ) + build_dir + "/status ] && echo yep || echo nope'") == "yep"
-	if not exists:
-		status = subprocess.call(["/usr/bin/ssh",host,"/root/metro/scripts/ezbuild.sh", build, arch_desc, subarch, target, build_dir])
-		if status:
-			print("ezbuild.sh completed with errors.")
-	success = subprocess.getoutput("ssh %s cat /home/mirror/funtoo/%s/%s/%s/" % ( host, build, arch_desc, subarch )  + build_dir + "/status") == "ok"
-	if success:
-		print("Build successful.")
-	else:
-		print("Build FAILED.")
-	return success
 
 def headSHA1(tree):
 	head = None
@@ -634,8 +613,7 @@ thin-manifests = true
 sign-manifests = false
 profile-formats = portage-2
 cache-formats = md5-dict
-masters = %s
-''' % ( self.name, " ".join(self.masters) )
+''' % self.name
 		if self.aliases:
 			out += "aliases = %s\n" % " ".join(self.aliases)
 		if self.masters:
@@ -792,67 +770,103 @@ class GitTree(Tree):
 
 	"A Tree (git) that we can use as a source for work jobs, and/or a target for running jobs."
 
-	def __init__(self,name, branch="master",url=None,pull=False,root=None,xml_out=None, clone=True, create=False,reponame=None):
+	def __init__(self, name, branch="master", url=None, commit_sha1=None, pull=True, root=None, xml_out=None, create=False,reponame=None):
+
+		# note that if create=True, we are in a special 'local create' mode which is good for testing. We create the repo locally from
+		# scratch if it doesn't exist, as well as any branches. And we don't push.
+
 		self.name = name
 		self.root = root
-		self.branch = branch
 		self.url = url
 		self.merged = []
 		self.xml_out = xml_out
-		self.push = False
-		self.changes = True
+		self.pull = True
 		self.reponame = reponame
+		self.create = create
+
+		self.initializeTree(branch, commit_sha1)
+
+
 		# if we don't specify root destination tree, assume we are source only:
+	
+	def initializeTree(self, branch, commit_sha1=None):
+		self.branch = branch
+		self.commit_sha1 = commit_sha1
 		if self.root == None:
-			self.writeTree = False
-			if self.url == None:
-				print("Error: please specify root or url for GitTree.")
-				sys.exit(1)
 			base = "/var/git/source-trees"
 			self.root = "%s/%s" % ( base, self.name )
+		if not os.path.isdir("%s/.git" % self.root):
+			# repo does not exist? - needs to be cloned or created
 			if os.path.exists(self.root):
-				self.head_old = self.head()
-				runShell("(cd %s; git fetch origin)" % self.root, abortOnFail=False)
-				runShell("(cd %s; git checkout %s)" % ( self.root, self.branch ))
-				if pull:
-					runShell("(cd %s; git pull -f origin %s)" % ( self.root, self.branch ), abortOnFail=False)
-				self.head_new = self.head()
-				self.changes = self.head_old != self.head_new
+				print("%s exists but does not appear to be a valid git repository. Exiting." % self.root)
+				sys.exit(1)
+				# dir exists but not a git repo, so exit
+			
+			base = os.path.dirname(self.root)
+			if create:
+				# we have been told to create this repo. This works even if we have a remote clone URL specified
+				os.makedirs(self.root)
+				runShell("( cd %s; git init )" % self.root )
+				runShell("echo 'created by merge.py' > %s/README" % self.root )
+				runShell("( cd %s; git add README; git commit -a -m 'initial commit by merge.py' )" % self.root )
+				runShell("( cd %s; git remote add origin %s )" % ( self.root, self.url ))
+			elif url:
+				# we aren't supposed to create it from scratch -- can we clone it?
+				runShell("(cd %s; git clone %s %s)" % ( base, self.url, os.path.basename(self.root) ))
 			else:
-				if not os.path.exists(base):
-					os.makedirs(base)
-				if url:
-					runShell("(cd %s; git clone %s %s)" % ( base, self.url, self.name ))
-					runShell("(cd %s; git checkout %s)" % ( self.root, self.branch ))
-				else:
-					print("Error: tree %s does not exist, but no clone URL specified. Exiting." % self.root)
-					sys.exit(1)
+				# we've run out of options
+				print("Error: tree %s does not exist, but no clone URL specified. Exiting." % self.root)
+				sys.exit(1)
+		
+		# if we've gotten here, we can assume that the repo exists at self.root. 
+
+		# first, we will clean up any messes:
+		runShell("(cd %s; git reset --hard; git clean -fd )" % self.root )
+
+		# Now we need to make sure it's on the correct branch and commit sha1, if specified.
+
+		# Let's make sure we have a local branch first:
+		if not self.localBranchExists(self.branch):
+			if not create:
+				# branch does not exist, so get it from remote and create it:
+				runShell("( cd %s; git fetch; git checkout -b %s --track origin/%s )" % ( self.root, self.branch, self.branch ))
+			else:
+				# in create mode, we take responsibility for creating branches ourselves, and we are not concerned with fetching:
+				runShell("(cd %s; git checkout -b %s)" % ( self.root, self.branch ))
+		
+		# the local branch exists:
+		
+		if self.create:
+			# we are done in this special case
+			return
+
+		# we are not in create mode, the branch exists and is active, but we want to make sure we are pointing to the exact
+		# set of files that we want:
+
+		if self.commit_sha1:
+			# if a commit_sha1 is specified, then we also want to make sure we go to a detached state pointing to this commit:
+			runShell("(cd %s; git fetch; git checkout %s )" % (self.root, self.commit_sha1 ))
+		elif self.currentLocalBranch != self.branch:
+			# we aren't on the right branch. Let's change that after we make sure we have the latest updates
+			runShell("(cd %s; git fetch; git checkout %s; git reset --hard; git pull -f )" % (self.root, self.branch ))
+		elif self.pull:
+			# we are on the right branch, but we want to make sure we have the latest updates 
+			runShell("(cd %s; git reset --hard; git pull -f )" % self.root )
+
+	@property
+	def currentLocalBranch(self):
+		s, branch = subprocess.getstatusoutput("( cd %s; git symbolic-ref --short -q HEAD )" % self.root)
+		if s:
+			return None
 		else:
-			self.writeTree = True
-			if not os.path.isdir("%s/.git" % self.root):
-				base = os.path.dirname(self.root)
-				if pull:
-					if not os.path.exists(base):
-						os.makedirs(base)
-					if url:
-						runShell("(cd %s; git clone %s %s)" % ( base, self.url, self.name ))
-						runShell("(cd %s; git checkout %s || git checkout -b %s --track origin/%s || git checkout -b %s)" % ( self.root, self.branch, self.branch, self.branch, self.branch ))
-					else:
-						print("Error: tree %s does not exist, but no clone URL specified. Exiting." % self.root)
-						sys.exit(1)
-				elif not create:
-					print("Error: repository does not exist at %s. Exiting." % self.root)
-					sys.exit(1)
-				else:
-					os.makedirs(self.root)
-					runShell("( cd %s; git init )" % self.root )
-					runShell("echo 'created by merge.py' > %s/README" % self.root )
-					runShell("( cd %s; git add README; git commit -a -m 'initial commit by merge.py' )" % self.root )
-					runShell("( cd %s; git remote add origin %s )" % ( self.root, self.url ))
-					# now repo exists, but local branch may not:
-					runShell("(cd %s; git checkout %s || git checkout -b %s --track origin/%s || git checkout -b %s)" % ( self.root, self.branch, self.branch, self.branch, self.branch ))
-			else:
-				self.push = True
+			return branch
+
+	def localBranchExists(self, branch):
+		s, branch = subprocess.getstatusoutput("( cd %s; git show-ref --verify --quiet refs/heads/%s )" % ( self.root, branch))
+		if s:
+			return False
+		else:
+			return True
 
 	def gitSubmoduleAddOrUpdate(self, tree, path, url=None, sha1=None):
 		if url == None:
@@ -908,7 +922,7 @@ class GitTree(Tree):
 		if retval != 0:
 			print("Commit failed.")
 			sys.exit(1)
-		if branch != False and push == True:
+		if push == True and self.create == False:
 			runShell("(cd %s; git push --mirror)" % self.root )
 		else:	 
 			print("Pushing disabled.")
