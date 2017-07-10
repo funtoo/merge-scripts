@@ -162,8 +162,6 @@ kit_source_defs = {
 	]
 }
 
-kit_source_instances = { }
-
 # 2. KIT GROUPS - this is where kits are actually defined. They are organized by GROUP: 'prime', 'current', or 'shared'.
 # 'prime' kits are production-quality kits. Current kits are bleeding-edge kits. 'shared' kits are used by both 'prime'
 # and 'current' -- they can have some "prime" kits as well as some "current" kits depending on what we want to stabilize.
@@ -309,13 +307,9 @@ def getKitPrepSteps(repos, kit_dict, gentoo_staging):
 
 def getKitSourceInstance(kit_dict):
 
-	global kit_source_instances
 	global kit_source_defs
 	
 	source_name = kit_dict['source']
-
-	if source_name in kit_source_instances:
-		return kit_source_instances[source_name]
 
 	repos = []
 
@@ -332,7 +326,9 @@ def getKitSourceInstance(kit_dict):
 			path = overlays[repo_name]["dirname"]
 		else:
 			path = repo_name
-		repo = repo_obj(repo_name, url=repo_url, root="/var/git/source-trees/%s" % path, branch=repo_branch, commit_sha1=repo_sha1, pull=True)
+		print("INITIALIZING Git Repo", repo_url, repo_branch, repo_sha1)
+		repo = repo_obj(repo_name, url=repo_url, root="/var/git/source-trees/%s" % path, branch=repo_branch, commit_sha1=repo_sha1)
+		print("DEBUG: ", repo.currentLocalBranch, headSHA1(repo.root))
 
 		if "options" in source_def:
 			sro = source_def["options"].copy()
@@ -343,7 +339,6 @@ def getKitSourceInstance(kit_dict):
 
 		repos.append( { "name" : repo_name, "repo" : repo, "options" : sro } )
 
-	kit_source_instances[source_name] = repos
 	return repos
 
 # UPDATE KIT. This function does the heavy lifting of taking a kit specification included in a kit_dict, and

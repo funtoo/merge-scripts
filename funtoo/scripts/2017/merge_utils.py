@@ -613,8 +613,7 @@ thin-manifests = true
 sign-manifests = false
 profile-formats = portage-2
 cache-formats = md5-dict
-masters = %s
-''' % ( self.name, " ".join(self.masters) )
+''' % self.name
 		if self.aliases:
 			out += "aliases = %s\n" % " ".join(self.aliases)
 		if self.masters:
