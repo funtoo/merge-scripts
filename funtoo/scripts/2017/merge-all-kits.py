@@ -227,25 +227,17 @@ def getKitPrepSteps(repos, kit_dict, gentoo_staging):
 	kit_steps = {
 		'core-kit' : { 'pre' : [
 				GenerateRepoMetadata("core-kit", aliases=["gentoo"], priority=1000),
-				# base profile stuff from gentoo:
-				SyncFiles(gentoo_staging.root, {
-					"profiles/info_pkgs" : "profiles/info_pkgs",
-					"profiles/thirdpartymirrors" : "profiles/thirdpartymirrors",
-					"profiles/license_groups" : "profiles/license_groups",
-					"profiles/use.desc" : "profiles/use.desc",
-				}),
+							],
+			'post' : [
+				# We copy files into funtoo's profile structure as post-steps because we rely on kit-fixups step to get the initial structure into place
+				# We also have special code that switches to the latest commit of gentoo_staging for this part, so we get the latest masks, etc. from 
+				# gentoo.
+				CopyAndRename("profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/subarch", "profiles/funtoo/1.0/linux-gnu/arch/pure64/subarch", lambda x: os.path.basename(x) + "-pure64"),
 				# news items are not included here anymore
 				SyncDir(gentoo_staging.root, "profiles/base"),
 				SyncDir(gentoo_staging.root, "profiles/arch/base"),
 				SyncDir(gentoo_staging.root, "profiles/updates"),
 				SyncDir(gentoo_staging.root, "metadata", exclude=["cache","md5-cache","layout.conf"]),
-				# add funtoo stuff to thirdpartymirrors
-				ThirdPartyMirrors(),
-				RunSed(["profiles/base/make.defaults"], ["/^PYTHON_TARGETS=/d", "/^PYTHON_SINGLE_TARGET=/d"]),
-							],
-			'post' : [
-				# we copy files into funtoo's profile structure as post-steps because we rely on kit-fixups step to get the initial structure into place
-				CopyAndRename("profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/subarch", "profiles/funtoo/1.0/linux-gnu/arch/pure64/subarch", lambda x: os.path.basename(x) + "-pure64"),
 				SyncFiles(gentoo_staging.root, {
 					"profiles/package.mask":"profiles/package.mask/00-gentoo",
 					"profiles/arch/amd64/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/package.use.mask/01-gentoo",
@@ -258,6 +250,15 @@ def getKitPrepSteps(repos, kit_dict, gentoo_staging):
 					"profiles/arch/amd64/no-multilib/package.mask":"profiles/funtoo/1.0/linux-gnu/arch/pure64/package.mask/01-gentoo",
 					"profiles/arch/amd64/no-multilib/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/pure64/use.mask/01-gentoo"
 				}),
+				SyncFiles(gentoo_staging.root, {
+					"profiles/info_pkgs" : "profiles/info_pkgs",
+					"profiles/thirdpartymirrors" : "profiles/thirdpartymirrors",
+					"profiles/license_groups" : "profiles/license_groups",
+					"profiles/use.desc" : "profiles/use.desc",
+				}),
+				# add funtoo stuff to thirdpartymirrors
+				ThirdPartyMirrors(),
+				RunSed(["profiles/base/make.defaults"], ["/^PYTHON_TARGETS=/d", "/^PYTHON_SINGLE_TARGET=/d"]),
 			]
 		},
 		# masters of core-kit for regular kits and nokit ensure that masking settings set in core-kit for catpkgs in other kits are applied
@@ -383,18 +384,7 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 	copy_steps = prep_steps[1]
 	post_steps = prep_steps[2]
 
-	# for core-kit, we want to grab CURRENT masks, etc, which is done by the pre_steps. But we want to grab eclasses and catpkgs from
-	# the snapshot. So we temporarily switch to "master" for grabbing masks so they are current, and then switch back to the snapshot.
-
-	if kit_dict["name"] == "core-kit":
-		prev_branch = gentoo_staging.branch
-		prev_sha1 = gentoo_staging.commit_sha1
-		gentoo_staging.initializeTree("master")
-
 	tree.run(pre_steps)
-
-	if kit_dict["name"] == "core-kit":
-		gentoo_staging.initializeTree(prev_branch, prev_sha1)
 
 	# Phase 2: copy core set of ebuilds
 
@@ -585,6 +575,14 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 	
 	# Phase 4: finalize and commit
 
+	# for core-kit, we want to grab CURRENT masks, etc, which is done by the post steps. But we want to grab eclasses and catpkgs from
+	# the snapshot. So we temporarily switch to "master" for grabbing masks so they are current, and then switch back to the snapshot.
+
+	if kit_dict["name"] == "core-kit":
+		prev_branch = gentoo_staging.branch
+		prev_sha1 = gentoo_staging.commit_sha1
+		gentoo_staging.initializeTree("master")
+
 	post_steps += [
 		ELTSymlinkWorkaround(),
 		CreateCategories(gentoo_staging),
@@ -593,11 +591,12 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 		GenUseLocalDesc(),
 		GenCache( cache_dir="/var/cache/edb/%s-%s" % ( kit_dict['name'], kit_dict['branch'] ) )
 	]
+
 	tree.run(post_steps)
 	tree.gitCommit(message="updates",branch=kit_dict['branch'],push=push)
 	
-	# now activate any regexes recorded so that they will be matched against for successive kits:
-		
+	# now activate any regexes recorded as applied so that they will be matched against (and matches skipped) for successive kits:
+	
 	cpm_logger.nextKit()
 
 if __name__ == "__main__":
