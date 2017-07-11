@@ -4,7 +4,7 @@ EAPI=6
 
 DESCRIPTION="100% pure-Java implementation of the Ruby programming language"
 HOMEPAGE="http://www.jruby.org/"
-SRC_URI="http://jruby.org.s3.amazonaws.com/downloads/${PV}/${PN}-bin-${PV}.tar.gz"
+SRC_URI="http://jruby.org.s3.amazonaws.com/downloads/${PV}/${P}.tar.gz"
 
 LICENSE="EPL GPL2 LGPL2.1 custom"
 SLOT="0"
