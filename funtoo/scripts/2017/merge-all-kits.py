@@ -222,7 +222,7 @@ kit_order = [ 'prime', 'shared', None, 'current' ]
 
 def getKitPrepSteps(repos, kit_dict, gentoo_staging):
 
-	global funtoo_overlay
+	global fixup_repo
 
 	kit_steps = {
 		'core-kit' : { 'pre' : [
@@ -238,15 +238,13 @@ def getKitPrepSteps(repos, kit_dict, gentoo_staging):
 				SyncDir(gentoo_staging.root, "profiles/base"),
 				SyncDir(gentoo_staging.root, "profiles/arch/base"),
 				SyncDir(gentoo_staging.root, "profiles/updates"),
-				SyncDir(funtoo_overlay.root, "profiles", "profiles", exclude=["repo_name", "categories", "updates"]),
 				SyncDir(gentoo_staging.root, "metadata", exclude=["cache","md5-cache","layout.conf"]),
-				SyncFiles(funtoo_overlay.root, {
-						"COPYRIGHT.txt":"COPYRIGHT.txt",
-						"LICENSE.txt":"LICENSE.txt",
-					}),
 				# add funtoo stuff to thirdpartymirrors
 				ThirdPartyMirrors(),
 				RunSed(["profiles/base/make.defaults"], ["/^PYTHON_TARGETS=/d", "/^PYTHON_SINGLE_TARGET=/d"]),
+							],
+			'post' : [
+				# we copy files into funtoo's profile structure as post-steps because we rely on kit-fixups step to get the initial structure into place
 				CopyAndRename("profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/subarch", "profiles/funtoo/1.0/linux-gnu/arch/pure64/subarch", lambda x: os.path.basename(x) + "-pure64"),
 				SyncFiles(gentoo_staging.root, {
 					"profiles/package.mask":"profiles/package.mask/00-gentoo",
@@ -260,17 +258,19 @@ def getKitPrepSteps(repos, kit_dict, gentoo_staging):
 					"profiles/arch/amd64/no-multilib/package.mask":"profiles/funtoo/1.0/linux-gnu/arch/pure64/package.mask/01-gentoo",
 					"profiles/arch/amd64/no-multilib/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/pure64/use.mask/01-gentoo"
 				}),
-				SyncFiles(funtoo_overlay.root, {
-					"profiles/package.mask/funtoo-toolchain":"profiles/funtoo/1.0/linux-gnu/build/current/package.mask/funtoo-toolchain",
-					"profiles/package.mask/funtoo-toolchain":"profiles/funtoo/1.0/linux-gnu/build/stable/package.mask/funtoo-toolchain",
-					"profiles/package.mask/funtoo-toolchain-experimental":"profiles/funtoo/1.0/linux-gnu/build/experimental/package.mask/funtoo-toolchain",
-				}),
 			]
 		},
 		# masters of core-kit for regular kits and nokit ensure that masking settings set in core-kit for catpkgs in other kits are applied
 		# to the other kits. Without this, mask settings in core-kit apply to core-kit only.
 		'regular-kits' : { 'pre' : [
 				GenerateRepoMetadata(kit_dict['name'], masters=[ "core-kit" ], priority=500),
+			]
+		},
+		'all-kits' : { 'pre' : [
+				SyncFiles(fixup_repo.root, {
+						"COPYRIGHT.txt":"COPYRIGHT.txt",
+						"LICENSE.txt":"LICENSE.txt",
+					}),
 			]
 		},
 		'nokit' : { 'pre' : [
@@ -298,6 +298,12 @@ def getKitPrepSteps(repos, kit_dict, gentoo_staging):
 			out_pre_steps += kit_steps['regular-kits']['pre']
 		if 'post' in kit_steps['regular-kits']:
 			out_post_steps += kit_steps['regular-kits']['post']
+
+	if 'all-kits' in kit_steps:
+		if 'pre' in kit_steps['all-kits']:
+			out_pre_steps += kit_steps['all-kits']['pre']
+		if 'post' in kit_steps['all-kits']:
+			out_post_steps += kit_steps['all-kits']['post']
 
 	return ( out_pre_steps, out_copy_steps, out_post_steps )
 
@@ -426,14 +432,18 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 				steps += [ SyncFiles(repo_dict["repo"].root, ec_files) ]
 		copycount = cpm_logger.copycount
 
-	# Phase 3: copy eclasses, licenses, and ebuild/eclass fixups from the kit-fixups repository. 
+	# Phase 3: copy eclasses, licenses, profile info, and ebuild/eclass fixups from the kit-fixups repository. 
 
 	# First, we are going to process the kit-fixups repository and look for ebuilds and eclasses to replace. Eclasses can be
 	# overridden by using the following paths inside kit-fixups:
 
 	# kit-fixups/eclass <--------------------- global eclasses, get installed to all kits unconditionally (overrides those above)
 	# kit-fixups/<kit>/global/eclass <-------- global eclasses for a particular kit, goes in all branches (overrides those above)
+	# kit-fixups/<kit>/global/profiles <------ global profile info for a particular kit, goes in all branches (overrides those above)
 	# kit-fixups/<kit>/<branch>/eclass <------ eclasses to install in just a specific branch of a specific kit (overrides those above)
+	# kit-fixups/<kit>/<branch>/profiles <---- profile info to install in just a specific branch of a specific kit (overrides those above)
+
+	# Note that profile repo_name and categories files are excluded from any copying.
 
 	# Ebuilds can be installed to kits by putting them in the following location(s):
 
@@ -461,6 +471,10 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 			if os.path.exists(fixup_repo.root + "/" + fixup_path + "/licenses"):
 				steps += [
 					InsertFilesFromSubdir(fixup_repo, "licenses", None, select="all", skip=None, src_offset=fixup_path)
+				]
+			if os.path.exists(fixup_repo.root + "/" + fixup_path + "/profiles"):
+				steps += [
+					InsertFilesFromSubdir(fixup_repo, "profiles", None, select="all", skip=["repo_name", "categories"] , src_offset=fixup_path)
 				]
 			# copy appropriate kit readme into place:
 			readme_path = fixup_path + "/README.rst"
