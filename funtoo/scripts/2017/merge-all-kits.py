@@ -228,6 +228,9 @@ def getKitPrepSteps(repos, kit_dict, gentoo_staging):
 	kit_steps = {
 		'core-kit' : { 'pre' : [
 				GenerateRepoMetadata("core-kit", aliases=["gentoo"], priority=1000),
+				# core-kit has special logic for eclasses -- we want all of them, so that third-party overlays can reference the full set.
+				# All other kits use alternate logic (not in kit_steps) to only grab the eclasses they actually use.
+				SyncDir(gentoo_staging.root, "eclass"),
 							],
 			'post' : [
 				# We copy files into funtoo's profile structure as post-steps because we rely on kit-fixups step to get the initial structure into place
@@ -499,24 +502,35 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 	# turn requires additional eclasses, thus creating additional missing eclasses. So we need a super-loop to drive the
 	# whole thing, and we keep going until the number of missing eclasses is zero.
 
-	while keep_going:
-		for repo, elist in getAllEclasses(tree, gentoo_staging).items():
-			repo_obj = None
-			if repo == "dest_kit":
-				# already where we want them
-				continue
-			elif repo == "parent_repo":
-				repo_obj = gentoo_staging
-			elif repo == None:
-				if len(elist) == 0:
-					keep_going = False
-				elif len(elist) == last_count:
-					iterations += 1
-					if iterations > max_iterations:
-						missing_eclasses = elist
+
+	if tree.name != "core-kit":
+	
+		# for core-kit, we are going to include a COMPLETE set of eclasses, even unused ones, so that third-party overlays that
+		# depend on any of these eclasses will find them and be able to use them.
+
+		# All other kits get only the eclasses they actually use, so they have local copies of the versions of the eclasses with
+		# which they were tested.
+
+		while keep_going:
+			for repo, elist in getAllEclasses(tree, gentoo_staging).items():
+				repo_obj = None
+				if repo == "dest_kit":
+					# This means the eclass already exists in the kit -- probably copied from fixups
+					continue
+				elif repo == "parent_repo":
+					# This means that the eclass is in gentoo_staging and needs to be copied
+					repo_obj = gentoo_staging
+				elif repo == None:
+					if len(elist) == 0:
 						keep_going = False
-			if repo_obj != None:
-				copy_steps += [ InsertEclasses(repo_obj, select=elist) ]
+					elif len(elist) == last_count:
+						# If there is something in elist, this means that the listed eclasses was nowhere to be found.
+						iterations += 1
+						if iterations > max_iterations:
+							missing_eclasses = elist
+							keep_going = False
+				if repo_obj != None:
+					copy_steps += [ InsertEclasses(repo_obj, select=elist) ]
 
 
 	if iterations > max_iterations and len(missing_eclasses):

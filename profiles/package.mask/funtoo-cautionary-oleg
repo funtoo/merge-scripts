@@ -1,3 +1,6 @@
+# FL-3939: mask "bad" verison of dev-util/cppunit
+>=dev-util/cppunit-1.14
+
 # mask vulenrable and discontinued autotrace
 # https://bugs.funtoo.org/browse/FL-3861
 # https://bugs.gentoo.org/show_bug.cgi?id=620802
