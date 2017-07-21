@@ -175,14 +175,15 @@ kit_groups = {
 		{ 'name' : 'core-hw-kit', 'branch' : 'master', 'source': 'gentoo_current' },
 		{ 'name' : 'security-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime' },
 		{ 'name' : 'xorg-kit', 'branch' : '1.17-prime', 'source': 'gentoo_prime_xorg' },
+		{ 'name' : 'gnome-kit', 'branch' : '3.20-prime', 'source': 'gentoo_prime_gnome' },
 	],
 	'current' : [
 		{ 'name' : 'core-kit', 'branch' : 'master', 'source': 'gentoo_current' },
 		{ 'name' : 'security-kit', 'branch' : 'master', 'source': 'gentoo_current' },
 		{ 'name' : 'xorg-kit', 'branch' : 'master', 'source': 'gentoo_current' },
+		{ 'name' : 'gnome-kit', 'branch' : 'master', 'source': 'gentoo_current' },
 	],
 	'shared' : [
-		{ 'name' : 'gnome-kit', 'branch' : '3.20-prime', 'source': 'gentoo_prime_gnome' },
 		{ 'name' : 'media-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime_media' },
 		{ 'name' : 'perl-kit', 'branch' : '5.24-prime', 'source': 'gentoo_prime_perl' },
 		{ 'name' : 'python-kit', 'branch' : '3.4-prime', 'source': 'gentoo_prime' },
