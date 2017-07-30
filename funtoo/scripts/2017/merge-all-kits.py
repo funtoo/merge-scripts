@@ -95,6 +95,11 @@ overlays = {
 			"media-tv/plex-media-server",
 		],
 	},
+	# Ryan Harris glassfish overlay. FL-3985:
+	"rh1" : { "type" : GitTree, "url" : "https://github.com/x48rph/glassfish.git", "select" : [
+			"www-servers/glassfish-bin",
+		],
+	},
 	# damex's deadbeef (music player like foobar2000) overlay
 	"deadbeef" : { "type" : GitTree, "url" : "https://github.com/damex/deadbeef-overlay.git", "copyfiles" : {
 			"profiles/package.mask": "profiles/package.mask/deadbeef.mask"
