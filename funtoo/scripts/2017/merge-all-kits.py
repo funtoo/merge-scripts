@@ -145,8 +145,8 @@ kit_source_defs = {
 		{ "repo" : "gentoo-staging" },
 		{ "repo" : "flora" },
 		{ "repo" : "faustoo" },
-		{ "repo" : "fusion809" }
-		{ "repo" ; "rh1" }
+		{ "repo" : "fusion809" },
+		{ "repo" : "rh1" }
 	],
 	"gentoo_prime" : [
 		{ "repo" : "gentoo-staging", "src_sha1" : '06a1fd99a3ce1dd33724e11ae9f81c5d0364985e', 'date' : '21 Apr 2017'},
