@@ -146,12 +146,14 @@ kit_source_defs = {
 		{ "repo" : "flora" },
 		{ "repo" : "faustoo" },
 		{ "repo" : "fusion809" }
+		{ "repo" ; "rh1" }
 	],
 	"gentoo_prime" : [
 		{ "repo" : "gentoo-staging", "src_sha1" : '06a1fd99a3ce1dd33724e11ae9f81c5d0364985e', 'date' : '21 Apr 2017'},
 		{ "repo" : "flora", },
 		{ "repo" : "faustoo", "src_sha1" : "58c805ec0df34cfc699e6555bf317590ff9dee15", },
 		{ "repo" : "fusion809", "src_sha1" : "8322bcd79d47ef81f7417c324a1a2b4772020985", "options" : { "merge" : True }},
+		{ "repo" : "rh1", }
 	],
 	"gentoo_prime_xorg" : [
 		{ "repo" : "gentoo-staging", 'src_sha1' : 'a56abf6b7026dae27f9ca30ed4c564a16ca82685', 'date' : '18 Nov 2016' }
