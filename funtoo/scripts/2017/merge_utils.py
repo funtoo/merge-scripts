@@ -810,7 +810,7 @@ class GitTree(Tree):
 				runShell("echo 'created by merge.py' > %s/README" % self.root )
 				runShell("( cd %s; git add README; git commit -a -m 'initial commit by merge.py' )" % self.root )
 				runShell("( cd %s; git remote add origin %s )" % ( self.root, self.url ))
-			elif url:
+			elif self.url:
 				# we aren't supposed to create it from scratch -- can we clone it?
 				runShell("(cd %s; git clone %s %s)" % ( base, self.url, os.path.basename(self.root) ))
 			else:
