@@ -803,14 +803,14 @@ class GitTree(Tree):
 				# dir exists but not a git repo, so exit
 			
 			base = os.path.dirname(self.root)
-			if create:
+			if self.create:
 				# we have been told to create this repo. This works even if we have a remote clone URL specified
 				os.makedirs(self.root)
 				runShell("( cd %s; git init )" % self.root )
 				runShell("echo 'created by merge.py' > %s/README" % self.root )
 				runShell("( cd %s; git add README; git commit -a -m 'initial commit by merge.py' )" % self.root )
 				runShell("( cd %s; git remote add origin %s )" % ( self.root, self.url ))
-			elif url:
+			elif self.url:
 				# we aren't supposed to create it from scratch -- can we clone it?
 				runShell("(cd %s; git clone %s %s)" % ( base, self.url, os.path.basename(self.root) ))
 			else:
@@ -827,7 +827,7 @@ class GitTree(Tree):
 
 		# Let's make sure we have a local branch first:
 		if not self.localBranchExists(self.branch):
-			if not create:
+			if not self.create:
 				# branch does not exist, so get it from remote and create it:
 				runShell("( cd %s; git fetch; git checkout -b %s --track origin/%s )" % ( self.root, self.branch, self.branch ))
 			else:
