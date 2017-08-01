@@ -1,0 +1,11 @@
+--- a/setup.py	2017-07-06 11:24:58.398207177 +0000
++++ b/setup.py	2017-07-06 11:39:26.306510902 +0000
+@@ -660,7 +660,7 @@
+ 		['$sysconfdir', ['cnf/etc-update.conf', 'cnf/dispatch-conf.conf']],
+ 		['$logrotatedir', ['cnf/logrotate.d/elog-save-summary']],
+ 		['$portage_confdir', [
+-			'cnf/make.conf.example', 'cnf/make.globals', 'cnf/repos.conf']],
++			'cnf/make.conf.example', 'cnf/make.globals']],
+ 		['$portage_setsdir', ['cnf/sets/portage.conf']],
+ 		['$docdir', ['NEWS', 'RELEASE-NOTES']],
+ 		['$portage_base/bin', ['bin/deprecated-path']],
