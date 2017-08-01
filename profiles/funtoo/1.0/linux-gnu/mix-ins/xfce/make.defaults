@@ -1,2 +1,0 @@
-USE="consolekit dbus gtk jpeg libnotify lock policykit session startup-notification svg thunar udev"
-

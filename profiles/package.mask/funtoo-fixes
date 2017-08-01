@@ -1,5 +1,0 @@
-#FL-2930
->=sys-fs/udev-init-scripts-28
-
-# FL-2803, also note FL-2885 - a pango rebuild may be required after downgrade
->=media-libs/fontconfig-2.11.2

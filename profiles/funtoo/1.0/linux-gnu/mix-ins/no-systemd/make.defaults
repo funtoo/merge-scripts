@@ -1,5 +1,0 @@
-# Disable USE flag "systemd"
-USE="-systemd"
-
-# Prevent portage from making directories and files here.
-INSTALL_MASK="/etc/systemd/ /usr/lib/systemd/ /lib/systemd/"

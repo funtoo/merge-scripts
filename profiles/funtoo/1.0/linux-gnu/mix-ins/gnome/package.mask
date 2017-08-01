@@ -1,2 +1,0 @@
-# mask recent dev-perl/SGMLSpm. This breaks gnome's power manager. It's unknown whether it breaks anything else. Keep the mask in gnome profile for now.
->=dev-perl/SGMLSpm-1.03-r8

@@ -1,6 +1,0 @@
-# Raspberry Pi 1 Model B, Model A, Model B+, Model A, Compute Module, Raspberry Pi Zero
-CHOST="armv6j-hardfloat-linux-gnueabi"
-CFLAGS="-O2 -pipe -march=armv6j -mtune=arm1176jzf-s -mfpu=vfp -mfloat-abi=hard"
-CXXFLAGS="${CFLAGS}"
-FFLAGS="${CFLAGS}"
-FCFLAGS="${CFLAGS}"

@@ -1,7 +1,0 @@
-Index: xorp-1.6/mibs/snmpdscripts/stopsnmp
-===================================================================
---- xorp-1.6.orig/mibs/snmpdscripts/stopsnmp	2009-07-21 17:56:05.000000000 +0200
-+++ xorp-1.6/mibs/snmpdscripts/stopsnmp	2009-07-21 17:56:20.000000000 +0200
-@@ -1 +1,2 @@
-+#!/bin/sh
- sudo killall snmpd

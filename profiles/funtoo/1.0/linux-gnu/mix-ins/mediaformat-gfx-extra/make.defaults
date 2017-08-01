@@ -1,3 +1,0 @@
-# Extra graphic file formats.
-
-USE="aalib djvu fpx hdri imagemagick jbig lcms mng openexr pnm tga"

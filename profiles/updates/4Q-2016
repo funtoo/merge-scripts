@@ -1,2 +1,0 @@
-move net-libs/htmlcxx dev-cpp/htmlcxx
-slotmove ~sys-libs/ncurses-6.0 5 0

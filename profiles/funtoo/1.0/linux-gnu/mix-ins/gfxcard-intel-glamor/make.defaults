@@ -1,2 +1,0 @@
-USE="glamor vaapi vdpau"
-VIDEO_CARDS="intel i965"

@@ -1,3 +1,0 @@
-# Pro-level video device support
-
-USE="dc1394 dv iec61883"

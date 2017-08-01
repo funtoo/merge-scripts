@@ -1,8 +1,0 @@
-# FL-3430 disable ffmpeg USE as a workaround
-=media-plugins/gst-plugins-meta-0.10* -ffmpeg
-
-# set policylkit USE for consolekit. Desktop need this.
-sys-auth/consolekit policykit
-
-# FL-1868. enale bluetooth USE in pulseaudio
-media-sound/pulseaudio bluetooth

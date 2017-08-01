@@ -1,4 +1,0 @@
-move media-video/mplayer-uau media-video/mplayer2
-move sys-apps/gdisk sys-apps/gptfdisk
-move sys-kernel/rhel5-openvz-sources sys-kernel/openvz-rhel5-stable
-move sys-kernel/rhel6-openvz-sources sys-kernel/openvz-rhel6-test

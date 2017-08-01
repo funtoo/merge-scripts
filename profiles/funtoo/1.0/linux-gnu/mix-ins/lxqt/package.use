@@ -1,5 +1,0 @@
-lxqt-base/lxqt-meta powermanagement
-dev-qt/qtchooser qt5
->=sys-auth/polkit-qt-0.112.0-r1 qt5
->=x11-libs/libxcb-1.11-r1 xkb
->=dev-libs/libpcre-8.36 pcre16

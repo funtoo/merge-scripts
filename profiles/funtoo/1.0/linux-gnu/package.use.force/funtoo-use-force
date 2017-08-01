@@ -1,7 +1,0 @@
-# FL-3548: force enable skia USE flag on firefox
->=www-client/firefox-51.0 skia
-
-## FL-426, gupnp and gupnp-igd need introspection flag enabled, this USE flag is disabled by core base profile,
-## funtoo-use-force enables profile disabled flags.
-net-libs/gupnp introspection
-net-libs/gupnp-igd introspection

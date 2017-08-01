@@ -1,5 +1,0 @@
-# Force the flag which corresponds to ARCH.
-x86
-
-# Add new abi's FL-452
-abi_x86_32

@@ -1,3 +1,0 @@
-# Extra audio file formats.
-
-USE="aacplus adplug alac amr amrenc audiofile celt fluidsynth gme gsm mac midi mikmod modplug musepack opus shorten sid sox speex toolame wildmidi"

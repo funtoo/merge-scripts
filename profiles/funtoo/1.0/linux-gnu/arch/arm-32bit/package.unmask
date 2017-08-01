@@ -1,5 +1,0 @@
-# QA-85: unmask to resolve internal compiler error bug
-=sys-devel/gcc-4.9.3
-
-# QA-85 and FL-2694: unmask for testing, builds under ARM
-=dev-libs/icu-55.1-r1002

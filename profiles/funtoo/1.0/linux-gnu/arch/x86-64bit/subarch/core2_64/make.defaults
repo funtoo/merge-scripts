@@ -1,6 +1,0 @@
-CFLAGS="-march=core2 -O2 -pipe"
-CXXFLAGS="${CFLAGS}"
-FFLAGS="${CFLAGS}"
-FCFLAGS="${CFLAGS}"
-
-CPU_FLAGS_X86="mmx mmxext sse sse2 sse3 ssse3"

@@ -1,6 +1,0 @@
-# enable llvm_targets
-sys-devel/clang llvm_targets_BPF
-sys-devel/llvm llvm_targets_BPF
-
-# enable pic USE for ffmpeg
-media-video/ffmpeg pic

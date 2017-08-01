@@ -1,8 +1,0 @@
-# Commonly found video file formats.
-
-# audio codecs
-USE="a52 aac dts faac faad twolame"
-# video codecs
-USE="$USE libmpeg2 mjpeg mpeg quicktime theora vpx x264 x265 xvid win32codecs"
-# containers, subtitles, functions
-USE="$USE encode ffmpeg libass libguess matroska postproc"

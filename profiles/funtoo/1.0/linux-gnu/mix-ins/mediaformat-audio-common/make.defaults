@@ -1,3 +1,0 @@
-# Commonly found audio file formats.
-
-USE="cddb flac lame mad mp3 ogg sndfile taglib vorbis wav wavpack"

@@ -1,5 +1,0 @@
-CFLAGS="-march=native -O2 -fomit-frame-pointer -pipe"
-CXXFLAGS="${CFLAGS}"
-FFLAGS="${CFLAGS}"
-FCFLAGS="${CFLAGS}"
-

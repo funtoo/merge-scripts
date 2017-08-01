@@ -1,9 +1,0 @@
-# Extra audio supoort
-USE="fdk"
-
-# Extra video file formats.
-
-USE="dirac dv kate libtiger nuv schroedinger"
-
-# fancy streaming protocols
-USE="$USE live mms rtmp rtsp"

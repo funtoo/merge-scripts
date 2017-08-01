@@ -1,4 +1,0 @@
-# Force enable multilib USE flag
-multilib
-# Add new abi's FL-452
-abi_x86_64 

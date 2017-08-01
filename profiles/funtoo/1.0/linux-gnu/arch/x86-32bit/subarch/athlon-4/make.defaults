@@ -1,6 +1,0 @@
-CFLAGS="-O2 -fomit-frame-pointer -march=athlon-4 -pipe"
-CXXFLAGS="${CFLAGS}"
-FFLAGS="${CFLAGS}"
-FCFLAGS="${CFLAGS}"
-
-CPU_FLAGS_X86="3dnow 3dnowext mmx mmxext sse"

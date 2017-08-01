@@ -1,5 +1,0 @@
-# Audio settings
-
-USE="alsa"
-ALSA_CARDS="ali5451 als4000 atiixp atiixp-modem bt87x ca0106 cmipci emu10k1x ens1370 ens1371 es1938 es1968 fm801 hda-intel ice1724 intel8x0 intel8x0m maestro3 trident usb-audio via82xx via82xx-modem ymfpci"
-ALSA_PCM_PLUGINS="adpcm alaw asym copy dmix dshare dsnoop empty extplug file hooks iec958 ioplug ladspa lfloat linear meter mmap_emul mulaw multi null plug rate route share shm softvol"

@@ -1,2 +1,0 @@
-move sys-boot/efivar sys-libs/efivar
-move app-shells/zsh-completion app-shells/funtoo-zsh-completions

@@ -1,3 +1,0 @@
-# Distributed under the terms of the GNU General Public License v2
-
-USE="consolekit declarative dri introspection kde kipi phonon plasma policykit qml qt5 semantic-desktop widgets xcomposite xinerama xscreensaver"

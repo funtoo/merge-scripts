@@ -1,3 +1,0 @@
-# support of llvm_targets
-sys-devel/clang llvm_targets_X86
-sys-devel/llvm llvm_targets_X86

@@ -1,6 +1,0 @@
-{
-	"mix-ins" : "funtoo/1.0/linux-gnu/mix-ins",
-	"flavor" : "funtoo/1.0/linux-gnu/flavor",
-	"arch" : "funtoo/1.0/linux-gnu/arch",
-	"build" : "funtoo/1.0/linux-gnu/build"
-}
