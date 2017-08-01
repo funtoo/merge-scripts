@@ -5,21 +5,6 @@ from merge_utils import *
 
 gentoo_staging_w = GitTree("gentoo-staging", "master", "repos@localhost:ports/gentoo-staging.git", root="/var/git/dest-trees/gentoo-staging", pull=False)
 
-# shards are overlays where we collect gentoo's most recent changes. This way, we can merge specific versions rather than always be forced to
-# get the latest.
-
-#shard_names = [ "perl", "python", "kde", "gnome", "core", "office", "media" ]
-#shards = {}
-#shard_steps = {}
-
-#for s in shard_names:
-#	shard_steps[s] = []
-#	if s.endswith("-kit"):
-#		shards[s] = GitTree(s, "master", "repos@localhost:kits/%s.git" % s, root="/var/git/dest-trees/%s" % s, pull=False)
-#	else:
-#		shards[s] = GitTree("gentoo-%s-shard" % s, "master", "repos@localhost:ports/gentoo-%s-shard.git" % s, root="/var/git/dest-trees/gentoo-%s-shard" % s, pull=False)
-#	shard_steps[s] += generateShardSteps(s, gentoo_staging_w, shards[s])
-
 # This function updates the gentoo-staging tree with all the latest gentoo updates:
 
 def gentoo_staging_update():
