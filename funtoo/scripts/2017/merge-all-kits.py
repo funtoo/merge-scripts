@@ -491,7 +491,7 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 				]
 			steps += [
 				# add a new parameter called 'prefix'
-				InsertEbuilds(fixup_repo, ebuildloc=fixup_path, select="all", skip=None, replace=True )
+				InsertEbuilds(fixup_repo, ebuildloc=fixup_path, select="all", skip=None, replace=True, cpm_logger=cpm_logger )
 			]
 	tree.run(steps)
 
