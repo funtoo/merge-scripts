@@ -188,16 +188,6 @@ kit_groups = {
 		{ 'name' : 'python-kit', 'branch' : '3.4-prime', 'source': 'gentoo_prime' },
 		{ 'name' : 'php-kit', 'branch' : '7.1.3-prime', 'source': 'gentoo_prime' },
 	],
-	'current' : [
-		{ 'name' : 'core-kit', 'branch' : 'master', 'source': 'gentoo_current' },
-		{ 'name' : 'security-kit', 'branch' : 'master', 'source': 'gentoo_current' },
-		{ 'name' : 'xorg-kit', 'branch' : 'master', 'source': 'gentoo_current' },
-		{ 'name' : 'gnome-kit', 'branch' : 'master', 'source': 'gentoo_current' },
-		{ 'name' : 'media-kit', 'branch' : 'master', 'source': 'gentoo_current' },
-		{ 'name' : 'perl-kit', 'branch' : 'master', 'source': 'gentoo_current' },
-		{ 'name' : 'python-kit', 'branch' : 'master', 'source': 'gentoo_current' },
-		{ 'name' : 'php-kit', 'branch' : 'master', 'source': 'gentoo_current' },
-	],
 	'shared' : [
 		{ 'name' : 'java-kit', 'branch' : 'master', 'source': 'gentoo_current' },
 		{ 'name' : 'dev-kit', 'branch' : 'master', 'source': 'gentoo_current' },
@@ -209,7 +199,17 @@ kit_groups = {
 		{ 'name' : 'science-kit', 'branch' : 'master', 'source': 'gentoo_current' },
 		{ 'name' : 'games-kit', 'branch' : 'master', 'source': 'gentoo_current' },
 		{ 'name' : 'nokit', 'branch' : 'master', 'source': 'gentoo_current' }
-	]
+	],
+	'current' : [
+		{ 'name' : 'core-kit', 'branch' : 'master', 'source': 'gentoo_current' },
+		{ 'name' : 'security-kit', 'branch' : 'master', 'source': 'gentoo_current' },
+		{ 'name' : 'xorg-kit', 'branch' : 'master', 'source': 'gentoo_current' },
+		{ 'name' : 'gnome-kit', 'branch' : 'master', 'source': 'gentoo_current' },
+		{ 'name' : 'media-kit', 'branch' : 'master', 'source': 'gentoo_current' },
+		{ 'name' : 'perl-kit', 'branch' : 'master', 'source': 'gentoo_current' },
+		{ 'name' : 'python-kit', 'branch' : 'master', 'source': 'gentoo_current' },
+		{ 'name' : 'php-kit', 'branch' : 'master', 'source': 'gentoo_current' },
+	],
 }
 
 

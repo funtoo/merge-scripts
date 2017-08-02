@@ -448,6 +448,7 @@ class CatPkgMatchLogger(object):
 		return False
 
 	def record(self, match):
+		print("Recording CPM", match)
 		if isinstance(match, regextype):
 			self._regexdict_curkit[match.pattern] = match
 		else:
@@ -479,16 +480,16 @@ def headSHA1(tree):
 def runShell(string,abortOnFail=True):
 	if debug:
 		print("running: %r" % string)
-		out = subprocess.getstatusoutput(string)
-		if out[0] != 0:
-			print("Error executing %r" % string)
-			print()
-			print("output:")
-			print(out[1])
-			if abortOnFail:
-				sys.exit(1)
-			else:
-				return False
+	out = subprocess.getstatusoutput(string)
+	if out[0] != 0:
+		print("Error executing %r" % string)
+		print()
+		print("output:")
+		print(out[1])
+		if abortOnFail:
+			sys.exit(1)
+		else:
+			return False
 	return True
 
 def run_command(args, *, abort_on_failure=True, **kwargs):
