@@ -478,8 +478,6 @@ def headSHA1(tree):
 
 def runShell(string,abortOnFail=True):
 	if debug:
-		print(string)
-	else:
 		print("running: %r" % string)
 		out = subprocess.getstatusoutput(string)
 		if out[0] != 0:
@@ -495,8 +493,6 @@ def runShell(string,abortOnFail=True):
 
 def run_command(args, *, abort_on_failure=True, **kwargs):
 	if debug:
-		print(args)
-	else:
 		print("running: %r" % args)
 		stdout = kwargs.pop("stdout", subprocess.PIPE)
 		stderr = kwargs.pop("stderr", subprocess.PIPE)
