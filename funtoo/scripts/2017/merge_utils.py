@@ -19,7 +19,7 @@ import grp
 import pwd
 import multiprocessing
 
-debug = False
+debug = True
 
 mergeLog = open("/var/tmp/merge.log","w")
 
@@ -1128,7 +1128,7 @@ class InsertEbuilds(MergeStep):
 	
 	
 	"""
-	def __init__(self,srctree,select="all",skip=None,replace=False,merge=None,categories=None,ebuildloc=None,branch=None,cpm_logger=None):
+	def __init__(self,srctree,select="all",skip=None,replace=False,merge=None,categories=None,ebuildloc=None,branch=None,cpm_logger=None,cpm_ignore=False):
 		self.select = select
 		self.skip = skip
 		self.srctree = srctree
@@ -1136,6 +1136,7 @@ class InsertEbuilds(MergeStep):
 		self.merge = merge
 		self.categories = categories
 		self.cpm_logger = cpm_logger
+		self.cpm_ignore = cpm_ignore
 
 		if branch != None:
 			# Allow dynamic switching to different branches/commits to grab things we want:
@@ -1145,9 +1146,9 @@ class InsertEbuilds(MergeStep):
 
 	def __repr__(self):
 		if self.select:
-			return "<InsertEbuilds: %s>" % " ".join(self.select) if type(self.select) == list else ""
+			return "<InsertEbuilds: %s %s>" % (self.srctree.root, " ".join(self.select) if type(self.select) == list else "")
 		else:
-			return "<InsertEbuilds>"
+			return "<InsertEbuilds: %s>" % srctree.root
 
 	def run(self,desttree):
 		if self.ebuildloc:
@@ -1179,7 +1180,8 @@ class InsertEbuilds(MergeStep):
 				dest_cat_set = set(f.read().splitlines())
 		else:
 			dest_cat_set = set()
-
+		print("SRCTREE.root", self.srctree.root)
+		print("DESTTREE.root", desttree.root)
 		# Our main loop:
 		print( "# Merging in ebuilds from %s" % srctree_root )
 		for cat in src_cat_set:
@@ -1191,7 +1193,7 @@ class InsertEbuilds(MergeStep):
 			for pkg in os.listdir(catdir):
 				catpkg = "%s/%s" % (cat,pkg)
 				pkgdir = os.path.join(catdir, pkg)
-				if self.cpm_logger and self.cpm_logger.match(catpkg):
+				if not self.cpm_ignore and self.cpm_logger and self.cpm_logger.match(catpkg):
 					#already copied
 					continue
 				if not os.path.isdir(pkgdir):
