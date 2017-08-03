@@ -2,3 +2,4 @@ sys-firmware/*
 sys-kernel/linux-firmware
 @regex@:.*-firmware
 sys-libs/timezone-data
+app-misc/ca-certificates

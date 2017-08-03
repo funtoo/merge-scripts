@@ -186,9 +186,9 @@ kit_groups = {
 		{ 'name' : 'media-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime_media' },
 		{ 'name' : 'perl-kit', 'branch' : '5.24-prime', 'source': 'gentoo_prime_perl' },
 		{ 'name' : 'python-kit', 'branch' : '3.4-prime', 'source': 'gentoo_prime' },
-		{ 'name' : 'php-kit', 'branch' : '7.1.3-prime', 'source': 'gentoo_prime' },
 	],
 	'shared' : [
+		{ 'name' : 'php-kit', 'branch' : 'master', 'source': 'gentoo_current' },
 		{ 'name' : 'java-kit', 'branch' : 'master', 'source': 'gentoo_current' },
 		{ 'name' : 'dev-kit', 'branch' : 'master', 'source': 'gentoo_current' },
 		{ 'name' : 'kde-kit', 'branch' : 'master', 'source': 'gentoo_current' },
@@ -208,7 +208,6 @@ kit_groups = {
 		{ 'name' : 'media-kit', 'branch' : 'master', 'source': 'gentoo_current' },
 		{ 'name' : 'perl-kit', 'branch' : 'master', 'source': 'gentoo_current' },
 		{ 'name' : 'python-kit', 'branch' : 'master', 'source': 'gentoo_current' },
-		{ 'name' : 'php-kit', 'branch' : 'master', 'source': 'gentoo_current' },
 	],
 }
 
