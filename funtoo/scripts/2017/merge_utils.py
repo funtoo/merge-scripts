@@ -505,26 +505,26 @@ def runShell(string,abortOnFail=True):
 def run_command(args, *, abort_on_failure=True, **kwargs):
 	if debug:
 		print("running: %r" % args)
-		stdout = kwargs.pop("stdout", subprocess.PIPE)
-		stderr = kwargs.pop("stderr", subprocess.PIPE)
-		try:
-			with subprocess.Popen(args, stdout=stdout, stderr=stderr, **kwargs) as process:
-				status = process.wait()
-				stdout_content = process.stdout.read().decode()
-				stderr_content = process.stderr.read().decode()
-		except OSError as e:
-			status = -1
-			stdout_content = ""
-			stderr_content = e.strerror
-		if status != 0:
-			print("Error executing %r" % args)
-			print()
-			print("stdout: %s" % stdout_content)
-			print("stderr: %s" % stderr_content)
-			if abort_on_failure:
-				sys.exit(1)
-			else:
-				return False
+	stdout = kwargs.pop("stdout", subprocess.PIPE)
+	stderr = kwargs.pop("stderr", subprocess.PIPE)
+	try:
+		with subprocess.Popen(args, stdout=stdout, stderr=stderr, **kwargs) as process:
+			status = process.wait()
+			stdout_content = process.stdout.read().decode()
+			stderr_content = process.stderr.read().decode()
+	except OSError as e:
+		status = -1
+		stdout_content = ""
+		stderr_content = e.strerror
+	if status != 0:
+		print("Error executing %r" % args)
+		print()
+		print("stdout: %s" % stdout_content)
+		print("stderr: %s" % stderr_content)
+		if abort_on_failure:
+			sys.exit(1)
+		else:
+			return False
 	return True
 
 class AutoGlobMask(MergeStep):
@@ -1145,10 +1145,7 @@ class InsertEbuilds(MergeStep):
 		self.ebuildloc = ebuildloc
 
 	def __repr__(self):
-		if self.select:
-			return "<InsertEbuilds: %s %s>" % (self.srctree.root, " ".join(self.select) if type(self.select) == list else "")
-		else:
-			return "<InsertEbuilds: %s>" % self.srctree.root
+		return "<InsertEbuilds: %s>" % self.srctree.root
 
 	def run(self,desttree):
 		if self.ebuildloc:
@@ -1328,7 +1325,7 @@ class GenCache(MergeStep):
 			if not os.path.exists(self.cache_dir):
 				os.makedirs(self.cache_dir)
 				os.chown(self.cache_dir, pwd.getpwnam('portage').pw_uid, grp.getgrnam('portage').gr_gid)
-		run_command(cmd, abort_on_failure=False)
+		run_command(cmd, abort_on_failure=True)
 
 class GenUseLocalDesc(MergeStep):
 
