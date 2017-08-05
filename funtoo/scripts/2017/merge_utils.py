@@ -19,7 +19,7 @@ import grp
 import pwd
 import multiprocessing
 
-debug = True
+debug = False
 
 mergeLog = open("/var/tmp/merge.log","w")
 
@@ -358,7 +358,7 @@ def generateShardSteps(name, from_tree, to_tree, super_tree, pkgdir=None, cpm_lo
 		skip = get_pkglist(pkgf_skip)
 	for pattern in get_pkglist(pkgf):
 		if pattern.startswith("@regex@:"):
-			steps += [ InsertEbuilds(from_tree, select=re.compile(pattern[8:]), skip=skip, replace=True, cpm_logger=cpm_logger) ]
+			steps += [ InsertEbuilds(from_tree, select=re.compile(pattern[8:]), skip=skip, replace=False, cpm_logger=cpm_logger) ]
 		elif pattern.startswith("@depsincat@:"):
 			patsplit = pattern.split(":")
 			catpkg = patsplit[1]
@@ -372,12 +372,12 @@ def generateShardSteps(name, from_tree, to_tree, super_tree, pkgdir=None, cpm_lo
 			cat_pkglist = getPackagesInCatWithEclass( from_tree, cat, eclass )
 			pkglist += list(cat_pkglist)
 		elif pattern.endswith("/*"):
-			steps += [ InsertEbuilds(from_tree, select=re.compile(pattern[:-1]+".*"), skip=skip, replace=True, cpm_logger=cpm_logger) ]
+			steps += [ InsertEbuilds(from_tree, select=re.compile(pattern[:-1]+".*"), skip=skip, replace=False, cpm_logger=cpm_logger) ]
 		else:
 			pkglist.append(pattern)
 
 	if not insert_kwargs:
-		insert_kwargs = { "replace" : True, "select" : pkglist }
+		insert_kwargs = { "select" : pkglist }
 	else:
 		# only allow a sub-set of catpkgs to be inserted -- no more than specified in insert_kwargs
 		if "select" in insert_kwargs:
@@ -385,9 +385,8 @@ def generateShardSteps(name, from_tree, to_tree, super_tree, pkgdir=None, cpm_lo
 			p_set = set(pkglist)
 			f_set = s_set & p_set
 			insert_kwargs["select"] = list(f_set)
-
 	if pkglist:
-		steps += [ InsertEbuilds(from_tree, skip=skip, cpm_logger=cpm_logger, **insert_kwargs) ]
+		steps += [ InsertEbuilds(from_tree, skip=skip, replace=False, cpm_logger=cpm_logger, **insert_kwargs) ]
 	return steps
 
 # CatPkgMatchLogger is an object that is used to keep a running record of catpkgs that were copied to kits via package-set rules.
@@ -423,9 +422,21 @@ class CatPkgMatchLogger(object):
 		self._matchdict = {}
 		# for regex matches
 		self._regexdict = {}
-		# we don't want to match regexes against catpkgs in the CURRENT KIT. Otherwise we will only copy the first match
-		# of a regex! So accumulate regexes here and only add them to our match list when the caller calls .nextKit()
 		self._regexdict_curkit = {}
+
+		# IMPORTANT:
+
+		# We don't want to match regexes against catpkgs in the CURRENT KIT. Otherwise we will only copy the first match
+		# of a regex! Here is why -- the first ebuild that matches the regex will get copied, and we will record the regex.
+		# Then the second and successive catpkg matches will also match the regex, so .match() will return True and we will
+		# skip them, thinking that they are already copied.
+
+		# We work around this by caching the regexes and only start applying them after the caller calls .nextKit(). Then they
+		# become active.
+
+		# NOTE: Since a kit pulls from multiple repos, this does raise the possibility of repo b replacing a catpkg that was
+		# already copied. We work around this by always using replace=False with InsertEbuilds -- so that if the catpkg is already
+		# on disk, then it isn't copied, even if it matches a regex.
 
 	# Another feature of the CatPkgMatchLoggger is that it records how many catpkgs actually were copied -- 1 for each catpkg
 	# literal, and a caller-specified number of matches for regexes. This tally is used by merge-all-kits.py to determine the
@@ -448,7 +459,6 @@ class CatPkgMatchLogger(object):
 		return False
 
 	def record(self, match):
-		print("Recording CPM", match)
 		if isinstance(match, regextype):
 			self._regexdict_curkit[match.pattern] = match
 		else:
@@ -929,7 +939,7 @@ class GitTree(Tree):
 		print("Starting run")
 		for step in steps:
 			if step != None:
-				print("Running step", step.__class__.__name__)
+				print("Running step", step.__class__.__name__, step)
 				step.run(self)
 
 	def head(self):
@@ -1113,27 +1123,17 @@ class InsertEbuilds(MergeStep):
 		all catpkgs should be overwritten. It is also possible to set replace to a list containing
 		catpkgs that should be overwritten. Wildcards such as "x11-libs/*" will be respected as well.
 
-	merge: Merge source/destination ebuilds. Default = None.
-		If a source catpkg is going to replace a destination catpkg, and this behavior is not desired,
-		you can use merge to tell InsertEbuilds to add the source ebuilds "on top of" the existing
-		ebuilds. The Manifest file will be updated appropriately. Possible values are None (don't
-		do merging), True (if dest catpkg exists, *always* merge new ebuilds on top), or a list containing
-		catpkg atoms, with wildcards like "x11-apps/*" being recognized. Note that if merging is
-		enabled and identical ebuild versions exist, then the version in the source repo will replace
-		the version in the destination repo.
-
 	categories: Categories to process. 
 		categories to process for inserting ebuilds. Defaults to all categories in tree, using
 		profiles/categories and all dirs with "-" in them and "virtuals" as sources.
 	
 	
 	"""
-	def __init__(self,srctree,select="all",skip=None,replace=False,merge=None,categories=None,ebuildloc=None,branch=None,cpm_logger=None,cpm_ignore=False):
+	def __init__(self,srctree,select="all",skip=None,replace=False,categories=None,ebuildloc=None,branch=None,cpm_logger=None,cpm_ignore=False):
 		self.select = select
 		self.skip = skip
 		self.srctree = srctree
 		self.replace = replace
-		self.merge = merge
 		self.categories = categories
 		self.cpm_logger = cpm_logger
 		self.cpm_ignore = cpm_ignore
@@ -1148,7 +1148,7 @@ class InsertEbuilds(MergeStep):
 		if self.select:
 			return "<InsertEbuilds: %s %s>" % (self.srctree.root, " ".join(self.select) if type(self.select) == list else "")
 		else:
-			return "<InsertEbuilds: %s>" % srctree.root
+			return "<InsertEbuilds: %s>" % self.srctree.root
 
 	def run(self,desttree):
 		if self.ebuildloc:
@@ -1180,8 +1180,6 @@ class InsertEbuilds(MergeStep):
 				dest_cat_set = set(f.read().splitlines())
 		else:
 			dest_cat_set = set()
-		print("SRCTREE.root", self.srctree.root)
-		print("DESTTREE.root", desttree.root)
 		# Our main loop:
 		print( "# Merging in ebuilds from %s" % srctree_root )
 		for cat in src_cat_set:
@@ -1222,40 +1220,7 @@ class InsertEbuilds(MergeStep):
 				if self.replace == True or (isinstance(self.replace, list) and (catpkg in self.replace)):
 					if not os.path.exists(tcatdir):
 						os.makedirs(tcatdir)
-					if self.merge is True or (isinstance(self.merge, list) and (catpkg in self.merge) and os.path.isdir(tpkgdir)):
-						# We are being told to merge, and the destination catpkg dir exists... so merging is required! :)
-						# Manifests must be processed and combined:
-						try:
-							pkgdir_manifest_file = open("%s/Manifest" % pkgdir)
-							pkgdir_manifest = pkgdir_manifest_file.readlines()
-							pkgdir_manifest_file.close()
-						except IOError:
-							pkgdir_manifest = []
-						try:
-							tpkgdir_manifest_file = open("%s/Manifest" % tpkgdir)
-							tpkgdir_manifest = tpkgdir_manifest_file.readlines()
-							tpkgdir_manifest_file.close()
-						except IOError:
-							tpkgdir_manifest = []
-						entries = {
-							"AUX": {},
-							"DIST": {},
-							"EBUILD": {},
-							"MISC": {}
-						}
-						for line in tpkgdir_manifest + pkgdir_manifest:
-							if line.startswith(("AUX ", "DIST ", "EBUILD ", "MISC ")):
-								entry_type = line.split(" ")[0]
-								if entry_type in (("AUX", "DIST", "EBUILD", "MISC")):
-									entries[entry_type][line.split(" ")[1]] = line
-						runShell("cp -a %s %s" % (pkgdir, os.path.dirname(tpkgdir)))
-						merged_manifest_file = open("%s/Manifest" % tpkgdir, "w")
-						for entry_type in ("AUX", "DIST", "EBUILD", "MISC"):
-							for key in sorted(entries[entry_type]):
-								merged_manifest_file.write(entries[entry_type][key])
-						merged_manifest_file.close()
-					else:
-						runShell("rm -rf %s; cp -a %s %s" % (tpkgdir, pkgdir, tpkgdir ))
+					runShell("rm -rf %s; cp -a %s %s" % (tpkgdir, pkgdir, tpkgdir ))
 					copied = True
 				else:
 					if not os.path.exists(tpkgdir):
