@@ -24,7 +24,7 @@ app-misc/screen
 app-misc/tmux
 net-misc/mosh
 # deps for mosh
-dev-libs/protobuf
+# moving protobuf to dev-kit so it gets updates for kde, etc
 sys-libs/utempter
 
 sys-block/parted
