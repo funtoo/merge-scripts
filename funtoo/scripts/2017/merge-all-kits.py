@@ -151,8 +151,8 @@ kit_source_defs = {
 	"gentoo_prime" : [
 		{ "repo" : "gentoo-staging", "src_sha1" : '06a1fd99a3ce1dd33724e11ae9f81c5d0364985e', 'date' : '21 Apr 2017'},
 		{ "repo" : "flora", },
-		{ "repo" : "faustoo", "src_sha1" : "58c805ec0df34cfc699e6555bf317590ff9dee15", },
-		{ "repo" : "fusion809", "src_sha1" : "8322bcd79d47ef81f7417c324a1a2b4772020985", "options" : { "merge" : True }},
+		{ "repo" : "faustoo", "src_sha1" : "58c805ec0df34cfc699e6555bf317590ff9dee15" },
+		{ "repo" : "fusion809", "src_sha1" : "8322bcd79d47ef81f7417c324a1a2b4772020985" },
 		{ "repo" : "rh1", },
 	],
 	"gentoo_prime_xorg" : [
@@ -347,9 +347,7 @@ def getKitSourceInstance(kit_dict):
 			path = overlays[repo_name]["dirname"]
 		else:
 			path = repo_name
-		print("INITIALIZING Git Repo", repo_url, repo_branch, repo_sha1)
 		repo = repo_obj(repo_name, url=repo_url, root="/var/git/source-trees/%s" % path, branch=repo_branch, commit_sha1=repo_sha1)
-		print("DEBUG: ", repo.currentLocalBranch, headSHA1(repo.root))
 
 		if "options" in source_def:
 			sro = source_def["options"].copy()
@@ -414,7 +412,7 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 		steps = []
 		if kit_dict["name"] == "nokit":
 			# grab all ebuilds to put in nokit
-			steps += [ InsertEbuilds(repo_dict["repo"], select="all", skip=None, replace=True, cpm_logger=cpm_logger) ]
+			steps += [ InsertEbuilds(repo_dict["repo"], select="all", skip=None, replace=False, cpm_logger=cpm_logger) ]
 		else:
 			steps += generateShardSteps(kit_dict['name'], repo_dict["repo"], tree, gentoo_staging, pkgdir=funtoo_overlay.root+"/funtoo/scripts", insert_kwargs=repo_dict["options"], cpm_logger=cpm_logger)
 		tree.run(steps)
@@ -489,8 +487,8 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 					})
 				]
 			steps += [
-				# add a new parameter called 'prefix'
-				InsertEbuilds(fixup_repo, ebuildloc=fixup_path, select="all", skip=None, replace=True, cpm_logger=cpm_logger )
+				# here we log catpkgs to the CatPkgMatchLogger, but cpm_ignore=True tells our code to not consult the cpm_logger to determine whether to copy. Always copy -- these are fixups!	
+				InsertEbuilds(fixup_repo, ebuildloc=fixup_path, select="all", skip=None, replace=True, cpm_logger=cpm_logger, cpm_ignore=True )
 			]
 	tree.run(steps)
 
