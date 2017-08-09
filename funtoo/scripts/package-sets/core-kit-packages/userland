@@ -13,6 +13,8 @@ sys-fs/mdadm
 sys-fs/udev-init-scripts
 sys-fs/xfsprogs
 sys-fs/zfs
+sys-fs/zfs-kmod
+sys-kernel/spl
 app-admin/metalog
 app-admin/mcelog
 sys-process/cronbase
