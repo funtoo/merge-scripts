@@ -24,7 +24,7 @@ class Distfile(dbobject):
 			# the id/filename is a composite key, because a SHA512 may exist under potentially multiple filenames, and we
 			# want to be aware of these situations.
 
-			Column('size', Integer),
+			Column('size', BigInteger),
 			Column('catpkg', String(255), index=True), # catpkg
 			Column('kit', String(40), index=True), # source kit
 			Column('src_uri', Text), # src_uris -- filename may be different as Portage can rename -- stored in order of appearance, one per line
