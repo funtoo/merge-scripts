@@ -599,9 +599,9 @@ class ApplyPatchSeries(MergeStep):
 				continue
 			if line[0:4] == "EXEC":
 				ls = line.split()
-				runShell( "( cd %s; %s/%s )" % ( tree.root, self.path, ls[1] ))
+				runShell( "( cd %s && %s/%s )" % ( tree.root, self.path, ls[1] ))
 			else:
-				runShell( "( cd %s; git apply %s/%s )" % ( tree.root, self.path, line[:-1] ))
+				runShell( "( cd %s && git apply %s/%s )" % ( tree.root, self.path, line[:-1] ))
 
 class GenerateRepoMetadata(MergeStep):
 	def __init__(self, name, masters=[], aliases=[], priority=None):
@@ -813,13 +813,15 @@ class GitTree(Tree):
 			if self.create:
 				# we have been told to create this repo. This works even if we have a remote clone URL specified
 				os.makedirs(self.root)
-				runShell("( cd %s; git init )" % self.root )
+				runShell("( cd %s && git init )" % self.root )
 				runShell("echo 'created by merge.py' > %s/README" % self.root )
-				runShell("( cd %s; git add README; git commit -a -m 'initial commit by merge.py' )" % self.root )
-				runShell("( cd %s; git remote add origin %s )" % ( self.root, self.url ))
+				runShell("( cd %s &&  git add README; git commit -a -m 'initial commit by merge.py' )" % self.root )
+				runShell("( cd %s && git remote add origin %s )" % ( self.root, self.url ))
 			elif self.url:
+				if not os.path.exists(base):
+					os.makedirs(base)
 				# we aren't supposed to create it from scratch -- can we clone it?
-				runShell("(cd %s; git clone %s %s)" % ( base, self.url, os.path.basename(self.root) ))
+				runShell("(cd %s && git clone %s %s)" % ( base, self.url, os.path.basename(self.root) ))
 			else:
 				# we've run out of options
 				print("Error: tree %s does not exist, but no clone URL specified. Exiting." % self.root)
@@ -828,7 +830,7 @@ class GitTree(Tree):
 		# if we've gotten here, we can assume that the repo exists at self.root. 
 
 		# first, we will clean up any messes:
-		runShell("(cd %s; git reset --hard; git clean -fd )" % self.root )
+		runShell("(cd %s &&  git reset --hard && git clean -fd )" % self.root )
 
 		# Now we need to make sure it's on the correct branch and commit sha1, if specified.
 
@@ -836,10 +838,10 @@ class GitTree(Tree):
 		if not self.localBranchExists(self.branch):
 			if not self.create:
 				# branch does not exist, so get it from remote and create it:
-				runShell("( cd %s; git fetch; git checkout -b %s --track origin/%s )" % ( self.root, self.branch, self.branch ))
+				runShell("( cd %s &&  git fetch && git checkout -b %s --track origin/%s )" % ( self.root, self.branch, self.branch ))
 			else:
 				# in create mode, we take responsibility for creating branches ourselves, and we are not concerned with fetching:
-				runShell("(cd %s; git checkout -b %s)" % ( self.root, self.branch ))
+				runShell("(cd %s &&  git checkout -b %s)" % ( self.root, self.branch ))
 		
 		# the local branch exists:
 		
@@ -852,24 +854,24 @@ class GitTree(Tree):
 
 		if self.commit_sha1:
 			# if a commit_sha1 is specified, then we also want to make sure we go to a detached state pointing to this commit:
-			runShell("(cd %s; git fetch; git checkout %s )" % (self.root, self.commit_sha1 ))
+			runShell("(cd %s && git fetch && git checkout %s )" % (self.root, self.commit_sha1 ))
 		elif self.currentLocalBranch != self.branch:
 			# we aren't on the right branch. Let's change that after we make sure we have the latest updates
-			runShell("(cd %s; git fetch; git checkout %s; git reset --hard; git pull -f )" % (self.root, self.branch ))
+			runShell("(cd %s && git fetch && git checkout %s && git reset --hard && git pull -f )" % (self.root, self.branch ))
 		elif self.pull:
 			# we are on the right branch, but we want to make sure we have the latest updates 
-			runShell("(cd %s; git reset --hard; git pull -f )" % self.root )
+			runShell("(cd %s && git reset --hard && git pull -f )" % self.root )
 
 	@property
 	def currentLocalBranch(self):
-		s, branch = subprocess.getstatusoutput("( cd %s; git symbolic-ref --short -q HEAD )" % self.root)
+		s, branch = subprocess.getstatusoutput("( cd %s && git symbolic-ref --short -q HEAD )" % self.root)
 		if s:
 			return None
 		else:
 			return branch
 
 	def localBranchExists(self, branch):
-		s, branch = subprocess.getstatusoutput("( cd %s; git show-ref --verify --quiet refs/heads/%s )" % ( self.root, branch))
+		s, branch = subprocess.getstatusoutput("( cd %s && git show-ref --verify --quiet refs/heads/%s )" % ( self.root, branch))
 		if s:
 			return False
 		else:
@@ -879,12 +881,12 @@ class GitTree(Tree):
 		if url == None:
 			url = tree.url
 		if sha1 == None:
-			s, sha1 = subprocess.getstatusoutput("( cd %s; git rev-parse HEAD )" % tree.root)
+			s, sha1 = subprocess.getstatusoutput("( cd %s && git rev-parse HEAD )" % tree.root)
 			sha1 = sha1.strip()
 		destpath = os.path.join(self.root, path)
 		if not os.path.exists(destpath):
-			runShell("( cd %s; git submodule add %s %s )" % ( os.path.dirname(destpath), url, tree.name ))
-		runShell("( cd %s; git fetch; git checkout %s )" % ( destpath, sha1 ))
+			runShell("( cd %s && git submodule add %s %s )" % ( os.path.dirname(destpath), url, tree.name ))
+		runShell("( cd %s && git fetch && git checkout %s )" % ( destpath, sha1 ))
 
 	def getAllCatPkgs(self):
 		self.gitCheckout()
@@ -902,13 +904,13 @@ class GitTree(Tree):
 		return catpkgs
 
 	def gitCheckout(self,branch="master"):
-		runShell("(cd %s; git checkout %s)" % ( self.root, self.branch ))
+		runShell("(cd %s && git checkout %s)" % ( self.root, self.branch ))
 
 	def gitCommit(self,message="",upstream="origin",branch=None,push=True):
 		if branch == None:
 			branch = self.branch
-		runShell("( cd %s; git add . )" % self.root )
-		cmd = "( cd %s; [ -n \"$(git status --porcelain)\" ] && git commit -a -F - << EOF || exit 0\n" % self.root
+		runShell("( cd %s && git add . )" % self.root )
+		cmd = "( cd %s && [ -n \"$(git status --porcelain)\" ] && git commit -a -F - << EOF || exit 0\n" % self.root
 		if message != "":
 			cmd += "%s\n\n" % message
 		names = []
@@ -930,7 +932,7 @@ class GitTree(Tree):
 			print("Commit failed.")
 			sys.exit(1)
 		if push == True and self.create == False:
-			runShell("(cd %s; git push --mirror)" % self.root )
+			runShell("(cd %s && git push --mirror)" % self.root )
 		else:	 
 			print("Pushing disabled.")
 
@@ -977,9 +979,9 @@ class SvnTree(Tree):
 		if not os.path.exists(base):
 			os.makedirs(base)
 		if os.path.exists(self.root):
-			runShell("(cd %s; svn up)" % self.root, abortOnFail=False)
+			runShell("(cd %s && svn up)" % self.root, abortOnFail=False)
 		else:
-			runShell("(cd %s; svn co %s %s)" % (base, self.url, self.name))
+			runShell("(cd %s && svn co %s %s)" % (base, self.url, self.name))
 
 class CvsTree(Tree):
 	def __init__(self, name, url=None, path=None):
@@ -992,9 +994,9 @@ class CvsTree(Tree):
 		if not os.path.exists(base):
 			os.makedirs(base)
 		if os.path.exists(self.root):
-			runShell("(cd %s; cvs update -dP)" % self.root, abortOnFail=False)
+			runShell("(cd %s && cvs update -dP)" % self.root, abortOnFail=False)
 		else:
-			runShell("(cd %s; cvs -d %s co %s)" % (base, self.url, path))
+			runShell("(cd %s && cvs -d %s co %s)" % (base, self.url, path))
 
 regextype = type(re.compile('hello, world'))
 
@@ -1340,7 +1342,7 @@ class GitCheckout(MergeStep):
 		self.branch = branch
 
 	def run(self,tree):
-		runShell("(cd %s; git checkout %s || git checkout -b %s --track origin/%s || git checkout -b %s)" % ( tree.root, self.branch, self.branch, self.branch, self.branch ))
+		runShell("(cd %s && git checkout %s || git checkout -b %s --track origin/%s || git checkout -b %s)" % ( tree.root, self.branch, self.branch, self.branch, self.branch ))
 
 class CreateBranch(MergeStep):
 
@@ -1348,7 +1350,7 @@ class CreateBranch(MergeStep):
 		self.branch = branch
 
 	def run(self,tree):
-		runShell("( cd %s; git checkout -b %s --track origin/%s )" % ( tree.root, self.branch, self.branch ))
+		runShell("( cd %s && git checkout -b %s --track origin/%s )" % ( tree.root, self.branch, self.branch ))
 
 
 class Minify(MergeStep):
@@ -1356,7 +1358,7 @@ class Minify(MergeStep):
 	"Minify removes ChangeLogs and shrinks Manifests."
 
 	def run(self,tree):
-		runShell("( cd %s; find -iname ChangeLog -exec rm -f {} \; )" % tree.root )
-		runShell("( cd %s; find -iname Manifest -exec sed -n -i -e \"/DIST/p\" {} \; )" % tree.root )
+		runShell("( cd %s && find -iname ChangeLog -exec rm -f {} \; )" % tree.root )
+		runShell("( cd %s && find -iname Manifest -exec sed -n -i -e \"/DIST/p\" {} \; )" % tree.root )
 
 # vim: ts=4 sw=4 noet
