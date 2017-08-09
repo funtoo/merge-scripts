@@ -6,7 +6,6 @@ import os
 import shutil
 import subprocess
 import sys
-import datetime
 import re
 from lxml import etree
 import portage
@@ -18,6 +17,7 @@ from portage.exception import PortageKeyError
 import grp
 import pwd
 import multiprocessing
+from db_core import *
 
 debug = False
 
@@ -217,6 +217,113 @@ location = %s
 				if eclass not in mypkgs:
 					mypkgs.add(catpkg)
 	return mypkgs
+
+class CatPkgScan(MergeStep):
+	def __init__(self, now):
+		self.now = now
+
+	def run(self, cur_overlay):
+		global db
+		session = db.session
+		cur_tree = cur_overlay.root
+		try:
+			with open(os.path.join(cur_tree, 'profiles/repo_name')) as f:
+				cur_name = f.readline().strip()
+		except FileNotFoundError:
+				cur_name = cur_overlay.name
+		env = os.environ.copy()
+		env['PORTAGE_REPOSITORIES'] = '''
+	[DEFAULT]
+	main-repo = %s
+
+	[%s]
+	location = %s
+	''' % (cur_name, cur_name, cur_tree)
+		p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
+		for pkg in p.cp_all():
+			
+			cp = portage.catsplit(pkg)
+
+			src_uri = {}
+
+			# match all ebuilds in catpkg
+
+			for a in p.xmatch("match-all", pkg):
+				if len(a) == 0:
+					continue
+				prev_blob = None
+				pos = 0
+				blobs = p.aux_get(a, ["SRC_URI"])[0].split()
+				while (pos < len(blobs)):
+					blob = blobs[pos]
+					if blob in [ ")", "(", "||" ] or blob.endswith("?"):
+						pos += 1
+						continue
+					if blob == "->":
+						fn = blobs[pos+1]
+						if not fn in src_uri:
+							src_uri[fn] = []
+						if prev_blob not in src_uri[fn]:
+							# avoid dups
+							src_uri[fn].append(prev_blob)
+						prev_blob = None
+						pos += 2
+					else:
+						if prev_blob:
+							fn = prev_blob.split("/")[-1]
+							if not fn in src_uri:
+								src_uri[fn] = []
+							if prev_blob not in src_uri[fn]:
+								# avoid dups
+								src_uri[fn].append(prev_blob)
+							prev_blob = None
+						prev_blob = blob
+						pos += 1
+				if prev_blob:
+					fn = prev_blob.split("/")[-1]
+					if not fn in src_uri:
+						src_uri[fn] = []
+					if prev_blob not in src_uri[fn]:
+						# avoid dups
+						src_uri[fn].append(prev_blob)
+
+			# src_uri now has the following format:
+
+			# src_uri["foo.tar.gz"] = [ "https://url1", "https//url2" ... ]
+
+			# get manifest info
+
+			man_info = {}
+			man_file = cur_tree + "/" + pkg + "/Manifest"
+			if os.path.exists(man_file):
+				man_f = open(man_file, "r")
+				for line in man_f.readlines():
+					ls = line.split()
+					if len(ls) < 7 or ls[0] != "DIST":
+						continue
+					man_info[ls[1]] = { "size" : ls[2], "sha512" : ls[6] }
+				man_f.close()
+
+			# for each catpkg:
+
+			for f, uris in src_uri.items():
+				if f not in man_info:
+					print("BAD!!! FILE MISSING FROM MANIFEST: ", pkg, f )
+					continue
+				d = Distfile()
+				d.id = man_info[f]["sha512"]
+				d.filename = f 
+				d.size = man_info[f]["size"]
+				s_out = ""
+				for u in uris:
+					s_out += u + "\n"
+				d.src_uri = s_out
+				d.catpkg = pkg
+				d.kit = cur_overlay.name
+				d.updated_on = self.now
+				merged_d = session.merge(d)
+
+			session.commit()
 
 def repoName(cur_overlay):
 	cur_tree = cur_overlay.root

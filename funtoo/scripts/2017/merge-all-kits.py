@@ -2,6 +2,7 @@
 
 import os
 from merge_utils import *
+from datetime import datetime
 
 # KIT DESIGN AND DEVELOPER DOCS
 
@@ -364,7 +365,7 @@ def getKitSourceInstance(kit_dict):
 # regenerating it. The kitted_catpkgs argument is a dictionary which is also written to and used to keep track of
 # catpkgs copied between runs of updateKit.
 
-def updateKit(kit_dict, cpm_logger, create=False, push=False):
+def updateKit(kit_dict, kit_group, cpm_logger, create=False, push=False, now=None):
 
 	# get set of source repos used to grab catpkgs from:
 
@@ -612,8 +613,13 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 		GenPythonUse("python3_4", "python2_7"),
 		Minify(),
 		GenUseLocalDesc(),
-		GenCache( cache_dir="/var/cache/edb/%s-%s" % ( kit_dict['name'], kit_dict['branch'] ) )
+		GenCache( cache_dir="/var/cache/edb/%s-%s" % ( kit_dict['name'], kit_dict['branch'] ) ),
 	]
+	if kit_group in [ "prime", "shared" ]:
+		# doing to record distfiles in mysql only for prime + shared, not current, at least for now
+		post_steps += [
+			CatPkgScan(now=now)
+		]
 
 	tree.run(post_steps)
 	tree.gitCommit(message="updates",branch=kit_dict['branch'],push=push)
@@ -623,6 +629,9 @@ def updateKit(kit_dict, cpm_logger, create=False, push=False):
 	cpm_logger.nextKit()
 
 if __name__ == "__main__":
+
+	# one global timestamp for each run of this tool -- for mysql db
+	now = datetime.utcnow()
 
 	if len(sys.argv) != 2 or sys.argv[1] not in [ "push", "nopush" ]:
 		print("Please specify push or nopush as an argument.")
@@ -638,7 +647,7 @@ if __name__ == "__main__":
 		else:
 			for kit_dict in kit_groups[kit_group]:
 				print("Regenerating kit ",kit_dict)
-				updateKit(kit_dict, cpm_logger, create=not push, push=push)
+				updateKit(kit_dict, kit_group, cpm_logger, create=not push, push=push, now=now)
 
 	print("Checking out prime versions of kits.")
 	for kit_dict in kit_groups['prime'] + kit_groups['shared']:
