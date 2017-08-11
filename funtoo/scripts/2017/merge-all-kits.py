@@ -618,7 +618,7 @@ def updateKit(kit_dict, kit_group, cpm_logger, db=None, create=False, push=False
 	if kit_group in [ "prime", "shared" ]:
 		# doing to record distfiles in mysql only for prime + shared, not current, at least for now
 		post_steps += [
-			CatPkgScan(now=now)
+			CatPkgScan(now=now, db=db)
 		]
 
 	tree.run(post_steps)

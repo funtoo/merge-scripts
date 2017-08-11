@@ -226,8 +226,8 @@ class CatPkgScan(MergeStep):
 	def run(self, cur_overlay):
 		if self.db == None:
 			return
-		global Distfile
-		session = db.session
+		from db_core import Distfile, MissingManifestFailure
+		session = self.db.session
 		cur_tree = cur_overlay.root
 		try:
 			with open(os.path.join(cur_tree, 'profiles/repo_name')) as f:
@@ -327,17 +327,18 @@ class CatPkgScan(MergeStep):
 			# for each catpkg:
 
 			for f, uris in src_uri.items():
+				s_out = ""
 				for u in uris:
 					s_out += u + "\n"
 				if f not in man_info:
-					f = ManifestFileFailure()
+					f = MissingManifestFailure()
 					f.filename = f
 					f.catpkg = pkg
 					f.kit = cur_overlay.name
 					f.branch = cur_overlay.branch
 					f.src_uri = s_out
 					f.failtype = "missing"
-					f.fail_on = now
+					f.fail_on = self.now
 					merged_f = session.merge(f)
 					print("BAD!!! FILE MISSING FROM MANIFEST: ", pkg, f )
 					continue
@@ -345,7 +346,6 @@ class CatPkgScan(MergeStep):
 				d.id = man_info[f]["sha512"]
 				d.filename = f 
 				d.size = man_info[f]["size"]
-				s_out = ""
 				d.src_uri = s_out
 				d.catpkg = pkg
 				d.kit = cur_overlay.name
