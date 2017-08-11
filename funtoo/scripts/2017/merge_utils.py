@@ -314,14 +314,20 @@ class CatPkgScan(MergeStep):
 			# entries in SRC_URI from fetch-restricted ebuilds will have SRC_URI prefixed by "NOMIRROR:"
 
 			man_info = {}
+			no_sha512 = set()
 			man_file = cur_tree + "/" + pkg + "/Manifest"
 			if os.path.exists(man_file):
 				man_f = open(man_file, "r")
 				for line in man_f.readlines():
 					ls = line.split()
-					if len(ls) < 7 or ls[0] != "DIST":
+					if len(ls) <= 3 or ls[0] != "DIST":
 						continue
-					man_info[ls[1]] = { "size" : ls[2], "sha512" : ls[6] }
+					try:
+					    sha512_index = ls.index("SHA512")
+					except ValueError:
+					    no_sha512.add(f)
+					    continue
+					man_info[ls[1]] = { "size" : ls[2], "sha512" : ls[sha512_index+1] }
 				man_f.close()
 
 			# for each catpkg:
@@ -337,10 +343,10 @@ class CatPkgScan(MergeStep):
 					fail.kit = cur_overlay.name
 					fail.branch = cur_overlay.branch
 					fail.src_uri = s_out
-					fail.failtype = "missing"
+					fail.failtype = "no_sha512" if f in no_sha512 else "missing"
 					fail.fail_on = self.now
 					merged_fail = session.merge(fail)
-					print("BAD!!! FILE MISSING FROM MANIFEST: ", pkg, f )
+					print("BAD!!! %s in MANIFEST: " % fail.failtype, pkg, f )
 					continue
 				d = Distfile()
 				d.id = man_info[f]["sha512"]
