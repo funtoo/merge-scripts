@@ -2,111 +2,140 @@
 
 from db_core import *
 import time
-from datetime import timedelta
+from datetime import datetime, timedelta
+import tornado
 from tornado import httpclient, gen, ioloop
 from tornado.queues import Queue
 from hashlib import sha512
+import socket
+import string
+import random
 
 @gen.coroutine
 
-def addDistfiles(db, q, delta=None):
+def addDistfiles(db, q):
 	keep_going = True
-	if delta:
-		start_time = datetime.utcnow()
-	while keep_going:
-		if delta:
-			if start_time + delta > datetime.utcnow():
-				keep_going = False
-				break
-		session = db.session
-		distfiles = session.query(Distfile).filter(Distfile.last_fetched_on == None).filter(or_(Distfile.last_attempted_on == None, Distfile.last_attempted_on < time_cutoff)).limit(100):
-		if len(distfiles) == 0:
-			keep_going = False
-			break
-		for distfile in distfiles:
-			distfile.last_attempted_on = datetime.utcnow() 
-			session.merge(distfile)
-			session.commit()
-			yield q.put(distfile)
+	time_cutoff = datetime.utcnow() - timedelta(hours=24)
+	session = db.session
+	distfiles = session.query(Distfile).filter(Distfile.last_fetched_on == None).filter(or_(Distfile.last_attempted_on == None, Distfile.last_attempted_on < time_cutoff)).limit(2000)
+	distfiles = list(distfiles)
+	print("Got %s distfiles" % len(distfiles))
+	for distfile in distfiles:
+		distfile.last_attempted_on = datetime.utcnow() 
+		session.merge(distfile)
+		session.commit()
+		yield q.put(distfile)
 
 class AsyncDistfileFetcher(object):
 
-	def __init__(self,distfile):
+	def __init__(self,db,distfile):
+		self.db = db
+		self.outfile = None
 		self.distfile = distfile
+		self.hash = sha512()
+		self.char = random.choice(string.ascii_lowercase)
 
 	@gen.coroutine
 	def fetch(self):
-		self.outfile = open(distfile.filename,"w")
-		self.hash = sha512()
+		urls = self.distfile.src_uri.split("\n")
+		pos = 0
+		while(pos < len(urls) and not urls[pos].startswith("http")):
+			pos += 1
+		if pos == len(urls):
+			print("NO valid url")
+			return
+		url = urls[pos]
 
-		client = tornado.client.AsyncHTTPClient()
-		AsyncHTTPClient.configure(None, max_body_size=1000000000)
+		print(url)
+		client = tornado.httpclient.AsyncHTTPClient()
+		tornado.httpclient.AsyncHTTPClient.configure(None, max_body_size=1000000000)
 		request = tornado.httpclient.HTTPRequest(
 			url=url, 
-			streaming_callback=on_chunk
+			streaming_callback=self.on_chunk,
 			connect_timeout = 10,
 			request_timeout = 600
 		)
 		try:
-			yield client.fetch(request,on_done)
+			print("Fetching %s" % self.distfile.filename)
+			yield client.fetch(request,self.on_done)
+		except tornado.httpclient.HTTPError as e:
+			self.distfile.last_failure_on = datetime.utcnow()
+			self.distfile.failtype = "http_%s" % e.code
+
+			session = self.db.session
+			session.merge(self.distfile)
+			session.commit()
+
+		except ValueError:
+			print("Couldn't grab from %s" % url)
+		except socket.gaierror:
+			print("Gaierror on %s" % url)
 		except Exception as e:
-			distfile.last_failed_on = datetime.utcnow()
+			raise
 
 	def on_chunk(self, chunk):
+		if not self.outfile:
+			print("Opening %s for writing" % self.distfile.filename) 
+			self.outfile = open("distfiles/" + self.distfile.filename,"wb")
+		sys.stdout.write(self.char)
+		sys.stdout.flush()
 		self.outfile.write(chunk)
 		self.hash.update(chunk)
 	
 	def on_done(self, response):
+		print("DONE", response)
 		if self.outfile:
 			self.outfile.close()
 		# verify sha512
 		cur_digest = self.hash.hexdigest()
 		
-		session = db.session
+		session = self.db.session
 
 		if cur_digest != self.distfile.id:
 			# digest fail - record failure
-			distfile.last_failure_on = datetime.utcnow()
-			distfile.failtype = "digest"
+			self.distfile.last_failure_on = datetime.utcnow()
+			self.distfile.failtype = "digest"
 		else:
-			distfile.last_fetched_on = datetime.utcnow()
+			self.distfile.last_fetched_on = datetime.utcnow()
 
-		session.add(distfile)
+		session.merge(self.distfile)
 		session.commit()
 
 @gen.coroutine
 def main():
 	fetch_count = 0	
 
-	q = Queue(maxsize=20)
+	q = Queue(maxsize=200)
 
-	db = getMySQLDatabase()
+	db = AppDatabase(getConfig())
 
 	start = time.time()
-	fetching, fetched = set(), set()
 
 	@gen.coroutine
-	def fetch_distfile():
+	def fetch_distfile(db):
 		distfile = yield q.get()
+		print("got", distfile.filename)
 		try:
 			print('fetching %s' % distfile.filename)
-			fetcher = AsyncDistfileFetcher(distfile)
+			fetcher = AsyncDistfileFetcher(db,distfile)
 			yield fetcher.fetch()
 		finally:
-			fetch_count += 1
 			q.task_done()
 
 	@gen.coroutine
 	def worker():
 		while True:
-			yield fetch_distfile()
+			yield fetch_distfile(db)
 	
-	yield addDistfiles(db, q, timedelta(hours=2))
+	yield addDistfiles(db, q)
 
-	for _ in range(concurrency):
+	for _ in range(8):
 		worker()
 
-	yield q.join()
+	while True:
+		yield q.join()
+		yield addDistfiles(db, q)
+
 	print('Done in %d seconds, fetched %s distfiles.' % ( time.time() - start, fetch_count))
 
 if __name__ == '__main__':
