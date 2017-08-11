@@ -331,15 +331,15 @@ class CatPkgScan(MergeStep):
 				for u in uris:
 					s_out += u + "\n"
 				if f not in man_info:
-					f = MissingManifestFailure()
-					f.filename = f
-					f.catpkg = pkg
-					f.kit = cur_overlay.name
-					f.branch = cur_overlay.branch
-					f.src_uri = s_out
-					f.failtype = "missing"
-					f.fail_on = self.now
-					merged_f = session.merge(f)
+					fail = MissingManifestFailure()
+					fail.filename = f
+					fail.catpkg = pkg
+					fail.kit = cur_overlay.name
+					fail.branch = cur_overlay.branch
+					fail.src_uri = s_out
+					fail.failtype = "missing"
+					fail.fail_on = self.now
+					merged_fail = session.merge(fail)
 					print("BAD!!! FILE MISSING FROM MANIFEST: ", pkg, f )
 					continue
 				d = Distfile()
