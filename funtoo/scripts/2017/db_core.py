@@ -53,6 +53,4 @@ def AppDatabase(config,serverMode=False):
 	)
 	return db
 
-db = AppDatabase(getConfig())
-
 # vim: ts=4 sw=4 noet

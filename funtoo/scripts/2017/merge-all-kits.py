@@ -365,7 +365,7 @@ def getKitSourceInstance(kit_dict):
 # regenerating it. The kitted_catpkgs argument is a dictionary which is also written to and used to keep track of
 # catpkgs copied between runs of updateKit.
 
-def updateKit(kit_dict, kit_group, cpm_logger, create=False, push=False, now=None):
+def updateKit(kit_dict, kit_group, cpm_logger, db=None, create=False, push=False, now=None):
 
 	# get set of source repos used to grab catpkgs from:
 
@@ -638,6 +638,11 @@ if __name__ == "__main__":
 		sys.exit(1)
 	else:
 		push = True if sys.argv[1] == "push" else False
+	
+	if push:
+		db = getMySQLDatabase()
+	else:
+		db = None
 
 	cpm_logger = CatPkgMatchLogger()
 
@@ -647,7 +652,7 @@ if __name__ == "__main__":
 		else:
 			for kit_dict in kit_groups[kit_group]:
 				print("Regenerating kit ",kit_dict)
-				updateKit(kit_dict, kit_group, cpm_logger, create=not push, push=push, now=now)
+				updateKit(kit_dict, kit_group, cpm_logger, db=db, create=not push, push=push, now=now)
 
 	print("Checking out prime versions of kits.")
 	for kit_dict in kit_groups['prime'] + kit_groups['shared']:

@@ -17,7 +17,6 @@ from portage.exception import PortageKeyError
 import grp
 import pwd
 import multiprocessing
-from db_core import *
 
 debug = False
 
@@ -219,11 +218,15 @@ location = %s
 	return mypkgs
 
 class CatPkgScan(MergeStep):
-	def __init__(self, now):
+
+	def __init__(self, now, db=None):
 		self.now = now
+		self.db = db
 
 	def run(self, cur_overlay):
-		global db
+		if self.db == None:
+			return
+		global Distfile
 		session = db.session
 		cur_tree = cur_overlay.root
 		try:
@@ -1490,4 +1493,7 @@ class Minify(MergeStep):
 		runShell("( cd %s && find -iname ChangeLog -exec rm -f {} \; )" % tree.root )
 		runShell("( cd %s && find -iname Manifest -exec sed -n -i -e \"/DIST/p\" {} \; )" % tree.root )
 
+def getMySQLDatabase(self):
+	from db_core import AppDatabase, Distfile
+	return AppDatabase(getConfig())
 # vim: ts=4 sw=4 noet
