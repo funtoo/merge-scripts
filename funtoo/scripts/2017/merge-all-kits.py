@@ -633,13 +633,13 @@ if __name__ == "__main__":
 	# one global timestamp for each run of this tool -- for mysql db
 	now = datetime.utcnow()
 
-	if len(sys.argv) != 2 or sys.argv[1] not in [ "push", "nopush" ]:
+	if len(sys.argv) < 2 or sys.argv[1] not in [ "push", "nopush" ]:
 		print("Please specify push or nopush as an argument.")
 		sys.exit(1)
 	else:
-		push = True if sys.argv[1] == "push" else False
+		push = True if "push" in sys.argv else False
 	
-	if push:
+	if "db" in sys.argv:
 		db = getMySQLDatabase()
 	else:
 		db = None

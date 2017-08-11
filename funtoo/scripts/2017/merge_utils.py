@@ -327,12 +327,15 @@ class CatPkgScan(MergeStep):
 			# for each catpkg:
 
 			for f, uris in src_uri.items():
+				for u in uris:
+					s_out += u + "\n"
 				if f not in man_info:
 					f = ManifestFileFailure()
 					f.filename = f
 					f.catpkg = pkg
 					f.kit = cur_overlay.name
 					f.branch = cur_overlay.branch
+					f.src_uri = s_out
 					f.failtype = "missing"
 					f.fail_on = now
 					merged_f = session.merge(f)
@@ -343,8 +346,6 @@ class CatPkgScan(MergeStep):
 				d.filename = f 
 				d.size = man_info[f]["size"]
 				s_out = ""
-				for u in uris:
-					s_out += u + "\n"
 				d.src_uri = s_out
 				d.catpkg = pkg
 				d.kit = cur_overlay.name
@@ -1498,6 +1499,6 @@ class Minify(MergeStep):
 		runShell("( cd %s && find -iname Manifest -exec sed -n -i -e \"/DIST/p\" {} \; )" % tree.root )
 
 def getMySQLDatabase(self):
-	from db_core import AppDatabase, Distfile
+	from db_core import AppDatabase, Distfile, MissingManifestFailure
 	return AppDatabase(getConfig())
 # vim: ts=4 sw=4 noet

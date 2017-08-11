@@ -40,7 +40,11 @@ class Distfile(dbobject):
 			Column('kit', String(40), index=True), # source kit
 			Column('src_uri', Text), # src_uris -- filename may be different as Portage can rename -- stored in order of appearance, one per line
 			Column('mirror', Boolean, default=True),
-			Column('updated_on', DateTime), # set to a datetime to know the last time we saw this file
+			Column('last_updated_on', DateTime), # set to a datetime to know the last time we updated/recorded this entry from source ebuilds
+			Column('last_attempted_on', DateTime) # set to a datetime the last time we tried to fetch the file 
+			Column('last_fetched_on', DateTime) # set to a datetime the last time we successfully fetched the file
+			Column('last_failure_on', DateTime), #last failure
+			Column('failtype', String(8)), # 'digest', '404'
 			**db.table_args
 		)
 
@@ -55,6 +59,7 @@ class MissingManifestFailure(dbobject):
 			Column('catpkg', String(255), primary_key=True), # catpkg
 			Column('kit', String(40), primary_key=True), # source kit
 			Column('branch', String(40), primary_key=True), # source kit
+			Column('src_uri', Text), # src_uris -- filename may be different as Portage can rename -- stored in order of appearance, one per line
 			Column('failtype', String(8)), # 'missing'
 			Column('fail_on', DateTime), #last failure
 			**db.table_args
@@ -68,9 +73,7 @@ class FetchFailure(dbobject):
 		cls.__table__ = Table('fetch_failures', db.metadata,
 			Column('id', String(128), primary_key=True), # sha512 in ASCII
 			Column('filename', String(255), primary_key=True), # filename on disk
-			Column('failtype', String(8)), # 'digest', '404'
 			Column('src_uri', Text), # src_uris attempted
-			Column('fail_on', DateTime), #last failure
 			**db.table_args
 		)
 
