@@ -246,14 +246,26 @@ class CatPkgScan(MergeStep):
 
 			src_uri = {}
 
-			# match all ebuilds in catpkg
+			# We are scanning SRC_URI in all ebuilds in the catpkg, as well as Manifest.
+			# This will give us a complete list of all archives used in the catpkg.
+
+			mirror_restrict_set = set()
 
 			for a in p.xmatch("match-all", pkg):
 				if len(a) == 0:
 					continue
 				prev_blob = None
 				pos = 0
-				blobs = p.aux_get(a, ["SRC_URI"])[0].split()
+				aux_info = p.aux_get(a, ["SRC_URI", "RESTRICT" ])
+				blobs = aux_info[0].split()
+				
+				restrict = aux_info[1].split()
+				mirror_restrict = False
+				for r in restrict:
+					if r == "mirror":
+						mirror_restrict = True
+						break
+
 				while (pos < len(blobs)):
 					blob = blobs[pos]
 					if blob in [ ")", "(", "||" ] or blob.endswith("?"):
@@ -261,6 +273,8 @@ class CatPkgScan(MergeStep):
 						continue
 					if blob == "->":
 						fn = blobs[pos+1]
+						if mirror_restrict:
+						    mirror_restrict_set.add(fn)
 						if not fn in src_uri:
 							src_uri[fn] = []
 						if prev_blob not in src_uri[fn]:
@@ -271,6 +285,8 @@ class CatPkgScan(MergeStep):
 					else:
 						if prev_blob:
 							fn = prev_blob.split("/")[-1]
+							if mirror_restrict:
+							    mirror_restrict_set.add(fn)
 							if not fn in src_uri:
 								src_uri[fn] = []
 							if prev_blob not in src_uri[fn]:
@@ -281,6 +297,8 @@ class CatPkgScan(MergeStep):
 						pos += 1
 				if prev_blob:
 					fn = prev_blob.split("/")[-1]
+					if mirror_restrict:
+					    mirror_restrict_set.add(fn)
 					if not fn in src_uri:
 						src_uri[fn] = []
 					if prev_blob not in src_uri[fn]:
@@ -290,8 +308,7 @@ class CatPkgScan(MergeStep):
 			# src_uri now has the following format:
 
 			# src_uri["foo.tar.gz"] = [ "https://url1", "https//url2" ... ]
-
-			# get manifest info
+			# entries in SRC_URI from fetch-restricted ebuilds will have SRC_URI prefixed by "NOMIRROR:"
 
 			man_info = {}
 			man_file = cur_tree + "/" + pkg + "/Manifest"
@@ -308,6 +325,10 @@ class CatPkgScan(MergeStep):
 
 			for f, uris in src_uri.items():
 				if f not in man_info:
+					# create anomaly --
+					# anomaly type
+					# timestamp
+					# identifier
 					print("BAD!!! FILE MISSING FROM MANIFEST: ", pkg, f )
 					continue
 				d = Distfile()
@@ -321,6 +342,7 @@ class CatPkgScan(MergeStep):
 				d.catpkg = pkg
 				d.kit = cur_overlay.name
 				d.updated_on = self.now
+				d.mirror = True if f not in mirror_restrict_set else False
 				merged_d = session.merge(d)
 
 			session.commit()
