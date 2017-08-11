@@ -1498,7 +1498,7 @@ class Minify(MergeStep):
 		runShell("( cd %s && find -iname ChangeLog -exec rm -f {} \; )" % tree.root )
 		runShell("( cd %s && find -iname Manifest -exec sed -n -i -e \"/DIST/p\" {} \; )" % tree.root )
 
-def getMySQLDatabase(self):
-	from db_core import AppDatabase, Distfile, MissingManifestFailure
+def getMySQLDatabase():
+	from db_core import AppDatabase, getConfig, Distfile, MissingManifestFailure
 	return AppDatabase(getConfig())
 # vim: ts=4 sw=4 noet

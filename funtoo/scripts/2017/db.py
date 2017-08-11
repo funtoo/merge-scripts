@@ -87,10 +87,14 @@ class dbobject(object):
 
 	def __init__(self,id=None):
 		self.id = id
-	
+
+	@classmethod
+	def primary_key(cls):
+	    return [cls.__table__.c.id]
+
 	@classmethod
 	def _mapTable(cls,db):
-		mapper(cls, cls.__table__, primary_key=[cls.__table__.c.id])
+		mapper(cls, cls.__table__, primary_key=cls.primary_key())
 
 class Database(object):
 

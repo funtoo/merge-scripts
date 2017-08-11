@@ -41,14 +41,18 @@ class Distfile(dbobject):
 			Column('src_uri', Text), # src_uris -- filename may be different as Portage can rename -- stored in order of appearance, one per line
 			Column('mirror', Boolean, default=True),
 			Column('last_updated_on', DateTime), # set to a datetime to know the last time we updated/recorded this entry from source ebuilds
-			Column('last_attempted_on', DateTime) # set to a datetime the last time we tried to fetch the file 
-			Column('last_fetched_on', DateTime) # set to a datetime the last time we successfully fetched the file
+			Column('last_attempted_on', DateTime), # set to a datetime the last time we tried to fetch the file 
+			Column('last_fetched_on', DateTime), # set to a datetime the last time we successfully fetched the file
 			Column('last_failure_on', DateTime), #last failure
 			Column('failtype', String(8)), # 'digest', '404'
 			**db.table_args
 		)
 
 class MissingManifestFailure(dbobject):
+
+	@classmethod
+	def primary_key(cls):
+	    return [cls.__table__.c.filename, cls.__table__.c.catpkg, cls.__table__.c.kit, cls.__table__.c.branch ]
 
 	# file is missing from manifest....
 	@classmethod
