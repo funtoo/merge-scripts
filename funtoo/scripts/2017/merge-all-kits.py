@@ -147,8 +147,8 @@ kit_source_defs = {
 		{ "repo" : "flora" },
 		{ "repo" : "faustoo" },
 		{ "repo" : "fusion809" },
-		{ "repo" : "rh1" }
-		{ "repo" : "gentoo-staging" },
+		{ "repo" : "rh1" },
+		{ "repo" : "gentoo-staging" }
 	],
 	"funtoo_prime" : [
 		# allow overlays to override gentoo
