@@ -39,15 +39,45 @@ class Distfile(dbobject):
 			Column('catpkg', String(255), index=True), # catpkg
 			Column('kit', String(40), index=True), # source kit
 			Column('src_uri', Text), # src_uris -- filename may be different as Portage can rename -- stored in order of appearance, one per line
-                        Column('mirror', Boolean, default=True),
+			Column('mirror', Boolean, default=True),
 			Column('updated_on', DateTime), # set to a datetime to know the last time we saw this file
+			**db.table_args
+		)
+
+class MissingManifestFailure(dbobject):
+
+	# file is missing from manifest....
+	@classmethod
+	def _makeTable(cls,db,engine):
+		cls.db = db
+		cls.__table__ = Table('manifest_failures', db.metadata,
+			Column('filename', String(255), primary_key=True), # filename on disk
+			Column('catpkg', String(255), primary_key=True), # catpkg
+			Column('kit', String(40), primary_key=True), # source kit
+			Column('branch', String(40), primary_key=True), # source kit
+			Column('failtype', String(8)), # 'missing'
+			Column('fail_on', DateTime), #last failure
+			**db.table_args
+		)
+
+class FetchFailure(dbobject):
+
+	@classmethod
+	def _makeTable(cls,db,engine):
+		cls.db = db
+		cls.__table__ = Table('fetch_failures', db.metadata,
+			Column('id', String(128), primary_key=True), # sha512 in ASCII
+			Column('filename', String(255), primary_key=True), # filename on disk
+			Column('failtype', String(8)), # 'digest', '404'
+			Column('src_uri', Text), # src_uris attempted
+			Column('fail_on', DateTime), #last failure
 			**db.table_args
 		)
 
 def AppDatabase(config,serverMode=False):
 	db = Database(
 		twophase=serverMode,
-		connlist=[[ config["main"]["connection"], [ Distfile ]]],
+		connlist=[[ config["main"]["connection"], [ Distfile, MissingManifestFailure, FetchFailure ]]],
 		table_args = { 'mysql_engine':'InnoDB','mysql_charset':'utf8' },
 		engine_args = { 'pool_recycle' : 3600 },
 	)

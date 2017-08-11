@@ -328,10 +328,14 @@ class CatPkgScan(MergeStep):
 
 			for f, uris in src_uri.items():
 				if f not in man_info:
-					# create anomaly --
-					# anomaly type
-					# timestamp
-					# identifier
+					f = ManifestFileFailure()
+					f.filename = f
+					f.catpkg = pkg
+					f.kit = cur_overlay.name
+					f.branch = cur_overlay.branch
+					f.failtype = "missing"
+					f.fail_on = now
+					merged_f = session.merge(f)
 					print("BAD!!! FILE MISSING FROM MANIFEST: ", pkg, f )
 					continue
 				d = Distfile()
