@@ -131,7 +131,7 @@ meta_repo = GitTree("meta-repo", "master", "repos@git.funtoo.org:meta-repo.git",
 # for each overlay.
 
 # Each kit source can be used as a source of catpkgs for a kit. Order is important -- package-set rules are applied in
-# the same order that the overlay appears in the kit_source_defs list -- so for "gentoo_current", package-set rules will
+# the same order that the overlay appears in the kit_source_defs list -- so for "funtoo_current", package-set rules will
 # be applied to gentoo-staging first, then flora, then faustoo, then fusion809. Once a particular catpkg matches and is
 # copied into a dest-kit, a matching capkg in a later overlay, if one exists, will be ignored.
 
@@ -142,30 +142,44 @@ meta_repo = GitTree("meta-repo", "master", "repos@git.funtoo.org:meta-repo.git",
 # appear as the first item in kit_source_defs, with the overlays appearing after.
 
 kit_source_defs = {
-	"gentoo_current" : [
-		{ "repo" : "gentoo-staging" },
+	"funtoo_current" : [
+		# allow overlays to override gentoo
 		{ "repo" : "flora" },
 		{ "repo" : "faustoo" },
 		{ "repo" : "fusion809" },
-		{ "repo" : "rh1" }
+		{ "repo" : "rh1" },
+		{ "repo" : "gentoo-staging" }
 	],
-	"gentoo_prime" : [
-		{ "repo" : "gentoo-staging", "src_sha1" : '06a1fd99a3ce1dd33724e11ae9f81c5d0364985e', 'date' : '21 Apr 2017'},
+	"funtoo_prime" : [
+		# allow overlays to override gentoo
 		{ "repo" : "flora", },
 		{ "repo" : "faustoo", "src_sha1" : "58c805ec0df34cfc699e6555bf317590ff9dee15" },
 		{ "repo" : "fusion809", "src_sha1" : "8322bcd79d47ef81f7417c324a1a2b4772020985" },
 		{ "repo" : "rh1", },
+		{ "repo" : "gentoo-staging", "src_sha1" : '06a1fd99a3ce1dd33724e11ae9f81c5d0364985e', 'date' : '21 Apr 2017'},
 	],
-	"gentoo_prime_xorg" : [
+	"gentoo_prime_protected" : [
+		# lock down core-kit and security-kit
+		{ "repo" : "gentoo-staging", "src_sha1" : '06a1fd99a3ce1dd33724e11ae9f81c5d0364985e', 'date' : '21 Apr 2017'},
+	],
+	"gentoo_current_protected" : [
+		# lock down core-kit and security-kit
+		{ "repo" : "gentoo-staging" },
+	],
+	"funtoo_prime_xorg" : [
+		# specific snapshot for xorg-kit
 		{ "repo" : "gentoo-staging", 'src_sha1' : 'a56abf6b7026dae27f9ca30ed4c564a16ca82685', 'date' : '18 Nov 2016' }
 	],
-	"gentoo_prime_gnome" : [
+	"funtoo_prime_gnome" : [
+		# specific snapshot for gnome-kit
 		{ "repo" : "gentoo-staging", 'src_sha1' : '44677858bd088805aa59fd56610ea4fb703a2fcd', 'date' : '18 Sep 2016' }
 	],
-	"gentoo_prime_media" : [
+	"funtoo_prime_media" : [
+		# specific snapshot for media-kit, though we should bump and expand this soon
 		{ "repo" : "gentoo-staging", 'src_sha1' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017' }
 	],
-	"gentoo_prime_perl" : [
+	"funtoo_prime_perl" : [
+		# specific snapshot for perl-kit
 		{ "repo" : "gentoo-staging", 'src_sha1' : 'fc74d3206fa20caa19b7703aa051ff6de95d5588', 'date' : '11 Jan 2017' }
 	]
 }
@@ -175,40 +189,40 @@ kit_source_defs = {
 # and 'current' -- they can have some "prime" kits as well as some "current" kits depending on what we want to stabilize.
 # Note that we specify a 'source' which points to a name of a kit_source to use as a source of ebuilds. A kit is defined
 # by a GROUP such as 'prime', a NAME, such as 'core-kit', a BRANCH, such as '1.0-prime', and a source (kit source) such
-# as 'gentoo_prime'.
+# as 'funtoo_prime'.
 
 kit_groups = {
 	'prime' : [
-		{ 'name' : 'core-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime' },
-		{ 'name' : 'core-hw-kit', 'branch' : 'master', 'source': 'gentoo_current' },
-		{ 'name' : 'security-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime' },
-		{ 'name' : 'xorg-kit', 'branch' : '1.17-prime', 'source': 'gentoo_prime_xorg' },
-		{ 'name' : 'gnome-kit', 'branch' : '3.20-prime', 'source': 'gentoo_prime_gnome' },
-		{ 'name' : 'media-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime_media' },
-		{ 'name' : 'perl-kit', 'branch' : '5.24-prime', 'source': 'gentoo_prime_perl' },
-		{ 'name' : 'python-kit', 'branch' : '3.4-prime', 'source': 'gentoo_prime' },
+		{ 'name' : 'core-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime_protected' },
+		{ 'name' : 'core-hw-kit', 'branch' : 'master', 'source': 'funtoo_current' },
+		{ 'name' : 'security-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime_protected' },
+		{ 'name' : 'xorg-kit', 'branch' : '1.17-prime', 'source': 'funtoo_prime_xorg' },
+		{ 'name' : 'gnome-kit', 'branch' : '3.20-prime', 'source': 'funtoo_prime_gnome' },
+		{ 'name' : 'media-kit', 'branch' : '1.0-prime', 'source': 'funtoo_prime_media' },
+		{ 'name' : 'perl-kit', 'branch' : '5.24-prime', 'source': 'funtoo_prime_perl' },
+		{ 'name' : 'python-kit', 'branch' : '3.4-prime', 'source': 'funtoo_prime' },
 	],
 	'shared' : [
-		{ 'name' : 'php-kit', 'branch' : 'master', 'source': 'gentoo_current' },
-		{ 'name' : 'java-kit', 'branch' : 'master', 'source': 'gentoo_current' },
-		{ 'name' : 'dev-kit', 'branch' : 'master', 'source': 'gentoo_current' },
-		{ 'name' : 'kde-kit', 'branch' : 'master', 'source': 'gentoo_current' },
-		{ 'name' : 'desktop-kit', 'branch' : 'master', 'source': 'gentoo_current' },
-		{ 'name' : 'editors-kit', 'branch' : 'master', 'source': 'gentoo_current' },
-		{ 'name' : 'net-kit', 'branch' : 'master', 'source': 'gentoo_current' },
-		{ 'name' : 'text-kit', 'branch' : 'master', 'source': 'gentoo_current' },
-		{ 'name' : 'science-kit', 'branch' : 'master', 'source': 'gentoo_current' },
-		{ 'name' : 'games-kit', 'branch' : 'master', 'source': 'gentoo_current' },
-		{ 'name' : 'nokit', 'branch' : 'master', 'source': 'gentoo_current' }
+		{ 'name' : 'php-kit', 'branch' : 'master', 'source': 'funtoo_current' },
+		{ 'name' : 'java-kit', 'branch' : 'master', 'source': 'funtoo_current' },
+		{ 'name' : 'dev-kit', 'branch' : 'master', 'source': 'funtoo_current' },
+		{ 'name' : 'kde-kit', 'branch' : 'master', 'source': 'funtoo_current' },
+		{ 'name' : 'desktop-kit', 'branch' : 'master', 'source': 'funtoo_current' },
+		{ 'name' : 'editors-kit', 'branch' : 'master', 'source': 'funtoo_current' },
+		{ 'name' : 'net-kit', 'branch' : 'master', 'source': 'funtoo_current' },
+		{ 'name' : 'text-kit', 'branch' : 'master', 'source': 'funtoo_current' },
+		{ 'name' : 'science-kit', 'branch' : 'master', 'source': 'funtoo_current' },
+		{ 'name' : 'games-kit', 'branch' : 'master', 'source': 'funtoo_current' },
+		{ 'name' : 'nokit', 'branch' : 'master', 'source': 'funtoo_current' }
 	],
 	'current' : [
-		{ 'name' : 'core-kit', 'branch' : 'master', 'source': 'gentoo_current' },
-		{ 'name' : 'security-kit', 'branch' : 'master', 'source': 'gentoo_current' },
-		{ 'name' : 'xorg-kit', 'branch' : 'master', 'source': 'gentoo_current' },
-		{ 'name' : 'gnome-kit', 'branch' : 'master', 'source': 'gentoo_current' },
-		{ 'name' : 'media-kit', 'branch' : 'master', 'source': 'gentoo_current' },
-		{ 'name' : 'perl-kit', 'branch' : 'master', 'source': 'gentoo_current' },
-		{ 'name' : 'python-kit', 'branch' : 'master', 'source': 'gentoo_current' },
+		{ 'name' : 'core-kit', 'branch' : 'master', 'source': 'gentoo_current_protected' },
+		{ 'name' : 'security-kit', 'branch' : 'master', 'source': 'gentoo_current_protected' },
+		{ 'name' : 'xorg-kit', 'branch' : 'master', 'source': 'funtoo_current' },
+		{ 'name' : 'gnome-kit', 'branch' : 'master', 'source': 'funtoo_current' },
+		{ 'name' : 'media-kit', 'branch' : 'master', 'source': 'funtoo_current' },
+		{ 'name' : 'perl-kit', 'branch' : 'master', 'source': 'funtoo_current' },
+		{ 'name' : 'python-kit', 'branch' : 'master', 'source': 'funtoo_current' },
 	],
 }
 

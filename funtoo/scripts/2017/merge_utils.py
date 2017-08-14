@@ -1045,6 +1045,7 @@ class GitTree(Tree):
 		if not os.path.exists(destpath):
 			runShell("( cd %s && git submodule add %s %s )" % ( os.path.dirname(destpath), url, tree.name ))
 		runShell("( cd %s && git fetch && git checkout %s )" % ( destpath, sha1 ))
+		runShell("( cd %s && git config -f .gitmodules submodule.kits/%s.branch %s )" % ( self.root, tree.name, tree.branch ))
 
 	def getAllCatPkgs(self):
 		self.gitCheckout()
