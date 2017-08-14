@@ -75,9 +75,10 @@ def do_package_use_line(pkg, def_python, bk_python, imps):
 
 class GenPythonUse(MergeStep):
 
-	def __init__(self,def_python,bk_python):
+	def __init__(self,def_python,bk_python,out_subpath):
 		self.def_python = def_python
 		self.bk_python = bk_python
+		self.out_subpath = out_subpath
 	
 	def run(self, cur_overlay):
 		cur_tree = cur_overlay.root
@@ -118,8 +119,14 @@ class GenPythonUse(MergeStep):
 					ebs[a] = imps
 			if len(ebs.keys()) == 0:
 				continue
+
 			# ebs now is a dict containing catpkg -> PYTHON_COMPAT settings for each ebuild in the catpkg. We want to see if they are identical
+
 			oldval = None
+
+			# if split == False, then we will do one global setting for the catpkg. If split == True, we will do individual settings for each version
+			# of the catpkg, since there are differences. This saves space in our python-use file while keeping everything correct.
+
 			split = False
 			for key,val in ebs.items():
 				if oldval == None:
@@ -128,12 +135,13 @@ class GenPythonUse(MergeStep):
 					if oldval != val:
 						split = True
 						break
+
 			if not split:
 				pkg_use += [ do_package_use_line(pkg, self.def_python, self.bk_python, oldval) ]
 			else:
 				for key,val in ebs.items():
 					pkg_use += [ do_package_use_line("=%s" % key, self.def_python, self.bk_python, val) ]
-		outpath = cur_tree + '/profiles/package.use'
+		outpath = cur_tree + '/profiles/' + self.out_subpath + '/package.use'
 		if not os.path.exists(outpath):
 			os.makedirs(outpath)
 		a = open(outpath + "/python-use", "w")
@@ -141,6 +149,13 @@ class GenPythonUse(MergeStep):
 			if l != None:
 				a.write(l + "\n")
 		a.close()
+		# for core-kit, set good defaults as well.
+		if cur_name == "core-kit":
+			outpath = cur_tree + '/profiles/' + self.out_subpath + '/make.defaults'
+			a = open(outpath, "w")
+			a.write('PYTHON_TARGETS="%s %s"\n' % ( self.def_python, self.bk_python ))
+			a.write('PYTHON_SINGLE_TARGET="%s"\n' % self.def_python)
+			a.close()
 
 def getDependencies(cur_overlay, catpkgs, levels=0, cur_level=0):
 	cur_tree = cur_overlay.root

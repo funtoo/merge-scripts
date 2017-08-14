@@ -212,6 +212,11 @@ kit_groups = {
 	],
 }
 
+python_kit_settings = {
+	#	branch / primary python / alternate python
+	'master' :  [ "python3_6", "python2_7" ],
+	'3.4-prime' : [ "python3_4", "python2_7" ]
+}
 
 # It has already been explained how when we apply package-set rules, we process the kit_source repositories in order and
 # after we find a catpkg that matches, any matches in successive repositories for catpkgs that we have already copied
@@ -610,11 +615,26 @@ def updateKit(kit_dict, kit_group, cpm_logger, db=None, create=False, push=False
 	post_steps += [
 		ELTSymlinkWorkaround(),
 		CreateCategories(gentoo_staging),
-		GenPythonUse("python3_4", "python2_7"),
+		# multi-plex this and store in different locations so that different selections can be made based on which python-kit is enabled.
+		# python-kit itself only needs one set which will be enabled by default.
+	]
+
+	if kit_dict["name"] == "python_kit":
+		# on the python-kit itself, we only need settings for ourselves (not other branches)
+		python_settings = python_kit_settings[kit_dict["name"]]
+	else:
+		# all other kits -- generate multiple settings, depending on what version of python-kit is active -- epro will select the right one for us.
+		python_settings = python_kit_settings
+
+	for branch, imps in python_settings.items():
+		post_steps += [ GenPythonUse(imps[0], imps[1], "funtoo/kits/python-kit/%s" % branch) ]
+
+	post_steps += [
 		Minify(),
 		GenUseLocalDesc(),
 		GenCache( cache_dir="/var/cache/edb/%s-%s" % ( kit_dict['name'], kit_dict['branch'] ) ),
 	]
+
 	if kit_group in [ "prime", "shared" ]:
 		# doing to record distfiles in mysql only for prime + shared, not current, at least for now
 		post_steps += [
