@@ -257,6 +257,7 @@ class CatPkgScan(MergeStep):
 	[%s]
 	location = %s
 	''' % (cur_name, cur_name, cur_tree)
+		env['ACCEPT_KEYWORDS'] = "~amd64 amd64"
 		p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
 		for pkg in p.cp_all():
 			
@@ -268,6 +269,26 @@ class CatPkgScan(MergeStep):
 			# This will give us a complete list of all archives used in the catpkg.
 
 			mirror_restrict_set = set()
+
+			# We want to prioritize SRC_URI for bestmatch-visible ebuilds. We will use bm
+			# and prio to tag files that are in bestmatch-visible ebuilds.
+
+			bm = p.xmatch("bestmatch-visible", pkg)
+
+			prio = {}
+
+			def record_src_uri(atom, uri, mirror_restrict):
+				#global prev_blob, bm, src_uri, mirror_restrict_set
+				if mirror_restrict:
+					mirror_restrict_set.add(fn)
+					if not fn in src_uri:
+						src_uri[fn] = []
+					if prev_blob not in src_uri[fn]:
+						# avoid dups
+						src_uri[fn].append(prev_blob)
+				if atom in bm:
+					# prioritize bestmatch-visible
+					prio[fn] = 1
 
 			for a in p.xmatch("match-all", pkg):
 				if len(a) == 0:
@@ -291,26 +312,13 @@ class CatPkgScan(MergeStep):
 						continue
 					if blob == "->":
 						fn = blobs[pos+1]
-						if mirror_restrict:
-						    mirror_restrict_set.add(fn)
-						if not fn in src_uri:
-							src_uri[fn] = []
-						if prev_blob not in src_uri[fn]:
-							# avoid dups
-							src_uri[fn].append(prev_blob)
+						record_src_uri(a, prev_blob, mirror_restrict)
 						prev_blob = None
 						pos += 2
 					else:
 						if prev_blob:
 							fn = prev_blob.split("/")[-1]
-							if mirror_restrict:
-							    mirror_restrict_set.add(fn)
-							if not fn in src_uri:
-								src_uri[fn] = []
-							if prev_blob not in src_uri[fn]:
-								# avoid dups
-								src_uri[fn].append(prev_blob)
-							prev_blob = None
+							record_src_uri(a, prev_blob, mirror_restrict)
 						prev_blob = blob
 						pos += 1
 				if prev_blob:
@@ -335,14 +343,15 @@ class CatPkgScan(MergeStep):
 				man_f = open(man_file, "r")
 				for line in man_f.readlines():
 					ls = line.split()
+					sha512_index = None
 					if len(ls) <= 3 or ls[0] != "DIST":
 						continue
 					try:
 					    sha512_index = ls.index("SHA512")
 					except ValueError:
-					    no_sha512.add(f)
+					    no_sha512.add(ls[1])
 					    continue
-					man_info[ls[1]] = { "size" : ls[2], "sha512" : ls[sha512_index+1] }
+					man_info[ls[1]] = { "size" : ls[2], "sha512" : ls[sha512_index+1] if sha512_index else None }
 				man_f.close()
 
 			# for each catpkg:
@@ -363,14 +372,17 @@ class CatPkgScan(MergeStep):
 					merged_fail = session.merge(fail)
 					print("BAD!!! %s in MANIFEST: " % fail.failtype, pkg, f )
 					continue
+				assert man_info[f]["sha512"] != None
 				d = Distfile()
 				d.id = man_info[f]["sha512"]
 				d.filename = f 
+				if f in prio:
+					d.priority = prio[f]
 				d.size = man_info[f]["size"]
 				d.src_uri = s_out
 				d.catpkg = pkg
 				d.kit = cur_overlay.name
-				d.updated_on = self.now
+				d.last_updated_on = self.now
 				d.mirror = True if f not in mirror_restrict_set else False
 				merged_d = session.merge(d)
 

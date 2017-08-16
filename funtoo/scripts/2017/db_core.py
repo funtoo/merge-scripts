@@ -45,6 +45,7 @@ class Distfile(dbobject):
 			Column('last_fetched_on', DateTime), # set to a datetime the last time we successfully fetched the file
 			Column('last_failure_on', DateTime), #last failure
 			Column('failtype', Text), # 'digest', '404'
+			Column('priority', Integer, default=0),
 			**db.table_args
 		)
 

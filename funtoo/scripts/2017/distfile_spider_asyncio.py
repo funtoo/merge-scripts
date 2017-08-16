@@ -6,6 +6,7 @@ import aiodns
 import aioftp
 import async_timeout
 import aiohttp
+import logging
 from hashlib import sha512
 
 from db_core import *
@@ -20,7 +21,7 @@ with open('/var/git/meta-repo/kits/core-kit/profiles/thirdpartymirrors', 'r') as
 		ls = line.split()
 		thirdp[ls[0]] = ls[1:]
 
-def src_uri_process(uri_text):
+def src_uri_process(uri_text, fn):
 
 	# converts \n delimited text of all SRC_URIs for file from ebuild into a list containing:
 	# [ mirror_path, [ mirrors ] -- where mirrors[0] + "/" + mirror_path is a valid dl path
@@ -29,6 +30,7 @@ def src_uri_process(uri_text):
 
 	global thirdp
 	uris_to_process = uri_text.split("\n")
+	uris_to_process = [ "http://distfiles.gentoo.org/distfiles/" + fn ] + uris_to_process
 	out_uris = []
 	for uri in uris_to_process:
 		if len(uri) == 0:
@@ -46,8 +48,6 @@ def src_uri_process(uri_text):
 	return out_uris
 
 async def ftp_fetch(host, path, port, login, password, outfile):
-	print("FTP", host, path, outfile)
-	char = random.choice(string.ascii_lowercase)
 	client = aioftp.Client()
 	await client.connect(host)
 	await client.login("anonymous", "drobbins@funtoo.org")
@@ -57,8 +57,6 @@ async def ftp_fetch(host, path, port, login, password, outfile):
 		return ("ftp_missing", None)
 	stream = await client.download_stream(path)
 	async for block in stream.iter_by_block(chunk_size):
-		sys.stdout.write(char)
-		sys.stdout.flush()
 		fd.write(block)
 		hash.update(block)
 	await stream.finish()
@@ -69,9 +67,7 @@ async def ftp_fetch(host, path, port, login, password, outfile):
 
 async def http_fetch(url, outfile):
 	global resolver
-	connector = aiohttp.TCPConnector(resolver=resolver)
-	print("HTTP", outfile)
-	char = random.choice(string.ascii_uppercase)
+	connector = aiohttp.TCPConnector(resolver=resolver,verify_ssl=False)
 	async with aiohttp.ClientSession(connector=connector) as http_session:
 		async with http_session.get(url) as response:
 			if response.status != 200:
@@ -80,8 +76,6 @@ async def http_fetch(url, outfile):
 				hash = sha512()
 				while True:
 					chunk = await response.content.read(chunk_size)
-					sys.stdout.write(char)
-					sys.stdout.flush()
 					if not chunk:
 						break
 					fd.write(chunk)
@@ -112,26 +106,23 @@ def fastpull_index(outfile,distfile):
 	# add to fastpull.
 	d1 = distfile.id[0]
 	d2 = distfile.id[1]
-	outdir = os.path.join("fastpull", d1, d2)
+	outdir = os.path.join("/home/mirror/fastpull", d1, d2)
 	if not os.path.exists(outdir):
 		os.makedirs(outdir)
 	fastpull_outfile = os.path.join(outdir, distfile.id)
 	if os.path.lexists(fastpull_outfile):
 		os.unlink(fastpull_outfile)
 	os.link(outfile, fastpull_outfile)
-	print(outfile)
 
 async def get_file(t_name,q):
-	print(t_name, "START")
 	timeout = 60
 
-	history = []
 	while True:
 		last_fetch = datetime.utcnow()	
 		# continually grab files....
 		d = await q.get()
-		uris = src_uri_process(d.src_uri)
-		outfile = os.path.join("distfiles/", d.filename)
+		uris = src_uri_process(d.src_uri, d.filename)
+		outfile = os.path.join("/home/mirror/distfiles/", d.filename)
 		mylist = list(next_uri(uris))
 		for real_uri in mylist:
 			# iterate through each potential URI for downloading a particular distfile. We'll keep trying until
@@ -142,7 +133,6 @@ async def get_file(t_name,q):
 			# truly failed downloading this distfile.
 		
 			fail_mode = None
-
 			if real_uri.startswith("ftp://"):
 				# handle ftp download --
 				host_parts = real_uri[6:]
@@ -180,28 +170,26 @@ async def get_file(t_name,q):
 				session.commit()
 				fastpull_index(outfile,d)
 			else:
-				print("%s BAD-DIGEST" % t_name)
-				print("file: %s" % d.filename)
-				print("uri : %s" % real_uri)
-				print("sha1: %s" % d.id)
-				print("sha2: %s" % sha)
-				print()
 				fail_mode = "digest"
 
 		if fail_mode:
 			distfile_fail(d, fail_mode)
 			# TODO: if we have failed with a bad digest, we need some follow-up process to query these so we can investigate...
-		print()
-		print(t_name,"DONE:", d.filename, q.qsize())
-		print(t_name, "FAIL:", d.failtype)
-		print()
-
-		history.append(d)
+			if fail_mode == "http_404":
+				sys.stdout.write("4")
+			elif fail_mode == "digest":
+				sys.stdout.write("d")
+			else:
+				sys.stdout.write("x")
+			sys.stdout.flush()
+		else:
+			sys.stdout.write(".")
+			sys.stdout.flush()
 	raise
 
-queue_size = 50 
+queue_size = 50
 query_size = 200
-workr_size = 16
+workr_size = 12 
 
 q = asyncio.Queue(maxsize=queue_size)
 
@@ -211,22 +199,50 @@ async def qsize(q):
 		await asyncio.sleep(5)
 
 async def get_more_distfiles(q):
+	global now
+	time_cutoff = datetime.utcnow() - timedelta(hours=24)
+	time_cutoff_hr = datetime.utcnow() - timedelta(hours=4)
 	while True:
 		print("MOR")
 		# RIGHT NOW THIS WILL REPEATEDLY GRAB THE SAME STUFF
 		session = db.session
-		for d in db.session.query(Distfile).filter(Distfile.last_fetched_on == None).filter(or_(Distfile.last_attempted_on == None, Distfile.last_attempted_on < time_cutoff)).limit(query_size):
-			# prevent repeats
-			d.last_attempted_on = datetime.utcnow()
-			await q.put(d)
-		session.commit()
+		count = 0
+		#query = db.session.query(Distfile).filter(Distfile.last_fetched_on == None).filter(or_(Distfile.last_attempted_on == None, Distfile.last_attempted_on < time_cutoff)).limit(query_size)
+		query = db.session.query(Distfile)
+		# avoid repeats for each run:
+		query = query.filter(Distfile.last_attempted_on < now)
+		query = query.filter(Distfile.last_fetched_on == None)
+		#query = query.filter(Distfile.failtype != "digest")
+		query = query.filter(Distfile.failtype != "http_404")
+		#query = query.filter(Distfile.failtype.like("%SSL%"))
+		#query = query.filter(Distfile.catpkg == "x11-misc/xearth")
+		query = query.limit(query_size)
+		query_list = list(query)
+		if len(query_list) == 0:
+			print("SLEEPING")
+			await asyncio.sleep(5)
+		else:
+			for d in query_list:
+				session = db.session
+				if os.path.exists("/home/mirror/fastpull/%s/%s/%s" % ( d.id[0], d.id[1], d.id )):
+					print("found in fastpull")
+					d.last_fetched_on = datetime.utcnow()
+					session.merge(d)
+				d.last_attempted_on = datetime.utcnow()
+				session.merge(d)
+				session.commit()
+				await q.put(d)
 
 	await q.put(None)
 
+logging.basicConfig(level=logging.ERROR)
+logger = logging.getLogger("aioftp.client")
+logger.setLevel(50)
+
 chunk_size = 4096
 db = AppDatabase(getConfig())
-time_cutoff = timedelta(hours=24)
 loop = asyncio.get_event_loop()
+now = datetime.utcnow()
 
 tasks = [
 	asyncio.async(get_more_distfiles(q)),
