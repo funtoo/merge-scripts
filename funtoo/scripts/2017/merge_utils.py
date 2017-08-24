@@ -1436,7 +1436,7 @@ class InsertEbuilds(MergeStep):
 									if name != None:
 										flag = etree.Element("flag")
 										flag.attrib["name"] = name
-										flag.text = etree.tostring(el, method="text").strip()
+										flag.text = etree.tostring(el, encoding='unicode', method="text").strip()
 										usexml.append(flag)
 								pkgxml.attrib["use"] = ",".join(use_vars)
 								pkgxml.append(usexml)

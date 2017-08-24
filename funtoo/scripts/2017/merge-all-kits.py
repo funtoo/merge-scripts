@@ -709,9 +709,9 @@ if __name__ == "__main__":
 	if push:
 		meta_repo.gitCommit(message="kit updates", branch="master", push=push)
 
-	if xml_out:
+	if len(xml_out):
 		a = open("/home/repos/packages.xml", "wb")
-		etree.ElementTree(xml_out).write(a, encoding='utf-8', xml_declarartion=True, pretty_print=True)
+		etree.ElementTree(xml_out).write(a, encoding='utf-8', xml_declaration=True, pretty_print=True)
 		a.close()
 
 # vim: ts=4 sw=4 noet tw=140
