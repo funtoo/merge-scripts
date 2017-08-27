@@ -4,6 +4,11 @@ import os
 from merge_utils import *
 from datetime import datetime
 
+if os.path.isdir("/home/ports"):
+	xml_out = etree.Element("packages")
+else:
+	xml_out = None
+
 # KIT DESIGN AND DEVELOPER DOCS
 
 # The maintainable model for kits is to have several source repositories that contain most of our source ebuilds/
@@ -122,6 +127,8 @@ overlays = {
 
 funtoo_overlay = GitTree("funtoo-overlay", "master", "repos@git.funtoo.org:funtoo-overlay.git")
 fixup_repo = GitTree("kit-fixups", "master", "repos@git.funtoo.org:kits/kit-fixups.git")
+
+# OUTPUT META-REPO: This is the master repository being written to.
 
 meta_repo = GitTree("meta-repo", "master", "repos@git.funtoo.org:meta-repo.git", root="/var/git/dest-trees/meta-repo")
 
@@ -386,6 +393,8 @@ def getKitSourceInstance(kit_dict):
 
 def updateKit(kit_dict, kit_group, cpm_logger, db=None, create=False, push=False, now=None):
 
+	global xml_out
+
 	# get set of source repos used to grab catpkgs from:
 
 	repos = kit_dict["repo_obj"] = getKitSourceInstance(kit_dict)
@@ -403,7 +412,10 @@ def updateKit(kit_dict, kit_group, cpm_logger, db=None, create=False, push=False
 		print("Gentoo staging mismatch -- name is %s" % gentoo_staging["name"])
 
 	# we should now be OK to use the repo and the local branch:
-	kit_dict['tree'] = tree = GitTree(kit_dict['name'], kit_dict['branch'], "repos@git.funtoo.org:kits/%s.git" % kit_dict['name'], create=create, root="/var/git/dest-trees/%s" % kit_dict['name'], pull=True)
+	if kit_group in [ "prime", "shared" ]:
+		kit_dict['tree'] = tree = GitTree(kit_dict['name'], kit_dict['branch'], "repos@git.funtoo.org:kits/%s.git" % kit_dict['name'], create=create, root="/var/git/dest-trees/%s" % kit_dict['name'], pull=True, xml_out=xml_out)
+	else:
+		kit_dict['tree'] = tree = GitTree(kit_dict['name'], kit_dict['branch'], "repos@git.funtoo.org:kits/%s.git" % kit_dict['name'], create=create, root="/var/git/dest-trees/%s" % kit_dict['name'], pull=True)
 	
 	# Phase 1: prep the kit
 	pre_steps = [
@@ -696,5 +708,10 @@ if __name__ == "__main__":
 			meta_repo.gitSubmoduleAddOrUpdate(kit_dict["tree"], "kits/%s" % kit_dict["name"], "https://github.com/funtoo/%s.git" % kit_dict["name"])
 	if push:
 		meta_repo.gitCommit(message="kit updates", branch="master", push=push)
+
+	if len(xml_out):
+		a = open("/home/repos/packages.xml", "wb")
+		etree.ElementTree(xml_out).write(a, encoding='utf-8', xml_declaration=True, pretty_print=True)
+		a.close()
 
 # vim: ts=4 sw=4 noet tw=140

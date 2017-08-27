@@ -30,6 +30,7 @@ class Distfile(dbobject):
 		cls.db = db
 		cls.__table__ = Table('distfiles', db.metadata,
 			Column('id', String(128), primary_key=True), # sha512 in ASCII
+			Column('rand_id', String(128)), # fastpull_id 
 			Column('filename', String(255), primary_key=True), # filename on disk
 
 			# the id/filename is a composite key, because a SHA512 may exist under potentially multiple filenames, and we
@@ -45,8 +46,10 @@ class Distfile(dbobject):
 			Column('last_fetched_on', DateTime), # set to a datetime the last time we successfully fetched the file
 			Column('last_failure_on', DateTime), #last failure
 			Column('failtype', Text), # 'digest', '404'
+			Column('priority', Integer, default=0),
 			**db.table_args
 		)
+		Index('rand_id_ix', cls.__table__.c.rand_id, mysql_length=10)
 
 class MissingManifestFailure(dbobject):
 
