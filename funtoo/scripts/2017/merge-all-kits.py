@@ -725,7 +725,7 @@ if __name__ == "__main__":
 	if push:
 		meta_repo.gitCommit(message="kit updates", branch="master", push=push)
 
-	if len(xml_out):
+	if xml_out != None and len(xml_out):
 		a = open("/home/repos/packages.xml", "wb")
 		etree.ElementTree(xml_out).write(a, encoding='utf-8', xml_declaration=True, pretty_print=True)
 		a.close()

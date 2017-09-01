@@ -642,7 +642,7 @@ class CatPkgMatchLogger(object):
 	def nextKit(self):
 		self._regexdict.update(self._regexdict_curkit)
 		self._regexdict_curkit = {}
-		self._matchdict.update(self,_matchdict_curkit)
+		self._matchdict.update(self._matchdict_curkit)
 		self._matchdict_curkit = {}
 
 def headSHA1(tree):
