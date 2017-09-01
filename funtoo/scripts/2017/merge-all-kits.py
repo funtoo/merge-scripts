@@ -208,29 +208,29 @@ kit_source_defs = {
 
 kit_groups = {
 	'prime' : [
-		{ 'name' : 'core-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime_protected' },
-		{ 'name' : 'core-hw-kit', 'branch' : 'master', 'source': 'funtoo_current' },
-		{ 'name' : 'security-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime_protected' },
-		{ 'name' : 'xorg-kit', 'branch' : '1.17-prime', 'source': 'funtoo_prime_xorg' },
+		{ 'name' : 'core-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime_protected', 'default' : True },
+		{ 'name' : 'core-hw-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True },
+		{ 'name' : 'security-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime_protected', 'default' : True },
+		{ 'name' : 'xorg-kit', 'branch' : '1.17-prime', 'source': 'funtoo_prime_xorg', 'default' : True },
 		{ 'name' : 'xorg-kit', 'branch' : '1.19-prime', 'source': 'funtoo_mk2_prime' }, # MK2
-		{ 'name' : 'gnome-kit', 'branch' : '3.20-prime', 'source': 'funtoo_prime_gnome' },
-		{ 'name' : 'media-kit', 'branch' : '1.0-prime', 'source': 'funtoo_prime_media' },
-		{ 'name' : 'perl-kit', 'branch' : '5.24-prime', 'source': 'funtoo_prime_perl' },
-		{ 'name' : 'python-kit', 'branch' : '3.4-prime', 'source': 'funtoo_prime' },
+		{ 'name' : 'gnome-kit', 'branch' : '3.20-prime', 'source': 'funtoo_prime_gnome', 'default' : True },
+		{ 'name' : 'media-kit', 'branch' : '1.0-prime', 'source': 'funtoo_prime_media', 'default' : True },
+		{ 'name' : 'perl-kit', 'branch' : '5.24-prime', 'source': 'funtoo_prime_perl', 'default' : True },
+		{ 'name' : 'python-kit', 'branch' : '3.4-prime', 'source': 'funtoo_prime', 'default' : True },
 		{ 'name' : 'python-kit', 'branch' : '3.6-prime', 'source': 'funtoo_mk2_prime' }, # MK2
 	],
 	'shared' : [
-		{ 'name' : 'php-kit', 'branch' : 'master', 'source': 'funtoo_current' },
-		{ 'name' : 'java-kit', 'branch' : 'master', 'source': 'funtoo_current' },
-		{ 'name' : 'dev-kit', 'branch' : 'master', 'source': 'funtoo_current' },
-		{ 'name' : 'kde-kit', 'branch' : 'master', 'source': 'funtoo_current' },
-		{ 'name' : 'desktop-kit', 'branch' : 'master', 'source': 'funtoo_current' },
-		{ 'name' : 'editors-kit', 'branch' : 'master', 'source': 'funtoo_current' },
-		{ 'name' : 'net-kit', 'branch' : 'master', 'source': 'funtoo_current' },
-		{ 'name' : 'text-kit', 'branch' : 'master', 'source': 'funtoo_current' },
-		{ 'name' : 'science-kit', 'branch' : 'master', 'source': 'funtoo_current' },
-		{ 'name' : 'games-kit', 'branch' : 'master', 'source': 'funtoo_current' },
-		{ 'name' : 'nokit', 'branch' : 'master', 'source': 'funtoo_current' }
+		{ 'name' : 'php-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True },
+		{ 'name' : 'java-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
+		{ 'name' : 'dev-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
+		{ 'name' : 'kde-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
+		{ 'name' : 'desktop-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
+		{ 'name' : 'editors-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
+		{ 'name' : 'net-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
+		{ 'name' : 'text-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
+		{ 'name' : 'science-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
+		{ 'name' : 'games-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
+		{ 'name' : 'nokit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  }
 	],
 	'current' : [
 		{ 'name' : 'core-kit', 'branch' : 'master', 'source': 'gentoo_current_protected' },
@@ -716,8 +716,11 @@ if __name__ == "__main__":
 				updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=db, create=not push, push=push, now=now)
 				prev_kit_dict = kit_dict
 
-	print("Checking out prime versions of kits.")
+	print("Checking out default versions of kits.")
 	for kit_dict in kit_groups['prime'] + kit_groups['shared']:
+		if 'default' not in kit_dict or kit_dict['default'] != True:
+			# skip non-default kits
+			continue
 		kit_dict["tree"].run([GitCheckout(branch=kit_dict['branch'])])
 		if push:
 			# use the github url for the submodule, for public consumption.
