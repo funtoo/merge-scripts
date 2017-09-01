@@ -586,10 +586,11 @@ def generateShardSteps(name, from_tree, to_tree, super_tree, pkgdir=None, cpm_lo
 class CatPkgMatchLogger(object):
 
 	def __init__(self):
-		self._copycount = 0	
-		self._matchcount = 0	
+		self._copycount = 0
+		self._matchcount = 0
 		# for string matches
 		self._matchdict = {}
+		self._matchdict_curkit = {}
 		# for regex matches
 		self._regexdict = {}
 		self._regexdict_curkit = {}
@@ -607,6 +608,9 @@ class CatPkgMatchLogger(object):
 		# NOTE: Since a kit pulls from multiple repos, this does raise the possibility of repo b replacing a catpkg that was
 		# already copied. We work around this by always using replace=False with InsertEbuilds -- so that if the catpkg is already
 		# on disk, then it isn't copied, even if it matches a regex.
+
+		# NOTE that we now also cache non-regex matches too. This allows us to process two xorg-kits or python-kits in a row.
+		# matches will accumulate but not take effect until .nextKit() is called.
 
 	# Another feature of the CatPkgMatchLoggger is that it records how many catpkgs actually were copied -- 1 for each catpkg
 	# literal, and a caller-specified number of matches for regexes. This tally is used by merge-all-kits.py to determine the
@@ -632,12 +636,14 @@ class CatPkgMatchLogger(object):
 		if isinstance(match, regextype):
 			self._regexdict_curkit[match.pattern] = match
 		else:
-			self._matchdict[match] = True
+			self._matchdict_curkit[match] = True
 		self._copycount += 1
 
 	def nextKit(self):
 		self._regexdict.update(self._regexdict_curkit)
 		self._regexdict_curkit = {}
+		self._matchdict.update(self,_matchdict_curkit)
+		self._matchdict_curkit = {}
 
 def headSHA1(tree):
 	head = None

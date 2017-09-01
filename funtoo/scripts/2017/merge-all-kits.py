@@ -157,6 +157,14 @@ kit_source_defs = {
 		{ "repo" : "rh1" },
 		{ "repo" : "gentoo-staging" }
 	],
+	"funtoo_mk2_prime" : [
+		# allow overlays to override gentoo
+		{ "repo" : "flora", },
+		{ "repo" : "faustoo", "src_sha1" : "d67f412668e3e6d58efdb4d802a835e6d99968bb" , 'date' : '28 Aug 2017'},
+		{ "repo" : "fusion809", "src_sha1" : "489b46557d306e93e6dc58c11e7c1da52abd34b0", 'date' : '31 Aug 2017' },
+		{ "repo" : "rh1", },
+		{ "repo" : "gentoo-staging", "src_sha1" : '80d2f3782e7f351855664919d679e94a95793a06', 'date' : '31 Aug 2017'},
+	],
 	"funtoo_prime" : [
 		# allow overlays to override gentoo
 		{ "repo" : "flora", },
@@ -204,10 +212,12 @@ kit_groups = {
 		{ 'name' : 'core-hw-kit', 'branch' : 'master', 'source': 'funtoo_current' },
 		{ 'name' : 'security-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime_protected' },
 		{ 'name' : 'xorg-kit', 'branch' : '1.17-prime', 'source': 'funtoo_prime_xorg' },
+		{ 'name' : 'xorg-kit', 'branch' : '1.19-prime', 'source': 'funtoo_mk2_prime' }, # MK2
 		{ 'name' : 'gnome-kit', 'branch' : '3.20-prime', 'source': 'funtoo_prime_gnome' },
 		{ 'name' : 'media-kit', 'branch' : '1.0-prime', 'source': 'funtoo_prime_media' },
 		{ 'name' : 'perl-kit', 'branch' : '5.24-prime', 'source': 'funtoo_prime_perl' },
 		{ 'name' : 'python-kit', 'branch' : '3.4-prime', 'source': 'funtoo_prime' },
+		{ 'name' : 'python-kit', 'branch' : '3.6-prime', 'source': 'funtoo_mk2_prime' }, # MK2
 	],
 	'shared' : [
 		{ 'name' : 'php-kit', 'branch' : 'master', 'source': 'funtoo_current' },
@@ -237,6 +247,7 @@ python_kit_settings = {
 	#	branch / primary python / alternate python
 	'master' :  [ "python3_6", "python2_7" ],
 	'3.4-prime' : [ "python3_4", "python2_7" ]
+	'3.6-prime' : [ "python3_6", "python3_4", "python2_7" ]
 }
 
 # It has already been explained how when we apply package-set rules, we process the kit_source repositories in order and
@@ -391,7 +402,14 @@ def getKitSourceInstance(kit_dict):
 # regenerating it. The kitted_catpkgs argument is a dictionary which is also written to and used to keep track of
 # catpkgs copied between runs of updateKit.
 
-def updateKit(kit_dict, kit_group, cpm_logger, db=None, create=False, push=False, now=None):
+def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=False, push=False, now=None):
+
+	if prev_kit_dict != None and kit_dict['name'] != prev_kit_dict['name']:
+		
+		# We are advancing to the next kit. For example, we just processed an xorg-kit and are now processing a python-kit. So we want to apply all our accumulated matches.
+		# If we are processing an xorg-kit again, this won't run, which is what we want. We want to keep accumulating catpkg names/matches.
+
+		cpm_logger.nextKit()
 
 	global xml_out
 
@@ -670,10 +688,6 @@ def updateKit(kit_dict, kit_group, cpm_logger, db=None, create=False, push=False
 	tree.run(post_steps)
 	tree.gitCommit(message="updates",branch=kit_dict['branch'],push=push)
 	
-	# now activate any regexes recorded as applied so that they will be matched against (and matches skipped) for successive kits:
-	
-	cpm_logger.nextKit()
-
 if __name__ == "__main__":
 
 	# one global timestamp for each run of this tool -- for mysql db
@@ -696,9 +710,11 @@ if __name__ == "__main__":
 		if kit_group == None:
 			cpm_logger = CatPkgMatchLogger()
 		else:
+			prev_kit_dict = None
 			for kit_dict in kit_groups[kit_group]:
 				print("Regenerating kit ",kit_dict)
-				updateKit(kit_dict, kit_group, cpm_logger, db=db, create=not push, push=push, now=now)
+				updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=db, create=not push, push=push, now=now)
+				prev_kit_dict = kit_dict
 
 	print("Checking out prime versions of kits.")
 	for kit_dict in kit_groups['prime'] + kit_groups['shared']:
