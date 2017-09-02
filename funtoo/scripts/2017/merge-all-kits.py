@@ -687,7 +687,8 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 
 	tree.run(post_steps)
 	tree.gitCommit(message="updates",branch=kit_dict['branch'],push=push)
-	
+	return tree.head
+
 if __name__ == "__main__":
 
 	# one global timestamp for each run of this tool -- for mysql db
@@ -706,6 +707,8 @@ if __name__ == "__main__":
 
 	cpm_logger = CatPkgMatchLogger()
 
+	output_sha1s = {}
+
 	for kit_group in kit_order: 
 		if kit_group == None:
 			cpm_logger = CatPkgMatchLogger()
@@ -713,8 +716,16 @@ if __name__ == "__main__":
 			prev_kit_dict = None
 			for kit_dict in kit_groups[kit_group]:
 				print("Regenerating kit ",kit_dict)
-				updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=db, create=not push, push=push, now=now)
+				head = updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=db, create=not push, push=push, now=now)
+				kit_name = kit_dict[name]
+				kit_branch = kit_dict[branch]
+				if kit_name not in output_sha1s:
+					output_sha1s[kit_name] = {}
+				output_sha1s[kit_name][kit_branch] = head
 				prev_kit_dict = kit_dict
+
+	with open(meta_repo.root + "/metadata/kit-sha1.json", "w") as a:
+		a.write(json.dumps(output_sha1s, sort_keys=True, indent=4, ensure_ascii=False).encode('utf-8'))
 
 	print("Checking out default versions of kits.")
 	for kit_dict in kit_groups['prime'] + kit_groups['shared']:
