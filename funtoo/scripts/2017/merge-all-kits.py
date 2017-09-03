@@ -734,8 +734,16 @@ if __name__ == "__main__":
 	with open(meta_repo.root + "/metadata/kit-sha1.json", "w") as a:
 		a.write(json.dumps(output_sha1s, sort_keys=True, indent=4, ensure_ascii=False))
 
+	outf = meta_repo.root + "/metadata/kit-info.json"
+	# read first to preserve any metadata we added manually
+	k_info = {}
+	if os.path.exists(outf):
+		a = open(outf, 'r')
+		k_info = json.loads(a.read())
+		a.close()
+	k_info["kit_order"] = output_order
 	with open(meta_repo.root + "/metadata/kit-info.json", "w") as a:
-		a.write(json.dumps({ "kit_order" : output_order }, sort_keys=True, indent=4, ensure_ascii=False))
+		a.write(json.dumps(k_info, sort_keys=True, indent=4, ensure_ascii=False))
 
 	print("Checking out default versions of kits.")
 	for kit_dict in kit_groups['prime'] + kit_groups['shared']:
