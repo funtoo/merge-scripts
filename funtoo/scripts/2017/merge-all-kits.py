@@ -709,6 +709,7 @@ if __name__ == "__main__":
 	cpm_logger = CatPkgMatchLogger()
 
 	output_sha1s = {}
+	output_order = []
 
 	for kit_group in kit_order: 
 		if kit_group == None:
@@ -720,6 +721,8 @@ if __name__ == "__main__":
 				head = updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=db, create=not push, push=push, now=now)
 				kit_name = kit_dict["name"]
 				kit_branch = kit_dict["branch"]
+				if kit_group in [ "prime", "shared"] and kit_name not in output_order:
+					output_order.append(kit_name)
 				if kit_name not in output_sha1s:
 					output_sha1s[kit_name] = {}
 				output_sha1s[kit_name][kit_branch] = head
@@ -730,6 +733,9 @@ if __name__ == "__main__":
 
 	with open(meta_repo.root + "/metadata/kit-sha1.json", "w") as a:
 		a.write(json.dumps(output_sha1s, sort_keys=True, indent=4, ensure_ascii=False))
+
+	with open(meta_repo.root + "/metadata/kit-info.json", "w") as a:
+		a.write(json.dumps({ "kit_order" : output_order }, sort_keys=True, indent=4, ensure_ascii=False))
 
 	print("Checking out default versions of kits.")
 	for kit_dict in kit_groups['prime'] + kit_groups['shared']:
