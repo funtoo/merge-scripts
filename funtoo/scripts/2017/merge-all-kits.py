@@ -710,6 +710,7 @@ if __name__ == "__main__":
 
 	output_sha1s = {}
 	output_order = []
+	output_settings = {}
 
 	for kit_group in kit_order: 
 		if kit_group == None:
@@ -723,6 +724,7 @@ if __name__ == "__main__":
 				kit_branch = kit_dict["branch"]
 				if kit_group in [ "prime", "shared"] and kit_name not in output_order:
 					output_order.append(kit_name)
+					output_settings[kit_name] = { "default" : kit_branch }
 				if kit_name not in output_sha1s:
 					output_sha1s[kit_name] = {}
 				output_sha1s[kit_name][kit_branch] = head
@@ -742,6 +744,7 @@ if __name__ == "__main__":
 		k_info = json.loads(a.read())
 		a.close()
 	k_info["kit_order"] = output_order
+	k_info["kit_settings"] = output_settings
 	with open(meta_repo.root + "/metadata/kit-info.json", "w") as a:
 		a.write(json.dumps(k_info, sort_keys=True, indent=4, ensure_ascii=False))
 
