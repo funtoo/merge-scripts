@@ -1014,7 +1014,7 @@ class GitTree(Tree):
 		if not self.localBranchExists(self.branch):
 			if not self.create:
 				# branch does not exist, so get it from remote and create it:
-				runShell("( cd %s &&  git fetch && git checkout -b %s --track origin/%s )" % ( self.root, self.branch, self.branch ))
+				runShell("( cd %s &&  git fetch && git checkout -b %s --track origin/%s || git checkout -b %s)" % ( self.root, self.branch, self.branch, self.branch ))
 			else:
 				# in create mode, we take responsibility for creating branches ourselves, and we are not concerned with fetching:
 				runShell("(cd %s &&  git checkout -b %s)" % ( self.root, self.branch ))
@@ -1033,10 +1033,11 @@ class GitTree(Tree):
 			runShell("(cd %s && git fetch && git checkout %s )" % (self.root, self.commit_sha1 ))
 		elif self.currentLocalBranch != self.branch:
 			# we aren't on the right branch. Let's change that after we make sure we have the latest updates
-			runShell("(cd %s && git fetch && git checkout %s && git reset --hard && git pull -f )" % (self.root, self.branch ))
+			# git pull -f may fail for new branch that has not yet been pushed remote...
+			runShell("(cd %s && git fetch && git checkout %s && git reset --hard && git pull -f || true)" % (self.root, self.branch ))
 		elif self.pull:
 			# we are on the right branch, but we want to make sure we have the latest updates 
-			runShell("(cd %s && git reset --hard && git pull -f )" % self.root )
+			runShell("(cd %s && git reset --hard && git pull -f || true)" % self.root )
 
 	@property
 	def currentLocalBranch(self):

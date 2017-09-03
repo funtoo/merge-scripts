@@ -3,6 +3,7 @@
 import os
 from merge_utils import *
 from datetime import datetime
+import json
 
 if os.path.isdir("/home/ports"):
 	xml_out = etree.Element("packages")
@@ -687,7 +688,7 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 
 	tree.run(post_steps)
 	tree.gitCommit(message="updates",branch=kit_dict['branch'],push=push)
-	return tree.head
+	return tree.head()
 
 if __name__ == "__main__":
 
@@ -717,15 +718,18 @@ if __name__ == "__main__":
 			for kit_dict in kit_groups[kit_group]:
 				print("Regenerating kit ",kit_dict)
 				head = updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=db, create=not push, push=push, now=now)
-				kit_name = kit_dict[name]
-				kit_branch = kit_dict[branch]
+				kit_name = kit_dict["name"]
+				kit_branch = kit_dict["branch"]
 				if kit_name not in output_sha1s:
 					output_sha1s[kit_name] = {}
 				output_sha1s[kit_name][kit_branch] = head
 				prev_kit_dict = kit_dict
 
+	if not os.path.exists(meta_repo.root + "/metadata"):
+		os.makedirs(meta_repo.root + "/metadata")
+
 	with open(meta_repo.root + "/metadata/kit-sha1.json", "w") as a:
-		a.write(json.dumps(output_sha1s, sort_keys=True, indent=4, ensure_ascii=False).encode('utf-8'))
+		a.write(json.dumps(output_sha1s, sort_keys=True, indent=4, ensure_ascii=False))
 
 	print("Checking out default versions of kits.")
 	for kit_dict in kit_groups['prime'] + kit_groups['shared']:
