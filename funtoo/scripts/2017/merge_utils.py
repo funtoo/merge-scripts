@@ -646,22 +646,10 @@ class CatPkgMatchLogger(object):
 		self._matchdict_curkit = {}
 
 def headSHA1(tree):
-	head = None
-	hfile = os.path.join(tree,".git/HEAD")
-	if os.path.exists(hfile):
-		infile = open(hfile,"r")
-		line = infile.readline()
-		infile.close()
-		if len(line.split(":")) == 2:
-			head = line.split()[1]
-			hfile2 = os.path.join(tree,".git")
-			hfile2 = os.path.join(hfile2,head)
-			if os.path.exists(hfile2):
-				infile = open(hfile2,"r")
-				head = infile.readline().split()[0]
-		else:
-			head=line.strip()
-	return head
+	retval, out = subprocess.getstatusoutput("(cd %s && git rev-parse HEAD)" % tree)
+	if retval == 0:
+		return out.strip()
+	return None
 
 def runShell(string,abortOnFail=True):
 	if debug:
