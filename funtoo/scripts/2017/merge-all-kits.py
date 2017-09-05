@@ -248,7 +248,7 @@ python_kit_settings = {
 	#	branch / primary python / alternate python
 	'master' :  [ "python3_6", "python2_7" ],
 	'3.4-prime' : [ "python3_4", "python2_7" ],
-	'3.6-prime' : [ "python3_6", "python3_4", "python2_7" ]
+	'3.6-prime' : [ "python3_6", "python2_7" ]
 }
 
 # It has already been explained how when we apply package-set rules, we process the kit_source repositories in order and
