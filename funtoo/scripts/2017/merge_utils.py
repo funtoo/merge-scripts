@@ -75,7 +75,7 @@ def do_package_use_line(pkg, def_python, bk_python, imps):
 
 class GenPythonUse(MergeStep):
 
-	def __init__(self, py_settings):
+	def __init__(self, py_settings, out_subpath):
 		self.def_python = py_settings["primary"]
 		self.bk_python = py_settings["alternate"]
 		self.mask = py_settings["mask"]
