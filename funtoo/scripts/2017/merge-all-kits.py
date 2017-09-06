@@ -245,10 +245,22 @@ kit_groups = {
 }
 
 python_kit_settings = {
-	#	branch / primary python / alternate python
-	'master' :  [ "python3_6", "python2_7" ],
-	'3.4-prime' : [ "python3_4", "python2_7" ],
-	'3.6-prime' : [ "python3_6", "python2_7" ]
+	#	branch / primary python / alternate python / python mask (if any)
+	'master' :  { 
+		"primary" : "python3_6", 
+		"alternate" : "python2_7",
+		"mask" : None
+	},
+	'3.4-prime' : {
+		"primary" "python3_4",
+		"alternate" : "python2_7",
+		"mask" : ">=dev-lang/python-3.5"
+	},
+	'3.6-prime' : { 
+		"primary" : "python3_6",
+		"alternate" : "python2_7",
+		"mask" : ">=dev-lang/python-3.7"
+	}
 }
 
 # It has already been explained how when we apply package-set rules, we process the kit_source repositories in order and
@@ -671,8 +683,8 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 		# all other kits -- generate multiple settings, depending on what version of python-kit is active -- epro will select the right one for us.
 		python_settings = python_kit_settings
 
-	for branch, imps in python_settings.items():
-		post_steps += [ GenPythonUse(imps[0], imps[1], "funtoo/kits/python-kit/%s" % branch) ]
+	for branch, py_settings in python_settings.items():
+		post_steps += [ GenPythonUse(py_settings, "funtoo/kits/python-kit/%s" % branch) ]
 
 	post_steps += [
 		Minify(),

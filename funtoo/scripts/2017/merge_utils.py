@@ -75,9 +75,10 @@ def do_package_use_line(pkg, def_python, bk_python, imps):
 
 class GenPythonUse(MergeStep):
 
-	def __init__(self,def_python,bk_python,out_subpath):
-		self.def_python = def_python
-		self.bk_python = bk_python
+	def __init__(self, py_settings):
+		self.def_python = py_settings["primary"]
+		self.bk_python = py_settings["alternate"]
+		self.mask = py_settings["mask"]
 		self.out_subpath = out_subpath
 	
 	def run(self, cur_overlay):
@@ -156,6 +157,13 @@ class GenPythonUse(MergeStep):
 			a.write('PYTHON_TARGETS="%s %s"\n' % ( self.def_python, self.bk_python ))
 			a.write('PYTHON_SINGLE_TARGET="%s"\n' % self.def_python)
 			a.close()
+			if self.mask:
+				outpath = cur_tree + '/profiles/' + self.out_subpath + '/package.mask/funtoo-kit-python'
+				if not os.path.exists(os.path.dirname(outpath)):
+					os.makedirs(os.path.dirname(outpath))
+				a = open(outpath, "w")
+				a.write(self.mask + "\n")
+				self.close()
 
 def getDependencies(cur_overlay, catpkgs, levels=0, cur_level=0):
 	cur_tree = cur_overlay.root
