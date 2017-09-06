@@ -11,8 +11,6 @@ from lxml import etree
 import portage
 from portage.dbapi.porttree import portdbapi
 from portage.dep import use_reduce, dep_getkey, flatten
-from portage.versions import catpkgsplit
-from portage.repository.config import RepoConfigLoader
 from portage.exception import PortageKeyError
 import grp
 import pwd
@@ -332,7 +330,7 @@ class CatPkgScan(MergeStep):
 				if prev_blob:
 					fn = prev_blob.split("/")[-1]
 					if mirror_restrict:
-					    mirror_restrict_set.add(fn)
+						mirror_restrict_set.add(fn)
 					if not fn in src_uri:
 						src_uri[fn] = []
 					if prev_blob not in src_uri[fn]:
@@ -355,10 +353,10 @@ class CatPkgScan(MergeStep):
 					if len(ls) <= 3 or ls[0] != "DIST":
 						continue
 					try:
-					    sha512_index = ls.index("SHA512")
+						sha512_index = ls.index("SHA512")
 					except ValueError:
-					    no_sha512.add(ls[1])
-					    continue
+						no_sha512.add(ls[1])
+						continue
 					man_info[ls[1]] = { "size" : ls[2], "sha512" : ls[sha512_index+1] if sha512_index else None }
 				man_f.close()
 
@@ -1536,6 +1534,6 @@ class Minify(MergeStep):
 		runShell("( cd %s && find -iname Manifest -exec sed -n -i -e \"/DIST/p\" {} \; )" % tree.root )
 
 def getMySQLDatabase():
-	from db_core import AppDatabase, getConfig, Distfile, MissingManifestFailure
+	from db_core import AppDatabase, getConfig
 	return AppDatabase(getConfig())
 # vim: ts=4 sw=4 noet

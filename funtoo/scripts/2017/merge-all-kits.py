@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-import os
 from merge_utils import *
 from datetime import datetime
 import json
