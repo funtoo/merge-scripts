@@ -252,7 +252,7 @@ python_kit_settings = {
 		"mask" : None
 	},
 	'3.4-prime' : {
-		"primary" "python3_4",
+		"primary" : "python3_4",
 		"alternate" : "python2_7",
 		"mask" : ">=dev-lang/python-3.5"
 	},
