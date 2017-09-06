@@ -163,7 +163,7 @@ class GenPythonUse(MergeStep):
 					os.makedirs(os.path.dirname(outpath))
 				a = open(outpath, "w")
 				a.write(self.mask + "\n")
-				self.close()
+				a.close()
 
 def getDependencies(cur_overlay, catpkgs, levels=0, cur_level=0):
 	cur_tree = cur_overlay.root
