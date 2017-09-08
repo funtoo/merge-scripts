@@ -77,9 +77,10 @@ def do_package_use_line(pkg, def_python, bk_python, imps):
 
 class GenPythonUse(MergeStep):
 
-	def __init__(self,def_python,bk_python,out_subpath):
-		self.def_python = def_python
-		self.bk_python = bk_python
+	def __init__(self, py_settings, out_subpath):
+		self.def_python = py_settings["primary"]
+		self.bk_python = py_settings["alternate"]
+		self.mask = py_settings["mask"]
 		self.out_subpath = out_subpath
 	
 	def run(self, cur_overlay):
@@ -158,6 +159,13 @@ class GenPythonUse(MergeStep):
 			a.write('PYTHON_TARGETS="%s %s"\n' % ( self.def_python, self.bk_python ))
 			a.write('PYTHON_SINGLE_TARGET="%s"\n' % self.def_python)
 			a.close()
+			if self.mask:
+				outpath = cur_tree + '/profiles/' + self.out_subpath + '/package.mask/funtoo-kit-python'
+				if not os.path.exists(os.path.dirname(outpath)):
+					os.makedirs(os.path.dirname(outpath))
+				a = open(outpath, "w")
+				a.write(self.mask + "\n")
+				a.close()
 
 def getDependencies(cur_overlay, catpkgs, levels=0, cur_level=0):
 	cur_tree = cur_overlay.root
@@ -588,10 +596,11 @@ def generateShardSteps(name, from_tree, to_tree, super_tree, pkgdir=None, cpm_lo
 class CatPkgMatchLogger(object):
 
 	def __init__(self):
-		self._copycount = 0	
-		self._matchcount = 0	
+		self._copycount = 0
+		self._matchcount = 0
 		# for string matches
 		self._matchdict = {}
+		self._matchdict_curkit = {}
 		# for regex matches
 		self._regexdict = {}
 		self._regexdict_curkit = {}
@@ -609,6 +618,9 @@ class CatPkgMatchLogger(object):
 		# NOTE: Since a kit pulls from multiple repos, this does raise the possibility of repo b replacing a catpkg that was
 		# already copied. We work around this by always using replace=False with InsertEbuilds -- so that if the catpkg is already
 		# on disk, then it isn't copied, even if it matches a regex.
+
+		# NOTE that we now also cache non-regex matches too. This allows us to process two xorg-kits or python-kits in a row.
+		# matches will accumulate but not take effect until .nextKit() is called.
 
 	# Another feature of the CatPkgMatchLoggger is that it records how many catpkgs actually were copied -- 1 for each catpkg
 	# literal, and a caller-specified number of matches for regexes. This tally is used by merge-all-kits.py to determine the
@@ -634,30 +646,20 @@ class CatPkgMatchLogger(object):
 		if isinstance(match, regextype):
 			self._regexdict_curkit[match.pattern] = match
 		else:
-			self._matchdict[match] = True
+			self._matchdict_curkit[match] = True
 		self._copycount += 1
 
 	def nextKit(self):
 		self._regexdict.update(self._regexdict_curkit)
 		self._regexdict_curkit = {}
+		self._matchdict.update(self._matchdict_curkit)
+		self._matchdict_curkit = {}
 
 def headSHA1(tree):
-	head = None
-	hfile = os.path.join(tree,".git/HEAD")
-	if os.path.exists(hfile):
-		infile = open(hfile,"r")
-		line = infile.readline()
-		infile.close()
-		if len(line.split(":")) == 2:
-			head = line.split()[1]
-			hfile2 = os.path.join(tree,".git")
-			hfile2 = os.path.join(hfile2,head)
-			if os.path.exists(hfile2):
-				infile = open(hfile2,"r")
-				head = infile.readline().split()[0]
-		else:
-			head=line.strip()
-	return head
+	retval, out = subprocess.getstatusoutput("(cd %s && git rev-parse HEAD)" % tree)
+	if retval == 0:
+		return out.strip()
+	return None
 
 def runShell(string,abortOnFail=True):
 	if debug:
@@ -739,7 +741,7 @@ class ThirdPartyMirrors(MergeStep):
 	def run(self,tree):
 		orig = "%s/profiles/thirdpartymirrors" % tree.root
 		new = "%s/profiles/thirdpartymirrors.new" % tree.root
-		mirrors = "http://build.funtoo.org/distfiles http://ftp.osuosl.org/pub/funtoo/distfiles https://distfiles.ceresia.ch/distfiles"
+		mirrors = "http://build.funtoo.org/distfiles http://ftp.osuosl.org/pub/funtoo/distfiles"
 		a = open(orig, "r")
 		b = open(new, "w")
 		for line in a:
@@ -1010,7 +1012,7 @@ class GitTree(Tree):
 		if not self.localBranchExists(self.branch):
 			if not self.create:
 				# branch does not exist, so get it from remote and create it:
-				runShell("( cd %s &&  git fetch && git checkout -b %s --track origin/%s )" % ( self.root, self.branch, self.branch ))
+				runShell("( cd %s &&  git fetch && git checkout -b %s --track origin/%s || git checkout -b %s)" % ( self.root, self.branch, self.branch, self.branch ))
 			else:
 				# in create mode, we take responsibility for creating branches ourselves, and we are not concerned with fetching:
 				runShell("(cd %s &&  git checkout -b %s)" % ( self.root, self.branch ))
@@ -1029,10 +1031,11 @@ class GitTree(Tree):
 			runShell("(cd %s && git fetch && git checkout %s )" % (self.root, self.commit_sha1 ))
 		elif self.currentLocalBranch != self.branch:
 			# we aren't on the right branch. Let's change that after we make sure we have the latest updates
-			runShell("(cd %s && git fetch && git checkout %s && git reset --hard && git pull -f )" % (self.root, self.branch ))
+			# git pull -f may fail for new branch that has not yet been pushed remote...
+			runShell("(cd %s && git fetch && git checkout %s && git reset --hard && git pull -f || true)" % (self.root, self.branch ))
 		elif self.pull:
 			# we are on the right branch, but we want to make sure we have the latest updates 
-			runShell("(cd %s && git reset --hard && git pull -f )" % self.root )
+			runShell("(cd %s && git reset --hard && git pull -f || true)" % self.root )
 
 	@property
 	def currentLocalBranch(self):
@@ -1438,7 +1441,7 @@ class InsertEbuilds(MergeStep):
 									if name != None:
 										flag = etree.Element("flag")
 										flag.attrib["name"] = name
-										flag.text = etree.tostring(el, method="text").strip()
+										flag.text = etree.tostring(el, encoding='unicode', method="text").strip()
 										usexml.append(flag)
 								pkgxml.attrib["use"] = ",".join(use_vars)
 								pkgxml.append(usexml)

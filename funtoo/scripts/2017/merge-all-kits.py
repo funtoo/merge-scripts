@@ -3,6 +3,7 @@
 import os
 from merge_utils import *
 from datetime import datetime
+import json
 
 if os.path.isdir("/home/ports"):
 	xml_out = etree.Element("packages")
@@ -157,6 +158,14 @@ kit_source_defs = {
 		{ "repo" : "rh1" },
 		{ "repo" : "gentoo-staging" }
 	],
+	"funtoo_mk2_prime" : [
+		# allow overlays to override gentoo
+		{ "repo" : "flora", },
+		{ "repo" : "faustoo", "src_sha1" : "d67f412668e3e6d58efdb4d802a835e6d99968bb" , 'date' : '28 Aug 2017'},
+		{ "repo" : "fusion809", "src_sha1" : "489b46557d306e93e6dc58c11e7c1da52abd34b0", 'date' : '31 Aug 2017' },
+		{ "repo" : "rh1", },
+		{ "repo" : "gentoo-staging", "src_sha1" : '80d2f3782e7f351855664919d679e94a95793a06', 'date' : '31 Aug 2017'},
+	],
 	"funtoo_prime" : [
 		# allow overlays to override gentoo
 		{ "repo" : "flora", },
@@ -200,27 +209,29 @@ kit_source_defs = {
 
 kit_groups = {
 	'prime' : [
-		{ 'name' : 'core-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime_protected' },
-		{ 'name' : 'core-hw-kit', 'branch' : 'master', 'source': 'funtoo_current' },
-		{ 'name' : 'security-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime_protected' },
-		{ 'name' : 'xorg-kit', 'branch' : '1.17-prime', 'source': 'funtoo_prime_xorg' },
-		{ 'name' : 'gnome-kit', 'branch' : '3.20-prime', 'source': 'funtoo_prime_gnome' },
-		{ 'name' : 'media-kit', 'branch' : '1.0-prime', 'source': 'funtoo_prime_media' },
-		{ 'name' : 'perl-kit', 'branch' : '5.24-prime', 'source': 'funtoo_prime_perl' },
-		{ 'name' : 'python-kit', 'branch' : '3.4-prime', 'source': 'funtoo_prime' },
+		{ 'name' : 'core-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime_protected', 'default' : True },
+		{ 'name' : 'core-hw-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True },
+		{ 'name' : 'security-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime_protected', 'default' : True },
+		{ 'name' : 'xorg-kit', 'branch' : '1.17-prime', 'source': 'funtoo_prime_xorg', 'default' : True },
+		{ 'name' : 'xorg-kit', 'branch' : '1.19-prime', 'source': 'funtoo_mk2_prime' }, # MK2
+		{ 'name' : 'gnome-kit', 'branch' : '3.20-prime', 'source': 'funtoo_prime_gnome', 'default' : True },
+		{ 'name' : 'media-kit', 'branch' : '1.0-prime', 'source': 'funtoo_prime_media', 'default' : True },
+		{ 'name' : 'perl-kit', 'branch' : '5.24-prime', 'source': 'funtoo_prime_perl', 'default' : True },
+		{ 'name' : 'python-kit', 'branch' : '3.4-prime', 'source': 'funtoo_prime', 'default' : True },
+		{ 'name' : 'python-kit', 'branch' : '3.6-prime', 'source': 'funtoo_mk2_prime' }, # MK2
 	],
 	'shared' : [
-		{ 'name' : 'php-kit', 'branch' : 'master', 'source': 'funtoo_current' },
-		{ 'name' : 'java-kit', 'branch' : 'master', 'source': 'funtoo_current' },
-		{ 'name' : 'dev-kit', 'branch' : 'master', 'source': 'funtoo_current' },
-		{ 'name' : 'kde-kit', 'branch' : 'master', 'source': 'funtoo_current' },
-		{ 'name' : 'desktop-kit', 'branch' : 'master', 'source': 'funtoo_current' },
-		{ 'name' : 'editors-kit', 'branch' : 'master', 'source': 'funtoo_current' },
-		{ 'name' : 'net-kit', 'branch' : 'master', 'source': 'funtoo_current' },
-		{ 'name' : 'text-kit', 'branch' : 'master', 'source': 'funtoo_current' },
-		{ 'name' : 'science-kit', 'branch' : 'master', 'source': 'funtoo_current' },
-		{ 'name' : 'games-kit', 'branch' : 'master', 'source': 'funtoo_current' },
-		{ 'name' : 'nokit', 'branch' : 'master', 'source': 'funtoo_current' }
+		{ 'name' : 'php-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True },
+		{ 'name' : 'java-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
+		{ 'name' : 'dev-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
+		{ 'name' : 'kde-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
+		{ 'name' : 'desktop-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
+		{ 'name' : 'editors-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
+		{ 'name' : 'net-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
+		{ 'name' : 'text-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
+		{ 'name' : 'science-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
+		{ 'name' : 'games-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
+		{ 'name' : 'nokit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  }
 	],
 	'current' : [
 		{ 'name' : 'core-kit', 'branch' : 'master', 'source': 'gentoo_current_protected' },
@@ -234,9 +245,22 @@ kit_groups = {
 }
 
 python_kit_settings = {
-	#	branch / primary python / alternate python
-	'master' :  [ "python3_6", "python2_7" ],
-	'3.4-prime' : [ "python3_4", "python2_7" ]
+	#	branch / primary python / alternate python / python mask (if any)
+	'master' :  { 
+		"primary" : "python3_6", 
+		"alternate" : "python2_7",
+		"mask" : None
+	},
+	'3.4-prime' : {
+		"primary" : "python3_4",
+		"alternate" : "python2_7",
+		"mask" : ">=dev-lang/python-3.5"
+	},
+	'3.6-prime' : { 
+		"primary" : "python3_6",
+		"alternate" : "python2_7",
+		"mask" : ">=dev-lang/python-3.7"
+	}
 }
 
 # It has already been explained how when we apply package-set rules, we process the kit_source repositories in order and
@@ -391,7 +415,14 @@ def getKitSourceInstance(kit_dict):
 # regenerating it. The kitted_catpkgs argument is a dictionary which is also written to and used to keep track of
 # catpkgs copied between runs of updateKit.
 
-def updateKit(kit_dict, kit_group, cpm_logger, db=None, create=False, push=False, now=None):
+def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=False, push=False, now=None):
+
+	if prev_kit_dict != None and kit_dict['name'] != prev_kit_dict['name']:
+		
+		# We are advancing to the next kit. For example, we just processed an xorg-kit and are now processing a python-kit. So we want to apply all our accumulated matches.
+		# If we are processing an xorg-kit again, this won't run, which is what we want. We want to keep accumulating catpkg names/matches.
+
+		cpm_logger.nextKit()
 
 	global xml_out
 
@@ -652,8 +683,8 @@ def updateKit(kit_dict, kit_group, cpm_logger, db=None, create=False, push=False
 		# all other kits -- generate multiple settings, depending on what version of python-kit is active -- epro will select the right one for us.
 		python_settings = python_kit_settings
 
-	for branch, imps in python_settings.items():
-		post_steps += [ GenPythonUse(imps[0], imps[1], "funtoo/kits/python-kit/%s" % branch) ]
+	for branch, py_settings in python_settings.items():
+		post_steps += [ GenPythonUse(py_settings, "funtoo/kits/python-kit/%s" % branch) ]
 
 	post_steps += [
 		Minify(),
@@ -669,10 +700,7 @@ def updateKit(kit_dict, kit_group, cpm_logger, db=None, create=False, push=False
 
 	tree.run(post_steps)
 	tree.gitCommit(message="updates",branch=kit_dict['branch'],push=push)
-	
-	# now activate any regexes recorded as applied so that they will be matched against (and matches skipped) for successive kits:
-	
-	cpm_logger.nextKit()
+	return tree.head()
 
 if __name__ == "__main__":
 
@@ -692,16 +720,51 @@ if __name__ == "__main__":
 
 	cpm_logger = CatPkgMatchLogger()
 
+	output_sha1s = {}
+	output_order = []
+	output_settings = {}
+
 	for kit_group in kit_order: 
 		if kit_group == None:
 			cpm_logger = CatPkgMatchLogger()
 		else:
+			prev_kit_dict = None
 			for kit_dict in kit_groups[kit_group]:
 				print("Regenerating kit ",kit_dict)
-				updateKit(kit_dict, kit_group, cpm_logger, db=db, create=not push, push=push, now=now)
+				head = updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=db, create=not push, push=push, now=now)
+				kit_name = kit_dict["name"]
+				kit_branch = kit_dict["branch"]
+				if kit_group in [ "prime", "shared"] and kit_name not in output_order:
+					output_order.append(kit_name)
+					output_settings[kit_name] = { "default" : kit_branch }
+				if kit_name not in output_sha1s:
+					output_sha1s[kit_name] = {}
+				output_sha1s[kit_name][kit_branch] = head
+				prev_kit_dict = kit_dict
 
-	print("Checking out prime versions of kits.")
+	if not os.path.exists(meta_repo.root + "/metadata"):
+		os.makedirs(meta_repo.root + "/metadata")
+
+	with open(meta_repo.root + "/metadata/kit-sha1.json", "w") as a:
+		a.write(json.dumps(output_sha1s, sort_keys=True, indent=4, ensure_ascii=False))
+
+	outf = meta_repo.root + "/metadata/kit-info.json"
+	# read first to preserve any metadata we added manually
+	k_info = {}
+	if os.path.exists(outf):
+		a = open(outf, 'r')
+		k_info = json.loads(a.read())
+		a.close()
+	k_info["kit_order"] = output_order
+	k_info["kit_settings"] = output_settings
+	with open(meta_repo.root + "/metadata/kit-info.json", "w") as a:
+		a.write(json.dumps(k_info, sort_keys=True, indent=4, ensure_ascii=False))
+
+	print("Checking out default versions of kits.")
 	for kit_dict in kit_groups['prime'] + kit_groups['shared']:
+		if 'default' not in kit_dict or kit_dict['default'] != True:
+			# skip non-default kits
+			continue
 		kit_dict["tree"].run([GitCheckout(branch=kit_dict['branch'])])
 		if push:
 			# use the github url for the submodule, for public consumption.
@@ -709,9 +772,9 @@ if __name__ == "__main__":
 	if push:
 		meta_repo.gitCommit(message="kit updates", branch="master", push=push)
 
-	if xml_out:
+	if xml_out != None and len(xml_out):
 		a = open("/home/repos/packages.xml", "wb")
-		etree.ElementTree(xml_out).write(a, encoding='utf-8', xml_declarartion=True, pretty_print=True)
+		etree.ElementTree(xml_out).write(a, encoding='utf-8', xml_declaration=True, pretty_print=True)
 		a.close()
 
 # vim: ts=4 sw=4 noet tw=140
