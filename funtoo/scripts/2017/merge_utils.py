@@ -634,7 +634,7 @@ class CatPkgMatchLogger(object):
 
 	def recordCopyToXML(self, srctree, kit, catpkg):
 		if self.xml_recorder:
-			self.xml_recorder.xml_record(srctree, catpkg)
+			self.xml_recorder.xml_record(srctree, kit, catpkg)
 
 	@property
 	def copycount(self):
