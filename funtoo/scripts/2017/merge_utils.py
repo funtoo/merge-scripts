@@ -23,7 +23,6 @@ mergeLog = open("/var/tmp/merge.log","w")
 class MergeStep(object):
 	pass
 
-
 def get_pkglist(fname):
 	if fname[0] == "/":
 		cpkg_fn = fname
@@ -591,7 +590,7 @@ def generateShardSteps(name, from_tree, to_tree, super_tree, pkgdir=None, cpm_lo
 
 class CatPkgMatchLogger(object):
 
-	def __init__(self):
+	def __init__(self, log_xml=False):
 		self._copycount = 0
 		self._matchcount = 0
 		# for string matches
@@ -600,6 +599,11 @@ class CatPkgMatchLogger(object):
 		# for regex matches
 		self._regexdict = {}
 		self._regexdict_curkit = {}
+
+		if log_xml:
+			self.xml_recorder = XMLRecorder()
+		else:
+			self.xml_recorder = None
 
 		# IMPORTANT:
 
@@ -621,6 +625,14 @@ class CatPkgMatchLogger(object):
 	# Another feature of the CatPkgMatchLoggger is that it records how many catpkgs actually were copied -- 1 for each catpkg
 	# literal, and a caller-specified number of matches for regexes. This tally is used by merge-all-kits.py to determine the
 	# total number of catpkgs copied to each kit.
+
+	def writeXML(self):
+		if self.xml_recorder:
+			self.xml_recorder.write()
+
+	def recordCopyToXML(self, srctree, catpkg):
+		if self.xml_recorder:
+			self.xml_recorder.xml_record(srctree, catpkg)
 
 	@property
 	def copycount(self):
@@ -943,11 +955,59 @@ class Tree(object):
 	def head(self):
 		return "None"
 
+class XMLRecorder(object):
+
+	def __init__(self):
+		self.xml_out = etree.Element("packages")
+
+	def write(self):
+		if os.path.exists("/home/repos"):
+			a = open("/home/repos/packages.xml", "wb")
+			etree.ElementTree(self.xml_out).write(a, encoding='utf-8', xml_declaration=True, pretty_print=True)
+			a.close()
+
+	def xml_record(self, kit, catpkg):
+		cat, pkg = catpkg.split("/")
+		catxml = self.xml_out.find("packages/category[@name='%s']" % cat)
+		if catxml == None:
+			catxml = etree.Element("category", name=cat)
+			self.xml_out.append(catxml)
+		pkgxml = self.xml_out.find("packages/category[@name='%s']/package/[@name='%s']" % (cat, pkg))
+		# remove existing
+		if pkgxml != None:
+			pkgxml.getparent().remove(pkgxml)
+		pkgxml = etree.Element("package", name=pkg, repository=kit["name"])
+		doMeta = True
+		try:
+			tpkgmeta = open("%s/%s/metadata.xml" % (kit["repo"].root, catpkg), 'rb')
+			try:
+				metatree = etree.parse(tpkgmeta)
+			except UnicodeDecodeError:
+				doMeta = False
+			tpkgmeta.close()
+			if doMeta:
+				use_vars = []
+				usexml = etree.Element("use")
+				for el in metatree.iterfind('.//flag'):
+					name = el.get("name")
+					if name != None:
+						flag = etree.Element("flag")
+						flag.attrib["name"] = name
+						flag.text = etree.tostring(el, encoding='unicode', method="text").strip()
+						usexml.append(flag)
+				pkgxml.attrib["use"] = ",".join(use_vars)
+				pkgxml.append(usexml)
+		except IOError:
+			pass
+			catxml.append(pkgxml)
+
 class GitTree(Tree):
 
 	"A Tree (git) that we can use as a source for work jobs, and/or a target for running jobs."
 
-	def __init__(self, name, branch="master", url=None, commit_sha1=None, pull=True, root=None, xml_out=None, create=False,reponame=None):
+	def __init__(self, name: object, branch: object = "master", url: object = None, commit_sha1: object = None, pull: object = True, root: object = None,
+				 create: object = False,
+				 reponame: object = None) -> object:
 
 		# note that if create=True, we are in a special 'local create' mode which is good for testing. We create the repo locally from
 		# scratch if it doesn't exist, as well as any branches. And we don't push.
@@ -956,7 +1016,6 @@ class GitTree(Tree):
 		self.root = root
 		self.url = url
 		self.merged = []
-		self.xml_out = xml_out
 		self.pull = True
 		self.reponame = reponame
 		self.create = create
@@ -1402,6 +1461,7 @@ class InsertEbuilds(MergeStep):
 				if copied:
 					# log XML here.
 					if self.cpm_logger:
+						self.cpm_logger.recordCopyToXML(self.srctree, catpkg)
 						if isinstance(self.select, regextype):
 							# If a regex was used to match the copied catpkg, record the regex and number of matches
 							self.cpm_logger.record(self.select)
@@ -1411,39 +1471,6 @@ class InsertEbuilds(MergeStep):
 					cpv = "/".join(tpkgdir.split("/")[-2:])
 					mergeLog.write("%s\n" % cpv)
 				# Record source tree of each copied catpkg to XML for later importing...
-					if desttree.xml_out != None:
-						catxml = desttree.xml_out.find("packages/category[@name='%s']" % cat)
-						if catxml == None:
-							catxml = etree.Element("category", name=cat)
-							desttree.xml_out.append(catxml)
-						pkgxml = desttree.xml_out.find("packages/category[@name='%s']/package/[@name='%s']" % ( cat ,pkg ))
-						#remove existing
-						if pkgxml != None:
-							pkgxml.getparent().remove(pkgxml)
-						pkgxml = etree.Element("package", name=pkg, repository=self.srctree.name)
-						doMeta = True
-						try:
-							tpkgmeta = open("%s/metadata.xml" % tpkgdir, 'rb')
-							try:
-								metatree=etree.parse(tpkgmeta)
-							except UnicodeDecodeError:
-								doMeta = False
-							tpkgmeta.close()
-							if doMeta:
-								use_vars = []
-								usexml = etree.Element("use")
-								for el in metatree.iterfind('.//flag'):
-									name = el.get("name")
-									if name != None:
-										flag = etree.Element("flag")
-										flag.attrib["name"] = name
-										flag.text = etree.tostring(el, encoding='unicode', method="text").strip()
-										usexml.append(flag)
-								pkgxml.attrib["use"] = ",".join(use_vars)
-								pkgxml.append(usexml)
-						except IOError:
-							pass
-						catxml.append(pkgxml)
 
 		if os.path.isdir(os.path.dirname(dest_cat_path)):
 			# only write out if profiles/ dir exists -- it doesn't with shards.

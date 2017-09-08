@@ -4,10 +4,7 @@ from merge_utils import *
 from datetime import datetime
 import json
 
-if os.path.isdir("/home/ports"):
-	xml_out = etree.Element("packages")
-else:
-	xml_out = None
+
 
 # KIT DESIGN AND DEVELOPER DOCS
 
@@ -423,8 +420,6 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 
 		cpm_logger.nextKit()
 
-	global xml_out
-
 	# get set of source repos used to grab catpkgs from:
 
 	repos = kit_dict["repo_obj"] = getKitSourceInstance(kit_dict)
@@ -442,11 +437,9 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 		print("Gentoo staging mismatch -- name is %s" % gentoo_staging["name"])
 
 	# we should now be OK to use the repo and the local branch:
-	if kit_group in [ "prime", "shared" ]:
-		kit_dict['tree'] = tree = GitTree(kit_dict['name'], kit_dict['branch'], "repos@git.funtoo.org:kits/%s.git" % kit_dict['name'], create=create, root="/var/git/dest-trees/%s" % kit_dict['name'], pull=True, xml_out=xml_out)
-	else:
-		kit_dict['tree'] = tree = GitTree(kit_dict['name'], kit_dict['branch'], "repos@git.funtoo.org:kits/%s.git" % kit_dict['name'], create=create, root="/var/git/dest-trees/%s" % kit_dict['name'], pull=True)
-	
+
+	kit_dict['tree'] = tree = GitTree(kit_dict['name'], kit_dict['branch'], "repos@git.funtoo.org:kits/%s.git" % kit_dict['name'], create=create, root="/var/git/dest-trees/%s" % kit_dict['name'], pull=True)
+
 	# Phase 1: prep the kit
 	pre_steps = [
 		GitCheckout(kit_dict['branch']),
@@ -717,7 +710,7 @@ if __name__ == "__main__":
 	else:
 		db = None
 
-	cpm_logger = CatPkgMatchLogger()
+	cpm_logger = CatPkgMatchLogger(log_xml=push)
 
 	output_sha1s = {}
 	output_order = []
@@ -725,7 +718,9 @@ if __name__ == "__main__":
 
 	for kit_group in kit_order: 
 		if kit_group == None:
-			cpm_logger = CatPkgMatchLogger()
+			if push:
+				cpm_logger.writeXML()
+			cpm_logger = CatPkgMatchLogger(log_xml=False)
 		else:
 			prev_kit_dict = None
 			for kit_dict in kit_groups[kit_group]:
@@ -771,9 +766,6 @@ if __name__ == "__main__":
 	if push:
 		meta_repo.gitCommit(message="kit updates", branch="master", push=push)
 
-	if xml_out != None and len(xml_out):
-		a = open("/home/repos/packages.xml", "wb")
-		etree.ElementTree(xml_out).write(a, encoding='utf-8', xml_declaration=True, pretty_print=True)
-		a.close()
+
 
 # vim: ts=4 sw=4 noet tw=140
