@@ -17,7 +17,7 @@ class RedirectHandler(tornado.web.RequestHandler):
 		if not result:
 			self.set_status(404)
 		else:
-			url = redirect_url % ( result.id[0], result.id[1], result.id )
+			url = self.redirect_url % ( result.id[0], result.id[1], result.id )
 			self.redirect(url, permanent=False)
 
 	@property
@@ -29,7 +29,7 @@ class RedirectHandler(tornado.web.RequestHandler):
 		return self.application.sub_db.session
    
    
-   # Remove the session when we are done...
+	# Remove the session when we are done...
 
 	def finish(self,chunk=None):
 		tornado.web.RequestHandler.finish(self,chunk)
