@@ -104,12 +104,12 @@ def next_uri(uri_expand):
 
 def fastpull_index(outfile,distfile):
 	# add to fastpull.
-	d1 = distfile.id[0]
-	d2 = distfile.id[1]
+	d1 = distfile.rand_id[0]
+	d2 = distfile.rand_id[1]
 	outdir = os.path.join("/home/mirror/fastpull", d1, d2)
 	if not os.path.exists(outdir):
 		os.makedirs(outdir)
-	fastpull_outfile = os.path.join(outdir, distfile.id)
+	fastpull_outfile = os.path.join(outdir, distfile.rand_id)
 	if os.path.lexists(fastpull_outfile):
 		os.unlink(fastpull_outfile)
 	os.link(outfile, fastpull_outfile)
@@ -165,10 +165,12 @@ async def get_file(t_name,q):
 			if sha == d.id:
 				# success! we can record our good work and break out of this loop...
 				d.last_fetched_on = datetime.utcnow()
+				d.rand_id = ''.join(random.choice('abcdef0123456789') for _ in range(128))
 				session = db.session
 				session.merge(d)
 				session.commit()
 				fastpull_index(outfile,d)
+				os.unlink(outfile)
 			else:
 				fail_mode = "digest"
 
@@ -210,10 +212,10 @@ async def get_more_distfiles(q):
 		#query = db.session.query(Distfile).filter(Distfile.last_fetched_on == None).filter(or_(Distfile.last_attempted_on == None, Distfile.last_attempted_on < time_cutoff)).limit(query_size)
 		query = db.session.query(Distfile)
 		# avoid repeats for each run:
-		query = query.filter(Distfile.last_attempted_on < now)
-		query = query.filter(Distfile.last_fetched_on == None)
+		query = query.filter(Distfile.last_attempted_on == None)
+		#query = query.filter(Distfile.last_fetched_on == None)
 		#query = query.filter(Distfile.failtype != "digest")
-		query = query.filter(Distfile.failtype != "http_404")
+		#query = query.filter(Distfile.failtype != "http_404")
 		#query = query.filter(Distfile.failtype.like("%SSL%"))
 		#query = query.filter(Distfile.catpkg == "x11-misc/xearth")
 		query = query.limit(query_size)

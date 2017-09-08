@@ -15,6 +15,8 @@ from portage.exception import PortageKeyError
 import grp
 import pwd
 import multiprocessing
+import random
+import string
 
 debug = False
 
@@ -372,7 +374,7 @@ class CatPkgScan(MergeStep):
 					fail.kit = cur_overlay.name
 					fail.branch = cur_overlay.branch
 					fail.src_uri = s_out
-					fail.failtype = "no_sha512" if f in no_sha512 else "missing"
+					fail.failtype = "nosha512" if f in no_sha512 else "missing"
 					fail.fail_on = self.now
 					merged_fail = session.merge(fail)
 					print("BAD!!! %s in MANIFEST: " % fail.failtype, pkg, f )
