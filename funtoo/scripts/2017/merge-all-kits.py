@@ -472,7 +472,7 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 			# grab all ebuilds to put in nokit
 			steps += [ InsertEbuilds(repo_dict["repo"], select_only=select_clause, skip=None, replace=False, cpm_logger=cpm_logger) ]
 		else:
-			steps += generateShardSteps(kit_dict['name'], repo_dict["repo"], tree, gentoo_staging, select=select_clause, pkgdir=funtoo_overlay.root+"/funtoo/scripts", insert_kwargs=repo_dict["options"], cpm_logger=cpm_logger)
+			steps += generateShardSteps(kit_dict['name'], repo_dict["repo"], tree, gentoo_staging, select_only=select_clause, pkgdir=funtoo_overlay.root+"/funtoo/scripts", insert_kwargs=repo_dict["options"], cpm_logger=cpm_logger)
 		tree.run(steps)
 		if copycount != cpm_logger.copycount:
 			# this means some catpkgs were installed from the repo we are currently processing. This means we also want to execute
