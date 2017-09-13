@@ -632,9 +632,9 @@ class CatPkgMatchLogger(object):
 		if self.xml_recorder:
 			self.xml_recorder.write()
 
-	def recordCopyToXML(self, srctree, catpkg):
+	def recordCopyToXML(self, srctree, kit, catpkg):
 		if self.xml_recorder:
-			self.xml_recorder.xml_record(srctree, catpkg)
+			self.xml_recorder.xml_record(srctree, kit, catpkg)
 
 	@property
 	def copycount(self):
@@ -963,12 +963,12 @@ class XMLRecorder(object):
 		self.xml_out = etree.Element("packages")
 
 	def write(self):
-		if os.path.exists("/home/repos"):
-			a = open("/home/repos/packages.xml", "wb")
+		if os.path.exists("/home/ports"):
+			a = open("/home/ports/packages.xml", "wb")
 			etree.ElementTree(self.xml_out).write(a, encoding='utf-8', xml_declaration=True, pretty_print=True)
 			a.close()
 
-	def xml_record(self, kit, catpkg):
+	def xml_record(self, repo, kit, catpkg):
 		cat, pkg = catpkg.split("/")
 		catxml = self.xml_out.find("packages/category[@name='%s']" % cat)
 		if catxml == None:
@@ -978,10 +978,10 @@ class XMLRecorder(object):
 		# remove existing
 		if pkgxml != None:
 			pkgxml.getparent().remove(pkgxml)
-		pkgxml = etree.Element("package", name=pkg, repository=kit["name"])
+		pkgxml = etree.Element("package", name=pkg, repository=repo.name, kit=kit.name)
 		doMeta = True
 		try:
-			tpkgmeta = open("%s/%s/metadata.xml" % (kit["repo"].root, catpkg), 'rb')
+			tpkgmeta = open("%s/%s/metadata.xml" % (repo.root, catpkg), 'rb')
 			try:
 				metatree = etree.parse(tpkgmeta)
 			except UnicodeDecodeError:
@@ -1001,7 +1001,7 @@ class XMLRecorder(object):
 				pkgxml.append(usexml)
 		except IOError:
 			pass
-			catxml.append(pkgxml)
+		catxml.append(pkgxml)
 
 class GitTree(Tree):
 
@@ -1463,7 +1463,7 @@ class InsertEbuilds(MergeStep):
 				if copied:
 					# log XML here.
 					if self.cpm_logger:
-						self.cpm_logger.recordCopyToXML(self.srctree, catpkg)
+						self.cpm_logger.recordCopyToXML(self.srctree, desttree, catpkg)
 						if isinstance(self.select, regextype):
 							# If a regex was used to match the copied catpkg, record the regex and number of matches
 							self.cpm_logger.record(self.select)
