@@ -522,7 +522,7 @@ def getAllMeta(metadata, dest_kit, parent_repo=None):
 						myeclasses.add(lic)
 	return myeclasses
 
-def generateShardSteps(name, from_tree, to_tree, super_tree, pkgdir=None, cpm_logger=None, insert_kwargs=None):
+def generateShardSteps(name, from_tree, to_tree, super_tree, select="all", pkgdir=None, cpm_logger=None, insert_kwargs=None):
 	steps = []
 	pkglist = []
 	pkgf = "package-sets/%s-packages" % name
@@ -535,7 +535,7 @@ def generateShardSteps(name, from_tree, to_tree, super_tree, pkgdir=None, cpm_lo
 		skip = get_pkglist(pkgf_skip)
 	for pattern in get_pkglist(pkgf):
 		if pattern.startswith("@regex@:"):
-			steps += [ InsertEbuilds(from_tree, select=re.compile(pattern[8:]), skip=skip, replace=False, cpm_logger=cpm_logger) ]
+			steps += [ InsertEbuilds(from_tree, select=re.compile(pattern[8:]), select=select, skip=skip, replace=False, cpm_logger=cpm_logger) ]
 		elif pattern.startswith("@depsincat@:"):
 			patsplit = pattern.split(":")
 			catpkg = patsplit[1]
@@ -549,7 +549,7 @@ def generateShardSteps(name, from_tree, to_tree, super_tree, pkgdir=None, cpm_lo
 			cat_pkglist = getPackagesInCatWithEclass( from_tree, cat, eclass )
 			pkglist += list(cat_pkglist)
 		elif pattern.endswith("/*"):
-			steps += [ InsertEbuilds(from_tree, select=re.compile(pattern[:-1]+".*"), skip=skip, replace=False, cpm_logger=cpm_logger) ]
+			steps += [ InsertEbuilds(from_tree, select=re.compile(pattern[:-1]+".*"), select=select, skip=skip, replace=False, cpm_logger=cpm_logger) ]
 		else:
 			pkglist.append(pattern)
 
