@@ -522,7 +522,7 @@ def getAllMeta(metadata, dest_kit, parent_repo=None):
 						myeclasses.add(lic)
 	return myeclasses
 
-def generateShardSteps(name, from_tree, to_tree, super_tree, select="all", pkgdir=None, cpm_logger=None, insert_kwargs=None):
+def generateShardSteps(name, from_tree, to_tree, super_tree, select_only="all", pkgdir=None, cpm_logger=None, insert_kwargs=None):
 	steps = []
 	pkglist = []
 	pkgf = "package-sets/%s-packages" % name
@@ -535,7 +535,7 @@ def generateShardSteps(name, from_tree, to_tree, super_tree, select="all", pkgdi
 		skip = get_pkglist(pkgf_skip)
 	for pattern in get_pkglist(pkgf):
 		if pattern.startswith("@regex@:"):
-			steps += [ InsertEbuilds(from_tree, select=re.compile(pattern[8:]), select=select, skip=skip, replace=False, cpm_logger=cpm_logger) ]
+			steps += [ InsertEbuilds(from_tree, select=re.compile(pattern[8:]), select_only=select_only, skip=skip, replace=False, cpm_logger=cpm_logger) ]
 		elif pattern.startswith("@depsincat@:"):
 			patsplit = pattern.split(":")
 			catpkg = patsplit[1]
@@ -549,7 +549,7 @@ def generateShardSteps(name, from_tree, to_tree, super_tree, select="all", pkgdi
 			cat_pkglist = getPackagesInCatWithEclass( from_tree, cat, eclass )
 			pkglist += list(cat_pkglist)
 		elif pattern.endswith("/*"):
-			steps += [ InsertEbuilds(from_tree, select=re.compile(pattern[:-1]+".*"), select=select, skip=skip, replace=False, cpm_logger=cpm_logger) ]
+			steps += [ InsertEbuilds(from_tree, select=re.compile(pattern[:-1]+".*"), select_only=select_only, skip=skip, replace=False, cpm_logger=cpm_logger) ]
 		else:
 			pkglist.append(pattern)
 
@@ -962,9 +962,9 @@ class XMLRecorder(object):
 	def __init__(self):
 		self.xml_out = etree.Element("packages")
 
-	def write(self):
-		if os.path.exists("/home/ports"):
-			a = open("/home/ports/packages.xml", "wb")
+	def write(self, fn):
+		if os.path.exists(os.path.dirname(fn)):
+			a = open(fn, "wb")
 			etree.ElementTree(self.xml_out).write(a, encoding='utf-8', xml_declaration=True, pretty_print=True)
 			a.close()
 
@@ -1364,7 +1364,7 @@ class InsertEbuilds(MergeStep):
 	
 	
 	"""
-	def __init__(self,srctree,select="all",skip=None,replace=False,categories=None,ebuildloc=None,branch=None,cpm_logger=None,cpm_ignore=False):
+	def __init__(self,srctree,select="all", select_only="all", skip=None,replace=False,categories=None,ebuildloc=None,branch=None,cpm_logger=None,cpm_ignore=False):
 		self.select = select
 		self.skip = skip
 		self.srctree = srctree
@@ -1372,6 +1372,10 @@ class InsertEbuilds(MergeStep):
 		self.categories = categories
 		self.cpm_logger = cpm_logger
 		self.cpm_ignore = cpm_ignore
+		if select_only == None:
+			self.select_only = []
+		else:
+			self.select_only = select_only
 
 		if branch != None:
 			# Allow dynamic switching to different branches/commits to grab things we want:
@@ -1425,6 +1429,9 @@ class InsertEbuilds(MergeStep):
 				pkgdir = os.path.join(catdir, pkg)
 				if not self.cpm_ignore and self.cpm_logger and self.cpm_logger.match(catpkg):
 					#already copied
+					continue
+				if self.select_only != "all" and catpkg not in self.select_only:
+					# we don't want this catpkg
 					continue
 				if not os.path.isdir(pkgdir):
 					# not a valid package dir in source overlay, so skip it
