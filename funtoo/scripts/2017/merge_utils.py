@@ -970,11 +970,15 @@ class XMLRecorder(object):
 
 	def xml_record(self, repo, kit, catpkg):
 		cat, pkg = catpkg.split("/")
-		catxml = self.xml_out.find("packages/category[@name='%s']" % cat)
+		exp = "category[@name='%s']" % cat
+		catxml = self.xml_out.find(exp)
+		print(catxml)
 		if catxml == None:
 			catxml = etree.Element("category", name=cat)
 			self.xml_out.append(catxml)
-		pkgxml = self.xml_out.find("packages/category[@name='%s']/package/[@name='%s']" % (cat, pkg))
+		pkgxml = self.xml_out.find("category[@name='%s']/package/[@name='%s']" % (cat, pkg))
+		import pdb; pdb.set_trace()
+
 		# remove existing
 		if pkgxml != None:
 			pkgxml.getparent().remove(pkgxml)

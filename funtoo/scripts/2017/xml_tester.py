@@ -14,3 +14,6 @@ k = Repo('mykit')
 
 a = XMLRecorder()
 a.xml_record(r, k, "foo-bar/oni")
+a.xml_record(r, k, "foo-bar/oni")
+print(etree.tostring(a.xml_out))
+
