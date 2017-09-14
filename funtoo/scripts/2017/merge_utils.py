@@ -977,7 +977,6 @@ class XMLRecorder(object):
 			catxml = etree.Element("category", name=cat)
 			self.xml_out.append(catxml)
 		pkgxml = self.xml_out.find("category[@name='%s']/package/[@name='%s']" % (cat, pkg))
-		import pdb; pdb.set_trace()
 
 		# remove existing
 		if pkgxml != None:
