@@ -630,7 +630,7 @@ class CatPkgMatchLogger(object):
 
 	def writeXML(self):
 		if self.xml_recorder:
-			self.xml_recorder.write()
+			self.xml_recorder.write("/home/ports/packages.xml")
 
 	def recordCopyToXML(self, srctree, kit, catpkg):
 		if self.xml_recorder:
@@ -972,7 +972,6 @@ class XMLRecorder(object):
 		cat, pkg = catpkg.split("/")
 		exp = "category[@name='%s']" % cat
 		catxml = self.xml_out.find(exp)
-		print(catxml)
 		if catxml == None:
 			catxml = etree.Element("category", name=cat)
 			self.xml_out.append(catxml)
