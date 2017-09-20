@@ -20,7 +20,7 @@ main-repo = %s
 location = %s
 ''' % (cur_name, cur_name, cur_tree)
 
-p = portage.portdbapi()
+p_global = portage.portdbapi()
 #mysettings=portage.config(env=env, config_profile_path=''))
 v = portage.vardbapi()
 
@@ -53,6 +53,7 @@ results = {
 
 p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
 mypkgs = {}
+kit_count = {}
 cp_all = p.cp_all()
 for catpkg in cp_all:
 	for pkg in p.cp_list(catpkg):
@@ -64,22 +65,45 @@ for catpkg in cp_all:
 		except PortageKeyError:
 			print("Portage key error for %s" % repr(pkg))
 			continue
-		for dep in flatten(use_reduce(aux[0]+" "+aux[1], matchall=True)):
+		try:
+			f = flatten(use_reduce(aux[0]+" "+aux[1], matchall=True))
+		except portage.exception.InvalidDependString:
+			print("bad dep string in " + pkg + ": " + aux[0] + " " + aux[1])
+			continue
+		for dep in f:
 			if len(dep) and dep[0] == "!":
 				continue
 			try:
 				mypkg = dep_getkey(dep)
 			except portage.exception.InvalidAtom:
 				continue
+			try:
+				kit = p_global.better_cache[mypkg][0].name
+			except KeyError:
+				kit = "(none)"
+			if kit == sys.argv[1]:
+				continue
 			if mypkg not in cp_all:
 				if mypkg not in mypkgs:
 					mypkgs[mypkg] = []
 				if catpkg not in mypkgs[mypkg]:
 					mypkgs[mypkg].append(catpkg)
+			if kit not in kit_count:
+				kit_count[kit] = 0
+			kit_count[kit] += 1
 print("External dependency            Packages with dependency")
 print("=============================  ================================================================")
 for pkg in sorted(mypkgs.keys()):
 	print(pkg.ljust(30), mypkgs[pkg])
 
+kit_tot = 0
+for key, val in kit_count.items():
+	kit_tot += val
+print()
+print("External Kit         Percentage")
+print("===================  ================================================================")
+
+for key in sorted(kit_count.keys()):
+	print(key.ljust(20), "%4.2f%%" % ((kit_count[key]*100)/kit_tot))
 #print(results)
 # vim: ts=4 sw=4 noet
