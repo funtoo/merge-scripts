@@ -4,8 +4,6 @@ from merge_utils import *
 from datetime import datetime
 import json
 
-
-
 # KIT DESIGN AND DEVELOPER DOCS
 
 # The maintainable model for kits is to have several source repositories that contain most of our source ebuilds/
@@ -119,10 +117,10 @@ overlays = {
 	},
 }
 
-# SUPPLEMENTAL REPOSITORIES: These are overlays that we are using but are not in KIT SOURCES. funtoo_overlay is something
+# SUPPLEMENTAL REPOSITORIES: These are overlays that we are using but are not in KIT SOURCES. merge_scripts is something
 # we are using only for profiles and other misc. things and may get phased out in the future:
 
-funtoo_overlay = GitTree("funtoo-overlay", "master", "repos@git.funtoo.org:funtoo-overlay.git")
+merge_scripts = GitTree("merge-scripts", "master", "git@github.com:funtoo/merge-scripts.git")
 fixup_repo = GitTree("kit-fixups", "master", "repos@git.funtoo.org:kits/kit-fixups.git")
 
 # OUTPUT META-REPO: This is the master repository being written to.
