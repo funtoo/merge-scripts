@@ -3,6 +3,7 @@
 from merge_utils import *
 from datetime import datetime
 import json
+from collections import defaultdict
 
 # KIT DESIGN AND DEVELOPER DOCS
 
@@ -216,20 +217,20 @@ kit_source_defs = {
 kit_groups = {
 	'prime' : [
 		{ 'name' : 'core-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime_protected', 'default' : True },
-		{ 'name' : 'core-kit', 'branch' : '1.1-prime', 'source': 'gentoo_prime_mk3_protected', 'default' : False },
+		{ 'name' : 'core-kit', 'branch' : '1.1-prime', 'source': 'gentoo_prime_mk3_protected', 'default' : False, 'dev' : True },
 		{ 'name' : 'core-hw-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True },
 		{ 'name' : 'security-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime_protected', 'default' : True },
-		{ 'name' : 'security-kit', 'branch' : '1.1-prime', 'source': 'gentoo_prime_mk3_protected', 'default' : False },
+		{ 'name' : 'security-kit', 'branch' : '1.1-prime', 'source': 'gentoo_prime_mk3_protected', 'default' : False, 'dev' : True },
 		{ 'name' : 'xorg-kit', 'branch' : '1.17-prime', 'source': 'funtoo_prime_xorg', 'default' : True },
-		{ 'name' : 'xorg-kit', 'branch' : '1.19-prime', 'source': 'funtoo_mk2_prime', 'default' : False }, # MK2
+		{ 'name' : 'xorg-kit', 'branch' : '1.19-prime', 'source': 'funtoo_mk2_prime', 'default' : False, 'prime' : True }, # MK2
 		{ 'name' : 'gnome-kit', 'branch' : '3.20-prime', 'source': 'funtoo_prime_gnome', 'default' : True },
 		{ 'name' : 'media-kit', 'branch' : '1.0-prime', 'source': 'funtoo_prime_media', 'default' : True },
-		{ 'name' : 'media-kit', 'branch' : '1.1-prime', 'source': 'funtoo_mk3_prime', default : False }, # MK2
+		{ 'name' : 'media-kit', 'branch' : '1.1-prime', 'source': 'funtoo_mk3_prime', 'default' : False, 'dev' : True }, # MK2
 		{ 'name' : 'perl-kit', 'branch' : '5.24-prime', 'source': 'funtoo_prime_perl', 'default' : True },
-		{ 'name' : 'perl-kit', 'branch' : '5.26-prime', 'source': 'funtoo_mk3_prime', 'default' : False },
+		{ 'name' : 'perl-kit', 'branch' : '5.26-prime', 'source': 'funtoo_mk3_prime', 'default' : False, 'dev' : True },
 		{ 'name' : 'python-kit', 'branch' : '3.4-prime', 'source': 'funtoo_prime', 'default' : True },
-		{ 'name' : 'python-kit', 'branch' : '3.6-prime', 'source': 'funtoo_mk2_prime', 'default' : False }, # MK2
-		{ 'name' : 'python-kit', 'branch' : '3.6.3-prime', 'source': 'funtoo_mk3_prime', default: False }, # MK3
+		{ 'name' : 'python-kit', 'branch' : '3.6-prime', 'source': 'funtoo_mk2_prime', 'default' : False, 'near-prime' : True }, # MK2
+		{ 'name' : 'python-kit', 'branch' : '3.6.3-prime', 'source': 'funtoo_mk3_prime', 'default': False, 'dev' : True }, # MK3
 	],
 	'shared' : [
 		{ 'name' : 'php-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True },
@@ -268,6 +269,11 @@ python_kit_settings = {
 		"mask" : ">=dev-lang/python-3.5"
 	},
 	'3.6-prime' : { 
+		"primary" : "python3_6",
+		"alternate" : "python2_7",
+		"mask" : ">=dev-lang/python-3.7"
+	},
+	'3.6.3-prime' : { 
 		"primary" : "python3_6",
 		"alternate" : "python2_7",
 		"mask" : ">=dev-lang/python-3.7"
@@ -733,7 +739,9 @@ if __name__ == "__main__":
 
 	output_sha1s = {}
 	output_order = []
-	output_settings = {}
+	output_settings = defaultdict(dict)
+	# just to make it easier for us setting various labels for kits:
+	output_settings_labels = defaultdict(defaultdict(list))
 
 	for kit_group in kit_order: 
 		if kit_group == None:
@@ -742,6 +750,8 @@ if __name__ == "__main__":
 			cpm_logger = CatPkgMatchLogger(log_xml=False)
 		else:
 			prev_kit_dict = None
+			# kits that are officially tagged as 'prime' -- this means that they are really prime -- branch name doesn't guarantee
+			kit_labels = defaultdict(list)
 			for kit_dict in kit_groups[kit_group]:
 				print("Regenerating kit ",kit_dict)
 				head = updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=db, create=not push, push=push, now=now)
@@ -749,7 +759,17 @@ if __name__ == "__main__":
 				kit_branch = kit_dict["branch"]
 				if kit_group in [ "prime", "shared"] and kit_name not in output_order:
 					output_order.append(kit_name)
-					output_settings[kit_name] = { "default" : kit_branch }
+					if 'default' in kit_dict and kit_dict['default'] == True:
+						output_settings[kit_name]["default"] = kit_branch
+						# default branches are automatically set to a prime kit
+						output_settings_labels[kit_name]["prime"].append(kit_branch)
+						prime_kits.append(kit_branch
+				elif kit_group in [ "current" ]:
+					output_settings_labels[kit_name]["current"].append(kit_branch)
+				# specific keywords that can be set for each branch to identify its current quality level
+				for keyword in [ 'prime', 'dev' 'beta' 'near-prime' ]:
+					if keyword in kit_dict and kit_dict[keyword] == True:
+						output_settings_labels[kit_name][keyword].append(kit_branch)
 				if kit_name not in output_sha1s:
 					output_sha1s[kit_name] = {}
 				output_sha1s[kit_name][kit_branch] = head
@@ -769,7 +789,8 @@ if __name__ == "__main__":
 		k_info = json.loads(a.read())
 		a.close()
 	k_info["kit_order"] = output_order
-	k_info["kit_settings"] = output_settings
+	output_settings.update(output_settings_labels)
+	k_info["kit_settings"] = output_settings.update(output_settings_labels)
 	with open(meta_repo.root + "/metadata/kit-info.json", "w") as a:
 		a.write(json.dumps(k_info, sort_keys=True, indent=4, ensure_ascii=False))
 
