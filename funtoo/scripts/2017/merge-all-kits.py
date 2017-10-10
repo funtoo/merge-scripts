@@ -160,6 +160,14 @@ kit_source_defs = {
 		{ "repo" : "rh1", },
 		{ "repo" : "gentoo-staging", "src_sha1" : '80d2f3782e7f351855664919d679e94a95793a06', 'date' : '31 Aug 2017'},
 	],
+	"funtoo_mk3_prime" : [
+		# allow overlays to override gentoo
+		{ "repo" : "flora", },
+		{ "repo" : "faustoo", "src_sha1" : "12ad881de89f5d35251f930d0eadfd163df9153a" , 'date' : '03 Oct 2017'},
+		{ "repo" : "fusion809", "src_sha1" : "8733034816d3932486cb593db2dfbfbc7577e28b", 'date' : '09 Oct 2017' },
+		{ "repo" : "rh1", },
+		{ "repo" : "gentoo-staging", "src_sha1" : '2de4b388863ab0dbbd291422aa556c9de646f1ff', 'date' : '10 Oct 2017'},
+	],
 	"funtoo_prime" : [
 		# allow overlays to override gentoo
 		{ "repo" : "flora", },
@@ -167,6 +175,10 @@ kit_source_defs = {
 		{ "repo" : "fusion809", "src_sha1" : "8322bcd79d47ef81f7417c324a1a2b4772020985" },
 		{ "repo" : "rh1", },
 		{ "repo" : "gentoo-staging", "src_sha1" : '06a1fd99a3ce1dd33724e11ae9f81c5d0364985e', 'date' : '21 Apr 2017'},
+	],
+	"gentoo_prime_protected_mk3" : [
+		# lock down core-kit and security-kit
+		{ "repo" : "gentoo-staging", "src_sha1" : '2de4b388863ab0dbbd291422aa556c9de646f1ff', 'date' : '10 Oct 2017'},
 	],
 	"gentoo_prime_protected" : [
 		# lock down core-kit and security-kit
@@ -204,16 +216,20 @@ kit_source_defs = {
 kit_groups = {
 	'prime' : [
 		{ 'name' : 'core-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime_protected', 'default' : True },
+		{ 'name' : 'core-kit', 'branch' : '1.1-prime', 'source': 'gentoo_prime_mk3_protected', 'default' : False },
 		{ 'name' : 'core-hw-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True },
 		{ 'name' : 'security-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime_protected', 'default' : True },
+		{ 'name' : 'security-kit', 'branch' : '1.1-prime', 'source': 'gentoo_prime_mk3_protected', 'default' : False },
 		{ 'name' : 'xorg-kit', 'branch' : '1.17-prime', 'source': 'funtoo_prime_xorg', 'default' : True },
-		{ 'name' : 'xorg-kit', 'branch' : '1.19-prime', 'source': 'funtoo_mk2_prime' }, # MK2
+		{ 'name' : 'xorg-kit', 'branch' : '1.19-prime', 'source': 'funtoo_mk2_prime', 'default' : False }, # MK2
 		{ 'name' : 'gnome-kit', 'branch' : '3.20-prime', 'source': 'funtoo_prime_gnome', 'default' : True },
 		{ 'name' : 'media-kit', 'branch' : '1.0-prime', 'source': 'funtoo_prime_media', 'default' : True },
-		{ 'name' : 'media-kit', 'branch' : '2.0-prime', 'source': 'funtoo_mk2_prime' }, # MK2
+		{ 'name' : 'media-kit', 'branch' : '1.1-prime', 'source': 'funtoo_mk3_prime', default : False }, # MK2
 		{ 'name' : 'perl-kit', 'branch' : '5.24-prime', 'source': 'funtoo_prime_perl', 'default' : True },
+		{ 'name' : 'perl-kit', 'branch' : '5.26-prime', 'source': 'funtoo_mk3_prime', 'default' : False },
 		{ 'name' : 'python-kit', 'branch' : '3.4-prime', 'source': 'funtoo_prime', 'default' : True },
-		{ 'name' : 'python-kit', 'branch' : '3.6-prime', 'source': 'funtoo_mk2_prime' }, # MK2
+		{ 'name' : 'python-kit', 'branch' : '3.6-prime', 'source': 'funtoo_mk2_prime', 'default' : False }, # MK2
+		{ 'name' : 'python-kit', 'branch' : '3.6.3-prime', 'source': 'funtoo_mk3_prime', default: False }, # MK3
 	],
 	'shared' : [
 		{ 'name' : 'php-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True },
