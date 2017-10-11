@@ -206,6 +206,39 @@ location = %s
 					mypkgs = mypkgs.union(getDependencies(cur_overlay, mypkg, levels=levels, cur_level=cur_level+1))
 	return mypkgs
 
+def getPackagesWithEclass(cur_overlay, eclass):
+	cur_tree = cur_overlay.root
+	try:
+		with open(os.path.join(cur_tree, 'profiles/repo_name')) as f:
+			cur_name = f.readline().strip()
+	except FileNotFoundError:
+			cur_name = cur_overlay.name
+	env = os.environ.copy()
+	env['PORTAGE_REPOSITORIES'] = '''
+[DEFAULT]
+main-repo = %s
+
+[%s]
+location = %s
+''' % (cur_name, cur_name, cur_tree)
+	p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
+	p.frozen = False
+	mypkgs = set()
+	for catpkg in p.cp_all():
+		for pkg in p.cp_list(catpkg):
+			if pkg == '':
+				print("No match for %s" % catpkg)
+				continue
+			try:
+				aux = p.aux_get(pkg, ["INHERITED"])
+			except PortageKeyError:
+				print("Portage key error for %s" % repr(pkg))
+				continue
+			if eclass in aux[0].split():
+				if eclass not in mypkgs:
+					mypkgs.add(catpkg)
+	return mypkgs
+
 def getPackagesInCatWithEclass(cur_overlay, cat, eclass):
 	cur_tree = cur_overlay.root
 	try:
@@ -543,6 +576,11 @@ def generateShardSteps(name, from_tree, to_tree, super_tree, select_only="all", 
 			if len(patsplit) == 3:
 				dep_pkglist, dep_pkglist_nomatch = filterInCategory(dep_pkglist, patsplit[2])
 			pkglist += list(dep_pkglist)
+		elif pattern.startswith("@has_eclass@:"):
+			patsplit = pattern.split(":")
+			eclass = patsplit[1]
+			eclass_pkglist = getPackagesWithEclass( from_tree, eclass )
+			pkglist += list(cat_pkglist)
 		elif pattern.startswith("@cat_has_eclass@:"):
 			patsplit = pattern.split(":")
 			cat, eclass = patsplit[1:]

@@ -224,6 +224,7 @@ kit_groups = {
 		{ 'name' : 'xorg-kit', 'branch' : '1.17-prime', 'source': 'funtoo_prime_xorg', 'default' : True },
 		{ 'name' : 'xorg-kit', 'branch' : '1.19-prime', 'source': 'funtoo_mk2_prime', 'default' : False, 'prime' : True }, # MK2
 		{ 'name' : 'gnome-kit', 'branch' : '3.20-prime', 'source': 'funtoo_prime_gnome', 'default' : True },
+		{ 'name' : 'kde-kit', 'branch' : '5.10-prime', 'source': 'funtoo_mk3_prime', 'default' : True  },
 		{ 'name' : 'media-kit', 'branch' : '1.0-prime', 'source': 'funtoo_prime_media', 'default' : True },
 		{ 'name' : 'media-kit', 'branch' : '1.1-prime', 'source': 'funtoo_mk3_prime', 'default' : False, 'dev' : True }, # MK2
 		{ 'name' : 'perl-kit', 'branch' : '5.24-prime', 'source': 'funtoo_prime_perl', 'default' : True },
@@ -236,7 +237,6 @@ kit_groups = {
 		{ 'name' : 'php-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True },
 		{ 'name' : 'java-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
 		{ 'name' : 'dev-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
-		{ 'name' : 'kde-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
 		{ 'name' : 'desktop-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
 		{ 'name' : 'editors-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
 		{ 'name' : 'net-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
@@ -250,6 +250,7 @@ kit_groups = {
 		{ 'name' : 'security-kit', 'branch' : 'master', 'source': 'gentoo_current_protected' },
 		{ 'name' : 'xorg-kit', 'branch' : 'master', 'source': 'funtoo_current' },
 		{ 'name' : 'gnome-kit', 'branch' : 'master', 'source': 'funtoo_current' },
+		{ 'name' : 'kde-kit', 'branch' : 'master', 'source': 'funtoo_current' },
 		{ 'name' : 'media-kit', 'branch' : 'master', 'source': 'funtoo_current' },
 		{ 'name' : 'perl-kit', 'branch' : 'master', 'source': 'funtoo_current' },
 		{ 'name' : 'python-kit', 'branch' : 'master', 'source': 'funtoo_current' },
