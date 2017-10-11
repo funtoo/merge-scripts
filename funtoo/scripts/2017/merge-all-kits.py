@@ -177,7 +177,7 @@ kit_source_defs = {
 		{ "repo" : "rh1", },
 		{ "repo" : "gentoo-staging", "src_sha1" : '06a1fd99a3ce1dd33724e11ae9f81c5d0364985e', 'date' : '21 Apr 2017'},
 	],
-	"gentoo_prime_protected_mk3" : [
+	"gentoo_prime_mk3_protected" : [
 		# lock down core-kit and security-kit
 		{ "repo" : "gentoo-staging", "src_sha1" : '2de4b388863ab0dbbd291422aa556c9de646f1ff', 'date' : '10 Oct 2017'},
 	],
@@ -740,8 +740,6 @@ if __name__ == "__main__":
 	output_sha1s = {}
 	output_order = []
 	output_settings = defaultdict(dict)
-	# just to make it easier for us setting various labels for kits:
-	output_settings_labels = defaultdict(defaultdict(list))
 
 	for kit_group in kit_order: 
 		if kit_group == None:
@@ -762,14 +760,19 @@ if __name__ == "__main__":
 					if 'default' in kit_dict and kit_dict['default'] == True:
 						output_settings[kit_name]["default"] = kit_branch
 						# default branches are automatically set to a prime kit
-						output_settings_labels[kit_name]["prime"].append(kit_branch)
-						prime_kits.append(kit_branch
+						if "prime" not in output_settings[kit_name]:
+							output_settings[kit_name]["prime"] = []
+						output_settings[kit_name]["prime"].append(kit_branch)
 				elif kit_group in [ "current" ]:
-					output_settings_labels[kit_name]["current"].append(kit_branch)
+					if "current" not in output_settings[kit_name]:
+						output_settings[kit_name]["current"] = []
+					output_settings[kit_name]["current"].append(kit_branch)
 				# specific keywords that can be set for each branch to identify its current quality level
 				for keyword in [ 'prime', 'dev' 'beta' 'near-prime' ]:
+					if keyword not in output_settings[kit_name]:
+						output_settings[kit_name][keyword] = []
 					if keyword in kit_dict and kit_dict[keyword] == True:
-						output_settings_labels[kit_name][keyword].append(kit_branch)
+						output_settings[kit_name][keyword].append(kit_branch)
 				if kit_name not in output_sha1s:
 					output_sha1s[kit_name] = {}
 				output_sha1s[kit_name][kit_branch] = head
@@ -789,8 +792,7 @@ if __name__ == "__main__":
 		k_info = json.loads(a.read())
 		a.close()
 	k_info["kit_order"] = output_order
-	output_settings.update(output_settings_labels)
-	k_info["kit_settings"] = output_settings.update(output_settings_labels)
+	k_info["kit_settings"] = output_settings
 	with open(meta_repo.root + "/metadata/kit-info.json", "w") as a:
 		a.write(json.dumps(k_info, sort_keys=True, indent=4, ensure_ascii=False))
 
@@ -805,7 +807,5 @@ if __name__ == "__main__":
 			meta_repo.gitSubmoduleAddOrUpdate(kit_dict["tree"], "kits/%s" % kit_dict["name"], "https://github.com/funtoo/%s.git" % kit_dict["name"])
 	if push:
 		meta_repo.gitCommit(message="kit updates", branch="master", push=push)
-
-
 
 # vim: ts=4 sw=4 noet tw=140
