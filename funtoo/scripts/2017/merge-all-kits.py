@@ -769,9 +769,9 @@ if __name__ == "__main__":
 					output_settings[kit_name]["current"].append(kit_branch)
 				# specific keywords that can be set for each branch to identify its current quality level
 				for keyword in [ 'prime', 'dev' 'beta' 'near-prime' ]:
-					if keyword not in output_settings[kit_name]:
-						output_settings[kit_name][keyword] = []
 					if keyword in kit_dict and kit_dict[keyword] == True:
+						if keyword not in output_settings[kit_name]:
+							output_settings[kit_name][keyword] = []
 						output_settings[kit_name][keyword].append(kit_branch)
 				if kit_name not in output_sha1s:
 					output_sha1s[kit_name] = {}
