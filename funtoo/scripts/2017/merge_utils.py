@@ -580,7 +580,7 @@ def generateShardSteps(name, from_tree, to_tree, super_tree, select_only="all", 
 			patsplit = pattern.split(":")
 			eclass = patsplit[1]
 			eclass_pkglist = getPackagesWithEclass( from_tree, eclass )
-			pkglist += list(cat_pkglist)
+			pkglist += list(eclass_pkglist)
 		elif pattern.startswith("@cat_has_eclass@:"):
 			patsplit = pattern.split(":")
 			cat, eclass = patsplit[1:]
