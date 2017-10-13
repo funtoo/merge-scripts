@@ -4,6 +4,7 @@ from merge_utils import *
 from datetime import datetime
 import json
 from collections import defaultdict
+from enum import Enum
 
 # KIT DESIGN AND DEVELOPER DOCS
 
@@ -214,24 +215,46 @@ kit_source_defs = {
 # by a GROUP such as 'prime', a NAME, such as 'core-kit', a BRANCH, such as '1.0-prime', and a source (kit source) such
 # as 'funtoo_prime'.
 
+class KitStabilityRating(Enum):
+	PRIME = 0               # Kit is enterprise-quality
+	NEAR_PRIME = 1          # Kit is approaching enterprise-quality
+	BETA = 2                # Kit is in beta
+	ALPHA = 3               # Kit is in alpha
+	DEV = 4                 # Kit is newly created and in active development
+	CURRENT = 10            # Kit follows Gentoo currrent
+
+def KitRatingString(kit_enum):
+	if kit_enum is KitStabilityRating.PRIME:
+		return "prime"
+	elif kit_enum is KitRatingString.NEAR_PRIME:
+		return "near-prime"
+	elif kit_enum is KitRatingString.BETA:
+		return "beta"
+	elif kit_enum is KitRatingString.ALPHA:
+		return "alpha"
+	elif kit_enum is KitRatingString.DEV:
+		return "dev"
+	elif kit_enum is KitRatingString.CURRENT:
+		return "current"
+
 kit_groups = {
 	'prime' : [
 		{ 'name' : 'core-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime_protected', 'default' : True },
-		{ 'name' : 'core-kit', 'branch' : '1.1-prime', 'source': 'gentoo_prime_mk3_protected', 'default' : False, 'dev' : True },
+		{ 'name' : 'core-kit', 'branch' : '1.1-prime', 'source': 'gentoo_prime_mk3_protected', 'stability' : KitStabilityRating.DEV },
 		{ 'name' : 'core-hw-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True },
 		{ 'name' : 'security-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime_protected', 'default' : True },
-		{ 'name' : 'security-kit', 'branch' : '1.1-prime', 'source': 'gentoo_prime_mk3_protected', 'default' : False, 'dev' : True },
+		{ 'name' : 'security-kit', 'branch' : '1.1-prime', 'source': 'gentoo_prime_mk3_protected', 'stability' : KitStabilityRating.DEV },
 		{ 'name' : 'xorg-kit', 'branch' : '1.17-prime', 'source': 'funtoo_prime_xorg', 'default' : True },
-		{ 'name' : 'xorg-kit', 'branch' : '1.19-prime', 'source': 'funtoo_mk2_prime', 'default' : False, 'prime' : True }, # MK2
+		{ 'name' : 'xorg-kit', 'branch' : '1.19-prime', 'source': 'funtoo_mk2_prime', 'default' : False, 'stability' : KitStabilityRating.PRIME  }, # MK2
 		{ 'name' : 'gnome-kit', 'branch' : '3.20-prime', 'source': 'funtoo_prime_gnome', 'default' : True },
 		{ 'name' : 'kde-kit', 'branch' : '5.10-prime', 'source': 'funtoo_mk3_prime', 'default' : True  },
 		{ 'name' : 'media-kit', 'branch' : '1.0-prime', 'source': 'funtoo_prime_media', 'default' : True },
-		{ 'name' : 'media-kit', 'branch' : '1.1-prime', 'source': 'funtoo_mk3_prime', 'default' : False, 'dev' : True }, # MK2
+		{ 'name' : 'media-kit', 'branch' : '1.1-prime', 'source': 'funtoo_mk3_prime', 'default' : False, 'stability' : KitStabilityRating.DEV }, # MK2
 		{ 'name' : 'perl-kit', 'branch' : '5.24-prime', 'source': 'funtoo_prime_perl', 'default' : True },
-		{ 'name' : 'perl-kit', 'branch' : '5.26-prime', 'source': 'funtoo_mk3_prime', 'default' : False, 'dev' : True },
+		{ 'name' : 'perl-kit', 'branch' : '5.26-prime', 'source': 'funtoo_mk3_prime', 'default' : False, 'stability' : KitStabilityRating.DEV },
 		{ 'name' : 'python-kit', 'branch' : '3.4-prime', 'source': 'funtoo_prime', 'default' : True },
-		{ 'name' : 'python-kit', 'branch' : '3.6-prime', 'source': 'funtoo_mk2_prime', 'default' : False, 'near-prime' : True }, # MK2
-		{ 'name' : 'python-kit', 'branch' : '3.6.3-prime', 'source': 'funtoo_mk3_prime', 'default': False, 'dev' : True }, # MK3
+		{ 'name' : 'python-kit', 'branch' : '3.6-prime', 'source': 'funtoo_mk2_prime', 'default' : False, 'stability' : KitStabilityRating.NEAR_PRIME }, # MK2
+		{ 'name' : 'python-kit', 'branch' : '3.6.3-prime', 'source': 'funtoo_mk3_prime', 'default': False, 'stability' : KitStabilityRating.DEV }, # MK3
 	],
 	'shared' : [
 		{ 'name' : 'php-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True },
@@ -756,24 +779,24 @@ if __name__ == "__main__":
 				head = updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=db, create=not push, push=push, now=now)
 				kit_name = kit_dict["name"]
 				kit_branch = kit_dict["branch"]
+
+				if 'default' in kit_dict:
+					kit_stability = KitStabilityRating.PRIME
+				elif 'stability' in kit_dict:
+					kit_stability = kit_dict['stability']
+				elif kit_group == 'current':
+					kit_stability = KitStabilityRating.CURRENT
+				else:
+					print("Unknown kit stability")
+					sys.exit(1)
 				if kit_group in [ "prime", "shared"] and kit_name not in output_order:
 					output_order.append(kit_name)
 					if 'default' in kit_dict and kit_dict['default'] == True:
 						output_settings[kit_name]["default"] = kit_branch
-						# default branches are automatically set to a prime kit
-						if "prime" not in output_settings[kit_name]:
-							output_settings[kit_name]["prime"] = []
-						output_settings[kit_name]["prime"].append(kit_branch)
-				elif kit_group in [ "current" ]:
-					if "current" not in output_settings[kit_name]:
-						output_settings[kit_name]["current"] = []
-					output_settings[kit_name]["current"].append(kit_branch)
 				# specific keywords that can be set for each branch to identify its current quality level
-				for keyword in [ 'prime', 'dev' 'beta' 'near-prime' ]:
-					if keyword in kit_dict and kit_dict[keyword] == True:
-						if keyword not in output_settings[kit_name]:
-							output_settings[kit_name][keyword] = []
-						output_settings[kit_name][keyword].append(kit_branch)
+				if 'stability' not in output_settings[kit_name]:
+					output_settings[kit_name]['stability'] = {}
+				output_settings[kit_name]['stability'][kit_branch] = KitRatingString(kit_stability)
 				if kit_name not in output_sha1s:
 					output_sha1s[kit_name] = {}
 				output_sha1s[kit_name][kit_branch] = head
