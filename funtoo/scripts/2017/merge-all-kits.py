@@ -226,15 +226,15 @@ class KitStabilityRating(Enum):
 def KitRatingString(kit_enum):
 	if kit_enum is KitStabilityRating.PRIME:
 		return "prime"
-	elif kit_enum is KitRatingString.NEAR_PRIME:
+	elif kit_enum is KitStabilityRating.NEAR_PRIME:
 		return "near-prime"
-	elif kit_enum is KitRatingString.BETA:
+	elif kit_enum is KitStabilityRating.BETA:
 		return "beta"
-	elif kit_enum is KitRatingString.ALPHA:
+	elif kit_enum is KitStabilityRating.ALPHA:
 		return "alpha"
-	elif kit_enum is KitRatingString.DEV:
+	elif kit_enum is KitStabilityRating.DEV:
 		return "dev"
-	elif kit_enum is KitRatingString.CURRENT:
+	elif kit_enum is KitStabilityRating.CURRENT:
 		return "current"
 
 kit_groups = {
