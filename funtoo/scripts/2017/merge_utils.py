@@ -144,11 +144,10 @@ class GenPythonUse(MergeStep):
 		outpath = cur_tree + '/profiles/' + self.out_subpath + '/package.use'
 		if not os.path.exists(outpath):
 			os.makedirs(outpath)
-		a = open(outpath + "/python-use", "w")
-		for l in pkg_use:
-			if l != None:
-				a.write(l + "\n")
-		a.close()
+		with open(outpath + "/python-use", "w") as f:
+			for l in sorted(pkg_use):
+				if l != None:
+					f.write(l + "\n")
 		# for core-kit, set good defaults as well.
 		if cur_name == "core-kit":
 			outpath = cur_tree + '/profiles/' + self.out_subpath + '/make.defaults'
