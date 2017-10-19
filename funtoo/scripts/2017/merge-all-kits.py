@@ -533,7 +533,6 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 				# we have eclasses to copy over, too:
 				ec_files = {}
 				for eclass in ov["eclasses"]:
-				for eclass in ov["eclasses"]:
 					ecf = "/eclass/" + eclass + ".eclass"
 					ec_files[ecf] = ecf
 				steps += [ SyncFiles(repo_dict["repo"].root, ec_files) ]
