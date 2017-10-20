@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6ee3156a-1e15-447f-a473-9b9dbf367746" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py" afterPath="$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py" afterPath="$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py" />
-    </list>
+    <list default="true" id="6ee3156a-1e15-447f-a473-9b9dbf367746" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -19,7 +15,7 @@
         <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="214">
-              <caret line="590" column="22" lean-forward="true" selection-start-line="590" selection-start-column="22" selection-end-line="590" selection-end-column="22" />
+              <caret line="590" column="22" lean-forward="false" selection-start-line="590" selection-start-column="22" selection-end-line="590" selection-end-column="22" />
               <folding>
                 <element signature="e#20#45#0" expanded="true" />
               </folding>
@@ -30,8 +26,8 @@
       <file leaf-file-name="merge_utils.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="214">
-              <caret line="713" column="0" lean-forward="true" selection-start-line="713" selection-start-column="0" selection-end-line="713" selection-end-column="0" />
+            <state relative-caret-position="245">
+              <caret line="713" column="0" lean-forward="false" selection-start-line="713" selection-start-column="0" selection-end-line="713" selection-end-column="0" />
               <folding>
                 <element signature="e#20#31#0" expanded="true" />
               </folding>
@@ -131,7 +127,7 @@
   <component name="PropertiesComponent">
     <property name="settings.editor.selected.configurable" value="upsource.project.settings" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../ego" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -180,7 +176,14 @@
       <option name="project" value="LOCAL" />
       <updated>1508391078399</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="This needs some intense testing, but what the changes should&#10;do is as follows: if we have a fixup for catpkg foo in&#10;1.1-prime, but no catpkg foo fixup in 1.2-prime or master, &#10;then 1.2-prime and master will end up getting a version of foo&#10;from their source repos. This should prevent the need to have&#10;a version of foo in all of the kit fixup directories if you are&#10;not using the global fixup dir. Should address FL-4333.">
+      <created>1508469791062</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1508469791062</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -198,7 +201,7 @@
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32976446" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="News Feed" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.06822917" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="News Feed" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18645833" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -234,7 +237,8 @@
     <MESSAGE value="refine kit stability ratings to be more useful. Use an Enum." />
     <MESSAGE value="Fix for KitStabilityRatings." />
     <MESSAGE value="remove duplicate line." />
-    <option name="LAST_COMMIT_MESSAGE" value="remove duplicate line." />
+    <MESSAGE value="This needs some intense testing, but what the changes should&#10;do is as follows: if we have a fixup for catpkg foo in&#10;1.1-prime, but no catpkg foo fixup in 1.2-prime or master, &#10;then 1.2-prime and master will end up getting a version of foo&#10;from their source repos. This should prevent the need to have&#10;a version of foo in all of the kit fixup directories if you are&#10;not using the global fixup dir. Should address FL-4333." />
+    <option name="LAST_COMMIT_MESSAGE" value="This needs some intense testing, but what the changes should&#10;do is as follows: if we have a fixup for catpkg foo in&#10;1.1-prime, but no catpkg foo fixup in 1.2-prime or master, &#10;then 1.2-prime and master will end up getting a version of foo&#10;from their source repos. This should prevent the need to have&#10;a version of foo in all of the kit fixup directories if you are&#10;not using the global fixup dir. Should address FL-4333." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -264,7 +268,7 @@
     <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="214">
-          <caret line="590" column="22" lean-forward="true" selection-start-line="590" selection-start-column="22" selection-end-line="590" selection-end-column="22" />
+          <caret line="590" column="22" lean-forward="false" selection-start-line="590" selection-start-column="22" selection-end-line="590" selection-end-column="22" />
           <folding>
             <element signature="e#20#45#0" expanded="true" />
           </folding>
@@ -273,8 +277,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="214">
-          <caret line="713" column="0" lean-forward="true" selection-start-line="713" selection-start-column="0" selection-end-line="713" selection-end-column="0" />
+        <state relative-caret-position="245">
+          <caret line="713" column="0" lean-forward="false" selection-start-line="713" selection-start-column="0" selection-end-line="713" selection-end-column="0" />
           <folding>
             <element signature="e#20#31#0" expanded="true" />
           </folding>
