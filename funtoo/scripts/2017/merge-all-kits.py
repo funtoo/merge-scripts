@@ -591,8 +591,12 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 					})
 				]
 			steps += [
-				# here we log catpkgs to the CatPkgMatchLogger, but cpm_ignore=True tells our code to not consult the cpm_logger to determine whether to copy. Always copy -- these are fixups!	
-				InsertEbuilds(fixup_repo, ebuildloc=fixup_path, select="all", skip=None, replace=True, cpm_logger=cpm_logger, cpm_ignore=True )
+
+				# here we log catpkgs to the CatPkgMatchLogger, but cpm_ignore=True tells our code to not consult the
+				# cpm_logger to determine whether to copy. Always copy -- these are fixups!
+
+				InsertEbuilds(fixup_repo, ebuildloc=fixup_path, select="all", skip=None, replace=True,
+				              cpm_logger=cpm_logger, is_fixup=True )
 			]
 	tree.run(steps)
 

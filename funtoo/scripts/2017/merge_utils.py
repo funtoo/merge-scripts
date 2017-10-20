@@ -15,8 +15,7 @@ from portage.exception import PortageKeyError
 import grp
 import pwd
 import multiprocessing
-import random
-import string
+from collections import defaultdict
 
 debug = False
 
@@ -382,7 +381,6 @@ class CatPkgScan(MergeStep):
 				man_f = open(man_file, "r")
 				for line in man_f.readlines():
 					ls = line.split()
-					sha512_index = None
 					if len(ls) <= 3 or ls[0] != "DIST":
 						continue
 					try:
@@ -634,6 +632,18 @@ class CatPkgMatchLogger(object):
 		self._matchcount = 0
 		# for string matches
 		self._matchdict = {}
+
+		# for fixups from a non-global directory, we want the match to only apply for a particular branch. This way
+		# If xorg-kit/1.17-prime/foo/bar gets copied, we don't also need to have an xorg-kit/1.19-prime/foo/bar --
+		# the code will be smart and know that for the 1.19-prime branch, we still want to copy over foo/bar when we
+		# encounter it.
+
+		# format: 'catpkg-match' : { 'kit' : [ 'branch1', 'branch2' ] }
+		#
+		# ^^^ This means that 'catpkg-match' was copied into branch1 and branch2 of kit 'kit'. So we want to ALLOW
+		# a copy into branch3 of kit, but NOT ALLOW a copy into any successive kit (since it was already copied.)
+
+		self._fixup_matchdict = defaultdict(dict)
 		self._matchdict_curkit = {}
 		# for regex matches
 		self._regexdict = {}
@@ -681,19 +691,60 @@ class CatPkgMatchLogger(object):
 	def matchcount(self):
 		return self._matchcount
 
-	def match(self, catpkg):
+	def match(self, catpkg, kit=None, branch=None, is_fixup=False):
+		"""
+		This method tells us whether we should copy over a catpkg to a particular kit.
+		:param catpkg: the catpkg in question.
+		:param kit: The kit name being processed.
+		:param branch: The branch of the kit being processed..
+		:param is_fixup: True if we are performing a fixup, else False.
+		:return: Boolean, True if we have already copied and should not copy again, and False if we have not seen and
+		         should copy..
+		"""
+
+		# First, we'll see if we've seen it in our fixup_matchdict. We do this even if we're not a fixup ourselves.
+		if catpkg in self._fixup_matchdict:
+			if kit in self._fixup_matchdict[catpkg]:
+				if branch in self._fixup_matchdict[catpkg][kit]:
+					# We've copied this catpkg to this kit and branch before as a fixup, don't copy
+					return True
 		if catpkg in self._matchdict:
+			# Yes, we've seen it, just as a regular package copied before (non-fixup), so don't copy
 			return True
+
 		for pat, regex in self._regexdict.items():
 			if regex.match(catpkg):
+				# Seen before, don't copy
 				return True
+		# We've passed all tests -- copy this sucker!
 		return False
 
-	def record(self, match):
+	def record(self, match, kit=None, branch=None, is_fixup=False):
+		"""
+		This method records catpkgs that we are copying over, so we can determine whether or not the catpkg should be
+		copied again into later kits. In general, we only want to copy a catpkg once -- but there are exceptions, like
+		if we have different branches of the same kit, or if we have fixups. So the logic is nuanced.
+
+		:param match: Either a catpkg string or regex match.
+		:param kit:  The kit that we are processing.
+		:param branch: This is the kit branch name we are processing.
+		:param is_fixup: True if we are applying a fixup; else False.
+		:return: None
+		"""
 		if isinstance(match, regextype):
+			if is_fixup:
+				raise IndexError("Can't use regex with fixup")
 			self._regexdict_curkit[match.pattern] = match
 		else:
-			self._matchdict_curkit[match] = True
+			if match in self._fixup_matchdict:
+				# we have recorded this match in the fixup matchdict. So we will treat this as a 'fixup match' and
+				# record it here even though we're not a fixup.
+				if kit not in self._fixup_matchdict[match]:
+					self._fixup_matchdict[match][kit] = set()
+				self._fixup_matchdict[match][kit].add(branch)
+			else:
+				# otherwise, record in our regular matchdict
+				self._matchdict_curkit[match] = True
 		self._copycount += 1
 
 	def nextKit(self):
@@ -1403,14 +1454,15 @@ class InsertEbuilds(MergeStep):
 	
 	
 	"""
-	def __init__(self,srctree,select="all", select_only="all", skip=None,replace=False,categories=None,ebuildloc=None,branch=None,cpm_logger=None,cpm_ignore=False):
+	def __init__(self, srctree,select="all", select_only="all", skip=None, replace=False, categories=None,
+	             ebuildloc=None, branch=None, cpm_logger=None, is_fixup=False):
 		self.select = select
 		self.skip = skip
 		self.srctree = srctree
 		self.replace = replace
 		self.categories = categories
 		self.cpm_logger = cpm_logger
-		self.cpm_ignore = cpm_ignore
+		self.is_fixup = is_fixup
 		if select_only == None:
 			self.select_only = []
 		else:
@@ -1426,6 +1478,11 @@ class InsertEbuilds(MergeStep):
 		return "<InsertEbuilds: %s>" % self.srctree.root
 
 	def run(self,desttree):
+
+		# Just for clarification, I'm breaking these out to separate variables:
+		branch = desttree.branch
+		kit = desttree.name
+
 		if self.ebuildloc:
 			srctree_root = self.srctree.root + "/" + self.ebuildloc
 		else:
@@ -1466,7 +1523,7 @@ class InsertEbuilds(MergeStep):
 			for pkg in os.listdir(catdir):
 				catpkg = "%s/%s" % (cat,pkg)
 				pkgdir = os.path.join(catdir, pkg)
-				if not self.cpm_ignore and self.cpm_logger and self.cpm_logger.match(catpkg):
+				if self.cpm_logger and self.cpm_logger.match(catpkg, kit=kit, branch=branch, is_fixup=self.is_fixup):
 					#already copied
 					continue
 				if self.select_only != "all" and catpkg not in self.select_only:
@@ -1511,11 +1568,11 @@ class InsertEbuilds(MergeStep):
 					if self.cpm_logger:
 						self.cpm_logger.recordCopyToXML(self.srctree, desttree, catpkg)
 						if isinstance(self.select, regextype):
-							# If a regex was used to match the copied catpkg, record the regex and number of matches
-							self.cpm_logger.record(self.select)
+							# If a regex was used to match the copied catpkg, record the regex and number of matches.
+							self.cpm_logger.record(self.select, kit=kit, branch=branch, is_fixup=self.is_fixup)
 						else:
 							# otherwise, record the literal catpkg matched.
-							self.cpm_logger.record(catpkg)
+							self.cpm_logger.record(catpkg, kit=kit, branch=branch, is_fixup=self.is_fixup)
 					cpv = "/".join(tpkgdir.split("/")[-2:])
 					mergeLog.write("%s\n" % cpv)
 				# Record source tree of each copied catpkg to XML for later importing...
