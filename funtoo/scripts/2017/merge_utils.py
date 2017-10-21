@@ -713,7 +713,7 @@ class CatPkgMatchLogger(object):
 
 		for pat, regex in self._regexdict.items():
 			if regex.match(catpkg):
-				# Seen before, don't copy
+				# Seen and likely copied before, don't copy
 				return True
 		# We've passed all tests -- copy this sucker!
 		return False
@@ -1624,7 +1624,10 @@ class GenCache(MergeStep):
 	"GenCache runs egencache --update to update metadata."
 
 	def run(self,tree):
-		cmd = ["egencache", "--update", "--repo", tree.reponame if tree.reponame else tree.name, "--repositories-configuration", "[%s]\nlocation = %s" % (tree.reponame if tree.reponame else tree.name, tree.root), "--jobs", repr(multiprocessing.cpu_count()+1)]
+		cmd = ["egencache", "--update", "--repo", tree.reponame if tree.reponame else tree.name,
+		       "--repositories-configuration",
+		       "[%s]\nlocation = %s" % (tree.reponame if tree.reponame else tree.name, tree.root),
+		       "--jobs", repr(multiprocessing.cpu_count()+1)]
 		if self.cache_dir:
 			cmd += [ "--cache-dir", self.cache_dir ]
 			if not os.path.exists(self.cache_dir):

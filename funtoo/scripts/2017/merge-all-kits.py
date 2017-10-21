@@ -483,7 +483,9 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 
 	# we should now be OK to use the repo and the local branch:
 
-	kit_dict['tree'] = tree = GitTree(kit_dict['name'], kit_dict['branch'], "repos@git.funtoo.org:kits/%s.git" % kit_dict['name'], create=create, root="/var/git/dest-trees/%s" % kit_dict['name'], pull=True)
+	kit_dict['tree'] = tree = GitTree(kit_dict['name'], kit_dict['branch'],
+	                                  "repos@git.funtoo.org:kits/%s.git" % kit_dict['name'], create=create,
+	                                  root="/var/git/dest-trees/%s" % kit_dict['name'], pull=True)
 
 	# Phase 1: prep the kit
 	pre_steps = [
