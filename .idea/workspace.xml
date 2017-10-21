@@ -2,6 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6ee3156a-1e15-447f-a473-9b9dbf367746" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/funtoo/scripts/2017/tests/extra_packages.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/funtoo/scripts/2017/tests/kit-fixups/foo-kit/1.0-prime/sys-apps/foobar/foobar-1.5.ebuild" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/funtoo/scripts/2017/tests/kit-fixups/foo-kit/1.0-prime/sys-apps/foobartronic/foobartronic-1.0.ebuild" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/funtoo/scripts/2017/tests/kit-fixups/foo-kit/1.1-prime/sys-apps/foobar/foobar-1.6.ebuild" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/funtoo/scripts/2017/tests/kit-fixups/foo-kit/1.1-prime/sys-apps/funapp/funapp-2.0.ebuild" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py" afterPath="$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py" afterPath="$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py" />
@@ -13,13 +18,17 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="CoverageDataManager">
+    <SUITE FILE_PATH="coverage/merge_scripts$merge_utils.coverage" NAME="merge_utils Coverage Results" MODIFIED="1508563508607" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/funtoo/scripts/2017" />
+    <SUITE FILE_PATH="coverage/merge_scripts$Unittests_in_extra_packages_py.coverage" NAME="Unittests in extra_packages.py Coverage Results" MODIFIED="1508569876661" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/funtoo/scripts/2017/tests" />
+  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="merge-all-kits.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="merge-all-kits.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="245">
-              <caret line="241" column="48" lean-forward="false" selection-start-line="241" selection-start-column="48" selection-end-line="241" selection-end-column="48" />
+            <state relative-caret-position="260">
+              <caret line="521" column="120" lean-forward="false" selection-start-line="521" selection-start-column="120" selection-end-line="521" selection-end-column="120" />
               <folding>
                 <element signature="e#20#45#0" expanded="true" />
               </folding>
@@ -27,13 +36,75 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="merge_utils.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="fastpull_alpha_service.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/fastpull_alpha_service.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="distfile_spider_asyncio.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/distfile_spider_asyncio.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="db_core.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/db_core.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="db_config.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/db_config.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="db.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/db.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-54">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="merge_utils.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2095">
-              <caret line="1426" column="19" lean-forward="false" selection-start-line="1426" selection-start-column="6" selection-end-line="1426" selection-end-column="19" />
+            <state relative-caret-position="5444">
+              <caret line="580" column="43" lean-forward="true" selection-start-line="580" selection-start-column="43" selection-end-line="580" selection-end-column="43" />
               <folding>
                 <element signature="e#20#31#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="extra_packages.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/tests/extra_packages.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="198">
+              <caret line="11" column="24" lean-forward="true" selection-start-line="10" selection-start-column="24" selection-end-line="11" selection-end-column="24" />
+              <folding>
+                <element signature="e#20#34#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -51,6 +122,13 @@
       </file>
     </leaf>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="FindInProjectRecents">
     <findStrings>
       <find>current</find>
@@ -65,6 +143,16 @@
       <find>GenPythonUse</find>
       <find>GenCache</find>
       <find>InsertEbuilds</find>
+      <find>CatPkgMatchLog</find>
+      <find>CatPkgMatch</find>
+      <find>fixups</find>
+      <find>GitTree</find>
+      <find>from_kit</find>
+      <find>class GitTree</find>
+      <find>mergeLog</find>
+      <find>get_extra</find>
+      <find>get_pkglist</find>
+      <find>generatekit</find>
     </findStrings>
   </component>
   <component name="GhostReviewsManagerService">
@@ -79,6 +167,7 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
+        <option value="$PROJECT_DIR$/funtoo/scripts/2017/tests/extra_packages.py" />
         <option value="$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py" />
         <option value="$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py" />
       </list>
@@ -91,8 +180,9 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="960" />
     <option name="y" value="1467" />
-    <option name="width" value="1920" />
+    <option name="width" value="960" />
     <option name="height" value="1053" />
   </component>
   <component name="ProjectView">
@@ -137,6 +227,14 @@
               <item name="scripts" type="462c0819:PsiDirectoryNode" />
               <item name="2017" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="merge-scripts" type="b2602c69:ProjectViewProjectNode" />
+              <item name="merge-scripts" type="462c0819:PsiDirectoryNode" />
+              <item name="funtoo" type="462c0819:PsiDirectoryNode" />
+              <item name="scripts" type="462c0819:PsiDirectoryNode" />
+              <item name="2017" type="462c0819:PsiDirectoryNode" />
+              <item name="tests" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -144,9 +242,14 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="upsource.project.settings" />
+    <property name="settings.editor.selected.configurable" value="BashSupport" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/funtoo/scripts/2017/tests/kit-fixups/foo-kit" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -159,6 +262,51 @@
         </RuleState>
       </list>
     </option>
+  </component>
+  <component name="RunManager" selected="Python tests.Unittests in extra_packages.py">
+    <configuration name="Unittests in extra_packages.py" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/funtoo/scripts/2017/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="merge-scripts" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/funtoo/scripts/2017/tests/extra_packages.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+    </configuration>
+    <configuration name="merge_utils" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/funtoo/scripts/2017" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="merge-scripts" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
+    <list size="2">
+      <item index="0" class="java.lang.String" itemvalue="Python.merge_utils" />
+      <item index="1" class="java.lang.String" itemvalue="Python tests.Unittests in extra_packages.py" />
+    </list>
+    <recent_temporary>
+      <list size="2">
+        <item index="0" class="java.lang.String" itemvalue="Python tests.Unittests in extra_packages.py" />
+        <item index="1" class="java.lang.String" itemvalue="Python.merge_utils" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
@@ -209,32 +357,73 @@
       <option name="project" value="LOCAL" />
       <updated>1508558915027</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="lil tweaks">
+      <created>1508563476132</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1508563476132</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
+  </component>
+  <component name="TestHistory">
+    <history-entry file="Unittests_in_extra_packages_py - 2017.10.21 at 01h 04m 21s.xml">
+      <configuration name="Unittests in extra_packages.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_extra_packages_py - 2017.10.21 at 01h 04m 38s.xml">
+      <configuration name="Unittests in extra_packages.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_extra_packages_py - 2017.10.21 at 01h 05m 20s.xml">
+      <configuration name="Unittests in extra_packages.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_extra_packages_py - 2017.10.21 at 01h 05m 22s.xml">
+      <configuration name="Unittests in extra_packages.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_extra_packages_py - 2017.10.21 at 01h 05m 49s.xml">
+      <configuration name="Unittests in extra_packages.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_extra_packages_py - 2017.10.21 at 01h 06m 09s.xml">
+      <configuration name="Unittests in extra_packages.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_extra_packages_py - 2017.10.21 at 01h 06m 26s.xml">
+      <configuration name="Unittests in extra_packages.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_extra_packages_py - 2017.10.21 at 01h 07m 49s.xml">
+      <configuration name="Unittests in extra_packages.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_extra_packages_py - 2017.10.21 at 01h 09m 14s.xml">
+      <configuration name="Unittests in extra_packages.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_extra_packages_py - 2017.10.21 at 01h 11m 16s.xml">
+      <configuration name="Unittests in extra_packages.py" configurationId="tests" />
+    </history-entry>
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="1467" width="1920" height="1053" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32976446" sideWeight="0.50208336" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14561027" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16822916" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Reviews" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23768736" sideWeight="0.49791667" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32976446" sideWeight="0.50208336" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3372591" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.50428265" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.29583332" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Reviews" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23768736" sideWeight="0.49791667" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.06745182" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="News Feed" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18645833" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="News Feed" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18645833" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Concurrent Activities Diagram" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32976446" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32976446" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -255,6 +444,16 @@
     </option>
     <option name="upsourceUrl" value="https://src.funtoo.org/" />
   </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
+  </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
@@ -264,7 +463,8 @@
     <MESSAGE value="remove duplicate line." />
     <MESSAGE value="This needs some intense testing, but what the changes should&#10;do is as follows: if we have a fixup for catpkg foo in&#10;1.1-prime, but no catpkg foo fixup in 1.2-prime or master, &#10;then 1.2-prime and master will end up getting a version of foo&#10;from their source repos. This should prevent the need to have&#10;a version of foo in all of the kit fixup directories if you are&#10;not using the global fixup dir. Should address FL-4333." />
     <MESSAGE value="Add needed list comprehension for pytony's python use sort changes." />
-    <option name="LAST_COMMIT_MESSAGE" value="Add needed list comprehension for pytony's python use sort changes." />
+    <MESSAGE value="lil tweaks" />
+    <option name="LAST_COMMIT_MESSAGE" value="lil tweaks" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -319,22 +519,72 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py">
+    <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/fastpull_alpha_service.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2095">
-          <caret line="1426" column="19" lean-forward="false" selection-start-line="1426" selection-start-column="6" selection-end-line="1426" selection-end-column="19" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/distfile_spider_asyncio.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/db_core.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/db_config.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/db.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-54">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/tests/extra_packages.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="11" column="24" lean-forward="true" selection-start-line="10" selection-start-column="24" selection-end-line="11" selection-end-column="24" />
           <folding>
-            <element signature="e#20#31#0" expanded="true" />
+            <element signature="e#20#34#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="245">
-          <caret line="241" column="48" lean-forward="false" selection-start-line="241" selection-start-column="48" selection-end-line="241" selection-end-column="48" />
+        <state relative-caret-position="260">
+          <caret line="521" column="120" lean-forward="false" selection-start-line="521" selection-start-column="120" selection-end-line="521" selection-end-column="120" />
           <folding>
             <element signature="e#20#45#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5444">
+          <caret line="580" column="43" lean-forward="true" selection-start-line="580" selection-start-column="43" selection-end-line="580" selection-end-column="43" />
+          <folding>
+            <element signature="e#20#31#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -19,8 +19,6 @@ from collections import defaultdict
 
 debug = False
 
-mergeLog = open("/var/tmp/merge.log","w")
-
 class MergeStep(object):
 	pass
 
@@ -551,18 +549,22 @@ def getAllMeta(metadata, dest_kit, parent_repo=None):
 						myeclasses.add(lic)
 	return myeclasses
 
-def generateShardSteps(name, from_tree, to_tree, super_tree, select_only="all", pkgdir=None, cpm_logger=None, insert_kwargs=None):
+def generateKitSteps(kit_name, from_tree, to_tree, super_tree, select_only="all", fixup_repo=None, pkgdir=None,
+                     cpm_logger=None, insert_kwargs=None):
 	steps = []
 	pkglist = []
-	pkgf = "package-sets/%s-packages" % name
-	pkgf_skip = "package-sets/%s-skip" % name
+	pkgf = "package-sets/%s-packages" % kit_name
+	pkgf_skip = "package-sets/%s-skip" % kit_name
 	if pkgdir != None:
 		pkgf = pkgdir + "/" + pkgf
 		pkgf_skip = pkgdir + "/" + pkgf_skip
 	skip = []
+	master_pkglist = get_pkglist(pkgf)
+	if fixup_repo:
+		master_pkglist += get_extra_catpkgs_from_kit_fixups(fixup_repo, kit_name)
 	if os.path.exists(pkgf_skip):
 		skip = get_pkglist(pkgf_skip)
-	for pattern in get_pkglist(pkgf):
+	for pattern in master_pkglist:
 		if pattern.startswith("@regex@:"):
 			steps += [ InsertEbuilds(from_tree, select=re.compile(pattern[8:]), select_only=select_only, skip=skip, replace=False, cpm_logger=cpm_logger) ]
 		elif pattern.startswith("@depsincat@:"):
@@ -599,6 +601,62 @@ def generateShardSteps(name, from_tree, to_tree, super_tree, select_only="all", 
 	if pkglist:
 		steps += [ InsertEbuilds(from_tree, skip=skip, replace=False, cpm_logger=cpm_logger, **insert_kwargs) ]
 	return steps
+
+def get_extra_catpkgs_from_kit_fixups(fixup_repo, kit):
+
+	"""
+	This function will scan the specified kit directory in kit-fixups and look for catpkgs that are specified in some
+	but not all non-global directories. This list of catpkgs should be added to the kit's package set. Otherwise, the
+	catpkg will exist in some branches (the one with the fixup) but will not exist in the branches without the fixup.
+	If we use this function, then we don't need to manually add these catpkgs to the package-set for the kit manually,
+	which makes things less error prone for us.
+
+	For example:
+
+	kit-fixups/foo-kit/1.0-prime/foo/bar exists
+	kit-fixups/foo-kit/1.1-prime/foo/bar does not exist.
+
+	Without using this function to augment the package-set automatically, and without manually adding foo/bar to the
+	package-set list ourselves, foo/bar will exist in 1.0-prime but will not exist in 1.1-prime. But if we scan our
+	kit-fixups with this method, we will get a list back [ "foo/bar" ] and can add this to our package-set for foo-kit,
+	which will cause both kits to get a copy of foo/bar. 1.0-prime will get the fixup and 1.1-prime will get a copy
+	from its source repos.
+
+	:param fixup_repo:
+	:param kit:
+	:return:
+	"""
+
+	root = fixup_repo.root
+
+	def get_catpkg_list(repo_root):
+		if not os.path.exists(repo_root):
+			return
+		for cat in os.listdir(repo_root):
+			if cat in [ "profiles", "eclass", "licenses"]:
+				continue
+			if not os.path.isdir(repo_root + "/" + cat):
+				continue
+			for pkg in os.listdir(repo_root + "/" + cat):
+				yield cat+"/"+pkg
+
+	global_set = set(get_catpkg_list(root+"/"+kit+"/"+"global"))
+	non_global_kit_dirs = set(os.listdir(root+"/"+kit))
+	if "global" in non_global_kit_dirs:
+		non_global_kit_dirs.remove("global")
+	non_global_count = len(list(non_global_kit_dirs))
+
+	non_global_matches = defaultdict(int)
+
+	for non_global_branch in non_global_kit_dirs:
+		for catpkg in get_catpkg_list(root+"/"+kit+"/"+non_global_branch):
+			non_global_matches[catpkg] += 1
+	out = []
+	for catpkg, count in non_global_matches.items():
+		if count < non_global_count and catpkg not in global_set:
+			out.append(catpkg)
+	return out
+
 
 # CatPkgMatchLogger is an object that is used to keep a running record of catpkgs that were copied to kits via package-set rules.
 # As catpkgs are called, a CatPkgMatchLogger() object is called as follows:
@@ -1083,7 +1141,9 @@ class GitTree(Tree):
 
 	"A Tree (git) that we can use as a source for work jobs, and/or a target for running jobs."
 
-	def __init__(self, name: object, branch: object = "master", url: object = None, commit_sha1: object = None, pull: object = True, root: object = None,
+	def __init__(self, name: object, branch: object = "master", url: object = None, commit_sha1: object = None,
+	             pull: object = True,
+	             root: object = None,
 				 create: object = False,
 				 reponame: object = None) -> object:
 
@@ -1560,7 +1620,6 @@ class InsertEbuilds(MergeStep):
 							# otherwise, record the literal catpkg matched.
 							self.cpm_logger.record(catpkg, kit=kit, branch=branch, is_fixup=self.is_fixup)
 					cpv = "/".join(tpkgdir.split("/")[-2:])
-					mergeLog.write("%s\n" % cpv)
 				# Record source tree of each copied catpkg to XML for later importing...
 
 		if os.path.isdir(os.path.dirname(dest_cat_path)):
