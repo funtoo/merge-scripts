@@ -759,7 +759,7 @@ if __name__ == "__main__":
 		sys.exit(1)
 	else:
 		push = True if "push" in sys.argv else False
-	
+
 	if "db" in sys.argv:
 		db = getMySQLDatabase()
 	else:

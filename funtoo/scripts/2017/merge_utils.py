@@ -701,12 +701,6 @@ class CatPkgMatchLogger(object):
 		         should copy..
 		"""
 
-		# First, we'll see if we've seen it in our fixup_matchdict. We do this even if we're not a fixup ourselves.
-		if catpkg in self._fixup_matchdict:
-			if kit in self._fixup_matchdict[catpkg]:
-				if branch in self._fixup_matchdict[catpkg][kit]:
-					# We've copied this catpkg to this kit and branch before as a fixup, don't copy
-					return True
 		if catpkg in self._matchdict:
 			# Yes, we've seen it, just as a regular package copied before (non-fixup), so don't copy
 			return True
@@ -735,15 +729,8 @@ class CatPkgMatchLogger(object):
 				raise IndexError("Can't use regex with fixup")
 			self._regexdict_curkit[match.pattern] = match
 		else:
-			if match in self._fixup_matchdict:
-				# we have recorded this match in the fixup matchdict. So we will treat this as a 'fixup match' and
-				# record it here even though we're not a fixup.
-				if kit not in self._fixup_matchdict[match]:
-					self._fixup_matchdict[match][kit] = set()
-				self._fixup_matchdict[match][kit].add(branch)
-			else:
-				# otherwise, record in our regular matchdict
-				self._matchdict_curkit[match] = True
+			# otherwise, record in our regular matchdict
+			self._matchdict_curkit[match] = True
 		self._copycount += 1
 
 	def nextKit(self):
