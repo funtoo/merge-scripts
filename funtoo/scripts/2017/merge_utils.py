@@ -641,7 +641,13 @@ def get_extra_catpkgs_from_kit_fixups(fixup_repo, kit):
 				yield cat+"/"+pkg
 
 	global_set = set(get_catpkg_list(root+"/"+kit+"/"+"global"))
-	non_global_kit_dirs = set(os.listdir(root+"/"+kit))
+	out = []
+
+	try:
+		non_global_kit_dirs = set(os.listdir(root+"/"+kit))
+	except FileNotFoundError:
+		return out
+
 	if "global" in non_global_kit_dirs:
 		non_global_kit_dirs.remove("global")
 	non_global_count = len(list(non_global_kit_dirs))
@@ -651,10 +657,11 @@ def get_extra_catpkgs_from_kit_fixups(fixup_repo, kit):
 	for non_global_branch in non_global_kit_dirs:
 		for catpkg in get_catpkg_list(root+"/"+kit+"/"+non_global_branch):
 			non_global_matches[catpkg] += 1
-	out = []
+
 	for catpkg, count in non_global_matches.items():
 		if count < non_global_count and catpkg not in global_set:
 			out.append(catpkg)
+
 	return out
 
 

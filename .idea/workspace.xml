@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="6ee3156a-1e15-447f-a473-9b9dbf367746" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py" afterPath="$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py" afterPath="$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -18,11 +18,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="merge-all-kits.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="merge-all-kits.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="353">
-              <caret line="133" column="56" lean-forward="false" selection-start-line="133" selection-start-column="56" selection-end-line="133" selection-end-column="56" />
+            <state relative-caret-position="245">
+              <caret line="127" column="58" lean-forward="false" selection-start-line="127" selection-start-column="58" selection-end-line="127" selection-end-column="58" />
               <folding>
                 <element signature="e#20#45#0" expanded="true" />
               </folding>
@@ -80,11 +80,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="merge_utils.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="merge_utils.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="281">
-              <caret line="674" column="71" lean-forward="false" selection-start-line="674" selection-start-column="71" selection-end-line="674" selection-end-column="71" />
+            <state relative-caret-position="628">
+              <caret line="655" column="0" lean-forward="true" selection-start-line="655" selection-start-column="0" selection-end-line="655" selection-end-column="0" />
               <folding>
                 <element signature="e#20#31#0" expanded="true" />
               </folding>
@@ -175,8 +175,8 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/funtoo/scripts/2017/tests/extra_packages.py" />
-        <option value="$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py" />
         <option value="$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py" />
+        <option value="$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py" />
       </list>
     </option>
   </component>
@@ -403,7 +403,14 @@
       <option name="project" value="LOCAL" />
       <updated>1508654726940</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Fixing various repo urls.">
+      <created>1508655083655</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1508655083655</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -505,7 +512,8 @@
     <MESSAGE value="lil tweaks" />
     <MESSAGE value="Added a feature, along with unit test, that will scan for &#10;kit-fixups catpkgs that don't exist across all &lt;branch&gt;&#10;directoris, and auto-add these catpkgs to the package-set for&#10;the kit, so the branches without a fixup will get a copy of&#10;the fixup from the source repos, rather than just have the&#10;catpkg missing." />
     <MESSAGE value="Add support for a &quot;curated&quot; kit-fixups directory which means &quot;all&#10;branches except the master branch&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add support for a &quot;curated&quot; kit-fixups directory which means &quot;all&#10;branches except the master branch&quot;" />
+    <MESSAGE value="Fixing various repo urls." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixing various repo urls." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -696,22 +704,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py">
+    <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="281">
-          <caret line="674" column="71" lean-forward="false" selection-start-line="674" selection-start-column="71" selection-end-line="674" selection-end-column="71" />
+        <state relative-caret-position="245">
+          <caret line="127" column="58" lean-forward="false" selection-start-line="127" selection-start-column="58" selection-end-line="127" selection-end-column="58" />
           <folding>
-            <element signature="e#20#31#0" expanded="true" />
+            <element signature="e#20#45#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py">
+    <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="353">
-          <caret line="133" column="56" lean-forward="false" selection-start-line="133" selection-start-column="56" selection-end-line="133" selection-end-column="56" />
+        <state relative-caret-position="628">
+          <caret line="655" column="0" lean-forward="true" selection-start-line="655" selection-start-column="0" selection-end-line="655" selection-end-column="0" />
           <folding>
-            <element signature="e#20#45#0" expanded="true" />
+            <element signature="e#20#31#0" expanded="true" />
           </folding>
         </state>
       </provider>
