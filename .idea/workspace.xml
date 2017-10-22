@@ -2,14 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6ee3156a-1e15-447f-a473-9b9dbf367746" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/funtoo/scripts/2017/tests/extra_packages.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/funtoo/scripts/2017/tests/kit-fixups/foo-kit/1.0-prime/sys-apps/foobar/foobar-1.5.ebuild" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/funtoo/scripts/2017/tests/kit-fixups/foo-kit/1.0-prime/sys-apps/foobartronic/foobartronic-1.0.ebuild" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/funtoo/scripts/2017/tests/kit-fixups/foo-kit/1.1-prime/sys-apps/foobar/foobar-1.6.ebuild" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/funtoo/scripts/2017/tests/kit-fixups/foo-kit/1.1-prime/sys-apps/funapp/funapp-2.0.ebuild" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py" afterPath="$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py" afterPath="$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -27,8 +21,8 @@
       <file leaf-file-name="merge-all-kits.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="260">
-              <caret line="521" column="120" lean-forward="false" selection-start-line="521" selection-start-column="120" selection-end-line="521" selection-end-column="120" />
+            <state relative-caret-position="252">
+              <caret line="577" column="34" lean-forward="true" selection-start-line="577" selection-start-column="34" selection-end-line="577" selection-end-column="34" />
               <folding>
                 <element signature="e#20#45#0" expanded="true" />
               </folding>
@@ -79,7 +73,7 @@
       <file leaf-file-name="db.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/db.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-54">
+            <state relative-caret-position="0">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
@@ -89,8 +83,8 @@
       <file leaf-file-name="merge_utils.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5444">
-              <caret line="580" column="43" lean-forward="true" selection-start-line="580" selection-start-column="43" selection-end-line="580" selection-end-column="43" />
+            <state relative-caret-position="533">
+              <caret line="645" column="44" lean-forward="true" selection-start-line="645" selection-start-column="44" selection-end-line="645" selection-end-column="44" />
               <folding>
                 <element signature="e#20#31#0" expanded="true" />
               </folding>
@@ -101,8 +95,8 @@
       <file leaf-file-name="extra_packages.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/tests/extra_packages.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="11" column="24" lean-forward="true" selection-start-line="10" selection-start-column="24" selection-end-line="11" selection-end-column="24" />
+            <state relative-caret-position="450">
+              <caret line="25" column="27" lean-forward="true" selection-start-line="25" selection-start-column="27" selection-end-line="25" selection-end-column="27" />
               <folding>
                 <element signature="e#20#34#0" expanded="true" />
               </folding>
@@ -112,6 +106,16 @@
       </file>
       <file leaf-file-name="pkglist.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/pkglist.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="xml_tester.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/xml_tester.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -150,9 +154,10 @@
       <find>from_kit</find>
       <find>class GitTree</find>
       <find>mergeLog</find>
-      <find>get_extra</find>
       <find>get_pkglist</find>
       <find>generatekit</find>
+      <find>kit-fixups</find>
+      <find>get_extra</find>
     </findStrings>
   </component>
   <component name="GhostReviewsManagerService">
@@ -168,8 +173,8 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/funtoo/scripts/2017/tests/extra_packages.py" />
-        <option value="$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py" />
         <option value="$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py" />
+        <option value="$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py" />
       </list>
     </option>
   </component>
@@ -180,9 +185,9 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="960" />
-    <option name="y" value="1467" />
-    <option name="width" value="960" />
+    <option name="x" value="110" />
+    <option name="y" value="1498" />
+    <option name="width" value="1717" />
     <option name="height" value="1053" />
   </component>
   <component name="ProjectView">
@@ -201,7 +206,6 @@
     </navigator>
     <panes>
       <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -235,10 +239,30 @@
               <item name="2017" type="462c0819:PsiDirectoryNode" />
               <item name="tests" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="merge-scripts" type="b2602c69:ProjectViewProjectNode" />
+              <item name="merge-scripts" type="462c0819:PsiDirectoryNode" />
+              <item name="funtoo" type="462c0819:PsiDirectoryNode" />
+              <item name="scripts" type="462c0819:PsiDirectoryNode" />
+              <item name="2017" type="462c0819:PsiDirectoryNode" />
+              <item name="tests" type="462c0819:PsiDirectoryNode" />
+              <item name="kit-fixups" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="merge-scripts" type="b2602c69:ProjectViewProjectNode" />
+              <item name="merge-scripts" type="462c0819:PsiDirectoryNode" />
+              <item name="funtoo" type="462c0819:PsiDirectoryNode" />
+              <item name="scripts" type="462c0819:PsiDirectoryNode" />
+              <item name="2017" type="462c0819:PsiDirectoryNode" />
+              <item name="tests" type="462c0819:PsiDirectoryNode" />
+              <item name="kit-fixups" type="462c0819:PsiDirectoryNode" />
+              <item name="foo-kit" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -364,7 +388,14 @@
       <option name="project" value="LOCAL" />
       <updated>1508563476132</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Added a feature, along with unit test, that will scan for &#10;kit-fixups catpkgs that don't exist across all &lt;branch&gt;&#10;directoris, and auto-add these catpkgs to the package-set for&#10;the kit, so the branches without a fixup will get a copy of&#10;the fixup from the source repos, rather than just have the&#10;catpkg missing.">
+      <created>1508570386458</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1508570386458</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -412,10 +443,8 @@
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.29583332" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Reviews" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23768736" sideWeight="0.49791667" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.06745182" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="News Feed" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18645833" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Concurrent Activities Diagram" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32976446" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -424,7 +453,9 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.06745182" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Concurrent Activities Diagram" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32976446" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -464,13 +495,92 @@
     <MESSAGE value="This needs some intense testing, but what the changes should&#10;do is as follows: if we have a fixup for catpkg foo in&#10;1.1-prime, but no catpkg foo fixup in 1.2-prime or master, &#10;then 1.2-prime and master will end up getting a version of foo&#10;from their source repos. This should prevent the need to have&#10;a version of foo in all of the kit fixup directories if you are&#10;not using the global fixup dir. Should address FL-4333." />
     <MESSAGE value="Add needed list comprehension for pytony's python use sort changes." />
     <MESSAGE value="lil tweaks" />
-    <option name="LAST_COMMIT_MESSAGE" value="lil tweaks" />
+    <MESSAGE value="Added a feature, along with unit test, that will scan for &#10;kit-fixups catpkgs that don't exist across all &lt;branch&gt;&#10;directoris, and auto-add these catpkgs to the package-set for&#10;the kit, so the branches without a fixup will get a copy of&#10;the fixup from the source repos, rather than just have the&#10;catpkg missing." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added a feature, along with unit test, that will scan for &#10;kit-fixups catpkgs that don't exist across all &lt;branch&gt;&#10;directoris, and auto-add these catpkgs to the package-set for&#10;the kit, so the branches without a fixup will get a copy of&#10;the fixup from the source repos, rather than just have the&#10;catpkg missing." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="9378">
+          <caret line="521" column="120" lean-forward="false" selection-start-line="521" selection-start-column="120" selection-end-line="521" selection-end-column="120" />
+          <folding>
+            <element signature="e#20#45#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/fastpull_alpha_service.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/distfile_spider_asyncio.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/db_core.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/db_config.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/db.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5364">
+          <caret line="298" column="38" lean-forward="true" selection-start-line="298" selection-start-column="38" selection-end-line="298" selection-end-column="38" />
+          <folding>
+            <element signature="e#20#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/pkglist.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/tests/extra_packages.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="12" column="0" lean-forward="true" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+          <folding>
+            <element signature="e#20#34#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="10548">
@@ -511,14 +621,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/pkglist.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/fastpull_alpha_service.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -553,7 +655,23 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/db.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-54">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/xml_tester.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/pkglist.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
@@ -561,8 +679,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/tests/extra_packages.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="11" column="24" lean-forward="true" selection-start-line="10" selection-start-column="24" selection-end-line="11" selection-end-column="24" />
+        <state relative-caret-position="450">
+          <caret line="25" column="27" lean-forward="true" selection-start-line="25" selection-start-column="27" selection-end-line="25" selection-end-column="27" />
           <folding>
             <element signature="e#20#34#0" expanded="true" />
           </folding>
@@ -571,8 +689,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="260">
-          <caret line="521" column="120" lean-forward="false" selection-start-line="521" selection-start-column="120" selection-end-line="521" selection-end-column="120" />
+        <state relative-caret-position="252">
+          <caret line="577" column="34" lean-forward="true" selection-start-line="577" selection-start-column="34" selection-end-line="577" selection-end-column="34" />
           <folding>
             <element signature="e#20#45#0" expanded="true" />
           </folding>
@@ -581,8 +699,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5444">
-          <caret line="580" column="43" lean-forward="true" selection-start-line="580" selection-start-column="43" selection-end-line="580" selection-end-column="43" />
+        <state relative-caret-position="533">
+          <caret line="645" column="44" lean-forward="true" selection-start-line="645" selection-start-column="44" selection-end-line="645" selection-end-column="44" />
           <folding>
             <element signature="e#20#31#0" expanded="true" />
           </folding>

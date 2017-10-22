@@ -569,7 +569,11 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 
 	if os.path.exists(fixup_repo.root + "/eclass"):
 		steps += [ InsertEclasses(fixup_repo, select="all", skip=None) ]
-	for fixup_dir in [ "global", kit_dict["branch"] ]:
+	if kit_dict["branch"] == "master":
+		fixup_dirs = [ "global", "master" ]
+	else:
+		fixup_dirs = [ "global", "curated", kit_dict["branch"] ]
+	for fixup_dir in fixup_dirs:
 		fixup_path = kit_dict['name'] + "/" + fixup_dir
 		if os.path.exists(fixup_repo.root + "/" + fixup_path):
 			if os.path.exists(fixup_repo.root + "/" + fixup_path + "/eclass"):
