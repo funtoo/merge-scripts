@@ -18,11 +18,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="merge-all-kits.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="merge-all-kits.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="252">
-              <caret line="577" column="34" lean-forward="true" selection-start-line="577" selection-start-column="34" selection-end-line="577" selection-end-column="34" />
+            <state relative-caret-position="353">
+              <caret line="133" column="56" lean-forward="false" selection-start-line="133" selection-start-column="56" selection-end-line="133" selection-end-column="56" />
               <folding>
                 <element signature="e#20#45#0" expanded="true" />
               </folding>
@@ -80,11 +80,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="merge_utils.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="merge_utils.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="533">
-              <caret line="645" column="44" lean-forward="true" selection-start-line="645" selection-start-column="44" selection-end-line="645" selection-end-column="44" />
+            <state relative-caret-position="281">
+              <caret line="674" column="71" lean-forward="false" selection-start-line="674" selection-start-column="71" selection-end-line="674" selection-end-column="71" />
               <folding>
                 <element signature="e#20#31#0" expanded="true" />
               </folding>
@@ -158,6 +158,8 @@
       <find>generatekit</find>
       <find>kit-fixups</find>
       <find>get_extra</find>
+      <find>flora</find>
+      <find>repos@git</find>
     </findStrings>
   </component>
   <component name="GhostReviewsManagerService">
@@ -185,9 +187,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="110" />
-    <option name="y" value="1498" />
-    <option name="width" value="1717" />
+    <option name="y" value="1467" />
+    <option name="width" value="1920" />
     <option name="height" value="1053" />
   </component>
   <component name="ProjectView">
@@ -395,7 +396,14 @@
       <option name="project" value="LOCAL" />
       <updated>1508570386458</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Add support for a &quot;curated&quot; kit-fixups directory which means &quot;all&#10;branches except the master branch&quot;">
+      <created>1508654726940</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1508654726940</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -496,7 +504,8 @@
     <MESSAGE value="Add needed list comprehension for pytony's python use sort changes." />
     <MESSAGE value="lil tweaks" />
     <MESSAGE value="Added a feature, along with unit test, that will scan for &#10;kit-fixups catpkgs that don't exist across all &lt;branch&gt;&#10;directoris, and auto-add these catpkgs to the package-set for&#10;the kit, so the branches without a fixup will get a copy of&#10;the fixup from the source repos, rather than just have the&#10;catpkg missing." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added a feature, along with unit test, that will scan for &#10;kit-fixups catpkgs that don't exist across all &lt;branch&gt;&#10;directoris, and auto-add these catpkgs to the package-set for&#10;the kit, so the branches without a fixup will get a copy of&#10;the fixup from the source repos, rather than just have the&#10;catpkg missing." />
+    <MESSAGE value="Add support for a &quot;curated&quot; kit-fixups directory which means &quot;all&#10;branches except the master branch&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add support for a &quot;curated&quot; kit-fixups directory which means &quot;all&#10;branches except the master branch&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -687,22 +696,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py">
+    <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="577" column="34" lean-forward="true" selection-start-line="577" selection-start-column="34" selection-end-line="577" selection-end-column="34" />
+        <state relative-caret-position="281">
+          <caret line="674" column="71" lean-forward="false" selection-start-line="674" selection-start-column="71" selection-end-line="674" selection-end-column="71" />
           <folding>
-            <element signature="e#20#45#0" expanded="true" />
+            <element signature="e#20#31#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py">
+    <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="533">
-          <caret line="645" column="44" lean-forward="true" selection-start-line="645" selection-start-column="44" selection-end-line="645" selection-end-column="44" />
+        <state relative-caret-position="353">
+          <caret line="133" column="56" lean-forward="false" selection-start-line="133" selection-start-column="56" selection-end-line="133" selection-end-column="56" />
           <folding>
-            <element signature="e#20#31#0" expanded="true" />
+            <element signature="e#20#45#0" expanded="true" />
           </folding>
         </state>
       </provider>

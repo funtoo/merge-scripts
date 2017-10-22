@@ -123,7 +123,7 @@ overlays = {
 # we are using only for profiles and other misc. things and may get phased out in the future:
 
 merge_scripts = GitTree("merge-scripts", "master", "git@github.com:funtoo/merge-scripts.git")
-fixup_repo = GitTree("kit-fixups", "master", "repos@git.funtoo.org:kits/kit-fixups.git")
+fixup_repo = GitTree("kit-fixups", "master", "git@github.com:funtoo/kit-fixups.git")
 
 # OUTPUT META-REPO: This is the master repository being written to.
 
@@ -484,7 +484,7 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 	# we should now be OK to use the repo and the local branch:
 
 	kit_dict['tree'] = tree = GitTree(kit_dict['name'], kit_dict['branch'],
-	                                  "repos@git.funtoo.org:kits/%s.git" % kit_dict['name'], create=create,
+	                                  "git@github.com:funtoo/%s" % kit_dict['name'], create=create,
 	                                  root="/var/git/dest-trees/%s" % kit_dict['name'], pull=True)
 
 	# Phase 1: prep the kit
