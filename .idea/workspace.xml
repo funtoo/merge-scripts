@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6ee3156a-1e15-447f-a473-9b9dbf367746" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/funtoo/scripts/package-sets/ml-lang-kit" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/funtoo/scripts/package-sets/xfce-kit-packages" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -21,8 +21,8 @@
       <file leaf-file-name="merge-all-kits.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="758">
-              <caret line="70" column="85" lean-forward="false" selection-start-line="70" selection-start-column="85" selection-end-line="70" selection-end-column="85" />
+            <state relative-caret-position="845">
+              <caret line="811" column="20" lean-forward="false" selection-start-line="811" selection-start-column="20" selection-end-line="811" selection-end-column="20" />
               <folding>
                 <element signature="e#20#45#0" expanded="true" />
               </folding>
@@ -30,7 +30,17 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ml-lang-kit-packages" pinned="false" current-in-tab="true">
+      <file leaf-file-name="xfce-kit-packages" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/funtoo/scripts/package-sets/xfce-kit-packages">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="18">
+              <caret line="1" column="6" lean-forward="true" selection-start-line="1" selection-start-column="6" selection-end-line="1" selection-end-column="6" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ml-lang-kit-packages" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/funtoo/scripts/package-sets/ml-lang-kit-packages">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
@@ -123,7 +133,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>logger</find>
       <find>def match</find>
       <find>def record</find>
       <find>skip</find>
@@ -153,6 +162,7 @@
       <find>kit_order</find>
       <find>shared</find>
       <find>current</find>
+      <find>metadata</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/funtoo/scripts/2017</dir>
@@ -179,6 +189,7 @@
         <option value="$PROJECT_DIR$/funtoo/scripts/package-sets/ml-lang-kit" />
         <option value="$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py" />
         <option value="$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py" />
+        <option value="$PROJECT_DIR$/funtoo/scripts/package-sets/xfce-kit-packages" />
       </list>
     </option>
   </component>
@@ -431,7 +442,14 @@
       <option name="project" value="LOCAL" />
       <updated>1508729817121</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="necessary fix for ml-lang-kit.">
+      <created>1508729856234</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1508729856234</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -866,20 +884,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/funtoo/scripts/package-sets/ml-lang-kit-packages">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="758">
-          <caret line="70" column="85" lean-forward="false" selection-start-line="70" selection-start-column="85" selection-end-line="70" selection-end-column="85" />
+        <state relative-caret-position="845">
+          <caret line="811" column="20" lean-forward="false" selection-start-line="811" selection-start-column="20" selection-end-line="811" selection-end-column="20" />
           <folding>
             <element signature="e#20#45#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/funtoo/scripts/package-sets/ml-lang-kit-packages">
+    <entry file="file://$PROJECT_DIR$/funtoo/scripts/package-sets/xfce-kit-packages">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="18">
+          <caret line="1" column="6" lean-forward="true" selection-start-line="1" selection-start-column="6" selection-end-line="1" selection-end-column="6" />
           <folding />
         </state>
       </provider>
