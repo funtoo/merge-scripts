@@ -1,0 +1,7 @@
+dev-ruby/*
+dev-lang/ruby
+dev-lang/rubinius
+www-servers/puma
+www-servers/thin
+@regex@:virtual/ruby*
+

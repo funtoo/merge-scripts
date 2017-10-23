@@ -201,6 +201,18 @@ location = %s
 					mypkgs = mypkgs.union(getDependencies(cur_overlay, mypkg, levels=levels, cur_level=cur_level+1))
 	return mypkgs
 
+def getPackagesInCatWithMaintainer(cur_overlay, my_cat, my_email):
+	cat_root = os.path.join(cur_overlay.root, my_cat)
+	if os.path.exists(cat_root):
+		for pkgdir in os.listdir(cat_root):
+			metafile = os.path.join(cat_root, pkgdir, "metadata.xml")
+			if not os.path.exists(metafile):
+				continue
+			tree = etree.parse(metafile)
+			for email in tree.xpath('.//maintainer/email/text()'):
+				if my_email == str(email):
+					yield my_cat + "/" + pkgdir
+
 def getPackagesWithEclass(cur_overlay, eclass):
 	cur_tree = cur_overlay.root
 	try:
@@ -574,6 +586,9 @@ def generateKitSteps(kit_name, from_tree, to_tree, super_tree, select_only="all"
 			if len(patsplit) == 3:
 				dep_pkglist, dep_pkglist_nomatch = filterInCategory(dep_pkglist, patsplit[2])
 			pkglist += list(dep_pkglist)
+		elif pattern.startswith("@maintainer@:"):
+			spiff, my_cat, my_email = pattern.split(":")
+			pkglist += list(getPackagesInCatWithMaintainer(my_cat, my_email))
 		elif pattern.startswith("@has_eclass@:"):
 			patsplit = pattern.split(":")
 			eclass = patsplit[1]

@@ -170,6 +170,14 @@ kit_source_defs = {
 		{ "repo" : "rh1", },
 		{ "repo" : "gentoo-staging", "src_sha1" : '2de4b388863ab0dbbd291422aa556c9de646f1ff', 'date' : '10 Oct 2017'},
 	],
+	"funtoo_mk3_late_prime": [
+		# allow overlays to override gentoo
+		{"repo": "flora", },
+		{"repo": "faustoo", "src_sha1": "b12d1d930eef9cb811588555c2ecad43422262a3", 'date': '22 Oct 2017'},
+		{"repo": "fusion809", "src_sha1": "574f9f6f69b30f4eec7aa2eb53f55059d3c05b6a", 'date': '23 Oct 2017'},
+		{"repo": "rh1", },
+		{"repo": "gentoo-staging", "src_sha1": 'aa03020139bc129af2ad5f454640c102afa712e6', 'date': '22 Oct 2017'},
+	],
 	"funtoo_prime" : [
 		# allow overlays to override gentoo
 		{ "repo" : "flora", },
@@ -255,29 +263,22 @@ kit_groups = {
 		{ 'name' : 'python-kit', 'branch' : '3.4-prime', 'source': 'funtoo_prime', 'default' : True },
 		{ 'name' : 'python-kit', 'branch' : '3.6-prime', 'source': 'funtoo_mk2_prime', 'default' : False, 'stability' : KitStabilityRating.NEAR_PRIME }, # MK2
 		{ 'name' : 'python-kit', 'branch' : '3.6.3-prime', 'source': 'funtoo_mk3_prime', 'default': False, 'stability' : KitStabilityRating.DEV }, # MK3
-	],
-	'shared' : [
-		{ 'name' : 'php-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True },
-		{ 'name' : 'java-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
-		{ 'name' : 'dev-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
-		{ 'name' : 'desktop-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
-		{ 'name' : 'editors-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
-		{ 'name' : 'net-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
-		{ 'name' : 'text-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
-		{ 'name' : 'science-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
-		{ 'name' : 'games-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  },
-		{ 'name' : 'nokit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True  }
-	],
-	'current' : [
-		{ 'name' : 'core-kit', 'branch' : 'master', 'source': 'gentoo_current_protected' },
-		{ 'name' : 'security-kit', 'branch' : 'master', 'source': 'gentoo_current_protected' },
-		{ 'name' : 'xorg-kit', 'branch' : 'master', 'source': 'funtoo_current' },
-		{ 'name' : 'gnome-kit', 'branch' : 'master', 'source': 'funtoo_current' },
-		{ 'name' : 'kde-kit', 'branch' : 'master', 'source': 'funtoo_current' },
-		{ 'name' : 'media-kit', 'branch' : 'master', 'source': 'funtoo_current' },
-		{ 'name' : 'perl-kit', 'branch' : 'master', 'source': 'funtoo_current' },
-		{ 'name' : 'python-kit', 'branch' : 'master', 'source': 'funtoo_current' },
-	],
+		{ 'name' : 'php-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True }, # We will freeze when 7.2.0 is released...
+		{ 'name' : 'java-kit', 'branch' : '1.1-prime', 'source': 'funtoo_mk3_late_prime', 'default' : True  },
+		{ 'name' : 'ruby-kit', 'branch': '1.1-prime', 'source': 'funtoo_mk3_late_prime', 'default': True},
+		{ 'name' : 'haskell-kit', 'branch': '1.1-prime', 'source': 'funtoo_mk3_late_prime', 'default': True },
+		{ 'name' : 'ml-lang-kit', 'branch': '1.1-prime', 'source': 'funtoo_mk3_late_prime', 'default': True },
+		{ 'name' : 'lisp-scheme-kit', 'branch': '1.1-prime', 'source': 'funtoo_mk3_late_prime', 'default': True },
+		{ 'name' : 'dev-kit', 'branch' : '1.1-prime', 'source': 'funtoo_mk3_late_prime', 'default' : True },
+		{ 'name' : 'xfce-kit', 'branch': '4.12-prime', 'source': 'funtoo_mk3_late_prime', 'default': True },
+		{ 'name' : 'desktop-kit', 'branch' : '1.1-prime', 'source': 'funtoo_mk3_late_prime', 'default' : True  },
+		{ 'name' : 'editors-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True },
+		{ 'name' : 'net-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True },
+		{ 'name' : 'text-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True },
+		{ 'name' : 'science-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True },
+		{ 'name' : 'games-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True },
+		{ 'name' : 'nokit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True }
+	]
 }
 
 python_kit_settings = {
