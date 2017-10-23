@@ -310,7 +310,7 @@ python_kit_settings = {
 # over to the destination kit are *ignored*. This is implemented using a dictionary called "kitted_catpkgs".  Once a
 # catpkg is inserted into a kit, it's no longer 'available' to be inserted into successive kits, to avoid duplicates.
 
-kit_order = [ 'prime', 'shared', None, 'current' ]
+kit_order = [ 'prime' ]
 
 # We want to reset 'kitted_catpkgs' at certain points. The 'kit_order' variable below is used to control this, and we
 # normally don't need to touch it. 'kitted_order' above tells the code to generate 'prime', then 'shared' (without
@@ -744,8 +744,8 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 		GenCache( cache_dir="/var/cache/edb/%s-%s" % ( kit_dict['name'], kit_dict['branch'] ) ),
 	]
 
-	if kit_group in [ "prime", "shared" ]:
-		# doing to record distfiles in mysql only for prime + shared, not current, at least for now
+	if kit_group in [ "prime" ]:
+		# doing to record distfiles in mysql only for prime, not current, at least for now
 		post_steps += [
 			CatPkgScan(now=now, db=db)
 		]
@@ -800,7 +800,7 @@ if __name__ == "__main__":
 				else:
 					print("Unknown kit stability")
 					sys.exit(1)
-				if kit_group in [ "prime", "shared"] and kit_name not in output_order:
+				if kit_group in [ "prime" ] and kit_name not in output_order:
 					output_order.append(kit_name)
 					if 'default' in kit_dict and kit_dict['default'] == True:
 						output_settings[kit_name]["default"] = kit_branch
@@ -832,7 +832,7 @@ if __name__ == "__main__":
 		a.write(json.dumps(k_info, sort_keys=True, indent=4, ensure_ascii=False))
 
 	print("Checking out default versions of kits.")
-	for kit_dict in kit_groups['prime'] + kit_groups['shared']:
+	for kit_dict in kit_groups['prime']:
 		if 'default' not in kit_dict or kit_dict['default'] != True:
 			# skip non-default kits
 			continue

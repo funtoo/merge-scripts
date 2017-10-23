@@ -588,7 +588,7 @@ def generateKitSteps(kit_name, from_tree, to_tree, super_tree, select_only="all"
 			pkglist += list(dep_pkglist)
 		elif pattern.startswith("@maintainer@:"):
 			spiff, my_cat, my_email = pattern.split(":")
-			pkglist += list(getPackagesInCatWithMaintainer(my_cat, my_email))
+			pkglist += list(getPackagesInCatWithMaintainer( from_tree, my_cat, my_email))
 		elif pattern.startswith("@has_eclass@:"):
 			patsplit = pattern.split(":")
 			eclass = patsplit[1]
