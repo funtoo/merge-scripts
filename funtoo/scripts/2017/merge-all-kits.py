@@ -269,6 +269,7 @@ kit_groups = {
 		{ 'name' : 'haskell-kit', 'branch': '1.1-prime', 'source': 'funtoo_mk3_late_prime', 'default': True },
 		{ 'name' : 'ml-lang-kit', 'branch': '1.1-prime', 'source': 'funtoo_mk3_late_prime', 'default': True },
 		{ 'name' : 'lisp-scheme-kit', 'branch': '1.1-prime', 'source': 'funtoo_mk3_late_prime', 'default': True },
+		{ 'name' : 'lang-kit', 'branch': '1.1-prime', 'source': 'funtoo_mk3_late_prime', 'default': True },
 		{ 'name' : 'dev-kit', 'branch' : '1.1-prime', 'source': 'funtoo_mk3_late_prime', 'default' : True },
 		{ 'name' : 'xfce-kit', 'branch': '4.12-prime', 'source': 'funtoo_mk3_late_prime', 'default': True },
 		{ 'name' : 'desktop-kit', 'branch' : '1.1-prime', 'source': 'funtoo_mk3_late_prime', 'default' : True  },
