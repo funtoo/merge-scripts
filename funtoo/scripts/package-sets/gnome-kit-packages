@@ -102,6 +102,7 @@ games-puzzle/quadrapassel
 games-puzzle/swell-foop
 gnome-base/*
 gnome-extra/*
+gnome-extra/iio-sensor-proxy
 gnome-extra/nm-applet
 mail-client/evolution
 mail-client/geary
