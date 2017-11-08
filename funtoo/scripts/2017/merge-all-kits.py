@@ -803,8 +803,8 @@ if __name__ == "__main__":
 					sys.exit(1)
 				if kit_group in [ "prime" ] and kit_name not in output_order:
 					output_order.append(kit_name)
-					if 'default' in kit_dict and kit_dict['default'] == True:
-						output_settings[kit_name]["default"] = kit_branch
+				if 'default' in kit_dict and kit_dict['default'] == True:
+					output_settings[kit_name]["default"] = kit_branch
 				# specific keywords that can be set for each branch to identify its current quality level
 				if 'stability' not in output_settings[kit_name]:
 					output_settings[kit_name]['stability'] = {}
