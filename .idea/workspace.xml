@@ -20,8 +20,8 @@
       <file leaf-file-name="merge-all-kits.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="738">
-              <caret line="822" column="53" lean-forward="false" selection-start-line="822" selection-start-column="53" selection-end-line="822" selection-end-column="53" />
+            <state relative-caret-position="540">
+              <caret line="600" column="22" lean-forward="true" selection-start-line="600" selection-start-column="22" selection-end-line="600" selection-end-column="22" />
               <folding>
                 <element signature="e#20#45#0" expanded="true" />
               </folding>
@@ -91,16 +91,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="gnome-kit-packages" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/funtoo/scripts/package-sets/gnome-kit-packages">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="games-kit-packages" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/funtoo/scripts/package-sets/games-kit-packages">
           <provider selected="true" editor-type-id="text-editor">
@@ -132,7 +122,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>def match</find>
       <find>def record</find>
       <find>skip</find>
       <find>Merging in</find>
@@ -162,6 +151,7 @@
       <find>shared</find>
       <find>current</find>
       <find>metadata</find>
+      <find>licenses</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/funtoo/scripts/2017</dir>
@@ -218,7 +208,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -264,6 +253,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -272,11 +262,14 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/funtoo/scripts/package-sets" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/funtoo/scripts/2017/tests/kit-fixups/foo-kit" />
+    </key>
+    <key name="OPEN_URL_DIALOG">
+      <recent name="https://github.com/funtoo/genkernel-funtoo" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/funtoo/scripts/package-sets" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -521,7 +514,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3477255" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12101911" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12181529" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Reviews" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23768736" sideWeight="0.49791667" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -590,6 +583,32 @@
       </list>
     </option>
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
+              <option name="COLUMN_ORDER">
+                <list>
+                  <option value="0" />
+                  <option value="1" />
+                  <option value="2" />
+                  <option value="3" />
+                </list>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
@@ -618,14 +637,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/funtoo/scripts/package-sets/games-kit-packages">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/funtoo/scripts/package-sets/editors-kit-packages">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1006,10 +1017,15 @@
         </state>
       </provider>
     </entry>
+    <entry file="https://github.com/funtoo/genkernel-funtoo">
+      <provider selected="true" editor-type-id="httpFileEditor">
+        <state />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="738">
-          <caret line="822" column="53" lean-forward="false" selection-start-line="822" selection-start-column="53" selection-end-line="822" selection-end-column="53" />
+        <state relative-caret-position="540">
+          <caret line="600" column="22" lean-forward="true" selection-start-line="600" selection-start-column="22" selection-end-line="600" selection-end-column="22" />
           <folding>
             <element signature="e#20#45#0" expanded="true" />
           </folding>
