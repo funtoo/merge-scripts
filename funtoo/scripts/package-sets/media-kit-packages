@@ -7,4 +7,5 @@ media-radio/*
 media-sound/*
 media-tv/*
 media-video/*
+virtual/jack
 virtual/jpeg
