@@ -22,6 +22,7 @@ sys-devel/bc
 sys-devel/binutils
 sys-devel/binutils-config
 sys-devel/bison
+sys-devel/clang
 sys-devel/flex
 sys-devel/gcc
 sys-devel/gcc-config
