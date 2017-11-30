@@ -194,6 +194,10 @@ kit_source_defs = {
 		# lock down core-kit and security-kit
 		{ "repo" : "gentoo-staging", "src_sha1" : '06a1fd99a3ce1dd33724e11ae9f81c5d0364985e', 'date' : '21 Apr 2017'},
 	],
+	"gentoo_profiles_protected": [
+		# lock down profiles
+		{"repo": "gentoo-staging", "src_sha1": '4f1d555256f6c56ed1d3beaa1001e78ed4f340c5', 'date': '30 Nov 2017'},
+	],
 	"gentoo_current_protected" : [
 		# lock down core-kit and security-kit
 		{ "repo" : "gentoo-staging" },
@@ -714,13 +718,14 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 	
 	# Phase 4: finalize and commit
 
-	# for core-kit, we want to grab CURRENT masks, etc, which is done by the post steps. But we want to grab eclasses and catpkgs from
-	# the snapshot. So we temporarily switch to "master" for grabbing masks so they are current, and then switch back to the snapshot.
+	# for core-kit, we want to grab our snapshot of masks, which is done by the post steps. But we want to grab eclasses and catpkgs from
+	# the snapshot. So we temporarily switch to a special branch for grabbing masks so they are current, and then switch back to the snapshot.
+	# We want to point to this special snapshot in post-steps. Eventually we will merge this with our core snapshot.
 
 	if kit_dict["name"] == "core-kit":
 		prev_branch = gentoo_staging.branch
 		prev_sha1 = gentoo_staging.commit_sha1
-		gentoo_staging.initializeTree("master")
+		gentoo_staging.initializeTree(kit_source_defs["gentoo_profiles_protected"][0]["src_sha1"])
 
 	post_steps += [
 		ELTSymlinkWorkaround(),
