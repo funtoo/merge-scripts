@@ -95,8 +95,7 @@ sys-apps/usbutils
 sys-apps/util-linux
 sys-apps/which
 sys-apps/dbus
-sys-boot/boot-update
-sys-boot/efibootmgr
+sys-boot/*
 sys-libs/efivar
 sys-libs/binutils-libs
 sys-boot/grub

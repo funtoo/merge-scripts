@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="6ee3156a-1e15-447f-a473-9b9dbf367746" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py" afterPath="$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py" />
+      <change beforePath="$PROJECT_DIR$/funtoo/scripts/package-sets/core-kit-packages/core-kit-packages" afterPath="$PROJECT_DIR$/funtoo/scripts/package-sets/core-kit-packages/core-kit-packages" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -20,14 +20,24 @@
     <splitter split-orientation="horizontal" split-proportion="0.6940334">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="merge-all-kits.py" pinned="false" current-in-tab="true">
+          <file leaf-file-name="merge-all-kits.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="393">
-                  <caret line="759" column="36" lean-forward="false" selection-start-line="759" selection-start-column="36" selection-end-line="759" selection-end-column="36" />
+                <state relative-caret-position="195">
+                  <caret line="748" column="26" lean-forward="true" selection-start-line="748" selection-start-column="26" selection-end-line="748" selection-end-column="26" />
                   <folding>
                     <element signature="e#20#45#0" expanded="true" />
                   </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="core-kit-packages" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/funtoo/scripts/package-sets/core-kit-packages/core-kit-packages">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="23">
+                  <caret line="96" column="13" lean-forward="true" selection-start-line="96" selection-start-column="13" selection-end-line="96" selection-end-column="13" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -129,8 +139,8 @@
         <option value="$PROJECT_DIR$/funtoo/scripts/2017/merge_utils.py" />
         <option value="$PROJECT_DIR$/funtoo/scripts/package-sets/xfce-kit-packages" />
         <option value="$PROJECT_DIR$/funtoo/scripts/package-sets/lang-kit-packages" />
-        <option value="$PROJECT_DIR$/funtoo/scripts/package-sets/core-kit-packages/core-kit-packages" />
         <option value="$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py" />
+        <option value="$PROJECT_DIR$/funtoo/scripts/package-sets/core-kit-packages/core-kit-packages" />
       </list>
     </option>
   </component>
@@ -185,6 +195,21 @@
               <item name="funtoo" type="462c0819:PsiDirectoryNode" />
               <item name="scripts" type="462c0819:PsiDirectoryNode" />
               <item name="2017" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="merge-scripts" type="b2602c69:ProjectViewProjectNode" />
+              <item name="merge-scripts" type="462c0819:PsiDirectoryNode" />
+              <item name="funtoo" type="462c0819:PsiDirectoryNode" />
+              <item name="scripts" type="462c0819:PsiDirectoryNode" />
+              <item name="package-sets" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="merge-scripts" type="b2602c69:ProjectViewProjectNode" />
+              <item name="merge-scripts" type="462c0819:PsiDirectoryNode" />
+              <item name="funtoo" type="462c0819:PsiDirectoryNode" />
+              <item name="scripts" type="462c0819:PsiDirectoryNode" />
+              <item name="package-sets" type="462c0819:PsiDirectoryNode" />
+              <item name="core-kit-packages" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -415,7 +440,14 @@
       <option name="project" value="LOCAL" />
       <updated>1510706731674</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="FL-4364: profile fork">
+      <created>1512022040964</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1512022040964</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -457,7 +489,7 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32976446" sideWeight="0.50208336" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3372591" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34742504" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.34724408" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16600318" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -579,7 +611,8 @@
     <MESSAGE value="Making xorg-kit 1.19-prime the default xorg-kit." />
     <MESSAGE value="Fix a bug where &quot;default&quot; was not getting set for a kit if it is not&#10;the first prime kit of a particular type in kit_order." />
     <MESSAGE value="Adding repoman to core-kit packages." />
-    <option name="LAST_COMMIT_MESSAGE" value="Adding repoman to core-kit packages." />
+    <MESSAGE value="FL-4364: profile fork" />
+    <option name="LAST_COMMIT_MESSAGE" value="FL-4364: profile fork" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -917,14 +950,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/funtoo/scripts/package-sets/core-kit-packages/core-kit-packages">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="11" column="18" lean-forward="false" selection-start-line="11" selection-start-column="18" selection-end-line="11" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/funtoo/scripts/package-sets/ml-lang-kit-packages">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -969,11 +994,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/funtoo/scripts/2017/merge-all-kits.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="393">
-          <caret line="759" column="36" lean-forward="false" selection-start-line="759" selection-start-column="36" selection-end-line="759" selection-end-column="36" />
+        <state relative-caret-position="195">
+          <caret line="748" column="26" lean-forward="true" selection-start-line="748" selection-start-column="26" selection-end-line="748" selection-end-column="26" />
           <folding>
             <element signature="e#20#45#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/funtoo/scripts/package-sets/core-kit-packages/core-kit-packages">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="23">
+          <caret line="96" column="13" lean-forward="true" selection-start-line="96" selection-start-column="13" selection-end-line="96" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>
