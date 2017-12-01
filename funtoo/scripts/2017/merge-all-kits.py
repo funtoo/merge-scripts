@@ -7,8 +7,6 @@ from collections import defaultdict
 from enum import Enum
 import os
 
-fixup_repo.root = os.path.realpath(__file__)
-
 # KIT DESIGN AND DEVELOPER DOCS
 
 # The maintainable model for kits is to have several source repositories that contain most of our source ebuilds/
@@ -83,7 +81,18 @@ overlays = {
 	"faustoo" : { "type" : GitTree, "url" : "https://github.com/fmoro/faustoo.git", "eclasses" : [
 		"waf",
 		"googlecode"
-	] }, # add select ebuilds here?
+		], "select" : [
+			"dev-util/idea-community",
+			"dev-util/eclipse-sdk-bin",
+			"dev-util/phpstorm",
+			"dev-util/webstorm",
+			"dev-util/vpuml"
+			"dev-util/vpumlce",
+			"dev-ruby/capistrano"
+
+
+		]
+	}, # add select ebuilds here?
 	"fusion809" : { "type" : GitTree, "url" : "https://github.com/fusion809/fusion809-overlay.git", "select" : [
 			"app-editors/atom-bin", 
 			"app-editors/notepadqq", 
@@ -328,9 +337,7 @@ kit_order = [ 'prime' ]
 # 'regular-kits'. These actions are appended to any kit that is not core-kit or nokit. In addition to 'pre' and 'post'
 # steps, there is also a 'copy' step that is not currently used (but is supported by getKitPrepSteps()).
 
-def getKitPrepSteps(repos, kit_dict, gentoo_staging):
-
-	global fixup_repo
+def getKitPrepSteps(repos, kit_dict, gentoo_staging, fixup_repo):
 
 	kit_steps = {
 		'core-kit' : { 'pre' : [
@@ -459,7 +466,7 @@ def getKitSourceInstance(kit_dict):
 # regenerating it. The kitted_catpkgs argument is a dictionary which is also written to and used to keep track of
 # catpkgs copied between runs of updateKit.
 
-def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=False, push=False, now=None):
+def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=False, push=False, now=None, fixup_repo=None):
 
 	if prev_kit_dict != None and kit_dict['name'] != prev_kit_dict['name']:
 		
@@ -496,7 +503,7 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 		CleanTree()
 	]
 	
-	prep_steps = getKitPrepSteps(repos, kit_dict, gentoo_staging)
+	prep_steps = getKitPrepSteps(repos, kit_dict, gentoo_staging, fixup_repo)
 	pre_steps += prep_steps[0]
 	copy_steps = prep_steps[1]
 	post_steps = prep_steps[2]
@@ -781,7 +788,7 @@ if __name__ == "__main__":
 			kit_labels = defaultdict(list)
 			for kit_dict in kit_groups[kit_group]:
 				print("Regenerating kit ",kit_dict)
-				head = updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=db, create=not push, push=push, now=now)
+				head = updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=db, create=not push, push=push, now=now, fixup_repo=fixup_repo)
 				kit_name = kit_dict["name"]
 				kit_branch = kit_dict["branch"]
 
