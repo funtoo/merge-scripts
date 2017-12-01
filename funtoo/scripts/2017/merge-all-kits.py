@@ -5,6 +5,9 @@ from datetime import datetime
 import json
 from collections import defaultdict
 from enum import Enum
+import os
+
+fixup_repo.root = os.path.realpath(__file__)
 
 # KIT DESIGN AND DEVELOPER DOCS
 
@@ -194,10 +197,6 @@ kit_source_defs = {
 		# lock down core-kit and security-kit
 		{ "repo" : "gentoo-staging", "src_sha1" : '06a1fd99a3ce1dd33724e11ae9f81c5d0364985e', 'date' : '21 Apr 2017'},
 	],
-	"gentoo_profiles_protected": [
-		# lock down profiles
-		{"repo": "gentoo-staging", "src_sha1": '4f1d555256f6c56ed1d3beaa1001e78ed4f340c5', 'date': '30 Nov 2017'},
-	],
 	"gentoo_current_protected" : [
 		# lock down core-kit and security-kit
 		{ "repo" : "gentoo-staging" },
@@ -342,15 +341,13 @@ def getKitPrepSteps(repos, kit_dict, gentoo_staging):
 							],
 			'post' : [
 				# We copy files into funtoo's profile structure as post-steps because we rely on kit-fixups step to get the initial structure into place
-				# We also have special code that switches to the latest commit of gentoo_staging for this part, so we get the latest masks, etc. from 
-				# gentoo.
 				CopyAndRename("profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/subarch", "profiles/funtoo/1.0/linux-gnu/arch/pure64/subarch", lambda x: os.path.basename(x) + "-pure64"),
 				# news items are not included here anymore
-				SyncDir(gentoo_staging.root, "profiles/base"),
-				SyncDir(gentoo_staging.root, "profiles/arch/base"),
-				SyncDir(gentoo_staging.root, "profiles/updates"),
-				SyncDir(gentoo_staging.root, "metadata", exclude=["cache","md5-cache","layout.conf"]),
-				SyncFiles(gentoo_staging.root, {
+				SyncDir(fixup_repo.root, "profiles/base"),
+				SyncDir(fixup_repo.root, "profiles/arch/base"),
+				SyncDir(fixup_repo.root, "profiles/updates"),
+				SyncDir(fixup_repo.root, "metadata", exclude=["cache","md5-cache","layout.conf"]),
+				SyncFiles(fixup_repo.root, {
 					"profiles/package.mask":"profiles/package.mask/00-gentoo",
 					"profiles/arch/amd64/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/package.use.mask/01-gentoo",
 					"profiles/arch/amd64/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/use.mask/01-gentoo",
@@ -362,7 +359,7 @@ def getKitPrepSteps(repos, kit_dict, gentoo_staging):
 					"profiles/arch/amd64/no-multilib/package.mask":"profiles/funtoo/1.0/linux-gnu/arch/pure64/package.mask/01-gentoo",
 					"profiles/arch/amd64/no-multilib/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/pure64/use.mask/01-gentoo"
 				}),
-				SyncFiles(gentoo_staging.root, {
+				SyncFiles(fixup_repo.root, {
 					"profiles/info_pkgs" : "profiles/info_pkgs",
 					"profiles/thirdpartymirrors" : "profiles/thirdpartymirrors",
 					"profiles/license_groups" : "profiles/license_groups",
@@ -717,15 +714,6 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 		sys.exit(1)
 	
 	# Phase 4: finalize and commit
-
-	# for core-kit, we want to grab our snapshot of masks, which is done by the post steps. But we want to grab eclasses and catpkgs from
-	# the snapshot. So we temporarily switch to a special branch for grabbing masks so they are current, and then switch back to the snapshot.
-	# We want to point to this special snapshot in post-steps. Eventually we will merge this with our core snapshot.
-
-	if kit_dict["name"] == "core-kit":
-		prev_branch = gentoo_staging.branch
-		prev_sha1 = gentoo_staging.commit_sha1
-		gentoo_staging.initializeTree(kit_source_defs["gentoo_profiles_protected"][0]["src_sha1"])
 
 	post_steps += [
 		ELTSymlinkWorkaround(),

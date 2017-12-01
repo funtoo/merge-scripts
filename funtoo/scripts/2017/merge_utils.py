@@ -547,7 +547,7 @@ def getAllMeta(metadata, dest_kit, parent_repo=None):
 				aux = p.aux_get(cpv, ["LICENSE","INHERITED"], mytree=dest_kit.root)
 			except PortageKeyError:
 				print("Portage key error for %s" % repr(cpv))
-				raise
+				continue
 			if metadata == "INHERITED":
 				for eclass in aux[metapos].split():
 					key = eclass + ".eclass"
