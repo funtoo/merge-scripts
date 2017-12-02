@@ -562,7 +562,7 @@ def getAllMeta(metadata, dest_kit, parent_repo=None):
 	return myeclasses
 
 def generateKitSteps(kit_name, from_tree, to_tree, super_tree, select_only="all", fixup_repo=None, pkgdir=None,
-                     cpm_logger=None, insert_kwargs=None):
+                     cpm_logger=None, filter_repos=None):
 	steps = []
 	pkglist = []
 	pkgf = "package-sets/%s-packages" % kit_name
@@ -572,6 +572,8 @@ def generateKitSteps(kit_name, from_tree, to_tree, super_tree, select_only="all"
 		pkgf_skip = pkgdir + "/" + pkgf_skip
 	skip = []
 	master_pkglist = get_pkglist(pkgf)
+	if filter_repos is None:
+		filter_repos = []
 	if fixup_repo:
 		master_pkglist += get_extra_catpkgs_from_kit_fixups(fixup_repo, kit_name)
 	if os.path.exists(pkgf_skip):
@@ -604,15 +606,29 @@ def generateKitSteps(kit_name, from_tree, to_tree, super_tree, select_only="all"
 		else:
 			pkglist.append(pattern)
 
-	if not insert_kwargs:
-		insert_kwargs = { "select" : pkglist }
-	else:
-		# only allow a sub-set of catpkgs to be inserted -- no more than specified in insert_kwargs
-		if "select" in insert_kwargs:
-			s_set = set(insert_kwargs["select"])
-			p_set = set(pkglist)
-			f_set = s_set & p_set
-			insert_kwargs["select"] = list(f_set)
+	to_insert = set(pkglist)
+
+	# filter out anything that was not in the select_only argument list, if it was provided:
+	if select_only != "all":
+		p_set = set(select_only)
+		to_insert = to_insert & p_set
+
+	# filter out any catpkgs that exist in any of the filter_repos:
+	new_set = set()
+	for catpkg in to_insert:
+		skip = False
+		for filter_repo in filter_repos:
+			if filter_repo.catpkg_exists(catpkg):
+				skip = True
+				break
+		if skip:
+			continue
+		else:
+			new_set.add(catpkg)
+	to_insert = new_set
+
+	insert_kwargs = {"select": list(to_insert)}
+
 	if pkglist:
 		steps += [ InsertEbuilds(from_tree, skip=skip, replace=False, cpm_logger=cpm_logger, **insert_kwargs) ]
 	return steps
@@ -1293,6 +1309,9 @@ class GitTree(Tree):
 					continue
 				catpkgs[cat + "/" + pkg] = self.name
 		return catpkgs
+
+	def catpkg_exists(self, catpkg):
+		return os.path.exists(self.root + "/" + catpkg)
 
 	def gitCheckout(self,branch="master"):
 		runShell("(cd %s && git checkout %s)" % ( self.root, self.branch ))

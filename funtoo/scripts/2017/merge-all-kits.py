@@ -81,18 +81,10 @@ overlays = {
 	"faustoo" : { "type" : GitTree, "url" : "https://github.com/fmoro/faustoo.git", "eclasses" : [
 		"waf",
 		"googlecode"
-		], "select" : [
-			"dev-util/idea-community",
-			"dev-util/eclipse-sdk-bin",
-			"dev-util/phpstorm",
-			"dev-util/webstorm",
-			"dev-util/vpuml"
-			"dev-util/vpumlce",
-			"dev-ruby/capistrano"
-
-
-		]
-	}, # add select ebuilds here?
+		],
+	     # SKIP any catpkgs that also exist in gentoo-staging (like nvidia-drivers). All others will be copied.
+	    "filter" :  [ "gentoo-staging" ]
+	},
 	"fusion809" : { "type" : GitTree, "url" : "https://github.com/fusion809/fusion809-overlay.git", "select" : [
 			"app-editors/atom-bin", 
 			"app-editors/notepadqq", 
@@ -101,8 +93,7 @@ overlays = {
 			"app-editors/scite", 
 			"app-editors/gvim", 
 			"app-editors/vim", 
-			"app-editors/vim-core", 
-			"app-editors/visual-studio-code", 
+			"app-editors/vim-core",
 			"app-editors/sublime-text"
 		]
 	}, # FL-3633, FL-3663, FL-3776
@@ -169,7 +160,7 @@ kit_source_defs = {
 	"funtoo_mk2_prime" : [
 		# allow overlays to override gentoo
 		{ "repo" : "flora", },
-		{ "repo" : "faustoo", "src_sha1" : "d67f412668e3e6d58efdb4d802a835e6d99968bb" , 'date' : '28 Aug 2017'},
+		{ "repo" : "faustoo" },
 		{ "repo" : "fusion809", "src_sha1" : "489b46557d306e93e6dc58c11e7c1da52abd34b0", 'date' : '31 Aug 2017' },
 		{ "repo" : "rh1", },
 		{ "repo" : "gentoo-staging", "src_sha1" : '80d2f3782e7f351855664919d679e94a95793a06', 'date' : '31 Aug 2017'},
@@ -177,7 +168,7 @@ kit_source_defs = {
 	"funtoo_mk3_prime" : [
 		# allow overlays to override gentoo
 		{ "repo" : "flora", },
-		{ "repo" : "faustoo", "src_sha1" : "12ad881de89f5d35251f930d0eadfd163df9153a" , 'date' : '03 Oct 2017'},
+		{ "repo" : "faustoo", },
 		{ "repo" : "fusion809", "src_sha1" : "8733034816d3932486cb593db2dfbfbc7577e28b", 'date' : '09 Oct 2017' },
 		{ "repo" : "rh1", },
 		{ "repo" : "gentoo-staging", "src_sha1" : '2de4b388863ab0dbbd291422aa556c9de646f1ff', 'date' : '10 Oct 2017'},
@@ -185,7 +176,7 @@ kit_source_defs = {
 	"funtoo_mk3_late_prime": [
 		# allow overlays to override gentoo
 		{"repo": "flora", },
-		{"repo": "faustoo", "src_sha1": "b12d1d930eef9cb811588555c2ecad43422262a3", 'date': '22 Oct 2017'},
+		{"repo": "faustoo", },
 		{"repo": "fusion809", "src_sha1": "574f9f6f69b30f4eec7aa2eb53f55059d3c05b6a", 'date': '23 Oct 2017'},
 		{"repo": "rh1", },
 		{"repo": "gentoo-staging", "src_sha1": 'aa03020139bc129af2ad5f454640c102afa712e6', 'date': '22 Oct 2017'},
@@ -193,7 +184,7 @@ kit_source_defs = {
 	"funtoo_prime" : [
 		# allow overlays to override gentoo
 		{ "repo" : "flora", },
-		{ "repo" : "faustoo", "src_sha1" : "58c805ec0df34cfc699e6555bf317590ff9dee15" },
+		{ "repo" : "faustoo", },
 		{ "repo" : "fusion809", "src_sha1" : "8322bcd79d47ef81f7417c324a1a2b4772020985" },
 		{ "repo" : "rh1", },
 		{ "repo" : "gentoo-staging", "src_sha1" : '06a1fd99a3ce1dd33724e11ae9f81c5d0364985e', 'date' : '21 Apr 2017'},
@@ -450,15 +441,7 @@ def getKitSourceInstance(kit_dict):
 		else:
 			path = repo_name
 		repo = repo_obj(repo_name, url=repo_url, root="/var/git/source-trees/%s" % path, branch=repo_branch, commit_sha1=repo_sha1)
-
-		if "options" in source_def:
-			sro = source_def["options"].copy()
-		else:
-			sro = {}
-		if "select" in overlays[repo_name]:
-			sro["select"] = overlays[repo_name]["select"]
-
-		repos.append( { "name" : repo_name, "repo" : repo, "options" : sro } )
+		repos.append( { "name" : repo_name, "repo" : repo, "overlay_def" : overlays[repo_name] } )
 
 	return repos
 
@@ -523,14 +506,32 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 	for repo_dict in repos:
 		steps = []
 		select_clause = "all"
-		if "select" in repo_dict["options"]:
-			select_clause = repo_dict["options"]["select"]
+		overlay_def = repo_dict["overlay_def"]
+
+		if "select" in overlay_def:
+			select_clause = overlay_def["select"]
+
+		# If the repo has a "filter" : [ "foo", "bar", "oni" ], then construct a list of repos with those names and put
+		# them in filter_repos. We will pass this list of repo objects to InsertEbuilds inside generateKitSteps, and if
+		# a catpkg exists in any of these repos, then it will NOT be copied if it is scheduled to be copied for this
+		# repo. This is a way we can lock down overlays to not insert any catpkgs that are already defined in gentoo --
+		# just add: filter : [ "gentoo-staging" ] and if the catpkg exists in gentoo-staging, it won't get copied. This
+		# way we can more safely choose to include all ebuilds from 'potpurri' overlays like faustoo without exposing
+		# ourself to too much risk from messing stuff up.
+
+		filter_repos = []
+		if "filter" in overlay_def:
+			for filter_repo_name in overlay_def["filter"]:
+				for x in repos:
+					if x["name"] == filter_repo_name:
+						filter_repos.append(x["repo"])
+
 		if kit_dict["name"] == "nokit":
 			# grab all ebuilds to put in nokit
 			steps += [ InsertEbuilds(repo_dict["repo"], select_only=select_clause, skip=None, replace=False, cpm_logger=cpm_logger) ]
 		else:
 			steps += generateKitSteps(kit_dict['name'], repo_dict["repo"], tree, gentoo_staging, fixup_repo=fixup_repo, select_only=select_clause,
-			                          pkgdir=merge_scripts.root+"/funtoo/scripts", insert_kwargs=repo_dict["options"], cpm_logger=cpm_logger)
+			                          pkgdir=merge_scripts.root+"/funtoo/scripts", filter_repos=filter_repos, cpm_logger=cpm_logger)
 		tree.run(steps)
 		if copycount != cpm_logger.copycount:
 			# this means some catpkgs were installed from the repo we are currently processing. This means we also want to execute
