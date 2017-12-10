@@ -562,7 +562,7 @@ def getAllMeta(metadata, dest_kit, parent_repo=None):
 	return myeclasses
 
 def generateKitSteps(kit_name, from_tree, to_tree, super_tree, select_only="all", fixup_repo=None, pkgdir=None,
-                     cpm_logger=None, filter_repos=None):
+                     cpm_logger=None, filter_repos=None, secondary_kit=False):
 	steps = []
 	pkglist = []
 	pkgf = "package-sets/%s-packages" % kit_name
@@ -607,6 +607,11 @@ def generateKitSteps(kit_name, from_tree, to_tree, super_tree, select_only="all"
 			pkglist.append(pattern)
 
 	to_insert = set(pkglist)
+
+	if secondary_kit is True:
+		# add in any catpkgs from previous scans of this same kit...
+		prev_inserted = cpm_logger.get_cached_catpkg_set()
+		to_insert = prev_inserted | to_insert
 
 	# filter out anything that was not in the select_only argument list, if it was provided:
 	if select_only != "all":
@@ -807,6 +812,9 @@ class CatPkgMatchLogger(object):
 				return True
 		# We've passed all tests -- copy this sucker!
 		return False
+
+	def get_cached_catpkg_set(self):
+		return set(self._matchdict.keys())
 
 	def record(self, match, kit=None, branch=None, is_fixup=False):
 		"""

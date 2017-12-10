@@ -451,12 +451,25 @@ def getKitSourceInstance(kit_dict):
 
 def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=False, push=False, now=None, fixup_repo=None):
 
-	if prev_kit_dict != None and kit_dict['name'] != prev_kit_dict['name']:
-		
-		# We are advancing to the next kit. For example, we just processed an xorg-kit and are now processing a python-kit. So we want to apply all our accumulated matches.
-		# If we are processing an xorg-kit again, this won't run, which is what we want. We want to keep accumulating catpkg names/matches.
+	# secondary_kit means: we're the second (or third, etc.) xorg-kit or other kit to be processed. The first kind of
+	# each kit processed has secondary_kit = False, and later ones have secondary_kit = True. We need special processing
+	# to grab any 'orphan' packages that were selected as part of prior kit scans (and thus will not be included in
+	# later kits) but were not picked up in our current kit-scan. For example, let's say @depsincat@:virtual/ttf-fonts:
+	# media-fonts picks up a funky font in the first xorg-kit scan, but in the second xorg-kit scan, the deps have
+	# changed and thus this font isn't selected. Well without special handling, if we are using the second (or later)
+	# xorg-kit, funky-font won't exist. We call these guys 'orphans' and need to ensure we include them.
 
-		cpm_logger.nextKit()
+	secondary_kit = False
+	if prev_kit_dict != None:
+		if kit_dict['name'] != prev_kit_dict['name']:
+		
+			# We are advancing to the next kit. For example, we just processed an xorg-kit and are now processing a python-kit. So we want to apply all our accumulated matches.
+			# If we are processing an xorg-kit again, this won't run, which is what we want. We want to keep accumulating catpkg names/matches.
+
+			cpm_logger.nextKit()
+
+		else:
+			secondary_kit = True
 
 	# get set of source repos used to grab catpkgs from:
 
@@ -531,7 +544,8 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 			steps += [ InsertEbuilds(repo_dict["repo"], select_only=select_clause, skip=None, replace=False, cpm_logger=cpm_logger) ]
 		else:
 			steps += generateKitSteps(kit_dict['name'], repo_dict["repo"], tree, gentoo_staging, fixup_repo=fixup_repo, select_only=select_clause,
-			                          pkgdir=merge_scripts.root+"/funtoo/scripts", filter_repos=filter_repos, cpm_logger=cpm_logger)
+			                          pkgdir=merge_scripts.root+"/funtoo/scripts", filter_repos=filter_repos, cpm_logger=cpm_logger,
+			                          secondary_kit=secondary_kit)
 		tree.run(steps)
 		if copycount != cpm_logger.copycount:
 			# this means some catpkgs were installed from the repo we are currently processing. This means we also want to execute
