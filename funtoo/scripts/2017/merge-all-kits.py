@@ -259,7 +259,7 @@ kit_groups = {
 		{ 'name' : 'xorg-kit', 'branch' : '1.19-prime', 'source': 'funtoo_mk2_prime', 'default' : True, 'stability' : KitStabilityRating.PRIME  }, # MK2
 		{ 'name' : 'gnome-kit', 'branch' : '3.20-prime', 'source': 'funtoo_prime_gnome', 'default' : True },
 		{ 'name' : 'kde-kit', 'branch' : '5.10-prime', 'source': 'funtoo_mk3_prime', 'default' : True  },
-		{ 'name' : 'media-kit', 'branch' : '1.0-prime', 'source': 'funtoo_prime_media', 'default' : False },
+		{ 'name' : 'media-kit', 'branch' : '1.0-prime', 'source': 'funtoo_prime_media', 'default' : False, 'stability' : KitStabilityRating.PRIME },
 		{ 'name' : 'media-kit', 'branch' : '1.1-prime', 'source': 'funtoo_mk3_prime', 'default' : True, 'stability' : KitStabilityRating.PRIME }, # MK3
 		{ 'name' : 'perl-kit', 'branch' : '5.24-prime', 'source': 'funtoo_prime_perl', 'default' : True },
 		{ 'name' : 'perl-kit', 'branch' : '5.26-prime', 'source': 'funtoo_mk3_prime', 'default' : False, 'stability' : KitStabilityRating.DEV },
