@@ -470,6 +470,7 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 
 		else:
 			secondary_kit = True
+	print("Processing kit %s branch %s, secondary kit is %s" % ( kit_dict['name'], kit_dict['branch'], repr(secondary_kit)))
 
 	# get set of source repos used to grab catpkgs from:
 

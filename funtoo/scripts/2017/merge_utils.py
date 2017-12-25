@@ -609,9 +609,12 @@ def generateKitSteps(kit_name, from_tree, to_tree, super_tree, select_only="all"
 	to_insert = set(pkglist)
 
 	if secondary_kit is True:
+		print('Secondary kit is true')
 		# add in any catpkgs from previous scans of this same kit...
 		prev_inserted = cpm_logger.get_cached_catpkg_set()
+		print('Previously inserted catpkgs are', sorted(list(prev_inserted)))
 		to_insert = prev_inserted | to_insert
+
 
 	# filter out anything that was not in the select_only argument list, if it was provided:
 	if select_only != "all":
@@ -631,8 +634,8 @@ def generateKitSteps(kit_name, from_tree, to_tree, super_tree, select_only="all"
 		else:
 			new_set.add(catpkg)
 	to_insert = new_set
-
-	insert_kwargs = {"select": list(to_insert)}
+	print('To-be-inserted catpkgs are', to_insert)
+	insert_kwargs = {"select": sorted(list(to_insert))}
 
 	if pkglist:
 		steps += [ InsertEbuilds(from_tree, skip=skip, replace=False, cpm_logger=cpm_logger, **insert_kwargs) ]
