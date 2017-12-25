@@ -175,8 +175,6 @@ main-repo = %s
 location = %s
 ''' % (cur_name, cur_name, cur_tree)
 	p = portage.portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
-	#p.frozen = False
-	p.melt()
 	mypkgs = set()
 	for catpkg in list(catpkgs):
 		for pkg in p.cp_list(catpkg):
@@ -212,6 +210,27 @@ def getPackagesInCatWithMaintainer(cur_overlay, my_cat, my_email):
 			for email in tree.xpath('.//maintainer/email/text()'):
 				if my_email == str(email):
 					yield my_cat + "/" + pkgdir
+
+def getPackagesMatchingGlob(cur_overlay, my_glob):
+	insert_list = []
+	for candidate in glob.glob(cur_overlay.root + "/" + my_glob):
+		if not os.path.isdir(candidate):
+			continue
+		strip_len = len(cur_overlay.root)+1
+		candy_strip = candidate[strip_len:]
+		insert_list.append(candy_strip)
+	return insert_list
+
+def getPackagesMatchingRegex(cur_overlay, my_regex):
+	insert_list = []
+	for candidate in glob.glob(cur_overlay.root + "/*/*"):
+		if not os.path.isdir(candidate):
+			continue
+		strip_len = len(cur_overlay.root)+1
+		candy_strip = candidate[strip_len:]
+		if my_regex.match(candy_strip):
+			insert_list.append(candy_strip)
+	return insert_list
 
 def getPackagesWithEclass(cur_overlay, eclass):
 	cur_tree = cur_overlay.root
@@ -539,7 +558,6 @@ def getAllMeta(metadata, dest_kit, parent_repo=None):
 	aliases = gentoo
 		''' % ( dest_kit.name, dest_kit.root )
 	p = portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
-	p.melt()
 	myeclasses = set()
 	for cp in p.cp_all(trees=[dest_kit.root]):
 		for cpv in p.cp_list(cp, mytree=dest_kit.root):
@@ -580,7 +598,7 @@ def generateKitSteps(kit_name, from_tree, to_tree, super_tree, select_only="all"
 		skip = get_pkglist(pkgf_skip)
 	for pattern in master_pkglist:
 		if pattern.startswith("@regex@:"):
-			steps += [ InsertEbuilds(from_tree, select=re.compile(pattern[8:]), select_only=select_only, skip=skip, replace=False, cpm_logger=cpm_logger) ]
+			pkglist += getPackagesMatchingRegex( from_tree, re.compile(pattern[8:]))
 		elif pattern.startswith("@depsincat@:"):
 			patsplit = pattern.split(":")
 			catpkg = patsplit[1]
@@ -602,7 +620,7 @@ def generateKitSteps(kit_name, from_tree, to_tree, super_tree, select_only="all"
 			cat_pkglist = getPackagesInCatWithEclass( from_tree, cat, eclass )
 			pkglist += list(cat_pkglist)
 		elif pattern.endswith("/*"):
-			steps += [ InsertEbuilds(from_tree, select=re.compile(pattern[:-1]+".*"), select_only=select_only, skip=skip, replace=False, cpm_logger=cpm_logger) ]
+			pkglist += getPackagesMatchingGlob( from_tree, pattern)
 		else:
 			pkglist.append(pattern)
 
@@ -612,6 +630,8 @@ def generateKitSteps(kit_name, from_tree, to_tree, super_tree, select_only="all"
 		print('Secondary kit is true')
 		# add in any catpkgs from previous scans of this same kit that might be missing from this scan:
 		to_insert = cpm_logger.update_cached_kit_catpkg_set(to_insert)
+	else:
+		cpm_logger.update_cached_kit_catpkg_set(to_insert)
 
 	# filter out anything that was not in the select_only argument list, if it was provided:
 	if select_only != "all":
@@ -631,6 +651,7 @@ def generateKitSteps(kit_name, from_tree, to_tree, super_tree, select_only="all"
 		else:
 			new_set.add(catpkg)
 	to_insert = new_set
+
 	print('To-be-inserted catpkgs are', to_insert)
 	insert_kwargs = {"select": sorted(list(to_insert))}
 
