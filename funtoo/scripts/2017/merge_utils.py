@@ -610,11 +610,8 @@ def generateKitSteps(kit_name, from_tree, to_tree, super_tree, select_only="all"
 
 	if secondary_kit is True:
 		print('Secondary kit is true')
-		# add in any catpkgs from previous scans of this same kit...
-		prev_inserted = cpm_logger.get_cached_catpkg_set()
-		print('Previously inserted catpkgs are', sorted(list(prev_inserted)))
-		to_insert = prev_inserted | to_insert
-
+		# add in any catpkgs from previous scans of this same kit that might be missing from this scan:
+		to_insert = cpm_logger.update_cached_kit_catpkg_set(to_insert)
 
 	# filter out anything that was not in the select_only argument list, if it was provided:
 	if select_only != "all":
@@ -735,6 +732,7 @@ class CatPkgMatchLogger(object):
 		self._matchcount = 0
 		# for string matches
 		self._matchdict = {}
+		self._current_kit_set = set()
 
 		# for fixups from a non-global directory, we want the match to only apply for a particular branch. This way
 		# If xorg-kit/1.17-prime/foo/bar gets copied, we don't also need to have an xorg-kit/1.19-prime/foo/bar --
@@ -816,8 +814,12 @@ class CatPkgMatchLogger(object):
 		# We've passed all tests -- copy this sucker!
 		return False
 
-	def get_cached_catpkg_set(self):
-		return set(self._matchdict.keys())
+	def update_cached_kit_catpkg_set(self, myset):
+		# this is used by the intra-kit logic that identifies catpkgs selected from prior runs of the same kit that
+		# don't exist in the current kit selection. We want to grab these stragglers.
+
+		self._current_kit_set |= myset
+		return self._current_kit_set
 
 	def record(self, match, kit=None, branch=None, is_fixup=False):
 		"""
@@ -845,6 +847,7 @@ class CatPkgMatchLogger(object):
 		self._regexdict_curkit = {}
 		self._matchdict.update(self._matchdict_curkit)
 		self._matchdict_curkit = {}
+		self._current_kit_set = set()
 
 def headSHA1(tree):
 	retval, out = subprocess.getstatusoutput("(cd %s && git rev-parse HEAD)" % tree)
