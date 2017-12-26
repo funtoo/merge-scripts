@@ -123,7 +123,7 @@ virtual/udev
 virtual/daemontools
 virtual/eject
 virtual/libelf
-virtual/libstdc++-v3
+virtual/libstdc++
 virtual/tmpfiles
 sys-apps/opentmpfiles
 sys-process/lsof

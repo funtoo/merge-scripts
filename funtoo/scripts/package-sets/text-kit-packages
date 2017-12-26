@@ -7,3 +7,4 @@ virtual/podofo-build
 virtual/texlive-core
 virtual/latex-base
 virtual/texi2dvi
+virtual/tex-base

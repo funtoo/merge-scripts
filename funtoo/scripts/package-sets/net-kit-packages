@@ -43,3 +43,4 @@ virtual/imap-c-client
 virtual/gsasl
 virtual/mda
 virtual/inetd
+virtual/w3m
