@@ -29,6 +29,7 @@ app-text/evince
 app-text/gnome-doc-utils
 app-text/gspell
 app-text/gtkspell
+app-text/libgepub
 app-text/libgxps
 app-text/libspectre
 app-text/poppler
