@@ -222,6 +222,10 @@ kit_source_defs = {
 		# specific snapshot for gnome-kit
 		{ "repo" : "gentoo-staging", 'src_sha1' : '44677858bd088805aa59fd56610ea4fb703a2fcd', 'date' : '18 Sep 2016' }
 	],
+	"funtoo_prime_gnome_3_26" : [
+		# specific snapshot for gnome-kit 3.26-prime branch
+		{ "repo" : "gentoo-staging", 'src_sha1' : 'fe325110726abec6a8cfcd9509a8bf0db210fef2', 'date' : '26 Dec 2017' }
+	],
 	"funtoo_prime_media" : [
 		# specific snapshot for media-kit, though we should bump and expand this soon
 		{ "repo" : "gentoo-staging", 'src_sha1' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017' }
@@ -271,6 +275,7 @@ kit_groups = {
 		{ 'name' : 'xorg-kit', 'branch' : '1.17-prime', 'source': 'funtoo_prime_xorg', 'default' : False, 'stability' : KitStabilityRating.PRIME },
 		{ 'name' : 'xorg-kit', 'branch' : '1.19-prime', 'source': 'funtoo_mk2_prime', 'default' : True, 'stability' : KitStabilityRating.PRIME  }, # MK2
 		{ 'name' : 'gnome-kit', 'branch' : '3.20-prime', 'source': 'funtoo_prime_gnome', 'default' : True },
+		{ 'name': 'gnome-kit', 'branch': '3.26-prime', 'source': 'funtoo_prime_gnome_3_26', 'default': False, 'stability' : KitStabilityRating.DEV },
 		{ 'name' : 'kde-kit', 'branch' : '5.10-prime', 'source': 'funtoo_mk3_prime', 'default' : True  },
 		{ 'name' : 'media-kit', 'branch' : '1.0-prime', 'source': 'funtoo_prime_media', 'default' : False, 'stability' : KitStabilityRating.PRIME },
 		{ 'name' : 'media-kit', 'branch' : '1.1-prime', 'source': 'funtoo_mk3_prime', 'default' : True, 'stability' : KitStabilityRating.PRIME }, # MK3
