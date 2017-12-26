@@ -648,16 +648,14 @@ def generateKitSteps(kit_name, from_tree, to_tree, super_tree, select_only="all"
 		skip = False
 		for filter_repo in filter_repos:
 			if filter_repo.catpkg_exists(catpkg):
-				skip = True
-				break
+				if catpkg not in force:
+					skip = True
+					break
 		if skip:
 			continue
 		else:
 			new_set.add(catpkg)
 	to_insert = new_set
-
-	# add forced catpkgs to the set.
-	to_insert |= force
 
 	print('To-be-inserted catpkgs are', to_insert)
 	insert_kwargs = {"select": sorted(list(to_insert))}
