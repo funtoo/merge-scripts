@@ -1,4 +1,3 @@
 sys-fs/*
-sys-libs/e2fsprogs-libs
 sys-kernel/spl
 

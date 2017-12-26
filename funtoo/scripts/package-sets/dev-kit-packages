@@ -19,3 +19,4 @@ dev-scheme/*
 dev-tcltk/*
 dev-util/*
 dev-vcs/*
+virtual/libgudev

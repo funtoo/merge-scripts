@@ -13,8 +13,6 @@ sys-auth/pam_*
 sys-auth/pambase
 sys-auth/skey
 sys-fs/cryptsetup
-sys-libs/cracklib
-sys-libs/pam
 virtual/acl
 virtual/baselayout
 virtual/checkpassword

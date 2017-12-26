@@ -38,3 +38,8 @@ www-client/*
 www-misc/*
 www-plugins/*
 www-servers/*
+virtual/qmail
+virtual/imap-c-client
+virtual/gsasl
+virtual/mda
+virtual/inetd

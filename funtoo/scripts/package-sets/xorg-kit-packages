@@ -27,6 +27,7 @@ x11-misc/bumblebee
 virtual/ttf-fonts
 @depsincat@:virtual/ttf-fonts:media-fonts
 virtual/opengl
+virtual/opencl
 virtual/glu
 sys-libs/mtdev
 x11-apps/mesa-progs

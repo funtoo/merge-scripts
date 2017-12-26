@@ -33,7 +33,6 @@ sys-devel/llvm
 sys-devel/m4
 sys-devel/make
 sys-devel/patch
-sys-libs/timezone-data
 virtual/ada
 virtual/fortran
 virtual/libc

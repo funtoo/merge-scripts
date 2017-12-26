@@ -21,7 +21,6 @@ net-dialup/ppp-scripts
 # deps
 
 dev-libs/libevent
-sys-libs/libcap
 net-misc/pps-tools
 sec-policy/selinux-ntp
 net-dns/libidn2
@@ -29,4 +28,3 @@ net-libs/gnutls
 net-libs/libproxy
 dev-libs/libnl
 net-libs/neon
-sys-libs/libpcap

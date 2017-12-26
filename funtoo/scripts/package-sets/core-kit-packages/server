@@ -5,6 +5,4 @@ sys-apps/tcp-wrappers
 virtual/mailx
 virtual/cron
 virtual/logger
-sys-libs/libpcap-ng
-sys-libs/libutempter
 sys-fs/quota

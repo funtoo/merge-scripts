@@ -10,7 +10,6 @@ app-misc/tmux
 net-misc/mosh
 # deps for mosh
 # moving protobuf to dev-kit so it gets updates for kde, etc
-sys-libs/utempter
 
 sys-block/parted
 sys-power/pm-utils
