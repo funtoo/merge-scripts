@@ -580,7 +580,11 @@ def getAllMeta(metadata, dest_kit, parent_repo=None):
 	return myeclasses
 
 def generateKitSteps(kit_name, from_tree, to_tree, super_tree, select_only="all", fixup_repo=None, pkgdir=None,
-                     cpm_logger=None, filter_repos=None, secondary_kit=False):
+                     cpm_logger=None, filter_repos=None, force=None, secondary_kit=False):
+	if force == None:
+		force = set()
+	else:
+		force = set(force)
 	steps = []
 	pkglist = []
 	pkgf = "package-sets/%s-packages" % kit_name
@@ -651,6 +655,9 @@ def generateKitSteps(kit_name, from_tree, to_tree, super_tree, select_only="all"
 		else:
 			new_set.add(catpkg)
 	to_insert = new_set
+
+	# add forced catpkgs to the set.
+	to_insert |= force
 
 	print('To-be-inserted catpkgs are', to_insert)
 	insert_kwargs = {"select": sorted(list(to_insert))}

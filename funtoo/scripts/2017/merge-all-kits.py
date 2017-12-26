@@ -83,7 +83,20 @@ overlays = {
 		"googlecode"
 		],
 	     # SKIP any catpkgs that also exist in gentoo-staging (like nvidia-drivers). All others will be copied.
-	    "filter" :  [ "gentoo-staging" ]
+	    "filter" :  [ "gentoo-staging" ],
+	    # well, I lied. There are some catpkgs that exist in gentoo-staging that we DO want to copy. These are the
+		# ones we will copy. We need to specify each one. This list may change over time as faustoo/gentoo gets stale.
+	    "force" : [
+		    "dev-java/maven-bin",
+		    "dev-java/sun-java3d-bin",
+		    "dev-php/pecl-mongo",
+		    "dev-php/pecl-mongodb",
+		    "dev-python/mongoengine",
+		    "dev-python/pymongo",
+		    "dev-util/idea-community",
+		    "dev-util/webstorm",
+		    "x11-wm/blackbox"
+	    ]
 	},
 	"fusion809" : { "type" : GitTree, "url" : "https://github.com/fusion809/fusion809-overlay.git", "select" : [
 			"app-editors/atom-bin", 
@@ -544,9 +557,10 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 			# grab all ebuilds to put in nokit
 			steps += [ InsertEbuilds(repo_dict["repo"], select_only=select_clause, skip=None, replace=False, cpm_logger=cpm_logger) ]
 		else:
-			steps += generateKitSteps(kit_dict['name'], repo_dict["repo"], tree, gentoo_staging, fixup_repo=fixup_repo, select_only=select_clause,
-			                          pkgdir=merge_scripts.root+"/funtoo/scripts", filter_repos=filter_repos, cpm_logger=cpm_logger,
-			                          secondary_kit=secondary_kit)
+			steps += generateKitSteps(kit_dict['name'], repo_dict["repo"], tree, gentoo_staging, fixup_repo=fixup_repo,
+			                          select_only=select_clause, pkgdir=merge_scripts.root+"/funtoo/scripts",
+			                          filter_repos=filter_repos, force=overlay_def["force"] if "force" in overlay_def else None,
+			                          cpm_logger=cpm_logger, secondary_kit=secondary_kit)
 		tree.run(steps)
 		if copycount != cpm_logger.copycount:
 			# this means some catpkgs were installed from the repo we are currently processing. This means we also want to execute
