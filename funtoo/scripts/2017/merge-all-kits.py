@@ -888,7 +888,7 @@ if __name__ == "__main__":
 				kit_name = kit_dict["name"]
 				kit_branch = kit_dict["branch"]
 
-				if 'default' in kit_dict:
+				if 'default' in kit_dict and kit_dict['default'] is True:
 					kit_stability = KitStabilityRating.PRIME
 				elif 'stability' in kit_dict:
 					kit_stability = kit_dict['stability']
