@@ -222,10 +222,6 @@ kit_source_defs = {
 		# specific snapshot for gnome-kit
 		{ "repo" : "gentoo-staging", 'src_sha1' : '44677858bd088805aa59fd56610ea4fb703a2fcd', 'date' : '18 Sep 2016' }
 	],
-	"funtoo_prime_gnome_3_26" : [
-		# specific snapshot for gnome-kit 3.26-prime branch
-		{ "repo" : "gentoo-staging", 'src_sha1' : 'fe325110726abec6a8cfcd9509a8bf0db210fef2', 'date' : '26 Dec 2017' }
-	],
 	"funtoo_prime_media" : [
 		# specific snapshot for media-kit, though we should bump and expand this soon
 		{ "repo" : "gentoo-staging", 'src_sha1' : '355a7986f9f7c86d1617de98d6bf11906729f108', 'date' : '25 Feb 2017' }
@@ -250,6 +246,7 @@ class KitStabilityRating(Enum):
 	ALPHA = 3               # Kit is in alpha
 	DEV = 4                 # Kit is newly created and in active development
 	CURRENT = 10            # Kit follows Gentoo currrent
+	DEPRECATED = 11         # Kit is deprecated/retired
 
 def KitRatingString(kit_enum):
 	if kit_enum is KitStabilityRating.PRIME:
@@ -264,36 +261,98 @@ def KitRatingString(kit_enum):
 		return "dev"
 	elif kit_enum is KitStabilityRating.CURRENT:
 		return "current"
+	elif kit_enum is KitStabilityRating.DEPRECATED:
+		return "deprecated"
+
+# Next release is 1.2-prime and will be based on a 'master' snapshot until it is near release, at which point the
+# tree will be frozen.
+
+# 1.2 RELEASE
+# =================================================================================
+#
+# Roadmap (compressed development schedule)
+#
+# 1. Development starts                                                            December 28, 2017
+# 1a. Addition of python-modules-kit and perl-modules-kit (for 1.1+)               January 1, 2018
+# 2. Alpha release (best attempt to get everything functioning)                    January 4, 2018
+# 3. Beta release (most stuff should be functioning and becoming stable)           January 11, 2018
+# 4. Near-prime (release candidate)                                                To be determined
+# 5. Prime release                                                                 January 21, 2018
+# 6. 1.0-prime kits EOL                                                            February 1, 2018
+#
+# 1.3 development starts                                                           April 1, 2018
+# 1.3 release                                                                      July 1, 2018
+# 1.2-prime kits EOL                                                               August 1, 2018
+#
+#							NEW VERSION             EXISTING
+#                           =======================================================
+# core-kit                  1.2-prime
+# security-kit              1.2-prime
+# xorg-kit                                          1.19-prime
+# gnome-kit                 3.26-prime              3.20-prime (also supported)
+# kde-kit                                           5.10-prime
+# media-kit                 1.2-prime
+# perl-kit                                          5.26-prime
+# > perl-modules-kit        1.2-prime
+# python-kit                3.6-prime
+# > python-modules-kit      1.2-prime
+# php-kit                                           master
+# java-kit                  1.2-prime
+# ruby-kit                  1.2-prime
+# haskell-kit               1.2-prime
+# ml-lang-kit               1.2-prime
+# lisp-scheme-kit           1.2-prime
+# lang-kit                  1.2-prime
+# dev-kit                   1.2-prime
+# xfce-kit                                          4.12-prime
+# desktop-kit               1.2-prime
+# editors-kit                                       master
+# net-kit                   1.2-prime
+# text-kit                                          master
+# science-kit                                       master
+# games-kit                                         master
+# nokit                                             master
 
 kit_groups = {
 	'prime' : [
 		{ 'name' : 'core-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime_protected', 'default' : True },
-		{ 'name' : 'core-kit', 'branch' : '1.1-prime', 'source': 'gentoo_prime_mk3_protected', 'stability' : KitStabilityRating.DEV },
+		{ 'name' : 'core-kit', 'branch' : '1.1-prime', 'source': 'gentoo_prime_mk3_protected', 'stability' : KitStabilityRating.DEPRECATED },
+		{ 'name' : 'core-kit', 'branch': '1.2-prime', 'source': 'funtoo_current', 'stability': KitStabilityRating.DEV},
 		{ 'name' : 'core-hw-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True },
 		{ 'name' : 'security-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime_protected', 'default' : True },
-		{ 'name' : 'security-kit', 'branch' : '1.1-prime', 'source': 'gentoo_prime_mk3_protected', 'stability' : KitStabilityRating.DEV },
+		{ 'name' : 'security-kit', 'branch' : '1.1-prime', 'source': 'gentoo_prime_mk3_protected', 'stability' : KitStabilityRating.DEPRECATED },
+		{ 'name' : 'security-kit', 'branch': '1.2-prime', 'source': 'funtoo_current', 'stability': KitStabilityRating.DEV},
 		{ 'name' : 'xorg-kit', 'branch' : '1.17-prime', 'source': 'funtoo_prime_xorg', 'default' : False, 'stability' : KitStabilityRating.PRIME },
 		{ 'name' : 'xorg-kit', 'branch' : '1.19-prime', 'source': 'funtoo_mk2_prime', 'default' : True, 'stability' : KitStabilityRating.PRIME  }, # MK2
 		{ 'name' : 'gnome-kit', 'branch' : '3.20-prime', 'source': 'funtoo_prime_gnome', 'default' : True },
-		{ 'name': 'gnome-kit', 'branch': '3.26-prime', 'source': 'funtoo_prime_gnome_3_26', 'default': False, 'stability' : KitStabilityRating.DEV },
+		{ 'name' : 'gnome-kit', 'branch': '3.26-prime', 'source': 'funtoo_current', 'default': False, 'stability' : KitStabilityRating.DEV },
 		{ 'name' : 'kde-kit', 'branch' : '5.10-prime', 'source': 'funtoo_mk3_prime', 'default' : True  },
-		{ 'name' : 'media-kit', 'branch' : '1.0-prime', 'source': 'funtoo_prime_media', 'default' : False, 'stability' : KitStabilityRating.PRIME },
+		{ 'name' : 'media-kit', 'branch' : '1.0-prime', 'source': 'funtoo_prime_media', 'default' : False, 'stability' : KitStabilityRating.DEPRECATED },
 		{ 'name' : 'media-kit', 'branch' : '1.1-prime', 'source': 'funtoo_mk3_prime', 'default' : True, 'stability' : KitStabilityRating.PRIME }, # MK3
+		{ 'name' : 'media-kit', 'branch' : '1.2-prime', 'source': 'funtoo_current', 'stability': KitStabilityRating.DEV},
 		{ 'name' : 'perl-kit', 'branch' : '5.24-prime', 'source': 'funtoo_prime_perl', 'default' : True },
 		{ 'name' : 'perl-kit', 'branch' : '5.26-prime', 'source': 'funtoo_mk3_prime', 'default' : False, 'stability' : KitStabilityRating.DEV },
 		{ 'name' : 'python-kit', 'branch' : '3.4-prime', 'source': 'funtoo_prime', 'default' : True },
-		{ 'name' : 'python-kit', 'branch' : '3.6-prime', 'source': 'funtoo_mk2_prime', 'default' : False, 'stability' : KitStabilityRating.NEAR_PRIME }, # MK2
-		{ 'name' : 'python-kit', 'branch' : '3.6.3-prime', 'source': 'funtoo_mk3_prime', 'default': False, 'stability' : KitStabilityRating.DEV }, # MK3
+		{ 'name' : 'python-kit', 'branch' : '3.6-prime', 'source': 'funtoo_mk2_prime', 'default' : False, 'stability' : KitStabilityRating.PRIME }, # MK2
+		{ 'name' : 'python-kit', 'branch' : '3.6.3-prime', 'source': 'funtoo_mk3_prime', 'default': False, 'stability' : KitStabilityRating.DEPRECATED }, # MK3
 		{ 'name' : 'php-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True }, # We will freeze when 7.2.0 is released...
 		{ 'name' : 'java-kit', 'branch' : '1.1-prime', 'source': 'funtoo_mk3_late_prime', 'default' : True  },
+		{ 'name' : 'java-kit', 'branch': '1.2-prime', 'source': 'funtoo_current', 'stability': KitStabilityRating.DEV},
 		{ 'name' : 'ruby-kit', 'branch': '1.1-prime', 'source': 'funtoo_mk3_late_prime', 'default': True},
+		{ 'name' : 'ruby-kit', 'branch': '1.2-prime', 'source': 'funtoo_current', 'stability': KitStabilityRating.DEV},
 		{ 'name' : 'haskell-kit', 'branch': '1.1-prime', 'source': 'funtoo_mk3_late_prime', 'default': True },
+		{ 'name' : 'haskell-kit', 'branch': '1.2-prime', 'source': 'funtoo_current', 'stability': KitStabilityRating.DEV},
 		{ 'name' : 'ml-lang-kit', 'branch': '1.1-prime', 'source': 'funtoo_mk3_late_prime', 'default': True },
+		{ 'name' : 'ml-lang-kit', 'branch': '1.2-prime', 'source': 'funtoo_current', 'stability': KitStabilityRating.DEV},
 		{ 'name' : 'lisp-scheme-kit', 'branch': '1.1-prime', 'source': 'funtoo_mk3_late_prime', 'default': True },
+		{ 'name' : 'lisp-scheme-kit', 'branch': '1.2-prime', 'source': 'funtoo_current', 'stability': KitStabilityRating.DEV},
 		{ 'name' : 'lang-kit', 'branch': '1.1-prime', 'source': 'funtoo_mk3_late_prime', 'default': True },
+		{ 'name' : 'lang-kit', 'branch': '1.2-prime', 'source': 'funtoo_current', 'stability': KitStabilityRating.DEV},
 		{ 'name' : 'dev-kit', 'branch' : '1.1-prime', 'source': 'funtoo_mk3_late_prime', 'default' : True },
+		{ 'name' : 'dev-kit', 'branch': '1.2-prime', 'source': 'funtoo_current', 'stability': KitStabilityRating.DEV},
 		{ 'name' : 'xfce-kit', 'branch': '4.12-prime', 'source': 'funtoo_mk3_late_prime', 'default': True },
 		{ 'name' : 'desktop-kit', 'branch' : '1.1-prime', 'source': 'funtoo_mk3_late_prime', 'default' : True  },
+		{ 'name' : 'desktop-kit', 'branch': '1.2-prime', 'source': 'funtoo_current', 'stability': KitStabilityRating.DEV},
 		{ 'name' : 'editors-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True },
 		{ 'name' : 'net-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True },
 		{ 'name' : 'text-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True },
@@ -506,11 +565,13 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 	elif gentoo_staging.name != "gentoo-staging":
 		print("Gentoo staging mismatch -- name is %s" % gentoo_staging["name"])
 
-	# we should now be OK to use the repo and the local branch:
-
 	kit_dict['tree'] = tree = GitTree(kit_dict['name'], kit_dict['branch'],
 	                                  "git@github.com:funtoo/%s" % kit_dict['name'], create=create,
 	                                  root="/var/git/dest-trees/%s" % kit_dict['name'], pull=True)
+
+	if "stability" in kit_dict and kit_dict["stability"] == KitStabilityRating.DEPRECATED:
+		# no longer update this kit.
+		return tree.head()
 
 	# Phase 1: prep the kit
 	pre_steps = [
