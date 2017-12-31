@@ -620,7 +620,7 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 						filter_repos.append(x["repo"])
 
 		if kit_dict["name"] == "nokit":
-			# grab all ebuilds to put in nokit
+			# grab all remaining ebuilds to put in nokit
 			steps += [ InsertEbuilds(repo_dict["repo"], select_only=select_clause, skip=None, replace=False, cpm_logger=cpm_logger) ]
 		else:
 			steps += generateKitSteps(kit_dict['name'], repo_dict["repo"], tree, gentoo_staging, fixup_repo=fixup_repo,
@@ -702,11 +702,12 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 						readme_path : "README.rst"
 					})
 				]
+
+			# We now add a step to insert the fixups, and we want to record them as being copied so successive kits
+			# don't get this particular catpkg. Assume we may not have all these catpkgs listed in our package-set
+			# file...
+
 			steps += [
-
-				# here we log catpkgs to the CatPkgMatchLogger, but cpm_ignore=True tells our code to not consult the
-				# cpm_logger to determine whether to copy. Always copy -- these are fixups!
-
 				InsertEbuilds(fixup_repo, ebuildloc=fixup_path, select="all", skip=None, replace=True,
 				              cpm_logger=cpm_logger, is_fixup=True )
 			]

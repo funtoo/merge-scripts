@@ -1695,14 +1695,11 @@ class InsertEbuilds(MergeStep):
 					if self.cpm_logger:
 						self.cpm_logger.recordCopyToXML(self.srctree, desttree, catpkg)
 						if isinstance(self.select, regextype):
-							# If a regex was used to match the copied catpkg, record the regex and number of matches.
+							# If a regex was used to match the copied catpkg, record the regex.
 							self.cpm_logger.record(self.select, kit=kit, branch=branch, is_fixup=self.is_fixup)
 						else:
 							# otherwise, record the literal catpkg matched.
 							self.cpm_logger.record(catpkg, kit=kit, branch=branch, is_fixup=self.is_fixup)
-					cpv = "/".join(tpkgdir.split("/")[-2:])
-				# Record source tree of each copied catpkg to XML for later importing...
-
 		if os.path.isdir(os.path.dirname(dest_cat_path)):
 			# only write out if profiles/ dir exists -- it doesn't with shards.
 			with open(dest_cat_path, "w") as f:
