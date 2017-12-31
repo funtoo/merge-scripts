@@ -1,3 +1,7 @@
+net-misc/broadcom-netxtreme2
+net-misc/igb
+net-misc/r8101
+net-wireless/broadcom-sta
 sys-firmware/*
 sys-kernel/linux-firmware
 @regex@:.*-firmware
