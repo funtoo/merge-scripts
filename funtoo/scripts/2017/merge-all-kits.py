@@ -78,6 +78,8 @@ import os
 overlays = {
 	# use gentoo-staging-2017 dirname to avoid conflicts with ports-2012 generation
 	"gentoo-staging" : { "type" : GitTree, "url" : "repos@git.funtoo.org:ports/gentoo-staging.git", "dirname" : "gentoo-staging-2017" },
+	"gentoo-staging-underlay": {"type": GitTree, "url": "repos@git.funtoo.org:ports/gentoo-staging.git",
+	                   "dirname": "gentoo-staging-2017-underlay"},
 	"faustoo" : { "type" : GitTree, "url" : "https://github.com/fmoro/faustoo.git", "eclasses" : [
 		"waf",
 		"googlecode"
@@ -178,7 +180,7 @@ kit_source_defs = {
 		{ "repo" : "rh1", },
 		{ "repo" : "gentoo-staging", "src_sha1" : '80d2f3782e7f351855664919d679e94a95793a06', 'date' : '31 Aug 2017'},
 		# add current gentoo-staging to catch any new ebuilds that are not yet in our snapshot above (dev-foo/* match)
-		{ "repo" : "gentoo-staging" },
+		{ "repo" : "gentoo-staging-underlay" },
 	],
 	"funtoo_mk3_prime" : [
 		# allow overlays to override gentoo
@@ -187,7 +189,7 @@ kit_source_defs = {
 		{ "repo" : "fusion809", "src_sha1" : "8733034816d3932486cb593db2dfbfbc7577e28b", 'date' : '09 Oct 2017' },
 		{ "repo" : "rh1", },
 		{ "repo" : "gentoo-staging", "src_sha1" : '2de4b388863ab0dbbd291422aa556c9de646f1ff', 'date' : '10 Oct 2017'},
-		{ "repo" : "gentoo-staging" },
+		{ "repo" : "gentoo-staging-underlay" },
 	],
 	"funtoo_mk3_late_prime": [
 		# allow overlays to override gentoo
@@ -196,7 +198,7 @@ kit_source_defs = {
 		{"repo": "fusion809", "src_sha1": "574f9f6f69b30f4eec7aa2eb53f55059d3c05b6a", 'date': '23 Oct 2017'},
 		{"repo": "rh1", },
 		{"repo": "gentoo-staging", "src_sha1": 'aa03020139bc129af2ad5f454640c102afa712e6', 'date': '22 Oct 2017'},
-		{"repo": "gentoo-staging" },
+		{"repo": "gentoo-staging-underlay" },
 	],
 	"funtoo_prime" : [
 		# allow overlays to override gentoo
@@ -205,7 +207,7 @@ kit_source_defs = {
 		{ "repo" : "fusion809", "src_sha1" : "8322bcd79d47ef81f7417c324a1a2b4772020985" },
 		{ "repo" : "rh1", },
 		{ "repo" : "gentoo-staging", "src_sha1" : '06a1fd99a3ce1dd33724e11ae9f81c5d0364985e', 'date' : '21 Apr 2017'},
-		{ "repo" : "gentoo-staging" },
+		{ "repo" : "gentoo-staging-underlay" },
 	],
 	"gentoo_prime_mk3_protected" : [
 		# lock down core-kit and security-kit
