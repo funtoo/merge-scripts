@@ -37,6 +37,8 @@ for kit in os.listdir(repo_name):
 	kit_path = os.path.join(repo_name, kit)
 	if not os.path.isdir(kit_path):
 		continue
+	if kit == "profiles":
+		continue
 	audit_cycle = get_audit_cycle(kit_path) or default_audit_cycle
 	for branch in os.listdir(kit_path):
 		branch_path = os.path.join(kit_path, branch)
