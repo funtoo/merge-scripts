@@ -19,7 +19,6 @@ app-dicts/gnome-dictionary
 app-editors/gedit
 app-editors/gedit-plugins
 app-editors/latexila
-app-emulation/libvirt-glib
 app-i18n/ibus
 app-misc/bijiben
 app-misc/geoclue
