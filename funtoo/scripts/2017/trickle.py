@@ -29,7 +29,7 @@ if not os.path.exists(repo_name):
 	print("path does not exist. Exiting.")
 	sys.exit(1)
 
-default_audit_cycle = 60
+default_audit_cycle = 30
 catpkg_list = []
 now = datetime.now()
 utcnow = datetime.utcnow()
