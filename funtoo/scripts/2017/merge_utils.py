@@ -579,9 +579,9 @@ def getAllMeta(metadata, dest_kit, parent_repo=None):
 						myeclasses.add(lic)
 	return myeclasses
 
-def generateKitSteps(kit_name, from_tree, to_tree, super_tree, select_only="all", fixup_repo=None, pkgdir=None,
+def generateKitSteps(kit_name, from_tree, select_only="all", fixup_repo=None, pkgdir=None,
                      cpm_logger=None, filter_repos=None, force=None, secondary_kit=False):
-	if force == None:
+	if force is None:
 		force = set()
 	else:
 		force = set(force)
@@ -589,7 +589,7 @@ def generateKitSteps(kit_name, from_tree, to_tree, super_tree, select_only="all"
 	pkglist = []
 	pkgf = "package-sets/%s-packages" % kit_name
 	pkgf_skip = "package-sets/%s-skip" % kit_name
-	if pkgdir != None:
+	if pkgdir is not None:
 		pkgf = pkgdir + "/" + pkgf
 		pkgf_skip = pkgdir + "/" + pkgf_skip
 	skip = []

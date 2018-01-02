@@ -628,7 +628,7 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 			# grab all remaining ebuilds to put in nokit
 			steps += [ InsertEbuilds(repo_dict["repo"], select_only=select_clause, skip=None, replace=False, cpm_logger=cpm_logger) ]
 		else:
-			steps += generateKitSteps(kit_dict['name'], repo_dict["repo"], tree, gentoo_staging, fixup_repo=fixup_repo,
+			steps += generateKitSteps(kit_dict['name'], repo_dict["repo"], fixup_repo=fixup_repo,
 			                          select_only=select_clause, pkgdir=merge_scripts.root+"/funtoo/scripts",
 			                          filter_repos=filter_repos, force=overlay_def["force"] if "force" in overlay_def else None,
 			                          cpm_logger=cpm_logger, secondary_kit=secondary_kit)
