@@ -324,7 +324,7 @@ kit_groups = {
 	'prime' : [
 		{ 'name' : 'core-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime_protected', 'default' : True },
 		{ 'name' : 'core-kit', 'branch' : '1.1-prime', 'source': 'gentoo_prime_mk3_protected', 'stability' : KitStabilityRating.DEPRECATED },
-		{ 'name' : 'core-kit', 'branch': '1.2-prime', 'source': 'funtoo_current', 'stability': KitStabilityRating.DEV},
+		{ 'name' : 'core-kit', 'branch': '1.2-prime', 'source': 'funtoo_current', 'stability': KitStabilityRating.ALPHA},
 		{ 'name' : 'core-hw-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True },
 		{ 'name' : 'security-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime_protected', 'default' : True },
 		{ 'name' : 'security-kit', 'branch' : '1.1-prime', 'source': 'gentoo_prime_mk3_protected', 'stability' : KitStabilityRating.DEPRECATED },
