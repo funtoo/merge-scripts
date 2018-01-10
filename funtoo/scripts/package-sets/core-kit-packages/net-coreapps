@@ -28,3 +28,7 @@ net-libs/gnutls
 net-libs/libproxy
 dev-libs/libnl
 net-libs/neon
+
+# the glibc split libraries
+net-libs/rpcsvc-proto
+net-libs/libnsl
