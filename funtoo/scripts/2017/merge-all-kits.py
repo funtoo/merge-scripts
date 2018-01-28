@@ -251,6 +251,10 @@ kit_source_defs = {
 	"funtoo_prime_perl" : [
 		# specific snapshot for perl-kit
 		{ "repo" : "gentoo-staging", 'src_sha1' : 'fc74d3206fa20caa19b7703aa051ff6de95d5588', 'date' : '11 Jan 2017' }
+	],
+	"funtoo_prime_kde" : [
+		# specific snapshot for kde-kit
+		{ "repo" : "gentoo-staging", 'src_sha1' : '1a0337dbb94be980733eeb9d9661da58cffd4e59', 'date' : '28 Jan 2018' }
 	]
 }
 
@@ -339,16 +343,17 @@ kit_groups = {
 	'prime' : [
 		{ 'name' : 'core-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime_protected', 'default' : True },
 		{ 'name' : 'core-kit', 'branch' : '1.1-prime', 'source': 'gentoo_prime_mk3_protected', 'stability' : KitStabilityRating.DEPRECATED },
-		{ 'name' : 'core-kit', 'branch': '1.2-prime', 'source': 'gentoo_prime_mk4_protected', 'stability': KitStabilityRating.BETA},
+		{ 'name' : 'core-kit', 'branch': '1.2-prime', 'source': 'gentoo_prime_mk4_protected', 'stability': KitStabilityRating.BETA },
 		{ 'name' : 'core-hw-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True },
 		{ 'name' : 'security-kit', 'branch' : '1.0-prime', 'source': 'gentoo_prime_protected', 'default' : True },
 		{ 'name' : 'security-kit', 'branch' : '1.1-prime', 'source': 'gentoo_prime_mk3_protected', 'stability' : KitStabilityRating.DEPRECATED },
-		{ 'name' : 'security-kit', 'branch': '1.2-prime', 'source': 'gentoo_prime_mk4_protected', 'stability': KitStabilityRating.BETA},
+		{ 'name' : 'security-kit', 'branch': '1.2-prime', 'source': 'gentoo_prime_mk4_protected', 'stability': KitStabilityRating.BETA },
 		{ 'name' : 'xorg-kit', 'branch' : '1.17-prime', 'source': 'funtoo_prime_xorg', 'default' : False, 'stability' : KitStabilityRating.PRIME },
 		{ 'name' : 'xorg-kit', 'branch' : '1.19-prime', 'source': 'funtoo_mk2_prime', 'default' : True, 'stability' : KitStabilityRating.PRIME  }, # MK2
 		{ 'name' : 'gnome-kit', 'branch' : '3.20-prime', 'source': 'funtoo_prime_gnome', 'default' : True },
-		{ 'name' : 'gnome-kit', 'branch': '3.26-prime', 'source': 'funtoo_current', 'default': False, 'stability' : KitStabilityRating.DEV },
+		{ 'name' : 'gnome-kit', 'branch': '3.26-prime', 'source': 'funtoo_current', 'default' : False, 'stability' : KitStabilityRating.DEV },
 		{ 'name' : 'kde-kit', 'branch' : '5.10-prime', 'source': 'funtoo_mk3_prime', 'default' : True  },
+		{ 'name' : 'kde-kit', 'branch' : '5.11-prime', 'source': 'funtoo_prime_kde', 'stability' : KitStabilityRating.BETA },
 		{ 'name' : 'media-kit', 'branch' : '1.0-prime', 'source': 'funtoo_prime_media', 'default' : False, 'stability' : KitStabilityRating.DEPRECATED },
 		{ 'name' : 'media-kit', 'branch' : '1.1-prime', 'source': 'funtoo_mk3_prime', 'default' : True, 'stability' : KitStabilityRating.PRIME }, # MK3
 		{ 'name' : 'media-kit', 'branch' : '1.2-prime', 'source': 'funtoo_mk4_prime', 'stability': KitStabilityRating.BETA},
