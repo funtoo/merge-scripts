@@ -1,5 +1,3 @@
-# sys-auth catpkg 
-sys-auth/*
 sec-policy/*
 # KERBEROS:
 
