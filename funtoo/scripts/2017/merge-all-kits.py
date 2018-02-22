@@ -3,7 +3,7 @@
 from merge_utils import *
 from datetime import datetime
 import json
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 from enum import Enum
 import os
 
@@ -200,6 +200,15 @@ kit_source_defs = {
 		{"repo": "gentoo-staging", "src_sha1": 'aa03020139bc129af2ad5f454640c102afa712e6', 'date': '22 Oct 2017'},
 		{"repo": "gentoo-staging-underlay" },
 	],
+	"funtoo_for_gnome_3.26": [
+		# allow overlays to override gentoo
+		{"repo": "flora", },
+		{"repo": "faustoo", },
+		{"repo": "fusion809", "src_sha1": "574f9f6f69b30f4eec7aa2eb53f55059d3c05b6a", 'date': '23 Oct 2017'},
+		{"repo": "rh1", },
+		{"repo": "gentoo-staging", "src_sha1": '0b2ce87aa5463fecfccf365d8c3af2d1504fe61c', 'date': '21 Jan 2018'},
+		{"repo": "gentoo-staging-underlay"},
+	],
 	"funtoo_prime" : [
 		# allow overlays to override gentoo
 		{ "repo" : "flora", },
@@ -332,7 +341,7 @@ kit_groups = {
 		{ 'name' : 'xorg-kit', 'branch' : '1.17-prime', 'source': 'funtoo_prime_xorg', 'default' : False, 'stability' : KitStabilityRating.PRIME },
 		{ 'name' : 'xorg-kit', 'branch' : '1.19-prime', 'source': 'funtoo_mk2_prime', 'default' : True, 'stability' : KitStabilityRating.PRIME  }, # MK2
 		{ 'name' : 'gnome-kit', 'branch' : '3.20-prime', 'source': 'funtoo_prime_gnome', 'default' : True },
-		{ 'name' : 'gnome-kit', 'branch': '3.26-prime', 'source': 'funtoo_current', 'default': False, 'stability' : KitStabilityRating.DEV },
+		{ 'name' : 'gnome-kit', 'branch': '3.26-prime', 'source': 'funtoo_for_gnome_3.26', 'default': False, 'stability' : KitStabilityRating.BETA },
 		{ 'name' : 'kde-kit', 'branch' : '5.10-prime', 'source': 'funtoo_mk3_prime', 'default' : True  },
 		{ 'name' : 'media-kit', 'branch' : '1.0-prime', 'source': 'funtoo_prime_media', 'default' : False, 'stability' : KitStabilityRating.DEPRECATED },
 		{ 'name' : 'media-kit', 'branch' : '1.1-prime', 'source': 'funtoo_mk3_prime', 'default' : True, 'stability' : KitStabilityRating.PRIME }, # MK3
@@ -366,6 +375,53 @@ kit_groups = {
 		{ 'name' : 'science-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True },
 		{ 'name' : 'games-kit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True },
 		{ 'name' : 'nokit', 'branch' : 'master', 'source': 'funtoo_current', 'default' : True }
+	]
+}
+
+funtoo_releases = OrderedDict()
+
+funtoo_releases["1.0"] = {
+	"kit_compat_group" : [
+	 ("core-kit", "1.0-prime"),
+	 ("security-kit", "1.0-prime"),
+	 ("media-kit", "1.1-prime"),
+	 ("java-kit", "1.0-prime"),
+	 ("ruby-kit", "1.0-prime"),
+	 ("haskell-kit", "1.0-prime"),
+	 ("lisp-scheme-kit", "1.0-prime"),
+	 ("lang-kit", "1.0-prime"),
+	 ("dev-kit", "1.0-prime"),
+	 ("desktop-kit", "1.0-prime"),
+	 ("python-kit", [ "3.4-prime", "3.6-prime"]),
+	 ("xorg-kit", ["1.17-prime", "1.19-prime"])
+	],
+	"upgrade_from" : []
+}
+
+funtoo_releases["1.2"] = {
+	"kit_compat_group" : [
+	  ("core-kit", "1.2-prime"),
+	  ("security-kit", "1.2-prime"),
+	  ("media-kit", "1.2-prime"),
+	  ("java-kit", "1.2-prime"),
+	  ("ruby-kit", "1.2-prime"),
+	  ("haskell-kit", "1.2-prime"),
+	  ("lisp-scheme-kit", "1.2-prime"),
+	  ("lang-kit", "1.2-prime"),
+	  ("dev-kit", "1.2-prime"),
+	  ("desktop-kit", "1.2-prime"),
+	  ("python-kit", ["3.4-prime", "3.6-prime"]),
+	  ("xorg-kit", ["1.17-prime", "1.19-prime"])
+	],
+	"upgrade_from" : [ "1.0" ],
+	"upgrade_docs" : "UPGRADE.mediawiki", #TODO: where is the optimal place to place this file?
+	"package_prerequisites" : [ ">=app-admin/ego-1.9.0" ],
+	"upgrade_steps" : [
+		"emerge -1 gcc",
+		"emerge -1 glibc",
+		"emerge -uDN @system",
+		"emerge -uDN @world",
+		"emerge @preserved-rebuild"
 	]
 }
 
