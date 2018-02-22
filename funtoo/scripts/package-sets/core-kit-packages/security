@@ -35,4 +35,7 @@ dev-libs/npth
 #MISC STUFF
 sys-apps/paxctl
 
+#PAM_PKCS dep
+sys-apps/pcsc-lite
+
 
