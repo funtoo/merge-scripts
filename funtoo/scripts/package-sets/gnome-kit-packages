@@ -10,6 +10,8 @@ app-admin/system-config-printer
 app-admin/system-config-printer-common
 app-admin/system-config-printer-gnome
 app-arch/file-roller
+app-arch/gcab
+app-arch/gnome-autorar
 app-cdr/brasero
 app-crypt/gcr
 app-crypt/libsecret
@@ -59,7 +61,6 @@ dev-libs/libgee
 dev-libs/libgit2-glib
 dev-libs/libgusb
 dev-libs/libgweather
-dev-libs/libical
 dev-libs/libinput
 dev-libs/liblouis
 dev-libs/libpeas
@@ -102,8 +103,6 @@ games-puzzle/quadrapassel
 games-puzzle/swell-foop
 gnome-base/*
 gnome-extra/*
-gnome-extra/iio-sensor-proxy
-gnome-extra/nm-applet
 mail-client/evolution
 mail-client/geary
 media-gfx/eog
