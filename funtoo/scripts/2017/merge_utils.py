@@ -23,6 +23,8 @@ class MergeStep(object):
 	pass
 
 def get_pkglist(fname):
+
+	"""Grabs a package set list, returning a list of lines."""
 	if fname[0] == "/":
 		cpkg_fn = fname
 	else:
@@ -211,14 +213,17 @@ def getPackagesInCatWithMaintainer(cur_overlay, my_cat, my_email):
 				if my_email == str(email):
 					yield my_cat + "/" + pkgdir
 
-def getPackagesMatchingGlob(cur_overlay, my_glob):
+def getPackagesMatchingGlob(cur_overlay, my_glob, exclusions=None):
 	insert_list = []
+	if exclusions is None:
+		exclusions = []
 	for candidate in glob.glob(cur_overlay.root + "/" + my_glob):
 		if not os.path.isdir(candidate):
 			continue
 		strip_len = len(cur_overlay.root)+1
 		candy_strip = candidate[strip_len:]
-		insert_list.append(candy_strip)
+		if candy_strip not in exclusions:
+			insert_list.append(candy_strip)
 	return insert_list
 
 def getPackagesMatchingRegex(cur_overlay, my_regex):
@@ -623,10 +628,19 @@ def generateKitSteps(kit_name, from_tree, select_only="all", fixup_repo=None, pk
 			cat, eclass = patsplit[1:]
 			cat_pkglist = getPackagesInCatWithEclass( from_tree, cat, eclass )
 			pkglist += list(cat_pkglist)
-		elif pattern.endswith("/*"):
-			pkglist += getPackagesMatchingGlob( from_tree, pattern)
 		else:
-			pkglist.append(pattern)
+			linesplit = pattern.split()
+			if len(linesplit) and linesplit[0].endswith("/*"):
+				# we want to support exclusions, starting with "-":
+				exclusions = []
+				for exclusion in linesplit[1:]:
+					if exclusion.startswith("-"):
+						exclusions.append(exclusion[1:])
+					else:
+						print("Invalid exclusion: %s" % pattern)
+				pkglist += getPackagesMatchingGlob( from_tree, pattern, exclusions=exclusions )
+			else:
+				pkglist.append(pattern)
 
 	to_insert = set(pkglist)
 
