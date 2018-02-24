@@ -256,20 +256,21 @@ location = %s
 	p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
 	p.frozen = False
 	mypkgs = set()
-	cpvs = []
+	cpv_map = {}
 	for catpkg in p.cp_all():
 		for pkg in p.cp_list(catpkg):
 			if pkg == '':
 				print("No match for %s" % catpkg)
 				continue
-			cpvs.append(pkg)
-	for cpv, result in p.parallel_aux_get(cpvs, [ "INHERITED"]):
+			cpv_map[pkg] = catpkg
+	for cpv, result in p.parallel_aux_get(cpv_map.keys(), [ "INHERITED"]):
 		if type(result) == portage.exception.PortageKeyError:
 			print("Portage key error for %s" % cpv)
 			continue
 		if eclass in result[0].split():
-			if eclass not in mypkgs:
-				mypkgs.add(cpv)
+			cp = cpv_map[cpv]
+			if cp not in mypkgs:
+				mypkgs.add(cp)
 	return mypkgs
 
 def getPackagesInCatWithEclass(cur_overlay, cat, eclass):
@@ -290,21 +291,22 @@ location = %s
 	p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
 	p.frozen = False
 	mypkgs = set()
-	cpvs = []
+	cpv_map = {}
 	for catpkg in p.cp_all(categories=[cat]):
 		for pkg in p.cp_list(catpkg):
 			if pkg == '':
 				print("No match for %s" % catpkg)
 				continue
-			cpvs.append(pkg)
-	for cpv, result in p.parallel_aux_get(cpvs, [ "INHERITED" ]):
+			cpv_map[pkg] = catpkg
+	for cpv, result in p.parallel_aux_get(cpv_map.keys(), [ "INHERITED" ]):
 		if type(result) == portage.exception.PortageKeyError:
 			print("Portage key error for %s" % cpv)
 			continue
 		print("ECLASS DEBUG", cpv, result)
 		if eclass in result[0].split():
-			if eclass not in mypkgs:
-				mypkgs.add(cpv)
+			cp = cpv_map[cpv]
+			if cp not in mypkgs:
+				mypkgs.add(cp)
 	return mypkgs
 
 class CatPkgScan(MergeStep):
@@ -568,12 +570,12 @@ def getAllMeta(metadata, dest_kit, parent_repo=None):
 		''' % ( dest_kit.name, dest_kit.root )
 	p = portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
 	myeclasses = set()
-	cpvs = []
+	cpv_map = {}
 	for cp in p.cp_all(trees=[dest_kit.root]):
 		for cpv in p.cp_list(cp, mytree=dest_kit.root):
-			cpvs.append(cpv)
+			cpv_map[cpv] = cp
 
-	for cpv, result in p.parallel_aux_get( cpvs, [ "LICENSE", "INHERITED"], mytree=dest_kit.root):
+	for cpv, result in p.parallel_aux_get( cpv_map.keys(), [ "LICENSE", "INHERITED"], mytree=dest_kit.root):
 		if type(result) == portage.exception.PortageKeyError:
 				print("Portage key error for %s" % repr(cpv))
 				continue
