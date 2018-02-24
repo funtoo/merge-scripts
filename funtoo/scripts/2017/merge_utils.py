@@ -302,7 +302,6 @@ location = %s
 		if type(result) == portage.exception.PortageKeyError:
 			print("Portage key error for %s" % cpv)
 			continue
-		print("ECLASS DEBUG", cpv, result)
 		if eclass in result[0].split():
 			cp = cpv_map[cpv]
 			if cp not in mypkgs:
@@ -653,7 +652,6 @@ def generateKitSteps(kit_name, from_tree, select_only="all", fixup_repo=None, pk
 	to_insert = set(pkglist)
 
 	if secondary_kit is True:
-		print('Secondary kit is true')
 		# add in any catpkgs from previous scans of this same kit that might be missing from this scan:
 		to_insert = cpm_logger.update_cached_kit_catpkg_set(to_insert)
 	else:
@@ -679,7 +677,6 @@ def generateKitSteps(kit_name, from_tree, select_only="all", fixup_repo=None, pk
 			new_set.add(catpkg)
 	to_insert = new_set
 
-	print('To-be-inserted catpkgs are', to_insert)
 	insert_kwargs = {"select": sorted(list(to_insert))}
 
 	if pkglist:
@@ -1410,7 +1407,6 @@ class GitTree(Tree):
 
 
 	def run(self,steps):
-		print("Starting run")
 		for step in steps:
 			if step != None:
 				print("Running step", step.__class__.__name__, step)
