@@ -1770,7 +1770,7 @@ class GenCache(MergeStep):
 	"GenCache runs egencache --update to update metadata."
 
 	def run(self,tree):
-		cmd = ["egencache", "--update", "--repo", tree.reponame if tree.reponame else tree.name,
+		cmd = ["egencache", "--update", "--tolerant", "--repo", tree.reponame if tree.reponame else tree.name,
 		       "--repositories-configuration",
 		       "[%s]\nlocation = %s" % (tree.reponame if tree.reponame else tree.name, tree.root),
 		       "--jobs", repr(multiprocessing.cpu_count()+1)]
@@ -1786,7 +1786,7 @@ class GenUseLocalDesc(MergeStep):
 	"GenUseLocalDesc runs egencache to update use.local.desc"
 
 	def run(self,tree):
-		run_command(["egencache", "--update-use-local-desc", "--repo", tree.reponame if tree.reponame else tree.name, "--repositories-configuration", "[%s]\nlocation = %s" % (tree.reponame if tree.reponame else tree.name, tree.root)], abort_on_failure=False)
+		run_command(["egencache", "--update-use-local-desc", "--tolerant", "--repo", tree.reponame if tree.reponame else tree.name, "--repositories-configuration", "[%s]\nlocation = %s" % (tree.reponame if tree.reponame else tree.name, tree.root)], abort_on_failure=False)
 
 class GitCheckout(MergeStep):
 
