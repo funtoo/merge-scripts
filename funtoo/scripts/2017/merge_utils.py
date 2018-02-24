@@ -178,27 +178,28 @@ location = %s
 ''' % (cur_name, cur_name, cur_tree)
 	p = portage.portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
 	mypkgs = set()
+	cpvs = []
 	for catpkg in list(catpkgs):
 		for pkg in p.cp_list(catpkg):
 			if pkg == '':
 				print("No match for %s" % catpkg)
 				continue
+			cpvs.append(pkg)
+	for cpv, result in p.parallel_aux_get(cpvs, [ "DEPEND", "RDEPEND"]):
+		if type(result) == portage.exception.PortageKeyError:
+			print("Portage key error for %s" % repr(cpv))
+			continue
+		for dep in flatten(use_reduce(result[0]+" "+result[1], matchall=True)):
+			if len(dep) and dep[0] == "!":
+				continue
 			try:
-				aux = p.aux_get(pkg, ["DEPEND", "RDEPEND"])
-			except PortageKeyError:
-				print("Portage key error for %s" % repr(pkg))
-				return mypkgs
-			for dep in flatten(use_reduce(aux[0]+" "+aux[1], matchall=True)):
-				if len(dep) and dep[0] == "!":
-					continue
-				try:
-					mypkg = dep_getkey(dep)
-				except portage.exception.InvalidAtom:
-					continue
-				if mypkg not in mypkgs:
-					mypkgs.add(mypkg)
-				if levels != cur_level:
-					mypkgs = mypkgs.union(getDependencies(cur_overlay, mypkg, levels=levels, cur_level=cur_level+1))
+				mypkg = dep_getkey(dep)
+			except portage.exception.InvalidAtom:
+				continue
+			if mypkg not in mypkgs:
+				mypkgs.add(mypkg)
+			if levels != cur_level:
+				mypkgs = mypkgs.union(getDependencies(cur_overlay, mypkg, levels=levels, cur_level=cur_level+1))
 	return mypkgs
 
 def getPackagesInCatWithMaintainer(cur_overlay, my_cat, my_email):
@@ -255,19 +256,20 @@ location = %s
 	p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
 	p.frozen = False
 	mypkgs = set()
+	cpvs = []
 	for catpkg in p.cp_all():
 		for pkg in p.cp_list(catpkg):
 			if pkg == '':
 				print("No match for %s" % catpkg)
 				continue
-			try:
-				aux = p.aux_get(pkg, ["INHERITED"])
-			except PortageKeyError:
-				print("Portage key error for %s" % repr(pkg))
-				continue
-			if eclass in aux[0].split():
-				if eclass not in mypkgs:
-					mypkgs.add(catpkg)
+			cpvs.append(pkg)
+	for cpv, result in p.parallel_aux_get(cpvs, [ "INHERITED"]):
+		if type(result) == portage.exception.PortageKeyError:
+			print("Portage key error for %s" % cpv)
+			continue
+		if eclass in result[0].split():
+			if eclass not in mypkgs:
+				mypkgs.add(cpv)
 	return mypkgs
 
 def getPackagesInCatWithEclass(cur_overlay, cat, eclass):
@@ -288,19 +290,20 @@ location = %s
 	p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
 	p.frozen = False
 	mypkgs = set()
+	cpvs = []
 	for catpkg in p.cp_all(categories=[cat]):
 		for pkg in p.cp_list(catpkg):
 			if pkg == '':
 				print("No match for %s" % catpkg)
 				continue
-			try:
-				aux = p.aux_get(pkg, ["INHERITED"])
-			except PortageKeyError:
-				print("Portage key error for %s" % repr(pkg))
-				continue
-			if eclass in aux[0].split():
-				if eclass not in mypkgs:
-					mypkgs.add(catpkg)
+			cpvs.append(pkg)
+	for cpv, result in p.parallel_aux_get(cpvs, [ "INHERITED" ]):
+		if type(result) == portage.exception.PortageKeyError:
+			print("Portage key error for %s" % cpv)
+			continue
+		if eclass in result[0].split():
+			if eclass not in mypkgs:
+				mypkgs.add(cpv)
 	return mypkgs
 
 class CatPkgScan(MergeStep):
@@ -564,24 +567,26 @@ def getAllMeta(metadata, dest_kit, parent_repo=None):
 		''' % ( dest_kit.name, dest_kit.root )
 	p = portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
 	myeclasses = set()
+	cpvs = []
 	for cp in p.cp_all(trees=[dest_kit.root]):
 		for cpv in p.cp_list(cp, mytree=dest_kit.root):
-			try:
-				aux = p.aux_get(cpv, ["LICENSE","INHERITED"], mytree=dest_kit.root)
-			except PortageKeyError:
+			cpvs.append(cpv)
+
+	for cpv, result in p.parallel_aux_get( cpvs, [ "LICENSE", "INHERITED"], mytree=dest_kit.root):
+		if type(result) == portage.exception.PortageKeyError:
 				print("Portage key error for %s" % repr(cpv))
 				continue
-			if metadata == "INHERITED":
-				for eclass in aux[metapos].split():
-					key = eclass + ".eclass"
-					if key not in myeclasses:
-						myeclasses.add(key)
-			elif metadata == "LICENSE":
-				for lic in aux[metapos].split():
-					if lic in [ ")", "(", "||" ] or lic.endswith("?"):
-						continue
-					if lic not in myeclasses:
-						myeclasses.add(lic)
+		if metadata == "INHERITED":
+			for eclass in result[metapos].split():
+				key = eclass + ".eclass"
+				if key not in myeclasses:
+					myeclasses.add(key)
+		elif metadata == "LICENSE":
+			for lic in result[metapos].split():
+				if lic in [ ")", "(", "||" ] or lic.endswith("?"):
+					continue
+				if lic not in myeclasses:
+					myeclasses.add(lic)
 	return myeclasses
 
 def generateKitSteps(kit_name, from_tree, select_only="all", fixup_repo=None, pkgdir=None,
