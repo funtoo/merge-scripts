@@ -638,7 +638,7 @@ def generateKitSteps(kit_name, from_tree, select_only="all", fixup_repo=None, pk
 						exclusions.append(exclusion[1:])
 					else:
 						print("Invalid exclusion: %s" % pattern)
-				pkglist += getPackagesMatchingGlob( from_tree, pattern, exclusions=exclusions )
+				pkglist += getPackagesMatchingGlob( from_tree, linesplit[0], exclusions=exclusions )
 			else:
 				pkglist.append(pattern)
 
