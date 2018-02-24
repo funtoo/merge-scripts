@@ -263,7 +263,7 @@ location = %s
 				print("No match for %s" % catpkg)
 				continue
 			cpv_map[pkg] = catpkg
-	for cpv, result in p.parallel_aux_get(cpv_map.keys(), [ "INHERITED"]):
+	for cpv, result in p.parallel_aux_get(list(cpv_map.keys()), [ "INHERITED"]):
 		if type(result) == portage.exception.PortageKeyError:
 			print("Portage key error for %s" % cpv)
 			continue
@@ -298,7 +298,7 @@ location = %s
 				print("No match for %s" % catpkg)
 				continue
 			cpv_map[pkg] = catpkg
-	for cpv, result in p.parallel_aux_get(cpv_map.keys(), [ "INHERITED" ]):
+	for cpv, result in p.parallel_aux_get(list(cpv_map.keys()), [ "INHERITED" ]):
 		if type(result) == portage.exception.PortageKeyError:
 			print("Portage key error for %s" % cpv)
 			continue
@@ -575,7 +575,7 @@ def getAllMeta(metadata, dest_kit, parent_repo=None):
 		for cpv in p.cp_list(cp, mytree=dest_kit.root):
 			cpv_map[cpv] = cp
 
-	for cpv, result in p.parallel_aux_get( cpv_map.keys(), [ "LICENSE", "INHERITED"], mytree=dest_kit.root):
+	for cpv, result in p.parallel_aux_get( list(cpv_map.keys()), [ "LICENSE", "INHERITED"], mytree=dest_kit.root):
 		if type(result) == portage.exception.PortageKeyError:
 				print("Portage key error for %s" % repr(cpv))
 				continue
