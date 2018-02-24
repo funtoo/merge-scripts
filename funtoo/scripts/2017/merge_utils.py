@@ -301,6 +301,7 @@ location = %s
 		if type(result) == portage.exception.PortageKeyError:
 			print("Portage key error for %s" % cpv)
 			continue
+		print("ECLASS DEBUG", cpv, result)
 		if eclass in result[0].split():
 			if eclass not in mypkgs:
 				mypkgs.add(cpv)
