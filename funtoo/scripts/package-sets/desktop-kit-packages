@@ -9,7 +9,7 @@ xfce-base/*
 xfce-extra/*
 # run this after xorg-kit
 x11-apps/*
-x11-libs/*
+x11-libs/* -x11-libs/compizconfig-backend-kconfig4
 x11-misc/*
 x11-plugins/*
 x11-terms/*
