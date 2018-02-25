@@ -69,6 +69,7 @@ dev-libs/newt
 dev-libs/totem-pl-parser
 dev-libs/vala-common
 dev-python/pyatspi
+dev-python/pycairo
 dev-python/pygobject
 dev-python/pygtk
 dev-util/anjuta
