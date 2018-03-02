@@ -852,15 +852,15 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 	tree.run(copy_steps)
 
 	# Remove unused eclasses:
+	if tree.name != "core-kit":
+		used_eclasses = getAllEclasses(tree)
 
-	used_eclasses = getAllEclasses(tree)
-
-	for eclass in os.listdir(tree.root + "/eclass"):
-		if not eclass.endswith(".eclass"):
-			continue
-		if eclass not in used_eclasses:
-			print("Removing unused eclass: " + eclass)
-			os.unlink(tree.root + "/eclass/" + eclass)
+		for eclass in os.listdir(tree.root + "/eclass"):
+			if not eclass.endswith(".eclass"):
+				continue
+			if eclass not in used_eclasses:
+				print("Removing unused eclass: " + eclass)
+				os.unlink(tree.root + "/eclass/" + eclass)
 	
 	# Phase 4: finalize and commit
 
