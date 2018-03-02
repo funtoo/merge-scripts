@@ -854,12 +854,12 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 	# Remove unused eclasses:
 	if tree.name != "core-kit":
 		used_eclasses = getAllEclasses(tree)
-
+		print()
 		to_remove = []
 		for eclass in os.listdir(tree.root + "/eclass"):
 			if not eclass.endswith(".eclass"):
 				continue
-			if eclass not in used_eclasses:
+			if eclass not in used_eclasses["dest_kit"]:
 				print("Removing unused eclass: " + eclass)
 				to_remove.append(tree.root + "/eclass/" + eclass)
 		print("Going to remove unused eclasses:", to_remove)
