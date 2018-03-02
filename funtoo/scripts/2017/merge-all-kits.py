@@ -811,39 +811,9 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 		# for core-kit, we are going to include a COMPLETE set of eclasses, even unused ones, so that third-party overlays that
 		# depend on any of these eclasses will find them and be able to use them.
 
-		# All other kits get only the eclasses they actually use, so they have local copies of the versions of the eclasses with
-		# which they were tested.
+		# Copy all eclasses that haven't already been copied over. We will remove unused ones later.
 
-		while keep_going:
-			for repo, elist in getAllEclasses(tree, gentoo_staging).items():
-				repo_obj = None
-				if repo == "dest_kit":
-					# This means the eclass already exists in the kit -- probably copied from fixups
-					continue
-				elif repo == "parent_repo":
-					# This means that the eclass is in gentoo_staging and needs to be copied
-					repo_obj = gentoo_staging
-				elif repo == None:
-					if len(elist) == 0:
-						keep_going = False
-					elif len(elist) == last_count:
-						# If there is something in elist, this means that the listed eclasses was nowhere to be found.
-						iterations += 1
-						if iterations > max_iterations:
-							missing_eclasses = elist
-							keep_going = False
-				if repo_obj != None:
-					copy_steps += [ InsertEclasses(repo_obj, select=elist) ]
-
-
-	if iterations > max_iterations and len(missing_eclasses):
-		print("!!! Error: The following eclasses were not found:")
-		print("!!!      : " + " ".join(missing_eclasses))
-		print("!!!      : Please be sure to use kit-fixups or the overlay's eclass list to copy these necessary eclasses into place.")
-		sys.exit(1)
-
-	# we need to get all the eclasses in place right away so that the following license extraction code has a 
-	# chance of working correctly:
+		copy_steps += [ InsertEclasses(gentoo_staging, simpleGetAllEclasses(tree, gentoo_staging)) ]
 
 	tree.run(copy_steps)
 	copy_steps = []
@@ -881,15 +851,16 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 
 	tree.run(copy_steps)
 
-	# QA check: all eclasses should be in place. Let's confirm. if egencache is run without all eclasses in place, it hangs.
+	# Remove unused eclasses:
 
-	result = getAllEclasses(tree)
-	if None in result and len(result[None]):
-		# we have some missing eclasses
-		print("!!! Error: QA check on kit failed -- missing eclasses:")
-		print("!!!      : " + " ".join(result[None]))
-		print("!!!      : Please be sure to use kit-fixups or the overlay's eclass list to copy these necessary eclasses into place.")
-		sys.exit(1)
+	used_eclasses = getAllEclasses(tree)
+
+	for eclass in os.listdir(tree.root + "/eclass"):
+		if not eclass.endswith(".eclass"):
+			continue
+		if eclass not in used_eclasses:
+			print("Removing unused eclass: " + eclass)
+			os.unlink(tree.root + "/eclass/" + eclass)
 	
 	# Phase 4: finalize and commit
 

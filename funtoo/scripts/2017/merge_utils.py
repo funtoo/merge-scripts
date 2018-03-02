@@ -511,6 +511,23 @@ def _getAllDriver(metadata, path_prefix, dest_kit, parent_repo):
 		out[None].append(eclass)
 	return out
 
+def simpleGetAllEclasses(dest_kit, parent_repo):
+	"""
+	A simpler method to get all eclasses copied into a kit. If the eclass exists in parent repo, but not in dest_kit,
+	return it in a list.
+
+	:param dest_kit:
+	:param parent_repo:
+	:return:
+	"""
+	out = []
+	for eclass in os.listdir(parent_repo + "/eclass"):
+		if not eclass.endswith(".eclass"):
+			continue
+		out.append(eclass)
+	return out
+
+
 def getAllEclasses(dest_kit, parent_repo=None):
 	return _getAllDriver("INHERITED", "eclass", dest_kit, parent_repo)
 
