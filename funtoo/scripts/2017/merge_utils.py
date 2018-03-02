@@ -521,7 +521,7 @@ def simpleGetAllEclasses(dest_kit, parent_repo):
 	:return:
 	"""
 	out = []
-	for eclass in os.listdir(parent_repo + "/eclass"):
+	for eclass in os.listdir(parent_repo.root + "/eclass"):
 		if not eclass.endswith(".eclass"):
 			continue
 		out.append(eclass)
