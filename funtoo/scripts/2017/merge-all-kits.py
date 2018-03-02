@@ -863,7 +863,6 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 				print("Removing unused eclass: " + eclass)
 				to_remove.append(tree.root + "/eclass/" + eclass)
 		print("Going to remove unused eclasses:", to_remove)
-		import pdb; pdb.set_trace()
 		for file in to_remove:
 			os.unlink(file)
 
