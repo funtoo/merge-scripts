@@ -524,6 +524,8 @@ def simpleGetAllEclasses(dest_kit, parent_repo):
 	for eclass in os.listdir(parent_repo.root + "/eclass"):
 		if not eclass.endswith(".eclass"):
 			continue
+		if os.path.exists(dest_kit.root + "/eclass/" + eclass):
+			continue
 		out.append(eclass)
 	return out
 
