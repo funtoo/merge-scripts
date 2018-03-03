@@ -795,26 +795,6 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 	# For eclasses we perform a much more conservative scan. We will only scour missing eclasses from gentoo-staging, not
 	# eclasses. If you need a special eclass, you need to specify it in the eclasses list for the overlay explicitly.
 
-	last_count = None
-	iterations = 0
-	max_iterations = 16
-	keep_going = True
-	missing_eclasses = []
-
-	# This loop is rather complicated to handle the case where we copy an eclass into our dest-kit, and this eclass in
-	# turn requires additional eclasses, thus creating additional missing eclasses. So we need a super-loop to drive the
-	# whole thing, and we keep going until the number of missing eclasses is zero.
-
-
-	if tree.name != "core-kit":
-	
-		# for core-kit, we are going to include a COMPLETE set of eclasses, even unused ones, so that third-party overlays that
-		# depend on any of these eclasses will find them and be able to use them.
-
-		# Copy all eclasses that haven't already been copied over. We will remove unused ones later.
-
-		copy_steps += [ InsertEclasses(gentoo_staging, simpleGetAllEclasses(tree, gentoo_staging)) ]
-
 	tree.run(copy_steps)
 	copy_steps = []
 
