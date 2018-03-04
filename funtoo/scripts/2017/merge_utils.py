@@ -116,6 +116,9 @@ aliases = gentoo
 		for pkg in p.cp_all():
 			
 			cp = portage.catsplit(pkg)
+			if not os.path.exists(cur_tree + "/" + cp):
+				# catpkg is from core-kit, but we are not processing core kit, so skip:
+				continue
 			ebs = {}
 			for a in p.xmatch("match-all", pkg):
 				if len(a) == 0:
