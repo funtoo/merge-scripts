@@ -798,56 +798,24 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 	tree.run(copy_steps)
 	copy_steps = []
 
-	# for licenses, we are going to aggressively scan all source repos for any missing licenses. We don't need to
-	# be as anal about licenses as eclasses where slight differences can cause problems:
-
-	not_found_licenses = {}
-
-	for repo_dict in repos:
-		for repo, elist in getAllLicenses(tree, repo_dict["repo"]).items():
-			repo_obj = None
-			if repo == "dest_kit":
-				# already where we want them
-				continue
-			elif repo == "parent_repo":
-				# found license in the parent repo/overlay
-				repo_obj = repo_dict["repo"]
-			elif repo == None:
-				for license in elist:
-					not_found_licenses[license] = repo_dict["repo"]
-			for license in elist:
-				if license in not_found_licenses:
-					del not_found_licenses[license]
-			if repo_obj:
-				copy_steps += [ InsertLicenses(repo_obj, select=elist) ]
-
-	if len(list(not_found_licenses)):
-		# we scoured all our source repositories and these licenses were not found:
-		print("!!! Error: The following eclasses were not found:")
-		for license, repo in not_found_licenses.items():
-			print("!!! %s license in %s" % (license, repo.name))
-		print("!!!      : Please be sure to install these licenses in the source repository.")
-		sys.exit(1)
-
+	# copy all available licenses that have not been copied in fixups from gentoo-staging over to the kit.
+	# We will remove any unused licenses below...
+	
+	copy_steps += [ InsertLicenses(gentoo_staging, select=simpleGetAllLicenses(tree, gentoo_staging)) ]
 	tree.run(copy_steps)
 
-	# Remove unused eclasses:
-	if tree.name != "core-kit":
-		used_eclasses = getAllEclasses(tree)
-		print()
-		to_remove = []
-		for eclass in os.listdir(tree.root + "/eclass"):
-			if not eclass.endswith(".eclass"):
-				continue
-			if eclass not in used_eclasses["dest_kit"]:
-				print("Removing unused eclass: " + eclass)
-				to_remove.append(tree.root + "/eclass/" + eclass)
-		print("Going to remove unused eclasses:", to_remove)
-		for file in to_remove:
-			os.unlink(file)
-
-
 	# Phase 4: finalize and commit
+
+	# remove unused licenses...
+	used_licenses = getAllLicenses(tree)
+	to_remove = []
+	for license in os.listdir(tree.root + "/licenses"):
+		if license not in used_licenses["dest_kit"]:
+			print("Removing unused license: " + license)
+			to_remove.append(tree.root + "/licenses/" + license)
+	print("Going to remove unused licenses:", to_remove)
+	for file in to_remove:
+		os.unlink(file)
 
 	post_steps += [
 		ELTSymlinkWorkaround(),

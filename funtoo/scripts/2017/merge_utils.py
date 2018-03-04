@@ -511,6 +511,14 @@ def _getAllDriver(metadata, path_prefix, dest_kit, parent_repo):
 		out[None].append(eclass)
 	return out
 
+def simpleGetAllLicenses(dest_kit, parent_repo):
+	out = []
+	for license in os.listdir(parent_repo.root + "/licenses"):
+		if os.path.exists(dest_kit.root + "/licenses/" + license):
+			continue
+		out.append(license)
+	return out
+
 def simpleGetAllEclasses(dest_kit, parent_repo):
 	"""
 	A simpler method to get all eclasses copied into a kit. If the eclass exists in parent repo, but not in dest_kit,
