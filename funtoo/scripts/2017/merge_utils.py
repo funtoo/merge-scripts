@@ -541,7 +541,7 @@ def simpleGetAllEclasses(dest_kit, parent_repo):
 def getAllEclasses(dest_kit, parent_repo=None):
 	return _getAllDriver("INHERITED", "eclass", dest_kit, parent_repo)
 
-def getAllLicenses(dest_kit, parent_repo):
+def getAllLicenses(dest_kit, parent_repo=None):
 	return _getAllDriver("LICENSE", "licenses", dest_kit, parent_repo)
 
 # getAllMeta uses the Portage API to query metadata out of a set of repositories. It is designed to be used to figure

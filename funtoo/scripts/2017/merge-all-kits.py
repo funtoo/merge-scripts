@@ -800,7 +800,7 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 
 	# copy all available licenses that have not been copied in fixups from gentoo-staging over to the kit.
 	# We will remove any unused licenses below...
-	
+
 	copy_steps += [ InsertLicenses(gentoo_staging, select=simpleGetAllLicenses(tree, gentoo_staging)) ]
 	tree.run(copy_steps)
 
