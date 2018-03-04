@@ -503,23 +503,15 @@ def repoName(cur_overlay):
 # None			: list of all eclasses that were NOT found. This is an error and indicates we need some kit-fixups or
 #				  overlay-specific eclasses.
 
-def _getAllDriver(metadata, path_prefix, dest_kit, parent_repo):
+def _getAllDriver(metadata, path_prefix, dest_kit):
 	# these may be eclasses or licenses -- we use the term 'eclass' here:
-	eclasses = getAllMeta(metadata, dest_kit, parent_repo)
+	eclasses = getAllMeta(metadata, dest_kit)
 	out = { None: [], "dest_kit" : [] }
-	if parent_repo != None:
-		out["parent_repo"] = []
 	for eclass in eclasses:
 		ep = os.path.join(dest_kit.root, path_prefix, eclass)
 		if os.path.exists(ep):
 			out["dest_kit"].append(eclass)
 			continue
-		if parent_repo != None:
-			ep = os.path.join(parent_repo.root, path_prefix, eclass)
-			if os.path.exists(ep):
-				out["parent_repo"].append(eclass)
-				continue
-			# not found!
 		out[None].append(eclass)
 	return out
 
@@ -550,11 +542,11 @@ def simpleGetAllEclasses(dest_kit, parent_repo):
 	return out
 
 
-def getAllEclasses(dest_kit, parent_repo=None):
-	return _getAllDriver("INHERITED", "eclass", dest_kit, parent_repo)
+def getAllEclasses(dest_kit):
+	return _getAllDriver("INHERITED", "eclass", dest_kit)
 
-def getAllLicenses(dest_kit, parent_repo=None):
-	return _getAllDriver("LICENSE", "licenses", dest_kit, parent_repo)
+def getAllLicenses(dest_kit):
+	return _getAllDriver("LICENSE", "licenses", dest_kit)
 
 # getAllMeta uses the Portage API to query metadata out of a set of repositories. It is designed to be used to figure
 # out what licenses or eclasses to copy from a parent repository to the current kit so that the current kit contains a
@@ -572,39 +564,31 @@ def getAllLicenses(dest_kit, parent_repo=None):
 #  getAllMeta() returns a set of actual files (without directories) that are used, so [ 'foo.eclass', 'bar.eclass'] 
 #  or [ 'GPL-2', 'bleh' ].
 #
-def getAllMeta(metadata, dest_kit, parent_repo=None):
+def getAllMeta(metadata, dest_kit):
 	metadict = { "LICENSE" : 0, "INHERITED" : 1 }
 	metapos = metadict[metadata]
 	
 	env = os.environ.copy()
-	
-	if parent_repo != None:
-		parent_name = parent_repo.reponame if parent_repo.reponame else repoName(parent_repo)
-	
 	env['PORTAGE_DEPCACHEDIR'] = '/var/cache/edb/%s-%s-meta' % ( dest_kit.name, dest_kit.branch )
-	if parent_repo != None:
+	if dest_kit.name != "core-kit":
 		env['PORTAGE_REPOSITORIES'] = '''
 	[DEFAULT]
-	main-repo = gentoo
+	main-repo = core-kit
 
-	[gentoo]
-	location = %s
+	[core-kit]
+	location = /var/git/dest-trees/core-kit
 
 	[%s]
 	location = %s
-	aliases = -gentoo
-	masters = gentoo 
-		''' % ( parent_repo.root, dest_kit.name, dest_kit.root)
+		''' % ( dest_kit.name, dest_kit.root)
 	else:
 		# we are testing a stand-alone kit that should have everything it needs included
 		env['PORTAGE_REPOSITORIES'] = '''
 	[DEFAULT]
-	main-repo = gentoo
+	main-repo = core-kit
 
 	[%s]
 	location = %s
-	eclass-overrides = gentoo 
-	aliases = gentoo
 		''' % ( dest_kit.name, dest_kit.root )
 	p = portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
 	myeclasses = set()
