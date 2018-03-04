@@ -97,7 +97,7 @@ location = /var/git/dest-trees/core-kit
 
 [%s]
 location = %s
-''' % (cur_name, cur_name, cur_tree)
+''' % (cur_name, cur_tree)
 		p = portage.portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
 
 		pkg_use = []
