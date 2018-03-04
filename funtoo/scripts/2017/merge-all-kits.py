@@ -811,7 +811,6 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 	to_remove = []
 	for license in os.listdir(tree.root + "/licenses"):
 		if license not in used_licenses["dest_kit"]:
-			print("Removing unused license: " + license)
 			to_remove.append(tree.root + "/licenses/" + license)
 	print("Going to remove unused licenses:", to_remove)
 	for file in to_remove:
@@ -831,8 +830,14 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 		# all other kits -- generate multiple settings, depending on what version of python-kit is active -- epro will select the right one for us.
 		python_settings = python_kit_settings
 
+	# TODO: GenPythonUse now references core-kit in the repository config in order to find needed eclasses for
+	# TODO: metadata generation. For now, core-kit is going to be pointing to 1.2, and this should work, but in the
+	# TODO: future, we may want more control over exactly what core-kit is chosen.
+
 	for branch, py_settings in python_settings.items():
 		post_steps += [ GenPythonUse(py_settings, "funtoo/kits/python-kit/%s" % branch) ]
+
+	# TODO: note that GenCache has been modified to utilize eclasses from core-kit as well.
 
 	post_steps += [
 		Minify(),
@@ -840,11 +845,11 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 		GenCache( cache_dir="/var/cache/edb/%s-%s" % ( kit_dict['name'], kit_dict['branch'] ) ),
 	]
 
-	if kit_group in [ "prime" ]:
-		# doing to record distfiles in mysql only for prime, not current, at least for now
-		post_steps += [
-			CatPkgScan(now=now, db=db)
-		]
+	#if kit_group in [ "prime" ]:
+	#	# doing to record distfiles in mysql only for prime, not current, at least for now
+	#	post_steps += [
+	#		CatPkgScan(now=now, db=db)
+	#	]
 
 	tree.run(post_steps)
 	tree.gitCommit(message="updates",branch=kit_dict['branch'],push=push)

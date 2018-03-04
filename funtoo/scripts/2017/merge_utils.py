@@ -89,12 +89,15 @@ class GenPythonUse(MergeStep):
 		env = os.environ.copy()
 		env['PORTAGE_DEPCACHEDIR'] = '/var/cache/edb/%s-%s-meta' % ( cur_overlay.name, cur_overlay.branch )
 		env['PORTAGE_REPOSITORIES'] = '''
-	[DEFAULT]
-	main-repo = %s
+[DEFAULT]
+main-repo = core-kit
 
-	[%s]
-	location = %s
-	''' % (cur_name, cur_name, cur_tree)
+[core-kit]
+location = /var/git/dest-trees/core-kit
+
+[%s]
+location = %s
+''' % (cur_name, cur_name, cur_tree)
 		p = portage.portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
 
 		pkg_use = []
@@ -1795,7 +1798,7 @@ class GenCache(MergeStep):
 	def run(self,tree):
 		cmd = ["egencache", "--update", "--tolerant", "--repo", tree.reponame if tree.reponame else tree.name,
 		       "--repositories-configuration",
-		       "[%s]\nlocation = %s" % (tree.reponame if tree.reponame else tree.name, tree.root),
+		       "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = /var/git/dest-trees/core-kit\n\n[%s]\nlocation = %s\n" % (tree.reponame if tree.reponame else tree.name, tree.root),
 		       "--jobs", repr(multiprocessing.cpu_count()+1)]
 		if self.cache_dir:
 			cmd += [ "--cache-dir", self.cache_dir ]
