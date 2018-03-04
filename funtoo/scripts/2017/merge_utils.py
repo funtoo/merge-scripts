@@ -88,6 +88,7 @@ class GenPythonUse(MergeStep):
 			cur_name = cur_overlay.name
 		env = os.environ.copy()
 		env['PORTAGE_DEPCACHEDIR'] = '/var/cache/edb/%s-%s-meta' % ( cur_overlay.name, cur_overlay.branch )
+		if cur_name != "core-kit":
 		env['PORTAGE_REPOSITORIES'] = '''
 [DEFAULT]
 main-repo = core-kit
@@ -98,6 +99,14 @@ location = /var/git/dest-trees/core-kit
 [%s]
 location = %s
 ''' % (cur_name, cur_tree)
+		else:
+		env['PORTAGE_REPOSITORIES'] = '''
+[DEFAULT]
+main-repo = core-kit
+
+[core-kit]
+location = /var/git/dest-trees/core-kit
+'''
 		p = portage.portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
 
 		pkg_use = []
