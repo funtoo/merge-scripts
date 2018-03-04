@@ -89,7 +89,7 @@ class GenPythonUse(MergeStep):
 		env = os.environ.copy()
 		env['PORTAGE_DEPCACHEDIR'] = '/var/cache/edb/%s-%s-meta' % ( cur_overlay.name, cur_overlay.branch )
 		if cur_name != "core-kit":
-		env['PORTAGE_REPOSITORIES'] = '''
+			env['PORTAGE_REPOSITORIES'] = '''
 [DEFAULT]
 main-repo = core-kit
 
@@ -100,7 +100,7 @@ location = /var/git/dest-trees/core-kit
 location = %s
 ''' % (cur_name, cur_tree)
 		else:
-		env['PORTAGE_REPOSITORIES'] = '''
+			env['PORTAGE_REPOSITORIES'] = '''
 [DEFAULT]
 main-repo = core-kit
 
