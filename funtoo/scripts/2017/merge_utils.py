@@ -95,6 +95,7 @@ main-repo = core-kit
 
 [core-kit]
 location = /var/git/dest-trees/core-kit
+aliases = gentoo
 
 [%s]
 location = %s
@@ -106,6 +107,7 @@ main-repo = core-kit
 
 [core-kit]
 location = /var/git/dest-trees/core-kit
+aliases = gentoo
 '''
 		p = portage.portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
 
@@ -181,13 +183,27 @@ def getDependencies(cur_overlay, catpkgs, levels=0, cur_level=0):
 	except FileNotFoundError:
 			cur_name = cur_overlay.name
 	env = os.environ.copy()
-	env['PORTAGE_REPOSITORIES'] = '''
-[DEFAULT]
-main-repo = %s 
+	if cur_overlay.name != "core-kit":
+		env['PORTAGE_REPOSITORIES'] = '''
+	[DEFAULT]
+	main-repo = core-kit
 
-[%s]
-location = %s
-''' % (cur_name, cur_name, cur_tree)
+	[core-kit]
+	location = /var/git/dest-trees/core-kit
+	aliases = gentoo
+
+	[%s]
+	location = %s
+	''' % (cur_name, cur_tree)
+	else:
+		env['PORTAGE_REPOSITORIES'] = '''
+	[DEFAULT]
+	main-repo = core-kit
+
+	[core-kit]
+	location = /var/git/dest-trees/core-kit
+	aliases = gentoo
+	'''
 	p = portage.portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
 	mypkgs = set()
 	cpvs = []
@@ -258,13 +274,27 @@ def getPackagesWithEclass(cur_overlay, eclass):
 	except FileNotFoundError:
 			cur_name = cur_overlay.name
 	env = os.environ.copy()
-	env['PORTAGE_REPOSITORIES'] = '''
-[DEFAULT]
-main-repo = %s
+	if cur_name != "core-kit":
+		env['PORTAGE_REPOSITORIES'] = '''
+	[DEFAULT]
+	main-repo = core-kit
 
-[%s]
-location = %s
-''' % (cur_name, cur_name, cur_tree)
+	[core-kit]
+	location = /var/git/dest-trees/core-kit
+	aliases = gentoo
+
+	[%s]
+	location = %s
+	''' % (cur_name, cur_tree)
+	else:
+		env['PORTAGE_REPOSITORIES'] = '''
+	[DEFAULT]
+	main-repo = core-kit
+
+	[core-kit]
+	location = /var/git/dest-trees/core-kit
+	aliases = gentoo
+	'''
 	p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
 	p.frozen = False
 	mypkgs = set()
@@ -293,13 +323,27 @@ def getPackagesInCatWithEclass(cur_overlay, cat, eclass):
 	except FileNotFoundError:
 			cur_name = cur_overlay.name
 	env = os.environ.copy()
-	env['PORTAGE_REPOSITORIES'] = '''
-[DEFAULT]
-main-repo = %s
+	if cur_name != "core-kit":
+		env['PORTAGE_REPOSITORIES'] = '''
+	[DEFAULT]
+	main-repo = core-kit
 
-[%s]
-location = %s
-''' % (cur_name, cur_name, cur_tree)
+	[core-kit]
+	location = /var/git/dest-trees/core-kit
+	aliases = gentoo
+
+	[%s]
+	location = %s
+	''' % (cur_name, cur_tree)
+	else:
+		env['PORTAGE_REPOSITORIES'] = '''
+	[DEFAULT]
+	main-repo = core-kit
+
+	[core-kit]
+	location = /var/git/dest-trees/core-kit
+	aliases = gentoo
+	'''
 	p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
 	p.frozen = False
 	mypkgs = set()
@@ -338,13 +382,27 @@ class CatPkgScan(MergeStep):
 		except FileNotFoundError:
 				cur_name = cur_overlay.name
 		env = os.environ.copy()
-		env['PORTAGE_REPOSITORIES'] = '''
-	[DEFAULT]
-	main-repo = %s
+		if cur_name != "core-kit":
+			env['PORTAGE_REPOSITORIES'] = '''
+		[DEFAULT]
+		main-repo = core-kit
 
-	[%s]
-	location = %s
-	''' % (cur_name, cur_name, cur_tree)
+		[core-kit]
+		location = /var/git/dest-trees/core-kit
+		aliases = gentoo
+
+		[%s]
+		location = %s
+		''' % (cur_name, cur_tree)
+		else:
+			env['PORTAGE_REPOSITORIES'] = '''
+		[DEFAULT]
+		main-repo = core-kit
+
+		[core-kit]
+		location = /var/git/dest-trees/core-kit
+		aliases = gentoo
+		'''
 		env['ACCEPT_KEYWORDS'] = "~amd64 amd64"
 		p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
 		for pkg in p.cp_all():
@@ -577,6 +635,7 @@ def getAllMeta(metadata, dest_kit):
 
 	[core-kit]
 	location = /var/git/dest-trees/core-kit
+	aliases = gentoo
 
 	[%s]
 	location = %s
@@ -589,6 +648,7 @@ def getAllMeta(metadata, dest_kit):
 
 	[%s]
 	location = %s
+	aliases = gentoo
 		''' % ( dest_kit.name, dest_kit.root )
 	p = portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
 	myeclasses = set()
