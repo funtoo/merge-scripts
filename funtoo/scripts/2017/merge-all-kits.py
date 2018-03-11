@@ -255,7 +255,7 @@ kit_source_defs = {
 	"funtoo_prime_kde" : [
 		# specific snapshot for kde-kit
 		{ "repo" : "gentoo-staging", 'src_sha1' : '1a0337dbb94be980733eeb9d9661da58cffd4e59', 'date' : '28 Jan 2018' }
-	]
+	],
 	"funtoo_prime_kde_late" : [
 		# specific snapshot for kde-kit
 		{ "repo" : "gentoo-staging", 'src_sha1' : '4d219563cd80de1a9a0ebb7c2718d8639415cc07', 'date' : '10 Mar 2018' }
