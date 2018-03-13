@@ -1,1 +1,3 @@
 @regex@:sci-.*/.*
+virtual/blas
+virtual/cblas
