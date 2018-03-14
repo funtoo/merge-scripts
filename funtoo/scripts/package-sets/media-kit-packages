@@ -10,3 +10,4 @@ media-video/*
 virtual/jack
 virtual/jpeg
 virtual/ffmpeg
+virtual/imagemagick-tools
