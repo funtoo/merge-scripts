@@ -21,3 +21,4 @@ dev-util/*
 dev-vcs/*
 virtual/libgudev
 virtual/libmysqlclient
+virtual/mysql
