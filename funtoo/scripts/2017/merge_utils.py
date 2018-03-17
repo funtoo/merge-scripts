@@ -723,7 +723,7 @@ def getAllMeta(metadata, dest_kit):
 	return mymeta
 
 def generateKitSteps(kit_name, from_tree, select_only="all", fixup_repo=None, pkgdir=None,
-                     cpm_logger=None, filter_repos=None, force=None, secondary_kit=False):
+					 cpm_logger=None, filter_repos=None, force=None, secondary_kit=False):
 	if force is None:
 		force = set()
 	else:
@@ -976,7 +976,7 @@ class CatPkgMatchLogger(object):
 		:param branch: The branch of the kit being processed..
 		:param is_fixup: True if we are performing a fixup, else False.
 		:return: Boolean, True if we have already copied and should not copy again, and False if we have not seen and
-		         should copy..
+				 should copy..
 		"""
 
 		if catpkg in self._matchdict:
@@ -1370,8 +1370,8 @@ class GitTree(Tree):
 	"A Tree (git) that we can use as a source for work jobs, and/or a target for running jobs."
 
 	def __init__(self, name: object, branch: object = "master", url: object = None, commit_sha1: object = None,
-	             pull: object = True,
-	             root: object = None,
+				 pull: object = True,
+				 root: object = None,
 				 create: object = False,
 				 reponame: object = None) -> object:
 
@@ -1731,7 +1731,7 @@ class InsertEbuilds(MergeStep):
 	
 	"""
 	def __init__(self, srctree,select="all", select_only="all", skip=None, replace=False, categories=None,
-	             ebuildloc=None, branch=None, cpm_logger=None, is_fixup=False):
+				 ebuildloc=None, branch=None, cpm_logger=None, is_fixup=False):
 		self.select = select
 		self.skip = skip
 		self.srctree = srctree
@@ -1897,14 +1897,22 @@ class GenCache(MergeStep):
 	"GenCache runs egencache --update to update metadata."
 
 	def run(self,tree):
+		result = getAllEclasses(tree)
+		if None in result and len(result[None]):
+			# we have some missing eclasses
+				print("!!! Error: QA check on kit %s failed -- missing eclasses:" % tree.name)
+				print("!!!      : " + " ".join(result[None]))
+				print("!!!      : Please be sure to use kit-fixups or the overlay's eclass list to copy these necessary eclasses into place.")
+				sys.exit(1)
+
 		if tree.name != "core-kit":
 			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = /var/git/dest-trees/core-kit\n\n[%s]\nlocation = %s\n" % (tree.reponame if tree.reponame else tree.name, tree.root)
 		else:
 			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = /var/git/dest-trees/core-kit\n"
 		cmd = ["egencache", "--update", "--tolerant", "--repo", tree.reponame if tree.reponame else tree.name,
-		       "--repositories-configuration",
-		       repos_conf,
-		       "--jobs", repr(multiprocessing.cpu_count()+1)]
+			   "--repositories-configuration",
+			   repos_conf,
+			   "--jobs", repr(multiprocessing.cpu_count()+1)]
 		if self.cache_dir:
 			cmd += [ "--cache-dir", self.cache_dir ]
 			if not os.path.exists(self.cache_dir):
