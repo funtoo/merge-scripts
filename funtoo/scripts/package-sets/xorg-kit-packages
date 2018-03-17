@@ -28,6 +28,7 @@ virtual/ttf-fonts
 @depsincat@:virtual/ttf-fonts:media-fonts
 virtual/opengl
 virtual/opencl
+virtual/freedesktop-icon-theme
 virtual/glu
 sys-libs/mtdev
 x11-apps/mesa-progs
