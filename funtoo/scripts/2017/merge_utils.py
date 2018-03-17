@@ -692,8 +692,8 @@ def getAllMeta(metadata, dest_kit):
 	cpv_map = {}
 
 	def future_generator():
-		for catpkg in p.cp_all():
-			for cpv in p.cp_list(catpkg, trees=[dest_kit.root]):
+		for catpkg in p.cp_all(trees=[dest_kit.root]):
+			for cpv in p.cp_list(catpkg, mytree=dest_kit.root):
 				if cpv == '':
 					print("No match for %s" % catpkg)
 					continue
