@@ -819,7 +819,6 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 	for license in os.listdir(tree.root + "/licenses"):
 		if license not in used_licenses["dest_kit"]:
 			to_remove.append(tree.root + "/licenses/" + license)
-	print("Going to remove unused licenses:", to_remove)
 	for file in to_remove:
 		os.unlink(file)
 
