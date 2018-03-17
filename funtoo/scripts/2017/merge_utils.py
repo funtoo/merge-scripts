@@ -16,6 +16,7 @@ import grp
 import pwd
 import multiprocessing
 from collections import defaultdict
+from portage.util.futures.iter_completed import iter_completed
 
 debug = False
 
@@ -209,28 +210,38 @@ def getDependencies(cur_overlay, catpkgs, levels=0, cur_level=0):
 	'''
 	p = portage.portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
 	mypkgs = set()
-	cpvs = []
-	for catpkg in list(catpkgs):
-		for pkg in p.cp_list(catpkg):
-			if pkg == '':
-				print("No match for %s" % catpkg)
-				continue
-			cpvs.append(pkg)
-	for cpv, result in p.parallel_aux_get(cpvs, [ "DEPEND", "RDEPEND"]):
-		if type(result) == portage.exception.PortageKeyError:
-			print("Portage key error for %s" % repr(cpv))
-			continue
-		for dep in flatten(use_reduce(result[0]+" "+result[1], matchall=True)):
-			if len(dep) and dep[0] == "!":
-				continue
-			try:
-				mypkg = dep_getkey(dep)
-			except portage.exception.InvalidAtom:
-				continue
-			if mypkg not in mypkgs:
-				mypkgs.add(mypkg)
-			if levels != cur_level:
-				mypkgs = mypkgs.union(getDependencies(cur_overlay, mypkg, levels=levels, cur_level=cur_level+1))
+
+	future_aux = {}
+
+	def future_generator():
+		for catpkg in list(catpkgs):
+			for cpv in p.cp_list(catpkg):
+				if cpv == '':
+					print("No match for %s" % catpkg)
+					continue
+				future = p.async_aux_get(cpv, [ "DEPEND", "RDEPEND"])
+				future_aux[id(future)] = cpv
+				yield future
+
+	for future in iter_completed(future_generator()):
+		cpv = future_aux.pop(id(future))
+		try:
+			result = future.result()
+		except KeyError as e:
+			print("aux_get fail", cpv, e)
+		else:
+			for dep in flatten(use_reduce(result[0]+" "+result[1], matchall=True)):
+				if len(dep) and dep[0] == "!":
+					continue
+				try:
+					mypkg = dep_getkey(dep)
+				except portage.exception.InvalidAtom:
+					continue
+				if mypkg not in mypkgs:
+					mypkgs.add(mypkg)
+				if levels != cur_level:
+					mypkgs = mypkgs.union(getDependencies(cur_overlay, mypkg, levels=levels, cur_level=cur_level+1))
+
 	return mypkgs
 
 def getPackagesInCatWithMaintainer(cur_overlay, my_cat, my_email):
@@ -299,23 +310,32 @@ def getPackagesWithEclass(cur_overlay, eclass):
 	aliases = gentoo
 	'''
 	p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
-	p.frozen = False
 	mypkgs = set()
+
+	future_aux = {}
 	cpv_map = {}
-	for catpkg in p.cp_all():
-		for pkg in p.cp_list(catpkg):
-			if pkg == '':
-				print("No match for %s" % catpkg)
-				continue
-			cpv_map[pkg] = catpkg
-	for cpv, result in p.parallel_aux_get(list(cpv_map.keys()), [ "INHERITED"]):
-		if type(result) == portage.exception.PortageKeyError:
-			print("Portage key error for %s" % cpv)
-			continue
-		if eclass in result[0].split():
-			cp = cpv_map[cpv]
-			if cp not in mypkgs:
-				mypkgs.add(cp)
+
+	def future_generator():
+		for catpkg in p.cp_all():
+			for cpv in p.cp_list(catpkg):
+				if cpv == '':
+					print("No match for %s" % catpkg)
+					continue
+				cpv_map[cpv] = catpkg
+				future = p.async_aux_get(cpv, [ "INHERITED"])
+				future_aux[id(future)] = cpv
+
+	for future in iter_completed(future_generator()):
+		cpv = future_aux.pop(id(future))
+		try:
+			result = future.result()
+		except KeyError as e:
+			print("aux_get fail", cpv, e)
+		else:
+			if eclass in result[0].split():
+				cp = cpv_map[cpv]
+				if cp not in mypkgs:
+					mypkgs.add(cp)
 	return mypkgs
 
 def getPackagesInCatWithEclass(cur_overlay, cat, eclass):
@@ -348,23 +368,32 @@ def getPackagesInCatWithEclass(cur_overlay, cat, eclass):
 	aliases = gentoo
 	'''
 	p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
-	p.frozen = False
 	mypkgs = set()
+
+	future_aux = {}
 	cpv_map = {}
-	for catpkg in p.cp_all(categories=[cat]):
-		for pkg in p.cp_list(catpkg):
-			if pkg == '':
-				print("No match for %s" % catpkg)
-				continue
-			cpv_map[pkg] = catpkg
-	for cpv, result in p.parallel_aux_get(list(cpv_map.keys()), [ "INHERITED" ]):
-		if type(result) == portage.exception.PortageKeyError:
-			print("Portage key error for %s" % cpv)
-			continue
-		if eclass in result[0].split():
-			cp = cpv_map[cpv]
-			if cp not in mypkgs:
-				mypkgs.add(cp)
+
+	def future_generator():
+		for catpkg in p.cp_all(categories=[cat]):
+			for cpv in p.cp_list(catpkg):
+				if cpv == '':
+					print("No match for %s" % catpkg)
+					continue
+				cpv_map[cpv] = catpkg
+				future = p.async_aux_get(cpv, [ "INHERITED"])
+				future_aux[id(future)] = cpv
+
+	for future in iter_completed(future_generator()):
+		cpv = future_aux.pop(id(future))
+		try:
+			result = future.result()
+		except KeyError as e:
+			print("aux_get fail", cpv, e)
+		else:
+			if eclass in result[0].split():
+				cp = cpv_map[cpv]
+				if cp not in mypkgs:
+					mypkgs.add(cp)
 	return mypkgs
 
 class CatPkgScan(MergeStep):
@@ -653,29 +682,42 @@ def getAllMeta(metadata, dest_kit):
 	location = %s
 	aliases = gentoo
 		''' % ( dest_kit.name, dest_kit.root )
-	p = portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
-	myeclasses = set()
-	cpv_map = {}
-	for cp in p.cp_all(trees=[dest_kit.root]):
-		for cpv in p.cp_list(cp, mytree=dest_kit.root):
-			cpv_map[cpv] = cp
 
-	for cpv, result in p.parallel_aux_get( list(cpv_map.keys()), [ "LICENSE", "INHERITED"], mytree=dest_kit.root):
-		if type(result) == portage.exception.PortageKeyError:
-				print("Portage key error for %s" % repr(cpv))
-				continue
-		if metadata == "INHERITED":
-			for eclass in result[metapos].split():
-				key = eclass + ".eclass"
-				if key not in myeclasses:
-					myeclasses.add(key)
-		elif metadata == "LICENSE":
-			for lic in result[metapos].split():
-				if lic in [ ")", "(", "||" ] or lic.endswith("?"):
+	p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
+	mymeta = set()
+
+	future_aux = {}
+	cpv_map = {}
+
+	def future_generator():
+		for catpkg in p.cp_all():
+			for cpv in p.cp_list(catpkg):
+				if cpv == '':
+					print("No match for %s" % catpkg)
 					continue
-				if lic not in myeclasses:
-					myeclasses.add(lic)
-	return myeclasses
+				cpv_map[cpv] = catpkg
+				future = p.async_aux_get(cpv, [ "LICENSE", "INHERITED" ])
+				future_aux[id(future)] = cpv
+
+	for future in iter_completed(future_generator()):
+		cpv = future_aux.pop(id(future))
+		try:
+			result = future.result()
+		except KeyError as e:
+			print("aux_get fail", cpv, e)
+		else:
+			if metadata == "INHERITED":
+				for eclass in result[metapos].split():
+					key = eclass + ".eclass"
+					if key not in mymeta:
+						mymeta.add(key)
+			elif metadata == "LICENSE":
+				for lic in result[metapos].split():
+					if lic in [")", "(", "||"] or lic.endswith("?"):
+						continue
+					if lic not in mymeta:
+						mymeta.add(lic)
+	return mymeta
 
 def generateKitSteps(kit_name, from_tree, select_only="all", fixup_repo=None, pkgdir=None,
                      cpm_logger=None, filter_repos=None, force=None, secondary_kit=False):

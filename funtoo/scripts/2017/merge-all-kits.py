@@ -427,12 +427,14 @@ funtoo_releases["1.2"] = {
 	"upgrade_from" : [ "1.0" ],
 	"upgrade_docs" : "UPGRADE.mediawiki", #TODO: where is the optimal place to place this file?
 	"package_prerequisites" : [ ">=app-admin/ego-1.9.0" ],
+	# TODO: these upgrade steps might be better placed in the ego repo.... maybe exported to JSON?
 	"upgrade_steps" : [
 		"emerge -1 gcc",
 		"emerge -1 glibc",
 		"emerge -uDN @system",
 		"emerge -uDN @world",
 		"emerge @preserved-rebuild"
+		"revdep-rebuild --library 'libstdc++.so.6' -- --exclude sys-devel/gcc"
 	]
 }
 
