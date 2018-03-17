@@ -1920,8 +1920,7 @@ class GenCache(MergeStep):
 		else:
 			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = /var/git/dest-trees/core-kit\n"
 		cmd = ["egencache", "--update", "--tolerant", "--repo", tree.reponame if tree.reponame else tree.name,
-			   "--repositories-configuration",
-			   repos_conf,
+			   "--repositories-configuration='%s'" % repos_conf,
 			   "--jobs", repr(multiprocessing.cpu_count()+1)]
 		if self.cache_dir:
 			cmd += [ "--cache-dir", self.cache_dir ]
@@ -1939,7 +1938,7 @@ class GenUseLocalDesc(MergeStep):
 			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = /var/git/dest-trees/core-kit\n\n[%s]\nlocation = %s\n" % (tree.reponame if tree.reponame else tree.name, tree.root)
 		else:
 			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = /var/git/dest-trees/core-kit\n"
-		run_command(["egencache", "--update-use-local-desc", "--tolerant", "--repo", tree.reponame if tree.reponame else tree.name, "--repositories-configuration", repos_conf], abort_on_failure=False)
+		run_command(["egencache", "--update-use-local-desc", "--tolerant", "--repo", tree.reponame if tree.reponame else tree.name, "--repositories-configuration='%s'" % repos_conf], abort_on_failure=False)
 
 class GitCheckout(MergeStep):
 
