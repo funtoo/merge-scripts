@@ -1897,9 +1897,13 @@ class GenCache(MergeStep):
 	"GenCache runs egencache --update to update metadata."
 
 	def run(self,tree):
+		if tree.reponame != "core-kit":
+			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = /var/git/dest-trees/core-kit\n\n[%s]\nlocation = %s\n" % (tree.reponame if tree.reponame else tree.name, tree.root)
+		else:
+			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = /var/git/dest-trees/core-kit"
 		cmd = ["egencache", "--update", "--tolerant", "--repo", tree.reponame if tree.reponame else tree.name,
 		       "--repositories-configuration",
-		       "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = /var/git/dest-trees/core-kit\n\n[%s]\nlocation = %s\n" % (tree.reponame if tree.reponame else tree.name, tree.root),
+		       repos_conf,
 		       "--jobs", repr(multiprocessing.cpu_count()+1)]
 		if self.cache_dir:
 			cmd += [ "--cache-dir", self.cache_dir ]
