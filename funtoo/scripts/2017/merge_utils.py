@@ -1897,16 +1897,26 @@ class GenCache(MergeStep):
 	"GenCache runs egencache --update to update metadata."
 
 	def run(self,tree):
-		result = getAllEclasses(tree)
-		if None in result and len(result[None]):
-			# we have some missing eclasses
-				print("!!! Error: QA check on kit %s failed -- missing eclasses:" % tree.name)
-				print("!!!      : " + " ".join(result[None]))
-				print("!!!      : Please be sure to use kit-fixups or the overlay's eclass list to copy these necessary eclasses into place.")
-				sys.exit(1)
 
 		if tree.name != "core-kit":
 			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = /var/git/dest-trees/core-kit\n\n[%s]\nlocation = %s\n" % (tree.reponame if tree.reponame else tree.name, tree.root)
+
+			# Perform QA check to ensure all eclasses are in place prior to performing egencache, as not having this can
+			# cause egencache to hang.
+
+			result = getAllEclasses(tree)
+			if None in result and len(result[None]):
+				missing_eclasses = []
+				for ec in result[None]:
+					# if a missing eclass is not in core-kit, then we'll be concerned:
+					if not os.path.exists("/var/git/dest-trees/core-kit/eclass/%s" % ec):
+						missing_eclasses.append(ec)
+				if len(missing_eclasses):
+					print("!!! Error: QA check on kit %s failed -- missing eclasses:" % tree.name)
+					print("!!!      : " + " ".join(missing_eclasses))
+					print(
+						"!!!      : Please be sure to use kit-fixups or the overlay's eclass list to copy these necessary eclasses into place.")
+					sys.exit(1)
 		else:
 			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = /var/git/dest-trees/core-kit\n"
 		cmd = ["egencache", "--update", "--tolerant", "--repo", tree.reponame if tree.reponame else tree.name,
