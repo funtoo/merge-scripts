@@ -324,6 +324,7 @@ def getPackagesWithEclass(cur_overlay, eclass):
 				cpv_map[cpv] = catpkg
 				future = p.async_aux_get(cpv, [ "INHERITED"])
 				future_aux[id(future)] = cpv
+				yield future
 
 	for future in iter_completed(future_generator()):
 		cpv = future_aux.pop(id(future))
@@ -382,6 +383,7 @@ def getPackagesInCatWithEclass(cur_overlay, cat, eclass):
 				cpv_map[cpv] = catpkg
 				future = p.async_aux_get(cpv, [ "INHERITED"])
 				future_aux[id(future)] = cpv
+				yield future
 
 	for future in iter_completed(future_generator()):
 		cpv = future_aux.pop(id(future))
@@ -698,6 +700,7 @@ def getAllMeta(metadata, dest_kit):
 				cpv_map[cpv] = catpkg
 				future = p.async_aux_get(cpv, [ "LICENSE", "INHERITED" ])
 				future_aux[id(future)] = cpv
+				yield future
 
 	for future in iter_completed(future_generator()):
 		cpv = future_aux.pop(id(future))
