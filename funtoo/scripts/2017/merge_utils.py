@@ -693,12 +693,12 @@ def getAllMeta(metadata, dest_kit):
 
 	def future_generator():
 		for catpkg in p.cp_all():
-			for cpv in p.cp_list(catpkg):
+			for cpv in p.cp_list(catpkg, trees=[dest_kit.root]):
 				if cpv == '':
 					print("No match for %s" % catpkg)
 					continue
 				cpv_map[cpv] = catpkg
-				future = p.async_aux_get(cpv, [ "LICENSE", "INHERITED" ])
+				future = p.async_aux_get(cpv, [ "LICENSE", "INHERITED" ], mytree=dest_kit.root)
 				future_aux[id(future)] = cpv
 				yield future
 
