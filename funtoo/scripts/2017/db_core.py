@@ -129,7 +129,6 @@ if __name__ == "__main__":
 				qd.filename = d.filename
 				qd.catpkg = d.catpkg
 				qd.kit = d.kit
-				qd.branch = d.branch
 				qd.src_uri = d.src_uri
 				qd.size = d.size
 				qd.mirror = d.mirror
