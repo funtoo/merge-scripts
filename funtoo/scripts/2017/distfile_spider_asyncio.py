@@ -212,8 +212,9 @@ async def get_more_distfiles(session, q):
 		#query = db.session.query(Distfile).filter(Distfile.last_fetched_on == None).filter(or_(Distfile.last_attempted_on == None, Distfile.last_attempted_on < time_cutoff)).limit(query_size)
 		query = session.query(db.Distfile)
 		# avoid repeats for each run:
+		#query = query.filter(db.Distfile.last_attempted_on > datetime.utcnow() - timedelta(hours=3))
 		query = query.filter(db.Distfile.last_attempted_on == None)
-		#query = query.filter(Distfile.last_fetched_on == None)
+		#query = query.filter(db.Distfile.last_fetched_on == None)
 		#query = query.filter(db.Distfile.failtype != "digest")
 		#query = query.filter(Distfile.failtype != "http_404")
 		#query = query.filter(Distfile.failtype.like("%SSL%"))
