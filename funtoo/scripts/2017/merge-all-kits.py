@@ -851,11 +851,11 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 		GenCache( cache_dir="/var/cache/edb/%s-%s" % ( kit_dict['name'], kit_dict['branch'] ) ),
 	]
 
-	#if kit_group in [ "prime" ]:
-	#	# doing to record distfiles in mysql only for prime, not current, at least for now
-	#	post_steps += [
-	#		CatPkgScan(now=now, db=db)
-	#	]
+	if kit_group in [ "prime" ]:
+		# doing to record distfiles in mysql only for prime, not current, at least for now
+		post_steps += [
+			CatPkgScan(now=now, db=db)
+		]
 
 	tree.run(post_steps)
 	tree.gitCommit(message="updates",branch=kit_dict['branch'],push=push)

@@ -407,7 +407,6 @@ class CatPkgScan(MergeStep):
 	def run(self, cur_overlay):
 		if self.db == None:
 			return
-		from db_core import Distfile, MissingManifestFailure
 		session = self.db.session
 		cur_tree = cur_overlay.root
 		try:
@@ -540,7 +539,7 @@ class CatPkgScan(MergeStep):
 				for u in uris:
 					s_out += u + "\n"
 				if f not in man_info:
-					fail = MissingManifestFailure()
+					fail = self.db.MissingManifestFailure()
 					fail.filename = f
 					fail.catpkg = pkg
 					fail.kit = cur_overlay.name
@@ -552,7 +551,7 @@ class CatPkgScan(MergeStep):
 					print("BAD!!! %s in MANIFEST: " % fail.failtype, pkg, f )
 					continue
 				assert man_info[f]["sha512"] != None
-				d = Distfile()
+				d = self.db.Distfile()
 				d.id = man_info[f]["sha512"]
 				d.filename = f 
 				if f in prio:
