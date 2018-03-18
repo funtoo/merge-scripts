@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
+import os, sys
 import random
 import asyncio
-import aiodns
 import aioftp
 import async_timeout
 import aiohttp
@@ -84,7 +84,6 @@ async def http_fetch(url, outfile):
 	return (None, cur_digest)
 
 def distfile_fail(d, failtype=None):
-	session = db.session
 	d.last_failure_on = datetime.utcnow()
 	d.failtype = failtype
 	session.merge(d)
@@ -114,7 +113,7 @@ def fastpull_index(outfile,distfile):
 		os.unlink(fastpull_outfile)
 	os.link(outfile, fastpull_outfile)
 
-async def get_file(t_name,q):
+async def get_file(session, t_name,q):
 	timeout = 60
 
 	while True:
@@ -166,7 +165,6 @@ async def get_file(t_name,q):
 				# success! we can record our good work and break out of this loop...
 				d.last_fetched_on = datetime.utcnow()
 				d.rand_id = ''.join(random.choice('abcdef0123456789') for _ in range(128))
-				session = db.session
 				session.merge(d)
 				session.commit()
 				fastpull_index(outfile,d)
@@ -187,7 +185,6 @@ async def get_file(t_name,q):
 		else:
 			sys.stdout.write(".")
 			sys.stdout.flush()
-	raise
 
 queue_size = 50
 query_size = 200
@@ -200,19 +197,18 @@ async def qsize(q):
 		print("Queue size: %s" % q.qsize())
 		await asyncio.sleep(5)
 
-async def get_more_distfiles(q):
+async def get_more_distfiles(session, q):
 	global now
 	time_cutoff = datetime.utcnow() - timedelta(hours=24)
 	time_cutoff_hr = datetime.utcnow() - timedelta(hours=4)
 	while True:
 		print("MOR")
 		# RIGHT NOW THIS WILL REPEATEDLY GRAB THE SAME STUFF
-		session = db.session
 		count = 0
 		#query = db.session.query(Distfile).filter(Distfile.last_fetched_on == None).filter(or_(Distfile.last_attempted_on == None, Distfile.last_attempted_on < time_cutoff)).limit(query_size)
-		query = db.session.query(Distfile)
+		query = session.query(db.Distfile)
 		# avoid repeats for each run:
-		query = query.filter(Distfile.last_attempted_on == None)
+		query = query.filter(db.Distfile.last_attempted_on is None)
 		#query = query.filter(Distfile.last_fetched_on == None)
 		#query = query.filter(Distfile.failtype != "digest")
 		#query = query.filter(Distfile.failtype != "http_404")
@@ -225,7 +221,6 @@ async def get_more_distfiles(q):
 			await asyncio.sleep(5)
 		else:
 			for d in query_list:
-				session = db.session
 				if os.path.exists("/home/mirror/fastpull/%s/%s/%s" % ( d.id[0], d.id[1], d.id )):
 					print("found in fastpull")
 					d.last_fetched_on = datetime.utcnow()
@@ -242,20 +237,23 @@ logger = logging.getLogger("aioftp.client")
 logger.setLevel(50)
 
 chunk_size = 4096
-db = AppDatabase(getConfig())
+db = FastPullDatabase()
 loop = asyncio.get_event_loop()
 now = datetime.utcnow()
 
-tasks = [
-	asyncio.async(get_more_distfiles(q)),
-	asyncio.async(qsize(q))
-]
-for x in range(0,workr_size):
-	tasks.append(asyncio.async(get_file("task%s" % x, q)))
+with db.session as session:
 
-loop.run_until_complete(asyncio.gather(*tasks))
+	tasks = [
+		asyncio.async(get_more_distfiles(session, q)),
+		asyncio.async(qsize(q))
+	]
+
+	for x in range(0,workr_size):
+		tasks.append(asyncio.async(get_file(session, "task%s" % x, q)))
+
+	loop.run_until_complete(asyncio.gather(*tasks))
 
 
-loop.close()
+	loop.close()
 
 # vim: ts=4 sw=4 noet

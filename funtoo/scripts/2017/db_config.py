@@ -3,7 +3,7 @@
 import os
 import configparser
 
-def getConfig():
+def get_app_config():
 	config = configparser.ConfigParser()
 	config.read(os.path.expanduser("~/.merge"))
 	return config
