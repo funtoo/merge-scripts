@@ -123,7 +123,7 @@ async def get_file(db, task_num, q):
 		# continually grab files....
 		d = await q.get()
 
-		insp = inspect(d)
+		insp = sqlalchemy.inspect(d)
 
 		with db.get_session() if insp.detached else object_session(d) as session:
 
