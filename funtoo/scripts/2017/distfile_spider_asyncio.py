@@ -135,6 +135,14 @@ async def get_file(db, task_num, q):
 			mylist = list(next_uri(uris))
 			fail_mode = None
 
+			# if we have a sha512, then we can to a pre-download check to see if the file has been grabbed before.
+			if d.digest_type == "sha512":
+				existing = session.query(db.Distfile).filter(db.Distfile.id == d.id).first()
+				if existing:
+					print("%s already downloaded; skipping." % d.filename)
+					session.delete(d)
+					session.commit()
+
 			for real_uri in mylist:
 				# iterate through each potential URI for downloading a particular distfile. We'll keep trying until
 				# we find one that works.
