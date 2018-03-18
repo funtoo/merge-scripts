@@ -126,7 +126,7 @@ async def get_file(db, task_num, q):
 		with db.get_session() as session:
 
 			# This will attach to our current session
-			d = session.query(db.QueuedDistfile.id == d.id).first()
+			d = session.query(db.QueuedDistfile).filter(db.QueuedDistfile.id == d.id).first()
 			if d is None:
 				# no longer exists
 				continue
