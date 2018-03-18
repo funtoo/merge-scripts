@@ -275,7 +275,7 @@ async def get_more_distfiles(db, q):
 		with db.get_session() as session:
 			results = session.query(db.QueuedDistfile).filter(db.QueuedDistfile.last_attempted_on == None)
 			results = results.limit(query_size)
-			if len(results) == 0:
+			if results.count() == 0:
 				print("SLEEPING")
 				await asyncio.sleep(5)
 			else:
