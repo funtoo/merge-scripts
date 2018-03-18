@@ -125,54 +125,56 @@ async def get_file(db, task_num, q):
 		elif d.digest_type == "sha512":
 			digest_func = sha512
 
-		uris = src_uri_process(d.src_uri, d.filename)
-		outfile = os.path.join("/home/mirror/distfiles/", d.filename)
-		mylist = list(next_uri(uris))
-		fail_mode = None
+		with db.get_session() as session:
 
-		for real_uri in mylist:
-			# iterate through each potential URI for downloading a particular distfile. We'll keep trying until
-			# we find one that works.
+			d = session.merge(d)
 
-			# fail_mode will effectively store the last reason why our download failed. We reset it each iteration,
-			# which is what we want. If fail_mode is set to something after our big loop exits, we know we have
-			# truly failed downloading this distfile.
-
+			uris = src_uri_process(d.src_uri, d.filename)
+			outfile = os.path.join("/home/mirror/distfiles/", d.filename)
+			mylist = list(next_uri(uris))
 			fail_mode = None
 
-			if real_uri.startswith("ftp://"):
-				# handle ftp download --
-				host_parts = real_uri[6:]
-				host = host_parts.split("/")[0]
-				path = "/".join(host_parts.split("/")[1:])
-				try:
-					digest = None
-					with async_timeout.timeout(timeout):
-						fail_mode, digest = await ftp_fetch(host, path, outfile, digest_func)
-				except Exception as e:
-					fail_mode = str(e)
-					if fail_mode == "Session is closed":
-						raise e
-			else:
-				# handle http/https download --
-				try:
-					digest = None
-					with async_timeout.timeout(timeout):
-						fail_mode, digest = await http_fetch(real_uri, outfile, digest_func)
-				except Exception as e:
-					fail_mode = str(e)
-					if fail_mode == "Session is closed":
-						raise e
+			for real_uri in mylist:
+				# iterate through each potential URI for downloading a particular distfile. We'll keep trying until
+				# we find one that works.
 
-			if digest == d.digest:
-				# success! we can record our fine ketchup:
+				# fail_mode will effectively store the last reason why our download failed. We reset it each iteration,
+				# which is what we want. If fail_mode is set to something after our big loop exits, we know we have
+				# truly failed downloading this distfile.
 
-				if d.digest_type == "sha512":
-					my_id = d.digest
+				fail_mode = None
+
+				if real_uri.startswith("ftp://"):
+					# handle ftp download --
+					host_parts = real_uri[6:]
+					host = host_parts.split("/")[0]
+					path = "/".join(host_parts.split("/")[1:])
+					try:
+						digest = None
+						with async_timeout.timeout(timeout):
+							fail_mode, digest = await ftp_fetch(host, path, outfile, digest_func)
+					except Exception as e:
+						fail_mode = str(e)
+						if fail_mode == "Session is closed":
+							raise e
 				else:
-					my_id = get_sha512(outfile)
+					# handle http/https download --
+					try:
+						digest = None
+						with async_timeout.timeout(timeout):
+							fail_mode, digest = await http_fetch(real_uri, outfile, digest_func)
+					except Exception as e:
+						fail_mode = str(e)
+						if fail_mode == "Session is closed":
+							raise e
 
-				with db.get_session() as session:
+				if digest == d.digest:
+					# success! we can record our fine ketchup:
+
+					if d.digest_type == "sha512":
+						my_id = d.digest
+					else:
+						my_id = get_sha512(outfile)
 
 					existing = session.query(db.Distfile).filter(db.Distfile.id == my_id).first()
 
@@ -207,28 +209,27 @@ async def get_file(db, task_num, q):
 					os.unlink(outfile)
 					# done; process next distfile
 					break
-			else:
-				fail_mode = "digest"
+				else:
+					fail_mode = "digest"
 
-		if fail_mode:
-			# If we tried all SRC_URIs, and still failed, we will end up here, with fail_mode set to something.
-			with db.get_session() as session:
+			if fail_mode:
+				# If we tried all SRC_URIs, and still failed, we will end up here, with fail_mode set to something.
 				d.last_failure_on = d.last_attempted_on = datetime.utcnow()
 				d.failtype = fail_mode
 				d.failcount += 1
 				session.merge(d)
 				session.commit()
-			if fail_mode == "http_404":
-				sys.stdout.write("4")
-			elif fail_mode == "digest":
-				sys.stdout.write("d")
+				if fail_mode == "http_404":
+					sys.stdout.write("4")
+				elif fail_mode == "digest":
+					sys.stdout.write("d")
+				else:
+					sys.stdout.write("x")
+				sys.stdout.flush()
 			else:
-				sys.stdout.write("x")
-			sys.stdout.flush()
-		else:
-			# we end up here if we are successful. Do successful output.
-			sys.stdout.write(".")
-			sys.stdout.flush()
+				# we end up here if we are successful. Do successful output.
+				sys.stdout.write(".")
+				sys.stdout.flush()
 
 queue_size = 50
 query_size = 200
