@@ -449,7 +449,7 @@ class CatPkgScan(MergeStep):
 			# We want to prioritize SRC_URI for bestmatch-visible ebuilds. We will use bm
 			# and prio to tag files that are in bestmatch-visible ebuilds.
 
-			bm = p.xmatch("bestmatch-visible", pkg, cur_tree=cur_overlay.root)
+			bm = p.xmatch("bestmatch-visible", pkg)
 
 			prio = {}
 
