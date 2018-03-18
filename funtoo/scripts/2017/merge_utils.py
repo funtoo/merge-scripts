@@ -549,11 +549,9 @@ class CatPkgScan(MergeStep):
 					# If we have already grabbed this distfile, then let's not queue it for fetching...
 
 					already_exists = False
-					for existing in session.query(self.db.Distfile).filter(self.db.Distfile.filename == f).filter(self.db.Distfile.size == man_info[f]["size"]):
-						if existing.digest_type == "sha512" and existing.id == man_info[f]["digest"]:
-							already_exists = True
-							break
-						elif existing.digest_type == "sha256" and existing.alt_digest == man_info[f]["digest"]:
+					if man_info[f]["digest_type"] == "sha512":
+						existing = session.query(self.db.Distfile).filter(self.db.Distfile.id == man_info[f]["digest"]).first()
+						if existing:
 							already_exists = True
 							break
 
@@ -567,19 +565,19 @@ class CatPkgScan(MergeStep):
 
 					# Queue the distfile for downloading...
 
-					d = self.db.QueuedDistfile()
-					d.filename = f
-					d.catpkg = pkg
-					d.kit = cur_overlay.name
-					d.branch = cur_overlay.branch
-					d.src_uri = s_out
-					d.size = man_info[f]["size"]
-					d.mirror = True if f not in mirror_restrict_set else False
-					d.digest_type = man_info[f]["digest_type"]
-					d.digest = man_info[f]["digest"]
+					qd = self.db.QueuedDistfile()
+					qd.filename = f
+					qd.catpkg = pkg
+					qd.kit = cur_overlay.name
+					qd.branch = cur_overlay.branch
+					qd.src_uri = s_out
+					qd.size = man_info[f]["size"]
+					qd.mirror = True if f not in mirror_restrict_set else False
+					qd.digest_type = man_info[f]["digest_type"]
+					qd.digest = man_info[f]["digest"]
 					if f in prio:
-						d.priority = prio[f]
-					session.add(d)
+						qd.priority = prio[f]
+					session.add(qd)
 				session.commit()
 
 def repoName(cur_overlay):
