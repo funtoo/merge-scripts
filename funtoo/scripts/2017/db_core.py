@@ -81,10 +81,10 @@ class FastPullDatabase(Database):
 			__tablename__ = 'queued_distfiles'
 
 			id = Column(Integer, primary_key=True)
-			filename = Column('filename', String(255), primary_key=True)                # filename on disk
-			catpkg = Column('catpkg', String(255), primary_key=True)                    # catpkg
-			kit = Column('kit', String(40), primary_key=True)                           # source kit
-			branch = Column('branch', String(40), primary_key=True)                     # source kit
+			filename = Column('filename', String(255), index=True)                # filename on disk
+			catpkg = Column('catpkg', String(255), index=True)                    # catpkg
+			kit = Column('kit', String(40), index=True)                           # source kit
+			branch = Column('branch', String(40), index=True)                     # source kit
 			src_uri	= Column('src_uri', Text)                                           # src_uris -- filename may be different as Portage can rename -- stored in order of appearance, one per line
 			size = Column('size', BigInteger)
 			mirror = Column('mirror', Boolean, default=True)
