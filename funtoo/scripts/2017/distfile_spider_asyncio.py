@@ -142,6 +142,8 @@ async def get_file(db, task_num, q):
 					print("%s already downloaded; skipping." % d.filename)
 					session.delete(d)
 					session.commit()
+					# move to next file....
+					continue
 
 			for real_uri in mylist:
 				# iterate through each potential URI for downloading a particular distfile. We'll keep trying until
