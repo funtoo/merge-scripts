@@ -439,8 +439,6 @@ class CatPkgScan(MergeStep):
 		env['ACCEPT_KEYWORDS'] = "~amd64 amd64"
 		p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
 		for pkg in p.cp_all():
-			
-			cp = portage.catsplit(pkg)
 
 			src_uri = {}
 
@@ -1965,6 +1963,6 @@ class Minify(MergeStep):
 		runShell("( cd %s && find -iname Manifest -exec sed -n -i -e \"/DIST/p\" {} \; )" % tree.root )
 
 def getMySQLDatabase():
-	from db_core import AppDatabase, getConfig
-	return AppDatabase(getConfig())
+	from db_core import FastPullDatabase
+
 # vim: ts=4 sw=4 noet
