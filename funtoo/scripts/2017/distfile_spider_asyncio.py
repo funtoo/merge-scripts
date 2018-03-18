@@ -132,6 +132,10 @@ async def get_file(db, task_num, q):
 			elif d.digest_type == "sha512":
 				digest_func = sha512
 
+			if d.src_uri is None:
+				print("Error: for file %s, SRC_URI is None; skipping." % d.filename)
+				continue
+
 			uris = src_uri_process(d.src_uri, d.filename)
 			outfile = os.path.join("/home/mirror/distfiles/", d.filename)
 			mylist = list(next_uri(uris))
