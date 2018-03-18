@@ -134,8 +134,12 @@ async def get_file(db, task_num, q):
 
 			if d.src_uri is None:
 				print("Error: for file %s, SRC_URI is None; skipping." % d.filename)
-				session.delete(d)
-				session.commit()
+				try:
+					session.delete(d)
+					session.commit()
+				except sqlalchemy.exc.InvalidRequestError:
+					# already deleted by someone else
+					pass
 				# move to next file...
 				continue
 
