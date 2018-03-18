@@ -117,17 +117,18 @@ async def get_file(db, task_num, q):
 	timeout = 60
 
 	while True:
+
 		# continually grab files....
 		d = await q.get()
-
-		if d.digest_type == "sha256":
-			digest_func = sha256
-		elif d.digest_type == "sha512":
-			digest_func = sha512
 
 		with db.get_session() as session:
 
 			d = session.merge(d)
+
+			if d.digest_type == "sha256":
+				digest_func = sha256
+			elif d.digest_type == "sha512":
+				digest_func = sha512
 
 			uris = src_uri_process(d.src_uri, d.filename)
 			outfile = os.path.join("/home/mirror/distfiles/", d.filename)
