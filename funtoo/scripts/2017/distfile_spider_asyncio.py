@@ -123,135 +123,137 @@ async def get_file(db, task_num, q):
 		# continually grab files....
 		d = await q.get()
 
-		session = object_session(d)
+		insp = inspect(d)
 
-		if d.digest_type == "sha256":
-			digest_func = sha256
-		elif d.digest_type == "sha512":
-			digest_func = sha512
+		with db.get_session() if insp.detached else object_session(d) as session:
 
-		if d.src_uri is None:
-			print("Error: for file %s, SRC_URI is None; skipping." % d.filename)
-			try:
-				session.delete(d)
-				session.commit()
-			except sqlalchemy.exc.InvalidRequestError:
-				# already deleted by someone else
-				pass
-			# move to next file...
-			continue
+			if d.digest_type == "sha256":
+				digest_func = sha256
+			elif d.digest_type == "sha512":
+				digest_func = sha512
 
-		uris = src_uri_process(d.src_uri, d.filename)
-		outfile = os.path.join("/home/mirror/distfiles/", d.filename)
-		mylist = list(next_uri(uris))
-		fail_mode = None
-
-		# if we have a sha512, then we can to a pre-download check to see if the file has been grabbed before.
-		if d.digest_type == "sha512":
-			existing = session.query(db.Distfile).filter(db.Distfile.id == d.digest).first()
-			if existing:
-				print("%s already downloaded; skipping." % d.filename)
-				session.delete(d)
-				session.commit()
-				# move to next file....
-				continue
-
-		for real_uri in mylist:
-			# iterate through each potential URI for downloading a particular distfile. We'll keep trying until
-			# we find one that works.
-
-			# fail_mode will effectively store the last reason why our download failed. We reset it each iteration,
-			# which is what we want. If fail_mode is set to something after our big loop exits, we know we have
-			# truly failed downloading this distfile.
-
-			fail_mode = None
-
-			if real_uri.startswith("ftp://"):
-				# handle ftp download --
-				host_parts = real_uri[6:]
-				host = host_parts.split("/")[0]
-				path = "/".join(host_parts.split("/")[1:])
+			if d.src_uri is None:
+				print("Error: for file %s, SRC_URI is None; skipping." % d.filename)
 				try:
-					digest = None
-					with async_timeout.timeout(timeout):
-						fail_mode, digest = await ftp_fetch(host, path, outfile, digest_func)
-				except Exception as e:
-					fail_mode = str(e)
-					if fail_mode == "Session is closed":
-						raise e
-			else:
-				# handle http/https download --
-				try:
-					digest = None
-					with async_timeout.timeout(timeout):
-						fail_mode, digest = await http_fetch(real_uri, outfile, digest_func)
-				except Exception as e:
-					fail_mode = str(e)
-					if fail_mode == "Session is closed":
-						raise e
-
-			if digest == d.digest:
-				# success! we can record our fine ketchup:
-
-				if d.digest_type == "sha512":
-					my_id = d.digest
-				else:
-					my_id = get_sha512(outfile)
-
-				existing = session.query(db.Distfile).filter(db.Distfile.id == my_id).first()
-
-				if existing is not None:
-					print("Downloaded %s, but already exists in our db. Skipping." % d.filename)
 					session.delete(d)
 					session.commit()
+				except sqlalchemy.exc.InvalidRequestError:
+					# already deleted by someone else
+					pass
+				# move to next file...
+				continue
+
+			uris = src_uri_process(d.src_uri, d.filename)
+			outfile = os.path.join("/home/mirror/distfiles/", d.filename)
+			mylist = list(next_uri(uris))
+			fail_mode = None
+
+			# if we have a sha512, then we can to a pre-download check to see if the file has been grabbed before.
+			if d.digest_type == "sha512":
+				existing = session.query(db.Distfile).filter(db.Distfile.id == d.digest).first()
+				if existing:
+					print("%s already downloaded; skipping." % d.filename)
+					session.delete(d)
+					session.commit()
+					# move to next file....
+					continue
+
+			for real_uri in mylist:
+				# iterate through each potential URI for downloading a particular distfile. We'll keep trying until
+				# we find one that works.
+
+				# fail_mode will effectively store the last reason why our download failed. We reset it each iteration,
+				# which is what we want. If fail_mode is set to something after our big loop exits, we know we have
+				# truly failed downloading this distfile.
+
+				fail_mode = None
+
+				if real_uri.startswith("ftp://"):
+					# handle ftp download --
+					host_parts = real_uri[6:]
+					host = host_parts.split("/")[0]
+					path = "/".join(host_parts.split("/")[1:])
+					try:
+						digest = None
+						with async_timeout.timeout(timeout):
+							fail_mode, digest = await ftp_fetch(host, path, outfile, digest_func)
+					except Exception as e:
+						fail_mode = str(e)
+						if fail_mode == "Session is closed":
+							raise e
+				else:
+					# handle http/https download --
+					try:
+						digest = None
+						with async_timeout.timeout(timeout):
+							fail_mode, digest = await http_fetch(real_uri, outfile, digest_func)
+					except Exception as e:
+						fail_mode = str(e)
+						if fail_mode == "Session is closed":
+							raise e
+
+				if digest == d.digest:
+					# success! we can record our fine ketchup:
+
+					if d.digest_type == "sha512":
+						my_id = d.digest
+					else:
+						my_id = get_sha512(outfile)
+
+					existing = session.query(db.Distfile).filter(db.Distfile.id == my_id).first()
+
+					if existing is not None:
+						print("Downloaded %s, but already exists in our db. Skipping." % d.filename)
+						session.delete(d)
+						session.commit()
+						os.unlink(outfile)
+						# done; process next distfile
+						break
+
+					d_final = db.Distfile()
+
+					d_final.id = my_id
+					d_final.rand_id = ''.join(random.choice('abcdef0123456789') for _ in range(128))
+					d_final.filename = d.filename
+					d_final.digest_type = d.digest_type
+					if d.digest_type != "sha512":
+						d_final.alt_digest = d.digest
+					d_final.size = d.size
+					d_final.catpkg = d.catpkg
+					d_final.kit = d.kit
+					d_final.src_uri = d.src_uri
+					d_final.mirror = d.mirror
+					d_final.last_fetched_on = datetime.utcnow()
+
+					session.add(d_final)
+					session.delete(d)
+					session.commit()
+
+					fastpull_index(outfile,d)
 					os.unlink(outfile)
 					# done; process next distfile
 					break
+				else:
+					fail_mode = "digest"
 
-				d_final = db.Distfile()
-
-				d_final.id = my_id
-				d_final.rand_id = ''.join(random.choice('abcdef0123456789') for _ in range(128))
-				d_final.filename = d.filename
-				d_final.digest_type = d.digest_type
-				if d.digest_type != "sha512":
-					d_final.alt_digest = d.digest
-				d_final.size = d.size
-				d_final.catpkg = d.catpkg
-				d_final.kit = d.kit
-				d_final.src_uri = d.src_uri
-				d_final.mirror = d.mirror
-				d_final.last_fetched_on = datetime.utcnow()
-
-				session.add(d_final)
-				session.delete(d)
+			if fail_mode:
+				# If we tried all SRC_URIs, and still failed, we will end up here, with fail_mode set to something.
+				d.last_failure_on = d.last_attempted_on = datetime.utcnow()
+				d.failtype = fail_mode
+				d.failcount += 1
+				session.merge(d)
 				session.commit()
-
-				fastpull_index(outfile,d)
-				os.unlink(outfile)
-				# done; process next distfile
-				break
+				if fail_mode == "http_404":
+					sys.stdout.write("4")
+				elif fail_mode == "digest":
+					sys.stdout.write("d")
+				else:
+					sys.stdout.write("x")
+				sys.stdout.flush()
 			else:
-				fail_mode = "digest"
-
-		if fail_mode:
-			# If we tried all SRC_URIs, and still failed, we will end up here, with fail_mode set to something.
-			d.last_failure_on = d.last_attempted_on = datetime.utcnow()
-			d.failtype = fail_mode
-			d.failcount += 1
-			session.merge(d)
-			session.commit()
-			if fail_mode == "http_404":
-				sys.stdout.write("4")
-			elif fail_mode == "digest":
-				sys.stdout.write("d")
-			else:
-				sys.stdout.write("x")
-			sys.stdout.flush()
-		else:
-			# we end up here if we are successful. Do successful output.
-			sys.stdout.write(".")
-			sys.stdout.flush()
+				# we end up here if we are successful. Do successful output.
+				sys.stdout.write(".")
+				sys.stdout.flush()
 
 queue_size = 50
 query_size = 200
