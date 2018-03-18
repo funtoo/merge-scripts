@@ -8,6 +8,7 @@ import async_timeout
 import aiohttp
 import logging
 from hashlib import sha512
+import socket
 
 from db_core import *
 import time
@@ -67,7 +68,7 @@ async def ftp_fetch(host, path, port, login, password, outfile):
 
 async def http_fetch(url, outfile):
 	global resolver
-	connector = aiohttp.TCPConnector(resolver=resolver,verify_ssl=False)
+	connector = aiohttp.TCPConnector(family=socket.AF_INET,resolver=resolver,verify_ssl=False)
 	async with aiohttp.ClientSession(connector=connector) as http_session:
 		async with http_session.get(url) as response:
 			if response.status != 200:
