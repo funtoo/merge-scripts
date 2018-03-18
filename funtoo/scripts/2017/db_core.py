@@ -84,7 +84,6 @@ class FastPullDatabase(Database):
 			added_on = Column('added_on', DateTime, default=datetime.utcnow)
 			priority = Column('priority', Integer, default=0)
 			last_attempted_on = Column('last_attempted_on', DateTime)
-			last_fetched_on = Column('last_fetched_on', DateTime)
 			last_failure_on = Column('last_failure_on', DateTime)
 			failcount = Column(Integer, default=0)
 			failtype = Column('failtype', Text)
@@ -112,7 +111,7 @@ if __name__ == "__main__":
 
 	db = FastPullDatabase()
 	with db.get_session() as session:
-		for x in session.query(db.Distfile).filter(db.Distfile.last_attempted_on == None):
+		for x in session.query(db.QueuedDistfile).filter(db.QueuedDistfile.last_attempted_on == None):
 			print(x.filename)
 
 # vim: ts=4 sw=4 noet
