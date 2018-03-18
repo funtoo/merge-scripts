@@ -539,7 +539,7 @@ class CatPkgScan(MergeStep):
 				for f, uris in src_uri.items():
 
 					if f not in man_info:
-						print("Error: Manifest file contains nothing for %s, skipping..." % f)
+						print("Error: %s/%s: %s Manifest file contains nothing for %s, skipping..." % (cur_overlay.name, cur_overlay.branch, pkg, f))
 						continue
 
 					s_out = ""
