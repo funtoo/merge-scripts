@@ -241,7 +241,7 @@ async def qsize(q):
 		print("Queue size: %s" % q.qsize())
 		await asyncio.sleep(5)
 
-async def get_more_distfiles(session, q):
+async def get_more_distfiles(db, q):
 	global now
 	time_cutoff = datetime.utcnow() - timedelta(hours=24)
 	time_cutoff_hr = datetime.utcnow() - timedelta(hours=4)
@@ -249,17 +249,16 @@ async def get_more_distfiles(session, q):
 		print("MOR")
 		# RIGHT NOW THIS WILL REPEATEDLY GRAB THE SAME STUFF
 		count = 0
-		query = query.filter(db.QueuedDistfile).filter(db.QueuedDistfile.last_attempted_on == None)
-		query = query.limit(query_size)
-		query_list = list(query)
-		if len(query_list) == 0:
-			print("SLEEPING")
-			await asyncio.sleep(5)
-		else:
-			for d in query_list:
-				await q.put(d)
-
-	await q.put(None)
+		with db.get_session() as session:
+			query = session.query(db.QueuedDistfile).filter(db.QueuedDistfile.last_attempted_on == None)
+			query = query.limit(query_size)
+			query_list = list(query)
+			if len(query_list) == 0:
+				print("SLEEPING")
+				await asyncio.sleep(5)
+			else:
+				for d in query_list:
+					await q.put(d)
 
 logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger("aioftp.client")
@@ -270,17 +269,16 @@ db = FastPullDatabase()
 loop = asyncio.get_event_loop()
 now = datetime.utcnow()
 
-with db.get_session() as session:
 
-	tasks = [
-		asyncio.async(get_more_distfiles(session, q)),
-		asyncio.async(qsize(q))
-	]
+tasks = [
+	asyncio.async(get_more_distfiles(db, q)),
+	asyncio.async(qsize(q))
+]
 
-	for x in range(0,workr_size):
-		tasks.append(asyncio.async(get_file(db, x, q)))
+for x in range(0,workr_size):
+	tasks.append(asyncio.async(get_file(db, x, q)))
 
-	loop.run_until_complete(asyncio.gather(*tasks))
-	loop.close()
+loop.run_until_complete(asyncio.gather(*tasks))
+loop.close()
 
 # vim: ts=4 sw=4 noet
