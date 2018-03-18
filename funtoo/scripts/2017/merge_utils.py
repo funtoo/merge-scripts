@@ -466,7 +466,7 @@ class CatPkgScan(MergeStep):
 					# prioritize bestmatch-visible
 					prio[fn] = 1
 
-			for a in p.xmatch("match-all", pkg, cur_tree=cur_overlay.root):
+			for a in p.xmatch("match-all", pkg):
 				if len(a) == 0:
 					continue
 				prev_blob = None
