@@ -7,6 +7,7 @@ from sqlalchemy import create_engine, ForeignKey, Integer, Boolean, Column, Stri
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
+from sqlalchemy.orm.session import object_session
 import sqlalchemy
 
 app_config = get_app_config()

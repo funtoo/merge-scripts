@@ -462,8 +462,6 @@ class CatPkgScan(MergeStep):
 				#global prev_blob, bm, src_uri, mirror_restrict_set
 				if mirror_restrict:
 					mirror_restrict_set.add(fn)
-					if not fn in src_uri:
-						src_uri[fn] = []
 					if prev_blob not in src_uri[fn]:
 						# avoid dups
 						src_uri[fn].append(prev_blob)
@@ -493,9 +491,10 @@ class CatPkgScan(MergeStep):
 						continue
 					if blob == "->":
 						fn = blobs[pos+1]
-						record_src_uri(a, prev_blob, mirror_restrict)
-						prev_blob = None
-						pos += 2
+						if fn is not None:
+							record_src_uri(a, prev_blob, mirror_restrict)
+							prev_blob = None
+							pos += 2
 					else:
 						if prev_blob:
 							fn = prev_blob.split("/")[-1]
@@ -504,11 +503,12 @@ class CatPkgScan(MergeStep):
 						pos += 1
 				if prev_blob:
 					fn = prev_blob.split("/")[-1]
-					if mirror_restrict:
-						mirror_restrict_set.add(fn)
-					if prev_blob not in src_uri[fn]:
-						# avoid dups
-						src_uri[fn].append(prev_blob)
+					if fn is not None:
+						if mirror_restrict:
+							mirror_restrict_set.add(fn)
+						if prev_blob not in src_uri[fn]:
+							# avoid dups
+							src_uri[fn].append(prev_blob)
 
 			with self.db.get_session() as session:
 
