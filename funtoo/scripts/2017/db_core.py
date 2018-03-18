@@ -52,7 +52,7 @@ class FastPullDatabase(Database):
 
 
 			id = Column('id', String(128), primary_key=True)                            # sha512 in ASCII
-			rand_id = Column('rand_id', String(128), index=True, mysql_length=10)       # fastpull_id
+			rand_id = Column('rand_id', String(128), index=True)       # fastpull_id
 			filename = Column('filename', String(255), primary_key=True)                # filename on disk
 
 			# the id/filename is a composite key, because a SHA512 may exist under potentially multiple filenames, and we
