@@ -407,7 +407,6 @@ class CatPkgScan(MergeStep):
 	def run(self, cur_overlay):
 		if self.db is None:
 			return
-		session = self.db.session
 		cur_tree = cur_overlay.root
 		try:
 			with open(os.path.join(cur_tree, 'profiles/repo_name')) as f:
@@ -513,56 +512,58 @@ class CatPkgScan(MergeStep):
 			# src_uri["foo.tar.gz"] = [ "https://url1", "https//url2" ... ]
 			# entries in SRC_URI from fetch-restricted ebuilds will have SRC_URI prefixed by "NOMIRROR:"
 
-			man_info = {}
-			no_sha512 = set()
-			man_file = cur_tree + "/" + pkg + "/Manifest"
-			if os.path.exists(man_file):
-				man_f = open(man_file, "r")
-				for line in man_f.readlines():
-					ls = line.split()
-					if len(ls) <= 3 or ls[0] != "DIST":
+			with self.db.get_session() as session:
+
+				man_info = {}
+				no_sha512 = set()
+				man_file = cur_tree + "/" + pkg + "/Manifest"
+				if os.path.exists(man_file):
+					man_f = open(man_file, "r")
+					for line in man_f.readlines():
+						ls = line.split()
+						if len(ls) <= 3 or ls[0] != "DIST":
+							continue
+						try:
+							sha512_index = ls.index("SHA512")
+						except ValueError:
+							no_sha512.add(ls[1])
+							continue
+						man_info[ls[1]] = { "size" : ls[2], "sha512" : ls[sha512_index+1] if sha512_index else None }
+					man_f.close()
+
+				# for each catpkg:
+
+				for f, uris in src_uri.items():
+					s_out = ""
+					for u in uris:
+						s_out += u + "\n"
+					if f not in man_info:
+						fail = self.db.MissingManifestFailure()
+						fail.filename = f
+						fail.catpkg = pkg
+						fail.kit = cur_overlay.name
+						fail.branch = cur_overlay.branch
+						fail.src_uri = s_out
+						fail.failtype = "nosha512" if f in no_sha512 else "missing"
+						fail.fail_on = self.now
+						merged_fail = session.merge(fail)
+						print("BAD!!! %s in MANIFEST: " % fail.failtype, pkg, f )
 						continue
-					try:
-						sha512_index = ls.index("SHA512")
-					except ValueError:
-						no_sha512.add(ls[1])
-						continue
-					man_info[ls[1]] = { "size" : ls[2], "sha512" : ls[sha512_index+1] if sha512_index else None }
-				man_f.close()
+					assert man_info[f]["sha512"] != None
+					d = self.db.Distfile()
+					d.id = man_info[f]["sha512"]
+					d.filename = f
+					if f in prio:
+						d.priority = prio[f]
+					d.size = man_info[f]["size"]
+					d.src_uri = s_out
+					d.catpkg = pkg
+					d.kit = cur_overlay.name
+					d.last_updated_on = self.now
+					d.mirror = True if f not in mirror_restrict_set else False
+					merged_d = session.merge(d)
 
-			# for each catpkg:
-
-			for f, uris in src_uri.items():
-				s_out = ""
-				for u in uris:
-					s_out += u + "\n"
-				if f not in man_info:
-					fail = self.db.MissingManifestFailure()
-					fail.filename = f
-					fail.catpkg = pkg
-					fail.kit = cur_overlay.name
-					fail.branch = cur_overlay.branch
-					fail.src_uri = s_out
-					fail.failtype = "nosha512" if f in no_sha512 else "missing"
-					fail.fail_on = self.now
-					merged_fail = session.merge(fail)
-					print("BAD!!! %s in MANIFEST: " % fail.failtype, pkg, f )
-					continue
-				assert man_info[f]["sha512"] != None
-				d = self.db.Distfile()
-				d.id = man_info[f]["sha512"]
-				d.filename = f 
-				if f in prio:
-					d.priority = prio[f]
-				d.size = man_info[f]["size"]
-				d.src_uri = s_out
-				d.catpkg = pkg
-				d.kit = cur_overlay.name
-				d.last_updated_on = self.now
-				d.mirror = True if f not in mirror_restrict_set else False
-				merged_d = session.merge(d)
-
-			session.commit()
+				session.commit()
 
 def repoName(cur_overlay):
 	cur_tree = cur_overlay.root
