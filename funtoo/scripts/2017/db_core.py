@@ -91,7 +91,7 @@ if __name__ == "__main__":
 
 	db = FastPullDatabase()
 	with db.get_session() as session:
-		for x in session.query(db.Distfile):
+		for x in session.query(db.Distfile).filter(db.Distfile.last_attempted_on == None):
 			print(x.filename)
 
 # vim: ts=4 sw=4 noet
