@@ -537,6 +537,11 @@ class CatPkgScan(MergeStep):
 				# for each catpkg:
 
 				for f, uris in src_uri.items():
+
+					if f not in man_info:
+						print("Error: Manifest file contains nothing for %s, skipping..." % f)
+						continue
+
 					s_out = ""
 					for u in uris:
 						s_out += u + "\n"
