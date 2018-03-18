@@ -123,6 +123,7 @@ async def get_file(session, t_name,q):
 		uris = src_uri_process(d.src_uri, d.filename)
 		outfile = os.path.join("/home/mirror/distfiles/", d.filename)
 		mylist = list(next_uri(uris))
+		fail_mode = None
 		for real_uri in mylist:
 			# iterate through each potential URI for downloading a particular distfile. We'll keep trying until
 			# we find one that works.
@@ -157,6 +158,8 @@ async def get_file(session, t_name,q):
 						raise e
 			if sha == d.id:
 				break
+			else:
+				print(fail_mode)
 
 		# after we've iterated over all possible download locations, we do this once per distfile....
 

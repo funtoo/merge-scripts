@@ -437,7 +437,7 @@ class CatPkgScan(MergeStep):
 		'''
 		env['ACCEPT_KEYWORDS'] = "~amd64 amd64"
 		p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
-		for pkg in p.cp_all():
+		for pkg in p.cp_all(trees=[cur_overlay.root]):
 
 			src_uri = {}
 
@@ -449,7 +449,7 @@ class CatPkgScan(MergeStep):
 			# We want to prioritize SRC_URI for bestmatch-visible ebuilds. We will use bm
 			# and prio to tag files that are in bestmatch-visible ebuilds.
 
-			bm = p.xmatch("bestmatch-visible", pkg)
+			bm = p.xmatch("bestmatch-visible", pkg, cur_tree=cur_overlay.root)
 
 			prio = {}
 
@@ -466,12 +466,12 @@ class CatPkgScan(MergeStep):
 					# prioritize bestmatch-visible
 					prio[fn] = 1
 
-			for a in p.xmatch("match-all", pkg):
+			for a in p.xmatch("match-all", pkg, cur_tree=cur_overlay.root):
 				if len(a) == 0:
 					continue
 				prev_blob = None
 				pos = 0
-				aux_info = p.aux_get(a, ["SRC_URI", "RESTRICT" ])
+				aux_info = p.aux_get(a, ["SRC_URI", "RESTRICT" ], mytree=cur_overlay.root)
 				blobs = aux_info[0].split()
 				
 				restrict = aux_info[1].split()
