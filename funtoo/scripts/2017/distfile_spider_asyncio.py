@@ -21,6 +21,8 @@ with open('/var/git/meta-repo/kits/core-kit/profiles/thirdpartymirrors', 'r') as
 		ls = line.split()
 		thirdp[ls[0]] = ls[1:]
 
+# TODO: only try to download one filename of the same name at a time.
+
 def src_uri_process(uri_text, fn):
 
 	# converts \n delimited text of all SRC_URIs for file from ebuild into a list containing:
@@ -137,7 +139,7 @@ async def get_file(db, task_num, q):
 
 			# if we have a sha512, then we can to a pre-download check to see if the file has been grabbed before.
 			if d.digest_type == "sha512":
-				existing = session.query(db.Distfile).filter(db.Distfile.id == d.id).first()
+				existing = session.query(db.Distfile).filter(db.Distfile.id == d.digest).first()
 				if existing:
 					print("%s already downloaded; skipping." % d.filename)
 					session.delete(d)
