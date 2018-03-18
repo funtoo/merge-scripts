@@ -273,14 +273,13 @@ async def get_more_distfiles(db, q):
 		# RIGHT NOW THIS WILL REPEATEDLY GRAB THE SAME STUFF
 		count = 0
 		with db.get_session() as session:
-			query = session.query(db.QueuedDistfile).filter(db.QueuedDistfile.last_attempted_on == None)
-			query = query.limit(query_size)
-			query_list = list(query)
-			if len(query_list) == 0:
+			results = session.query(db.QueuedDistfile).filter(db.QueuedDistfile.last_attempted_on == None)
+			results = results.limit(query_size)
+			if len(results) == 0:
 				print("SLEEPING")
 				await asyncio.sleep(5)
 			else:
-				for d in query_list:
+				for d in results:
 					await q.put(d)
 
 logging.basicConfig(level=logging.ERROR)
