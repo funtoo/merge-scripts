@@ -526,7 +526,7 @@ class CatPkgScan(MergeStep):
 						except ValueError:
 							try:
 								digest_index = ls.index("SHA256") + 1
-								digest_type = "she256"
+								digest_type = "sha256"
 							except ValueError:
 								print("Error: Manifest file %s has invalid format: " % man_file)
 								print(" ", line)
