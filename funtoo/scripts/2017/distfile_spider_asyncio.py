@@ -134,6 +134,9 @@ async def get_file(db, task_num, q):
 
 			if d.src_uri is None:
 				print("Error: for file %s, SRC_URI is None; skipping." % d.filename)
+				session.delete(d)
+				session.commit()
+				# move to next file...
 				continue
 
 			uris = src_uri_process(d.src_uri, d.filename)
