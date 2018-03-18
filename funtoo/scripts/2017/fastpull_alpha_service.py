@@ -12,28 +12,13 @@ class RedirectHandler(tornado.web.RequestHandler):
 	redirect_url = "https://storage.googleapis.com/fastpull-us/%s/%s/%s"
 
 	def get(self,fn):
-		session = self.session
-		result = session.query(Distfile).filter(Distfile.filename == fn).first()
-		if not result:
-			self.set_status(404)
-		else:
-			url = self.redirect_url % ( result.id[0], result.id[1], result.id )
-			self.redirect(url, permanent=False)
-
-	@property
-	def session(self):
-		return self.application.db.session
-
-	@property
-	def sub_session(self):
-		return self.application.sub_db.session
-   
-   
-	# Remove the session when we are done...
-
-	def finish(self,chunk=None):
-		tornado.web.RequestHandler.finish(self,chunk)
-		self.session.close_all()
+		with self.application.db.get_session() as session:
+			result = session.query(self.application.db.Distfile).filter(self.application.db.Distfile.filename == fn).first()
+			if not result:
+				self.set_status(404)
+			else:
+				url = self.redirect_url % ( result.id[0], result.id[1], result.id )
+				self.redirect(url, permanent=False)
 
 settings = {
 	"xsrf_cookies": False,
@@ -51,14 +36,12 @@ class Application(tornado.web.Application):
 		tornado.web.Application.__init__(self, self.handlers, **settings)
 
 application = Application()
-application.db = AppDatabase(getConfig(), serverMode=False)
+application.db = FastPullDatabase()
 http_server = HTTPServer(application, xheaders=True)
 http_server.bind(8080, "127.0.0.1")
 http_server.start()
 
 # start ioloop
 IOLoop.instance().start()
-
-
 
 # vim: ts=4 sw=4 noet

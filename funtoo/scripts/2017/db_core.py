@@ -12,10 +12,9 @@ class Database(object):
 
 	# Abstract database class with contextmanager pattern.
 
-	@property
 	@contextmanager
-	def session(self):
-		session = self.sessionmaker()
+	def get_session(self):
+		session = self.session_factory()
 		try:
 			yield session
 			session.commit()
@@ -86,12 +85,12 @@ class FastPullDatabase(Database):
 		self.MissingManifestFailure = MissingManifestFailure
 
 		self.Base.metadata.create_all(self.engine)
-		self.sessionmaker = sessionmaker(bind=self.engine)
+		self.session_factory = sessionmaker(bind=self.engine)
 
 if __name__ == "__main__":
 
 	db = FastPullDatabase()
-	with db.session as session:
+	with db.get_session() as session:
 		for x in session.query(db.Distfile):
 			print(x.filename)
 

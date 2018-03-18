@@ -241,7 +241,7 @@ db = FastPullDatabase()
 loop = asyncio.get_event_loop()
 now = datetime.utcnow()
 
-with db.session as session:
+with db.get_session() as session:
 
 	tasks = [
 		asyncio.async(get_more_distfiles(session, q)),
