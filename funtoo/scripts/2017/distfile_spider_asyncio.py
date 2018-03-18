@@ -121,12 +121,12 @@ async def get_file(db, task_num, q):
 	while True:
 
 		# continually grab files....
-		d = await q.get()
+		d_id = await q.get()
 
 		with db.get_session() as session:
 
 			# This will attach to our current session
-			d = session.query(db.QueuedDistfile).filter(db.QueuedDistfile.id == d.id).first()
+			d = session.query(db.QueuedDistfile).filter(db.QueuedDistfile.id == d_id).first()
 			if d is None:
 				# no longer exists
 				continue
@@ -286,7 +286,7 @@ async def get_more_distfiles(db, q):
 				await asyncio.sleep(5)
 			else:
 				for d in results:
-					await q.put(d)
+					await q.put(d.id)
 
 logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger("aioftp.client")
