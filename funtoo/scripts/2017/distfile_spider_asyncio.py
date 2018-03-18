@@ -123,9 +123,13 @@ async def get_file(db, task_num, q):
 		# continually grab files....
 		d = await q.get()
 
-		insp = sqlalchemy.inspect(d)
+		with db.get_session() as session:
 
-		with db.get_session() if insp.detached else object_session(d) as session:
+			# This will attach to our current session
+			d = session.query(db.QueuedDistfile.id == d.id).first()
+			if d is None:
+				# no longer exists
+				continue
 
 			if d.digest_type == "sha256":
 				digest_func = sha256
