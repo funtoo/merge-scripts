@@ -439,7 +439,12 @@ class CatPkgScan(MergeStep):
 		p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
 		for pkg in p.cp_all(trees=[cur_overlay.root]):
 
-			src_uri = {}
+			# src_uri now has the following format:
+
+			# src_uri["foo.tar.gz"] = [ "https://url1", "https//url2" ... ]
+			# entries in SRC_URI from fetch-restricted ebuilds will have SRC_URI prefixed by "NOMIRROR:"
+
+			src_uri = defaultdict(list)
 
 			# We are scanning SRC_URI in all ebuilds in the catpkg, as well as Manifest.
 			# This will give us a complete list of all archives used in the catpkg.
@@ -501,21 +506,13 @@ class CatPkgScan(MergeStep):
 					fn = prev_blob.split("/")[-1]
 					if mirror_restrict:
 						mirror_restrict_set.add(fn)
-					if not fn in src_uri:
-						src_uri[fn] = []
 					if prev_blob not in src_uri[fn]:
 						# avoid dups
 						src_uri[fn].append(prev_blob)
 
-			# src_uri now has the following format:
-
-			# src_uri["foo.tar.gz"] = [ "https://url1", "https//url2" ... ]
-			# entries in SRC_URI from fetch-restricted ebuilds will have SRC_URI prefixed by "NOMIRROR:"
-
 			with self.db.get_session() as session:
 
 				man_info = {}
-				no_sha512 = set()
 				man_file = cur_tree + "/" + pkg + "/Manifest"
 				if os.path.exists(man_file):
 					man_f = open(man_file, "r")
@@ -524,11 +521,17 @@ class CatPkgScan(MergeStep):
 						if len(ls) <= 3 or ls[0] != "DIST":
 							continue
 						try:
-							sha512_index = ls.index("SHA512")
+							digest_index = ls.index("SHA512") + 1
+							digest_type = "sha512"
 						except ValueError:
-							no_sha512.add(ls[1])
-							continue
-						man_info[ls[1]] = { "size" : ls[2], "sha512" : ls[sha512_index+1] if sha512_index else None }
+							try:
+								digest_index = ls.index("SHA256") + 1
+								digest_type = "she256"
+							except ValueError:
+								print("Error: Manifest file %s has invalid format: " % man_file)
+								print(" ", line)
+								continue
+						man_info[ls[1]] = { "size" : ls[2], "digest" : ls[digest_index], "digest_type" : digest_type }
 					man_f.close()
 
 				# for each catpkg:
@@ -537,32 +540,41 @@ class CatPkgScan(MergeStep):
 					s_out = ""
 					for u in uris:
 						s_out += u + "\n"
-					if f not in man_info:
-						fail = self.db.MissingManifestFailure()
-						fail.filename = f
-						fail.catpkg = pkg
-						fail.kit = cur_overlay.name
-						fail.branch = cur_overlay.branch
-						fail.src_uri = s_out
-						fail.failtype = "nosha512" if f in no_sha512 else "missing"
-						fail.fail_on = self.now
-						merged_fail = session.merge(fail)
-						print("BAD!!! %s in MANIFEST: " % fail.failtype, pkg, f )
+
+					# If we have already grabbed this distfile, then let's not queue it for fetching...
+
+					already_exists = False
+					for existing in session.query(self.db.Distfile).filter(self.db.Distfile.filename == f).filter(self.db.Distfile.size == man_info[f]["size"]):
+						if existing.digest_type == "sha512" and existing.id == man_info[f]["digest"]:
+							already_exists = True
+							break
+						elif existing.digest_type == "sha256" and existing.alt_digest == man_info[f]["digest"]:
+							already_exists = True
+							break
+
+					# Don't create multiple queued downloads for the same distfile:
+
+					if session.query(self.db.QueuedDistfile).filter(self.db.QueuedDistfile.filename == f).filter(self.db.QueuedDistfile.size == man_info[f]["size"]).first() is not None:
+						already_exists = True
+
+					if already_exists:
 						continue
-					assert man_info[f]["sha512"] != None
-					d = self.db.Distfile()
-					d.id = man_info[f]["sha512"]
+
+					# Queue the distfile for downloading...
+
+					d = self.db.QueuedDistfile()
 					d.filename = f
-					if f in prio:
-						d.priority = prio[f]
-					d.size = man_info[f]["size"]
-					d.src_uri = s_out
 					d.catpkg = pkg
 					d.kit = cur_overlay.name
-					d.last_updated_on = self.now
+					d.branch = cur_overlay.branch
+					d.src_uri = s_out
+					d.size = man_info[f]["size"]
 					d.mirror = True if f not in mirror_restrict_set else False
-					merged_d = session.merge(d)
-
+					d.digest_type = man_info[f]["digest_type"]
+					d.digest = man_info[f]["digest"]
+					if f in prio:
+						d.priority = prio[f]
+					session.add(d)
 				session.commit()
 
 def repoName(cur_overlay):

@@ -7,11 +7,10 @@ import aioftp
 import async_timeout
 import aiohttp
 import logging
-from hashlib import sha512
+from hashlib import sha256, sha512
 import socket
 
 from db_core import *
-import time
 from datetime import datetime, timedelta
 
 resolver = aiohttp.AsyncResolver(nameservers=['8.8.8.8', '8.8.4.4'], timeout=3, tries=2)
@@ -48,12 +47,17 @@ def src_uri_process(uri_text, fn):
 			out_uris.append(uri)
 	return out_uris
 
-async def ftp_fetch(host, path, port, login, password, outfile):
+def get_sha512(fn):
+		with open(fn, "rb") as data:
+			my_hash = sha512(data=data.read())
+			return hash.hexdigest()
+
+async def ftp_fetch(host, path, outfile, digest_func):
 	client = aioftp.Client()
 	await client.connect(host)
 	await client.login("anonymous", "drobbins@funtoo.org")
 	fd = open(outfile, 'wb')
-	hash = sha512()
+	hash = digest_func()
 	if not await client.exists(path):
 		return ("ftp_missing", None)
 	stream = await client.download_stream(path)
@@ -66,7 +70,7 @@ async def ftp_fetch(host, path, port, login, password, outfile):
 	fd.close()
 	return (None, cur_digest)
 
-async def http_fetch(url, outfile):
+async def http_fetch(url, outfile, digest_func):
 	global resolver
 	connector = aiohttp.TCPConnector(family=socket.AF_INET,resolver=resolver,verify_ssl=False)
 	async with aiohttp.ClientSession(connector=connector) as http_session:
@@ -74,7 +78,7 @@ async def http_fetch(url, outfile):
 			if response.status != 200:
 				return ("http_%s" % response.status, None)
 			with open(outfile, 'wb') as fd:
-				hash = sha512()
+				hash = digest_func()
 				while True:
 					chunk = await response.content.read(chunk_size)
 					if not chunk:
@@ -84,11 +88,6 @@ async def http_fetch(url, outfile):
 	cur_digest = hash.hexdigest()
 	return (None, cur_digest)
 
-def distfile_fail(d, failtype=None):
-	d.last_failure_on = datetime.utcnow()
-	d.failtype = failtype
-	session.merge(d)
-	session.commit()
 
 def next_uri(uri_expand):
 	for src_uri in uri_expand:
@@ -114,17 +113,23 @@ def fastpull_index(outfile,distfile):
 		os.unlink(fastpull_outfile)
 	os.link(outfile, fastpull_outfile)
 
-async def get_file(session, t_name,q):
+async def get_file(db, task_num, q):
 	timeout = 60
 
 	while True:
-		last_fetch = datetime.utcnow()	
 		# continually grab files....
 		d = await q.get()
+
+		if d.digest_type == "sha256":
+			digest_func = sha256
+		elif d.digest_type == "sha512":
+			digest_func = sha512
+
 		uris = src_uri_process(d.src_uri, d.filename)
 		outfile = os.path.join("/home/mirror/distfiles/", d.filename)
 		mylist = list(next_uri(uris))
 		fail_mode = None
+
 		for real_uri in mylist:
 			# iterate through each potential URI for downloading a particular distfile. We'll keep trying until
 			# we find one that works.
@@ -132,17 +137,18 @@ async def get_file(session, t_name,q):
 			# fail_mode will effectively store the last reason why our download failed. We reset it each iteration,
 			# which is what we want. If fail_mode is set to something after our big loop exits, we know we have
 			# truly failed downloading this distfile.
-		
+
 			fail_mode = None
+
 			if real_uri.startswith("ftp://"):
 				# handle ftp download --
 				host_parts = real_uri[6:]
 				host = host_parts.split("/")[0]
 				path = "/".join(host_parts.split("/")[1:])
 				try:
-					sha = None
+					digest = None
 					with async_timeout.timeout(timeout):
-						fail_mode, sha = await ftp_fetch(host, path, 21, "anonymous", "drobbins@funtoo.org", outfile)
+						fail_mode, digest = await ftp_fetch(host, path, outfile, digest_func)
 				except Exception as e:
 					fail_mode = str(e)
 					if fail_mode == "Session is closed":
@@ -150,35 +156,68 @@ async def get_file(session, t_name,q):
 			else:
 				# handle http/https download --
 				try:
-					sha = None
+					digest = None
 					with async_timeout.timeout(timeout):
-						fail_mode, sha = await http_fetch(real_uri, outfile)
+						fail_mode, digest = await http_fetch(real_uri, outfile, digest_func)
 				except Exception as e:
 					fail_mode = str(e)
 					if fail_mode == "Session is closed":
 						raise e
-			if sha == d.id:
-				break
-			else:
-				print(fail_mode)
 
-		# after we've iterated over all possible download locations, we do this once per distfile....
+			if digest == d.digest:
+				# success! we can record our fine ketchup:
 
-		if not fail_mode:
-			if sha == d.id:
-				# success! we can record our good work and break out of this loop...
-				d.last_fetched_on = datetime.utcnow()
-				d.rand_id = ''.join(random.choice('abcdef0123456789') for _ in range(128))
-				session.merge(d)
-				session.commit()
-				fastpull_index(outfile,d)
-				os.unlink(outfile)
+				if d.digest_type == "sha512":
+					my_id = d.digest
+				else:
+					my_id = get_sha512(outfile)
+
+				with db.session as session:
+
+					existing = session.query(db.Distfile).filter(db.Distfile.id == my_id).first()
+
+					if existing is not None:
+						print("Downloaded %s, but already exists in our db. Skipping." % d.filename)
+						session.delete(d)
+						session.commit()
+						os.unlink(outfile)
+						# done; process next distfile
+						break
+
+					d_final = db.Distfile()
+
+					d_final.id = my_id
+					d_final.rand_id = ''.join(random.choice('abcdef0123456789') for _ in range(128))
+					d_final.filename = d.filename
+					d_final.digest_type = d.digest_type
+					if d.digest_type != "sha512":
+						d_final.alt_digest = d.digest
+					d_final.size = d.size
+					d_final.catpkg = d.catpkg
+					d_final.kit = d.kit
+					d_final.src_uri = d.src_uri
+					d_final.mirror = d.mirror
+					d_final.last_fetched_on = datetime.utcnow()
+
+					session.add(d_final)
+					session.delete(d)
+					session.commit()
+
+					fastpull_index(outfile,d)
+					os.unlink(outfile)
+					# done; process next distfile
+					break
 			else:
 				fail_mode = "digest"
 
 		if fail_mode:
-			distfile_fail(d, fail_mode)
-			# TODO: if we have failed with a bad digest, we need some follow-up process to query these so we can investigate...
+			# If we tried all SRC_URIs, and still failed, we will end up here, with fail_mode set to something.
+			with db.session as session:
+				d.last_failure_on = d.last_attempted_on = datetime.utcnow()
+				d.failtype = fail_mode
+				d.failcount += 1
+				session.merge(d)
+				session.commit()
 			if fail_mode == "http_404":
 				sys.stdout.write("4")
 			elif fail_mode == "digest":
@@ -187,6 +226,7 @@ async def get_file(session, t_name,q):
 				sys.stdout.write("x")
 			sys.stdout.flush()
 		else:
+			# we end up here if we are successful. Do successful output.
 			sys.stdout.write(".")
 			sys.stdout.flush()
 
@@ -209,15 +249,7 @@ async def get_more_distfiles(session, q):
 		print("MOR")
 		# RIGHT NOW THIS WILL REPEATEDLY GRAB THE SAME STUFF
 		count = 0
-		#query = db.session.query(Distfile).filter(Distfile.last_fetched_on == None).filter(or_(Distfile.last_attempted_on == None, Distfile.last_attempted_on < time_cutoff)).limit(query_size)
-		query = session.query(db.Distfile)
-		# avoid repeats for each run:
-		query = query.filter(db.Distfile.last_attempted_on == None)
-		#query = query.filter(Distfile.last_fetched_on == None)
-		#query = query.filter(db.Distfile.failtype != "digest")
-		#query = query.filter(Distfile.failtype != "http_404")
-		#query = query.filter(Distfile.failtype.like("%SSL%"))
-		#query = query.filter(Distfile.catpkg == "x11-misc/xearth")
+		query = query.filter(db.QueuedDistfile).filter(db.QueuedDistfile.last_attempted_on == None)
 		query = query.limit(query_size)
 		query_list = list(query)
 		if len(query_list) == 0:
@@ -225,14 +257,6 @@ async def get_more_distfiles(session, q):
 			await asyncio.sleep(5)
 		else:
 			for d in query_list:
-				print(">",d.filename)
-				if os.path.exists("/home/mirror/fastpull/%s/%s/%s" % ( d.id[0], d.id[1], d.id )):
-					print("found in fastpull")
-					d.last_fetched_on = datetime.utcnow()
-					session.merge(d)
-				d.last_attempted_on = datetime.utcnow()
-				session.merge(d)
-				session.commit()
 				await q.put(d)
 
 	await q.put(None)
@@ -254,7 +278,7 @@ with db.get_session() as session:
 	]
 
 	for x in range(0,workr_size):
-		tasks.append(asyncio.async(get_file(session, "task%s" % x, q)))
+		tasks.append(asyncio.async(get_file(db, x, q)))
 
 	loop.run_until_complete(asyncio.gather(*tasks))
 
