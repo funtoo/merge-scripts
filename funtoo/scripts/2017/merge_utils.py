@@ -405,7 +405,7 @@ class CatPkgScan(MergeStep):
 		self.db = db
 
 	def run(self, cur_overlay):
-		if self.db == None:
+		if self.db is None:
 			return
 		session = self.db.session
 		cur_tree = cur_overlay.root
@@ -1964,5 +1964,6 @@ class Minify(MergeStep):
 
 def getMySQLDatabase():
 	from db_core import FastPullDatabase
+	return FastPullDatabase()
 
 # vim: ts=4 sw=4 noet
