@@ -226,6 +226,7 @@ async def get_more_distfiles(session, q):
 			await asyncio.sleep(5)
 		else:
 			for d in query_list:
+				print(">",d.filename)
 				if os.path.exists("/home/mirror/fastpull/%s/%s/%s" % ( d.id[0], d.id[1], d.id )):
 					print("found in fastpull")
 					d.last_fetched_on = datetime.utcnow()
