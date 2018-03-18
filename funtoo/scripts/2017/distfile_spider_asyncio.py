@@ -172,7 +172,7 @@ async def get_file(db, task_num, q):
 				else:
 					my_id = get_sha512(outfile)
 
-				with db.session as session:
+				with db.get_session() as session:
 
 					existing = session.query(db.Distfile).filter(db.Distfile.id == my_id).first()
 
@@ -212,7 +212,7 @@ async def get_file(db, task_num, q):
 
 		if fail_mode:
 			# If we tried all SRC_URIs, and still failed, we will end up here, with fail_mode set to something.
-			with db.session as session:
+			with db.get_session() as session:
 				d.last_failure_on = d.last_attempted_on = datetime.utcnow()
 				d.failtype = fail_mode
 				d.failcount += 1
@@ -281,8 +281,6 @@ with db.get_session() as session:
 		tasks.append(asyncio.async(get_file(db, x, q)))
 
 	loop.run_until_complete(asyncio.gather(*tasks))
-
-
 	loop.close()
 
 # vim: ts=4 sw=4 noet

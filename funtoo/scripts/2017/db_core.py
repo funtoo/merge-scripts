@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import sys
 from db_config import get_app_config
 from contextlib import contextmanager
 from sqlalchemy import create_engine, ForeignKey, Integer, Boolean, Column, String, ForeignKey, BigInteger, DateTime, Text, Numeric
@@ -67,6 +68,14 @@ class FastPullDatabase(Database):
 			mirror = Column('mirror', Boolean, default=True)
 			last_fetched_on = Column('last_fetched_on', DateTime)                       # set to a datetime the last time we successfully fetched the file                    # last failure
 
+			# deprecated fields:
+
+			last_attempted_on = Column('last_attempted_on', DateTime)
+			last_failure_on = Column('last_failure_on', DateTime)
+			failtype = Column('failtype', Text)
+			priority = Column('priority', Integer, default=0)
+
+
 		class QueuedDistfile(self.Base):
 
 			__tablename__ = 'queued_distfiles'
@@ -109,9 +118,38 @@ class FastPullDatabase(Database):
 
 if __name__ == "__main__":
 
-	db = FastPullDatabase()
-	with db.get_session() as session:
-		for x in session.query(db.QueuedDistfile).filter(db.QueuedDistfile.last_attempted_on == None):
-			print(x.filename)
+	# This migration code is designed to migrate old Distfile() records to the new QueuedDistfile() records:
+
+	if len(sys.argv) > 1 and sys.argv[1] == "migrate":
+		db = FastPullDatabase()
+		print("migrating...")
+		with db.get_session() as session:
+			for d in session.query(db.Distfile).filter(db.Distfile.last_fetched_on == None):
+				qd = db.QueuedDistfile()
+				qd.filename = d.filename
+				qd.catpkg = d.catpkg
+				qd.kit = d.kit
+				qd.branch = d.branch
+				qd.src_uri = d.src_uri
+				qd.size = d.size
+				qd.mirror = d.mirror
+				qd.digest_type = "sha512"
+				qd.added_on = datetime.utcnow()
+				qd.priority = d.priority
+				qd.last_attempted_on = d.last_attempted_on
+				qd.last_failure_on = d.last_failure_on
+				qd.failcount = 1
+				qd.failtype = d.failtype
+				session.add(qd)
+				session.delete(d)
+				session.commit()
+				sys.stdout.write(">")
+				sys.stdout.flush()
+		print()
+	else:
+		db = FastPullDatabase()
+		with db.get_session() as session:
+			for x in session.query(db.QueuedDistfile).filter(db.QueuedDistfile.last_attempted_on == None):
+				print(x.filename)
 
 # vim: ts=4 sw=4 noet
