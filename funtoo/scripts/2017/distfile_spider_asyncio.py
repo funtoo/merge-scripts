@@ -103,14 +103,14 @@ def next_uri(uri_expand):
 		else:
 			yield src_uri
 
-def fastpull_index(outfile,distfile):
+def fastpull_index(outfile, distfile_final):
 	# add to fastpull.
-	d1 = distfile.rand_id[0]
-	d2 = distfile.rand_id[1]
+	d1 = distfile_final.rand_id[0]
+	d2 = distfile_final.rand_id[1]
 	outdir = os.path.join("/home/mirror/fastpull", d1, d2)
 	if not os.path.exists(outdir):
 		os.makedirs(outdir)
-	fastpull_outfile = os.path.join(outdir, distfile.rand_id)
+	fastpull_outfile = os.path.join(outdir, distfile_final.rand_id)
 	if os.path.lexists(fastpull_outfile):
 		os.unlink(fastpull_outfile)
 	os.link(outfile, fastpull_outfile)
@@ -229,11 +229,12 @@ async def get_file(db, task_num, q):
 					d_final.mirror = d.mirror
 					d_final.last_fetched_on = datetime.utcnow()
 
+					fastpull_index(outfile, d_final)
+
 					session.add(d_final)
 					session.delete(d)
 					session.commit()
-
-					fastpull_index(outfile,d)
+					
 					os.unlink(outfile)
 					# done; process next distfile
 					break
