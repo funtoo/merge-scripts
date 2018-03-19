@@ -29,7 +29,8 @@ class Application(tornado.web.Application):
 
 	name = "fastpull alpha service"
 	handlers = [
-		("/alpha/(.*)", RedirectHandler),
+		("/(.*)", RedirectHandler),
+		("/distfiles/(.*)", RedirectHandler),
 	]
 
 	def __init__(self):
