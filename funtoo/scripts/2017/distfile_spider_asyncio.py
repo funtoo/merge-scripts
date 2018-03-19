@@ -246,6 +246,7 @@ async def get_file(db, task_num, q):
 
 					if existing is not None:
 						print("Downloaded %s, but already exists in our db. Skipping." % d.filename)
+						fail_mode = None
 						session.delete(d)
 						session.commit()
 						os.unlink(outfile)
@@ -274,7 +275,6 @@ async def get_file(db, task_num, q):
 						# something went bad, couldn't find file for indexing.
 						fail_mode = "notfound"
 						continue
-
 
 					session.add(d_final)
 					session.delete(d)
