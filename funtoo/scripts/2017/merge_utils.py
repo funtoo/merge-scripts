@@ -398,6 +398,44 @@ def getPackagesInCatWithEclass(cur_overlay, cat, eclass):
 					mypkgs.add(cp)
 	return mypkgs
 
+def extract_uris(src_uri, fn_urls):
+
+	def record_fn_url(fn, prev_blob):
+		if prev_blob not in src_uri[fn]:
+			new_files.append(fn)
+			fn_urls[fn].append(prev_blob)
+
+	blobs = src_uri.split()
+	prev_blob = None
+	pos = 0
+	new_files = []
+
+	while pos <= len(blobs):
+		if pos < len(blobs):
+			blob = blobs[pos]
+		else:
+			# we're one beyond end of list...
+			pass
+		if blob in [")", "(", "||"] or blob.endswith("?"):
+			pos += 1
+			continue
+		if blob == "->":
+			# We found a http://foo -> bar situation. Handle it:
+			fn = blobs[pos + 1]
+			if fn is not None:
+				record_fn_url(fn, prev_blob)
+				prev_blob = None
+				pos += 2
+		else:
+			# Process previous item:
+			if prev_blob:
+				fn = prev_blob.split("/")[-1]
+				record_fn_url(fn, prev_blob)
+			prev_blob = blob
+			pos += 1
+
+	return new_files
+
 class CatPkgScan(MergeStep):
 
 	def __init__(self, now, db=None):
@@ -444,39 +482,24 @@ class CatPkgScan(MergeStep):
 			# src_uri["foo.tar.gz"] = [ "https://url1", "https//url2" ... ]
 			# entries in SRC_URI from fetch-restricted ebuilds will have SRC_URI prefixed by "NOMIRROR:"
 
-			src_uri = defaultdict(list)
-
 			# We are scanning SRC_URI in all ebuilds in the catpkg, as well as Manifest.
 			# This will give us a complete list of all archives used in the catpkg.
-
-			mirror_restrict_set = set()
 
 			# We want to prioritize SRC_URI for bestmatch-visible ebuilds. We will use bm
 			# and prio to tag files that are in bestmatch-visible ebuilds.
 
 			bm = p.xmatch("bestmatch-visible", pkg)
 
-			prio = {}
+			fn_urls = defaultdict(list)
+			fn_meta = defaultdict(dict)
 
-			def record_src_uri(atom, prev_blob, mirror_restrict):
-				#global prev_blob, bm, src_uri, mirror_restrict_set
-				if mirror_restrict:
-					mirror_restrict_set.add(fn)
-				if prev_blob not in src_uri[fn]:
-					# avoid dups
-					src_uri[fn].append(prev_blob)
-				if atom in bm:
-					# prioritize bestmatch-visible
-					prio[fn] = 1
 
-			for a in p.xmatch("match-all", pkg):
-				if len(a) == 0:
+			for cpv in p.xmatch("match-all", pkg):
+				if len(cpv) == 0:
 					continue
-				prev_blob = None
-				pos = 0
-				aux_info = p.aux_get(a, ["SRC_URI", "RESTRICT" ], mytree=cur_overlay.root)
-				blobs = aux_info[0].split()
-				
+
+				aux_info = p.aux_get(cpv, ["SRC_URI", "RESTRICT" ], mytree=cur_overlay.root)
+
 				restrict = aux_info[1].split()
 				mirror_restrict = False
 				for r in restrict:
@@ -484,31 +507,10 @@ class CatPkgScan(MergeStep):
 						mirror_restrict = True
 						break
 
-				while (pos < len(blobs)):
-					blob = blobs[pos]
-					if blob in [ ")", "(", "||" ] or blob.endswith("?"):
-						pos += 1
-						continue
-					if blob == "->":
-						fn = blobs[pos+1]
-						if fn is not None:
-							record_src_uri(a, prev_blob, mirror_restrict)
-							prev_blob = None
-							pos += 2
-					else:
-						if prev_blob:
-							fn = prev_blob.split("/")[-1]
-							record_src_uri(a, prev_blob, mirror_restrict)
-						prev_blob = blob
-						pos += 1
-				if prev_blob:
-					fn = prev_blob.split("/")[-1]
-					if fn is not None:
-						if mirror_restrict:
-							mirror_restrict_set.add(fn)
-						if prev_blob not in src_uri[fn]:
-							# avoid dups
-							src_uri[fn].append(prev_blob)
+				# record our own metadata about each file...
+				for fn in extract_uris(aux_info[0], fn_urls):
+					fn_meta[fn]["restrict"] = mirror_restrict
+					fn_meta[fn]["bestmatch"] = cpv == bm
 
 			with self.db.get_session() as session:
 
@@ -536,7 +538,7 @@ class CatPkgScan(MergeStep):
 
 				# for each catpkg:
 
-				for f, uris in src_uri.items():
+				for f, uris in fn_urls.items():
 
 					if f not in man_info:
 						print("Error: %s/%s: %s Manifest file contains nothing for %s, skipping..." % (cur_overlay.name, cur_overlay.branch, pkg, f))
@@ -572,11 +574,10 @@ class CatPkgScan(MergeStep):
 					qd.branch = cur_overlay.branch
 					qd.src_uri = s_out
 					qd.size = man_info[f]["size"]
-					qd.mirror = True if f not in mirror_restrict_set else False
+					qd.mirror = not fn_meta[f]["restrict"]
 					qd.digest_type = man_info[f]["digest_type"]
 					qd.digest = man_info[f]["digest"]
-					if f in prio:
-						qd.priority = prio[f]
+					qd.priority = 1 if fn_meta[f]["bestmatch"] else 0
 					session.add(qd)
 				session.commit()
 
@@ -1981,5 +1982,28 @@ class Minify(MergeStep):
 def getMySQLDatabase():
 	from db_core import FastPullDatabase
 	return FastPullDatabase()
+
+if __name__ == "__main__":
+	env = os.environ.copy()
+	env['PORTAGE_REPOSITORIES'] = '''
+			[DEFAULT]
+			main-repo = core-kit
+
+			[core-kit]
+			location = /var/git/dest-trees/core-kit
+			aliases = gentoo
+			'''
+	env['ACCEPT_KEYWORDS'] = "~amd64 amd64"
+	p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
+	for pkg in [ "app-emulation/lxd"]:
+		for cpv in p.xmatch("match-all", pkg):
+			if len(cpv) == 0:
+				continue
+
+		aux_info = p.aux_get(cpv, ["SRC_URI", "RESTRICT"], mytree="core-kit")
+		fn_urls = defaultdict(list)
+		new_files = extract_uris(aux_info[0], fn_urls)
+
+		print(fn_urls)
 
 # vim: ts=4 sw=4 noet
