@@ -134,23 +134,26 @@ async def get_file(db, task_num, q):
 		# continually grab files....
 		d_id = await q.get()
 
-		# track file ids in progress.
-		progress_set.add(d_id)
-
 		print("Grabbed file %s." % d_id)
 
-
 		with db.get_session() as session:
-
+			print("progress_set", progress_set)
 			# This will attach to our current session
 			print("Going to query for file", d_id)
-			if d_id == 5:
-				import pdb; pdb.set_trace()
 			d = session.query(db.QueuedDistfile).filter(db.QueuedDistfile.id == d_id).first()
 			print("Got file", d_id)
 			if d is None:
 				print("File %s is none." % d_id)
 				# no longer exists, no longer in progress, next file...
+				progress_set.remove(d_id)
+				continue
+
+			if d.digest is None:
+				print("Digest for %s is none. Skipping." % d_id)
+				# TODO: skip for now. These can be nomirror files which give us no digest information. We can choose to mirror them anyway, but can't verify authenticity.
+				d.last_attempted_on = datetime.utcnow()
+				session.add(d)
+				session.commit()
 				progress_set.remove(d_id)
 				continue
 
@@ -173,6 +176,9 @@ async def get_file(db, task_num, q):
 					# already deleted by someone else
 					pass
 				# move to next file...
+				d.last_attempted_on = datetime.utcnow()
+				session.add(d)
+				session.commit()
 				progress_set.remove(d_id)
 				continue
 			
@@ -279,7 +285,7 @@ async def get_file(db, task_num, q):
 				d.last_failure_on = d.last_attempted_on = datetime.utcnow()
 				d.failtype = fail_mode
 				d.failcount += 1
-				session.merge(d)
+				session.add(d)
 				session.commit()
 				if fail_mode == "http_404":
 					sys.stdout.write("4")
@@ -294,8 +300,8 @@ async def get_file(db, task_num, q):
 				sys.stdout.flush()
 			progress_set.remove(d_id)
 
-queue_size = 30
-query_size = 10 
+queue_size = 60
+query_size = 60 
 workr_size = 30
 
 pending_q = asyncio.Queue(maxsize=queue_size)
@@ -313,14 +319,24 @@ async def get_more_distfiles(db, q):
 	time_cutoff = datetime.utcnow() - timedelta(hours=24)
 	time_cutoff_hr = datetime.utcnow() - timedelta(hours=4)
 	while True:
+		print("progress_set", progress_set)
 		with db.get_session() as session:
 			results = session.query(db.QueuedDistfile).filter(db.QueuedDistfile.last_attempted_on < time_cutoff_hr)
 			results = results.limit(query_size)
 			if len(list(results)) == 0:
 				await asyncio.sleep(5)
 			else:
+				added = 0
 				for d in results:
-					await q.put(d.id)
+					print(d.last_attempted_on)
+					if d.id not in progress_set:
+						await q.put(d.id)
+						# track file ids in progress.
+						progress_set.add(d.id)
+						added += 1
+				if added == 0:
+					await asyncio.sleep(0.5)
+
 
 #import logging
 #logging.basicConfig()
