@@ -51,8 +51,9 @@ def src_uri_process(uri_text, fn):
 
 def get_sha512(fn):
 		with open(fn, "rb") as data:
-			my_hash = sha512(data=data.read())
-			return hash.hexdigest()
+			my_hash = sha512()
+			my_hash.update(data.read())
+			return my_hash.hexdigest()
 
 async def ftp_fetch(host, path, outfile, digest_func):
 	client = aioftp.Client()
@@ -103,7 +104,10 @@ def next_uri(uri_expand):
 		else:
 			yield src_uri
 
+fastpull_count = 0
+
 def fastpull_index(outfile, distfile_final):
+	global fastpull_count
 	# add to fastpull.
 	d1 = distfile_final.rand_id[0]
 	d2 = distfile_final.rand_id[1]
@@ -114,6 +118,7 @@ def fastpull_index(outfile, distfile_final):
 	if os.path.lexists(fastpull_outfile):
 		os.unlink(fastpull_outfile)
 	os.link(outfile, fastpull_outfile)
+	fastpull_count += 1
 
 async def get_file(db, task_num, q):
 	timeout = 60
@@ -234,7 +239,7 @@ async def get_file(db, task_num, q):
 					session.add(d_final)
 					session.delete(d)
 					session.commit()
-					
+
 					os.unlink(outfile)
 					# done; process next distfile
 					break
@@ -260,31 +265,31 @@ async def get_file(db, task_num, q):
 				sys.stdout.write(".")
 				sys.stdout.flush()
 
-queue_size = 50
-query_size = 200
-workr_size = 12 
+queue_size = 300
+query_size = 300
+workr_size = 30
 
 q = asyncio.Queue(maxsize=queue_size)
 
 async def qsize(q):
 	while True:
+		print()
 		print("Queue size: %s" % q.qsize())
-		await asyncio.sleep(5)
+		print("Added to fastpull: %s" % fastpull_count)
+		await asyncio.sleep(60)
 
 async def get_more_distfiles(db, q):
 	global now
 	time_cutoff = datetime.utcnow() - timedelta(hours=24)
 	time_cutoff_hr = datetime.utcnow() - timedelta(hours=4)
 	while True:
-		print("MOR")
-		# RIGHT NOW THIS WILL REPEATEDLY GRAB THE SAME STUFF
-		count = 0
 		with db.get_session() as session:
 			results = session.query(db.QueuedDistfile).filter(db.QueuedDistfile.last_attempted_on == None)
 			results = results.limit(query_size)
 			if results.count() == 0:
-				print("SLEEPING")
-				await asyncio.sleep(5)
+				sys.stdout.write(".")
+				sys.stdout.flush()
+				await asyncio.sleep(60)
 			else:
 				for d in results:
 					await q.put(d.id)
@@ -297,7 +302,6 @@ chunk_size = 4096
 db = FastPullDatabase()
 loop = asyncio.get_event_loop()
 now = datetime.utcnow()
-
 
 tasks = [
 	asyncio.async(get_more_distfiles(db, q)),
