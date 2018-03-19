@@ -1990,12 +1990,12 @@ if __name__ == "__main__":
 			main-repo = core-kit
 
 			[core-kit]
-			location = /var/git/dest-trees/core-kit
+			location = /var/git/meta-repo/kits/core-kit
 			aliases = gentoo
 			'''
 	env['ACCEPT_KEYWORDS'] = "~amd64 amd64"
 	p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
-	for pkg in [ "app-emulation/lxd"]:
+	for pkg in [ "app-emulation/lxd" ]:
 		for cpv in p.xmatch("match-all", pkg):
 			if len(cpv) == 0:
 				continue
