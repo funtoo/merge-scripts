@@ -458,13 +458,13 @@ class CatPkgScan(MergeStep):
 
 			prio = {}
 
-			def record_src_uri(atom, uri, mirror_restrict):
+			def record_src_uri(atom, prev_blob, mirror_restrict):
 				#global prev_blob, bm, src_uri, mirror_restrict_set
 				if mirror_restrict:
 					mirror_restrict_set.add(fn)
-					if prev_blob not in src_uri[fn]:
-						# avoid dups
-						src_uri[fn].append(prev_blob)
+				if prev_blob not in src_uri[fn]:
+					# avoid dups
+					src_uri[fn].append(prev_blob)
 				if atom in bm:
 					# prioritize bestmatch-visible
 					prio[fn] = 1
