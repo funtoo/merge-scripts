@@ -140,6 +140,7 @@ async def get_file(db, task_num, q):
 			print("progress_set", progress_set)
 			# This will attach to our current session
 			print("Going to query for file", d_id)
+			await asyncio.sleep(0.1)
 			d = session.query(db.QueuedDistfile).filter(db.QueuedDistfile.id == d_id).first()
 			print("Got file", d_id)
 			if d is None:
