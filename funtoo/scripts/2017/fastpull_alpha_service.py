@@ -17,7 +17,7 @@ class RedirectHandler(tornado.web.RequestHandler):
 			if not result:
 				self.set_status(404)
 			else:
-				url = self.redirect_url % ( result.id[0], result.id[1], result.id )
+				url = self.redirect_url % ( result.rand_id[0], result.rand_id[1], result.rand_id )
 				self.redirect(url, permanent=False)
 
 settings = {

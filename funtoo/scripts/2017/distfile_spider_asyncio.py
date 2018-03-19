@@ -318,6 +318,8 @@ async def get_more_distfiles(db, q):
 	global now
 	time_cutoff = datetime.utcnow() - timedelta(hours=24)
 	time_cutoff_hr = datetime.utcnow() - timedelta(hours=4)
+	# The asyncio.sleep() calls below not only sleep, they also turn this into a true async function. Otherwise we
+	# would not allow other coroutines to run.
 	while True:
 		print("progress_set", progress_set)
 		with db.get_session() as session:
