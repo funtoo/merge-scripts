@@ -240,8 +240,13 @@ async def get_file(db, task_num, q):
 					if d.digest_type == "sha512" and digest is not None:
 						my_id = digest
 					else:
-						my_id = get_sha512(outfile)
-
+						try:
+							my_id = get_sha512(outfile)
+						except FileNotFoundError:
+							print("Apparently, the file we want to digest does not exist.")
+							fail_mode = "notfound"
+							continue
+							
 					existing = session.query(db.Distfile).filter(db.Distfile.id == my_id).first()
 
 					if existing is not None:
