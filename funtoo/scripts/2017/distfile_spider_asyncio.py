@@ -237,7 +237,7 @@ async def get_file(db, task_num, q):
 				if d.digest is None or digest == d.digest:
 					# success! we can record our fine ketchup:
 
-					if d.digest_type == "sha512":
+					if d.digest_type == "sha512" and digest is not None:
 						my_id = digest
 					else:
 						my_id = get_sha512(outfile)
