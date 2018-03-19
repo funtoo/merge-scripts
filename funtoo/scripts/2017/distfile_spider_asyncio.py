@@ -126,7 +126,7 @@ def fastpull_index(outfile, distfile_final):
 	fastpull_count += 1
 
 async def get_file(db, task_num, q):
-	timeout = 60
+	timeout = 30
 
 	while True:
 
@@ -203,6 +203,7 @@ async def get_file(db, task_num, q):
 		# force session close before download by exiting "with"
 
 		for real_uri in mylist:
+
 			# iterate through each potential URI for downloading a particular distfile. We'll keep trying until
 			# we find one that works.
 
@@ -225,8 +226,7 @@ async def get_file(db, task_num, q):
 						fail_mode, digest = await ftp_fetch(host, path, outfile, digest_func)
 				except Exception as e:
 					fail_mode = str(e)
-					if fail_mode == "Session is closed":
-						raise e
+					continue
 			else:
 				# handle http/https download --
 				try:
@@ -235,10 +235,9 @@ async def get_file(db, task_num, q):
 						fail_mode, digest = await http_fetch(real_uri, outfile, digest_func)
 				except Exception as e:
 					fail_mode = str(e)
-					if fail_mode == "Session is closed":
-						raise e
+					continue
 
-			if d.digest is None or digest == d.digest:
+			if d.digest is None or (digest is not None and digest == d.digest):
 				# success! we can record our fine ketchup:
 
 				if d.digest_type == "sha512" and digest is not None:
