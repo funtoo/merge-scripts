@@ -158,6 +158,25 @@ if __name__ == "__main__":
 				except ValueError:
 					# not hexadecimal... need to re-fetch, etc.
 					print(d.filename)
+					qd = db.QueuedDistfile()
+					qd.filename = d.filename
+					qd.catpkg = d.catpkg
+					qd.kit = d.kit
+					qd.src_uri = d.src_uri
+					qd.size = d.size
+					qd.mirror = d.mirror
+					qd.digest_type = "sha512"
+					qd.added_on = datetime.utcnow()
+					qd.priority = d.priority
+					qd.last_attempted_on = None
+					qd.last_failure_on = None
+					qd.failcount = 0
+					qd.failtype = None
+					session.add(qd)
+					session.delete(d)
+					session.commit()
+					sys.stdout.write(">")
+					sys.stdout.flush()
 	else:
 		db = FastPullDatabase()
 		with db.get_session() as session:
