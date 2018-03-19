@@ -147,6 +147,17 @@ if __name__ == "__main__":
 				sys.stdout.write(">")
 				sys.stdout.flush()
 		print()
+	elif len(sys.argv) > 1 and sys.argv[1] == "fixup":
+		# this code should detect and fixup things that need to be re-fetched.
+		db = FastPullDatabase()
+		print("fixing up old random ids...")
+		with db.get_session() as session:
+			for d in session.query(db.Distfile):
+				try:
+					myval = int(d.rand_id, 16)
+				except ValueError:
+					# not hexadecimal... need to re-fetch, etc.
+					print(d.filename)
 	else:
 		db = FastPullDatabase()
 		with db.get_session() as session:
