@@ -357,8 +357,8 @@ async def get_more_distfiles(db, q):
 		else:
 			added = 0
 			for d in results:
-				print(d.last_attempted_on)
 				if d.id not in progress_set:
+					print(d.last_attempted_on)
 					await q.put(d.id)
 					# track file ids in progress.
 					progress_set.add(d.id)
