@@ -86,7 +86,7 @@ async def http_fetch(url, outfile, digest_func):
 			with open(outfile, 'wb') as fd:
 				hash = digest_func()
 				while True:
-					with aiohttp.Timeout(10):
+					with aiohttp.Timeout(20):
 						try:
 							chunk = await response.content.read(chunk_size)
 							if not chunk:
@@ -131,7 +131,7 @@ def fastpull_index(outfile, distfile_final):
 	fastpull_count += 1
 
 async def get_file(db, task_num, q):
-	timeout = 1200
+	timeout = 2400
 
 	while True:
 
@@ -331,7 +331,7 @@ async def get_file(db, task_num, q):
 
 queue_size = 60
 query_size = 60 
-workr_size = 30
+workr_size = 10 
 
 pending_q = asyncio.Queue(maxsize=queue_size)
 progress_set = set()

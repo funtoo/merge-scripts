@@ -555,6 +555,9 @@ class CatPkgScan(MergeStep):
 					already_exists = False
 					if man_info[f]["digest_type"] == "sha512":
 						existing = session.query(self.db.Distfile).filter(self.db.Distfile.id == man_info[f]["digest"]).first()
+						# TODO: maybe it already exists, but under a different filename. If so, we still want to
+						# create a distfile entry for it so it can be downloaded...
+
 						if existing:
 							already_exists = True
 							break
