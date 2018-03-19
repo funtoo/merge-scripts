@@ -31,6 +31,7 @@ class Application(tornado.web.Application):
 
 	name = "fastpull alpha service"
 	handlers = [
+		(r"/distfiles/distfiles/(.*)", RedirectHandler),
 		(r"/distfiles/(.*)", RedirectHandler),
 		(r"/(.*)", RedirectHandler),
 	]

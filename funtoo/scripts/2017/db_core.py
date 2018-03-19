@@ -34,7 +34,7 @@ class FastPullDatabase(Database):
 	Base = declarative_base()
 
 	def __init__(self):
-		self.engine = create_engine(app_config["main"]["connection"], pool_recycle=900)
+		self.engine = create_engine(app_config["main"]["connection"], pool_recycle=900, pool_size=100)
 
 		class Distfile(self.Base):
 
@@ -175,9 +175,10 @@ if __name__ == "__main__":
 					qd.failtype = None
 					session.add(qd)
 					session.delete(d)
-					session.commit()
 					sys.stdout.write(">")
 					sys.stdout.flush()
+			session.commit()
+	
 	else:
 		db = FastPullDatabase()
 		with db.get_session() as session:
