@@ -134,6 +134,9 @@ async def get_file(db, task_num, q):
 		# continually grab files....
 		d_id = await q.get()
 
+		# track file ids in progress.
+		progress_set.add(d_id)
+
 		print("Grabbed file %s." % d_id)
 
 
@@ -147,8 +150,9 @@ async def get_file(db, task_num, q):
 			print("Got file", d_id)
 			if d is None:
 				print("File %s is none." % d_id)
-				# no longer exists
-				break
+				# no longer exists, no longer in progress, next file...
+				progress_set.remove(d_id)
+				continue
 
 			if d.digest_type == "sha256":
 				digest_func = sha256
@@ -169,6 +173,7 @@ async def get_file(db, task_num, q):
 					# already deleted by someone else
 					pass
 				# move to next file...
+				progress_set.remove(d_id)
 				continue
 			
 			print(uris)
@@ -185,6 +190,7 @@ async def get_file(db, task_num, q):
 					session.delete(d)
 					session.commit()
 					# move to next file....
+					progress_set.remove(d_id)
 					continue
 
 			for real_uri in mylist:
@@ -286,12 +292,14 @@ async def get_file(db, task_num, q):
 				# we end up here if we are successful. Do successful output.
 				sys.stdout.write("^")
 				sys.stdout.flush()
+			progress_set.remove(d_id)
 
 queue_size = 30
 query_size = 10 
 workr_size = 30
 
-q = asyncio.Queue(maxsize=queue_size)
+pending_q = asyncio.Queue(maxsize=queue_size)
+progress_set = set()
 
 async def qsize(q):
 	while True:
@@ -306,7 +314,7 @@ async def get_more_distfiles(db, q):
 	time_cutoff_hr = datetime.utcnow() - timedelta(hours=4)
 	while True:
 		with db.get_session() as session:
-			results = session.query(db.QueuedDistfile)
+			results = session.query(db.QueuedDistfile).filter(db.QueuedDistfile.last_attempted_on < time_cutoff_hr)
 			results = results.limit(query_size)
 			if len(list(results)) == 0:
 				await asyncio.sleep(5)
@@ -324,12 +332,12 @@ loop = asyncio.get_event_loop()
 now = datetime.utcnow()
 
 tasks = [
-	asyncio.async(get_more_distfiles(db, q)),
-	asyncio.async(qsize(q))
+	asyncio.async(get_more_distfiles(db, pending_q)),
+	asyncio.async(qsize(pending_q))
 ]
 
 for x in range(0,workr_size):
-	tasks.append(asyncio.async(get_file(db, x, q)))
+	tasks.append(asyncio.async(get_file(db, x, pending_q)))
 
 loop.run_until_complete(asyncio.gather(*tasks))
 loop.close()
