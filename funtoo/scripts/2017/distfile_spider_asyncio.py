@@ -148,18 +148,16 @@ async def get_file(db, task_num, q):
 				progress_set.remove(d_id)
 				continue
 
-			if d.digest is None:
-				print("Digest for %s is none. Skipping." % d_id)
-				# TODO: skip for now. These can be nomirror files which give us no digest information. We can choose to mirror them anyway, but can't verify authenticity.
-				d.last_attempted_on = datetime.utcnow()
-				session.add(d)
+			if not d.mirror:
+				print("No mirroring set for %s, deleting from queue." % d.filename)
+				session.delete(d)
 				session.commit()
 				progress_set.remove(d_id)
 				continue
 
 			if d.digest_type == "sha256":
 				digest_func = sha256
-			elif d.digest_type == "sha512":
+			else:
 				digest_func = sha512
 
 			print("Trying to download %s" % d.filename)
@@ -189,7 +187,7 @@ async def get_file(db, task_num, q):
 			fail_mode = None
 
 			# if we have a sha512, then we can to a pre-download check to see if the file has been grabbed before.
-			if d.digest_type == "sha512":
+			if d.digest_type == "sha512" and d.digest is not None:
 				existing = session.query(db.Distfile).filter(db.Distfile.id == d.digest).first()
 				if existing:
 					print("%s already downloaded; skipping." % d.filename)
@@ -235,11 +233,11 @@ async def get_file(db, task_num, q):
 						if fail_mode == "Session is closed":
 							raise e
 
-				if digest == d.digest:
+				if d.digest is None or digest == d.digest:
 					# success! we can record our fine ketchup:
 
 					if d.digest_type == "sha512":
-						my_id = d.digest
+						my_id = digest
 					else:
 						my_id = get_sha512(outfile)
 
@@ -260,7 +258,7 @@ async def get_file(db, task_num, q):
 					d_final.filename = d.filename
 					d_final.digest_type = d.digest_type
 					if d.digest_type != "sha512":
-						d_final.alt_digest = d.digest
+						d_final.alt_digest = digest
 					d_final.size = d.size
 					d_final.catpkg = d.catpkg
 					d_final.kit = d.kit
@@ -323,7 +321,7 @@ async def get_more_distfiles(db, q):
 	while True:
 		print("progress_set", progress_set)
 		with db.get_session() as session:
-			results = session.query(db.QueuedDistfile).filter(db.QueuedDistfile.last_attempted_on < time_cutoff_hr)
+			results = session.query(db.QueuedDistfile).filter(or_(db.QueuedDistfile.last_attempted_on < time_cutoff_hr, db.QueuedDistfile.last_attempted_on == None)
 			results = results.limit(query_size)
 			if len(list(results)) == 0:
 				await asyncio.sleep(5)
