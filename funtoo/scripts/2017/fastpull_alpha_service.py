@@ -6,6 +6,8 @@ import tornado.web
 import tornado.gen
 from tornado.ioloop import IOLoop
 from db_core import *
+from tornado.log import enable_pretty_logging
+enable_pretty_logging()
 
 class RedirectHandler(tornado.web.RequestHandler):
 
@@ -29,8 +31,8 @@ class Application(tornado.web.Application):
 
 	name = "fastpull alpha service"
 	handlers = [
-		("/(.*)", RedirectHandler),
-		("/distfiles/(.*)", RedirectHandler),
+		(r"/distfiles/(.*)", RedirectHandler),
+		(r"/(.*)", RedirectHandler),
 	]
 
 	def __init__(self):
