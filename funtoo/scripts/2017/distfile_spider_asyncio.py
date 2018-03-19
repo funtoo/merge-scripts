@@ -321,7 +321,7 @@ async def get_more_distfiles(db, q):
 	while True:
 		print("progress_set", progress_set)
 		with db.get_session() as session:
-			results = session.query(db.QueuedDistfile).filter(or_(db.QueuedDistfile.last_attempted_on < time_cutoff_hr, db.QueuedDistfile.last_attempted_on == None)
+			results = session.query(db.QueuedDistfile).filter(or_(db.QueuedDistfile.last_attempted_on < time_cutoff_hr, db.QueuedDistfile.last_attempted_on == None))
 			results = results.limit(query_size)
 			if len(list(results)) == 0:
 				await asyncio.sleep(5)
