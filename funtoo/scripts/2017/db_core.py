@@ -34,7 +34,7 @@ class FastPullDatabase(Database):
 	Base = declarative_base()
 
 	def __init__(self):
-		self.engine = create_engine(app_config["main"]["connection"], pool_recycle=900, pool_size=100)
+		self.engine = create_engine(app_config["main"]["connection"], pool_recycle=25, pool_size=100)
 
 		class Distfile(self.Base):
 
