@@ -86,13 +86,18 @@ async def http_fetch(url, outfile, digest_func):
 			with open(outfile, 'wb') as fd:
 				hash = digest_func()
 				while True:
-					chunk = await response.content.read(chunk_size)
-					if not chunk:
-						break
-					sys.stdout.write(".")
-					sys.stdout.flush()
-					fd.write(chunk)
-					hash.update(chunk)
+					with aiohttp.Timeout(5):
+						try:
+							chunk = await response.content.read(chunk_size)
+							if not chunk:
+								break
+							else:
+								sys.stdout.write(".")
+								sys.stdout.flush()
+								fd.write(chunk)
+								hash.update(chunk)
+						except aiohttp.EofStream:
+							break
 	cur_digest = hash.hexdigest()
 	return (None, cur_digest)
 
@@ -126,7 +131,7 @@ def fastpull_index(outfile, distfile_final):
 	fastpull_count += 1
 
 async def get_file(db, task_num, q):
-	timeout = 30
+	timeout = 600
 
 	while True:
 
