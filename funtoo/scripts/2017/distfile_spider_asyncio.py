@@ -246,7 +246,7 @@ async def get_file(db, task_num, q):
 							print("Apparently, the file we want to digest does not exist.")
 							fail_mode = "notfound"
 							continue
-							
+
 					existing = session.query(db.Distfile).filter(db.Distfile.id == my_id).first()
 
 					if existing is not None:
@@ -293,11 +293,16 @@ async def get_file(db, task_num, q):
 
 			if fail_mode:
 				# If we tried all SRC_URIs, and still failed, we will end up here, with fail_mode set to something.
-				d.last_failure_on = d.last_attempted_on = datetime.utcnow()
-				d.failtype = fail_mode
-				d.failcount += 1
-				session.add(d)
-				session.commit()
+				d = session.query(db.QueuedDistfile).filter(db.QueuedDistfile.id == d_id).first()
+				if d == None:
+					# object no longer exists, so skip this update:
+					pass
+				else:
+					d.last_failure_on = d.last_attempted_on = datetime.utcnow()
+					d.failtype = fail_mode
+					d.failcount += 1
+					session.add(d)
+					session.commit()
 				if fail_mode == "http_404":
 					sys.stdout.write("4")
 				elif fail_mode == "digest":
