@@ -226,6 +226,7 @@ async def get_file(db, task_num, q):
 						fail_mode, digest = await ftp_fetch(host, path, outfile, digest_func)
 				except Exception as e:
 					fail_mode = str(e)
+					print("Download failure:", fail_mode)
 					continue
 			else:
 				# handle http/https download --
@@ -235,6 +236,7 @@ async def get_file(db, task_num, q):
 						fail_mode, digest = await http_fetch(real_uri, outfile, digest_func)
 				except Exception as e:
 					fail_mode = str(e)
+					print("Download failure:", fail_mode)
 					continue
 
 			if d.digest is None or (digest is not None and digest == d.digest):
@@ -297,30 +299,30 @@ async def get_file(db, task_num, q):
 			else:
 				fail_mode = "digest"
 
-			if fail_mode:
-				# If we tried all SRC_URIs, and still failed, we will end up here, with fail_mode set to something.
-				d = session.query(db.QueuedDistfile).filter(db.QueuedDistfile.id == d_id).first()
-				if d == None:
-					# object no longer exists, so skip this update:
-					pass
-				else:
-					d.last_failure_on = d.last_attempted_on = datetime.utcnow()
-					d.failtype = fail_mode
-					d.failcount += 1
-					session.add(d)
-					session.commit()
-				if fail_mode == "http_404":
-					sys.stdout.write("4")
-				elif fail_mode == "digest":
-					sys.stdout.write("d")
-				else:
-					sys.stdout.write("x")
-				sys.stdout.flush()
+		if fail_mode:
+			# If we tried all SRC_URIs, and still failed, we will end up here, with fail_mode set to something.
+			d = session.query(db.QueuedDistfile).filter(db.QueuedDistfile.id == d_id).first()
+			if d == None:
+				# object no longer exists, so skip this update:
+				pass
 			else:
-				# we end up here if we are successful. Do successful output.
-				sys.stdout.write("^")
-				sys.stdout.flush()
-			progress_set.remove(d_id)
+				d.last_failure_on = d.last_attempted_on = datetime.utcnow()
+				d.failtype = fail_mode
+				d.failcount += 1
+				session.add(d)
+				session.commit()
+			if fail_mode == "http_404":
+				sys.stdout.write("4")
+			elif fail_mode == "digest":
+				sys.stdout.write("d")
+			else:
+				sys.stdout.write("x")
+			sys.stdout.flush()
+		else:
+			# we end up here if we are successful. Do successful output.
+			sys.stdout.write("^")
+			sys.stdout.flush()
+		progress_set.remove(d_id)
 
 queue_size = 60
 query_size = 60 
