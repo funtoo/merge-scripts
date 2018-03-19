@@ -12,6 +12,7 @@ import socket
 
 from db_core import *
 from datetime import datetime, timedelta
+from sqlalchemy.orm import defer, undefer
 
 resolver = aiohttp.AsyncResolver(nameservers=['8.8.8.8', '8.8.4.4'], timeout=3, tries=2)
 
@@ -197,55 +198,61 @@ async def get_file(db, task_num, q):
 					# move to next file....
 					progress_set.remove(d_id)
 					continue
+			session.expunge_all()
 
-			for real_uri in mylist:
-				# iterate through each potential URI for downloading a particular distfile. We'll keep trying until
-				# we find one that works.
+		# force session close before download by exiting "with"
 
-				# fail_mode will effectively store the last reason why our download failed. We reset it each iteration,
-				# which is what we want. If fail_mode is set to something after our big loop exits, we know we have
-				# truly failed downloading this distfile.
+		for real_uri in mylist:
+			# iterate through each potential URI for downloading a particular distfile. We'll keep trying until
+			# we find one that works.
 
-				print("Trying URI", real_uri)
+			# fail_mode will effectively store the last reason why our download failed. We reset it each iteration,
+			# which is what we want. If fail_mode is set to something after our big loop exits, we know we have
+			# truly failed downloading this distfile.
 
-				fail_mode = None
+			print("Trying URI", real_uri)
 
-				if real_uri.startswith("ftp://"):
-					# handle ftp download --
-					host_parts = real_uri[6:]
-					host = host_parts.split("/")[0]
-					path = "/".join(host_parts.split("/")[1:])
-					try:
-						digest = None
-						with async_timeout.timeout(timeout):
-							fail_mode, digest = await ftp_fetch(host, path, outfile, digest_func)
-					except Exception as e:
-						fail_mode = str(e)
-						if fail_mode == "Session is closed":
-							raise e
+			fail_mode = None
+
+			if real_uri.startswith("ftp://"):
+				# handle ftp download --
+				host_parts = real_uri[6:]
+				host = host_parts.split("/")[0]
+				path = "/".join(host_parts.split("/")[1:])
+				try:
+					digest = None
+					with async_timeout.timeout(timeout):
+						fail_mode, digest = await ftp_fetch(host, path, outfile, digest_func)
+				except Exception as e:
+					fail_mode = str(e)
+					if fail_mode == "Session is closed":
+						raise e
+			else:
+				# handle http/https download --
+				try:
+					digest = None
+					with async_timeout.timeout(timeout):
+						fail_mode, digest = await http_fetch(real_uri, outfile, digest_func)
+				except Exception as e:
+					fail_mode = str(e)
+					if fail_mode == "Session is closed":
+						raise e
+
+			if d.digest is None or digest == d.digest:
+				# success! we can record our fine ketchup:
+
+				if d.digest_type == "sha512" and digest is not None:
+					my_id = digest
 				else:
-					# handle http/https download --
 					try:
-						digest = None
-						with async_timeout.timeout(timeout):
-							fail_mode, digest = await http_fetch(real_uri, outfile, digest_func)
-					except Exception as e:
-						fail_mode = str(e)
-						if fail_mode == "Session is closed":
-							raise e
-
-				if d.digest is None or digest == d.digest:
-					# success! we can record our fine ketchup:
-
-					if d.digest_type == "sha512" and digest is not None:
-						my_id = digest
-					else:
-						try:
-							my_id = get_sha512(outfile)
-						except FileNotFoundError:
-							print("Apparently, the file we want to digest does not exist.")
-							fail_mode = "notfound"
-							continue
+						my_id = get_sha512(outfile)
+					except FileNotFoundError:
+						print("Apparently, the file we want to digest does not exist.")
+						fail_mode = "notfound"
+						continue
+					
+				# create new session after download completes (successfully or not)
+				with db.get_session() as session:
 
 					existing = session.query(db.Distfile).filter(db.Distfile.id == my_id).first()
 
@@ -288,8 +295,8 @@ async def get_file(db, task_num, q):
 					os.unlink(outfile)
 					# done; process next distfile
 					break
-				else:
-					fail_mode = "digest"
+			else:
+				fail_mode = "digest"
 
 			if fail_mode:
 				# If we tried all SRC_URIs, and still failed, we will end up here, with fail_mode set to something.
@@ -339,21 +346,25 @@ async def get_more_distfiles(db, q):
 	while True:
 		print("progress_set", progress_set)
 		with db.get_session() as session:
-			results = session.query(db.QueuedDistfile).filter(or_(db.QueuedDistfile.last_attempted_on < time_cutoff_hr, db.QueuedDistfile.last_attempted_on == None))
-			results = results.limit(query_size)
-			if len(list(results)) == 0:
-				await asyncio.sleep(5)
-			else:
-				added = 0
-				for d in results:
-					print(d.last_attempted_on)
-					if d.id not in progress_set:
-						await q.put(d.id)
-						# track file ids in progress.
-						progress_set.add(d.id)
-						added += 1
-				if added == 0:
-					await asyncio.sleep(0.5)
+			results = session.query(db.QueuedDistfile)
+			results = results.options(undefer('last_attempted_on'))
+			results = results.filter(or_(db.QueuedDistfile.last_attempted_on < time_cutoff_hr, db.QueuedDistfile.last_attempted_on == None))
+			results = list(results.limit(query_size))
+			session.expunge_all()
+		# force session to close here
+		if len(list(results)) == 0:
+			await asyncio.sleep(5)
+		else:
+			added = 0
+			for d in results:
+				print(d.last_attempted_on)
+				if d.id not in progress_set:
+					await q.put(d.id)
+					# track file ids in progress.
+					progress_set.add(d.id)
+					added += 1
+			if added == 0:
+				await asyncio.sleep(0.5)
 
 
 #import logging
