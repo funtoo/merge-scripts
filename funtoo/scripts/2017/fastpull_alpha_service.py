@@ -14,13 +14,26 @@ class RedirectHandler(tornado.web.RequestHandler):
 	redirect_url = "https://storage.googleapis.com/fastpull-us/%s/%s/%s"
 
 	def get(self,fn):
-		with self.application.db.get_session() as session:
-			result = session.query(self.application.db.Distfile).filter(self.application.db.Distfile.filename == fn).first()
-			if not result:
-				self.set_status(404)
-			else:
-				url = self.redirect_url % ( result.rand_id[0], result.rand_id[1], result.rand_id )
-				self.redirect(url, permanent=False)
+		success = False
+		for attempt in range(0,3):
+			try:
+				with self.application.db.get_session() as session:
+					result = session.query(self.application.db.Distfile).filter(self.application.db.Distfile.filename == fn).first()
+					if not result:
+						session.close()
+						self.set_status(404)
+					else:
+						rand_id = result.rand_id
+						success = True
+						session.close()
+						break
+			except sqlalchemy.exc.OperationalError:
+				pass
+		if success:
+			url = self.redirect_url % ( rand_id[0], rand_id[1], rand_id )
+			self.redirect(url, permanent=False)
+		else:
+			self.set_status(404)
 
 settings = {
 	"xsrf_cookies": False,

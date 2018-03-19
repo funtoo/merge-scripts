@@ -398,10 +398,12 @@ def getPackagesInCatWithEclass(cur_overlay, cat, eclass):
 					mypkgs.add(cp)
 	return mypkgs
 
-def extract_uris(src_uri, fn_urls):
+def extract_uris(src_uri):
+	
+	fn_urls = defaultdict(list)
 
 	def record_fn_url(fn, prev_blob):
-		if prev_blob not in src_uri[fn]:
+		if prev_blob not in fn_urls[fn]:
 			new_files.append(fn)
 			fn_urls[fn].append(prev_blob)
 
@@ -414,8 +416,7 @@ def extract_uris(src_uri, fn_urls):
 		if pos < len(blobs):
 			blob = blobs[pos]
 		else:
-			# we're one beyond end of list...
-			pass
+			blob = ""
 		if blob in [")", "(", "||"] or blob.endswith("?"):
 			pos += 1
 			continue
@@ -434,7 +435,7 @@ def extract_uris(src_uri, fn_urls):
 			prev_blob = blob
 			pos += 1
 
-	return new_files
+	return fn_urls, new_files
 
 class CatPkgScan(MergeStep):
 
@@ -493,7 +494,6 @@ class CatPkgScan(MergeStep):
 			fn_urls = defaultdict(list)
 			fn_meta = defaultdict(dict)
 
-
 			for cpv in p.xmatch("match-all", pkg):
 				if len(cpv) == 0:
 					continue
@@ -508,7 +508,9 @@ class CatPkgScan(MergeStep):
 						break
 
 				# record our own metadata about each file...
-				for fn in extract_uris(aux_info[0], fn_urls):
+				new_fn_urls, new_files = extract_uris(aux_info[0])
+				fn_urls.update(new_fn_urls)
+				for fn in new_files:
 					fn_meta[fn]["restrict"] = mirror_restrict
 					fn_meta[fn]["bestmatch"] = cpv == bm
 
@@ -1999,11 +2001,15 @@ if __name__ == "__main__":
 		for cpv in p.xmatch("match-all", pkg):
 			if len(cpv) == 0:
 				continue
+			
+			fn_urls = defaultdict(list)
 
-		aux_info = p.aux_get(cpv, ["SRC_URI", "RESTRICT"], mytree="core-kit")
-		fn_urls = defaultdict(list)
-		new_files = extract_uris(aux_info[0], fn_urls)
-
-		print(fn_urls)
+			try:
+				aux_info = p.aux_get(cpv, ["SRC_URI", "RESTRICT"], mytree="/var/git/meta-repo/kits/core-kit")
+				fn_urls, new_files = extract_uris(aux_info[0])
+				print(fn_urls)
+				print(new_files)
+			except Exception as e:
+				raise
 
 # vim: ts=4 sw=4 noet

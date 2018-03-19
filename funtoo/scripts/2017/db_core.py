@@ -10,6 +10,7 @@ from datetime import datetime
 from sqlalchemy import or_
 from sqlalchemy.orm.session import object_session
 import sqlalchemy
+from sqlalchemy.pool import NullPool
 
 app_config = get_app_config()
 
@@ -34,7 +35,8 @@ class FastPullDatabase(Database):
 	Base = declarative_base()
 
 	def __init__(self):
-		self.engine = create_engine(app_config["main"]["connection"], pool_recycle=25, pool_size=100)
+		
+		self.engine = create_engine(app_config["main"]["connection"], poolclass=NullPool)
 
 		class Distfile(self.Base):
 
