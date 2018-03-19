@@ -65,6 +65,8 @@ async def ftp_fetch(host, path, outfile, digest_func):
 		return ("ftp_missing", None)
 	stream = await client.download_stream(path)
 	async for block in stream.iter_by_block(chunk_size):
+		sys.stdout.write(".")
+		sys.stdout.flush()
 		fd.write(block)
 		hash.update(block)
 	await stream.finish()
@@ -86,6 +88,8 @@ async def http_fetch(url, outfile, digest_func):
 					chunk = await response.content.read(chunk_size)
 					if not chunk:
 						break
+					sys.stdout.write(".")
+					sys.stdout.flush()
 					fd.write(chunk)
 					hash.update(chunk)
 	cur_digest = hash.hexdigest()
@@ -125,24 +129,39 @@ async def get_file(db, task_num, q):
 
 	while True:
 
+		print("Going to grab file")
+
 		# continually grab files....
 		d_id = await q.get()
+
+		print("Grabbed file %s." % d_id)
+
 
 		with db.get_session() as session:
 
 			# This will attach to our current session
+			print("Going to query for file", d_id)
+			if d_id == 5:
+				import pdb; pdb.set_trace()
 			d = session.query(db.QueuedDistfile).filter(db.QueuedDistfile.id == d_id).first()
+			print("Got file", d_id)
 			if d is None:
+				print("File %s is none." % d_id)
 				# no longer exists
-				continue
+				break
 
 			if d.digest_type == "sha256":
 				digest_func = sha256
 			elif d.digest_type == "sha512":
 				digest_func = sha512
 
-			if d.src_uri is None:
-				print("Error: for file %s, SRC_URI is None; skipping." % d.filename)
+			print("Trying to download %s" % d.filename)
+
+			uris = []
+			if d.src_uri is not None:
+				uris = src_uri_process(d.src_uri, d.filename)
+			if len(uris) == 0:
+				print("Error: for file %s, no URIs available; skipping." % d.filename)
 				try:
 					session.delete(d)
 					session.commit()
@@ -151,8 +170,9 @@ async def get_file(db, task_num, q):
 					pass
 				# move to next file...
 				continue
+			
+			print(uris)
 
-			uris = src_uri_process(d.src_uri, d.filename)
 			outfile = os.path.join("/home/mirror/distfiles/", d.filename)
 			mylist = list(next_uri(uris))
 			fail_mode = None
@@ -174,6 +194,8 @@ async def get_file(db, task_num, q):
 				# fail_mode will effectively store the last reason why our download failed. We reset it each iteration,
 				# which is what we want. If fail_mode is set to something after our big loop exits, we know we have
 				# truly failed downloading this distfile.
+
+				print("Trying URI", real_uri)
 
 				fail_mode = None
 
@@ -262,11 +284,11 @@ async def get_file(db, task_num, q):
 				sys.stdout.flush()
 			else:
 				# we end up here if we are successful. Do successful output.
-				sys.stdout.write(".")
+				sys.stdout.write("^")
 				sys.stdout.flush()
 
-queue_size = 300
-query_size = 300
+queue_size = 30
+query_size = 10 
 workr_size = 30
 
 q = asyncio.Queue(maxsize=queue_size)
@@ -276,7 +298,7 @@ async def qsize(q):
 		print()
 		print("Queue size: %s" % q.qsize())
 		print("Added to fastpull: %s" % fastpull_count)
-		await asyncio.sleep(60)
+		await asyncio.sleep(15)
 
 async def get_more_distfiles(db, q):
 	global now
@@ -286,19 +308,17 @@ async def get_more_distfiles(db, q):
 		with db.get_session() as session:
 			results = session.query(db.QueuedDistfile)
 			results = results.limit(query_size)
-			if results.count() == 0:
-				sys.stdout.write(".")
-				sys.stdout.flush()
-				await asyncio.sleep(60)
+			if len(list(results)) == 0:
+				await asyncio.sleep(5)
 			else:
 				for d in results:
 					await q.put(d.id)
 
-logging.basicConfig(level=logging.ERROR)
-logger = logging.getLogger("aioftp.client")
-logger.setLevel(50)
+#import logging
+#logging.basicConfig()
+#logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
-chunk_size = 4096
+chunk_size = 65536
 db = FastPullDatabase()
 loop = asyncio.get_event_loop()
 now = datetime.utcnow()
