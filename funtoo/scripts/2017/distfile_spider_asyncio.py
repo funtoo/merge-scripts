@@ -267,7 +267,14 @@ async def get_file(db, task_num, q):
 					d_final.mirror = d.mirror
 					d_final.last_fetched_on = datetime.utcnow()
 
-					fastpull_index(outfile, d_final)
+
+					try:
+						fastpull_index(outfile, d_final)
+					except FileNotFoundError:
+						# something went bad, couldn't find file for indexing.
+						fail_mode = "notfound"
+						continue
+
 
 					session.add(d_final)
 					session.delete(d)
