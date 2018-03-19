@@ -45,7 +45,7 @@ def src_uri_process(uri_text, fn):
 				print("!!! Error: no third-party mirror defined for %s" % mirror_name)
 				continue
 			out_uris.append([mirror_path, thirdp[mirror_name]])
-		else:
+		elif uri.startswith("http://") or uri.startswith("https://") or uri.startswith("ftp://"):
 			out_uris.append(uri)
 	return out_uris
 
@@ -284,7 +284,7 @@ async def get_more_distfiles(db, q):
 	time_cutoff_hr = datetime.utcnow() - timedelta(hours=4)
 	while True:
 		with db.get_session() as session:
-			results = session.query(db.QueuedDistfile).filter(db.QueuedDistfile.last_attempted_on == None)
+			results = session.query(db.QueuedDistfile)
 			results = results.limit(query_size)
 			if results.count() == 0:
 				sys.stdout.write(".")
