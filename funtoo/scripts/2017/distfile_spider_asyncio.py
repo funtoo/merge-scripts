@@ -389,7 +389,7 @@ async def get_file(db, task_num, q):
 
 queue_size = 60
 query_size = 60
-workr_size = 3
+workr_size = 10
 
 pending_q = asyncio.Queue(maxsize=queue_size)
 # set of all QueuedDistfile IDs currently being processed:
