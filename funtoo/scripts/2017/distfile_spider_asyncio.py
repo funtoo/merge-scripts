@@ -5,6 +5,7 @@ import random
 import asyncio
 import aioftp
 import async_timeout
+import aiodns
 import aiohttp
 import logging
 from hashlib import sha256, sha512
@@ -14,7 +15,7 @@ from db_core import *
 from datetime import datetime, timedelta
 from sqlalchemy.orm import defer, undefer
 
-resolver = aiohttp.AsyncResolver(nameservers=['8.8.8.8', '8.8.4.4'], timeout=3, tries=2)
+resolver = aiohttp.AsyncResolver(nameservers=['8.8.8.8', '8.8.4.4'], timeout=5, tries=3)
 
 thirdp = {}
 with open('/var/git/meta-repo/kits/core-kit/profiles/thirdpartymirrors', 'r') as fd:
@@ -24,8 +25,13 @@ with open('/var/git/meta-repo/kits/core-kit/profiles/thirdpartymirrors', 'r') as
 
 # TODO: only try to download one filename of the same name at a time.
 
-def src_uri_process(uri_text, fn):
+# maximum number of third-party mirrors to consider for download:
 
+max_mirrors = 3
+mirror_blacklist = [ "gentooexperimental" ]
+
+
+def src_uri_process(uri_text, fn):
 	# converts \n delimited text of all SRC_URIs for file from ebuild into a list containing:
 	# [ mirror_path, [ mirrors ] -- where mirrors[0] + "/" + mirror_path is a valid dl path
 	#
@@ -45,7 +51,17 @@ def src_uri_process(uri_text, fn):
 			if mirror_name not in thirdp:
 				print("!!! Error: no third-party mirror defined for %s" % mirror_name)
 				continue
-			out_uris.append([mirror_path, thirdp[mirror_name]])
+			out_mirrors = []
+			for my_mirror in thirdp[mirror_name]:
+				skip = False
+				for bl_entry in mirror_blacklist:
+					if my_mirror.find(bl_entry) != -1:
+						skip = True
+						break
+				if skip:
+					continue
+				out_mirrors.append(my_mirror)
+			out_uris.append([mirror_path, out_mirrors[:max_mirrors]])
 		elif uri.startswith("http://") or uri.startswith("https://") or uri.startswith("ftp://"):
 			out_uris.append(uri)
 	return out_uris
@@ -76,28 +92,43 @@ async def ftp_fetch(host, path, outfile, digest_func):
 	fd.close()
 	return (None, cur_digest)
 
+http_data_timeout = 60
+
 async def http_fetch(url, outfile, digest_func):
 	global resolver
 	connector = aiohttp.TCPConnector(family=socket.AF_INET,resolver=resolver,verify_ssl=False)
+	headers = {}
+	fmode = 'wb'
+	hash = digest_func()
+	if os.path.exists(outfile):
+		size_bytes = os.path.getsize(outfile)
+		if size_bytes > 65536:
+			# prime the digest with existing data...
+			with open(outfile, 'rb') as fd:
+				hash.update(fd.read())
+			headers = { "Range" : "bytes=" + str(size_bytes) + "-" }
+			fmode = 'ab'
+			print("Resuming transfer...")
+		else:
+			os.unlink(outfile)
 	async with aiohttp.ClientSession(connector=connector) as http_session:
-		async with http_session.get(url) as response:
+		async with http_session.get(url, headers=headers, timeout=None) as response:
 			if response.status != 200:
 				return ("http_%s" % response.status, None)
-			with open(outfile, 'wb') as fd:
-				hash = digest_func()
+			with open(outfile, fmode) as fd:
 				while True:
-					with aiohttp.Timeout(20):
-						try:
-							chunk = await response.content.read(chunk_size)
-							if not chunk:
-								break
-							else:
-								sys.stdout.write(".")
-								sys.stdout.flush()
-								fd.write(chunk)
-								hash.update(chunk)
-						except aiohttp.EofStream:
+					#with aiohttp.Timeout(http_data_timeout):
+					try:
+						chunk = await response.content.read(chunk_size)
+						if not chunk:
 							break
+						else:
+							sys.stdout.write(".")
+							sys.stdout.flush()
+							fd.write(chunk)
+							hash.update(chunk)
+					except aiohttp.EofStream:
+						pass
 	cur_digest = hash.hexdigest()
 	return (None, cur_digest)
 
@@ -131,24 +162,19 @@ def fastpull_index(outfile, distfile_final):
 	fastpull_count += 1
 
 async def get_file(db, task_num, q):
-	timeout = 2400
+	timeout = 4800 
 
 	while True:
-
-		print("Going to grab file")
 
 		# continually grab files....
 		d_id = await q.get()
 
-		print("Grabbed file %s." % d_id)
+		progress_map[d_id] = "selected"
 
 		with db.get_session() as session:
-			print("progress_set", progress_set)
 			# This will attach to our current session
-			print("Going to query for file", d_id)
 			await asyncio.sleep(0.1)
 			d = session.query(db.QueuedDistfile).filter(db.QueuedDistfile.id == d_id).first()
-			print("Got file", d_id)
 			if d is None:
 				print("File %s is none." % d_id)
 				# no longer exists, no longer in progress, next file...
@@ -166,8 +192,6 @@ async def get_file(db, task_num, q):
 				digest_func = sha256
 			else:
 				digest_func = sha512
-
-			print("Trying to download %s" % d.filename)
 
 			uris = []
 			if d.src_uri is not None:
@@ -187,11 +211,11 @@ async def get_file(db, task_num, q):
 				progress_set.remove(d_id)
 				continue
 			
-			print(uris)
-
 			outfile = os.path.join("/home/mirror/distfiles/", d.filename)
 			mylist = list(next_uri(uris))
 			fail_mode = None
+
+			progress_map[d_id] = "dl_check"
 
 			# if we have a sha512, then we can to a pre-download check to see if the file has been grabbed before.
 			if d.digest_type == "sha512" and d.digest is not None:
@@ -207,6 +231,8 @@ async def get_file(db, task_num, q):
 
 		# force session close before download by exiting "with"
 
+		last_uri = None
+
 		for real_uri in mylist:
 
 			# iterate through each potential URI for downloading a particular distfile. We'll keep trying until
@@ -218,6 +244,7 @@ async def get_file(db, task_num, q):
 
 			print("Trying URI", real_uri)
 
+			progress_map[d_id] = real_uri
 			fail_mode = None
 
 			if real_uri.startswith("ftp://"):
@@ -229,8 +256,21 @@ async def get_file(db, task_num, q):
 					digest = None
 					with async_timeout.timeout(timeout):
 						fail_mode, digest = await ftp_fetch(host, path, outfile, digest_func)
+				except asyncio.TimeoutError as e:
+					fail_mode = "timeout"
+					continue
+				except socket.gaierror as e:
+					fail_mode = "dnsfail"
+					continue
+				except OSError:
+					fail_mode = "refused"
+					continue
+				except aioftp.errors.StatusCodeError:
+					fail_mode = "ftp_code"
+					continue
 				except Exception as e:
 					fail_mode = str(e)
+					raise
 					print("Download failure:", fail_mode)
 					continue
 			else:
@@ -239,10 +279,25 @@ async def get_file(db, task_num, q):
 					digest = None
 					with async_timeout.timeout(timeout):
 						fail_mode, digest = await http_fetch(real_uri, outfile, digest_func)
+				except asyncio.TimeoutError as e:
+					fail_mode = "timeout"
+					continue
+				except aiodns.error.DNSError as e:
+					fail_mode = "dnsfail"
+					continue
+				except ValueError as e:
+					fail_mode = "bad_url"
+					continue
+				except aiohttp.errors.ClientOSError as e:
+					fail_mode = "refused"
+					continue
 				except Exception as e:
 					fail_mode = str(e)
+					raise
 					print("Download failure:", fail_mode)
 					continue
+
+			del progress_map[d_id]
 
 			if d.digest is None or (digest is not None and digest == d.digest):
 				# success! we can record our fine ketchup:
@@ -253,7 +308,6 @@ async def get_file(db, task_num, q):
 					try:
 						my_id = get_sha512(outfile)
 					except FileNotFoundError:
-						print("Apparently, the file we want to digest does not exist.")
 						fail_mode = "notfound"
 						continue
 					
@@ -306,23 +360,27 @@ async def get_file(db, task_num, q):
 
 		if fail_mode:
 			# If we tried all SRC_URIs, and still failed, we will end up here, with fail_mode set to something.
-			d = session.query(db.QueuedDistfile).filter(db.QueuedDistfile.id == d_id).first()
-			if d == None:
-				# object no longer exists, so skip this update:
-				pass
-			else:
-				d.last_failure_on = d.last_attempted_on = datetime.utcnow()
-				d.failtype = fail_mode
-				d.failcount += 1
-				session.add(d)
-				session.commit()
-			if fail_mode == "http_404":
-				sys.stdout.write("4")
-			elif fail_mode == "digest":
-				sys.stdout.write("d")
-			else:
-				sys.stdout.write("x")
-			sys.stdout.flush()
+			with db.get_session() as session:
+				d = session.query(db.QueuedDistfile).filter(db.QueuedDistfile.id == d_id).first()
+				if d == None:
+					# object no longer exists, so skip this update:
+					pass
+				else:
+					d.last_failure_on = d.last_attempted_on = datetime.utcnow()
+					d.failtype = fail_mode
+					d.failcount += 1
+					session.add(d)
+					session.commit()
+				print()
+				print("Download failure: %s" % d.filename)
+				if last_uri:
+					print("  Last URI:", last_uri)
+				print("  Failure reason: %s" % fail_mode)
+				print("  Expected filesize: %s" % d.size)
+				outfile = os.path.join("/home/mirror/distfiles/", d.filename)
+				if os.path.exists(outfile):
+					print("  Partial filesize: %s" % os.path.getsize(outfile))
+				print()
 		else:
 			# we end up here if we are successful. Do successful output.
 			sys.stdout.write("^")
@@ -330,31 +388,50 @@ async def get_file(db, task_num, q):
 		progress_set.remove(d_id)
 
 queue_size = 60
-query_size = 60 
-workr_size = 10 
+query_size = 60
+workr_size = 3
 
 pending_q = asyncio.Queue(maxsize=queue_size)
+# set of all QueuedDistfile IDs currently being processed:
 progress_set = set()
+# dictionary of status info for all QueuedDistfile IDs:
+progress_map = {}
 
 async def qsize(q):
 	while True:
 		print()
 		print("Queue size: %s" % q.qsize())
 		print("Added to fastpull: %s" % fastpull_count)
+		print("In pending queue: %s" % pending_q.qsize())
+		print("In progress: %s" % len(list(map(str,progress_set))))
+		print("IDs in progress:")
+		for my_id in sorted(list(progress_set)):
+			print("{:8s}".format(str(my_id)), end="")
+			if my_id in progress_map:
+				print(progress_map[my_id])
+			else:
+				print()
+		# clean up stale progress_map entries
+		to_del = []
+		for my_id in progress_map.keys():
+			if my_id not in progress_set:
+				to_del.append(my_id)
+		for my_id in to_del:
+			del progress_map[my_id]
 		await asyncio.sleep(15)
 
 async def get_more_distfiles(db, q):
 	global now
 	time_cutoff = datetime.utcnow() - timedelta(hours=24)
-	time_cutoff_hr = datetime.utcnow() - timedelta(hours=4)
+	time_cutoff_hr = datetime.utcnow() - timedelta(hours=2)
 	# The asyncio.sleep() calls below not only sleep, they also turn this into a true async function. Otherwise we
 	# would not allow other coroutines to run.
 	while True:
-		print("progress_set", progress_set)
 		with db.get_session() as session:
 			results = session.query(db.QueuedDistfile)
 			results = results.options(undefer('last_attempted_on'))
 			results = results.filter(or_(db.QueuedDistfile.last_attempted_on < time_cutoff_hr, db.QueuedDistfile.last_attempted_on == None))
+			results = results.filter(db.QueuedDistfile.mirror == True).order_by(db.QueuedDistfile.last_attempted_on)
 			results = list(results.limit(query_size))
 			session.expunge_all()
 		# force session to close here
@@ -364,10 +441,10 @@ async def get_more_distfiles(db, q):
 			added = 0
 			for d in results:
 				if d.id not in progress_set:
-					print(d.last_attempted_on)
 					await q.put(d.id)
 					# track file ids in progress.
 					progress_set.add(d.id)
+					progress_map[d.id] = "queued"
 					added += 1
 			if added == 0:
 				await asyncio.sleep(0.5)
@@ -377,7 +454,7 @@ async def get_more_distfiles(db, q):
 #logging.basicConfig()
 #logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
-chunk_size = 65536
+chunk_size = 65536 
 db = FastPullDatabase()
 loop = asyncio.get_event_loop()
 now = datetime.utcnow()
