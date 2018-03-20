@@ -210,8 +210,9 @@ async def get_file(db, task_num, q):
 				session.commit()
 				progress_set.remove(d_id)
 				continue
-			
-			outfile = os.path.join("/home/mirror/distfiles/", d.filename)
+		
+			filename = d.filename
+			outfile = os.path.join("/home/mirror/distfiles/", filename)
 			mylist = list(next_uri(uris))
 			fail_mode = None
 
@@ -317,13 +318,14 @@ async def get_file(db, task_num, q):
 					existing = session.query(db.Distfile).filter(db.Distfile.id == my_id).first()
 
 					if existing is not None:
-						print("Downloaded %s, but already exists in our db. Skipping." % d.filename)
-						fail_mode = None
-						session.delete(d)
-						session.commit()
-						os.unlink(outfile)
-						# done; process next distfile
-						break
+						if existing.filename == filename:
+							print("Downloaded %s, but already exists in our db. Skipping." % d.filename)
+							fail_mode = None
+							session.delete(d)
+							session.commit()
+							os.unlink(outfile)
+							# done; process next distfile
+							break
 
 					d_final = db.Distfile()
 
