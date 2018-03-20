@@ -559,15 +559,11 @@ class CatPkgScan(MergeStep):
 						# create a distfile entry for it so it can be downloaded...
 
 						if existing:
-							already_exists = True
-							break
+							continue
 
 					# Don't create multiple queued downloads for the same distfile:
 
 					if session.query(self.db.QueuedDistfile).filter(self.db.QueuedDistfile.filename == f).filter(self.db.QueuedDistfile.size == man_info[f]["size"]).first() is not None:
-						already_exists = True
-
-					if already_exists:
 						continue
 
 					# Queue the distfile for downloading...
