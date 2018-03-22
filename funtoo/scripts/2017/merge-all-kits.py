@@ -337,7 +337,7 @@ def KitRatingString(kit_enum):
 # ml-lang-kit               1.2-prime
 # lisp-scheme-kit           1.2-prime
 # lang-kit                  1.2-prime
-# llvm-dev-kit              1.22-prime
+# llvm-dev-kit              1.2-prime
 # dev-kit                   1.2-prime
 # xfce-kit                                          4.12-prime
 # desktop-kit               1.2-prime
