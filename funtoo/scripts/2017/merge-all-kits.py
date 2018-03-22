@@ -385,7 +385,7 @@ kit_groups = {
 		{ 'name' : 'lisp-scheme-kit', 'branch': '1.2-prime', 'source': 'funtoo_mk4_prime', 'stability': KitStabilityRating.BETA},
 		{ 'name' : 'lang-kit', 'branch': '1.1-prime', 'source': 'funtoo_mk3_late_prime', 'default': True },
 		{ 'name' : 'lang-kit', 'branch': '1.2-prime', 'source': 'funtoo_mk4_prime', 'stability': KitStabilityRating.BETA},
-		{ 'name' : 'llvm-dev-kit', 'branch': '1.0-prime', 'source': 'funtoo_prime_llvm', 'stability': KitStabilityRating.BETA},
+		{ 'name' : 'llvm-dev-kit', 'branch': '1.2-prime', 'source': 'funtoo_prime_llvm', 'stability': KitStabilityRating.BETA},
 		{ 'name' : 'dev-kit', 'branch' : '1.1-prime', 'source': 'funtoo_mk3_late_prime', 'default' : True },
 		{ 'name' : 'dev-kit', 'branch': '1.2-prime', 'source': 'funtoo_mk4_prime', 'stability': KitStabilityRating.BETA},
 		{ 'name' : 'xfce-kit', 'branch': '4.12-prime', 'source': 'funtoo_mk3_late_prime', 'default': True },
