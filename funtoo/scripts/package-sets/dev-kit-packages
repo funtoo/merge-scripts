@@ -19,6 +19,7 @@ dev-scheme/*
 dev-tcltk/*
 dev-util/*
 dev-vcs/*
+virtual/bitcoin-leveldb
 virtual/libgudev
 virtual/libmysqlclient
 virtual/mysql
