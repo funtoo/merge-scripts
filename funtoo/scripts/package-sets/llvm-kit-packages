@@ -1,10 +1,10 @@
-dev-ml/llvm-ocaml 
-dev-python/clang-python 
-dev-util/lldb 
-sys-devel/clang 
+dev-ml/llvm-ocaml
+dev-python/clang-python
+dev-util/lldb
+sys-devel/clang
 sys-devel/clang-runtime
 sys-devel/lld
-sys-devel/llvm 
+sys-devel/llvm
 sys-devel/llvm-common
 sys-devel/llvmgold
 sys-libs/compiler-rt

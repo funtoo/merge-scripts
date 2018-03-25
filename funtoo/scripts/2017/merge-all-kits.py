@@ -261,7 +261,7 @@ kit_source_defs = {
 		{ "repo" : "gentoo-staging", 'src_sha1' : '4d219563cd80de1a9a0ebb7c2718d8639415cc07', 'date' : '10 Mar 2018' }
 	],
 	"funtoo_prime_llvm" : [
-		# specific snapshot for llvm-dev-kit
+		# specific snapshot for llvm-kit
 		{ "repo" : "gentoo-staging", 'src_sha1' : 'e4d303da8b2ad31692eddba258ef28b69fec3efb', 'date' : '20 Mar 2018' }
 	]
 }
@@ -337,7 +337,7 @@ def KitRatingString(kit_enum):
 # ml-lang-kit               1.2-prime
 # lisp-scheme-kit           1.2-prime
 # lang-kit                  1.2-prime
-# llvm-dev-kit              1.2-prime
+# llvm-kit                  1.2-prime
 # dev-kit                   1.2-prime
 # xfce-kit                                          4.12-prime
 # desktop-kit               1.2-prime
@@ -385,7 +385,7 @@ kit_groups = {
 		{ 'name' : 'lisp-scheme-kit', 'branch': '1.2-prime', 'source': 'funtoo_mk4_prime', 'stability': KitStabilityRating.BETA},
 		{ 'name' : 'lang-kit', 'branch': '1.1-prime', 'source': 'funtoo_mk3_late_prime', 'default': True },
 		{ 'name' : 'lang-kit', 'branch': '1.2-prime', 'source': 'funtoo_mk4_prime', 'stability': KitStabilityRating.BETA},
-		{ 'name' : 'llvm-dev-kit', 'branch': '1.2-prime', 'source': 'funtoo_prime_llvm', 'stability': KitStabilityRating.BETA},
+		{ 'name' : 'llvm-kit', 'branch': '1.2-prime', 'source': 'funtoo_prime_llvm', 'default' : True, 'stability': KitStabilityRating.PRIME},
 		{ 'name' : 'dev-kit', 'branch' : '1.1-prime', 'source': 'funtoo_mk3_late_prime', 'default' : True },
 		{ 'name' : 'dev-kit', 'branch': '1.2-prime', 'source': 'funtoo_mk4_prime', 'stability': KitStabilityRating.BETA},
 		{ 'name' : 'xfce-kit', 'branch': '4.12-prime', 'source': 'funtoo_mk3_late_prime', 'default': True },
