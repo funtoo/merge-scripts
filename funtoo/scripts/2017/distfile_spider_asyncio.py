@@ -181,12 +181,12 @@ async def get_file(db, task_num, q):
 				progress_set.remove(d_id)
 				continue
 
-			if not d.mirror:
-				print("No mirroring set for %s, deleting from queue." % d.filename)
-				session.delete(d)
-				session.commit()
-				progress_set.remove(d_id)
-				continue
+			#if not d.mirror:
+			#	print("No mirroring set for %s, deleting from queue." % d.filename)
+			#	session.delete(d)
+			#	session.commit()
+			#	progress_set.remove(d_id)
+			#	continue
 
 			if d.digest_type == "sha256":
 				digest_func = sha256
@@ -433,7 +433,8 @@ async def get_more_distfiles(db, q):
 			results = session.query(db.QueuedDistfile)
 			results = results.options(undefer('last_attempted_on'))
 			results = results.filter(or_(db.QueuedDistfile.last_attempted_on < time_cutoff_hr, db.QueuedDistfile.last_attempted_on == None))
-			results = results.filter(db.QueuedDistfile.mirror == True).order_by(db.QueuedDistfile.last_attempted_on)
+			#results = results.filter(db.QueuedDistfile.mirror == True)
+			results = results.order_by(db.QueuedDistfile.last_attempted_on)
 			results = list(results.limit(query_size))
 			session.expunge_all()
 		# force session to close here
