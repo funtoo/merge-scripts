@@ -14,15 +14,16 @@ class RedirectHandler(tornado.web.RequestHandler):
 	redirect_url = "https://storage.googleapis.com/fastpull-us/%s/%s/%s"
 
 	def get(self,fn):
+		fn = os.path.basename(fn)
 		success = False
 		for attempt in range(0,3):
 			try:
 				with self.application.db.get_session() as session:
 					result = session.query(self.application.db.Distfile).filter(self.application.db.Distfile.filename == fn).first()
-					if not result:
-						miss = session.query(self.application.db.MissingManifestFile).filter(self.application.db.MissingManifestFile.filename == fn).first()
+					if not result and not fn.endswith("/") and len(fn):
+						miss = session.query(self.application.db.MissingRequestedFile).filter(self.application.db.MissingRequestedFile.filename == fn).first()
 						if miss is None:
-							miss = self.application.db.MissingManifestFile()
+							miss = self.application.db.MissingRequestedFile()
 							miss.filename = fn
 						miss.last_failure_on = datetime.utcnow()
 						miss.failcount += 1

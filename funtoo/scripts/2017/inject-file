@@ -33,15 +33,17 @@ with db.get_session() as session:
 	if existing:
 		print("File already exists in distfiles. Skipping.")
 		sys.exit(1)
-	qdsf = db.QueuedDistfile()
-	qdsf.filename = os.path.basename(fn)
-	qdsf.catpkg = options.catpkg
-	qdsf.kit = options.kit
-	qdsf.branch = options.branch
-	qdsf.src_uri = options.src_uri
-	qdsf.size = os.path.getsize(fn)
-	qdsf.digest_type = "sha512"
-	qdsf.digest = get_sha512(fn)
-	session.add(qdsf)
-	session.commit()
-	print("Injected file %s into queued distfiles." % fn)
+qdsf = db.QueuedDistfile()
+qdsf.filename = os.path.basename(fn)
+qdsf.catpkg = options.catpkg
+qdsf.kit = options.kit
+qdsf.branch = options.branch
+qdsf.src_uri = options.src_uri
+qdsf.size = os.path.getsize(fn)
+qdsf.digest_type = "sha512"
+qdsf.digest = get_sha512(fn)
+with db.get_session() as session:
+    # get_sha512() can take a long time; session can time out.
+    session.add(qdsf)
+    session.commit()
+print("Injected file %s into queued distfiles." % fn)
