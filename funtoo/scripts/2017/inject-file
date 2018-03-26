@@ -12,8 +12,8 @@ parser.add_option("--branch", dest="branch", help="branch of kit")
 options, args = parser.parse_args()
 
 if len(args) != 1:
-    print("Please specify a single file to inject into queued distfiles.")
-    sys.exit(1)
+	print("Please specify a single file to inject into queued distfiles.")
+	sys.exit(1)
 
 def get_sha512(fn):
 	with open(fn, "rb") as data:
@@ -25,23 +25,23 @@ db = FastPullDatabase()
 fn = args[0]
 
 if not os.path.exists(fn):
-    print("File %s does not exist. Can't inject." % fn)
-    sys.exit(1)
+	print("File %s does not exist. Can't inject." % fn)
+	sys.exit(1)
 
 with db.get_session() as session:
-    existing = session.query(db.Distfile).filter(db.Distfile.filename == fn).first()
-    if existing:
-        print("File already exists in distfiles. Skipping.")
-        sys.exit(1)
-    qdsf = db.QueuedDistfile()
-    qdsf.filename = os.path.basename(fn)
-    qdsf.catpkg = options.catpkg
-    qdsf.kit = options.kit
-    qdsf.branch = options.branch
-    qdsf.src_uri = options.src_uri
-    qdsf.size = os.path.getsize(fn)
-    qdsf.digest_type = "sha512"
-    qdsf.digest = get_sha512(fn)
-    session.add(qdsf)
-    session.commit()
-    print("Injected file %s into queued distfiles." % fn)
+	existing = session.query(db.Distfile).filter(db.Distfile.filename == os.path.basename(fn)).first()
+	if existing:
+		print("File already exists in distfiles. Skipping.")
+		sys.exit(1)
+	qdsf = db.QueuedDistfile()
+	qdsf.filename = os.path.basename(fn)
+	qdsf.catpkg = options.catpkg
+	qdsf.kit = options.kit
+	qdsf.branch = options.branch
+	qdsf.src_uri = options.src_uri
+	qdsf.size = os.path.getsize(fn)
+	qdsf.digest_type = "sha512"
+	qdsf.digest = get_sha512(fn)
+	session.add(qdsf)
+	session.commit()
+	print("Injected file %s into queued distfiles." % fn)
