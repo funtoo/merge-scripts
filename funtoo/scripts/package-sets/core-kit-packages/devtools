@@ -22,14 +22,12 @@ sys-devel/bc
 sys-devel/binutils
 sys-devel/binutils-config
 sys-devel/bison
-sys-devel/clang
 sys-devel/flex
 sys-devel/gcc
 sys-devel/gcc-config
 sys-devel/gettext
 sys-devel/gnuconfig
 sys-devel/libtool
-sys-devel/llvm
 sys-devel/m4
 sys-devel/make
 sys-devel/patch
