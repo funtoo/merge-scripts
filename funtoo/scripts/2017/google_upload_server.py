@@ -1,8 +1,13 @@
 #!/usr/bin/python3
 
+import sys, os
+from google.cloud import storage
+import google.cloud.exceptions
+from spider_common import *
+import zmq
+from zmq import Context
+
 def google_upload_server():
-	with open("out.foo","w") as foo:
-		foo.write("HELLO")
 	log = logging.getLogger('google_upload_server')
 	log.info("Why hello there!")
 	print("starting...")
@@ -56,4 +61,6 @@ def google_upload_server():
 
 		print("Upload complete for %s." % msg.filename)
 
+if __name__ == "__main__":
+	google_upload_server()
 

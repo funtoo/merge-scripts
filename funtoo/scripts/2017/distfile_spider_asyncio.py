@@ -14,16 +14,14 @@ import zmq.asyncio
 from zmq.asyncio import Context
 from zmq.eventloop.zmqstream import ZMQStream
 zmq.asyncio.install()
-from google.cloud import storage
-import google.cloud.exceptions
+from spider_common import *
+
 from db_core import *
 from datetime import datetime, timedelta
 from sqlalchemy.orm import defer, undefer
-from zmq_msg_core import MultiPartMessage
-from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 
 resolver = aiohttp.AsyncResolver(nameservers=['8.8.8.8', '8.8.4.4'], timeout=5, tries=3)
-fastpull_out = "/home/mirror/fastpull"
+
 
 thirdp = {}
 with open('/var/git/meta-repo/kits/core-kit/profiles/thirdpartymirrors', 'r') as fd:
@@ -471,34 +469,12 @@ async def get_more_distfiles(db, q):
 #logging.basicConfig()
 #logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
-class SpiderMessage(MultiPartMessage):
-
-	header = b"SPDR"
-
-	def __init__(self, message, filename=""):
-		self.message = message
-		self.filename = filename
-
-	@property
-	def msg(self):
-		return [ self.header, self.message.encode("utf-8"), self.filename.encode("utf-8") ]
-
-	def log(self):
-		logging.info("Sending SpiderMessage: %s." % self.message)
-
-	@classmethod
-	def from_msg(cls, msg):
-		"Construct a SpiderMessage from a pyzmq message"
-		if len(msg) != 3 or msg[0] != cls.header:
-			#invalid
-			return None
-		return cls(msg[1].decode("utf-8"), msg[2].decode["utf-8"])
 
 def on_server_msg_recv(msg_data):
-
+	global google_server_status
 	my_msg = SpiderMessage.from_msg(msg_data)
 	if my_msg.message == "ready":
-		google_server_status == "ready"
+		google_server_status = "ready"
 		if google_upload_q.qsize() > 0:
 			to_upload = google_upload_q.get()
 			print("Sending message to Google upload server to upload %s." % to_upload)
@@ -509,73 +485,6 @@ def on_server_msg_recv(msg_data):
 	elif my_msg.message == "fail":
 		print("Google upload failed -- requeueing %s" % my_msg.filename)
 		google_upload_q.put(my_msg.filename)
-def google_upload_server():
-	with open("out.foo","w") as foo:
-		foo.write("HELLO")
-	log = logging.getLogger('google_upload_server')
-	log.info("Why hello there!")
-	print("starting...")
-	sys.stdout.flush()
-	sys.stderr.flush()
-	ctx = Context.instance()
-	zmq_server = ctx.socket(zmq.ROUTER)
-	zmq_server.bind("tcp://127.0.0.1:5556")
-	print("Connecting to google storage...")
-	google_client = storage.Client.from_service_account_json('goog_creds.json')
-	print("Connection complete.")
-	# google_upload_server will "pull" requests by sending "ready" messages to the spider.
-	# A "ready" message means "we are ready to download the next file". The upload server
-	# may get an actual "upload" message much later, when one is available to upload. Once
-	# it completes, the upload server sends another "ready" message.
-
-	while True:
-		# tell client: we are ready for next file to upload.
-		print("Sending ready message...")
-		ready_msg = SpiderMessage("ready")
-		ready_msg.send(zmq_server)
-
-		# Now just wait for a message from the client... we can only upload a file at
-		# a time so safe to wait here....
-		msg = yield zmq_server.recv_multipart()
-		msg = SpiderMessage.from_msg(msg)
-
-		if msg.message == "quit":
-			print("Google upload server process exiting.")
-			sys.exit(0)
-
-		# if we didn't get a quit message, it's an upload message....
-		print("Starting Google upload for %s..." % msg.filename)
-
-		# add prefix to path to specify file for upload ("/home/mirror/distfiles"):
-		disk_path = os.path.join(fastpull_out, msg.filename)
-
-		# should strip non-important directories:
-		google_blob = google_client.blob(msg.filename)
-
-		try:
-			google_blob.upload_from_file(disk_path)
-		except google.cloud.exceptions.GoogleCloudError:
-			# Tell client -- we failed to download this file
-			fail_msg = SpiderMessage("fail", msg.filename)
-			fail_msg.send(zmq_server)
-		else:
-			# Tell client -- we downloaded this file successfully
-			good_msg = SpiderMessage("good", msg.filename)
-			good_msg.send(zmq_server)
-
-		print("Upload complete for %s." % msg.filename)
-
-async def run_blocking_tasks(executor):
-	log = logging.getLogger('run_blocking_tasks')
-	log.info('starting')
-	log.info('creating executor tasks')
-	loop = asyncio.get_event_loop()
-	blocking_tasks = [
-		loop.run_in_executor(executor, google_upload_server)
-	]
-	log.info('waiting for executor tasks')
-	completed, pending = await asyncio.wait(blocking_tasks)
-	log.info('exiting')
 
 logging.basicConfig(
 	level=logging.INFO,
@@ -593,9 +502,7 @@ chunk_size = 65536
 db = FastPullDatabase()
 loop = asyncio.get_event_loop()
 now = datetime.utcnow()
-executor = ThreadPoolExecutor(max_workers=3)
 tasks = [
-	run_blocking_tasks(executor),
 	asyncio.async(get_more_distfiles(db, pending_q)),
 	asyncio.async(qsize(pending_q)),
 ]
