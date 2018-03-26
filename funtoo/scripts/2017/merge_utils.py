@@ -1126,17 +1126,12 @@ class ThirdPartyMirrors(MergeStep):
 	def run(self,tree):
 		orig = "%s/profiles/thirdpartymirrors" % tree.root
 		new = "%s/profiles/thirdpartymirrors.new" % tree.root
-		mirrors = "http://build.funtoo.org/distfiles http://ftp.osuosl.org/pub/funtoo/distfiles"
+		mirrors = "https://fastpull-us.funtoo.org/distfiles"
 		a = open(orig, "r")
 		b = open(new, "w")
 		for line in a:
 			ls = line.split()
 			if len(ls) and ls[0] == "gentoo":
-
-				# Add funtoo mirrors as second and third Gentoo mirrors. So, try the main gentoo mirror first.
-				# If not there, maybe we forked it and the sources are removed from Gentoo's mirrors, so try
-				# ours. This allows us to easily fix mirroring issues for users.
-
 				b.write("gentoo\t"+ls[1]+" "+mirrors+" "+" ".join(ls[2:])+"\n")
 			else:
 				b.write(line)
