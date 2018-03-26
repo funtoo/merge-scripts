@@ -10,12 +10,19 @@ import aiohttp
 import logging
 from hashlib import sha256, sha512
 import socket
-
+import zmq.asyncio
+from zmq.asyncio import Context
+from zmq.eventloop.zmqstream import ZMQStream
+zmq.asyncio.install()
+from google.cloud import storage
+import google.cloud.exceptions
 from db_core import *
 from datetime import datetime, timedelta
 from sqlalchemy.orm import defer, undefer
+from zmq_msg_core import MultiPartMessage
 
 resolver = aiohttp.AsyncResolver(nameservers=['8.8.8.8', '8.8.4.4'], timeout=5, tries=3)
+fastpull_out = "/home/mirror/fastpull"
 
 thirdp = {}
 with open('/var/git/meta-repo/kits/core-kit/profiles/thirdpartymirrors', 'r') as fd:
@@ -152,7 +159,7 @@ def fastpull_index(outfile, distfile_final):
 	# add to fastpull.
 	d1 = distfile_final.rand_id[0]
 	d2 = distfile_final.rand_id[1]
-	outdir = os.path.join("/home/mirror/fastpull", d1, d2)
+	outdir = os.path.join(fastpull_out, d1, d2)
 	if not os.path.exists(outdir):
 		os.makedirs(outdir)
 	fastpull_outfile = os.path.join(outdir, distfile_final.rand_id)
@@ -160,6 +167,7 @@ def fastpull_index(outfile, distfile_final):
 		os.unlink(fastpull_outfile)
 	os.link(outfile, fastpull_outfile)
 	fastpull_count += 1
+	return os.path.join(d1, d2, distfile_final.rand_id)
 
 async def get_file(db, task_num, q):
 	timeout = 4800 
@@ -344,7 +352,10 @@ async def get_file(db, task_num, q):
 
 
 					try:
-						fastpull_index(outfile, d_final)
+						fastpull_file = fastpull_index(outfile, d_final)
+						# add to queue to upload to google:
+						google_upload_q.push(fastpull_file)
+
 					except FileNotFoundError:
 						# something went bad, couldn't find file for indexing.
 						fail_mode = "notfound"
@@ -394,6 +405,7 @@ query_size = 60
 workr_size = 10
 
 pending_q = asyncio.Queue(maxsize=queue_size)
+google_upload_q = asyncio.Queue()
 # set of all QueuedDistfile IDs currently being processed:
 progress_set = set()
 # dictionary of status info for all QueuedDistfile IDs:
@@ -457,20 +469,116 @@ async def get_more_distfiles(db, q):
 #logging.basicConfig()
 #logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
-chunk_size = 65536 
-db = FastPullDatabase()
-loop = asyncio.get_event_loop()
-now = datetime.utcnow()
+class SpiderMessage(MultiPartMessage):
 
-tasks = [
-	asyncio.async(get_more_distfiles(db, pending_q)),
-	asyncio.async(qsize(pending_q))
-]
+	header = b"SPDR"
 
-for x in range(0,workr_size):
-	tasks.append(asyncio.async(get_file(db, x, pending_q)))
+	def __init__(self, message, filename=""):
+		self.message = message
+		self.filename = filename
 
-loop.run_until_complete(asyncio.gather(*tasks))
-loop.close()
+	@property
+	def msg(self):
+		return [ self.header, self.message.encode("utf-8"), self.filename.encode("utf-8") ]
+
+	def log(self):
+		logging.info("Sending SpiderMessage: %s." % self.message)
+
+	@classmethod
+	def from_msg(cls, msg):
+		"Construct a SpiderMessage from a pyzmq message"
+		if len(msg) != 3 or msg[0] != cls.header:
+			#invalid
+			return None
+		return cls(msg[1].decode("utf-8"), msg[2].decode["utf-8"])
+
+def on_server_msg_recv(msg_data):
+
+	my_msg = SpiderMessage.from_msg(msg_data)
+	if my_msg.message == "ready":
+		google_server_status == "ready"
+		if google_upload_q.qsize() > 0:
+			to_upload = google_upload_q.get()
+			print("Sending message to Google upload server to upload %s." % to_upload)
+			upload_msg = SpiderMessage("upload", to_upload)
+			upload_msg.send(zmq_client)
+	elif my_msg.message == "good":
+		print("Google upload OK: %s" % my_msg.filename)
+	elif my_msg.message == "fail":
+		print("Google upload failed -- requeueing %s" % my_msg.filename)
+		google_upload_q.put(my_msg.filename)
+
+def google_upload_server():
+	ctx = Context.instance()
+	zmq_server = ctx.socket(zmq.ROUTER)
+	zmq_server.bind("tcp://127.0.0.1:5556")
+	google_client = storage.Client.from_service_account_json('goog_creds.json')
+
+	# google_upload_server will "pull" requests by sending "ready" messages to the spider.
+	# A "ready" message means "we are ready to download the next file". The upload server
+	# may get an actual "upload" message much later, when one is available to upload. Once
+	# it completes, the upload server sends another "ready" message.
+
+	while True:
+		# tell client: we are ready for next file to upload.
+		ready_msg = SpiderMessage("ready")
+		ready_msg.send(zmq_server)
+
+		# Now just wait for a message from the client... we can only upload a file at
+		# a time so safe to wait here....
+		msg = SpiderMessage.recv(zmq_server)
+
+		if msg.message == "quit":
+			print("Google upload server process exiting.")
+			sys.exit(0)
+
+		# if we didn't get a quit message, it's an upload message....
+		print("Starting Google upload for %s..." % msg.filename)
+
+		# add prefix to path to specify file for upload ("/home/mirror/distfiles"):
+		disk_path = os.path.join(fastpull_out, msg.filename)
+
+		# should strip non-important directories:
+		google_blob = google_client.blob(msg.filename)
+
+		try:
+			google_blob.upload_from_file(disk_path)
+		except google.cloud.exceptions.GoogleCloudError:
+			# Tell client -- we failed to download this file
+			fail_msg = SpiderMessage("fail", msg.filename)
+			fail_msg.send(zmq_server)
+		else:
+			# Tell client -- we downloaded this file successfully
+			good_msg = SpiderMessage("good", msg.filename)
+			good_msg.send(zmq_server)
+
+		print("Upload complete for %s." % msg.filename)
+
+newpid = os.fork()
+if newpid == 0:
+	google_upload_server()
+else:
+	google_server_status = None
+	ctx = Context.instance()
+	zmq_client = ctx.socket(zmq.DEALER)
+	zmq_client.connect("tcp://127.0.0.1:5556")
+	zmq_client = ZMQStream(zmq_client)
+	zmq_client.on_recv(on_server_msg_recv)
+
+	chunk_size = 65536
+	db = FastPullDatabase()
+	loop = asyncio.get_event_loop()
+	now = datetime.utcnow()
+
+	tasks = [
+		asyncio.async(get_more_distfiles(db, pending_q)),
+		asyncio.async(qsize(pending_q))
+	]
+
+	for x in range(0,workr_size):
+		tasks.append(asyncio.async(get_file(db, x, pending_q)))
+
+	loop.run_until_complete(asyncio.gather(*tasks))
+	loop.close()
 
 # vim: ts=4 sw=4 noet
