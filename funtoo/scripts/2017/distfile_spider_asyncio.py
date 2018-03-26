@@ -20,6 +20,7 @@ from db_core import *
 from datetime import datetime, timedelta
 from sqlalchemy.orm import defer, undefer
 from zmq_msg_core import MultiPartMessage
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 
 resolver = aiohttp.AsyncResolver(nameservers=['8.8.8.8', '8.8.4.4'], timeout=5, tries=3)
 fastpull_out = "/home/mirror/fastpull"
@@ -354,7 +355,7 @@ async def get_file(db, task_num, q):
 					try:
 						fastpull_file = fastpull_index(outfile, d_final)
 						# add to queue to upload to google:
-						google_upload_q.push(fastpull_file)
+						google_upload_q.put(fastpull_file)
 
 					except FileNotFoundError:
 						# something went bad, couldn't find file for indexing.
@@ -437,14 +438,15 @@ async def qsize(q):
 async def get_more_distfiles(db, q):
 	global now
 	time_cutoff = datetime.utcnow() - timedelta(hours=24)
-	time_cutoff_hr = datetime.utcnow() - timedelta(hours=2)
+	#time_cutoff_hr = datetime.utcnow() - timedelta(hours=2)
+	time_cutoff_hr = datetime.utcnow()
 	# The asyncio.sleep() calls below not only sleep, they also turn this into a true async function. Otherwise we
 	# would not allow other coroutines to run.
 	while True:
 		with db.get_session() as session:
 			results = session.query(db.QueuedDistfile)
 			results = results.options(undefer('last_attempted_on'))
-			results = results.filter(or_(db.QueuedDistfile.last_attempted_on < time_cutoff_hr, db.QueuedDistfile.last_attempted_on == None))
+			results = results.filter(or_(db.QueuedDistfile.last_attempted_on < time_cutoff, db.QueuedDistfile.last_attempted_on == None))
 			#results = results.filter(db.QueuedDistfile.mirror == True)
 			results = results.order_by(db.QueuedDistfile.last_attempted_on)
 			results = list(results.limit(query_size))
@@ -507,13 +509,20 @@ def on_server_msg_recv(msg_data):
 	elif my_msg.message == "fail":
 		print("Google upload failed -- requeueing %s" % my_msg.filename)
 		google_upload_q.put(my_msg.filename)
-
 def google_upload_server():
+	with open("out.foo","w") as foo:
+		foo.write("HELLO")
+	log = logging.getLogger('google_upload_server')
+	log.info("Why hello there!")
+	print("starting...")
+	sys.stdout.flush()
+	sys.stderr.flush()
 	ctx = Context.instance()
 	zmq_server = ctx.socket(zmq.ROUTER)
 	zmq_server.bind("tcp://127.0.0.1:5556")
+	print("Connecting to google storage...")
 	google_client = storage.Client.from_service_account_json('goog_creds.json')
-
+	print("Connection complete.")
 	# google_upload_server will "pull" requests by sending "ready" messages to the spider.
 	# A "ready" message means "we are ready to download the next file". The upload server
 	# may get an actual "upload" message much later, when one is available to upload. Once
@@ -521,12 +530,14 @@ def google_upload_server():
 
 	while True:
 		# tell client: we are ready for next file to upload.
+		print("Sending ready message...")
 		ready_msg = SpiderMessage("ready")
 		ready_msg.send(zmq_server)
 
 		# Now just wait for a message from the client... we can only upload a file at
 		# a time so safe to wait here....
-		msg = SpiderMessage.recv(zmq_server)
+		msg = yield zmq_server.recv_multipart()
+		msg = SpiderMessage.from_msg(msg)
 
 		if msg.message == "quit":
 			print("Google upload server process exiting.")
@@ -554,31 +565,45 @@ def google_upload_server():
 
 		print("Upload complete for %s." % msg.filename)
 
-newpid = os.fork()
-if newpid == 0:
-	google_upload_server()
-else:
-	google_server_status = None
-	ctx = Context.instance()
-	zmq_client = ctx.socket(zmq.DEALER)
-	zmq_client.connect("tcp://127.0.0.1:5556")
-	zmq_client = ZMQStream(zmq_client)
-	zmq_client.on_recv(on_server_msg_recv)
-
-	chunk_size = 65536
-	db = FastPullDatabase()
+async def run_blocking_tasks(executor):
+	log = logging.getLogger('run_blocking_tasks')
+	log.info('starting')
+	log.info('creating executor tasks')
 	loop = asyncio.get_event_loop()
-	now = datetime.utcnow()
-
-	tasks = [
-		asyncio.async(get_more_distfiles(db, pending_q)),
-		asyncio.async(qsize(pending_q))
+	blocking_tasks = [
+		loop.run_in_executor(executor, google_upload_server)
 	]
+	log.info('waiting for executor tasks')
+	completed, pending = await asyncio.wait(blocking_tasks)
+	log.info('exiting')
 
-	for x in range(0,workr_size):
-		tasks.append(asyncio.async(get_file(db, x, pending_q)))
+logging.basicConfig(
+	level=logging.INFO,
+	format='PID %(process)5s %(name)18s: %(message)s',
+	stream=sys.stderr,
+)
+google_server_status = None
+ctx = Context.instance()
+zmq_client = ctx.socket(zmq.DEALER)
+zmq_client.connect("tcp://127.0.0.1:5556")
+zmq_client = ZMQStream(zmq_client)
+zmq_client.on_recv(on_server_msg_recv)
 
-	loop.run_until_complete(asyncio.gather(*tasks))
-	loop.close()
+chunk_size = 65536
+db = FastPullDatabase()
+loop = asyncio.get_event_loop()
+now = datetime.utcnow()
+executor = ThreadPoolExecutor(max_workers=3)
+tasks = [
+	run_blocking_tasks(executor),
+	asyncio.async(get_more_distfiles(db, pending_q)),
+	asyncio.async(qsize(pending_q)),
+]
+
+for x in range(0,workr_size):
+	tasks.append(asyncio.async(get_file(db, x, pending_q)))
+
+loop.run_until_complete(asyncio.gather(*tasks))
+loop.close()
 
 # vim: ts=4 sw=4 noet
