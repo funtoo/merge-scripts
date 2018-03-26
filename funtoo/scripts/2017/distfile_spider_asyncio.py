@@ -350,7 +350,7 @@ async def keep_getting_files(db, task_num, q):
 						fastpull_file = fastpull_index(outfile, d_final)
 						# add to queue to upload to google:
 						loop = asyncio.get_event_loop()
-						loop.run_in_executor(thred_exec, google_upload, fastpull_file)
+						loop.run_in_executor(thread_exec, google_upload, fastpull_file)
 
 					except FileNotFoundError:
 						# something went bad, couldn't find file for indexing.
@@ -401,7 +401,6 @@ query_size = 60
 workr_size = 10
 
 pending_q = asyncio.Queue(maxsize=queue_size)
-google_upload_q = asyncio.Queue()
 # set of all QueuedDistfile IDs currently being processed:
 progress_set = set()
 # dictionary of status info for all QueuedDistfile IDs:
