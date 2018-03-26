@@ -102,6 +102,15 @@ class FastPullDatabase(Database):
 			failcount = Column(Integer, default=0)
 			failtype = Column('failtype', Text)
 
+		class MissingRequestedFile(self.Base):
+
+			__tablename__ = "missing_requested_files"
+
+			id = Column(Integer, primary_key=True)
+			filename = Column(String(255), index=True)
+			failcount = Column(Integer, default=0)
+			last_failure_on = Column(DateTime, default=None)
+
 		class MissingManifestFailure(self.Base):
 
 			__tablename__ = 'manifest_failures'
@@ -117,7 +126,7 @@ class FastPullDatabase(Database):
 		self.Distfile = Distfile
 		self.QueuedDistfile = QueuedDistfile
 		self.MissingManifestFailure = MissingManifestFailure
-
+		self.MissingRequestedFile = MissingRequestedFile
 		self.Base.metadata.create_all(self.engine)
 		self.session_factory = sessionmaker(bind=self.engine)
 

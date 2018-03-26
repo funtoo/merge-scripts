@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-import os
-import json
+
 from tornado.httpserver import HTTPServer
 import tornado.web
 import tornado.gen
@@ -8,6 +7,7 @@ from tornado.ioloop import IOLoop
 from db_core import *
 from tornado.log import enable_pretty_logging
 enable_pretty_logging()
+import sqlalchemy.exc
 
 class RedirectHandler(tornado.web.RequestHandler):
 
@@ -20,14 +20,22 @@ class RedirectHandler(tornado.web.RequestHandler):
 				with self.application.db.get_session() as session:
 					result = session.query(self.application.db.Distfile).filter(self.application.db.Distfile.filename == fn).first()
 					if not result:
-						session.close()
-						self.set_status(404)
+						miss = session.query(self.application.db.MissingManifestFile).filter(self.application.db.MissingManifestFile.filename == fn).first()
+						if miss is None:
+							miss = self.application.db.MissingManifestFile()
+							miss.filename = fn
+						miss.last_failure_on = datetime.utcnow()
+						miss.failcount += 1
+						session.add(miss)
+						session.commit()
 					else:
 						rand_id = result.rand_id
 						success = True
 						session.close()
 						break
 			except sqlalchemy.exc.OperationalError:
+				pass
+			except sqlalchemy.exc.SQLAlchemyError:
 				pass
 		if success:
 			url = self.redirect_url % ( rand_id[0], rand_id[1], rand_id )
