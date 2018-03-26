@@ -14,7 +14,7 @@ import zmq.asyncio
 from zmq.asyncio import Context
 from zmq.eventloop.zmqstream import ZMQStream
 zmq.asyncio.install()
-from spider_common import *
+from google_upload_server import google_upload_server
 
 from db_core import *
 from datetime import datetime, timedelta
@@ -469,40 +469,46 @@ async def get_more_distfiles(db, q):
 #logging.basicConfig()
 #logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
-
-def on_server_msg_recv(msg_data):
-	global google_server_status
-	my_msg = SpiderMessage.from_msg(msg_data)
-	if my_msg.message == "ready":
-		google_server_status = "ready"
-		if google_upload_q.qsize() > 0:
-			to_upload = google_upload_q.get()
-			print("Sending message to Google upload server to upload %s." % to_upload)
-			upload_msg = SpiderMessage("upload", to_upload)
-			upload_msg.send(zmq_client)
-	elif my_msg.message == "good":
-		print("Google upload OK: %s" % my_msg.filename)
-	elif my_msg.message == "fail":
-		print("Google upload failed -- requeueing %s" % my_msg.filename)
-		google_upload_q.put(my_msg.filename)
-
 logging.basicConfig(
 	level=logging.INFO,
 	format='PID %(process)5s %(name)18s: %(message)s',
 	stream=sys.stderr,
 )
 google_server_status = None
-ctx = Context.instance()
-zmq_client = ctx.socket(zmq.DEALER)
-zmq_client.connect("tcp://127.0.0.1:5556")
-zmq_client = ZMQStream(zmq_client)
-zmq_client.on_recv(on_server_msg_recv)
+ctx = zmq.asyncio.Context()
 
+@asyncio.coroutine
+def run_zmq_client():
+	global google_server_status
+	print("Starting ZMQ client...")
+	zmq_client = ctx.socket(zmq.DEALER)
+	zmq_client.connect("tcp://127.0.0.1:5556")
+	print("Gonna loop")
+	while True:
+		print("Gonna recv")
+		msg = yield from zmq_client.recv_multipart()
+		print("Received message")
+		my_msg = SpiderMessage.from_msg(msg_data)
+		if my_msg.message == "ready":
+			google_server_status = "ready"
+			if google_upload_q.qsize() > 0:
+				to_upload = google_upload_q.get()
+				print("Sending message to Google upload server to upload %s." % to_upload)
+				upload_msg = SpiderMessage("upload", to_upload)
+				yield from zmq_client.send_multipart(upload_msg.msg)
+		elif my_msg.message == "good":
+			print("Google upload OK: %s" % my_msg.filename)
+		elif my_msg.message == "fail":
+			print("Google upload failed -- requeueing %s" % my_msg.filename)
+			google_upload_q.put(my_msg.filename)
+
+	
 chunk_size = 65536
 db = FastPullDatabase()
 loop = asyncio.get_event_loop()
 now = datetime.utcnow()
 tasks = [
+	run_zmq_client(),
 	asyncio.async(get_more_distfiles(db, pending_q)),
 	asyncio.async(qsize(pending_q)),
 ]

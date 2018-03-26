@@ -8,33 +8,23 @@ import zmq
 from zmq import Context
 
 def google_upload_server():
-	log = logging.getLogger('google_upload_server')
-	log.info("Why hello there!")
 	print("starting...")
-	sys.stdout.flush()
-	sys.stderr.flush()
 	ctx = Context.instance()
 	zmq_server = ctx.socket(zmq.ROUTER)
 	zmq_server.bind("tcp://127.0.0.1:5556")
-	print("Connecting to google storage...")
 	google_client = storage.Client.from_service_account_json('goog_creds.json')
-	print("Connection complete.")
-	# google_upload_server will "pull" requests by sending "ready" messages to the spider.
-	# A "ready" message means "we are ready to download the next file". The upload server
-	# may get an actual "upload" message much later, when one is available to upload. Once
-	# it completes, the upload server sends another "ready" message.
-
+	print("got here")
 	while True:
-		# tell client: we are ready for next file to upload.
-		print("Sending ready message...")
+		print("sending ready message")
 		ready_msg = SpiderMessage("ready")
 		ready_msg.send(zmq_server)
-
-		# Now just wait for a message from the client... we can only upload a file at
-		# a time so safe to wait here....
-		msg = yield zmq_server.recv_multipart()
+		print("ready msg sent...")
+		print("waiting for message")
+		msg = zmq_server.recv_multipart()
+		identity = msg[0]
+		msg = msg[1:]
 		msg = SpiderMessage.from_msg(msg)
-
+		print("got message")
 		if msg.message == "quit":
 			print("Google upload server process exiting.")
 			sys.exit(0)
@@ -61,6 +51,9 @@ def google_upload_server():
 
 		print("Upload complete for %s." % msg.filename)
 
-if __name__ == "__main__":
-	google_upload_server()
 
+
+# vim: ts=4 sw=4 noet
+
+
+google_upload_server()
