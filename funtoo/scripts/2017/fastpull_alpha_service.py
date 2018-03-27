@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import os
 from tornado.httpserver import HTTPServer
 import tornado.web
 import tornado.gen
@@ -20,15 +21,16 @@ class RedirectHandler(tornado.web.RequestHandler):
 			try:
 				with self.application.db.get_session() as session:
 					result = session.query(self.application.db.Distfile).filter(self.application.db.Distfile.filename == fn).first()
-					if not result and not fn.endswith("/") and len(fn):
-						miss = session.query(self.application.db.MissingRequestedFile).filter(self.application.db.MissingRequestedFile.filename == fn).first()
-						if miss is None:
-							miss = self.application.db.MissingRequestedFile()
-							miss.filename = fn
-						miss.last_failure_on = datetime.utcnow()
-						miss.failcount += 1
-						session.add(miss)
-						session.commit()
+					if not result:
+						if not fn.endswith("/") and len(fn):
+							miss = session.query(self.application.db.MissingRequestedFile).filter(self.application.db.MissingRequestedFile.filename == fn).first()
+							if miss is None:
+								miss = self.application.db.MissingRequestedFile()
+								miss.filename = fn
+							miss.last_failure_on = datetime.utcnow()
+							miss.failcount += 1
+							session.add(miss)
+							session.commit()
 					else:
 						rand_id = result.rand_id
 						success = True
