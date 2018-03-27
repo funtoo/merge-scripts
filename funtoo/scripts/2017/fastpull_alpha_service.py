@@ -28,6 +28,8 @@ class RedirectHandler(tornado.web.RequestHandler):
 								miss = self.application.db.MissingRequestedFile()
 								miss.filename = fn
 							miss.last_failure_on = datetime.utcnow()
+							if miss.failcount is None:
+								miss.failcount = 0
 							miss.failcount += 1
 							session.add(miss)
 							session.commit()
