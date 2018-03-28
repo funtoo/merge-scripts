@@ -9,6 +9,7 @@ parser.add_option("--catpkg", dest="catpkg", help="catpkg of ebuild")
 parser.add_option("--src_uri", dest="src_uri", help="download URL")
 parser.add_option("--kit", dest="kit", help="kit of ebuild")
 parser.add_option("--branch", dest="branch", help="branch of kit")
+parser.add_option("--replace", dest="replace", action="store_true", default=False, help="replace existing distfile in fastpull.")
 options, args = parser.parse_args()
 
 if len(args) != 1:
@@ -31,8 +32,13 @@ if not os.path.exists(fn):
 with db.get_session() as session:
 	existing = session.query(db.Distfile).filter(db.Distfile.filename == os.path.basename(fn)).first()
 	if existing:
-		print("File already exists in distfiles. Skipping.")
-		sys.exit(1)
+		if options.replace is True:
+			print("Removing distfile entry for existing file.")
+			session.delete(existing)
+			session.commit()
+		else:
+			print("File already exists in distfiles. Skipping.")
+			sys.exit(1)
 qdsf = db.QueuedDistfile()
 qdsf.filename = os.path.basename(fn)
 qdsf.catpkg = options.catpkg
