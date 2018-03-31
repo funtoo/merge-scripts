@@ -103,7 +103,7 @@ games-puzzle/lightsoff
 games-puzzle/quadrapassel
 games-puzzle/swell-foop
 gnome-base/*
-gnome-extra/*
+gnome-extra/* -gnome-extra/avant-window-navigator -gnome-extra/avant-window-navigator-extras -gnome-extra/cameramonitor
 mail-client/evolution
 mail-client/geary
 media-gfx/eog
