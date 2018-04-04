@@ -24,7 +24,12 @@ thirdp = {}
 with open('/var/git/meta-repo/kits/core-kit/profiles/thirdpartymirrors', 'r') as fd:
 	for line in fd.readlines():
 		ls = line.split()
-		thirdp[ls[0]] = ls[1:]
+		thirdp[ls[0]] = []
+		for x in ls[1:]:
+			if "fastpull" in x:
+				continue
+			else:
+				thirdp[ls[0]].append(x)
 
 # TODO: only try to download one filename of the same name at a time.
 
@@ -206,7 +211,8 @@ async def keep_getting_files(db, task_num, q):
 				continue
 		
 			filename = d.filename
-			outfile = os.path.join("/home/mirror/distfiles/", filename)
+			outfile = os.path.join("/home/mirror/distfiles/%s/%s" % (task_num, filename))
+			os.makedirs(os.path.dirname(outfile))
 			mylist = list(next_uri(uris))
 			fail_mode = None
 
