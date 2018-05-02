@@ -6,6 +6,7 @@ import json
 from collections import defaultdict, OrderedDict
 from enum import Enum
 import os
+from decimal import Decimal
 
 # KIT DESIGN AND DEVELOPER DOCS
 
@@ -400,54 +401,7 @@ kit_groups = {
 	]
 }
 
-funtoo_releases = OrderedDict()
 
-funtoo_releases["1.0"] = {
-	"kit_compat_group" : [
-	 ("core-kit", "1.0-prime"),
-	 ("security-kit", "1.0-prime"),
-	 ("media-kit", "1.1-prime"),
-	 ("java-kit", "1.0-prime"),
-	 ("ruby-kit", "1.0-prime"),
-	 ("haskell-kit", "1.0-prime"),
-	 ("lisp-scheme-kit", "1.0-prime"),
-	 ("lang-kit", "1.0-prime"),
-	 ("dev-kit", "1.0-prime"),
-	 ("desktop-kit", "1.0-prime"),
-	 ("python-kit", [ "3.4-prime", "3.6-prime"]),
-	 ("xorg-kit", ["1.17-prime", "1.19-prime"])
-	],
-	"upgrade_from" : []
-}
-
-funtoo_releases["1.2"] = {
-	"kit_compat_group" : [
-	  ("core-kit", "1.2-prime"),
-	  ("security-kit", "1.2-prime"),
-	  ("media-kit", "1.2-prime"),
-	  ("java-kit", "1.2-prime"),
-	  ("ruby-kit", "1.2-prime"),
-	  ("haskell-kit", "1.2-prime"),
-	  ("lisp-scheme-kit", "1.2-prime"),
-	  ("lang-kit", "1.2-prime"),
-	  ("dev-kit", "1.2-prime"),
-	  ("desktop-kit", "1.2-prime"),
-	  ("python-kit", ["3.4-prime", "3.6-prime"]),
-	  ("xorg-kit", ["1.17-prime", "1.19-prime"])
-	],
-	"upgrade_from" : [ "1.0" ],
-	"upgrade_docs" : "UPGRADE.mediawiki", #TODO: where is the optimal place to place this file?
-	"package_prerequisites" : [ ">=app-admin/ego-1.9.0" ],
-	# TODO: these upgrade steps might be better placed in the ego repo.... maybe exported to JSON?
-	"upgrade_steps" : [
-		"emerge -1 gcc",
-		"emerge -1 glibc",
-		"emerge -uDN @system",
-		"emerge -uDN @world",
-		"emerge @preserved-rebuild"
-		"revdep-rebuild --library 'libstdc++.so.6' -- --exclude sys-devel/gcc"
-	]
-}
 
 python_kit_settings = {
 	#	branch / primary python / alternate python / python mask (if any)
@@ -505,28 +459,7 @@ def getKitPrepSteps(repos, kit_dict, gentoo_staging, fixup_repo):
 				# We copy files into funtoo's profile structure as post-steps because we rely on kit-fixups step to get the initial structure into place
 				CopyAndRename("profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/subarch", "profiles/funtoo/1.0/linux-gnu/arch/pure64/subarch", lambda x: os.path.basename(x) + "-pure64"),
 				# news items are not included here anymore
-				SyncDir(fixup_repo.root, "profiles/base"),
-				SyncDir(fixup_repo.root, "profiles/arch/base"),
-				SyncDir(fixup_repo.root, "profiles/updates"),
 				SyncDir(fixup_repo.root, "metadata", exclude=["cache","md5-cache","layout.conf"]),
-				SyncFiles(fixup_repo.root, {
-					"profiles/package.mask":"profiles/package.mask/00-gentoo",
-					"profiles/arch/amd64/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/package.use.mask/01-gentoo",
-					"profiles/arch/amd64/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/use.mask/01-gentoo",
-					"profiles/arch/x86/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-32bit/package.use.mask/01-gentoo",
-					"profiles/arch/x86/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/x86-32bit/use.mask/01-gentoo",
-					"profiles/default/linux/package.use.mask":"profiles/funtoo/1.0/linux-gnu/package.use.mask/01-gentoo",
-					"profiles/default/linux/use.mask":"profiles/funtoo/1.0/linux-gnu/use.mask/01-gentoo",
-					"profiles/arch/amd64/no-multilib/package.use.mask":"profiles/funtoo/1.0/linux-gnu/arch/pure64/package.use.mask/01-gentoo",
-					"profiles/arch/amd64/no-multilib/package.mask":"profiles/funtoo/1.0/linux-gnu/arch/pure64/package.mask/01-gentoo",
-					"profiles/arch/amd64/no-multilib/use.mask":"profiles/funtoo/1.0/linux-gnu/arch/pure64/use.mask/01-gentoo"
-				}),
-				SyncFiles(fixup_repo.root, {
-					"profiles/info_pkgs" : "profiles/info_pkgs",
-					"profiles/thirdpartymirrors" : "profiles/thirdpartymirrors",
-					"profiles/license_groups" : "profiles/license_groups",
-					"profiles/use.desc" : "profiles/use.desc",
-				}),
 				# add funtoo stuff to thirdpartymirrors
 				ThirdPartyMirrors(),
 				RunSed(["profiles/base/make.defaults"], ["/^PYTHON_TARGETS=/d", "/^PYTHON_SINGLE_TARGET=/d"]),

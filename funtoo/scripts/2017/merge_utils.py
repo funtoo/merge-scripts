@@ -1495,6 +1495,10 @@ class GitTree(Tree):
 		runShell("( cd %s && git fetch && git checkout %s )" % ( destpath, sha1 ))
 		runShell("( cd %s && git config -f .gitmodules submodule.kits/%s.branch %s )" % ( self.root, tree.name, tree.branch ))
 
+	def getDepthOfCommit(self, sha1):
+		s, depth = subprocess.getstatusoutput("( cd %s && git rev-list HEAD ^%s --count)" % ( self.root, sha1 ))
+		return int(depth) + 1
+
 	def getAllCatPkgs(self):
 		self.gitCheckout()
 		with open(self.root + "/profiles/categories","r") as a:
