@@ -24,7 +24,12 @@ thirdp = {}
 with open('/var/git/meta-repo/kits/core-kit/profiles/thirdpartymirrors', 'r') as fd:
 	for line in fd.readlines():
 		ls = line.split()
-		thirdp[ls[0]] = ls[1:]
+		thirdp[ls[0]] = []
+		for x in ls[1:]:
+			if "fastpull" in x:
+				continue
+			else:
+				thirdp[ls[0]].append(x)
 
 # TODO: only try to download one filename of the same name at a time.
 
@@ -103,16 +108,7 @@ async def http_fetch(url, outfile, digest_func):
 	fmode = 'wb'
 	hash = digest_func()
 	if os.path.exists(outfile):
-		size_bytes = os.path.getsize(outfile)
-		if size_bytes > 65536:
-			# prime the digest with existing data...
-			with open(outfile, 'rb') as fd:
-				hash.update(fd.read())
-			headers = { "Range" : "bytes=" + str(size_bytes) + "-" }
-			fmode = 'ab'
-			print("Resuming transfer...")
-		else:
-			os.unlink(outfile)
+		os.unlink(outfile)
 	async with aiohttp.ClientSession(connector=connector) as http_session:
 		async with http_session.get(url, headers=headers, timeout=None) as response:
 			if response.status != 200:
@@ -215,7 +211,8 @@ async def keep_getting_files(db, task_num, q):
 				continue
 		
 			filename = d.filename
-			outfile = os.path.join("/home/mirror/distfiles/", filename)
+			outfile = os.path.join("/home/mirror/distfiles/%s/%s" % (task_num, filename))
+			os.makedirs(os.path.dirname(outfile))
 			mylist = list(next_uri(uris))
 			fail_mode = None
 

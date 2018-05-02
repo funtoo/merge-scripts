@@ -44,3 +44,5 @@ virtual/gsasl
 virtual/mda
 virtual/inetd
 virtual/w3m
+virtual/httpd-fastcgi
+virtual/httpd-cgi

@@ -7,6 +7,7 @@ mate-base/*
 mate-extra/*
 xfce-base/*
 xfce-extra/*
+@regex@:virtual/leechcraft-.*
 # run this after xorg-kit
 x11-apps/*
 x11-libs/* -x11-libs/compizconfig-backend-kconfig4

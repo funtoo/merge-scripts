@@ -4,5 +4,6 @@ app-xemacs/*
 app-vim/*
 app-misc/editor-wrapper
 virtual/emacs
+virtual/emacs-flim
 virtual/editor
 @all_classes@
