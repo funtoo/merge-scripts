@@ -13,21 +13,23 @@ from portage.dbapi.porttree import portdbapi
 from portage.dbapi.vartree import vardbapi
 
 p = portage.portdbapi()
+p.freeze()
 
 future_aux = {}
 
 old_python_set = { "python_targets_python3_3", "python_targets_python3_4", "python_targets_python3_5" }
-cur_python_set = { "python_targets_python3.6" }
+cur_python_set = { "python_targets_python3_6" }
 
 def future_generator():
 	for cp in p.cp_all():
+		repos = p.getRepositories(catpkg=cp)
 		for cpv in p.xmatch("match-all", cp):
 			future = p.async_aux_get(cpv, [ "INHERITED", "IUSE" ])
-			future_aux[id(future)] = cpv
+			future_aux[id(future)] = (cpv, repos)
 			yield future
 
 for future in iter_completed(future_generator()):
-	cpv = future_aux.pop(id(future))
+	cpv, repo = future_aux.pop(id(future))
 	try:
 		result = future.result()
 	except KeyError as e:
@@ -37,5 +39,5 @@ for future in iter_completed(future_generator()):
 
 	if len(old_python_set & iuse_set) and not len(cur_python_set & iuse_set):
 		# contains python3.4 or 3.5 compat but not python3.6 compat:
-		print(cpv, old_python_set & iuse_set)
+		print(cpv, repo, old_python_set & iuse_set)
 
