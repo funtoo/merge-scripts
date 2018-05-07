@@ -370,6 +370,7 @@ kit_groups = {
 		{ 'name' : 'media-kit', 'branch' : '1.2-prime', 'source': 'funtoo_mk4_prime', 'stability': KitStabilityRating.BETA},
 		{ 'name' : 'perl-kit', 'branch' : '5.24-prime', 'source': 'funtoo_prime_perl', 'default' : True },
 		{ 'name' : 'perl-kit', 'branch' : '5.26-prime', 'source': 'funtoo_mk3_prime', 'default' : False, 'stability' : KitStabilityRating.DEV },
+		{ 'name' : 'python-modules-kit', 'branch': 'master', 'source': 'funtoo_current', 'default': True, 'stability' : KitStabilityRating.PRIME },
 		{ 'name' : 'python-kit', 'branch' : '3.4-prime', 'source': 'funtoo_prime', 'default' : True },
 		{ 'name' : 'python-kit', 'branch' : '3.6-prime', 'source': 'funtoo_mk2_prime', 'default' : False, 'stability' : KitStabilityRating.PRIME }, # MK2
 		{ 'name' : 'python-kit', 'branch' : '3.6.3-prime', 'source': 'funtoo_mk3_prime', 'default': False, 'stability' : KitStabilityRating.DEPRECATED }, # MK3
@@ -823,7 +824,7 @@ if __name__ == "__main__":
 	output_settings = defaultdict(dict)
 
 	for kit_group in kit_order: 
-		if kit_group == None:
+		if kit_group is None:
 			if push:
 				cpm_logger.writeXML()
 			cpm_logger = CatPkgMatchLogger(log_xml=False)
