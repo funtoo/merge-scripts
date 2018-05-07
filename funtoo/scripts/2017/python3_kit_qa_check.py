@@ -23,7 +23,8 @@ cur_python_set = { "python_targets_python3_6" }
 def future_generator():
 	for cp in p.cp_all():
 		repos = p.getRepositories(catpkg=cp)
-		for cpv in p.xmatch("match-all", cp):
+		cpv = p.xmatch("bestmatch-visible", cp)
+		if cpv:
 			future = p.async_aux_get(cpv, [ "INHERITED", "IUSE" ])
 			future_aux[id(future)] = (cpv, repos)
 			yield future
