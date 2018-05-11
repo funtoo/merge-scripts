@@ -23,3 +23,5 @@ virtual/bitcoin-leveldb
 virtual/libgudev
 virtual/libmysqlclient
 virtual/mysql
+#keep in sync with protobuf-stuff
+dev-python/protobuf-python
