@@ -30,7 +30,7 @@ gentoo-staging = repos@git.funtoo.org:ports/gentoo-staging.git
 [destinations]
 
 meta-repo = https://github.com/funtoo/meta-repo
-kits_root = https://github.com/funtoo
+kits-root = https://github.com/funtoo
 
 [branches]
 
@@ -42,8 +42,6 @@ meta-repo = master
 
 source = /var/git/source-trees
 destination = /var/git/dest-trees
-		
-			
 			""")
 			sys.exit(1)
 
