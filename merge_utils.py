@@ -1431,9 +1431,17 @@ class GitTree(Tree):
 				# we've run out of options
 				print("Error: tree %s does not exist, but no clone URL specified. Exiting." % self.root)
 				sys.exit(1)
-		
-		# if we've gotten here, we can assume that the repo exists at self.root. 
 
+		# if we've gotten here, we can assume that the repo exists at self.root. 
+		if self.url is not None:
+			retval, out = subprocess.getstatusoutput("(cd %s && git remote get-url origin)" % self.root)
+			if out != self.url:
+				print()
+				print("Error: remote url for origin at %s is:" % self.root)
+				print("  existing:",out)
+				print("  expected:", self.url)
+				print("Please fix or delete any repos that are cloned from the wrong origin.")
+				sys.exit(1)
 		# first, we will clean up any messes:
 		runShell("(cd %s &&  git reset --hard && git clean -fd )" % self.root )
 
