@@ -1438,8 +1438,10 @@ class GitTree(Tree):
 			if out != self.url:
 				print()
 				print("Error: remote url for origin at %s is:" % self.root)
+				print()
 				print("  existing:",out)
 				print("  expected:", self.url)
+				print()
 				print("Please fix or delete any repos that are cloned from the wrong origin.")
 				sys.exit(1)
 		# first, we will clean up any messes:
