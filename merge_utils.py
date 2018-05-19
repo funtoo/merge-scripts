@@ -1435,7 +1435,12 @@ class GitTree(Tree):
 		# if we've gotten here, we can assume that the repo exists at self.root. 
 		if self.url is not None:
 			retval, out = subprocess.getstatusoutput("(cd %s && git remote get-url origin)" % self.root)
-			if out != self.url:
+			my_url = self.url
+			if my_url.endswith(".git"):
+				my_url = my_url[:-4]
+			if out.endswith(".git"):
+				out = out[:-4]
+			if out != my_url:
 				print()
 				print("Error: remote url for origin at %s is:" % self.root)
 				print()
