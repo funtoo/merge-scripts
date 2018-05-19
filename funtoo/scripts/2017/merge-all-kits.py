@@ -63,17 +63,12 @@ destination = /var/git/dest-trees
 						print("Error: ~/.merge [%s] option %s is invalid." % (section, opt))
 						sys.exit(1)
 
-		if not os.path.exists(self.source_trees):
-			os.makedirs(self.source_trees)
-
-		if not os.path.exists(self.dest_trees):
-			os.makedirs(self.dest_trees)
-
 	def get_option(self, section, key, default):
 		if self.config.has_section(section) and key in self.config[section]:
 			my_path = self.config[section][key]
 		else:
 			my_path = default
+		return my_path
 
 	@property
 	def flora(self):
@@ -104,7 +99,7 @@ destination = /var/git/dest-trees
 
 	@property
 	def dest_trees(self):
-		return self.get_option("work", "source", "/var/git/dest-trees")
+		return self.get_option("work", "destination", "/var/git/dest-trees")
 
 	@property
 	def merge_scripts(self):
@@ -245,11 +240,11 @@ overlays = {
 # SUPPLEMENTAL REPOSITORIES: These are overlays that we are using but are not in KIT SOURCES. merge_scripts is something
 # we are using only for profiles and other misc. things and may get phased out in the future:
 
-fixup_repo = GitTree("kit-fixups", config.branch("kit-fixups"), config.kit_fixups)
+fixup_repo = GitTree("kit-fixups", config.branch("kit-fixups"), url=config.kit_fixups, root=config.source_trees+"/kit-fixups")
 
 # OUTPUT META-REPO: This is the master repository being written to.
 
-meta_repo = GitTree("meta-repo", config.branch("meta-repo"), config.meta_repo, root=config.dest_trees+"/meta-repo")
+meta_repo = GitTree("meta-repo", config.branch("meta-repo"), url=config.meta_repo, root=config.dest_trees+"/meta-repo")
 
 # 2. KIT SOURCES - kit sources are a combination of overlays, arranged in a python list [ ]. A KIT SOURCE serves as a
 # unified collection of source catpkgs for a particular kit. Each kit can have one KIT SOURCE. KIT SOURCEs MAY be
