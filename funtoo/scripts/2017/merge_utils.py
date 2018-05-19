@@ -1483,18 +1483,6 @@ class GitTree(Tree):
 		else:
 			return True
 
-	def gitSubmoduleAddOrUpdate(self, tree, path, url=None, sha1=None):
-		if url == None:
-			url = tree.url
-		if sha1 == None:
-			s, sha1 = subprocess.getstatusoutput("( cd %s && git rev-parse HEAD )" % tree.root)
-			sha1 = sha1.strip()
-		destpath = os.path.join(self.root, path)
-		if not os.path.exists(destpath):
-			runShell("( cd %s && git submodule add %s %s )" % ( os.path.dirname(destpath), url, tree.name ))
-		runShell("( cd %s && git fetch && git checkout %s )" % ( destpath, sha1 ))
-		runShell("( cd %s && git config -f .gitmodules submodule.kits/%s.branch %s )" % ( self.root, tree.name, tree.branch ))
-
 	def getDepthOfCommit(self, sha1):
 		s, depth = subprocess.getstatusoutput("( cd %s && git rev-list HEAD ^%s --count)" % ( self.root, sha1 ))
 		return int(depth) + 1

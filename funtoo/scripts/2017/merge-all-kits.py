@@ -7,6 +7,98 @@ from collections import defaultdict, OrderedDict
 from enum import Enum
 import os
 from decimal import Decimal
+from configparser import ConfigParser
+
+class Configuration:
+
+	def __init__(self):
+
+		self.config_path = os.path.join(os.environ["HOME"], ".merge")
+		if not os.path.exists(self.config_path):
+			print("""
+		Merge scripts now use a configuration file. Create a ~/.merge file with the following format:	
+
+[sources]
+
+flora = https://github.com/funtoo/flora
+kit-fixups = https://github.com/funtoo/kit-fixups
+gentoo-staging = repos@git.funtoo.org:ports/gentoo-staging.git
+
+[destinations]
+
+meta-repo = https://github.com/funtoo/meta-repo
+kits_root = https://github.com/funtoo
+
+[branches]
+
+flora = master
+kit-fixups = master
+meta-repo = master
+
+[work]
+
+source = /var/git/source-trees
+destination = /var/git/dest-trees
+		
+			
+			""")
+			sys.exit(1)
+
+		self.config = ConfigParser()
+		self.config.read(self.config_path)
+
+		valids = {
+			"sources": [ "flora", "kit-fixups" ],
+			"destinations": [ "meta-repo", "kits-root" ],
+			"branches": [ "flora", "kit-fixups", "meta-repo" ],
+			"work": [ "source", "destination"]
+		}
+		for section, my_valids in valids.items():
+
+			if self.config.has_section(section):
+				for opt in self.config[section]:
+					if opt not in my_valids:
+						print("Error: ~/.merge [source] option %s is invalid." % opt)
+						sys.exit(1)
+
+	def get_option(self, section, key, default):
+		if self.config.has_section(section) and key in self.config[section]:
+			my_path = self.config[section][key]
+		else:
+			my_path = default
+
+	@property
+	def flora(self):
+		return self.get_option("sources", "flora", "https://github.com/funtoo/flora")
+
+	@property
+	def kit_fixups(self):
+		return self.get_option("sources", "kit-fixups", "https://github.com/funtoo/kit-fixups")
+
+	@property
+	def meta_repo(self):
+		return self.get_option("destinations", "meta-repo", "repos@git.funtoo.org:meta-repo.git")
+
+	@property
+	def gentoo_staging(self):
+		return self.get_option("sources", "gentoo-staging", "repos@git.funtoo.org:ports/gentoo-staging.git")
+
+	@property
+	def kits_root(self):
+		return self.get_option("destinations", "kits-root", "repos@git.funtoo.org:kits/")
+
+	def branch(self, key):
+		return self.get_option("branches", key, "master")
+
+	@property
+	def source_trees(self):
+		return self.get_option("work", "source", "/var/git/source-trees")
+
+	@property
+	def dest_trees(self):
+		return self.get_option("work", "source", "/var/git/dest-trees")
+
+config = Configuration()
 
 # KIT DESIGN AND DEVELOPER DOCS
 
@@ -78,8 +170,8 @@ from decimal import Decimal
 
 overlays = {
 	# use gentoo-staging-2017 dirname to avoid conflicts with ports-2012 generation
-	"gentoo-staging" : { "type" : GitTree, "url" : "repos@git.funtoo.org:ports/gentoo-staging.git", "dirname" : "gentoo-staging-2017" },
-	"gentoo-staging-underlay": {"type": GitTree, "url": "repos@git.funtoo.org:ports/gentoo-staging.git",
+	"gentoo-staging" : { "type" : GitTree, "url" : config.gentoo_staging, "dirname" : "gentoo-staging-2017" },
+	"gentoo-staging-underlay": {"type": GitTree, "url": config.gentoo_staging,
 	                   "dirname": "gentoo-staging-2017-underlay"},
 	"faustoo" : { "type" : GitTree, "url" : "https://github.com/fmoro/faustoo.git", "eclasses" : [
 		"waf",
@@ -132,7 +224,7 @@ overlays = {
 			"profiles/package.mask": "profiles/package.mask/wmfs.mask" 
 		},
 	},
-	"flora" : { "type" : GitTree, "url" : "https://github.com/funtoo/flora.git", "copyfiles" : {
+	"flora" : { "type" : GitTree, "url" : config.flora, "copyfiles" : {
 			"licenses/renoise-EULA": "licenses/renoise-EULA"
 		},
 	},
@@ -142,11 +234,11 @@ overlays = {
 # we are using only for profiles and other misc. things and may get phased out in the future:
 
 merge_scripts = GitTree("merge-scripts", "master", "git@github.com:funtoo/merge-scripts.git")
-fixup_repo = GitTree("kit-fixups", "master", "git@github.com:funtoo/kit-fixups.git")
+fixup_repo = GitTree("kit-fixups", config.branch("kit-fixups"), config.kit_fixups)
 
 # OUTPUT META-REPO: This is the master repository being written to.
 
-meta_repo = GitTree("meta-repo", "master", "repos@git.funtoo.org:meta-repo.git", root="/var/git/dest-trees/meta-repo")
+meta_repo = GitTree("meta-repo", config.branch("meta-repo"), config.meta_repo, root=config.dest_trees+"/meta-repo")
 
 # 2. KIT SOURCES - kit sources are a combination of overlays, arranged in a python list [ ]. A KIT SOURCE serves as a
 # unified collection of source catpkgs for a particular kit. Each kit can have one KIT SOURCE. KIT SOURCEs MAY be
@@ -538,7 +630,7 @@ def getKitSourceInstance(kit_dict):
 			path = overlays[repo_name]["dirname"]
 		else:
 			path = repo_name
-		repo = repo_obj(repo_name, url=repo_url, root="/var/git/source-trees/%s" % path, branch=repo_branch, commit_sha1=repo_sha1)
+		repo = repo_obj(repo_name, url=repo_url, root="%s/%s" % (config.source_trees, path), branch=repo_branch, commit_sha1=repo_sha1)
 		repos.append( { "name" : repo_name, "repo" : repo, "overlay_def" : overlays[repo_name] } )
 
 	return repos
@@ -586,9 +678,12 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 	elif gentoo_staging.name != "gentoo-staging":
 		print("Gentoo staging mismatch -- name is %s" % gentoo_staging["name"])
 
+	kit_path = config.kits_root
+	if not kit_path.endswith("/"):
+		kit_path += "/"
 	kit_dict['tree'] = tree = GitTree(kit_dict['name'], kit_dict['branch'],
-	                                  "git@github.com:funtoo/%s" % kit_dict['name'], create=create,
-	                                  root="/var/git/dest-trees/%s" % kit_dict['name'], pull=True)
+	                                  kit_path + kit_dict['name'], create=create,
+	                                  root="%s/%s" % (config.dest_trees, kit_dict['name']), pull=True)
 
 	if "stability" in kit_dict and kit_dict["stability"] == KitStabilityRating.DEPRECATED:
 		# no longer update this kit.
@@ -884,9 +979,6 @@ if __name__ == "__main__":
 			# skip non-default kits
 			continue
 		kit_dict["tree"].run([GitCheckout(branch=kit_dict['branch'])])
-		if push:
-			# use the github url for the submodule, for public consumption.
-			meta_repo.gitSubmoduleAddOrUpdate(kit_dict["tree"], "kits/%s" % kit_dict["name"], "https://github.com/funtoo/%s.git" % kit_dict["name"])
 	if push:
 		meta_repo.gitCommit(message="kit updates", branch="master", push=push)
 
