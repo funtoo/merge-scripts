@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import os, sys
+import os
 import random
 import asyncio
 import aioftp
@@ -16,7 +16,7 @@ from spider_common import *
 
 from db_core import *
 from datetime import datetime, timedelta
-from sqlalchemy.orm import defer, undefer
+from sqlalchemy.orm import undefer
 
 resolver = aiohttp.AsyncResolver(nameservers=['8.8.8.8', '8.8.4.4'], timeout=5, tries=3)
 

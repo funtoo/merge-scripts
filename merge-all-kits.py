@@ -29,8 +29,7 @@ gentoo-staging = repos@git.funtoo.org:ports/gentoo-staging.git
 
 [destinations]
 
-meta-repo = https://github.com/funtoo/meta-repo
-kits-root = https://github.com/funtoo
+base_url = https://github.com/funtoo
 
 [branches]
 
@@ -51,7 +50,7 @@ destination = /var/git/dest-trees
 
 		valids = {
 			"sources": [ "flora", "kit-fixups", "gentoo-staging" ],
-			"destinations": [ "meta-repo", "kits-root" ],
+			"destinations": [ "base_url" ],
 			"branches": [ "flora", "kit-fixups", "meta-repo" ],
 			"work": [ "source", "destination", "merge-scripts"]
 		}
@@ -79,16 +78,14 @@ destination = /var/git/dest-trees
 		return self.get_option("sources", "kit-fixups", "https://github.com/funtoo/kit-fixups")
 
 	@property
-	def meta_repo(self):
-		return self.get_option("destinations", "meta-repo", "repos@git.funtoo.org:meta-repo.git")
-
-	@property
 	def gentoo_staging(self):
 		return self.get_option("sources", "gentoo-staging", "repos@git.funtoo.org:ports/gentoo-staging.git")
 
-	@property
-	def kits_root(self):
-		return self.get_option("destinations", "kits-root", "repos@git.funtoo.org:kits/")
+	def base_url(self, repo):
+		base = self.get_option("destinations", "base_url", "repos@git.funtoo.org:kits/")
+		if not base.endswith("/"):
+			base += "/"
+		return base + repo
 
 	def branch(self, key):
 		return self.get_option("branches", key, "master")
@@ -244,7 +241,7 @@ fixup_repo = GitTree("kit-fixups", config.branch("kit-fixups"), url=config.kit_f
 
 # OUTPUT META-REPO: This is the master repository being written to.
 
-meta_repo = GitTree("meta-repo", config.branch("meta-repo"), url=config.meta_repo, root=config.dest_trees+"/meta-repo")
+meta_repo = GitTree("meta-repo", config.branch("meta-repo"), url=config.base_url("meta-repo"), root=config.dest_trees+"/meta-repo")
 
 # 2. KIT SOURCES - kit sources are a combination of overlays, arranged in a python list [ ]. A KIT SOURCE serves as a
 # unified collection of source catpkgs for a particular kit. Each kit can have one KIT SOURCE. KIT SOURCEs MAY be
@@ -684,11 +681,8 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 	elif gentoo_staging.name != "gentoo-staging":
 		print("Gentoo staging mismatch -- name is %s" % gentoo_staging["name"])
 
-	kit_path = config.kits_root
-	if not kit_path.endswith("/"):
-		kit_path += "/"
 	kit_dict['tree'] = tree = GitTree(kit_dict['name'], kit_dict['branch'],
-	                                  kit_path + kit_dict['name'], create=create,
+	                                  url=config.base_url(kit_dict['name']), create=create,
 	                                  root="%s/%s" % (config.dest_trees, kit_dict['name']), pull=True)
 
 	if "stability" in kit_dict and kit_dict["stability"] == KitStabilityRating.DEPRECATED:
@@ -746,7 +740,7 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 			steps += [ InsertEbuilds(repo_dict["repo"], select_only=select_clause, skip=None, replace=False, cpm_logger=cpm_logger) ]
 		else:
 			steps += generateKitSteps(kit_dict['name'], repo_dict["repo"], fixup_repo=fixup_repo,
-			                          select_only=select_clause, pkgdir=config.merge_scripts+"/funtoo/scripts",
+			                          select_only=select_clause, pkgdir=config.merge_scripts,
 			                          filter_repos=filter_repos, force=overlay_def["force"] if "force" in overlay_def else None,
 			                          cpm_logger=cpm_logger, secondary_kit=secondary_kit)
 		tree.run(steps)
