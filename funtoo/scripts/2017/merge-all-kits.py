@@ -49,7 +49,7 @@ destination = /var/git/dest-trees
 		self.config.read(self.config_path)
 
 		valids = {
-			"sources": [ "flora", "kit-fixups" ],
+			"sources": [ "flora", "kit-fixups", "gentoo-staging" ],
 			"destinations": [ "meta-repo", "kits-root" ],
 			"branches": [ "flora", "kit-fixups", "meta-repo" ],
 			"work": [ "source", "destination"]
@@ -59,7 +59,7 @@ destination = /var/git/dest-trees
 			if self.config.has_section(section):
 				for opt in self.config[section]:
 					if opt not in my_valids:
-						print("Error: ~/.merge [source] option %s is invalid." % opt)
+						print("Error: ~/.merge [%s] option %s is invalid." % (section, opt))
 						sys.exit(1)
 
 	def get_option(self, section, key, default):
