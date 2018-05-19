@@ -16,7 +16,10 @@ class Configuration:
 		self.config_path = os.path.join(os.environ["HOME"], ".merge")
 		if not os.path.exists(self.config_path):
 			print("""
-		Merge scripts now use a configuration file. Create a ~/.merge file with the following format:	
+Merge scripts now use a configuration file. Create a ~/.merge file with the following format. Note that
+while the config file must exist, it may be empty, in which case, the following settings will be used.
+These are the production configuration settings, so you will probably want to override most or all of
+these.	
 
 [sources]
 
