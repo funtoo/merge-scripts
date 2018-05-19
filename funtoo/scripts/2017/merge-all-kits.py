@@ -40,6 +40,7 @@ meta-repo = master
 
 [work]
 
+merge-scripts = /root/merge-scripts
 source = /var/git/source-trees
 destination = /var/git/dest-trees
 			""")
@@ -52,7 +53,7 @@ destination = /var/git/dest-trees
 			"sources": [ "flora", "kit-fixups", "gentoo-staging" ],
 			"destinations": [ "meta-repo", "kits-root" ],
 			"branches": [ "flora", "kit-fixups", "meta-repo" ],
-			"work": [ "source", "destination"]
+			"work": [ "source", "destination", "merge-scripts"]
 		}
 		for section, my_valids in valids.items():
 
@@ -61,6 +62,12 @@ destination = /var/git/dest-trees
 					if opt not in my_valids:
 						print("Error: ~/.merge [%s] option %s is invalid." % (section, opt))
 						sys.exit(1)
+
+		if not os.path.exists(self.source_trees):
+			os.makedirs(self.source_trees)
+
+		if not os.path.exists(self.dest_trees):
+			os.makedirs(self.dest_trees)
 
 	def get_option(self, section, key, default):
 		if self.config.has_section(section) and key in self.config[section]:
@@ -98,6 +105,10 @@ destination = /var/git/dest-trees
 	@property
 	def dest_trees(self):
 		return self.get_option("work", "source", "/var/git/dest-trees")
+
+	@property
+	def merge_scripts(self):
+		return self.get_option("work", "merge-scripts", "/root/merge-scripts")
 
 config = Configuration()
 
@@ -234,7 +245,6 @@ overlays = {
 # SUPPLEMENTAL REPOSITORIES: These are overlays that we are using but are not in KIT SOURCES. merge_scripts is something
 # we are using only for profiles and other misc. things and may get phased out in the future:
 
-merge_scripts = GitTree("merge-scripts", "master", "git@github.com:funtoo/merge-scripts.git")
 fixup_repo = GitTree("kit-fixups", config.branch("kit-fixups"), config.kit_fixups)
 
 # OUTPUT META-REPO: This is the master repository being written to.
@@ -741,7 +751,7 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 			steps += [ InsertEbuilds(repo_dict["repo"], select_only=select_clause, skip=None, replace=False, cpm_logger=cpm_logger) ]
 		else:
 			steps += generateKitSteps(kit_dict['name'], repo_dict["repo"], fixup_repo=fixup_repo,
-			                          select_only=select_clause, pkgdir=merge_scripts.root+"/funtoo/scripts",
+			                          select_only=select_clause, pkgdir=config.merge_scripts+"/funtoo/scripts",
 			                          filter_repos=filter_repos, force=overlay_def["force"] if "force" in overlay_def else None,
 			                          cpm_logger=cpm_logger, secondary_kit=secondary_kit)
 		tree.run(steps)
