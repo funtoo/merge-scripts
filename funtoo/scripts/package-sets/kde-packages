@@ -1,9 +1,0 @@
-dev-qt/*
-kde-apps/*
-kde-base/*
-kde-frameworks/*
-kde-misc/*
-kde-plasma/*
-@eclass@:kde.*\.eclass
-@eclass@:qt4-.*\.eclass
-@eclass@:qt5-.*\.eclass
