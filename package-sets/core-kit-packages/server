@@ -1,8 +1,0 @@
-app-admin/syslog-ng
-sys-apps/haveged
-sys-apps/smartmontools
-sys-apps/tcp-wrappers
-virtual/mailx
-virtual/cron
-virtual/logger
-sys-fs/quota

@@ -1,5 +1,0 @@
-dev-perl/*
-perl-core/*
-dev-lang/perl
-app-admin/perl-cleaner
-@regex@:virtual/perl.*

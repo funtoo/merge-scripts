@@ -39,7 +39,6 @@ meta-repo = master
 
 [work]
 
-merge-scripts = /root/merge-scripts
 source = /var/git/source-trees
 destination = /var/git/dest-trees
 			""")
@@ -52,7 +51,7 @@ destination = /var/git/dest-trees
 			"sources": [ "flora", "kit-fixups", "gentoo-staging" ],
 			"destinations": [ "base_url" ],
 			"branches": [ "flora", "kit-fixups", "meta-repo" ],
-			"work": [ "source", "destination", "merge-scripts"]
+			"work": [ "source", "destination" ]
 		}
 		for section, my_valids in valids.items():
 
@@ -97,10 +96,6 @@ destination = /var/git/dest-trees
 	@property
 	def dest_trees(self):
 		return self.get_option("work", "destination", "/var/git/dest-trees")
-
-	@property
-	def merge_scripts(self):
-		return self.get_option("work", "merge-scripts", "/root/merge-scripts")
 
 config = Configuration()
 
@@ -729,7 +724,7 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 			steps += [ InsertEbuilds(repo_dict["repo"], select_only=select_clause, skip=None, replace=False, cpm_logger=cpm_logger) ]
 		else:
 			steps += generateKitSteps(kit_dict['name'], repo_dict["repo"], fixup_repo=fixup_repo,
-			                          select_only=select_clause, pkgdir=config.merge_scripts,
+			                          select_only=select_clause, pkgdir=config.kit_fixups,
 			                          filter_repos=filter_repos, force=overlay_def["force"] if "force" in overlay_def else None,
 			                          cpm_logger=cpm_logger, secondary_kit=secondary_kit)
 		tree.run(steps)

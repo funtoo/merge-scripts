@@ -1,2 +1,0 @@
-dev-python/* -dev-python/clang-python
-@regex@:virtual/py.*

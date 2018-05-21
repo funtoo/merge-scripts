@@ -1,9 +1,0 @@
-dev-java/*
-java-virtuals/*
-virtual/jdk
-virtual/jre
-www-servers/tomcat
-www-servers/resin
-dev-lang/scala
-dev-lang/scala-bin
-@maintainer@:dev-util:java@gentoo.org

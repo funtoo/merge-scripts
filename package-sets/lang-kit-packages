@@ -1,8 +1,0 @@
-dev-lang/*
-dev-ada/*
-dev-dotnet/*
-dev-erlang/*
-dev-go/*
-dev-lua/*
-dev-tcltk/*
-net-libs/nodejs
