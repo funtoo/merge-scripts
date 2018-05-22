@@ -29,7 +29,7 @@ def getMySQLDatabase():
 # generated, they can include from all possible catpkgs. This is done because prime+shared is designed to be our
 # primary enterprise-set of Funtoo kits. current+shared is also supported as a more bleeding edge option.
 
-# 3. KIT PREP STEPS. To rebuild kits from scratch, we need to perform some initial actions to initialize an empty git
+# KIT PREP STEPS. To rebuild kits from scratch, we need to perform some initial actions to initialize an empty git
 # repository, as well as some final actions. In the kit_steps dictionary below, indexed by kit, 'pre' dict lists the
 # initial actions, and 'post' lists the final actions for the kit. There is also a special top-level key called
 # 'regular-kits'. These actions are appended to any kit that is not core-kit or nokit. In addition to 'pre' and 'post'
@@ -99,7 +99,7 @@ def getKitPrepSteps(repos, kit_dict, gentoo_staging, fixup_repo):
 		if 'post' in kit_steps['all-kits']:
 			out_post_steps += kit_steps['all-kits']['post']
 
-	return ( out_pre_steps, out_copy_steps, out_post_steps )
+	return out_pre_steps, out_copy_steps, out_post_steps
 
 # GET KIT SOURCE INSTANCE. This function returns a list of GitTree objects for each of repositories specified for
 # a particular kit's kit_source, in the order that they should be processed (in the order they are defined in
@@ -398,7 +398,7 @@ if __name__ == "__main__":
 		push = True if "push" in sys.argv else False
 
 	if "db" in sys.argv:
-		db = mu.getMySQLDatabase()
+		db = getMySQLDatabase()
 	else:
 		db = None
 
