@@ -736,7 +736,7 @@ def getAllMeta(metadata, dest_kit):
 						mymeta.add(lic)
 	return mymeta
 
-def generateKitSteps(kit_name, from_tree, select_only="all", fixup_repo=None, pkgdir=None,
+def generateKitSteps(kit_name, from_tree, select_only="all", fixup_repo=None,
 					 cpm_logger=None, filter_repos=None, force=None, secondary_kit=False):
 	if force is None:
 		force = set()
@@ -746,9 +746,9 @@ def generateKitSteps(kit_name, from_tree, select_only="all", fixup_repo=None, pk
 	pkglist = []
 	pkgf = "package-sets/%s-packages" % kit_name
 	pkgf_skip = "package-sets/%s-skip" % kit_name
-	if pkgdir is not None:
-		pkgf = pkgdir + "/" + pkgf
-		pkgf_skip = pkgdir + "/" + pkgf_skip
+	pkgdir = fixup_repo.root
+	pkgf = pkgdir + "/" + pkgf
+	pkgf_skip = pkgdir + "/" + pkgf_skip
 	skip = []
 	master_pkglist = get_pkglist(pkgf)
 	if filter_repos is None:

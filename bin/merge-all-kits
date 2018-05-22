@@ -13,7 +13,7 @@ from merge.config import config
 fixup_repo = mu.GitTree("kit-fixups", config.branch("kit-fixups"), url=config.kit_fixups, root=config.source_trees+"/kit-fixups")
 meta_repo = mu.GitTree("meta-repo", config.branch("meta-repo"), url=config.base_url("meta-repo"), root=config.dest_trees+"/meta-repo")
 
-sys.path.insert(0, config.kit_fixups + "/modules")
+sys.path.insert(0, fixup_repo.root + "/modules")
 from fixups.foundations import KitFoundation, KitRatingString, KitStabilityRating
 foundation = KitFoundation(config)
 
@@ -230,8 +230,7 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 			# grab all remaining ebuilds to put in nokit
 			steps += [ mu.InsertEbuilds(repo_dict["repo"], select_only=select_clause, skip=None, replace=False, cpm_logger=cpm_logger) ]
 		else:
-			steps += mu.generateKitSteps(kit_dict['name'], repo_dict["repo"], fixup_repo=fixup_repo,
-			                          select_only=select_clause, pkgdir=config.kit_fixups,
+			steps += mu.generateKitSteps(kit_dict['name'], repo_dict["repo"], fixup_repo=fixup_repo, select_only=select_clause,
 			                          filter_repos=filter_repos, force=overlay_def["force"] if "force" in overlay_def else None,
 			                          cpm_logger=cpm_logger, secondary_kit=secondary_kit)
 		tree.run(steps)
