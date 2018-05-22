@@ -4,13 +4,9 @@
 # of python3 but not python3.6. This does not scan python_single_target ebuilds but rather those that can
 # be built to support multiple python implementations.
 
-from merge_utils import *
+from merge.merge_utils import *
 
 import portage
-import os
-from portage.versions import pkgsplit, pkgcmp
-from portage.dbapi.porttree import portdbapi
-from portage.dbapi.vartree import vardbapi
 
 p = portage.portdbapi()
 p.freeze()

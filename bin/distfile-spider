@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import os
+import sys
 import random
 import asyncio
 import aioftp
@@ -11,12 +12,13 @@ import logging
 from hashlib import sha256, sha512
 import socket
 from concurrent.futures import ThreadPoolExecutor
-from google_upload_server import google_upload
-from spider_common import *
-
-from db_core import *
+from utils.google_upload_server import google_upload
+from utils.spider_common import *
 from datetime import datetime, timedelta
 from sqlalchemy.orm import undefer
+
+sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "/../modules")))
+from merge.db_core import *
 
 resolver = aiohttp.AsyncResolver(nameservers=['8.8.8.8', '8.8.4.4'], timeout=5, tries=3)
 

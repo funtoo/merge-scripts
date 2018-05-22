@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 
-import sys, os
+import os
 from google.cloud import storage
 import google.cloud.exceptions
-from spider_common import *
+from utils.spider_common import *
 
 google_client = storage.Client.from_service_account_json('goog_creds.json')
 bucket = google_client.get_bucket("fastpull-us")

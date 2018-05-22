@@ -1,15 +1,12 @@
 #!/usr/bin/python3
 
 import sys
-from db_config import get_app_config
+from merge.db_config import get_app_config
 from contextlib import contextmanager
-from sqlalchemy import create_engine, ForeignKey, Integer, Boolean, Column, String, BigInteger, DateTime, Text, Numeric
+from sqlalchemy import create_engine, Integer, Boolean, Column, String, BigInteger, DateTime, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
-from sqlalchemy import or_
-from sqlalchemy.orm.session import object_session
-import sqlalchemy
 from sqlalchemy.pool import NullPool
 
 app_config = get_app_config()

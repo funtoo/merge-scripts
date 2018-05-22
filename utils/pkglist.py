@@ -1,11 +1,8 @@
 #!/usr/bin/python3.4
 
-from merge_utils import *
+from src.merge_utils import *
 
 import portage
-from portage.versions import pkgsplit, pkgcmp
-from portage.dbapi.porttree import portdbapi
-from portage.dbapi.vartree import vardbapi
 
 cur_name = sys.argv[1]
 cur_tree = "/var/git/meta-repo/kits/" + cur_name

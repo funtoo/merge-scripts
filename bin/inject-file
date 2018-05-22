@@ -1,9 +1,13 @@
 #!/usr/bin/python3
 
-import sys, os
+import os
 from hashlib import sha512
-from db_core import *
+from merge.db_core import *
 from optparse import OptionParser
+
+sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "/../modules")))
+from merge.db_core import *
+
 parser = OptionParser()
 parser.add_option("--catpkg", dest="catpkg", help="catpkg of ebuild")
 parser.add_option("--src_uri", dest="src_uri", help="download URL")

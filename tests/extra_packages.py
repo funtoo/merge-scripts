@@ -2,8 +2,8 @@
 
 import os, sys
 import unittest
-sys.path.insert(0, "..")
-from merge_utils import get_extra_catpkgs_from_kit_fixups
+sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "/../modules")))
+from merge.merge_utils import get_extra_catpkgs_from_kit_fixups
 
 class MockTree():
 

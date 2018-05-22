@@ -1,14 +1,18 @@
 #!/usr/bin/python3
 
 import os
+import sys
 from tornado.httpserver import HTTPServer
 import tornado.web
 import tornado.gen
 from tornado.ioloop import IOLoop
-from db_core import *
+
 from tornado.log import enable_pretty_logging
 enable_pretty_logging()
 import sqlalchemy.exc
+
+sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "/../modules")))
+from merge.db_core import *
 
 class RedirectHandler(tornado.web.RequestHandler):
 

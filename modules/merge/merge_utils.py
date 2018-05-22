@@ -9,7 +9,6 @@ import sys
 import re
 from lxml import etree
 import portage
-from portage.dbapi.porttree import portdbapi
 from portage.dep import use_reduce, dep_getkey, flatten
 from portage.exception import PortageKeyError
 import grp
@@ -1982,35 +1981,6 @@ class Minify(MergeStep):
 		runShell("( cd %s && find -iname ChangeLog -exec rm -f {} \; )" % tree.root )
 		runShell("( cd %s && find -iname Manifest -exec sed -n -i -e \"/DIST/p\" {} \; )" % tree.root )
 
-def getMySQLDatabase():
-	from db_core import FastPullDatabase
-	return FastPullDatabase()
 
-if __name__ == "__main__":
-	env = os.environ.copy()
-	env['PORTAGE_REPOSITORIES'] = '''
-			[DEFAULT]
-			main-repo = core-kit
-
-			[core-kit]
-			location = /var/git/meta-repo/kits/core-kit
-			aliases = gentoo
-			'''
-	env['ACCEPT_KEYWORDS'] = "~amd64 amd64"
-	p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
-	for pkg in [ "app-emulation/lxd" ]:
-		for cpv in p.xmatch("match-all", pkg):
-			if len(cpv) == 0:
-				continue
-			
-			fn_urls = defaultdict(list)
-
-			try:
-				aux_info = p.aux_get(cpv, ["SRC_URI", "RESTRICT"], mytree="/var/git/meta-repo/kits/core-kit")
-				fn_urls, new_files = extract_uris(aux_info[0])
-				print(fn_urls)
-				print(new_files)
-			except Exception as e:
-				raise
 
 # vim: ts=4 sw=4 noet
