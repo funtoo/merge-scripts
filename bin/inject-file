@@ -5,7 +5,7 @@ from hashlib import sha512
 from merge.db_core import *
 from optparse import OptionParser
 
-sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "/../modules")))
+sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "../modules")))
 from merge.db_core import *
 
 parser = OptionParser()

@@ -6,7 +6,7 @@ from datetime import datetime
 import json
 from collections import defaultdict
 
-sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "/../modules")))
+sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "../modules")))
 import merge.merge_utils as mu
 from merge.config import config
 

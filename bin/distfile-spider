@@ -17,7 +17,7 @@ from utils.spider_common import *
 from datetime import datetime, timedelta
 from sqlalchemy.orm import undefer
 
-sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "/../modules")))
+sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "../modules")))
 from merge.db_core import *
 
 resolver = aiohttp.AsyncResolver(nameservers=['8.8.8.8', '8.8.4.4'], timeout=5, tries=3)
