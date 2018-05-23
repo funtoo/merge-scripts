@@ -12,7 +12,7 @@ import logging
 from hashlib import sha256, sha512
 import socket
 from concurrent.futures import ThreadPoolExecutor
-from utils.google_upload_server import google_upload
+# from utils.google_upload_server import google_upload
 from utils.spider_common import *
 from datetime import datetime, timedelta
 from sqlalchemy.orm import undefer
@@ -356,8 +356,8 @@ async def keep_getting_files(db, task_num, q):
 					try:
 						fastpull_file = fastpull_index(outfile, d_final)
 						# add to queue to upload to google:
-						loop = asyncio.get_event_loop()
-						loop.run_in_executor(thread_exec, google_upload, fastpull_file)
+						# loop = asyncio.get_event_loop()
+						# loop.run_in_executor(thread_exec, google_upload, fastpull_file)
 
 					except FileNotFoundError:
 						# something went bad, couldn't find file for indexing.
