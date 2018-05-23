@@ -1746,7 +1746,7 @@ class InsertEbuilds(MergeStep):
 	
 	"""
 	def __init__(self, srctree,select="all", select_only="all", skip=None, replace=False, categories=None,
-				 ebuildloc=None, branch=None, cpm_logger=None, is_fixup=False):
+				 ebuildloc=None, branch=None, cpm_logger: CatPkgMatchLogger=None, is_fixup=False):
 		self.select = select
 		self.skip = skip
 		self.srctree = srctree
@@ -1814,7 +1814,7 @@ class InsertEbuilds(MergeStep):
 			for pkg in os.listdir(catdir):
 				catpkg = "%s/%s" % (cat,pkg)
 				pkgdir = os.path.join(catdir, pkg)
-				if self.cpm_logger and self.cpm_logger.match(catpkg, kit=kit, branch=branch, is_fixup=self.is_fixup):
+				if self.cpm_logger and self.cpm_logger.match(catpkg):
 					#already copied
 					continue
 				if self.select_only != "all" and catpkg not in self.select_only:
@@ -1860,10 +1860,10 @@ class InsertEbuilds(MergeStep):
 						self.cpm_logger.recordCopyToXML(self.srctree, desttree, catpkg)
 						if isinstance(self.select, regextype):
 							# If a regex was used to match the copied catpkg, record the regex.
-							self.cpm_logger.record(self.select, kit=kit, branch=branch, is_fixup=self.is_fixup)
+							self.cpm_logger.record(self.select, is_fixup=self.is_fixup)
 						else:
 							# otherwise, record the literal catpkg matched.
-							self.cpm_logger.record(catpkg, kit=kit, branch=branch, is_fixup=self.is_fixup)
+							self.cpm_logger.record(catpkg, is_fixup=self.is_fixup)
 		if os.path.isdir(os.path.dirname(dest_cat_path)):
 			# only write out if profiles/ dir exists -- it doesn't with shards.
 			with open(dest_cat_path, "w") as f:
