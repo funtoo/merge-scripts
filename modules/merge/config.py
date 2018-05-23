@@ -51,17 +51,22 @@ destination = /var/git/dest-trees
 		for section, my_valids in valids.items():
 
 			if self.config.has_section(section):
+				if section == "database":
+					continue
 				for opt in self.config[section]:
 					if opt not in my_valids:
 						print("Error: ~/.merge [%s] option %s is invalid." % (section, opt))
 						sys.exit(1)
 
-	def get_option(self, section, key, default):
+	def get_option(self, section, key, default=None):
 		if self.config.has_section(section) and key in self.config[section]:
 			my_path = self.config[section][key]
 		else:
 			my_path = default
 		return my_path
+
+	def db_connection(self, dbname):
+		return self.get_option("database", dbname)
 
 	@property
 	def flora(self):

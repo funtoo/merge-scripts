@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import sys
-from merge.db_config import get_app_config
+from merge.config import Configuration
 from contextlib import contextmanager
 from sqlalchemy import create_engine, Integer, Boolean, Column, String, BigInteger, DateTime, Text
 from sqlalchemy.ext.declarative import declarative_base
@@ -9,7 +9,7 @@ from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 from sqlalchemy.pool import NullPool
 
-app_config = get_app_config()
+app_config = Configuration()
 
 class Database(object):
 
@@ -33,7 +33,7 @@ class FastPullDatabase(Database):
 
 	def __init__(self):
 		
-		self.engine = create_engine(app_config["main"]["connection"], poolclass=NullPool)
+		self.engine = create_engine(app_config.db_connection("fastpull"), poolclass=NullPool)
 
 		class Distfile(self.Base):
 
