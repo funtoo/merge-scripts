@@ -16,6 +16,7 @@ import pwd
 import multiprocessing
 from collections import defaultdict
 from portage.util.futures.iter_completed import iter_completed
+from merge.config import config
 
 debug = False
 
@@ -94,21 +95,21 @@ class GenPythonUse(MergeStep):
 main-repo = core-kit
 
 [core-kit]
-location = /var/git/dest-trees/core-kit
+location = %s/core-kit
 aliases = gentoo
 
 [%s]
 location = %s
-''' % (cur_name, cur_tree)
+''' % (config.dest_trees, cur_name, cur_tree)
 		else:
 			env['PORTAGE_REPOSITORIES'] = '''
 [DEFAULT]
 main-repo = core-kit
 
 [core-kit]
-location = /var/git/dest-trees/core-kit
+location = %s/core-kit
 aliases = gentoo
-'''
+''' % config.dest_trees
 		p = portage.portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
 
 		pkg_use = []
@@ -192,21 +193,21 @@ def getDependencies(cur_overlay, catpkgs, levels=0, cur_level=0):
 	main-repo = core-kit
 
 	[core-kit]
-	location = /var/git/dest-trees/core-kit
+	location = %s/core-kit
 	aliases = gentoo
 
 	[%s]
 	location = %s
-	''' % (cur_name, cur_tree)
+	''' % (config.dest_trees, cur_name, cur_tree)
 	else:
 		env['PORTAGE_REPOSITORIES'] = '''
 	[DEFAULT]
 	main-repo = core-kit
 
 	[core-kit]
-	location = /var/git/dest-trees/core-kit
+	location = %s/core-kit
 	aliases = gentoo
-	'''
+	''' % config.dest_trees
 	p = portage.portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
 	mypkgs = set()
 
@@ -214,13 +215,13 @@ def getDependencies(cur_overlay, catpkgs, levels=0, cur_level=0):
 
 	def future_generator():
 		for catpkg in list(catpkgs):
-			for cpv in p.cp_list(catpkg):
-				if cpv == '':
+			for my_cpv in p.cp_list(catpkg):
+				if my_cpv == '':
 					print("No match for %s" % catpkg)
 					continue
-				future = p.async_aux_get(cpv, [ "DEPEND", "RDEPEND"])
-				future_aux[id(future)] = cpv
-				yield future
+				my_future = p.async_aux_get(my_cpv, [ "DEPEND", "RDEPEND"])
+				future_aux[id(my_future)] = my_cpv
+				yield my_future
 
 	for future in iter_completed(future_generator()):
 		cpv = future_aux.pop(id(future))
@@ -293,21 +294,21 @@ def getPackagesWithEclass(cur_overlay, eclass):
 	main-repo = core-kit
 
 	[core-kit]
-	location = /var/git/dest-trees/core-kit
+	location = %s/core-kit
 	aliases = gentoo
 
 	[%s]
 	location = %s
-	''' % (cur_name, cur_tree)
+	''' % (config.dest_trees, cur_name, cur_tree)
 	else:
 		env['PORTAGE_REPOSITORIES'] = '''
 	[DEFAULT]
 	main-repo = core-kit
 
 	[core-kit]
-	location = /var/git/dest-trees/core-kit
+	location = /%s/core-kit
 	aliases = gentoo
-	'''
+	''' % config.dest_trees
 	p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
 	mypkgs = set()
 
@@ -316,14 +317,14 @@ def getPackagesWithEclass(cur_overlay, eclass):
 
 	def future_generator():
 		for catpkg in p.cp_all():
-			for cpv in p.cp_list(catpkg):
-				if cpv == '':
+			for my_cpv in p.cp_list(catpkg):
+				if my_cpv == '':
 					print("No match for %s" % catpkg)
 					continue
-				cpv_map[cpv] = catpkg
-				future = p.async_aux_get(cpv, [ "INHERITED"])
-				future_aux[id(future)] = cpv
-				yield future
+				cpv_map[my_cpv] = catpkg
+				my_future = p.async_aux_get(my_cpv, [ "INHERITED"])
+				future_aux[id(my_future)] = my_cpv
+				yield my_future
 
 	for future in iter_completed(future_generator()):
 		cpv = future_aux.pop(id(future))
@@ -352,21 +353,21 @@ def getPackagesInCatWithEclass(cur_overlay, cat, eclass):
 	main-repo = core-kit
 
 	[core-kit]
-	location = /var/git/dest-trees/core-kit
+	location = %s/core-kit
 	aliases = gentoo
 
 	[%s]
 	location = %s
-	''' % (cur_name, cur_tree)
+	''' % (config.dest_trees, cur_name, cur_tree)
 	else:
 		env['PORTAGE_REPOSITORIES'] = '''
 	[DEFAULT]
 	main-repo = core-kit
 
 	[core-kit]
-	location = /var/git/dest-trees/core-kit
+	location = %s/core-kit
 	aliases = gentoo
-	'''
+	''' % config.dest_trees
 	p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
 	mypkgs = set()
 
@@ -375,14 +376,14 @@ def getPackagesInCatWithEclass(cur_overlay, cat, eclass):
 
 	def future_generator():
 		for catpkg in p.cp_all(categories=[cat]):
-			for cpv in p.cp_list(catpkg):
-				if cpv == '':
+			for my_cpv in p.cp_list(catpkg):
+				if my_cpv == '':
 					print("No match for %s" % catpkg)
 					continue
-				cpv_map[cpv] = catpkg
-				future = p.async_aux_get(cpv, [ "INHERITED"])
-				future_aux[id(future)] = cpv
-				yield future
+				cpv_map[my_cpv] = catpkg
+				my_future = p.async_aux_get(my_cpv, [ "INHERITED"])
+				future_aux[id(my_future)] = my_cpv
+				yield my_future
 
 	for future in iter_completed(future_generator()):
 		cpv = future_aux.pop(id(future))
@@ -401,10 +402,10 @@ def extract_uris(src_uri):
 	
 	fn_urls = defaultdict(list)
 
-	def record_fn_url(fn, prev_blob):
-		if prev_blob not in fn_urls[fn]:
-			new_files.append(fn)
-			fn_urls[fn].append(prev_blob)
+	def record_fn_url(my_fn, p_blob):
+		if p_blob not in fn_urls[my_fn]:
+			new_files.append(my_fn)
+			fn_urls[my_fn].append(p_blob)
 
 	blobs = src_uri.split()
 	prev_blob = None
@@ -458,21 +459,21 @@ class CatPkgScan(MergeStep):
 		main-repo = core-kit
 
 		[core-kit]
-		location = /var/git/dest-trees/core-kit
+		location = %s/core-kit
 		aliases = gentoo
 
 		[%s]
 		location = %s
-		''' % (cur_name, cur_tree)
+		''' % (config.dest_trees, cur_name, cur_tree)
 		else:
 			env['PORTAGE_REPOSITORIES'] = '''
 		[DEFAULT]
 		main-repo = core-kit
 
 		[core-kit]
-		location = /var/git/dest-trees/core-kit
+		location = %s/core-kit
 		aliases = gentoo
-		'''
+		''' % config.dest_trees
 		env['ACCEPT_KEYWORDS'] = "~amd64 amd64"
 		p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
 		for pkg in p.cp_all(trees=[cur_overlay.root]):
@@ -551,7 +552,6 @@ class CatPkgScan(MergeStep):
 
 					# If we have already grabbed this distfile, then let's not queue it for fetching...
 
-					already_exists = False
 					if man_info[f]["digest_type"] == "sha512":
 						existing = session.query(self.db.Distfile).filter(self.db.Distfile.id == man_info[f]["digest"]).first()
 						# TODO: maybe it already exists, but under a different filename. If so, we still want to
@@ -623,10 +623,10 @@ def _getAllDriver(metadata, path_prefix, dest_kit):
 
 def simpleGetAllLicenses(dest_kit, parent_repo):
 	out = []
-	for license in os.listdir(parent_repo.root + "/licenses"):
-		if os.path.exists(dest_kit.root + "/licenses/" + license):
+	for my_license in os.listdir(parent_repo.root + "/licenses"):
+		if os.path.exists(dest_kit.root + "/licenses/" + my_license):
 			continue
-		out.append(license)
+		out.append(my_license)
 	return out
 
 def simpleGetAllEclasses(dest_kit, parent_repo):
@@ -682,12 +682,12 @@ def getAllMeta(metadata, dest_kit):
 	main-repo = core-kit
 
 	[core-kit]
-	location = /var/git/dest-trees/core-kit
+	location = %s/core-kit
 	aliases = gentoo
 
 	[%s]
 	location = %s
-		''' % ( dest_kit.name, dest_kit.root)
+		''' % ( config.dest_trees, dest_kit.name, dest_kit.root)
 	else:
 		# we are testing a stand-alone kit that should have everything it needs included
 		env['PORTAGE_REPOSITORIES'] = '''
@@ -712,9 +712,9 @@ def getAllMeta(metadata, dest_kit):
 					print("No match for %s" % catpkg)
 					continue
 				cpv_map[cpv] = catpkg
-				future = p.async_aux_get(cpv, [ "LICENSE", "INHERITED" ], mytree=dest_kit.root)
-				future_aux[id(future)] = cpv
-				yield future
+				my_future = p.async_aux_get(cpv, [ "LICENSE", "INHERITED" ], mytree=dest_kit.root)
+				future_aux[id(my_future)] = cpv
+				yield my_future
 
 	for future in iter_completed(future_generator()):
 		cpv = future_aux.pop(id(future))
@@ -982,13 +982,10 @@ class CatPkgMatchLogger(object):
 	def matchcount(self):
 		return self._matchcount
 
-	def match(self, catpkg, kit=None, branch=None, is_fixup=False):
+	def match(self, catpkg):
 		"""
 		This method tells us whether we should copy over a catpkg to a particular kit.
 		:param catpkg: the catpkg in question.
-		:param kit: The kit name being processed.
-		:param branch: The branch of the kit being processed..
-		:param is_fixup: True if we are performing a fixup, else False.
 		:return: Boolean, True if we have already copied and should not copy again, and False if we have not seen and
 				 should copy..
 		"""
@@ -1011,15 +1008,13 @@ class CatPkgMatchLogger(object):
 		self._current_kit_set |= myset
 		return self._current_kit_set
 
-	def record(self, match, kit=None, branch=None, is_fixup=False):
+	def record(self, match, is_fixup=False):
 		"""
 		This method records catpkgs that we are copying over, so we can determine whether or not the catpkg should be
 		copied again into later kits. In general, we only want to copy a catpkg once -- but there are exceptions, like
 		if we have different branches of the same kit, or if we have fixups. So the logic is nuanced.
 
 		:param match: Either a catpkg string or regex match.
-		:param kit:  The kit that we are processing.
-		:param branch: This is the kit branch name we are processing.
 		:param is_fixup: True if we are applying a fixup; else False.
 		:return: None
 		"""
@@ -1103,8 +1098,8 @@ class AutoGlobMask(MergeStep):
 
 	"""
 
-	def __init__(self,catpkg,glob,maskdest):
-		self.glob = glob
+	def __init__(self, catpkg, my_glob, maskdest):
+		self.glob = my_glob
 		self.catpkg = catpkg
 		self.maskdest = maskdest
 
@@ -1157,10 +1152,10 @@ class ApplyPatchSeries(MergeStep):
 				runShell( "( cd %s && git apply %s/%s )" % ( tree.root, self.path, line[:-1] ))
 
 class GenerateRepoMetadata(MergeStep):
-	def __init__(self, name, masters=[], aliases=[], priority=None):
+	def __init__(self, name, masters=None, aliases=None, priority=None):
 		self.name = name
-		self.aliases = aliases
-		self.masters = masters
+		self.aliases = aliases if aliases is not None else []
+		self.masters = masters if masters is not None else []
 		self.priority = priority
 
 	def run(self,tree):
@@ -1188,7 +1183,9 @@ cache-formats = md5-dict
 		a.close() 
 
 class RemoveFiles(MergeStep):
-	def __init__(self,globs=[]):
+	def __init__(self,globs=None):
+		if globs is None:
+			globs = []
 		self.globs = globs
 	
 	def run(self,tree):
@@ -1197,11 +1194,11 @@ class RemoveFiles(MergeStep):
 			runShell(cmd)
 
 class SyncDir(MergeStep):
-	def __init__(self,srcroot,srcdir=None,destdir=None,exclude=[],delete=False):
+	def __init__(self,srcroot,srcdir=None,destdir=None,exclude=None,delete=False):
 		self.srcroot = srcroot
 		self.srcdir = srcdir
 		self.destdir = destdir
-		self.exclude = exclude
+		self.exclude = exclude if exclude is not None else []
 		self.delete = delete
 
 	def run(self,tree):
@@ -1299,7 +1296,9 @@ class MergeUpdates(MergeStep):
 class CleanTree(MergeStep):
 	# remove all files from tree, except dotfiles/dirs.
 
-	def __init__(self,exclude=[]):
+	def __init__(self,exclude=None):
+		if exclude is None:
+			exclude = []
 		self.exclude = exclude
 	def run(self,tree):
 		for fn in os.listdir(tree.root):
@@ -1311,7 +1310,9 @@ class CleanTree(MergeStep):
 
 class SyncFromTree(SyncDir):
 	# sync a full portage tree, deleting any excess files in the target dir:
-	def __init__(self,srctree,exclude=[]):
+	def __init__(self,srctree,exclude=None):
+		if exclude is None:
+			exclude=[]
 		self.srctree = srctree
 		SyncDir.__init__(self,srctree.root,srcdir=None,destdir=None,exclude=exclude,delete=True)
 
@@ -1341,13 +1342,13 @@ class XMLRecorder(object):
 		cat, pkg = catpkg.split("/")
 		exp = "category[@name='%s']" % cat
 		catxml = self.xml_out.find(exp)
-		if catxml == None:
+		if catxml is not None:
 			catxml = etree.Element("category", name=cat)
 			self.xml_out.append(catxml)
 		pkgxml = self.xml_out.find("category[@name='%s']/package/[@name='%s']" % (cat, pkg))
 
 		# remove existing
-		if pkgxml != None:
+		if pkgxml is not None:
 			pkgxml.getparent().remove(pkgxml)
 		pkgxml = etree.Element("package", name=pkg, repository=repo.name, kit=kit.name)
 		doMeta = True
@@ -1363,7 +1364,7 @@ class XMLRecorder(object):
 				usexml = etree.Element("use")
 				for el in metatree.iterfind('.//flag'):
 					name = el.get("name")
-					if name != None:
+					if name is not None:
 						flag = etree.Element("flag")
 						flag.attrib["name"] = name
 						flag.text = etree.tostring(el, encoding='unicode', method="text").strip()
@@ -1378,11 +1379,11 @@ class GitTree(Tree):
 
 	"A Tree (git) that we can use as a source for work jobs, and/or a target for running jobs."
 
-	def __init__(self, name: object, branch: object = "master", url: object = None, commit_sha1: object = None,
-				 pull: object = True,
-				 root: object = None,
-				 create: object = False,
-				 reponame: object = None) -> object:
+	def __init__(self, name: str, branch: str = "master", url: str = None, commit_sha1: str = None,
+				 pull: bool = True,
+				 root: str = None,
+				 create: bool = False,
+				 reponame: str = None):
 
 		# note that if create=True, we are in a special 'local create' mode which is good for testing. We create the repo locally from
 		# scratch if it doesn't exist, as well as any branches. And we don't push.
@@ -1403,8 +1404,8 @@ class GitTree(Tree):
 	def initializeTree(self, branch, commit_sha1=None):
 		self.branch = branch
 		self.commit_sha1 = commit_sha1
-		if self.root == None:
-			base = "/var/git/source-trees"
+		if self.root is None:
+			base = config.source_trees
 			self.root = "%s/%s" % ( base, self.name )
 		if not os.path.isdir("%s/.git" % self.root):
 			# repo does not exist? - needs to be cloned or created
@@ -1519,12 +1520,10 @@ class GitTree(Tree):
 	def catpkg_exists(self, catpkg):
 		return os.path.exists(self.root + "/" + catpkg)
 
-	def gitCheckout(self,branch="master"):
+	def gitCheckout(self, branch="master"):
 		runShell("(cd %s && git checkout %s)" % ( self.root, self.branch ))
 
-	def gitCommit(self,message="",upstream="origin",branch=None,push=True):
-		if branch == None:
-			branch = self.branch
+	def gitCommit(self, message="", branch=None,push=True):
 		runShell("( cd %s && git add . )" % self.root )
 		cmd = "( cd %s && [ -n \"$(git status --porcelain)\" ] && git commit -a -F - << EOF || exit 0\n" % self.root
 		if message != "":
@@ -1537,7 +1536,7 @@ class GitTree(Tree):
 					# don't print dups
 					continue
 				names.append(name)
-				if sha1 != None:
+				if sha1 is not None:
 					cmd += "  %s: %s\n" % ( name, sha1 )
 		cmd += "EOF\n"
 		cmd += ")\n"
@@ -1555,7 +1554,7 @@ class GitTree(Tree):
 
 	def run(self,steps):
 		for step in steps:
-			if step != None:
+			if step is not None:
 				print("Running step", step.__class__.__name__, step)
 				step.run(self)
 
@@ -1564,7 +1563,7 @@ class GitTree(Tree):
 
 	def logTree(self,srctree):
 		# record name and SHA of src tree in dest tree, used for git commit message/auditing:
-		if srctree.name == None:
+		if srctree.name is None:
 			# this tree doesn't have a name, so just copy any existing history from that tree
 			self.merged.extend(srctree.merged)
 		else:
@@ -1579,7 +1578,7 @@ class RsyncTree(Tree):
 	def __init__(self,name,url="rsync://rsync.us.gentoo.org/gentoo-portage/"):
 		self.name = name
 		self.url = url 
-		base = "/var/rsync/source-trees"
+		base = config.source_trees
 		self.root = "%s/%s" % (base, self.name)
 		if not os.path.exists(base):
 			os.makedirs(base)
@@ -1589,7 +1588,7 @@ class SvnTree(Tree):
 	def __init__(self, name, url=None):
 		self.name = name
 		self.url = url
-		base = "/var/svn/source-trees"
+		base = config.source_trees
 		self.root = "%s/%s" % (base, self.name)
 		if not os.path.exists(base):
 			os.makedirs(base)
@@ -1604,7 +1603,7 @@ class CvsTree(Tree):
 		self.url = url
 		if path is None:
 			path = self.name
-		base = "/var/cvs/source-trees"
+		base = config.source_trees
 		self.root = "%s/%s" % (base, path)
 		if not os.path.exists(base):
 			os.makedirs(base)
@@ -1689,7 +1688,7 @@ class ZapMatchingEbuilds(MergeStep):
 	def __init__(self,srctree,select="all",branch=None):
 		self.select = select
 		self.srctree = srctree
-		if branch != None:
+		if branch is not None:
 			# Allow dynamic switching to different branches/commits to grab things we want:
 			self.srctree.gitCheckout(branch)
 
@@ -1755,12 +1754,12 @@ class InsertEbuilds(MergeStep):
 		self.categories = categories
 		self.cpm_logger = cpm_logger
 		self.is_fixup = is_fixup
-		if select_only == None:
+		if select_only is None:
 			self.select_only = []
 		else:
 			self.select_only = select_only
 
-		if branch != None:
+		if branch is not None:
 			# Allow dynamic switching to different branches/commits to grab things we want:
 			self.srctree.gitCheckout(branch)
 
@@ -1783,7 +1782,7 @@ class InsertEbuilds(MergeStep):
 		# Figure out what categories to process:
 		src_cat_path = os.path.join(srctree_root, "profiles/categories")
 		dest_cat_path = os.path.join(desttree.root, "profiles/categories")
-		if self.categories != None:
+		if self.categories is not None:
 			# categories specified in __init__:
 			src_cat_set = set(self.categories)
 		else:
@@ -1915,7 +1914,7 @@ class GenCache(MergeStep):
 	def run(self,tree):
 
 		if tree.name != "core-kit":
-			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = /var/git/dest-trees/core-kit\n\n[%s]\nlocation = %s\n" % (tree.reponame if tree.reponame else tree.name, tree.root)
+			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = %s/core-kit\n\n[%s]\nlocation = %s\n" % (config.dest_trees, tree.reponame if tree.reponame else tree.name, tree.root)
 
 			# Perform QA check to ensure all eclasses are in place prior to performing egencache, as not having this can
 			# cause egencache to hang.
@@ -1925,7 +1924,7 @@ class GenCache(MergeStep):
 				missing_eclasses = []
 				for ec in result[None]:
 					# if a missing eclass is not in core-kit, then we'll be concerned:
-					if not os.path.exists("/var/git/dest-trees/core-kit/eclass/%s" % ec):
+					if not os.path.exists("%s/core-kit/eclass/%s" % (config.dest_trees, ec)):
 						missing_eclasses.append(ec)
 				if len(missing_eclasses):
 					print("!!! Error: QA check on kit %s failed -- missing eclasses:" % tree.name)
@@ -1934,7 +1933,7 @@ class GenCache(MergeStep):
 						"!!!      : Please be sure to use kit-fixups or the overlay's eclass list to copy these necessary eclasses into place.")
 					sys.exit(1)
 		else:
-			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = /var/git/dest-trees/core-kit\n"
+			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = %s/core-kit\n" % config.dest_trees
 		cmd = ["egencache", "--update", "--tolerant", "--repo", tree.reponame if tree.reponame else tree.name,
 			   "--repositories-configuration" , repos_conf ,
 			   "--jobs", repr(multiprocessing.cpu_count()+1)]
@@ -1951,9 +1950,9 @@ class GenUseLocalDesc(MergeStep):
 
 	def run(self,tree):
 		if tree.name != "core-kit":
-			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = /var/git/dest-trees/core-kit\n\n[%s]\nlocation = %s\n" % (tree.reponame if tree.reponame else tree.name, tree.root)
+			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = %s/core-kit\n\n[%s]\nlocation = %s\n" % (config.dest_trees, tree.reponame if tree.reponame else tree.name, tree.root)
 		else:
-			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = /var/git/dest-trees/core-kit\n"
+			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = %s/core-kit\n" % config.dest_trees
 		run_command(["egencache", "--update-use-local-desc", "--tolerant", "--repo", tree.reponame if tree.reponame else tree.name, "--repositories-configuration" , repos_conf ], abort_on_failure=False)
 
 class GitCheckout(MergeStep):
