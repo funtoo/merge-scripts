@@ -1342,7 +1342,7 @@ class XMLRecorder(object):
 		cat, pkg = catpkg.split("/")
 		exp = "category[@name='%s']" % cat
 		catxml = self.xml_out.find(exp)
-		if catxml is not None:
+		if catxml is None:
 			catxml = etree.Element("category", name=cat)
 			self.xml_out.append(catxml)
 		pkgxml = self.xml_out.find("category[@name='%s']/package/[@name='%s']" % (cat, pkg))
