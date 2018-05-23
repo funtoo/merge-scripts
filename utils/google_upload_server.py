@@ -3,13 +3,12 @@
 import os
 from google.cloud import storage
 import google.cloud.exceptions
-from utils.spider_common import *
 
 google_client = storage.Client.from_service_account_json('goog_creds.json')
 bucket = google_client.get_bucket("fastpull-us")
 def google_upload(filename):
 	print("starting upload")
-	disk_path = os.path.join(fastpull_out, filename)
+	disk_path = os.path.join(config.get_path("fastpull_out"), filename)
 	print("disk path", disk_path)
 	# should strip non-important directories:
 	google_blob = bucket.blob(filename)

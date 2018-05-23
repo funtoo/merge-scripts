@@ -13,13 +13,15 @@ from hashlib import sha256, sha512
 import socket
 from concurrent.futures import ThreadPoolExecutor
 # from utils.google_upload_server import google_upload
-from utils.spider_common import *
 from datetime import datetime, timedelta
 from sqlalchemy.orm import undefer
+from sqlalchemy import or_
 
 sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "../../modules")))
 from merge.db_core import *
 
+# TODO: convert to .merge configuration setting:
+fastpull_out = "/home/mirror/fastpull"
 resolver = aiohttp.AsyncResolver(nameservers=['8.8.8.8', '8.8.4.4'], timeout=5, tries=3)
 
 thirdp = {}
