@@ -4,11 +4,12 @@ import os
 import sys
 from configparser import ConfigParser
 
+
 class Configuration:
 
 	def __init__(self):
-
-		self.config_path = os.path.join(os.environ["HOME"], ".merge")
+		home_dir = os.path.expanduser("~")
+		self.config_path = os.path.join(home_dir, ".merge")
 		if not os.path.exists(self.config_path):
 			print("""
 Merge scripts now use a configuration file. Create a ~/.merge file with the following format. Note that
