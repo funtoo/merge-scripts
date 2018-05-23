@@ -214,7 +214,10 @@ async def keep_getting_files(db, task_num, q):
 		
 			filename = d.filename
 			outfile = os.path.join("/home/mirror/distfiles/%s/%s" % (task_num, filename))
-			os.makedirs(os.path.dirname(outfile))
+			try:
+				os.makedirs(os.path.dirname(outfile))
+			except FileExistsError:
+				pass
 			mylist = list(next_uri(uris))
 			fail_mode = None
 
@@ -294,9 +297,14 @@ async def keep_getting_files(db, task_num, q):
 				except aiohttp.errors.ClientOSError as e:
 					fail_mode = "refused"
 					continue
+				except aiohttp.errors.ServerDisconnectedError as e:
+					fail_mode = "disconn"
+					continue
+				except aiohttp.errors.ClientError:
+					fail_mode = "aiohttp"
+					continue
 				except Exception as e:
 					fail_mode = str(e)
-					raise
 					print("Download failure:", fail_mode)
 					continue
 
