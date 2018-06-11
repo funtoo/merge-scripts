@@ -810,13 +810,13 @@ def generateKitSteps(kit_name, from_tree, select_only="all", fixup_repo=None,
 	# filter out any catpkgs that exist in any of the filter_repos:
 	new_set = set()
 	for catpkg in to_insert:
-		skip = False
+		do_skip = False
 		for filter_repo in filter_repos:
 			if filter_repo.catpkg_exists(catpkg):
 				if catpkg not in force:
-					skip = True
+					do_skip = True
 					break
-		if skip:
+		if do_skip:
 			continue
 		else:
 			new_set.add(catpkg)
