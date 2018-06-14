@@ -143,6 +143,8 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 	# changed and thus this font isn't selected. Well without special handling, if we are using the second (or later)
 	# xorg-kit, funky-font won't exist. We call these guys 'orphans' and need to ensure we include them.
 
+	move_maps = mu.get_move_maps(fixup_repo.root + "/move_maps/" + kit_dict['name'])
+
 	secondary_kit = False
 	if prev_kit_dict != None:
 		if kit_dict['name'] != prev_kit_dict['name']:
@@ -228,11 +230,11 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 
 		if kit_dict["name"] == "nokit":
 			# grab all remaining ebuilds to put in nokit
-			steps += [ mu.InsertEbuilds(repo_dict["repo"], select_only=select_clause, skip=None, replace=False, cpm_logger=cpm_logger) ]
+			steps += [ mu.InsertEbuilds(repo_dict["repo"], select_only=select_clause, move_maps=move_maps, skip=None, replace=False, cpm_logger=cpm_logger) ]
 		else:
 			steps += mu.generateKitSteps(kit_dict['name'], repo_dict["repo"], fixup_repo=fixup_repo, select_only=select_clause,
 			                          filter_repos=filter_repos, force=overlay_def["force"] if "force" in overlay_def else None,
-			                          cpm_logger=cpm_logger, secondary_kit=secondary_kit)
+			                          cpm_logger=cpm_logger, move_maps=move_maps, secondary_kit=secondary_kit)
 		tree.run(steps)
 		if copycount != cpm_logger.copycount:
 			# this means some catpkgs were installed from the repo we are currently processing. This means we also want to execute

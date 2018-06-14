@@ -23,6 +23,23 @@ debug = False
 class MergeStep(object):
 	pass
 
+def get_move_maps(fname):
+	"""Grabs a move map list, returning a dictionary"""
+	move_maps = {}
+	if os.path.exists(fname):
+		with open(fname, "r") as move_file:
+			for line in move_file:
+				line = line.strip()
+				move_split = line.split("->")
+				if len(move_split) != 2:
+					print("WARNING: invalid package move line in %s: %s" % ( fname, line))
+					continue
+				else:
+					pkg1 = line[0].strip()
+					pkg2 = line[1].strip()
+					move_maps[pkg1] = pkg2
+	return move_maps
+
 def get_pkglist(fname):
 
 	"""Grabs a package set list, returning a list of lines."""
@@ -737,7 +754,7 @@ def getAllMeta(metadata, dest_kit):
 	return mymeta
 
 def generateKitSteps(kit_name, from_tree, select_only="all", fixup_repo=None,
-					 cpm_logger=None, filter_repos=None, force=None, secondary_kit=False):
+					 cpm_logger=None, filter_repos=None, move_maps=None, force=None, secondary_kit=False):
 	if force is None:
 		force = set()
 	else:
@@ -750,6 +767,10 @@ def generateKitSteps(kit_name, from_tree, select_only="all", fixup_repo=None,
 	pkgf = pkgdir + "/" + pkgf
 	pkgf_skip = pkgdir + "/" + pkgf_skip
 	skip = []
+	if move_maps is None:
+		move_maps = {}
+	else:
+		move_maps = move_maps
 	master_pkglist = get_pkglist(pkgf)
 	if filter_repos is None:
 		filter_repos = []
@@ -792,7 +813,14 @@ def generateKitSteps(kit_name, from_tree, select_only="all", fixup_repo=None,
 						print("Invalid exclusion: %s" % pattern)
 				pkglist += getPackagesMatchingGlob( from_tree, linesplit[0], exclusions=exclusions )
 			else:
-				pkglist.append(pattern)
+				move_pkg = pattern.split("->")
+				if len(move_pkg) == 2:
+					# we have something in the form sys-apps/foo -> sys-apps/bar -- we will add foo to the merge list...
+					pkglist.append(move_pkg[1].strip())
+					# but create move_map so we have info that we want to to move to the new location if we find it.
+					move_maps[move_pkg[1].strip()] = move_pkg[2].strip()
+				else:
+					pkglist.append(pattern)
 
 	to_insert = set(pkglist)
 
@@ -825,7 +853,7 @@ def generateKitSteps(kit_name, from_tree, select_only="all", fixup_repo=None,
 	insert_kwargs = {"select": sorted(list(to_insert))}
 
 	if pkglist:
-		steps += [ InsertEbuilds(from_tree, skip=skip, replace=False, cpm_logger=cpm_logger, **insert_kwargs) ]
+		steps += [ InsertEbuilds(from_tree, skip=skip, replace=False, cpm_logger=cpm_logger, move_maps=move_maps, **insert_kwargs) ]
 	return steps
 
 def get_extra_catpkgs_from_kit_fixups(fixup_repo, kit):
@@ -1746,7 +1774,7 @@ class InsertEbuilds(MergeStep):
 	
 	"""
 	def __init__(self, srctree,select="all", select_only="all", skip=None, replace=False, categories=None,
-				 ebuildloc=None, branch=None, cpm_logger: CatPkgMatchLogger=None, is_fixup=False):
+				 ebuildloc=None, branch=None, cpm_logger: CatPkgMatchLogger=None, move_maps: dict=None, is_fixup=False):
 		self.select = select
 		self.skip = skip
 		self.srctree = srctree
@@ -1754,6 +1782,10 @@ class InsertEbuilds(MergeStep):
 		self.categories = categories
 		self.cpm_logger = cpm_logger
 		self.is_fixup = is_fixup
+		if move_maps is None:
+			self.move_maps = {}
+		else:
+			self.move_maps = move_maps
 		if select_only is None:
 			self.select_only = []
 		else:
@@ -1840,8 +1872,20 @@ class InsertEbuilds(MergeStep):
 						# regex skip match, continue
 						continue
 				dest_cat_set.add(cat)
-				tcatdir = os.path.join(desttree.root,cat)
-				tpkgdir = os.path.join(tcatdir,pkg)
+				tpkgdir = None
+				tcatpkg = None
+				if catpkg in self.move_maps:
+					if os.path.exists(pkgdir):
+						# old package exists, so we'll want to rename.
+						tcatpkg = self.move_maps[catpkg]
+						tpkgdir = os.path.join(desttree.root,tcatpkg)
+					else:
+						tcatpkg = self.move_maps[catpkg]
+						# old package doesn't exist, so we'll want to use the "new" pkgname as the source, hope it's there...
+						pkgdir = os.path.join(srctree_root, tcatpkg)
+						# and use new package name as destination...
+						tpkgdir = os.path.join(desttree.root, tcatpkg)
+				tcatdir = os.path.dirname(tpkgdir)
 				copied = False
 				if self.replace == True or (isinstance(self.replace, list) and (catpkg in self.replace)):
 					if not os.path.exists(tcatdir):
@@ -1864,8 +1908,11 @@ class InsertEbuilds(MergeStep):
 						else:
 							# otherwise, record the literal catpkg matched.
 							self.cpm_logger.record(catpkg, is_fixup=self.is_fixup)
+							if tcatpkg is not None:
+								# This means we did a package move. Record the "new name" of the package, too. So both
+								# old name and new name get marked as being part of this kit.
+								self.cpm_logger.record(tcatpkg, is_fixup=self.is_fixup)
 		if os.path.isdir(os.path.dirname(dest_cat_path)):
-			# only write out if profiles/ dir exists -- it doesn't with shards.
 			with open(dest_cat_path, "w") as f:
 				f.write("\n".join(sorted(dest_cat_set)))
 
