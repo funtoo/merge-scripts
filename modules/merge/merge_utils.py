@@ -818,9 +818,9 @@ def generateKitSteps(kit_name, from_tree, select_only="all", fixup_repo=None,
 				move_pkg = pattern.split("->")
 				if len(move_pkg) == 2:
 					# we have something in the form sys-apps/foo -> sys-apps/bar -- we will add foo to the merge list...
-					pkglist.append(move_pkg[1].strip())
+					pkglist.append(move_pkg[0].strip())
 					# but create move_map so we have info that we want to to move to the new location if we find it.
-					move_maps[move_pkg[1].strip()] = move_pkg[2].strip()
+					move_maps[move_pkg[0].strip()] = move_pkg[1].strip()
 				else:
 					pkglist.append(pattern)
 
