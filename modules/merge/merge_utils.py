@@ -23,21 +23,23 @@ debug = False
 class MergeStep(object):
 	pass
 
-def get_move_maps(fname):
+def get_move_maps(move_map_path, kit_name):
 	"""Grabs a move map list, returning a dictionary"""
 	move_maps = {}
-	if os.path.exists(fname):
-		with open(fname, "r") as move_file:
-			for line in move_file:
-				line = line.strip()
-				move_split = line.split("->")
-				if len(move_split) != 2:
-					print("WARNING: invalid package move line in %s: %s" % ( fname, line))
-					continue
-				else:
-					pkg1 = line[0].strip()
-					pkg2 = line[1].strip()
-					move_maps[pkg1] = pkg2
+	for kit in [ "global", kit_name ]:
+		fname = move_map_path + "/" + kit
+		if os.path.exists(fname):
+			with open(fname, "r") as move_file:
+				for line in move_file:
+					line = line.strip()
+					move_split = line.split("->")
+					if len(move_split) != 2:
+						print("WARNING: invalid package move line in %s: %s" % ( fname, line))
+						continue
+					else:
+						pkg1 = line[0].strip()
+						pkg2 = line[1].strip()
+						move_maps[pkg1] = pkg2
 	return move_maps
 
 def get_pkglist(fname):
