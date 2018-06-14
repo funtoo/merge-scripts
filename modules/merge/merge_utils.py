@@ -1887,6 +1887,8 @@ class InsertEbuilds(MergeStep):
 						pkgdir = os.path.join(srctree_root, tcatpkg)
 						# and use new package name as destination...
 						tpkgdir = os.path.join(desttree.root, tcatpkg)
+				else:
+					tpkgdir = os.path.join(desttree.root, catpkg)
 				tcatdir = os.path.dirname(tpkgdir)
 				copied = False
 				if self.replace == True or (isinstance(self.replace, list) and (catpkg in self.replace)):
