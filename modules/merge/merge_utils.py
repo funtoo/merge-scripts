@@ -886,7 +886,7 @@ def get_extra_catpkgs_from_kit_fixups(fixup_repo, kit):
 	root = fixup_repo.root
 
 	def get_catpkg_list(repo_root):
-		if not os.path.exists(repo_root):
+		if not os.path.exists(repo_root) or not os.path.isdir(repo_root):
 			return
 		for cat in os.listdir(repo_root):
 			if cat in [ "profiles", "eclass", "licenses"]:

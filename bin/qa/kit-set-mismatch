@@ -1,0 +1,67 @@
+#!/usr/bin/python3
+
+"""
+Initial stab at a QA check for catpkgs in fixups that are part of another kit's package set, and catpkgs in package
+sets that are in another kit's fixups.
+"""
+
+import sys
+import os
+sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "../../../modules")))
+import merge.merge_utils as mu
+from merge.config import config
+from collections import defaultdict
+
+fixup_repo = mu.GitTree("kit-fixups", config.branch("kit-fixups"), url=config.kit_fixups, root=config.source_trees+"/kit-fixups")
+meta_repo = mu.GitTree("meta-repo", config.branch("meta-repo"), url=config.base_url("meta-repo"), root=config.dest_trees+"/meta-repo")
+
+sys.path.insert(0, fixup_repo.root + "/modules")
+from fixups.foundations import KitFoundation
+
+foundation = KitFoundation(config)
+
+kit_order = [ 'prime' ]
+
+fixup_packages = {}
+package_sets = defaultdict(set)
+
+for kit_group in kit_order:
+	for kit_dict in foundation.kit_groups[kit_group]:
+		kit_name = kit_dict['name']
+		pkgf = "package-sets/%s-packages" % kit_name
+		pkgf_skip = "package-sets/%s-skip" % kit_name
+		pkgdir = fixup_repo.root
+		pkgf = pkgdir + "/" + pkgf
+		pkgf_skip = pkgdir + "/" + pkgf_skip
+
+		pkg_set = []
+		if os.path.exists(pkgf):
+			pkg_set = mu.get_pkglist(pkgf)
+
+		filtered_pkg_set = []
+		for pkg in pkg_set:
+			parts = pkg.split()
+			if not len(parts):
+				continue
+			first_part = parts[0]
+			if first_part.split("/") != 2:
+				continue
+			parts = first_part.split("/")
+			if parts[1] == "*":
+				continue
+			filtered_pkg_set.append(pkg)
+
+		fixup_set = mu.get_extra_catpkgs_from_kit_fixups(fixup_repo, kit_name)
+		filtered_pkg_set = set(filtered_pkg_set)
+		for catpkg in fixup_set:
+			fixup_packages[catpkg] = kit_name
+		for catpkg in filtered_pkg_set:
+			package_sets[catpkg] = kit_name
+
+for catpkg, kit in package_sets.items():
+	if catpkg in fixup_packages and fixup_packages[catpkg] != kit:
+		print(kit, catpkg)
+
+for catpkg, kit in fixup_packages.items():
+	if catpkg in package_sets and package_sets[catpkg] != kit:
+		print(kit, catpkg)
