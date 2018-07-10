@@ -9,6 +9,7 @@ import sys
 import re
 from lxml import etree
 import portage
+portage._internal_caller = True
 from portage.dep import use_reduce, dep_getkey, flatten
 from portage.exception import PortageKeyError
 import grp
