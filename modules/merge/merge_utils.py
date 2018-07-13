@@ -1435,11 +1435,10 @@ class GitTree(Tree):
 		self.pull = True
 		self.reponame = reponame
 		self.create = create
-
-		self.initializeTree(branch, commit_sha1)
-
 		self.has_cleaned = False
 		self.has_fetched = False
+
+		self.initializeTree(branch, commit_sha1)
 
 		# if we don't specify root destination tree, assume we are source only:
 	
