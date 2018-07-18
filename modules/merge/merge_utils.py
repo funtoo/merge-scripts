@@ -1940,14 +1940,14 @@ class InsertEbuilds(MergeStep):
 						self.cpm_logger.recordCopyToXML(self.srctree, desttree, catpkg)
 						if isinstance(self.select, regextype):
 							# If a regex was used to match the copied catpkg, record the regex.
-							self.cpm_logger.record(self.srctree.name, catpkg, regex_matched=self.select, is_fixup=self.is_fixup)
+							self.cpm_logger.record(desttree.name, catpkg, regex_matched=self.select, is_fixup=self.is_fixup)
 						else:
 							# otherwise, record the literal catpkg matched.
-							self.cpm_logger.record(self.srctree.name, catpkg, is_fixup=self.is_fixup)
+							self.cpm_logger.record(desttree.name, catpkg, is_fixup=self.is_fixup)
 							if tcatpkg is not None:
 								# This means we did a package move. Record the "new name" of the package, too. So both
 								# old name and new name get marked as being part of this kit.
-								self.cpm_logger.record(self.srctree.name, tcatpkg, is_fixup=self.is_fixup)
+								self.cpm_logger.record(desttree.name, tcatpkg, is_fixup=self.is_fixup)
 		if os.path.isdir(os.path.dirname(dest_cat_path)):
 			with open(dest_cat_path, "w") as f:
 				f.write("\n".join(sorted(dest_cat_set)))
