@@ -426,7 +426,7 @@ if __name__ == "__main__":
 				kit_branch = kit_dict["branch"]
 
 				if 'default' in kit_dict and kit_dict['default'] is True:
-					if 'stability' in kit_dict and kit_dict['stability'] != KitStabilityRating.PRIME:
+					if 'stability' in kit_dict and kit_dict['stability'] not in [ KitStabilityRating.PRIME, KitStabilityRating.CURRENT]:
 						print("Error -- kit set as default but not a Prime kit! exiting.")
 						sys.exit(1)
 					kit_stability = KitStabilityRating.PRIME
