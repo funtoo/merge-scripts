@@ -9,6 +9,7 @@ import sys
 import re
 from lxml import etree
 import portage
+portage._internal_caller = True
 from portage.dep import use_reduce, dep_getkey, flatten
 from portage.exception import PortageKeyError
 import grp
@@ -761,6 +762,7 @@ def generateKitSteps(kit_name, from_tree, select_only="all", fixup_repo=None,
 		force = set()
 	else:
 		force = set(force)
+	literals = []
 	steps = []
 	pkglist = []
 	pkgf = "package-sets/%s-packages" % kit_name
@@ -823,6 +825,7 @@ def generateKitSteps(kit_name, from_tree, select_only="all", fixup_repo=None,
 					move_maps[move_pkg[0].strip()] = move_pkg[1].strip()
 				else:
 					pkglist.append(pattern)
+					literals.append(pattern)
 
 	to_insert = set(pkglist)
 
@@ -855,7 +858,7 @@ def generateKitSteps(kit_name, from_tree, select_only="all", fixup_repo=None,
 	insert_kwargs = {"select": sorted(list(to_insert))}
 
 	if pkglist:
-		steps += [ InsertEbuilds(from_tree, skip=skip, replace=False, cpm_logger=cpm_logger, move_maps=move_maps, **insert_kwargs) ]
+		steps += [ InsertEbuilds(from_tree, skip=skip, replace=False, literals=literals, cpm_logger=cpm_logger, move_maps=move_maps, **insert_kwargs) ]
 	return steps
 
 def get_extra_catpkgs_from_kit_fixups(fixup_repo, kit):
@@ -886,7 +889,7 @@ def get_extra_catpkgs_from_kit_fixups(fixup_repo, kit):
 	root = fixup_repo.root
 
 	def get_catpkg_list(repo_root):
-		if not os.path.exists(repo_root):
+		if not os.path.exists(repo_root) or not os.path.isdir(repo_root):
 			return
 		for cat in os.listdir(repo_root):
 			if cat in [ "profiles", "eclass", "licenses"]:
@@ -953,6 +956,8 @@ class CatPkgMatchLogger(object):
 		# for string matches
 		self._matchdict = {}
 		self._current_kit_set = set()
+		# map catpkg to kit that matched it.
+		self._match_map = {}
 
 		# for fixups from a non-global directory, we want the match to only apply for a particular branch. This way
 		# If xorg-kit/1.17-prime/foo/bar gets copied, we don't also need to have an xorg-kit/1.19-prime/foo/bar --
@@ -1038,23 +1043,28 @@ class CatPkgMatchLogger(object):
 		self._current_kit_set |= myset
 		return self._current_kit_set
 
-	def record(self, match, is_fixup=False):
+	def get_other_kit(self, catpkg):
+		return self._match_map[catpkg] if catpkg in self._match_map else "(unknown)"
+
+	def record(self, kit, catpkg, regex_matched=None, is_fixup=False):
 		"""
 		This method records catpkgs that we are copying over, so we can determine whether or not the catpkg should be
 		copied again into later kits. In general, we only want to copy a catpkg once -- but there are exceptions, like
 		if we have different branches of the same kit, or if we have fixups. So the logic is nuanced.
 
-		:param match: Either a catpkg string or regex match.
+		:param catpkg: Either a catpkg string or regex match.
 		:param is_fixup: True if we are applying a fixup; else False.
 		:return: None
 		"""
-		if isinstance(match, regextype):
+		if regex_matched is not None:
 			if is_fixup:
 				raise IndexError("Can't use regex with fixup")
-			self._regexdict_curkit[match.pattern] = match
+			self._regexdict_curkit[regex_matched.pattern] = catpkg
+			self._match_map[catpkg] = kit
 		else:
 			# otherwise, record in our regular matchdict
-			self._matchdict_curkit[match] = True
+			self._matchdict_curkit[catpkg] = True
+			self._match_map[catpkg] = kit
 		self._copycount += 1
 
 	def nextKit(self):
@@ -1425,9 +1435,10 @@ class GitTree(Tree):
 		self.pull = True
 		self.reponame = reponame
 		self.create = create
+		self.has_cleaned = False
+		self.has_fetched = False
 
 		self.initializeTree(branch, commit_sha1)
-
 
 		# if we don't specify root destination tree, assume we are source only:
 	
@@ -1480,7 +1491,9 @@ class GitTree(Tree):
 				print("Please fix or delete any repos that are cloned from the wrong origin.")
 				sys.exit(1)
 		# first, we will clean up any messes:
-		runShell("(cd %s &&  git reset --hard && git clean -fd )" % self.root )
+		if not self.has_cleaned:
+			runShell("(cd %s &&  git reset --hard && git clean -fd )" % self.root )
+			self.has_cleaned = True
 
 		# Now we need to make sure it's on the correct branch and commit sha1, if specified.
 
@@ -1489,6 +1502,7 @@ class GitTree(Tree):
 			if not self.create:
 				# branch does not exist, so get it from remote and create it:
 				runShell("( cd %s &&  git fetch && git checkout -b %s --track origin/%s || git checkout -b %s)" % ( self.root, self.branch, self.branch, self.branch ))
+				self.has_fetched = True
 			else:
 				# in create mode, we take responsibility for creating branches ourselves, and we are not concerned with fetching:
 				runShell("(cd %s &&  git checkout -b %s)" % ( self.root, self.branch ))
@@ -1504,14 +1518,23 @@ class GitTree(Tree):
 
 		if self.commit_sha1:
 			# if a commit_sha1 is specified, then we also want to make sure we go to a detached state pointing to this commit:
-			runShell("(cd %s && git fetch && git checkout %s )" % (self.root, self.commit_sha1 ))
+			if not self.has_fetched:
+				runShell("(cd %s && git fetch )" % self.root)
+				self.has_fetched = True
+			runShell("(cd %s && git checkout %s )" % (self.root, self.commit_sha1 ))
 		elif self.currentLocalBranch != self.branch:
+			if not self.has_fetched:
+				runShell("(cd %s && git fetch )" % self.root)
+				self.has_fetched = True
+			if not self.has_cleaned:
+				runShell("(cd %s && git reset --hard )" % self.root)
+				self.has_cleaned = True
 			# we aren't on the right branch. Let's change that after we make sure we have the latest updates
 			# git pull -f may fail for new branch that has not yet been pushed remote...
-			runShell("(cd %s && git fetch && git checkout %s && git reset --hard && git pull -f || true)" % (self.root, self.branch ))
+			runShell("(cd %s && git checkout %s && git pull -f || true)" % (self.root, self.branch ))
 		elif self.pull:
 			# we are on the right branch, but we want to make sure we have the latest updates 
-			runShell("(cd %s && git reset --hard && git pull -f || true)" % self.root )
+			runShell("(cd %s && git pull -f || true)" % self.root )
 
 	@property
 	def currentLocalBranch(self):
@@ -1775,8 +1798,8 @@ class InsertEbuilds(MergeStep):
 	
 	
 	"""
-	def __init__(self, srctree,select="all", select_only="all", skip=None, replace=False, categories=None,
-				 ebuildloc=None, branch=None, cpm_logger: CatPkgMatchLogger=None, move_maps: dict=None, is_fixup=False):
+	def __init__(self, srctree: GitTree, select="all", select_only="all", skip=None, replace=False, categories=None,
+				 ebuildloc=None, branch=None, cpm_logger: CatPkgMatchLogger=None, literals: list=None, move_maps: dict=None, is_fixup=False):
 		self.select = select
 		self.skip = skip
 		self.srctree = srctree
@@ -1784,6 +1807,13 @@ class InsertEbuilds(MergeStep):
 		self.categories = categories
 		self.cpm_logger = cpm_logger
 		self.is_fixup = is_fixup
+		# literals is a list of catpkgs specified directly in the package set, in sys-foo/bar format. We want to
+		# print a warning if one of these manually specified in the package list is not copied because it was already
+		# included in another kit. This can indicate an issue.
+		if literals is None:
+			self.literals = []
+		else:
+			self.literals = literals
 		if move_maps is None:
 			self.move_maps = {}
 		else:
@@ -1849,6 +1879,8 @@ class InsertEbuilds(MergeStep):
 				catpkg = "%s/%s" % (cat,pkg)
 				pkgdir = os.path.join(catdir, pkg)
 				if self.cpm_logger and self.cpm_logger.match(catpkg):
+					if catpkg in self.literals:
+						print("!!! WARNING: catpkg '%s' specified in package set was already included in kit %s. This should be fixed." % ( catpkg, self.cpm_logger.get_other_kit(catpkg)))
 					#already copied
 					continue
 				if self.select_only != "all" and catpkg not in self.select_only:
@@ -1891,7 +1923,7 @@ class InsertEbuilds(MergeStep):
 					tpkgdir = os.path.join(desttree.root, catpkg)
 				tcatdir = os.path.dirname(tpkgdir)
 				copied = False
-				if self.replace == True or (isinstance(self.replace, list) and (catpkg in self.replace)):
+				if self.replace is True or (isinstance(self.replace, list) and (catpkg in self.replace)):
 					if not os.path.exists(tcatdir):
 						os.makedirs(tcatdir)
 					runShell("rm -rf %s; cp -a %s %s" % (tpkgdir, pkgdir, tpkgdir ))
@@ -1908,14 +1940,14 @@ class InsertEbuilds(MergeStep):
 						self.cpm_logger.recordCopyToXML(self.srctree, desttree, catpkg)
 						if isinstance(self.select, regextype):
 							# If a regex was used to match the copied catpkg, record the regex.
-							self.cpm_logger.record(self.select, is_fixup=self.is_fixup)
+							self.cpm_logger.record(desttree.name, catpkg, regex_matched=self.select, is_fixup=self.is_fixup)
 						else:
 							# otherwise, record the literal catpkg matched.
-							self.cpm_logger.record(catpkg, is_fixup=self.is_fixup)
+							self.cpm_logger.record(desttree.name, catpkg, is_fixup=self.is_fixup)
 							if tcatpkg is not None:
 								# This means we did a package move. Record the "new name" of the package, too. So both
 								# old name and new name get marked as being part of this kit.
-								self.cpm_logger.record(tcatpkg, is_fixup=self.is_fixup)
+								self.cpm_logger.record(desttree.name, tcatpkg, is_fixup=self.is_fixup)
 		if os.path.isdir(os.path.dirname(dest_cat_path)):
 			with open(dest_cat_path, "w") as f:
 				f.write("\n".join(sorted(dest_cat_set)))

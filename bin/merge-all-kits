@@ -465,6 +465,9 @@ if __name__ == "__main__":
 		a.close()
 	k_info["kit_order"] = output_order
 	k_info["kit_settings"] = output_settings
+	k_info["release_defs"] = getattr(foundation, "release_defs", None)
+	k_info["release_info"] = getattr(foundation, "release_info", None)
+
 	with open(meta_repo.root + "/metadata/kit-info.json", "w") as a:
 		a.write(json.dumps(k_info, sort_keys=True, indent=4, ensure_ascii=False))
 
