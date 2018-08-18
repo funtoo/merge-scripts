@@ -69,12 +69,13 @@ for kit in os.listdir(repo_name):
 		continue
 	if kit == "profiles":
 		continue
-	audit_cycle = get_audit_cycle(kit_path)
+	kit_audit_cycle = get_audit_cycle(kit_path)
 	for branch in os.listdir(kit_path):
 		branch_path = os.path.join(kit_path, branch)
 		if not os.path.isdir(branch_path):
 			continue
-		audit_cycle = get_audit_cycle(branch_path) or audit_cycle or default_audit_cycle(kit, branch)
+		audit_cycle = get_audit_cycle(branch_path) or kit_audit_cycle or default_audit_cycle(kit, branch)
+		print(kit, branch, audit_cycle)
 		for cat in os.listdir(branch_path):
 			if "-" not in cat and cat != "virtual":
 				continue
