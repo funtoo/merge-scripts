@@ -4,6 +4,14 @@ import sys, os, subprocess
 from email.utils import parsedate
 from time import mktime
 from datetime import datetime
+import merge_utils as mu
+from merge.config import config
+
+fixup_repo = mu.GitTree("kit-fixups", config.branch("kit-fixups"), url=config.kit_fixups, root=config.source_trees+"/kit-fixups")
+
+sys.path.insert(0, fixup_repo.root + "/modules")
+from fixups.foundations import KitFoundation, KitRatingString, KitStabilityRating
+foundation = KitFoundation(config)
 
 repo_name = sys.argv[1]
 
@@ -25,11 +33,21 @@ def get_audit_cycle(path):
 	except IOError:
 		return None
 
+def default_audit_cycle(kit, branch):
+	for kit_dict in foundation.kit_groups["prime"]:
+		if kit_dict["name"] == kit and kit_dict["branch"] == branch:
+			if kit_dict["stability"] == KitStabilityRating.PRIME:
+				return 30
+			elif kit_dict["stability"] == KitStabilityRating.DEPRECATED:
+				return 180
+			else:
+				return 90
+	return 180
+
 if not os.path.exists(repo_name):
 	print("path does not exist. Exiting.")
 	sys.exit(1)
 
-default_audit_cycle = 30
 catpkg_list = []
 now = datetime.now()
 utcnow = datetime.utcnow()
@@ -39,12 +57,12 @@ for kit in os.listdir(repo_name):
 		continue
 	if kit == "profiles":
 		continue
-	audit_cycle = get_audit_cycle(kit_path) or default_audit_cycle
+	audit_cycle = get_audit_cycle(kit_path)
 	for branch in os.listdir(kit_path):
 		branch_path = os.path.join(kit_path, branch)
 		if not os.path.isdir(branch_path):
 			continue
-		audit_cycle = get_audit_cycle(branch_path) or audit_cycle
+		audit_cycle = get_audit_cycle(branch_path) or audit_cycle or default_audit_cycle(kit, branch)
 		for cat in os.listdir(branch_path):
 			if "-" not in cat and cat != "virtual":
 				continue
@@ -64,7 +82,8 @@ for kit in os.listdir(repo_name):
 				email, isodate = out.split("_")
 				dt = (now - datetime.fromtimestamp(mktime(parsedate(isodate))))
 				if dt.days >= audit_cycle:
-					catpkg_list.append((dt, kit, branch, catpkg, email))
+					days_delta = dt.days - audit_cycle
+					catpkg_list.append((days_delta, dt, kit, branch, catpkg, email))
 				#"git log -n 1 --oneline -- ."
 				#"git show --no-patch --format=%ce,%cI 68dc82e"
 print('<html><head><title>kit-fixups that need review</title><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous"></head><body>'
@@ -75,11 +94,11 @@ print('<html><head><title>kit-fixups that need review</title><link rel="styleshe
       '<p>Please ensure catpkgs are not stale. Ideally review them every 30 days or less; please do not let catpkgs go without review for 60 days or more. Also note that because Funtoo doesn\'t have official maintainers for packages, the \'last modified by\' column is listed for convenience so you can coordinate with the previous committer if necessary.</p></div>'
       '<div style="text-align: right; width: 100%;"><p style="font-size: 8pt;"><i>This page was last updated on ' + now.strftime("%Y-%m-%d %H:%M:%S %p %Z local time") + " (" + utcnow.strftime("%y-%m-%d %H:%M") + " UTC)</i></p></div>"
       '</div></div></div>'
-      '<table class="table table-striped"><thead class="thead-dark"><th>days stale</th><th>kit</th><th>branch</th><th>catpkg</th><th>last modified by</th></thead>')
+      '<table class="table table-striped"><thead class="thead-dark"><th>days late</th><th>days stale</th><th>kit</th><th>branch</th><th>catpkg</th><th>last modified by</th></thead>')
 catpkg_list.sort(key=lambda x: x[0], reverse=True)
 for item in catpkg_list:
-	days = item[0].days
-	if days > 100:
-		days = '<b><span style="color: #ff0000;">' + str(days) + '</span></b>'
-	print("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>" % ( days, item[1], item[2], item[3], item[4]))
+	days_delta = item[0]
+	if days_delta > 100:
+		days = '<b><span style="color: #ff0000;">' + str(days_delta) + '</span></b>'
+	print("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>" % ( days_delta, dt.days, item[1], item[2], item[3], item[4]))
 print("</table></body></html>")
