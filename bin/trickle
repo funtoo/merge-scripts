@@ -4,6 +4,7 @@ import sys, os, subprocess
 from email.utils import parsedate
 from time import mktime
 from datetime import datetime
+sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "../../modules")))
 import merge_utils as mu
 from merge.config import config
 
