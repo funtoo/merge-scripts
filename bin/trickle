@@ -104,5 +104,5 @@ for item in catpkg_list:
 	days_delta = item[0]
 	if days_delta > 100:
 		days = '<b><span style="color: #ff0000;">' + str(days_delta) + '</span></b>'
-	print("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>" % ( days_delta, dt.days, item[1], item[2], item[3], item[4]))
+	print("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>" % ( days_delta, item[1].days, item[2], item[3], item[4], item[5]))
 print("</table></body></html>")
