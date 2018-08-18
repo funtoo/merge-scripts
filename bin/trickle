@@ -42,7 +42,7 @@ def default_audit_cycle(kit, branch):
 		if kit in rdict and  branch in rdict[kit]:
 			return 30
 	if branch in [ "global", "curated" ]:
-		return 30
+		return 45
 	for kit_dict in foundation.kit_groups["prime"]:
 		if kit_dict["name"] == kit and kit_dict["branch"] == branch:
 			if "stability" in kit_dict and kit_dict["stability"] == KitStabilityRating.PRIME:
@@ -64,6 +64,8 @@ catpkg_list = []
 now = datetime.now()
 utcnow = datetime.utcnow()
 for kit in os.listdir(repo_name):
+	if kit == ".git":
+		continue
 	kit_path = os.path.join(repo_name, kit)
 	if not os.path.isdir(kit_path):
 		continue
