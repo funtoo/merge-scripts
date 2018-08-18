@@ -40,9 +40,9 @@ def get_audit_cycle(path):
 def default_audit_cycle(kit, branch):
 	for kit_dict in foundation.kit_groups["prime"]:
 		if kit_dict["name"] == kit and kit_dict["branch"] == branch:
-			if kit_dict["stability"] == KitStabilityRating.PRIME:
+			if "stability" in kit_dict and kit_dict["stability"] == KitStabilityRating.PRIME or "default" in kit_dict and kit_dict["default"] is True:
 				return 30
-			elif kit_dict["stability"] == KitStabilityRating.DEPRECATED:
+			elif "stability" in kit_dict and kit_dict["stability"] == KitStabilityRating.DEPRECATED:
 				return 180
 			else:
 				return 90
