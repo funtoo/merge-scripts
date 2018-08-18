@@ -38,19 +38,22 @@ def get_audit_cycle(path):
 		return None
 
 def default_audit_cycle(kit, branch):
+	for release, rdict in foundation.release_defs.items():
+		if kit in rdict and  branch in rdict[kit]:
+			return 30
 	if branch in [ "global", "curated" ]:
 		return 30
 	for kit_dict in foundation.kit_groups["prime"]:
 		if kit_dict["name"] == kit and kit_dict["branch"] == branch:
 			if "stability" in kit_dict and kit_dict["stability"] == KitStabilityRating.PRIME:
 				if "default" in kit_dict and kit_dict["default"] is True:
-					return 30
+					return 60
 				else:
 					return 90
 			elif "stability" in kit_dict and kit_dict["stability"] == KitStabilityRating.DEPRECATED:
 				return 180
 			else:
-				return 90
+				return 60
 	return 180
 
 if not os.path.exists(repo_name):
