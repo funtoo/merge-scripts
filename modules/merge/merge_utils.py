@@ -27,7 +27,7 @@ class MergeStep(object):
 def get_move_maps(move_map_path, kit_name):
 	"""Grabs a move map list, returning a dictionary"""
 	move_maps = {}
-	for kit in [ "global", kit_name ]:
+	for kit in ["global", kit_name]:
 		fname = move_map_path + "/" + kit
 		if os.path.exists(fname):
 			with open(fname, "r") as move_file:
@@ -41,6 +41,12 @@ def get_move_maps(move_map_path, kit_name):
 						pkg1 = line[0].strip()
 						pkg2 = line[1].strip()
 						move_maps[pkg1] = pkg2
+	for key, val in move_maps.items():
+		if val in move_maps:
+			print("WARNING: move_map target %s is also in move_maps as a source!" % val)
+		else:
+			# create reverse mappings automatically as well.
+			move_maps[val] = key
 	return move_maps
 
 def get_pkglist(fname):
@@ -1912,7 +1918,7 @@ class InsertEbuilds(MergeStep):
 					if os.path.exists(pkgdir):
 						# old package exists, so we'll want to rename.
 						tcatpkg = self.move_maps[catpkg]
-						tpkgdir = os.path.join(desttree.root,tcatpkg)
+						tpkgdir = os.path.join(desttree.root, tcatpkg)
 					else:
 						tcatpkg = self.move_maps[catpkg]
 						# old package doesn't exist, so we'll want to use the "new" pkgname as the source, hope it's there...
