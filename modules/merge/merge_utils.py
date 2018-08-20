@@ -41,12 +41,6 @@ def get_move_maps(move_map_path, kit_name):
 						pkg1 = line[0].strip()
 						pkg2 = line[1].strip()
 						move_maps[pkg1] = pkg2
-	for key, val in move_maps.items():
-		if val in move_maps:
-			print("WARNING: move_map target %s is also in move_maps as a source!" % val)
-		else:
-			# create reverse mappings automatically as well.
-			move_maps[val] = key
 	return move_maps
 
 def get_pkglist(fname):
