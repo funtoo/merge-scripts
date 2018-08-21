@@ -38,8 +38,8 @@ def get_move_maps(move_map_path, kit_name):
 						print("WARNING: invalid package move line in %s: %s" % ( fname, line))
 						continue
 					else:
-						pkg1 = line[0].strip()
-						pkg2 = line[1].strip()
+						pkg1 = move_split[0].strip()
+						pkg2 = move_split[1].strip()
 						move_maps[pkg1] = pkg2
 	return move_maps
 
