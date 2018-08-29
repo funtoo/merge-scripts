@@ -33,6 +33,10 @@ def get_move_maps(move_map_path, kit_name):
 			with open(fname, "r") as move_file:
 				for line in move_file:
 					line = line.strip()
+					if line.startswith("#"):
+						continue
+					elif len(line) == 0:
+						continue
 					move_split = line.split("->")
 					if len(move_split) != 2:
 						print("WARNING: invalid package move line in %s: %s" % ( fname, line))
@@ -922,7 +926,6 @@ def get_extra_catpkgs_from_kit_fixups(fixup_repo, kit):
 			out.append(catpkg)
 
 	return out
-
 
 # CatPkgMatchLogger is an object that is used to keep a running record of catpkgs that were copied to kits via package-set rules.
 # As catpkgs are called, a CatPkgMatchLogger() object is called as follows:
