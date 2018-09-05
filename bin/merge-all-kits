@@ -414,6 +414,7 @@ if __name__ == "__main__":
 			continue
 		cpm_logger = mu.CatPkgMatchLogger(log_xml=False)
 		prev_kit_dict = None
+
 		kit_labels = defaultdict(list)
 		for kit_dict in foundation.kit_groups[kit_group]:
 			print("Regenerating kit ", kit_dict)
