@@ -163,9 +163,9 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 	if "generate" in kit_dict and kit_dict["generate"] is not True:
 		# independently-maintained repo. Don't regenerate. Just record all catpkgs in this kit as belonging ot this kit so they don't get into other kits:
 		tree = mu.GitTree(kit_dict["name"], kit_dict["branch"], url="https://github.com/funtoo/%s" % kit_dict["name"], root=config.source_trees + "/" + kit_dict["name"])
-		tree.run(
+		tree.run([
 			mu.RecordAllCatPkgs(tree, cpm_logger)
-		)
+		])
 		return tree.head()
 	
 	repos = kit_dict["repo_obj"] = getKitSourceInstance(kit_dict)
