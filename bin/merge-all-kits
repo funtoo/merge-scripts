@@ -461,7 +461,7 @@ if __name__ == "__main__":
 	if rdefs is None:
 		# auto-generate release-defs:
 		rdefs = {}
-		for release, kits in foundation.kit_groups.keys():
+		for release, kits in foundation.kit_groups.items():
 			rdefs[release] = {}
 			kit_name_set = []
 			for kit in kits:
