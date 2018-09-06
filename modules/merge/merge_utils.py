@@ -1772,6 +1772,23 @@ class ZapMatchingEbuilds(MergeStep):
 					continue
 				runShell("rm -rf %s" % dest_pkgdir)
 
+
+class RecordAllCatPkgs(MergeStep):
+	
+	"""
+	This is used for non-auto-generated kits where we should record the catpkgs as belonging to a particular kit
+	but perform no other action. A kit generation NO-OP, comparted to InsertEbuilds
+	"""
+	
+	def __init__(self, srctree: GitTree, cpm_logger: CatPkgMatchLogger=None):
+		self.cpm_logger = cpm_logger
+		self.srctree = srctree
+		
+	def run(self, desttree=None):
+		for catpkg in self.srctree.getAllCatPkgs():
+			self.cpm_logger.record(desttree.name, catpkg, is_fixup=False)
+			
+
 class InsertEbuilds(MergeStep):
 
 	"""

@@ -3,7 +3,7 @@
 import json
 import os
 import sys
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 from datetime import datetime
 
 sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "../../modules")))
@@ -174,6 +174,15 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 	elif gentoo_staging.name != "gentoo-staging":
 		print("Gentoo staging mismatch -- name is %s" % gentoo_staging["name"])
 	
+	if kit_dict["generate"] is not True:
+		# independently-maintained repo. Don't regenerate. Just record all catpkgs in this kit as belonging ot this kit so they don't get into other kits:
+		tree = mu.GitTree(kit_dict["name"], kit_dict["branch"], url="https://github.com/funtoo/%s" % kit_dict["name"], root=config.source_trees + "/" + kit_dict["name"])
+		tree.run(
+			mu.RecordAllCatPkgs(tree, cpm_logger)
+		)
+		return tree.head()
+	
+	# If we have gotten here, we are automatically generating a kit...
 	kit_dict['tree'] = tree = mu.GitTree(kit_dict['name'], kit_dict['branch'],
 										 url=config.base_url(kit_dict['name']), create=create,
 										 root="%s/%s" % (config.dest_trees, kit_dict['name']), pull=True)
@@ -447,7 +456,24 @@ if __name__ == "__main__":
 		a.close()
 	k_info["kit_order"] = output_order
 	k_info["kit_settings"] = output_settings
-	k_info["release_defs"] = getattr(foundation, "release_defs", None)
+	
+	rdefs = getattr(foundation, "release_defs", None)
+	if rdefs is None:
+		# auto-generate release-defs:
+		rdefs = {}
+		for release, kits in foundation.kit_groups.keys():
+			rdefs[release] = {}
+			kit_name_set = []
+			for kit in kits:
+				kn = kit["name"]
+				if kn not in kit_name_set:
+					kit_name_set.append(kn)
+			for kit_name in kit_name_set:
+				rdefs[release][kit_name] = []
+				for def_kit in kits.filter(lambda x: x["name"] == kit_name and x["stability"] in [KitStabilityRating.PRIME, KitStabilityRating.CURRENT]):
+					rdefs[release][kit_name].append(def_kit["branch"])
+
+	k_info["release_defs"] = rdefs
 	k_info["release_info"] = getattr(foundation, "release_info", None)
 	
 	with open(meta_repo.root + "/metadata/kit-info.json", "w") as a:
