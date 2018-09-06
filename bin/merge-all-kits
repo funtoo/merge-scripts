@@ -159,6 +159,14 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 	print("Processing kit %s branch %s, secondary kit is %s" % (kit_dict['name'], kit_dict['branch'], repr(secondary_kit)))
 	
 	# get set of source repos used to grab catpkgs from:
+
+	if "generate" in kit_dict and kit_dict["generate"] is not True:
+		# independently-maintained repo. Don't regenerate. Just record all catpkgs in this kit as belonging ot this kit so they don't get into other kits:
+		tree = mu.GitTree(kit_dict["name"], kit_dict["branch"], url="https://github.com/funtoo/%s" % kit_dict["name"], root=config.source_trees + "/" + kit_dict["name"])
+		tree.run(
+			mu.RecordAllCatPkgs(tree, cpm_logger)
+		)
+		return tree.head()
 	
 	repos = kit_dict["repo_obj"] = getKitSourceInstance(kit_dict)
 	
@@ -173,14 +181,6 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 		print("Couldn't find source gentoo staging repo")
 	elif gentoo_staging.name != "gentoo-staging":
 		print("Gentoo staging mismatch -- name is %s" % gentoo_staging["name"])
-	
-	if "generate" in kit_dict and kit_dict["generate"] is not True:
-		# independently-maintained repo. Don't regenerate. Just record all catpkgs in this kit as belonging ot this kit so they don't get into other kits:
-		tree = mu.GitTree(kit_dict["name"], kit_dict["branch"], url="https://github.com/funtoo/%s" % kit_dict["name"], root=config.source_trees + "/" + kit_dict["name"])
-		tree.run(
-			mu.RecordAllCatPkgs(tree, cpm_logger)
-		)
-		return tree.head()
 	
 	# If we have gotten here, we are automatically generating a kit...
 	kit_dict['tree'] = tree = mu.GitTree(kit_dict['name'], kit_dict['branch'],
