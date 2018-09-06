@@ -470,7 +470,7 @@ if __name__ == "__main__":
 					kit_name_set.append(kn)
 			for kit_name in kit_name_set:
 				rdefs[release][kit_name] = []
-				for def_kit in kits.filter(lambda x: x["name"] == kit_name and x["stability"] in [KitStabilityRating.PRIME, KitStabilityRating.CURRENT]):
+				for def_kit in filter(lambda x: x["name"] == kit_name and x["stability"] in [KitStabilityRating.PRIME, KitStabilityRating.CURRENT], kits):
 					rdefs[release][kit_name].append(def_kit["branch"])
 
 	k_info["release_defs"] = rdefs
