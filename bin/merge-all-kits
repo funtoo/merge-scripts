@@ -431,7 +431,8 @@ if __name__ == "__main__":
 			kit_name = kit_dict["name"]
 			kit_branch = kit_dict["branch"]
 			kit_stability = kit_dict['stability']
-			output_order[kit_group].append(kit_name)
+			if kit_name not in output_order[kit_group]:
+				output_order[kit_group].append(kit_name)
 			# specific keywords that can be set for each branch to identify its current quality level
 			if 'stability' not in output_settings[kit_name]:
 				output_settings[kit_name]['stability'] = {}
