@@ -134,7 +134,7 @@ def getKitSourceInstance(kit_dict):
 # regenerating it. The kitted_catpkgs argument is a dictionary which is also written to and used to keep track of
 # catpkgs copied between runs of updateKit.
 
-def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=False, push=False, now=None, fixup_repo=None):
+def updateKit(release, kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=False, push=False, now=None, fixup_repo=None):
 	# secondary_kit means: we're the second (or third, etc.) xorg-kit or other kit to be processed. The first kind of
 	# each kit processed has secondary_kit = False, and later ones have secondary_kit = True. We need special processing
 	# to grab any 'orphan' packages that were selected as part of prior kit scans (and thus will not be included in
@@ -241,7 +241,7 @@ def updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=Fa
 			# grab all remaining ebuilds to put in nokit
 			steps += [mu.InsertEbuilds(repo_dict["repo"], select_only=select_clause, move_maps=move_maps, skip=None, replace=False, cpm_logger=cpm_logger)]
 		else:
-			steps += mu.generateKitSteps(kit_dict['name'], repo_dict["repo"], fixup_repo=fixup_repo, select_only=select_clause,
+			steps += mu.generateKitSteps(release, kit_dict['name'], repo_dict["repo"], fixup_repo=fixup_repo, select_only=select_clause,
 										 filter_repos=filter_repos, force=overlay_def["force"] if "force" in overlay_def else None,
 										 cpm_logger=cpm_logger, move_maps=move_maps, secondary_kit=secondary_kit)
 		tree.run(steps)
@@ -418,21 +418,21 @@ if __name__ == "__main__":
 	output_order = defaultdict(list)
 	output_settings = defaultdict(dict)
 
-	for kit_group in foundation.kit_groups.keys():
-		if not kit_group.endswith("-release"):
+	for release in foundation.kit_groups.keys():
+		if not release.endswith("-release"):
 			continue
 		cpm_logger = mu.CatPkgMatchLogger(log_xml=False)
 		prev_kit_dict = None
 
 		kit_labels = defaultdict(list)
-		for kit_dict in foundation.kit_groups[kit_group]:
+		for kit_dict in foundation.kit_groups[release]:
 			print("Regenerating kit ", kit_dict)
-			head = updateKit(kit_dict, prev_kit_dict, kit_group, cpm_logger, db=db, create=not push, push=push, now=now, fixup_repo=fixup_repo)
+			head = updateKit(release, kit_dict, prev_kit_dict, release, cpm_logger, db=db, create=not push, push=push, now=now, fixup_repo=fixup_repo)
 			kit_name = kit_dict["name"]
 			kit_branch = kit_dict["branch"]
 			kit_stability = kit_dict['stability']
-			if kit_name not in output_order[kit_group]:
-				output_order[kit_group].append(kit_name)
+			if kit_name not in output_order[release]:
+				output_order[release].append(kit_name)
 			# specific keywords that can be set for each branch to identify its current quality level
 			if 'stability' not in output_settings[kit_name]:
 				output_settings[kit_name]['stability'] = {}

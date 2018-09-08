@@ -21,8 +21,10 @@ from merge.config import config
 
 debug = False
 
+
 class MergeStep(object):
 	pass
+
 
 def get_move_maps(move_map_path, kit_name):
 	"""Grabs a move map list, returning a dictionary"""
@@ -46,6 +48,7 @@ def get_move_maps(move_map_path, kit_name):
 						pkg2 = move_split[1].strip()
 						move_maps[pkg1] = pkg2
 	return move_maps
+
 
 def get_pkglist(fname):
 
@@ -78,6 +81,28 @@ def get_pkglist(fname):
 	else:
 		return patterns
 
+
+def get_package_set_and_skips_for_kit(fixup_root, release, kit_name):
+
+	pkgf = "package-sets/%s/%s-packages"
+	pkgf_skip = "package-sets/%s/%s-skip"
+	
+	specific_pkgf = os.path.join(fixup_root, pkgf % (release, kit_name))
+	if os.path.exists(specific_pkgf):
+		specific_skips = os.path.join(fixup_root, pkgf_skip % (release, kit_name))
+		if os.path.exists(specific_skips):
+			return get_pkglist(specific_pkgf), get_pkglist(specific_skips)
+		else:
+			return get_pkglist(specific_pkgf), []
+	else:
+		global_pkgf = os.path.join(fixup_root, pkgf % ("global", kit_name))
+		global_skips = os.path.join(fixup_root, pkgf_skip % ("global", kit_name))
+		if os.path.exists(global_skips):
+			return get_pkglist(global_pkgf), get_pkglist(global_skips)
+		else:
+			return get_pkglist(global_pkgf), []
+		
+
 def filterInCategory(pkgset, fil):
 	match = set()
 	nomatch = set()
@@ -88,6 +113,7 @@ def filterInCategory(pkgset, fil):
 			nomatch.add(pkg)
 	return match, nomatch
 
+
 def do_package_use_line(pkg, def_python, bk_python, imps):
 	if def_python not in imps:
 		if bk_python in imps:
@@ -95,6 +121,7 @@ def do_package_use_line(pkg, def_python, bk_python, imps):
 		else:
 			return "%s python_single_target_%s python_targets_%s" % (pkg, imps[0], imps[0])
 	return None
+
 
 class GenPythonUse(MergeStep):
 
@@ -760,8 +787,8 @@ def getAllMeta(metadata, dest_kit):
 						mymeta.add(lic)
 	return mymeta
 
-def generateKitSteps(kit_name, from_tree, select_only="all", fixup_repo=None,
-					 cpm_logger=None, filter_repos=None, move_maps=None, force=None, secondary_kit=False):
+
+def generateKitSteps(release, kit_name, from_tree, select_only="all", fixup_repo=None, cpm_logger=None, filter_repos=None, move_maps=None, force=None, secondary_kit=False):
 	if force is None:
 		force = set()
 	else:
@@ -779,13 +806,7 @@ def generateKitSteps(kit_name, from_tree, select_only="all", fixup_repo=None,
 		move_maps = {}
 	else:
 		move_maps = move_maps
-	master_pkglist = get_pkglist(pkgf)
-	if filter_repos is None:
-		filter_repos = []
-	if fixup_repo:
-		master_pkglist += get_extra_catpkgs_from_kit_fixups(fixup_repo, kit_name)
-	if os.path.exists(pkgf_skip):
-		skip = get_pkglist(pkgf_skip)
+	master_pkglist, skip = get_package_set_and_skips_for_kit(fixup_repo.root, release, kit_name)
 	for pattern in master_pkglist:
 		if pattern.startswith("@regex@:"):
 			pkglist += getPackagesMatchingRegex( from_tree, re.compile(pattern[8:]))
