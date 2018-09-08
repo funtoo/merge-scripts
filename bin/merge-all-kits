@@ -480,6 +480,26 @@ if __name__ == "__main__":
 	with open(meta_repo.root + "/metadata/kit-info.json", "w") as a:
 		a.write(json.dumps(k_info, sort_keys=True, indent=4, ensure_ascii=False))
 	
+	with open(meta_repo.root + "/metadata/version.json", "w") as a:
+		a.write(json.dumps(
+			{
+				# required versions for functionality:
+				"required": {
+					"metadata-support": 10,
+					"ego": "2.6.0"
+				},
+				# recommended versions, if any:
+				"recommended": {
+					"metadata-support": None,
+					"ego": None
+					
+				}
+				
+			},
+			sort_keys=True,
+			indent=4,
+			ensure_ascii=False
+		))
 	if push:
 		meta_repo.gitCommit(message="kit updates", branch="master", push=push)
 
