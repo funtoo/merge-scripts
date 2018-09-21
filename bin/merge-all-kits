@@ -427,24 +427,23 @@ def generate_kit_metadata(release, meta_repo, output_settings):
 		k_info["kit_settings"] = out_settings
 		
 		# auto-generate release-defs. We used to define them manually in foundation:
+
+		kit_name_set = OrderedDict()
+		for kit_dict in foundation.kit_groups[release]:
+			kit_name_set[kit_dict["name"]] = True
+
 		rdefs = {}
-		for kits_list in foundation.kit_groups[release]:
-			if release in ["1.2-release"]:
-				release_key = "1.2"
-			else:
-				release_key = release
-			rdefs[release_key] = {}
-			kit_name_set = []
-			for kit_dict in kits_list:
-				kn = kit_dict["name"]
-				if kn not in kit_name_set:
-					kit_name_set.append(kn)
-			for kit_name in kit_name_set:
-				rdefs[release_key][kit_name] = []
-				for def_kit in filter(lambda x: x["name"] == kit_name and x["stability"] not in [KitStabilityRating.DEPRECATED], kits_list):
-					rdefs[release_key][kit_name].append(def_kit["branch"])
+		for kit_name in kit_name_set.keys():
+			rdefs[kit_name] = []
+			for def_kit in filter(lambda x: x["name"] == kit_name and x["stability"] not in [KitStabilityRating.DEPRECATED], foundation.kit_groups[release]):
+				rdefs[kit_name].append(def_kit["branch"])
 	
-		k_info["release_defs"] = rdefs
+		if release in [ "1.2-release"]:
+			# metadata format version 1:
+			k_info["release_defs"] = { "1.2" : rdefs }
+		else:
+			# newer metadata format version 10: drop release version dict:
+			k_info["release_defs"] = rdefs
 		k_info["release_info"] = getattr(foundation, "release_info", None)
 		a.write(json.dumps(k_info, sort_keys=True, indent=4, ensure_ascii=False))
 	
