@@ -415,7 +415,7 @@ def generate_kit_metadata(release, meta_repo, output_settings):
 		k_info = {}
 		out = []
 		out_settings = defaultdict(dict)
-		for kit_dict in foundation.kit_groups[release].values():
+		for kit_dict in foundation.kit_groups[release]:
 			kit_name = kit_dict["name"]
 			if kit_name not in out:
 				out.append(kit_name)
