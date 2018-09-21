@@ -428,20 +428,20 @@ def generate_kit_metadata(release, meta_repo, output_settings):
 		
 		# auto-generate release-defs. We used to define them manually in foundation:
 		rdefs = {}
-		for kits in foundation.kit_groups[release]:
+		for kits_list in foundation.kit_groups[release]:
 			if release in ["1.2-release"]:
 				release_key = "1.2"
 			else:
 				release_key = release
 			rdefs[release_key] = {}
 			kit_name_set = []
-			for kit in kits:
-				kn = kit["name"]
+			for kit_dict in kits_list:
+				kn = kit_dict["name"]
 				if kn not in kit_name_set:
 					kit_name_set.append(kn)
 			for kit_name in kit_name_set:
 				rdefs[release_key][kit_name] = []
-				for def_kit in filter(lambda x: x["name"] == kit_name and x["stability"] not in [KitStabilityRating.DEPRECATED], kits):
+				for def_kit in filter(lambda x: x["name"] == kit_name and x["stability"] not in [KitStabilityRating.DEPRECATED], kits_list):
 					rdefs[release_key][kit_name].append(def_kit["branch"])
 	
 		k_info["release_defs"] = rdefs
