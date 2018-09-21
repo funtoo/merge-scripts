@@ -411,7 +411,7 @@ def generate_kit_metadata(release, meta_repo, output_settings):
 	
 	outf = meta_repo.root + "/metadata/kit-info.json"
 
-	with open(outf, 'r') as a:
+	with open(outf, 'w') as a:
 		k_info = {}
 		out = []
 		out_settings = defaultdict(dict)
