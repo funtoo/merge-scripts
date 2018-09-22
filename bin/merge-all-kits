@@ -493,7 +493,8 @@ if __name__ == "__main__":
 
 		meta_repo.gitCommit(message="kit updates", push=False)
 	
-	if push:
+	if push is True:
+		print("Pushing meta-repo...")
 		meta_repo.gitPush()
 
 # vim: ts=4 sw=4 noet tw=140
