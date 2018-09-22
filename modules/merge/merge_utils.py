@@ -1573,6 +1573,13 @@ class GitTree(Tree):
 			return False
 		else:
 			return True
+		
+	def remoteBranchExists(self, branch):
+		s, o = subprocess.getstatusoutput("( cd %s && git show-branch remotes/origin/%s )" % ( self.root, branch))
+		if s:
+			return False
+		else:
+			return True
 
 	def getDepthOfCommit(self, sha1):
 		s, depth = subprocess.getstatusoutput("( cd %s && git rev-list HEAD ^%s --count)" % ( self.root, sha1 ))
@@ -1597,8 +1604,14 @@ class GitTree(Tree):
 		return os.path.exists(self.root + "/" + catpkg)
 
 	def gitCheckout(self, branch="master"):
-		runShell("(cd %s && git checkout %s && git pull -f || true)" % (self.root, branch))
-
+		runShell("(cd %s && git fetch" % self.root)
+		if self.localBranchExists(branch):
+			runShell("(cd %s && git checkout %s && git pull -f || true)" % (self.root, branch))
+		elif self.remoteBranchExists(branch):
+			runShell("(cd %s && git checkout -b %s --track origin/%s)" % (self.root, branch, branch))
+		else:
+			runShell("(cd %s && git checkout -b %s)" % (self.root, branch))
+			
 	def gitPush(self):
 		runShell("(cd %s && git push --mirror)" % self.root)
 
