@@ -1439,6 +1439,11 @@ class XMLRecorder(object):
 			pass
 		catxml.append(pkgxml)
 
+class GitTreeError(Exception):
+	
+	pass
+
+
 class GitTree(Tree):
 
 	"A Tree (git) that we can use as a source for work jobs, and/or a target for running jobs."
@@ -1524,6 +1529,8 @@ class GitTree(Tree):
 
 		if self.commit_sha1:
 			runShell("(cd %s && git checkout %s )" % (self.root, self.commit_sha1 ))
+			if self.head() != self.commit_sha1:
+				raise GitTreeError("%s: Was not able to check out specified SHA1: %s." % (self.root, self.commit_sha1))
 		elif self.pull:
 			# we are on the right branch, but we want to make sure we have the latest updates 
 			runShell("(cd %s && git pull -f || true)" % self.root )
@@ -1580,7 +1587,9 @@ class GitTree(Tree):
 			runShell("(cd %s && git checkout -b %s --track origin/%s)" % (self.root, branch, branch))
 		else:
 			runShell("(cd %s && git checkout -b %s)" % (self.root, branch))
-			
+		if self.currentLocalBranch != branch:
+			raise GitTreeError("%s: Was not able to check out branch %s." % (self.root, branch))
+		
 	def gitPush(self):
 		runShell("(cd %s && git push --mirror)" % self.root)
 
