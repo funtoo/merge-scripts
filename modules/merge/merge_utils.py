@@ -1459,7 +1459,6 @@ class GitTree(Tree):
 		self.reponame = reponame
 		self.create = create
 		self.has_cleaned = False
-		self.has_fetched = False
 
 		self.initializeTree(branch, commit_sha1)
 
@@ -1518,43 +1517,13 @@ class GitTree(Tree):
 			runShell("(cd %s &&  git reset --hard && git clean -fd )" % self.root )
 			self.has_cleaned = True
 
-		# Now we need to make sure it's on the correct branch and commit sha1, if specified.
+		# git fetch will run as part of this:
+		self.gitCheckout(self.branch)
 
-		# Let's make sure we have a local branch first:
-		if not self.localBranchExists(self.branch):
-			if not self.create:
-				# branch does not exist, so get it from remote and create it:
-				runShell("( cd %s &&  git fetch && git checkout -b %s --track origin/%s || git checkout -b %s)" % ( self.root, self.branch, self.branch, self.branch ))
-				self.has_fetched = True
-			else:
-				# in create mode, we take responsibility for creating branches ourselves, and we are not concerned with fetching:
-				runShell("(cd %s &&  git checkout -b %s)" % ( self.root, self.branch ))
-		
-		# the local branch exists:
-		
-		if self.create:
-			# we are done in this special case
-			return
-
-		# we are not in create mode, the branch exists and is active, but we want to make sure we are pointing to the exact
-		# set of files that we want:
+		# point to specified sha1:
 
 		if self.commit_sha1:
-			# if a commit_sha1 is specified, then we also want to make sure we go to a detached state pointing to this commit:
-			if not self.has_fetched:
-				runShell("(cd %s && git fetch )" % self.root)
-				self.has_fetched = True
 			runShell("(cd %s && git checkout %s )" % (self.root, self.commit_sha1 ))
-		elif self.currentLocalBranch != self.branch:
-			if not self.has_fetched:
-				runShell("(cd %s && git fetch )" % self.root)
-				self.has_fetched = True
-			if not self.has_cleaned:
-				runShell("(cd %s && git reset --hard )" % self.root)
-				self.has_cleaned = True
-			# we aren't on the right branch. Let's change that after we make sure we have the latest updates
-			# git pull -f may fail for new branch that has not yet been pushed remote...
-			runShell("(cd %s && git checkout %s && git pull -f || true)" % (self.root, self.branch ))
 		elif self.pull:
 			# we are on the right branch, but we want to make sure we have the latest updates 
 			runShell("(cd %s && git pull -f || true)" % self.root )
