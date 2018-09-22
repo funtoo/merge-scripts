@@ -1604,7 +1604,7 @@ class GitTree(Tree):
 		return os.path.exists(self.root + "/" + catpkg)
 
 	def gitCheckout(self, branch="master"):
-		runShell("(cd %s && git fetch" % self.root)
+		runShell("(cd %s && git fetch)" % self.root)
 		if self.localBranchExists(branch):
 			runShell("(cd %s && git checkout %s && git pull -f || true)" % (self.root, branch))
 		elif self.remoteBranchExists(branch):
