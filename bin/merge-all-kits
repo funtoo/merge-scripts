@@ -391,7 +391,7 @@ def updateKit(release, kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, 
 	]
 	
 	tree.run(post_steps)
-	tree.gitCommit(message="updates", branch=kit_dict['branch'], push=push)
+	tree.gitCommit(message="updates", push=push)
 	return tree.head()
 
 
@@ -470,13 +470,17 @@ if __name__ == "__main__":
 	cpm_logger = mu.CatPkgMatchLogger(log_xml=push)
 	
 	for release in foundation.kit_groups.keys():
-		output_sha1s = {}
 		if not release.endswith("-release"):
 			continue
+		
+		target_branch = "master" if release == "1.2-release" else release
+		meta_repo.gitCheckout(target_branch)
+		
+		output_sha1s = {}
+
 		cpm_logger = mu.CatPkgMatchLogger(log_xml=False)
 		prev_kit_dict = None
 
-		kit_labels = defaultdict(list)
 		for kit_dict in foundation.kit_groups[release]:
 			print("Regenerating kit ", kit_dict)
 			head = updateKit(release, kit_dict, prev_kit_dict, release, cpm_logger, db=db, create=not push, push=push, now=now, fixup_repo=fixup_repo)
@@ -486,7 +490,10 @@ if __name__ == "__main__":
 			output_sha1s[kit_name][kit_dict["branch"]] = head
 			prev_kit_dict = kit_dict
 		generate_kit_metadata(release, meta_repo, output_sha1s)
-		if push:
-			meta_repo.gitCommit(message="kit updates", branch="master" if release == "1.2-release" else release, push=push)
+
+		meta_repo.gitCommit(message="kit updates", push=False)
+	
+	if push:
+		meta_repo.gitPush()
 
 # vim: ts=4 sw=4 noet tw=140

@@ -1444,7 +1444,6 @@ class GitTree(Tree):
 	"A Tree (git) that we can use as a source for work jobs, and/or a target for running jobs."
 
 	def __init__(self, name: str, branch: str = "master", url: str = None, commit_sha1: str = None,
-				 pull: bool = True,
 				 root: str = None,
 				 create: bool = False,
 				 reponame: str = None):
@@ -1598,9 +1597,12 @@ class GitTree(Tree):
 		return os.path.exists(self.root + "/" + catpkg)
 
 	def gitCheckout(self, branch="master"):
-		runShell("(cd %s && git checkout %s)" % ( self.root, self.branch ))
+		runShell("(cd %s && git checkout %s && git pull -f || true)" % (self.root, branch))
 
-	def gitCommit(self, message="", branch=None,push=True):
+	def gitPush(self):
+		runShell("(cd %s && git push --mirror)" % self.root)
+
+	def gitCommit(self, message="", push=True):
 		runShell("( cd %s && git add . )" % self.root )
 		cmd = "( cd %s && [ -n \"$(git status --porcelain)\" ] && git commit -a -F - << EOF || exit 0\n" % self.root
 		if message != "":
@@ -1627,7 +1629,6 @@ class GitTree(Tree):
 			runShell("(cd %s && git push --mirror)" % self.root )
 		else:	 
 			print("Pushing disabled.")
-
 
 	def run(self,steps):
 		for step in steps:
