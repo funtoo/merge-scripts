@@ -184,7 +184,7 @@ def updateKit(release, kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, 
 	# If we have gotten here, we are automatically generating a kit...
 	kit_dict['tree'] = tree = mu.GitTree(kit_dict['name'], kit_dict['branch'],
 										 url=config.base_url(kit_dict['name']), create=create,
-										 root="%s/%s" % (config.dest_trees, kit_dict['name']), pull=True)
+										 root="%s/%s" % (config.dest_trees, kit_dict['name']))
 	
 	if "stability" in kit_dict and kit_dict["stability"] == KitStabilityRating.DEPRECATED:
 		# no longer update this kit.
