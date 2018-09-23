@@ -18,6 +18,7 @@ import multiprocessing
 from collections import defaultdict
 from portage.util.futures.iter_completed import iter_completed
 from merge.config import config
+from merge.async_engine import AsyncEngine
 
 debug = False
 
@@ -490,12 +491,12 @@ def extract_uris(src_uri):
 
 class CatPkgScan(MergeStep):
 
-	def __init__(self, now, db=None):
+	def __init__(self, now, engine : AsyncEngine = None):
 		self.now = now
-		self.db = db
+		self.engine = engine
 
 	def run(self, cur_overlay):
-		if self.db is None:
+		if self.engine is None:
 			return
 		cur_tree = cur_overlay.root
 		try:
@@ -527,110 +528,97 @@ class CatPkgScan(MergeStep):
 		''' % config.dest_trees
 		env['ACCEPT_KEYWORDS'] = "~amd64 amd64"
 		p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
-		with self.db.get_session() as session:
-			for pkg in p.cp_all(trees=[cur_overlay.root]):
-	
-				# src_uri now has the following format:
-	
-				# src_uri["foo.tar.gz"] = [ "https://url1", "https//url2" ... ]
-				# entries in SRC_URI from fetch-restricted ebuilds will have SRC_URI prefixed by "NOMIRROR:"
-	
-				# We are scanning SRC_URI in all ebuilds in the catpkg, as well as Manifest.
-				# This will give us a complete list of all archives used in the catpkg.
-	
-				# We want to prioritize SRC_URI for bestmatch-visible ebuilds. We will use bm
-				# and prio to tag files that are in bestmatch-visible ebuilds.
-	
-				bm = p.xmatch("bestmatch-visible", pkg)
-	
-				fn_urls = defaultdict(list)
-				fn_meta = defaultdict(dict)
-	
-				for cpv in p.xmatch("match-all", pkg):
-					if len(cpv) == 0:
-						continue
-	
-					aux_info = p.aux_get(cpv, ["SRC_URI", "RESTRICT" ], mytree=cur_overlay.root)
-	
-					restrict = aux_info[1].split()
-					mirror_restrict = False
-					for r in restrict:
-						if r == "mirror":
-							mirror_restrict = True
-							break
-	
-					# record our own metadata about each file...
-					new_fn_urls, new_files = extract_uris(aux_info[0])
-					fn_urls.update(new_fn_urls)
-					for fn in new_files:
-						fn_meta[fn]["restrict"] = mirror_restrict
-						fn_meta[fn]["bestmatch"] = cpv == bm
-	
-				man_info = {}
-				man_file = cur_tree + "/" + pkg + "/Manifest"
-				if os.path.exists(man_file):
-					man_f = open(man_file, "r")
-					for line in man_f.readlines():
-						ls = line.split()
-						if len(ls) <= 3 or ls[0] != "DIST":
-							continue
-						try:
-							digest_index = ls.index("SHA512") + 1
-							digest_type = "sha512"
-						except ValueError:
-							try:
-								digest_index = ls.index("SHA256") + 1
-								digest_type = "sha256"
-							except ValueError:
-								print("Error: Manifest file %s has invalid format: " % man_file)
-								print(" ", line)
-								continue
-						man_info[ls[1]] = { "size" : ls[2], "digest" : ls[digest_index], "digest_type" : digest_type }
-					man_f.close()
-	
-				# for each catpkg:
-	
-				for f, uris in fn_urls.items():
-	
-					if f not in man_info:
-						print("Error: %s/%s: %s Manifest file contains nothing for %s, skipping..." % (cur_overlay.name, cur_overlay.branch, pkg, f))
-						continue
-	
-					s_out = ""
-					for u in uris:
-						s_out += u + "\n"
-	
-					# If we have already grabbed this distfile, then let's not queue it for fetching...
-	
-					if man_info[f]["digest_type"] == "sha512":
-						existing = session.query(self.db.Distfile).filter(self.db.Distfile.id == man_info[f]["digest"]).first()
-						# TODO: maybe it already exists, but under a different filename. If so, we still want to
-						# create a distfile entry for it so it can be downloaded...
-	
-						if existing:
-							continue
-	
-					# Don't create multiple queued downloads for the same distfile:
-	
-					if session.query(self.db.QueuedDistfile).filter(self.db.QueuedDistfile.filename == f).filter(self.db.QueuedDistfile.size == man_info[f]["size"]).first() is not None:
-						continue
-	
-					# Queue the distfile for downloading...
-	
-					qd = self.db.QueuedDistfile()
-					qd.filename = f
-					qd.catpkg = pkg
-					qd.kit = cur_overlay.name
-					qd.branch = cur_overlay.branch
-					qd.src_uri = s_out
-					qd.size = man_info[f]["size"]
-					qd.mirror = not fn_meta[f]["restrict"]
-					qd.digest_type = man_info[f]["digest_type"]
-					qd.digest = man_info[f]["digest"]
-					qd.priority = 1 if fn_meta[f]["bestmatch"] else 0
-					session.add(qd)
-			session.commit()
 
+		for pkg in p.cp_all(trees=[cur_overlay.root]):
+
+			# src_uri now has the following format:
+
+			# src_uri["foo.tar.gz"] = [ "https://url1", "https//url2" ... ]
+			# entries in SRC_URI from fetch-restricted ebuilds will have SRC_URI prefixed by "NOMIRROR:"
+
+			# We are scanning SRC_URI in all ebuilds in the catpkg, as well as Manifest.
+			# This will give us a complete list of all archives used in the catpkg.
+
+			# We want to prioritize SRC_URI for bestmatch-visible ebuilds. We will use bm
+			# and prio to tag files that are in bestmatch-visible ebuilds.
+
+			bm = p.xmatch("bestmatch-visible", pkg)
+
+			fn_urls = defaultdict(list)
+			fn_meta = defaultdict(dict)
+
+			for cpv in p.xmatch("match-all", pkg):
+				if len(cpv) == 0:
+					continue
+
+				aux_info = p.aux_get(cpv, ["SRC_URI", "RESTRICT" ], mytree=cur_overlay.root)
+
+				restrict = aux_info[1].split()
+				mirror_restrict = False
+				for r in restrict:
+					if r == "mirror":
+						mirror_restrict = True
+						break
+
+				# record our own metadata about each file...
+				new_fn_urls, new_files = extract_uris(aux_info[0])
+				fn_urls.update(new_fn_urls)
+				for fn in new_files:
+					fn_meta[fn]["restrict"] = mirror_restrict
+					fn_meta[fn]["bestmatch"] = cpv == bm
+
+			man_info = {}
+			man_file = cur_tree + "/" + pkg + "/Manifest"
+			if os.path.exists(man_file):
+				man_f = open(man_file, "r")
+				for line in man_f.readlines():
+					ls = line.split()
+					if len(ls) <= 3 or ls[0] != "DIST":
+						continue
+					try:
+						digest_index = ls.index("SHA512") + 1
+						digest_type = "sha512"
+					except ValueError:
+						try:
+							digest_index = ls.index("SHA256") + 1
+							digest_type = "sha256"
+						except ValueError:
+							print("Error: Manifest file %s has invalid format: " % man_file)
+							print(" ", line)
+							continue
+					man_info[ls[1]] = { "size" : ls[2], "digest" : ls[digest_index], "digest_type" : digest_type }
+				man_f.close()
+
+			# for each catpkg:
+
+			for f, uris in fn_urls.items():
+
+				if f not in man_info:
+					print("Error: %s/%s: %s Manifest file contains nothing for %s, skipping..." % (cur_overlay.name, cur_overlay.branch, pkg, f))
+					continue
+
+				s_out = ""
+				for u in uris:
+					s_out += u + "\n"
+
+				# If we have already grabbed this distfile, then let's not queue it for fetching...
+
+				if man_info[f]["digest_type"] == "sha512":
+					# enqueue this distfile to potentially be added to distfile-spider. This is done asynchronously.
+					self.engine.enqueue(
+						file=f,
+						digest=man_info[f]["digest"],
+						size=man_info[f]["size"],
+						restrict=fn_meta[f]["restrict"],
+						catpkg=pkg,
+						src_uri=s_out,
+						kit_name=cur_overlay["name"],
+						kit_branch=cur_overlay["branch"],
+						digest_type=man_info[f]["digest_type"],
+						bestmatch= fn_meta[f]["bestmatch"]
+						
+					)
+				
 def repoName(cur_overlay):
 	cur_tree = cur_overlay.root
 	try:
@@ -1534,7 +1522,7 @@ class GitTree(Tree):
 
 	@property
 	def currentLocalBranch(self):
-		s, branch = subprocess.getstatusoutput("( cd %s && git symbolic-ref --short -q HEAD )" % self.root)
+		s, branch = subprocess.getstatusoutput("( cd %s && git symbolic-ref --short -task_q HEAD )" % self.root)
 		if s:
 			return None
 		else:

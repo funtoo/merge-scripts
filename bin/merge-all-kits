@@ -9,6 +9,7 @@ from datetime import datetime
 sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "../../modules")))
 import merge.merge_utils as mu
 from merge.config import config
+from merge.async_engine import AsyncEngine
 
 fixup_repo = mu.GitTree("kit-fixups", config.branch("kit-fixups"), url=config.kit_fixups, root=config.source_trees + "/kit-fixups")
 meta_repo = mu.GitTree("meta-repo", config.branch("meta-repo"), url=config.base_url("meta-repo"), root=config.dest_trees + "/meta-repo")
@@ -387,7 +388,7 @@ def updateKit(release, kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, 
 	]
 	
 	post_steps += [
-		mu.CatPkgScan(now=now, db=db)
+		mu.CatPkgScan(now=now, engine=async_engine)
 	]
 	
 	tree.run(post_steps)
@@ -395,7 +396,7 @@ def updateKit(release, kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, 
 	return tree.head()
 
 
-def generate_kit_metadata(release, meta_repo, output_settings):
+def generate_kit_metadata(release, meta_repo, output_sha1s):
 	"""
 	Generates the metadata in /var/git/meta-repo/metadata/...
 	:param release: the release string, like "1.3-release".
@@ -451,6 +452,71 @@ def generate_kit_metadata(release, meta_repo, output_settings):
 		a.write(json.dumps(foundation.metadata_version_info[release], sort_keys=True, indent=4, ensure_ascii=False))
 
 
+class AsyncMergeAllKits(AsyncEngine):
+	
+	db = None
+	
+	async def worker_thread(self, **kwargs):
+		print("Performing work: ", kwargs)
+		with self.db.get_session() as session:
+			f = kwargs["file"]
+			existing = session.query(self.db.Distfile).filter(self.db.Distfile.id == kwargs["digest"]).first()
+			# TODO: maybe it already exists, but under a different filename. If so, we still want to create a distfile entry for it so it can be downloaded...
+			
+			if existing:
+				return
+			
+			# Don't create multiple queued downloads for the same distfile:
+			if session.query(self.db.QueuedDistfile).filter(self.db.QueuedDistfile.filename == f).filter(self.db.QueuedDistfile.size == kwargs["size"]).first() is not None:
+				return
+			
+			# Queue the distfile for downloading...
+			
+			qd = self.db.QueuedDistfile()
+			qd.filename = f
+			qd.catpkg = kwargs["catpkg"]
+			qd.kit = kwargs["kit_name"]
+			qd.branch = kwargs["kit_branch"]
+			qd.src_uri = kwargs["src_uri"]
+			qd.size = kwargs["size"]
+			qd.mirror = kwargs["restrict"]
+			qd.digest_type = kwargs["digest_type"]
+			qd.digest = kwargs["digest"]
+			qd.priority = 1 if kwargs["bestmatch"] else 0
+			session.add(qd)
+			session.commit()
+
+	
+	async def main_thread(self):
+		cpm_logger = mu.CatPkgMatchLogger(log_xml=push)
+		
+		for release in foundation.kit_groups.keys():
+			if not release.endswith("-release"):
+				continue
+			
+			target_branch = "master" if release == "1.2-release" else release
+			meta_repo.gitCheckout(target_branch)
+			
+			output_sha1s = {}
+			prev_kit_dict = None
+			
+			for kit_dict in foundation.kit_groups[release]:
+				print("Regenerating kit ", kit_dict)
+				head = updateKit(release, kit_dict, prev_kit_dict, release, cpm_logger, db=db, create=not push, push=push, now=now, fixup_repo=fixup_repo)
+				kit_name = kit_dict["name"]
+				if kit_name not in output_sha1s:
+					output_sha1s[kit_name] = {}
+				output_sha1s[kit_name][kit_dict["branch"]] = head
+				prev_kit_dict = kit_dict
+			generate_kit_metadata(release, meta_repo, output_sha1s)
+			
+			meta_repo.gitCommit(message="kit updates", push=False)
+		
+		if push is True:
+			print("Pushing meta-repo...")
+			meta_repo.gitPush()
+		
+
 if __name__ == "__main__":
 	
 	# one global timestamp for each run of this tool -- for mysql db
@@ -467,34 +533,12 @@ if __name__ == "__main__":
 	else:
 		db = None
 	
-	cpm_logger = mu.CatPkgMatchLogger(log_xml=push)
+	# Start an asyncio loop. Main thread regenerates kits. Background thread queries MySQL db and processes potential distfiles for spider.
 	
-	for release in foundation.kit_groups.keys():
-		if not release.endswith("-release"):
-			continue
-		
-		target_branch = "master" if release == "1.2-release" else release
-		meta_repo.gitCheckout(target_branch)
-		
-		output_sha1s = {}
+	async_engine = AsyncMergeAllKits()
+	async_engine.db = db
+	async_engine.add_worker(async_engine.main_thread)
+	async_engine.start()
 
-		cpm_logger = mu.CatPkgMatchLogger(log_xml=False)
-		prev_kit_dict = None
-
-		for kit_dict in foundation.kit_groups[release]:
-			print("Regenerating kit ", kit_dict)
-			head = updateKit(release, kit_dict, prev_kit_dict, release, cpm_logger, db=db, create=not push, push=push, now=now, fixup_repo=fixup_repo)
-			kit_name = kit_dict["name"]
-			if kit_name not in output_sha1s:
-				output_sha1s[kit_name] = {}
-			output_sha1s[kit_name][kit_dict["branch"]] = head
-			prev_kit_dict = kit_dict
-		generate_kit_metadata(release, meta_repo, output_sha1s)
-
-		meta_repo.gitCommit(message="kit updates", push=False)
-	
-	if push is True:
-		print("Pushing meta-repo...")
-		meta_repo.gitPush()
 
 # vim: ts=4 sw=4 noet tw=140
