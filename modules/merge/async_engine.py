@@ -19,7 +19,7 @@ class AsyncEngine:
 	def start(self, enable_workers=True):
 		if enable_workers is True:
 			for x in range(0, self.num_threads):
-				self.tasks.append(self.thread_exec.submit(self._worker,x))
+				self.tasks.append(asyncio.wrap_future(self.thread_exec.submit(self._worker,x)))
 		# run forever
 		print(self.tasks)
 		self.loop.run_until_complete(asyncio.gather(*self.tasks))
