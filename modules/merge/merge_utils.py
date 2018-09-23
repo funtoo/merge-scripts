@@ -1522,7 +1522,7 @@ class GitTree(Tree):
 
 	@property
 	def currentLocalBranch(self):
-		s, branch = subprocess.getstatusoutput("( cd %s && git symbolic-ref --short -task_q HEAD )" % self.root)
+		s, branch = subprocess.getstatusoutput("( cd %s && git symbolic-ref --short -q HEAD )" % self.root)
 		if s:
 			return None
 		else:
@@ -1572,7 +1572,7 @@ class GitTree(Tree):
 		else:
 			runShell("(cd %s && git checkout -b %s)" % (self.root, branch))
 		if self.currentLocalBranch != branch:
-			raise GitTreeError("%s: Was not able to check out branch %s." % (self.root, branch))
+			raise GitTreeError("%s: On branch %s. not able to check out branch %s." % (self.root, self.currentLocalBranch, branch))
 		
 	def gitPush(self):
 		runShell("(cd %s && git push --mirror)" % self.root)
