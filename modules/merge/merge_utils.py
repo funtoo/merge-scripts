@@ -134,7 +134,7 @@ class GenPythonUse(MergeStep):
 		self.mask = py_settings["mask"]
 		self.out_subpath = out_subpath
 	
-	def run(self, cur_overlay):
+	async def run(self, cur_overlay):
 		cur_tree = cur_overlay.root
 		try:
 			with open(os.path.join(cur_tree, 'profiles/repo_name')) as f:
@@ -502,7 +502,7 @@ class CatPkgScan(MergeStep):
 		self.now = now
 		self.engine = engine
 
-	def run(self, cur_overlay):
+	async def run(self, cur_overlay):
 		if self.engine is None:
 			return
 		cur_tree = cur_overlay.root
