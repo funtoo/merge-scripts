@@ -5,6 +5,7 @@ import os
 import sys
 from collections import defaultdict, OrderedDict
 from datetime import datetime
+import asyncio
 
 sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "../../modules")))
 import merge.merge_utils as mu
@@ -488,6 +489,8 @@ class AsyncMergeAllKits(AsyncEngine):
 
 	
 	async def main_thread(self):
+		# let workers start before we hog things...
+		await asyncio.sleep(0.5)
 		cpm_logger = mu.CatPkgMatchLogger(log_xml=push)
 		
 		for release in foundation.kit_groups.keys():

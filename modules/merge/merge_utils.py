@@ -277,24 +277,26 @@ async def getDependencies(cur_overlay, catpkgs, levels=0, cur_level=0):
 				future_aux[id(my_future)] = my_cpv
 				yield my_future
 
-	for future in await async_iter_completed(future_generator()):
-		cpv = future_aux.pop(id(future))
-		try:
-			result = future.result()
-		except KeyError as e:
-			print("aux_get fail", cpv, e)
-		else:
-			for dep in flatten(use_reduce(result[0]+" "+result[1], matchall=True)):
-				if len(dep) and dep[0] == "!":
-					continue
-				try:
-					mypkg = dep_getkey(dep)
-				except portage.exception.InvalidAtom:
-					continue
-				if mypkg not in mypkgs:
-					mypkgs.add(mypkg)
-				if levels != cur_level:
-					mypkgs = mypkgs.union(await getDependencies(cur_overlay, mypkg, levels=levels, cur_level=cur_level+1))
+	for fu_fu in  async_iter_completed(future_generator()):
+		future_set = await fu_fu
+		for future in future_set:
+			cpv = future_aux.pop(id(future))
+			try:
+				result = future.result()
+			except KeyError as e:
+				print("aux_get fail", cpv, e)
+			else:
+				for dep in flatten(use_reduce(result[0]+" "+result[1], matchall=True)):
+					if len(dep) and dep[0] == "!":
+						continue
+					try:
+						mypkg = dep_getkey(dep)
+					except portage.exception.InvalidAtom:
+						continue
+					if mypkg not in mypkgs:
+						mypkgs.add(mypkg)
+					if levels != cur_level:
+						mypkgs = mypkgs.union(await getDependencies(cur_overlay, mypkg, levels=levels, cur_level=cur_level+1))
 	return mypkgs
 
 def getPackagesInCatWithMaintainer(cur_overlay, my_cat, my_email):
@@ -379,17 +381,19 @@ async def getPackagesWithEclass(cur_overlay, eclass):
 				future_aux[id(my_future)] = my_cpv
 				yield my_future
 
-	for future in await async_iter_completed(future_generator()):
-		cpv = future_aux.pop(id(future))
-		try:
-			result = future.result()
-		except KeyError as e:
-			print("aux_get fail", cpv, e)
-		else:
-			if eclass in result[0].split():
-				cp = cpv_map[cpv]
-				if cp not in mypkgs:
-					mypkgs.add(cp)
+	for fu_fu in  async_iter_completed(future_generator()):
+		future_set = await fu_fu
+		for future in future_set:
+			cpv = future_aux.pop(id(future))
+			try:
+				result = future.result()
+			except KeyError as e:
+				print("aux_get fail", cpv, e)
+			else:
+				if eclass in result[0].split():
+					cp = cpv_map[cpv]
+					if cp not in mypkgs:
+						mypkgs.add(cp)
 	return mypkgs
 
 async def getPackagesInCatWithEclass(cur_overlay, cat, eclass):
@@ -438,17 +442,19 @@ async def getPackagesInCatWithEclass(cur_overlay, cat, eclass):
 				future_aux[id(my_future)] = my_cpv
 				yield my_future
 
-	for future in await async_iter_completed(future_generator()):
-		cpv = future_aux.pop(id(future))
-		try:
-			result = future.result()
-		except KeyError as e:
-			print("aux_get fail", cpv, e)
-		else:
-			if eclass in result[0].split():
-				cp = cpv_map[cpv]
-				if cp not in mypkgs:
-					mypkgs.add(cp)
+	for fu_fu in async_iter_completed(future_generator()):
+		future_set = await fu_fu
+		for future in future_set:
+			cpv = future_aux.pop(id(future))
+			try:
+				result = future.result()
+			except KeyError as e:
+				print("aux_get fail", cpv, e)
+			else:
+				if eclass in result[0].split():
+					cp = cpv_map[cpv]
+					if cp not in mypkgs:
+						mypkgs.add(cp)
 	return mypkgs
 
 def extract_uris(src_uri):
@@ -755,24 +761,26 @@ async def getAllMeta(metadata, dest_kit):
 				future_aux[id(my_future)] = cpv
 				yield my_future
 
-	for future in await async_iter_completed(future_generator()):
-		cpv = future_aux.pop(id(future))
-		try:
-			result = future.result()
-		except KeyError as e:
-			print("aux_get fail", cpv, e)
-		else:
-			if metadata == "INHERITED":
-				for eclass in result[metapos].split():
-					key = eclass + ".eclass"
-					if key not in mymeta:
-						mymeta.add(key)
-			elif metadata == "LICENSE":
-				for lic in result[metapos].split():
-					if lic in [")", "(", "||"] or lic.endswith("?"):
-						continue
-					if lic not in mymeta:
-						mymeta.add(lic)
+	for fu_fu in async_iter_completed(future_generator()):
+		future_set = await fu_fu
+		for future in future_set:
+			cpv = future_aux.pop(id(future))
+			try:
+				result = future.result()
+			except KeyError as e:
+				print("aux_get fail", cpv, e)
+			else:
+				if metadata == "INHERITED":
+					for eclass in result[metapos].split():
+						key = eclass + ".eclass"
+						if key not in mymeta:
+							mymeta.add(key)
+				elif metadata == "LICENSE":
+					for lic in result[metapos].split():
+						if lic in [")", "(", "||"] or lic.endswith("?"):
+							continue
+						if lic not in mymeta:
+							mymeta.add(lic)
 	return mymeta
 
 
