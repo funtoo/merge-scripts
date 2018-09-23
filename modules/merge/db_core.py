@@ -7,7 +7,6 @@ from sqlalchemy import create_engine, Integer, Boolean, Column, String, BigInteg
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 from datetime import datetime
-from sqlalchemy.pool import SingletonThreadPool
 from sqlalchemy.schema import MetaData
 
 app_config = Configuration()
@@ -126,7 +125,7 @@ class FastPullDatabase(Database):
 		self.MissingManifestFailure = MissingManifestFailure
 		self.MissingRequestedFile = MissingRequestedFile
 		
-		self.engine = create_engine(app_config.db_connection("fastpull"), poolclass=SingletonThreadPool, strategy='threadlocal')
+		self.engine = create_engine(app_config.db_connection("fastpull"), strategy='threadlocal', pool_pre_ping=True)
 		self.Base.metadata.create_all(self.engine)
 
 if __name__ == "__main__":
