@@ -21,12 +21,6 @@ class AsyncEngine:
 			for x in range(0, self.num_threads):
 				self.loop.run_in_executor(self.thread_exec, self._worker, x)
 	
-	def start_ioloop(self):
-		# run forever
-		print(self.tasks)
-		self.loop.run_until_complete(asyncio.gather(*self.tasks))
-		self.loop.close()
-	
 	def add_worker(self, w):
 		self.tasks.append(self.thread_exec.submit(w))
 			

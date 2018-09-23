@@ -543,8 +543,12 @@ if __name__ == "__main__":
 	# Start an asyncio loop. Main thread regenerates kits. Background thread queries MySQL db and processes potential distfiles for spider.
 	
 	async_engine = AsyncMergeAllKits(num_threads=num_threads)
-	asyncio.ensure_future(main_thread())
 	async_engine.start_threads(enable_workers = True if num_threads != 0 else False)
+	loop = asyncio.get_event_loop()
+	loop.run_until_complete(main_thread())
+	loop.close()
+	
+	
 	async_engine.start_ioloop()
 
 
