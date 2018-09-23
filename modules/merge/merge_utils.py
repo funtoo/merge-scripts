@@ -1478,9 +1478,7 @@ class GitTree(Tree):
 		if not os.path.isdir("%s/.git" % self.root):
 			# repo does not exist? - needs to be cloned or created
 			if os.path.exists(self.root):
-				print("%s exists but does not appear to be a valid git repository. Exiting." % self.root)
-				sys.exit(1)
-				# dir exists but not a git repo, so exit
+				raise GitTreeError("%s exists but does not appear to be a valid git repository." % self.root)
 			
 			base = os.path.dirname(self.root)
 			if self.create:
@@ -1516,7 +1514,7 @@ class GitTree(Tree):
 				print("  expected:", self.url)
 				print()
 				print("Please fix or delete any repos that are cloned from the wrong origin.")
-				sys.exit(1)
+				raise GitTreeError("%s: Git origin mismatch." % self.root)
 		# first, we will clean up any messes:
 		if not self.has_cleaned:
 			runShell("(cd %s &&  git reset --hard && git clean -fd )" % self.root )
@@ -1562,7 +1560,6 @@ class GitTree(Tree):
 		return int(depth) + 1
 
 	def getAllCatPkgs(self):
-		self.gitCheckout()
 		with open(self.root + "/profiles/categories","r") as a:
 			cats = a.read().split()
 		catpkgs = {} 
