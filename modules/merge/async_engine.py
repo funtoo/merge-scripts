@@ -27,7 +27,7 @@ class AsyncEngine:
 		self.tasks.append(asyncio.async(w))
 			
 	def enqueue(self, **kwargs):
-		self.tasks.append(self.task_q.put(kwargs))
+		asyncio.ensure_future(self.task_q.put(kwargs), loop=self.loop)
 	
 	async def _worker(self, worker_num):
 		print("Worker number %s." % worker_num)
