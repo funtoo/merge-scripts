@@ -125,7 +125,7 @@ class FastPullDatabase(Database):
 		self.MissingManifestFailure = MissingManifestFailure
 		self.MissingRequestedFile = MissingRequestedFile
 		
-		self.engine = create_engine(app_config.db_connection("fastpull"), strategy='threadlocal', pool_pre_ping=True)
+		self.engine = create_engine(app_config.db_connection("fastpull"), strategy='threadlocal', pool_pre_ping=True, pool_size=40, max_overflow=80)
 		self.Base.metadata.create_all(self.engine)
 
 if __name__ == "__main__":

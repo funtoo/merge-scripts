@@ -21,6 +21,7 @@ class AsyncEngine:
 		if enable_workers is True:
 			for x in range(0, self.num_threads):
 				self.loop.run_in_executor(self.thread_exec, self._worker, x)
+		print("Started %s workers." % self.num_threads)
 	
 	def add_worker(self, w):
 		self.workers.append(self.thread_exec.submit(w))
@@ -29,8 +30,6 @@ class AsyncEngine:
 		self.task_q.put(kwargs)
 	
 	def _worker(self, worker_num):
-		print("Worker number %s." % worker_num)
-		
 		while self.keep_running is True or (self.keep_running is False and self.task_q.qsize() > 0 ):
 			kwargs = defaultdict(lambda: None, self.task_q.get())
 			self.worker_thread(**kwargs)
