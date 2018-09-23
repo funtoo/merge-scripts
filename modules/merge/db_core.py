@@ -8,6 +8,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 from datetime import datetime
 from sqlalchemy.pool import SingletonThreadPool
+from sqlalchemy.schema import MetaData
 
 app_config = Configuration()
 
@@ -29,12 +30,12 @@ class Database(object):
 
 class FastPullDatabase(Database):
 
-	Base = declarative_base()
-
+	MetaData = MetaData()
+	
 	def __init__(self):
 		
-		self.engine = create_engine(app_config.db_connection("fastpull"), poolclass=SingletonThreadPool, strategy='threadlocal')
-
+		self.Base = declarative_base(self.MetaData)
+		
 		class Distfile(self.Base):
 
 			# A distfile represents a single file for download. A distfile has a filename, which is its local filename
@@ -124,6 +125,8 @@ class FastPullDatabase(Database):
 		self.QueuedDistfile = QueuedDistfile
 		self.MissingManifestFailure = MissingManifestFailure
 		self.MissingRequestedFile = MissingRequestedFile
+		
+		self.engine = create_engine(app_config.db_connection("fastpull"), poolclass=SingletonThreadPool, strategy='threadlocal')
 		self.Base.metadata.create_all(self.engine)
 		self.session_factory = scoped_session(sessionmaker(bind=self.engine))
 
