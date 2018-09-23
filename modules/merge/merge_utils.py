@@ -30,6 +30,257 @@ class MergeStep(object):
 		pass
 
 
+class Tree(object):
+	def __init__(self, name, root):
+		self.name = name
+		self.root = root
+	
+	def head(self):
+		return "None"
+
+
+class GitTreeError(Exception):
+	pass
+
+
+class GitTree(Tree):
+	"A Tree (git) that we can use as a source for work jobs, and/or a target for running jobs."
+	
+	def __init__(self, name: str, branch: str = "master", url: str = None, commit_sha1: str = None,
+				 root: str = None,
+				 create: bool = False,
+				 reponame: str = None):
+		
+		# note that if create=True, we are in a special 'local create' mode which is good for testing. We create the repo locally from
+		# scratch if it doesn't exist, as well as any branches. And we don't push.
+		
+		self.name = name
+		self.root = root
+		self.url = url
+		self.merged = []
+		self.pull = True
+		self.reponame = reponame
+		self.create = create
+		self.has_cleaned = False
+		
+		self.initializeTree(branch, commit_sha1)
+	
+	# if we don't specify root destination tree, assume we are source only:
+	
+	def initializeTree(self, branch, commit_sha1=None):
+		self.branch = branch
+		self.commit_sha1 = commit_sha1
+		if self.root is None:
+			base = config.source_trees
+			self.root = "%s/%s" % (base, self.name)
+		if not os.path.isdir("%s/.git" % self.root):
+			# repo does not exist? - needs to be cloned or created
+			if os.path.exists(self.root):
+				raise GitTreeError("%s exists but does not appear to be a valid git repository." % self.root)
+			
+			base = os.path.dirname(self.root)
+			if self.create:
+				# we have been told to create this repo. This works even if we have a remote clone URL specified
+				os.makedirs(self.root)
+				runShell("( cd %s && git init )" % self.root)
+				runShell("echo 'created by merge.py' > %s/README" % self.root)
+				runShell("( cd %s &&  git add README; git commit -a -m 'initial commit by merge.py' )" % self.root)
+				runShell("( cd %s && git remote add origin %s )" % (self.root, self.url))
+			elif self.url:
+				if not os.path.exists(base):
+					os.makedirs(base)
+				# we aren't supposed to create it from scratch -- can we clone it?
+				runShell("(cd %s && git clone %s %s)" % (base, self.url, os.path.basename(self.root)))
+			else:
+				# we've run out of options
+				print("Error: tree %s does not exist, but no clone URL specified. Exiting." % self.root)
+				sys.exit(1)
+		
+		# if we've gotten here, we can assume that the repo exists at self.root.
+		if self.url is not None:
+			retval, out = subprocess.getstatusoutput("(cd %s && git remote get-url origin)" % self.root)
+			my_url = self.url
+			if my_url.endswith(".git"):
+				my_url = my_url[:-4]
+			if out.endswith(".git"):
+				out = out[:-4]
+			if out != my_url:
+				print()
+				print("Error: remote url for origin at %s is:" % self.root)
+				print()
+				print("  existing:", out)
+				print("  expected:", self.url)
+				print()
+				print("Please fix or delete any repos that are cloned from the wrong origin.")
+				raise GitTreeError("%s: Git origin mismatch." % self.root)
+		# first, we will clean up any messes:
+		if not self.has_cleaned:
+			runShell("(cd %s &&  git reset --hard && git clean -fd )" % self.root)
+			self.has_cleaned = True
+		
+		# git fetch will run as part of this:
+		self.gitCheckout(self.branch)
+		
+		# point to specified sha1:
+		
+		if self.commit_sha1:
+			runShell("(cd %s && git checkout %s )" % (self.root, self.commit_sha1))
+			if self.head() != self.commit_sha1:
+				raise GitTreeError("%s: Was not able to check out specified SHA1: %s." % (self.root, self.commit_sha1))
+		elif self.pull:
+			# we are on the right branch, but we want to make sure we have the latest updates
+			runShell("(cd %s && git pull -f || true)" % self.root)
+	
+	@property
+	def currentLocalBranch(self):
+		s, branch = subprocess.getstatusoutput("( cd %s && git symbolic-ref --short -q HEAD )" % self.root)
+		if s:
+			return None
+		else:
+			return branch
+	
+	def localBranchExists(self, branch):
+		s, branch = subprocess.getstatusoutput("( cd %s && git show-ref --verify --quiet refs/heads/%s )" % (self.root, branch))
+		if s:
+			return False
+		else:
+			return True
+	
+	def remoteBranchExists(self, branch):
+		s, o = subprocess.getstatusoutput("( cd %s && git show-branch remotes/origin/%s )" % (self.root, branch))
+		if s:
+			return False
+		else:
+			return True
+	
+	def getDepthOfCommit(self, sha1):
+		s, depth = subprocess.getstatusoutput("( cd %s && git rev-list HEAD ^%s --count)" % (self.root, sha1))
+		return int(depth) + 1
+	
+	def getAllCatPkgs(self):
+		with open(self.root + "/profiles/categories", "r") as a:
+			cats = a.read().split()
+		catpkgs = {}
+		for cat in cats:
+			if not os.path.exists(self.root + "/" + cat):
+				continue
+			pkgs = os.listdir(self.root + "/" + cat)
+			for pkg in pkgs:
+				if not os.path.isdir(self.root + "/" + cat + "/" + pkg):
+					continue
+				catpkgs[cat + "/" + pkg] = self.name
+		return catpkgs
+	
+	def catpkg_exists(self, catpkg):
+		return os.path.exists(self.root + "/" + catpkg)
+	
+	def gitCheckout(self, branch="master"):
+		runShell("(cd %s && git fetch)" % self.root)
+		if self.localBranchExists(branch):
+			runShell("(cd %s && git checkout %s && git pull -f || true)" % (self.root, branch))
+		elif self.remoteBranchExists(branch):
+			runShell("(cd %s && git checkout -b %s --track origin/%s)" % (self.root, branch, branch))
+		else:
+			runShell("(cd %s && git checkout -b %s)" % (self.root, branch))
+		if self.currentLocalBranch != branch:
+			raise GitTreeError("%s: On branch %s. not able to check out branch %s." % (self.root, self.currentLocalBranch, branch))
+	
+	def gitPush(self):
+		runShell("(cd %s && git push --mirror)" % self.root)
+	
+	def gitCommit(self, message="", push=True):
+		runShell("( cd %s && git add . )" % self.root)
+		cmd = "( cd %s && [ -n \"$(git status --porcelain)\" ] && git commit -a -F - << EOF || exit 0\n" % self.root
+		if message != "":
+			cmd += "%s\n\n" % message
+		names = []
+		if len(self.merged):
+			cmd += "merged: \n\n"
+			for name, sha1 in self.merged:
+				if name in names:
+					# don't print dups
+					continue
+				names.append(name)
+				if sha1 is not None:
+					cmd += "  %s: %s\n" % (name, sha1)
+		cmd += "EOF\n"
+		cmd += ")\n"
+		print("running: %s" % cmd)
+		# we use os.system because this multi-line command breaks runShell() - really, breaks commands.getstatusoutput().
+		retval = os.system(cmd)
+		if retval != 0:
+			print("Commit failed.")
+			sys.exit(1)
+		if push == True and self.create == False:
+			runShell("(cd %s && git push --mirror)" % self.root)
+		else:
+			print("Pushing disabled.")
+	
+	async def run(self, steps):
+		for step in steps:
+			if step is not None:
+				print("Running step", step.__class__.__name__, step)
+				await step.run(self)
+	
+	def head(self):
+		return headSHA1(self.root)
+	
+	def logTree(self, srctree):
+		# record name and SHA of src tree in dest tree, used for git commit message/auditing:
+		if srctree.name is None:
+			# this tree doesn't have a name, so just copy any existing history from that tree
+			self.merged.extend(srctree.merged)
+		else:
+			# this tree has a name, so record the name of the tree and its SHA1 for reference
+			if hasattr(srctree, "origroot"):
+				self.merged.append([srctree.name, headSHA1(srctree.origroot)])
+				return
+			
+			self.merged.append([srctree.name, srctree.head()])
+
+
+class RsyncTree(Tree):
+	def __init__(self, name, url="rsync://rsync.us.gentoo.org/gentoo-portage/"):
+		self.name = name
+		self.url = url
+		base = config.source_trees
+		self.root = "%s/%s" % (base, self.name)
+		if not os.path.exists(base):
+			os.makedirs(base)
+		runShell(
+			"rsync --recursive --delete-excluded --links --safe-links --perms --times --compress --force --whole-file --delete --timeout=180 --exclude=/.git --exclude=/metadata/cache/ --exclude=/metadata/glsa/glsa-200*.xml --exclude=/metadata/glsa/glsa-2010*.xml --exclude=/metadata/glsa/glsa-2011*.xml --exclude=/metadata/md5-cache/	--exclude=/distfiles --exclude=/local --exclude=/packages %s %s/" % (
+			self.url, self.root))
+
+
+class SvnTree(Tree):
+	def __init__(self, name, url=None):
+		self.name = name
+		self.url = url
+		base = config.source_trees
+		self.root = "%s/%s" % (base, self.name)
+		if not os.path.exists(base):
+			os.makedirs(base)
+		if os.path.exists(self.root):
+			runShell("(cd %s && svn up)" % self.root, abortOnFail=False)
+		else:
+			runShell("(cd %s && svn co %s %s)" % (base, self.url, self.name))
+
+
+class CvsTree(Tree):
+	def __init__(self, name, url=None, path=None):
+		self.name = name
+		self.url = url
+		if path is None:
+			path = self.name
+		base = config.source_trees
+		self.root = "%s/%s" % (base, path)
+		if not os.path.exists(base):
+			os.makedirs(base)
+		if os.path.exists(self.root):
+			runShell("(cd %s && cvs update -dP)" % self.root, abortOnFail=False)
+		else:
+			runShell("(cd %s && cvs -d %s co %s)" % (base, self.url, path))
+
 def get_move_maps(move_map_path, kit_name):
 	"""Grabs a move map list, returning a dictionary"""
 	move_maps = {}
@@ -503,7 +754,7 @@ class CatPkgScan(MergeStep):
 		self.now = now
 		self.engine = engine
 
-	async def run(self, cur_overlay):
+	async def run(self, cur_overlay: GitTree):
 		if self.engine is None:
 			return
 		cur_tree = cur_overlay.root
@@ -620,8 +871,8 @@ class CatPkgScan(MergeStep):
 						restrict=fn_meta[f]["restrict"],
 						catpkg=pkg,
 						src_uri=s_out,
-						kit_name=cur_overlay["name"],
-						kit_branch=cur_overlay["branch"],
+						kit_name=cur_overlay.name,
+						kit_branch=cur_overlay.branch,
 						digest_type=man_info[f]["digest_type"],
 						bestmatch= fn_meta[f]["bestmatch"]
 						
@@ -1382,13 +1633,6 @@ class SyncFromTree(SyncDir):
 		SyncDir.run(self,desttree)
 		desttree.logTree(self.srctree)
 
-class Tree(object):
-	def __init__(self,name,root):
-		self.name = name
-		self.root = root
-		
-	def head(self):
-		return "None"
 
 class XMLRecorder(object):
 
@@ -1438,244 +1682,6 @@ class XMLRecorder(object):
 			pass
 		catxml.append(pkgxml)
 
-class GitTreeError(Exception):
-	
-	pass
-
-
-class GitTree(Tree):
-
-	"A Tree (git) that we can use as a source for work jobs, and/or a target for running jobs."
-
-	def __init__(self, name: str, branch: str = "master", url: str = None, commit_sha1: str = None,
-				 root: str = None,
-				 create: bool = False,
-				 reponame: str = None):
-
-		# note that if create=True, we are in a special 'local create' mode which is good for testing. We create the repo locally from
-		# scratch if it doesn't exist, as well as any branches. And we don't push.
-
-		self.name = name
-		self.root = root
-		self.url = url
-		self.merged = []
-		self.pull = True
-		self.reponame = reponame
-		self.create = create
-		self.has_cleaned = False
-
-		self.initializeTree(branch, commit_sha1)
-
-		# if we don't specify root destination tree, assume we are source only:
-	
-	def initializeTree(self, branch, commit_sha1=None):
-		self.branch = branch
-		self.commit_sha1 = commit_sha1
-		if self.root is None:
-			base = config.source_trees
-			self.root = "%s/%s" % ( base, self.name )
-		if not os.path.isdir("%s/.git" % self.root):
-			# repo does not exist? - needs to be cloned or created
-			if os.path.exists(self.root):
-				raise GitTreeError("%s exists but does not appear to be a valid git repository." % self.root)
-			
-			base = os.path.dirname(self.root)
-			if self.create:
-				# we have been told to create this repo. This works even if we have a remote clone URL specified
-				os.makedirs(self.root)
-				runShell("( cd %s && git init )" % self.root )
-				runShell("echo 'created by merge.py' > %s/README" % self.root )
-				runShell("( cd %s &&  git add README; git commit -a -m 'initial commit by merge.py' )" % self.root )
-				runShell("( cd %s && git remote add origin %s )" % ( self.root, self.url ))
-			elif self.url:
-				if not os.path.exists(base):
-					os.makedirs(base)
-				# we aren't supposed to create it from scratch -- can we clone it?
-				runShell("(cd %s && git clone %s %s)" % ( base, self.url, os.path.basename(self.root) ))
-			else:
-				# we've run out of options
-				print("Error: tree %s does not exist, but no clone URL specified. Exiting." % self.root)
-				sys.exit(1)
-
-		# if we've gotten here, we can assume that the repo exists at self.root. 
-		if self.url is not None:
-			retval, out = subprocess.getstatusoutput("(cd %s && git remote get-url origin)" % self.root)
-			my_url = self.url
-			if my_url.endswith(".git"):
-				my_url = my_url[:-4]
-			if out.endswith(".git"):
-				out = out[:-4]
-			if out != my_url:
-				print()
-				print("Error: remote url for origin at %s is:" % self.root)
-				print()
-				print("  existing:",out)
-				print("  expected:", self.url)
-				print()
-				print("Please fix or delete any repos that are cloned from the wrong origin.")
-				raise GitTreeError("%s: Git origin mismatch." % self.root)
-		# first, we will clean up any messes:
-		if not self.has_cleaned:
-			runShell("(cd %s &&  git reset --hard && git clean -fd )" % self.root )
-			self.has_cleaned = True
-
-		# git fetch will run as part of this:
-		self.gitCheckout(self.branch)
-
-		# point to specified sha1:
-
-		if self.commit_sha1:
-			runShell("(cd %s && git checkout %s )" % (self.root, self.commit_sha1 ))
-			if self.head() != self.commit_sha1:
-				raise GitTreeError("%s: Was not able to check out specified SHA1: %s." % (self.root, self.commit_sha1))
-		elif self.pull:
-			# we are on the right branch, but we want to make sure we have the latest updates 
-			runShell("(cd %s && git pull -f || true)" % self.root )
-
-	@property
-	def currentLocalBranch(self):
-		s, branch = subprocess.getstatusoutput("( cd %s && git symbolic-ref --short -q HEAD )" % self.root)
-		if s:
-			return None
-		else:
-			return branch
-
-	def localBranchExists(self, branch):
-		s, branch = subprocess.getstatusoutput("( cd %s && git show-ref --verify --quiet refs/heads/%s )" % ( self.root, branch))
-		if s:
-			return False
-		else:
-			return True
-		
-	def remoteBranchExists(self, branch):
-		s, o = subprocess.getstatusoutput("( cd %s && git show-branch remotes/origin/%s )" % ( self.root, branch))
-		if s:
-			return False
-		else:
-			return True
-
-	def getDepthOfCommit(self, sha1):
-		s, depth = subprocess.getstatusoutput("( cd %s && git rev-list HEAD ^%s --count)" % ( self.root, sha1 ))
-		return int(depth) + 1
-
-	def getAllCatPkgs(self):
-		with open(self.root + "/profiles/categories","r") as a:
-			cats = a.read().split()
-		catpkgs = {} 
-		for cat in cats:
-			if not os.path.exists(self.root + "/" + cat):
-				continue
-			pkgs = os.listdir(self.root + "/" + cat)
-			for pkg in pkgs:
-				if not os.path.isdir(self.root + "/" + cat + "/" + pkg):
-					continue
-				catpkgs[cat + "/" + pkg] = self.name
-		return catpkgs
-
-	def catpkg_exists(self, catpkg):
-		return os.path.exists(self.root + "/" + catpkg)
-
-	def gitCheckout(self, branch="master"):
-		runShell("(cd %s && git fetch)" % self.root)
-		if self.localBranchExists(branch):
-			runShell("(cd %s && git checkout %s && git pull -f || true)" % (self.root, branch))
-		elif self.remoteBranchExists(branch):
-			runShell("(cd %s && git checkout -b %s --track origin/%s)" % (self.root, branch, branch))
-		else:
-			runShell("(cd %s && git checkout -b %s)" % (self.root, branch))
-		if self.currentLocalBranch != branch:
-			raise GitTreeError("%s: On branch %s. not able to check out branch %s." % (self.root, self.currentLocalBranch, branch))
-		
-	def gitPush(self):
-		runShell("(cd %s && git push --mirror)" % self.root)
-
-	def gitCommit(self, message="", push=True):
-		runShell("( cd %s && git add . )" % self.root )
-		cmd = "( cd %s && [ -n \"$(git status --porcelain)\" ] && git commit -a -F - << EOF || exit 0\n" % self.root
-		if message != "":
-			cmd += "%s\n\n" % message
-		names = []
-		if len(self.merged):
-			cmd += "merged: \n\n"
-			for name, sha1 in self.merged:
-				if name in names:
-					# don't print dups
-					continue
-				names.append(name)
-				if sha1 is not None:
-					cmd += "  %s: %s\n" % ( name, sha1 )
-		cmd += "EOF\n"
-		cmd += ")\n"
-		print("running: %s" % cmd)
-		# we use os.system because this multi-line command breaks runShell() - really, breaks commands.getstatusoutput().
-		retval = os.system(cmd)
-		if retval != 0:
-			print("Commit failed.")
-			sys.exit(1)
-		if push == True and self.create == False:
-			runShell("(cd %s && git push --mirror)" % self.root )
-		else:	 
-			print("Pushing disabled.")
-
-	async def run(self,steps):
-		for step in steps:
-			if step is not None:
-				print("Running step", step.__class__.__name__, step)
-				await step.run(self)
-
-	def head(self):
-		return headSHA1(self.root)
-
-	def logTree(self,srctree):
-		# record name and SHA of src tree in dest tree, used for git commit message/auditing:
-		if srctree.name is None:
-			# this tree doesn't have a name, so just copy any existing history from that tree
-			self.merged.extend(srctree.merged)
-		else:
-			# this tree has a name, so record the name of the tree and its SHA1 for reference
-			if hasattr(srctree, "origroot"):
-				self.merged.append([srctree.name, headSHA1(srctree.origroot)])
-				return
-
-			self.merged.append([srctree.name, srctree.head()])
-
-class RsyncTree(Tree):
-	def __init__(self,name,url="rsync://rsync.us.gentoo.org/gentoo-portage/"):
-		self.name = name
-		self.url = url 
-		base = config.source_trees
-		self.root = "%s/%s" % (base, self.name)
-		if not os.path.exists(base):
-			os.makedirs(base)
-		runShell("rsync --recursive --delete-excluded --links --safe-links --perms --times --compress --force --whole-file --delete --timeout=180 --exclude=/.git --exclude=/metadata/cache/ --exclude=/metadata/glsa/glsa-200*.xml --exclude=/metadata/glsa/glsa-2010*.xml --exclude=/metadata/glsa/glsa-2011*.xml --exclude=/metadata/md5-cache/	--exclude=/distfiles --exclude=/local --exclude=/packages %s %s/" % (self.url, self.root))
-
-class SvnTree(Tree):
-	def __init__(self, name, url=None):
-		self.name = name
-		self.url = url
-		base = config.source_trees
-		self.root = "%s/%s" % (base, self.name)
-		if not os.path.exists(base):
-			os.makedirs(base)
-		if os.path.exists(self.root):
-			runShell("(cd %s && svn up)" % self.root, abortOnFail=False)
-		else:
-			runShell("(cd %s && svn co %s %s)" % (base, self.url, self.name))
-
-class CvsTree(Tree):
-	def __init__(self, name, url=None, path=None):
-		self.name = name
-		self.url = url
-		if path is None:
-			path = self.name
-		base = config.source_trees
-		self.root = "%s/%s" % (base, path)
-		if not os.path.exists(base):
-			os.makedirs(base)
-		if os.path.exists(self.root):
-			runShell("(cd %s && cvs update -dP)" % self.root, abortOnFail=False)
-		else:
-			runShell("(cd %s && cvs -d %s co %s)" % (base, self.url, path))
 
 regextype = type(re.compile('hello, world'))
 
