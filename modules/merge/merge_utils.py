@@ -527,46 +527,45 @@ class CatPkgScan(MergeStep):
 		''' % config.dest_trees
 		env['ACCEPT_KEYWORDS'] = "~amd64 amd64"
 		p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
-		for pkg in p.cp_all(trees=[cur_overlay.root]):
-
-			# src_uri now has the following format:
-
-			# src_uri["foo.tar.gz"] = [ "https://url1", "https//url2" ... ]
-			# entries in SRC_URI from fetch-restricted ebuilds will have SRC_URI prefixed by "NOMIRROR:"
-
-			# We are scanning SRC_URI in all ebuilds in the catpkg, as well as Manifest.
-			# This will give us a complete list of all archives used in the catpkg.
-
-			# We want to prioritize SRC_URI for bestmatch-visible ebuilds. We will use bm
-			# and prio to tag files that are in bestmatch-visible ebuilds.
-
-			bm = p.xmatch("bestmatch-visible", pkg)
-
-			fn_urls = defaultdict(list)
-			fn_meta = defaultdict(dict)
-
-			for cpv in p.xmatch("match-all", pkg):
-				if len(cpv) == 0:
-					continue
-
-				aux_info = p.aux_get(cpv, ["SRC_URI", "RESTRICT" ], mytree=cur_overlay.root)
-
-				restrict = aux_info[1].split()
-				mirror_restrict = False
-				for r in restrict:
-					if r == "mirror":
-						mirror_restrict = True
-						break
-
-				# record our own metadata about each file...
-				new_fn_urls, new_files = extract_uris(aux_info[0])
-				fn_urls.update(new_fn_urls)
-				for fn in new_files:
-					fn_meta[fn]["restrict"] = mirror_restrict
-					fn_meta[fn]["bestmatch"] = cpv == bm
-
-			with self.db.get_session() as session:
-
+		with self.db.get_session() as session:
+			for pkg in p.cp_all(trees=[cur_overlay.root]):
+	
+				# src_uri now has the following format:
+	
+				# src_uri["foo.tar.gz"] = [ "https://url1", "https//url2" ... ]
+				# entries in SRC_URI from fetch-restricted ebuilds will have SRC_URI prefixed by "NOMIRROR:"
+	
+				# We are scanning SRC_URI in all ebuilds in the catpkg, as well as Manifest.
+				# This will give us a complete list of all archives used in the catpkg.
+	
+				# We want to prioritize SRC_URI for bestmatch-visible ebuilds. We will use bm
+				# and prio to tag files that are in bestmatch-visible ebuilds.
+	
+				bm = p.xmatch("bestmatch-visible", pkg)
+	
+				fn_urls = defaultdict(list)
+				fn_meta = defaultdict(dict)
+	
+				for cpv in p.xmatch("match-all", pkg):
+					if len(cpv) == 0:
+						continue
+	
+					aux_info = p.aux_get(cpv, ["SRC_URI", "RESTRICT" ], mytree=cur_overlay.root)
+	
+					restrict = aux_info[1].split()
+					mirror_restrict = False
+					for r in restrict:
+						if r == "mirror":
+							mirror_restrict = True
+							break
+	
+					# record our own metadata about each file...
+					new_fn_urls, new_files = extract_uris(aux_info[0])
+					fn_urls.update(new_fn_urls)
+					for fn in new_files:
+						fn_meta[fn]["restrict"] = mirror_restrict
+						fn_meta[fn]["bestmatch"] = cpv == bm
+	
 				man_info = {}
 				man_file = cur_tree + "/" + pkg + "/Manifest"
 				if os.path.exists(man_file):
@@ -588,36 +587,36 @@ class CatPkgScan(MergeStep):
 								continue
 						man_info[ls[1]] = { "size" : ls[2], "digest" : ls[digest_index], "digest_type" : digest_type }
 					man_f.close()
-
+	
 				# for each catpkg:
-
+	
 				for f, uris in fn_urls.items():
-
+	
 					if f not in man_info:
 						print("Error: %s/%s: %s Manifest file contains nothing for %s, skipping..." % (cur_overlay.name, cur_overlay.branch, pkg, f))
 						continue
-
+	
 					s_out = ""
 					for u in uris:
 						s_out += u + "\n"
-
+	
 					# If we have already grabbed this distfile, then let's not queue it for fetching...
-
+	
 					if man_info[f]["digest_type"] == "sha512":
 						existing = session.query(self.db.Distfile).filter(self.db.Distfile.id == man_info[f]["digest"]).first()
 						# TODO: maybe it already exists, but under a different filename. If so, we still want to
 						# create a distfile entry for it so it can be downloaded...
-
+	
 						if existing:
 							continue
-
+	
 					# Don't create multiple queued downloads for the same distfile:
-
+	
 					if session.query(self.db.QueuedDistfile).filter(self.db.QueuedDistfile.filename == f).filter(self.db.QueuedDistfile.size == man_info[f]["size"]).first() is not None:
 						continue
-
+	
 					# Queue the distfile for downloading...
-
+	
 					qd = self.db.QueuedDistfile()
 					qd.filename = f
 					qd.catpkg = pkg
@@ -630,7 +629,7 @@ class CatPkgScan(MergeStep):
 					qd.digest = man_info[f]["digest"]
 					qd.priority = 1 if fn_meta[f]["bestmatch"] else 0
 					session.add(qd)
-				session.commit()
+			session.commit()
 
 def repoName(cur_overlay):
 	cur_tree = cur_overlay.root
