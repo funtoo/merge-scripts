@@ -559,7 +559,7 @@ class CatPkgScan(MergeStep):
 				if len(cpv) == 0:
 					continue
 
-				aux_info = p.aux_get(cpv, ["SRC_URI", "RESTRICT" ], mytree=cur_overlay.root)
+				aux_info = await p.async_aux_get(cpv, ["SRC_URI", "RESTRICT" ], mytree=cur_overlay.root)
 
 				restrict = aux_info[1].split()
 				mirror_restrict = False
