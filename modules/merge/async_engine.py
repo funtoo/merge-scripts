@@ -12,10 +12,10 @@ class AsyncEngine:
 	def __init__(self, num_threads=40):
 		self.task_q = asyncio.Queue(maxsize=self.queue_size)
 		self.loop = asyncio.get_event_loop()
+		self.num_threads = num_threads
 		self.thread_exec = ThreadPoolExecutor(max_workers=self.num_threads)
 		self.tasks = []
-		self.num_threads = num_threads
-	
+
 	def worker_init(self):
 		pass
 	
