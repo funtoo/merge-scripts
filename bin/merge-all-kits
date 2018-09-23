@@ -134,7 +134,7 @@ def getKitSourceInstance(kit_dict):
 # regenerating it. The kitted_catpkgs argument is a dictionary which is also written to and used to keep track of
 # catpkgs copied between runs of updateKit.
 
-def updateKit(release, kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=False, push=False, now=None, fixup_repo=None):
+async def updateKit(release, kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=False, push=False, now=None, fixup_repo=None):
 	# secondary_kit means: we're the second (or third, etc.) xorg-kit or other kit to be processed. The first kind of
 	# each kit processed has secondary_kit = False, and later ones have secondary_kit = True. We need special processing
 	# to grab any 'orphan' packages that were selected as part of prior kit scans (and thus will not be included in
@@ -163,7 +163,7 @@ def updateKit(release, kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, 
 	if "generate" in kit_dict and kit_dict["generate"] is not True:
 		# independently-maintained repo. Don't regenerate. Just record all catpkgs in this kit as belonging ot this kit so they don't get into other kits:
 		tree = mu.GitTree(kit_dict["name"], kit_dict["branch"], url="https://github.com/funtoo/%s" % kit_dict["name"], root=config.source_trees + "/" + kit_dict["name"])
-		tree.run([
+		await tree.run([
 			mu.RecordAllCatPkgs(tree, cpm_logger)
 		])
 		return tree.head()
@@ -202,7 +202,7 @@ def updateKit(release, kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, 
 	copy_steps = prep_steps[1]
 	post_steps = prep_steps[2]
 	
-	tree.run(pre_steps)
+	await tree.run(pre_steps)
 	
 	# Phase 2: copy core set of ebuilds
 	
@@ -241,10 +241,10 @@ def updateKit(release, kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, 
 			# grab all remaining ebuilds to put in nokit
 			steps += [mu.InsertEbuilds(repo_dict["repo"], select_only=select_clause, move_maps=move_maps, skip=None, replace=False, cpm_logger=cpm_logger)]
 		else:
-			steps += mu.generateKitSteps(release, kit_dict['name'], repo_dict["repo"], fixup_repo=fixup_repo, select_only=select_clause,
+			steps += await mu.generateKitSteps(release, kit_dict['name'], repo_dict["repo"], fixup_repo=fixup_repo, select_only=select_clause,
 										 filter_repos=filter_repos, force=overlay_def["force"] if "force" in overlay_def else None,
 										 cpm_logger=cpm_logger, move_maps=move_maps, secondary_kit=secondary_kit)
-		tree.run(steps)
+		await tree.run(steps)
 		if copycount != cpm_logger.copycount:
 			# this means some catpkgs were installed from the repo we are currently processing. This means we also want to execute
 			# 'copyfiles' and 'eclasses' copy logic:
@@ -328,7 +328,7 @@ def updateKit(release, kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, 
 				mu.InsertEbuilds(fixup_repo, ebuildloc=fixup_path, select="all", skip=None, replace=True,
 								 cpm_logger=cpm_logger, is_fixup=True)
 			]
-	tree.run(steps)
+	await tree.run(steps)
 	
 	# Now we want to perform a scan of any eclasses in the Gentoo repo that we need to copy over to our dest_kit so that it contains all
 	# eclasses and licenses it needs within itself, without having to reference any in the Gentoo repo.
@@ -338,19 +338,19 @@ def updateKit(release, kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, 
 	# For eclasses we perform a much more conservative scan. We will only scour missing eclasses from gentoo-staging, not
 	# eclasses. If you need a special eclass, you need to specify it in the eclasses list for the overlay explicitly.
 	
-	tree.run(copy_steps)
+	await tree.run(copy_steps)
 	copy_steps = []
 	
 	# copy all available licenses that have not been copied in fixups from gentoo-staging over to the kit.
 	# We will remove any unused licenses below...
 	
 	copy_steps += [mu.InsertLicenses(gentoo_staging, select=mu.simpleGetAllLicenses(tree, gentoo_staging))]
-	tree.run(copy_steps)
+	await tree.run(copy_steps)
 	
 	# Phase 4: finalize and commit
 	
 	# remove unused licenses...
-	used_licenses = mu.getAllLicenses(tree)
+	used_licenses = await mu.getAllLicenses(tree)
 	to_remove = []
 	for license in os.listdir(tree.root + "/licenses"):
 		if license not in used_licenses["dest_kit"]:
@@ -391,7 +391,7 @@ def updateKit(release, kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, 
 		mu.CatPkgScan(now=now, engine=async_engine)
 	]
 	
-	tree.run(post_steps)
+	await tree.run(post_steps)
 	tree.gitCommit(message="updates", push=push)
 	return tree.head()
 
@@ -502,7 +502,7 @@ class AsyncMergeAllKits(AsyncEngine):
 			
 			for kit_dict in foundation.kit_groups[release]:
 				print("Regenerating kit ", kit_dict)
-				head = updateKit(release, kit_dict, prev_kit_dict, release, cpm_logger, db=db, create=not push, push=push, now=now, fixup_repo=fixup_repo)
+				head = await updateKit(release, kit_dict, prev_kit_dict, release, cpm_logger, db=db, create=not push, push=push, now=now, fixup_repo=fixup_repo)
 				kit_name = kit_dict["name"]
 				if kit_name not in output_sha1s:
 					output_sha1s[kit_name] = {}

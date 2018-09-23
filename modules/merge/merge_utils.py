@@ -16,7 +16,7 @@ import grp
 import pwd
 import multiprocessing
 from collections import defaultdict
-from portage.util.futures.iter_completed import iter_completed
+from portage.util.futures.iter_completed import async_iter_completed
 from merge.config import config
 from merge.async_engine import AsyncEngine
 
@@ -24,7 +24,9 @@ debug = False
 
 
 class MergeStep(object):
-	pass
+	
+	async def run(self):
+		pass
 
 
 def get_move_maps(move_map_path, kit_name):
@@ -198,7 +200,7 @@ aliases = gentoo
 
 			split = False
 			for key,val in ebs.items():
-				if oldval == None:
+				if oldval is None:
 					oldval = val
 				else:
 					if oldval != val:
@@ -231,7 +233,7 @@ aliases = gentoo
 				a.write(self.mask + "\n")
 				a.close()
 
-def getDependencies(cur_overlay, catpkgs, levels=0, cur_level=0):
+async def getDependencies(cur_overlay, catpkgs, levels=0, cur_level=0):
 	cur_tree = cur_overlay.root
 	try:
 		with open(os.path.join(cur_tree, 'profiles/repo_name')) as f:
@@ -275,7 +277,7 @@ def getDependencies(cur_overlay, catpkgs, levels=0, cur_level=0):
 				future_aux[id(my_future)] = my_cpv
 				yield my_future
 
-	for future in iter_completed(future_generator()):
+	for future in await async_iter_completed(future_generator()):
 		cpv = future_aux.pop(id(future))
 		try:
 			result = future.result()
@@ -292,8 +294,7 @@ def getDependencies(cur_overlay, catpkgs, levels=0, cur_level=0):
 				if mypkg not in mypkgs:
 					mypkgs.add(mypkg)
 				if levels != cur_level:
-					mypkgs = mypkgs.union(getDependencies(cur_overlay, mypkg, levels=levels, cur_level=cur_level+1))
-
+					mypkgs = mypkgs.union(await getDependencies(cur_overlay, mypkg, levels=levels, cur_level=cur_level+1))
 	return mypkgs
 
 def getPackagesInCatWithMaintainer(cur_overlay, my_cat, my_email):
@@ -332,7 +333,7 @@ def getPackagesMatchingRegex(cur_overlay, my_regex):
 			insert_list.append(candy_strip)
 	return insert_list
 
-def getPackagesWithEclass(cur_overlay, eclass):
+async def getPackagesWithEclass(cur_overlay, eclass):
 	cur_tree = cur_overlay.root
 	try:
 		with open(os.path.join(cur_tree, 'profiles/repo_name')) as f:
@@ -378,7 +379,7 @@ def getPackagesWithEclass(cur_overlay, eclass):
 				future_aux[id(my_future)] = my_cpv
 				yield my_future
 
-	for future in iter_completed(future_generator()):
+	for future in await async_iter_completed(future_generator()):
 		cpv = future_aux.pop(id(future))
 		try:
 			result = future.result()
@@ -391,7 +392,7 @@ def getPackagesWithEclass(cur_overlay, eclass):
 					mypkgs.add(cp)
 	return mypkgs
 
-def getPackagesInCatWithEclass(cur_overlay, cat, eclass):
+async def getPackagesInCatWithEclass(cur_overlay, cat, eclass):
 	cur_tree = cur_overlay.root
 	try:
 		with open(os.path.join(cur_tree, 'profiles/repo_name')) as f:
@@ -437,7 +438,7 @@ def getPackagesInCatWithEclass(cur_overlay, cat, eclass):
 				future_aux[id(my_future)] = my_cpv
 				yield my_future
 
-	for future in iter_completed(future_generator()):
+	for future in await async_iter_completed(future_generator()):
 		cpv = future_aux.pop(id(future))
 		try:
 			result = future.result()
@@ -647,9 +648,9 @@ def repoName(cur_overlay):
 # None			: list of all eclasses that were NOT found. This is an error and indicates we need some kit-fixups or
 #				  overlay-specific eclasses.
 
-def _getAllDriver(metadata, path_prefix, dest_kit):
+async def _getAllDriver(metadata, path_prefix, dest_kit):
 	# these may be eclasses or licenses -- we use the term 'eclass' here:
-	eclasses = getAllMeta(metadata, dest_kit)
+	eclasses = await getAllMeta(metadata, dest_kit)
 	out = { None: [], "dest_kit" : [] }
 	for eclass in eclasses:
 		ep = os.path.join(dest_kit.root, path_prefix, eclass)
@@ -686,11 +687,11 @@ def simpleGetAllEclasses(dest_kit, parent_repo):
 	return out
 
 
-def getAllEclasses(dest_kit):
-	return _getAllDriver("INHERITED", "eclass", dest_kit)
+async def getAllEclasses(dest_kit):
+	return await _getAllDriver("INHERITED", "eclass", dest_kit)
 
-def getAllLicenses(dest_kit):
-	return _getAllDriver("LICENSE", "licenses", dest_kit)
+async def getAllLicenses(dest_kit):
+	return await _getAllDriver("LICENSE", "licenses", dest_kit)
 
 # getAllMeta uses the Portage API to query metadata out of a set of repositories. It is designed to be used to figure
 # out what licenses or eclasses to copy from a parent repository to the current kit so that the current kit contains a
@@ -708,7 +709,7 @@ def getAllLicenses(dest_kit):
 #  getAllMeta() returns a set of actual files (without directories) that are used, so [ 'foo.eclass', 'bar.eclass'] 
 #  or [ 'GPL-2', 'bleh' ].
 #
-def getAllMeta(metadata, dest_kit):
+async def getAllMeta(metadata, dest_kit):
 	metadict = { "LICENSE" : 0, "INHERITED" : 1 }
 	metapos = metadict[metadata]
 	
@@ -754,7 +755,7 @@ def getAllMeta(metadata, dest_kit):
 				future_aux[id(my_future)] = cpv
 				yield my_future
 
-	for future in iter_completed(future_generator()):
+	for future in await async_iter_completed(future_generator()):
 		cpv = future_aux.pop(id(future))
 		try:
 			result = future.result()
@@ -775,7 +776,7 @@ def getAllMeta(metadata, dest_kit):
 	return mymeta
 
 
-def generateKitSteps(release, kit_name, from_tree, select_only="all", fixup_repo=None, cpm_logger=None, filter_repos=None, move_maps=None, force=None, secondary_kit=False):
+async def generateKitSteps(release, kit_name, from_tree, select_only="all", fixup_repo=None, cpm_logger=None, filter_repos=None, move_maps=None, force=None, secondary_kit=False):
 	if force is None:
 		force = set()
 	else:
@@ -810,12 +811,12 @@ def generateKitSteps(release, kit_name, from_tree, select_only="all", fixup_repo
 		elif pattern.startswith("@has_eclass@:"):
 			patsplit = pattern.split(":")
 			eclass = patsplit[1]
-			eclass_pkglist = getPackagesWithEclass( from_tree, eclass )
+			eclass_pkglist = await getPackagesWithEclass( from_tree, eclass )
 			pkglist += list(eclass_pkglist)
 		elif pattern.startswith("@cat_has_eclass@:"):
 			patsplit = pattern.split(":")
 			cat, eclass = patsplit[1:]
-			cat_pkglist = getPackagesInCatWithEclass( from_tree, cat, eclass )
+			cat_pkglist = await getPackagesInCatWithEclass( from_tree, cat, eclass )
 			pkglist += list(cat_pkglist)
 		else:
 			linesplit = pattern.split()
@@ -1154,7 +1155,7 @@ class AutoGlobMask(MergeStep):
 		self.catpkg = catpkg
 		self.maskdest = maskdest
 
-	def run(self,tree):
+	async def run(self,tree):
 		if not os.path.exists(tree.root + "/profiles/package.mask"):
 			os.makedirs(tree.root + "/profiles/package.mask")
 		f = open(os.path.join(tree.root,"profiles/package.mask", self.maskdest), "w")
@@ -1168,7 +1169,7 @@ class AutoGlobMask(MergeStep):
 class ThirdPartyMirrors(MergeStep):
 	"Add funtoo's distfiles mirror, and add funtoo's mirrors as gentoo back-ups."
 
-	def run(self,tree):
+	async def run(self,tree):
 		orig = "%s/profiles/thirdpartymirrors" % tree.root
 		new = "%s/profiles/thirdpartymirrors.new" % tree.root
 		mirrors = "https://fastpull-us.funtoo.org/distfiles"
@@ -1191,7 +1192,7 @@ class ApplyPatchSeries(MergeStep):
 	def __init__(self,path):
 		self.path = path
 
-	def run(self,tree):
+	async def run(self, tree):
 		a = open(os.path.join(self.path,"series"),"r")
 		for line in a:
 			if line[0:1] == "#":
@@ -1209,7 +1210,7 @@ class GenerateRepoMetadata(MergeStep):
 		self.masters = masters if masters is not None else []
 		self.priority = priority
 
-	def run(self,tree):
+	async def run(self, tree):
 		meta_path = os.path.join(tree.root, "metadata")
 		if not os.path.exists(meta_path):
 			os.makedirs(meta_path)
@@ -1239,7 +1240,7 @@ class RemoveFiles(MergeStep):
 			globs = []
 		self.globs = globs
 	
-	def run(self,tree):
+	async def run(self, tree):
 		for glob in self.globs:
 			cmd = "rm -rf %s/%s" % ( tree.root, glob )
 			runShell(cmd)
@@ -1252,7 +1253,7 @@ class SyncDir(MergeStep):
 		self.exclude = exclude if exclude is not None else []
 		self.delete = delete
 
-	def run(self,tree):
+	async def run(self, tree):
 		if self.srcdir:
 			src = os.path.join(self.srcroot,self.srcdir)+"/"
 		else:
@@ -1281,7 +1282,7 @@ class CopyAndRename(MergeStep):
 		#renaming function ... accepts source file path, and returns destination filename
 		self.ren_fun = ren_fun
 
-	def run(self, tree):
+	async def run(self, tree):
 		srcpath = os.path.join(tree.root,self.src)
 		for f in os.listdir(srcpath):
 			destfile = os.path.join(tree.root,self.dest)
@@ -1295,7 +1296,7 @@ class SyncFiles(MergeStep):
 		if not isinstance(files, dict):
 			raise TypeError("'files' argument should be a dict of source:destination items")
 
-	def run(self, tree):
+	async def run(self, tree):
 		for src, dest in self.files.items():
 			if dest is not None:
 				dest = os.path.join(tree.root, dest)
@@ -1318,7 +1319,7 @@ class SyncFiles(MergeStep):
 
 class ELTSymlinkWorkaround(MergeStep):
 
-	def run(self, tree):
+	async def run(self, tree):
 		dest = os.path.join(tree.root + "/eclass/ELT-patches")
 		if not os.path.lexists(dest):
 			os.makedirs(dest)
@@ -1327,7 +1328,7 @@ class MergeUpdates(MergeStep):
 	def __init__(self, srcroot):
 		self.srcroot = srcroot
 
-	def run(self, tree):
+	async def run(self, tree):
 		for src in sorted(glob.glob(os.path.join(self.srcroot, "profiles/updates/?Q-????")), key=lambda x: (x[-4:], x[-7])):
 			dest = os.path.join(tree.root, "profiles/updates", src[-7:])
 			if os.path.exists(dest):
@@ -1351,7 +1352,8 @@ class CleanTree(MergeStep):
 		if exclude is None:
 			exclude = []
 		self.exclude = exclude
-	def run(self,tree):
+	
+	async def run(self,tree):
 		for fn in os.listdir(tree.root):
 			if fn[:1] == ".":
 				continue
@@ -1367,7 +1369,7 @@ class SyncFromTree(SyncDir):
 		self.srctree = srctree
 		SyncDir.__init__(self,srctree.root,srcdir=None,destdir=None,exclude=exclude,delete=True)
 
-	def run(self,desttree):
+	async def run(self, desttree):
 		SyncDir.run(self,desttree)
 		desttree.logTree(self.srctree)
 
@@ -1375,6 +1377,7 @@ class Tree(object):
 	def __init__(self,name,root):
 		self.name = name
 		self.root = root
+		
 	def head(self):
 		return "None"
 
@@ -1605,11 +1608,11 @@ class GitTree(Tree):
 		else:	 
 			print("Pushing disabled.")
 
-	def run(self,steps):
+	async def run(self,steps):
 		for step in steps:
 			if step is not None:
 				print("Running step", step.__class__.__name__, step)
-				step.run(self)
+				await step.run(self)
 
 	def head(self):
 		return headSHA1(self.root)
@@ -1677,7 +1680,7 @@ class InsertFilesFromSubdir(MergeStep):
 		self.skip = skip 
 		self.src_offset = src_offset
 
-	def run(self,desttree):
+	async def run(self,desttree):
 		desttree.logTree(self.srctree)
 		src = self.srctree.root
 		if self.src_offset:
@@ -1724,7 +1727,7 @@ class CreateCategories(MergeStep):
 	def __init__(self,srctree):
 		self.srctree = srctree
 
-	def run(self,desttree):
+	async def run(self,desttree):
 		catset = set()
 		with open(self.srctree.root + "/profiles/categories", "r") as f:
 			cats = f.read().split()
@@ -1745,7 +1748,7 @@ class ZapMatchingEbuilds(MergeStep):
 			# Allow dynamic switching to different branches/commits to grab things we want:
 			self.srctree.gitCheckout(branch)
 
-	def run(self,desttree):
+	async def run(self,desttree):
 		# Figure out what categories to process:
 		dest_cat_path = os.path.join(desttree.root, "profiles/categories")
 		if os.path.exists(dest_cat_path):
@@ -1781,7 +1784,7 @@ class RecordAllCatPkgs(MergeStep):
 		self.cpm_logger = cpm_logger
 		self.srctree = srctree
 		
-	def run(self, desttree=None):
+	async def run(self, desttree=None):
 		for catpkg in self.srctree.getAllCatPkgs():
 			self.cpm_logger.record(desttree.name, catpkg, is_fixup=False)
 			
@@ -1849,7 +1852,7 @@ class InsertEbuilds(MergeStep):
 	def __repr__(self):
 		return "<InsertEbuilds: %s>" % self.srctree.root
 
-	def run(self,desttree):
+	async def run(self,desttree):
 
 		# Just for clarification, I'm breaking these out to separate variables:
 		branch = desttree.branch
@@ -1973,7 +1976,7 @@ class ProfileDepFix(MergeStep):
 
 	"ProfileDepFix undeprecates profiles marked as deprecated."
 
-	def run(self,tree):
+	async def run(self,tree):
 		fpath = os.path.join(tree.root,"profiles/profiles.desc")
 		if os.path.exists(fpath):
 			a = open(fpath,"r")
@@ -1999,7 +2002,7 @@ class RunSed(MergeStep):
 		self.files = files
 		self.commands = commands
 
-	def run(self, tree):
+	async def run(self, tree):
 		commands = list(itertools.chain.from_iterable(("-e", command) for command in self.commands))
 		files = [os.path.join(tree.root, file) for file in self.files]
 		run_command(["sed"] + commands + ["-i"] + files)
@@ -2011,7 +2014,7 @@ class GenCache(MergeStep):
 
 	"GenCache runs egencache --update to update metadata."
 
-	def run(self,tree):
+	async def run(self,tree):
 
 		if tree.name != "core-kit":
 			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = %s/core-kit\n\n[%s]\nlocation = %s\n" % (config.dest_trees, tree.reponame if tree.reponame else tree.name, tree.root)
@@ -2019,7 +2022,7 @@ class GenCache(MergeStep):
 			# Perform QA check to ensure all eclasses are in place prior to performing egencache, as not having this can
 			# cause egencache to hang.
 
-			result = getAllEclasses(tree)
+			result = await getAllEclasses(tree)
 			if None in result and len(result[None]):
 				missing_eclasses = []
 				for ec in result[None]:
@@ -2048,7 +2051,7 @@ class GenUseLocalDesc(MergeStep):
 
 	"GenUseLocalDesc runs egencache to update use.local.desc"
 
-	def run(self,tree):
+	async def run(self,tree):
 		if tree.name != "core-kit":
 			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = %s/core-kit\n\n[%s]\nlocation = %s\n" % (config.dest_trees, tree.reponame if tree.reponame else tree.name, tree.root)
 		else:
@@ -2060,7 +2063,7 @@ class GitCheckout(MergeStep):
 	def __init__(self,branch):
 		self.branch = branch
 
-	def run(self,tree):
+	async def run(self,tree):
 		runShell("(cd %s && git checkout %s || git checkout -b %s --track origin/%s || git checkout -b %s)" % ( tree.root, self.branch, self.branch, self.branch, self.branch ))
 
 class CreateBranch(MergeStep):
@@ -2068,7 +2071,7 @@ class CreateBranch(MergeStep):
 	def __init__(self,branch):
 		self.branch = branch
 
-	def run(self,tree):
+	async def run(self,tree):
 		runShell("( cd %s && git checkout -b %s --track origin/%s )" % ( tree.root, self.branch, self.branch ))
 
 
@@ -2076,7 +2079,7 @@ class Minify(MergeStep):
 
 	"Minify removes ChangeLogs and shrinks Manifests."
 
-	def run(self,tree):
+	async def run(self,tree):
 		runShell("( cd %s && find -iname ChangeLog -exec rm -f {} \; )" % tree.root )
 		runShell("( cd %s && find -iname Manifest -exec sed -n -i -e \"/DIST/p\" {} \; )" % tree.root )
 
