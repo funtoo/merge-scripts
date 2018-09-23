@@ -1061,7 +1061,7 @@ async def generateKitSteps(release, kit_name, from_tree, select_only="all", fixu
 		elif pattern.startswith("@depsincat@:"):
 			patsplit = pattern.split(":")
 			catpkg = patsplit[1]
-			dep_pkglist = getDependencies( from_tree, [ catpkg ] )
+			dep_pkglist = await getDependencies( from_tree, [ catpkg ] )
 			if len(patsplit) == 3:
 				dep_pkglist, dep_pkglist_nomatch = filterInCategory(dep_pkglist, patsplit[2])
 			pkglist += list(dep_pkglist)

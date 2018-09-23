@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import asyncio
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
 from collections import defaultdict
 
 
@@ -11,22 +11,21 @@ class AsyncEngine:
 	
 	def __init__(self, num_threads=40):
 		self.task_q = asyncio.Queue(maxsize=self.queue_size)
-		self.loop = asyncio.get_event_loop()
 		self.num_threads = num_threads
-		self.thread_exec = ProcessPoolExecutor(max_workers=self.num_threads)
+		self.thread_exec = ThreadPoolExecutor(max_workers=self.num_threads)
 		self.tasks = []
+		self.loop = asyncio.get_event_loop()
 	
 	def start(self, enable_workers=True):
 		if enable_workers is True:
 			for x in range(0, self.num_threads):
-				self.tasks.append(asyncio.async(self._worker(x)))
-		print(len(self.tasks), "Tasks")
+				self.tasks.append(self.thread_exec.submit(self._worker,x))
 		# run forever
 		self.loop.run_until_complete(asyncio.gather(*self.tasks))
 		self.loop.close()
 	
 	def add_worker(self, w):
-		self.tasks.append(asyncio.async(w))
+		self.tasks.append(self.thread_exec.submit(w))
 			
 	def enqueue(self, **kwargs):
 		asyncio.ensure_future(self.task_q.put(kwargs), loop=self.loop)
