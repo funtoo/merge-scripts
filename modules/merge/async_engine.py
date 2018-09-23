@@ -39,10 +39,3 @@ class AsyncEngine:
 	
 	
 # vim: ts=4 sw=4 noet
-
-if __name__ == "__main__":
-	a = AsyncEngine()
-	for x in range(1,100):
-		a.enqueue(foo="bar")
-	print("Started!")
-	a.start()

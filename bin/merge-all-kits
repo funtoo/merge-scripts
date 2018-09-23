@@ -464,6 +464,7 @@ class AsyncMergeAllKits(AsyncEngine):
 	
 	def worker_thread(self, **kwargs):
 		print("Performing work: ", kwargs)
+		print("TASK Q SIZE", self.task_q.qsize())
 		db = self.db
 		with db.get_session() as session:
 			f = kwargs["file"]
@@ -547,9 +548,6 @@ if __name__ == "__main__":
 	loop = asyncio.get_event_loop()
 	loop.run_until_complete(main_thread())
 	loop.close()
-	
-	
-	async_engine.start_ioloop()
 
 
 # vim: ts=4 sw=4 noet tw=140
