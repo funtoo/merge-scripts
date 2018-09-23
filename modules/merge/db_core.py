@@ -17,7 +17,7 @@ class Database(object):
 
 	@contextmanager
 	def get_session(self):
-		session = scoped_session(sessionmaker(bind=self.engine))
+		session = self.session_factory()
 		try:
 			yield session
 			session.commit()
@@ -125,6 +125,7 @@ class FastPullDatabase(Database):
 		self.MissingManifestFailure = MissingManifestFailure
 		self.MissingRequestedFile = MissingRequestedFile
 		self.Base.metadata.create_all(self.engine)
+		self.session_factory = scoped_session(sessionmaker(bind=self.engine))
 
 if __name__ == "__main__":
 

@@ -453,14 +453,13 @@ def generate_kit_metadata(release, meta_repo, output_sha1s):
 
 class AsyncMergeAllKits(AsyncEngine):
 	
-	_db = None
-	
 	@property
 	def db(self):
-		if self._db is None:
+		local_storage = threading.local()
+		if not hasattr(local_storage, "db"):
 			from merge.db_core import FastPullDatabase
-			self._db = FastPullDatabase()
-		return self._db
+			local_storage.db = FastPullDatabase()
+		return local_storage.db
 	
 	async def worker_thread(self, **kwargs):
 		print("Performing work: ", kwargs)
