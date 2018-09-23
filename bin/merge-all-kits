@@ -462,7 +462,7 @@ class AsyncMergeAllKits(AsyncEngine):
 			self._db = FastPullDatabase()
 		return self._db
 	
-	async def worker_thread(self, **kwargs):
+	def worker_thread(self, **kwargs):
 		print("Performing work: ", kwargs)
 		db = self.db
 		with db.get_session() as session:
@@ -494,36 +494,34 @@ class AsyncMergeAllKits(AsyncEngine):
 			session.commit()
 	
 	
-	async def main_thread(self):
-		# let workers start before we hog things...
-		await asyncio.sleep(0.5)
-		cpm_logger = mu.CatPkgMatchLogger(log_xml=push)
+async def main_thread():
+	cpm_logger = mu.CatPkgMatchLogger(log_xml=push)
+	
+	for release in foundation.kit_groups.keys():
+		if not release.endswith("-release"):
+			continue
 		
-		for release in foundation.kit_groups.keys():
-			if not release.endswith("-release"):
-				continue
-			
-			target_branch = "master" if release == "1.2-release" else release
-			meta_repo.gitCheckout(target_branch)
-			
-			output_sha1s = {}
-			prev_kit_dict = None
-			
-			for kit_dict in foundation.kit_groups[release]:
-				print("Regenerating kit ", kit_dict)
-				head = await updateKit(release, kit_dict, prev_kit_dict, release, cpm_logger, create=not push, push=push, now=now, fixup_repo=fixup_repo)
-				kit_name = kit_dict["name"]
-				if kit_name not in output_sha1s:
-					output_sha1s[kit_name] = {}
-				output_sha1s[kit_name][kit_dict["branch"]] = head
-				prev_kit_dict = kit_dict
-			generate_kit_metadata(release, meta_repo, output_sha1s)
-			
-			meta_repo.gitCommit(message="kit updates", push=False)
+		target_branch = "master" if release == "1.2-release" else release
+		meta_repo.gitCheckout(target_branch)
 		
-		if push is True:
-			print("Pushing meta-repo...")
-			meta_repo.gitPush()
+		output_sha1s = {}
+		prev_kit_dict = None
+		
+		for kit_dict in foundation.kit_groups[release]:
+			print("Regenerating kit ", kit_dict)
+			head = await updateKit(release, kit_dict, prev_kit_dict, release, cpm_logger, create=not push, push=push, now=now, fixup_repo=fixup_repo)
+			kit_name = kit_dict["name"]
+			if kit_name not in output_sha1s:
+				output_sha1s[kit_name] = {}
+			output_sha1s[kit_name][kit_dict["branch"]] = head
+			prev_kit_dict = kit_dict
+		generate_kit_metadata(release, meta_repo, output_sha1s)
+		
+		meta_repo.gitCommit(message="kit updates", push=False)
+	
+	if push is True:
+		print("Pushing meta-repo...")
+		meta_repo.gitPush()
 		
 
 if __name__ == "__main__":
@@ -545,8 +543,9 @@ if __name__ == "__main__":
 	# Start an asyncio loop. Main thread regenerates kits. Background thread queries MySQL db and processes potential distfiles for spider.
 	
 	async_engine = AsyncMergeAllKits(num_threads=num_threads)
-	async_engine.add_worker(async_engine.main_thread())
-	async_engine.start(enable_workers = True if num_threads != 0 else False)
+	asyncio.ensure_future(main_thread())
+	async_engine.start_threads(enable_workers = True if num_threads != 0 else False)
+	async_engine.start_ioloop()
 
 
 # vim: ts=4 sw=4 noet tw=140
