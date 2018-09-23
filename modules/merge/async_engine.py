@@ -21,6 +21,7 @@ class AsyncEngine:
 			for x in range(0, self.num_threads):
 				self.tasks.append(self.thread_exec.submit(self._worker,x))
 		# run forever
+		print(self.tasks)
 		self.loop.run_until_complete(asyncio.gather(*self.tasks))
 		self.loop.close()
 	
@@ -28,7 +29,7 @@ class AsyncEngine:
 		self.tasks.append(self.thread_exec.submit(w))
 			
 	def enqueue(self, **kwargs):
-		asyncio.ensure_future(self.task_q.put(kwargs), loop=self.loop)
+		asyncio.ensure_future(self.task_q.put(kwargs))
 	
 	async def _worker(self, worker_num):
 		print("Worker number %s." % worker_num)
