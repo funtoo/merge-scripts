@@ -537,7 +537,7 @@ if __name__ == "__main__":
 	
 	async_engine = AsyncMergeAllKits()
 	async_engine.db = db
-	async_engine.add_worker(async_engine.main_thread)
+	async_engine.add_worker(async_engine.main_thread())
 	async_engine.start()
 
 
