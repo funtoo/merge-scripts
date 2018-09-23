@@ -419,10 +419,10 @@ def generate_kit_metadata(release, meta_repo, output_sha1s):
 			kit_name = kit_dict["name"]
 			if kit_name not in out:
 				out.append(kit_name)
-				# specific keywords that can be set for each branch to identify its current quality level
-				if 'stability' not in out_settings[kit_name]:
-					out_settings[kit_name]['stability'] = {}
-				out_settings[kit_name]['stability'][kit_dict["branch"]] = KitRatingString(kit_dict["stability"])
+			# specific keywords that can be set for each branch to identify its current quality level
+			if 'stability' not in out_settings[kit_name]:
+				out_settings[kit_name]['stability'] = {}
+			out_settings[kit_name]['stability'][kit_dict["branch"]] = KitRatingString(kit_dict["stability"])
 		k_info["kit_order"] = out
 		k_info["kit_settings"] = out_settings
 		
