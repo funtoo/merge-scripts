@@ -15,9 +15,6 @@ class AsyncEngine:
 		self.num_threads = num_threads
 		self.thread_exec = ThreadPoolExecutor(max_workers=self.num_threads)
 		self.tasks = []
-
-	def worker_init(self):
-		pass
 	
 	def start(self, enable_workers=True):
 		if enable_workers is True:

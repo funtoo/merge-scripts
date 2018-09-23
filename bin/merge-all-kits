@@ -453,13 +453,17 @@ def generate_kit_metadata(release, meta_repo, output_sha1s):
 
 class AsyncMergeAllKits(AsyncEngine):
 	
-	def worker_init(self):
-		from merge.db_core import FastPullDatabase
-		threading.local().db = FastPullDatabase()
+	@property
+	def db(self):
+		local_storage = threading.local()
+		if not hasattr(local_storage, "db"):
+			from merge.db_core import FastPullDatabase
+			local_storage.db = FastPullDatabase()
+		return local_storage.db
 	
 	async def worker_thread(self, **kwargs):
 		print("Performing work: ", kwargs)
-		db = threading.local().db
+		db = self.db
 		with db.get_session() as session:
 			f = kwargs["file"]
 			existing = session.query(db.Distfile).filter(db.Distfile.id == kwargs["digest"]).first()
