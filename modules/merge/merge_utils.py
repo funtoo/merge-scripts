@@ -19,6 +19,7 @@ from collections import defaultdict
 from portage.util.futures.iter_completed import async_iter_completed
 from merge.config import config
 from merge.async_engine import AsyncEngine
+from merge.async_portage import async_xmatch
 
 debug = False
 
@@ -175,10 +176,10 @@ aliases = gentoo
 				# catpkg is from core-kit, but we are not processing core kit, so skip:
 				continue
 			ebs = {}
-			for a in p.xmatch("match-all", pkg):
+			for a in await async_xmatch(p, "match-all", pkg):
 				if len(a) == 0:
 					continue
-				aux = p.aux_get(a, ["INHERITED"])
+				aux = await p.async_aux_get(a, ["INHERITED"])
 				eclasses=aux[0].split()
 				if "python-single-r1" not in eclasses:
 					continue
@@ -549,12 +550,12 @@ class CatPkgScan(MergeStep):
 			# We want to prioritize SRC_URI for bestmatch-visible ebuilds. We will use bm
 			# and prio to tag files that are in bestmatch-visible ebuilds.
 
-			bm = p.xmatch("bestmatch-visible", pkg)
+			bm = await async_xmatch(p, "bestmatch-visible", pkg)
 
 			fn_urls = defaultdict(list)
 			fn_meta = defaultdict(dict)
 
-			for cpv in p.xmatch("match-all", pkg):
+			for cpv in await async_xmatch(p, "match-all", pkg):
 				if len(cpv) == 0:
 					continue
 
