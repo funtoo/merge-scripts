@@ -3,7 +3,7 @@
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from collections import defaultdict
-from queue import Queue
+from queue import Queue, Empty
 
 class AsyncEngine:
 	
@@ -20,7 +20,7 @@ class AsyncEngine:
 	def start_threads(self, enable_workers=True):
 		if enable_workers is True:
 			for x in range(0, self.num_threads):
-				self.loop.run_in_executor(self.thread_exec, self._worker, x)
+				self.loop.run_in_executor(self.thread_exec, self._worker)
 		print("Started %s workers." % self.num_threads)
 	
 	def add_worker(self, w):
@@ -29,11 +29,14 @@ class AsyncEngine:
 	def enqueue(self, **kwargs):
 		self.task_q.put(kwargs)
 	
-	def _worker(self, worker_num):
+	def _worker(self):
 		while self.keep_running is True or (self.keep_running is False and self.task_q.qsize() > 0 ):
-			kwargs = defaultdict(lambda: None, self.task_q.get())
-			self.worker_thread(**kwargs)
-	
+			try:
+				kwargs = defaultdict(lambda: None, self.task_q.get(timeout=3))
+				self.worker_thread(**kwargs)
+			except Empty:
+				continue
+				
 	async def wait_for_workers_to_finish(self):
 		self.keep_running = False
 		await asyncio.gather(*self.workers)
