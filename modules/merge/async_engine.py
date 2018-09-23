@@ -6,8 +6,8 @@ from collections import defaultdict
 
 class AsyncEngine:
 	
-	queue_size = 60
-	num_threads = 20
+	queue_size = 60000
+	num_threads = 40
 	
 	def __init__(self):
 		self.task_q = asyncio.Queue(maxsize=self.queue_size)

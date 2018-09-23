@@ -5,9 +5,9 @@ from merge.config import Configuration
 from contextlib import contextmanager
 from sqlalchemy import create_engine, Integer, Boolean, Column, String, BigInteger, DateTime, Text
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 from datetime import datetime
-from sqlalchemy.pool import NullPool
+from sqlalchemy.pool import SingletonThreadPool
 
 app_config = Configuration()
 
@@ -33,7 +33,7 @@ class FastPullDatabase(Database):
 
 	def __init__(self):
 		
-		self.engine = create_engine(app_config.db_connection("fastpull"), poolclass=NullPool)
+		self.engine = create_engine(app_config.db_connection("fastpull"), poolclass=SingletonThreadPool)
 
 		class Distfile(self.Base):
 
@@ -125,7 +125,7 @@ class FastPullDatabase(Database):
 		self.MissingManifestFailure = MissingManifestFailure
 		self.MissingRequestedFile = MissingRequestedFile
 		self.Base.metadata.create_all(self.engine)
-		self.session_factory = sessionmaker(bind=self.engine)
+		self.session_factory = scoped_session(sessionmaker(bind=self.engine))
 
 if __name__ == "__main__":
 
