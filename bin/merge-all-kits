@@ -22,6 +22,47 @@ from fixups.foundations import KitFoundation, KitRatingString, KitStabilityRatin
 foundation = KitFoundation(config)
 
 
+class AsyncMergeAllKits(AsyncEngine):
+	_db = None
+	
+	@property
+	def db(self):
+		if self._db is None:
+			from merge.db_core import FastPullDatabase
+			self._db = FastPullDatabase()
+		return self._db
+	
+	def worker_thread(self, **kwargs):
+		db = self.db
+		with db.get_session() as session:
+			f = kwargs["file"]
+			existing = session.query(db.Distfile).filter(db.Distfile.id == kwargs["digest"]).first()
+			# TODO: maybe it already exists, but under a different filename. If so, we still want to create a distfile entry for it so it can be downloaded...
+			
+			if existing:
+				return
+			
+			# Don't create multiple queued downloads for the same distfile:
+			if session.query(db.QueuedDistfile).filter(db.QueuedDistfile.filename == f).filter(db.QueuedDistfile.size == kwargs["size"]).first() is not None:
+				return
+			
+			# Queue the distfile for downloading...
+			
+			qd = db.QueuedDistfile()
+			qd.filename = f
+			qd.catpkg = kwargs["catpkg"]
+			qd.kit = kwargs["kit_name"]
+			qd.branch = kwargs["kit_branch"]
+			qd.src_uri = kwargs["src_uri"]
+			qd.size = kwargs["size"]
+			qd.mirror = kwargs["restrict"]
+			qd.digest_type = kwargs["digest_type"]
+			qd.digest = kwargs["digest"]
+			qd.priority = 1 if kwargs["bestmatch"] else 0
+			session.add(qd)
+			session.commit()
+
+
 # We want to reset 'kitted_catpkgs' at certain points. The 'kit_order' variable below is used to control this, and we
 # normally don't need to touch it. 'kitted_order' above tells the code to generate 'prime', then 'shared' (without
 # resetting kitted_catpkgs to empty), then the None tells the code to reset kitted_catpkgs, so when 'current' kits are
@@ -133,7 +174,7 @@ def getKitSourceInstance(kit_dict):
 # regenerating it. The kitted_catpkgs argument is a dictionary which is also written to and used to keep track of
 # catpkgs copied between runs of updateKit.
 
-async def updateKit(release, kit_dict, prev_kit_dict, kit_group, cpm_logger, create=False, push=False, now=None, fixup_repo=None):
+async def updateKit(release, async_engine : AsyncMergeAllKits, kit_dict, prev_kit_dict, cpm_logger, create=False, push=False, now=None, fixup_repo=None):
 	# secondary_kit means: we're the second (or third, etc.) xorg-kit or other kit to be processed. The first kind of
 	# each kit processed has secondary_kit = False, and later ones have secondary_kit = True. We need special processing
 	# to grab any 'orphan' packages that were selected as part of prior kit scans (and thus will not be included in
@@ -145,7 +186,7 @@ async def updateKit(release, kit_dict, prev_kit_dict, kit_group, cpm_logger, cre
 	move_maps = mu.get_move_maps(fixup_repo.root + "/move-maps", kit_dict['name'])
 	
 	secondary_kit = False
-	if prev_kit_dict != None:
+	if prev_kit_dict is not None:
 		if kit_dict['name'] != prev_kit_dict['name']:
 			
 			# We are advancing to the next kit. For example, we just processed an xorg-kit and are now processing a python-kit. So we want to apply all our accumulated matches.
@@ -451,51 +492,23 @@ def generate_kit_metadata(release, meta_repo, output_sha1s):
 		a.write(json.dumps(foundation.metadata_version_info[release], sort_keys=True, indent=4, ensure_ascii=False))
 
 
-class AsyncMergeAllKits(AsyncEngine):
-	
-	_db = None
-	
-	@property
-	def db(self):
-		if self._db is None:
-			from merge.db_core import FastPullDatabase
-			self._db = FastPullDatabase()
-		return self._db
-	
-	def worker_thread(self, **kwargs):
-		print("Performing work: ", kwargs)
-		print("TASK Q SIZE", self.task_q.qsize())
-		db = self.db
-		with db.get_session() as session:
-			f = kwargs["file"]
-			existing = session.query(db.Distfile).filter(db.Distfile.id == kwargs["digest"]).first()
-			# TODO: maybe it already exists, but under a different filename. If so, we still want to create a distfile entry for it so it can be downloaded...
-			
-			if existing:
-				return
-			
-			# Don't create multiple queued downloads for the same distfile:
-			if session.query(db.QueuedDistfile).filter(db.QueuedDistfile.filename == f).filter(db.QueuedDistfile.size == kwargs["size"]).first() is not None:
-				return
-			
-			# Queue the distfile for downloading...
-			
-			qd = db.QueuedDistfile()
-			qd.filename = f
-			qd.catpkg = kwargs["catpkg"]
-			qd.kit = kwargs["kit_name"]
-			qd.branch = kwargs["kit_branch"]
-			qd.src_uri = kwargs["src_uri"]
-			qd.size = kwargs["size"]
-			qd.mirror = kwargs["restrict"]
-			qd.digest_type = kwargs["digest_type"]
-			qd.digest = kwargs["digest"]
-			qd.priority = 1 if kwargs["bestmatch"] else 0
-			session.add(qd)
-			session.commit()
-	
-	
 async def main_thread():
+	# one global timestamp for each run of this tool -- for mysql db
+	now = datetime.utcnow()
+	
+	if len(sys.argv) < 2 or sys.argv[1] not in ["push", "nopush"]:
+		print("Please specify push or nopush as an argument.")
+		sys.exit(1)
+	else:
+		push = True if "push" in sys.argv else False
+	
+	num_threads = 40
+	async_engine = None
+	
+	if "db" in sys.argv:
+		async_engine = AsyncMergeAllKits(num_threads=num_threads)
+		async_engine.start_threads(enable_workers = True if num_threads != 0 else False)
+	
 	cpm_logger = mu.CatPkgMatchLogger(log_xml=push)
 	
 	for release in foundation.kit_groups.keys():
@@ -510,7 +523,7 @@ async def main_thread():
 		
 		for kit_dict in foundation.kit_groups[release]:
 			print("Regenerating kit ", kit_dict)
-			head = await updateKit(release, kit_dict, prev_kit_dict, release, cpm_logger, create=not push, push=push, now=now, fixup_repo=fixup_repo)
+			head = await updateKit(release, async_engine, kit_dict, prev_kit_dict, cpm_logger, create=not push, push=push, now=now, fixup_repo=fixup_repo)
 			kit_name = kit_dict["name"]
 			if kit_name not in output_sha1s:
 				output_sha1s[kit_name] = {}
@@ -524,30 +537,13 @@ async def main_thread():
 		print("Pushing meta-repo...")
 		meta_repo.gitPush()
 		
+	await async_engine.wait_for_workers_to_finish()
+
 
 if __name__ == "__main__":
 	
-	# one global timestamp for each run of this tool -- for mysql db
-	now = datetime.utcnow()
-	
-	if len(sys.argv) < 2 or sys.argv[1] not in ["push", "nopush"]:
-		print("Please specify push or nopush as an argument.")
-		sys.exit(1)
-	else:
-		push = True if "push" in sys.argv else False
-	
-	if "db" in sys.argv:
-		num_threads = 40
-	else:
-		num_threads = 5
-	
-	# Start an asyncio loop. Main thread regenerates kits. Background thread queries MySQL db and processes potential distfiles for spider.
-	
-	async_engine = AsyncMergeAllKits(num_threads=num_threads)
-	async_engine.start_threads(enable_workers = True if num_threads != 0 else False)
 	loop = asyncio.get_event_loop()
 	loop.run_until_complete(main_thread())
 	loop.close()
-
 
 # vim: ts=4 sw=4 noet tw=140

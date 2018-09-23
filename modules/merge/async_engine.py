@@ -13,8 +13,9 @@ class AsyncEngine:
 		self.task_q = Queue(maxsize=self.queue_size)
 		self.num_threads = num_threads
 		self.thread_exec = ThreadPoolExecutor(max_workers=self.num_threads)
-		self.tasks = []
+		self.workers = []
 		self.loop = asyncio.get_event_loop()
+		self.keep_running = True
 	
 	def start_threads(self, enable_workers=True):
 		if enable_workers is True:
@@ -22,7 +23,7 @@ class AsyncEngine:
 				self.loop.run_in_executor(self.thread_exec, self._worker, x)
 	
 	def add_worker(self, w):
-		self.tasks.append(self.thread_exec.submit(w))
+		self.workers.append(self.thread_exec.submit(w))
 			
 	def enqueue(self, **kwargs):
 		self.task_q.put(kwargs)
@@ -30,10 +31,14 @@ class AsyncEngine:
 	def _worker(self, worker_num):
 		print("Worker number %s." % worker_num)
 		
-		while True:
+		while self.keep_running is True or (self.keep_running is False and self.task_q.qsize() > 0 ):
 			kwargs = defaultdict(lambda: None, self.task_q.get())
 			self.worker_thread(**kwargs)
-			
+	
+	async def wait_for_workers_to_finish(self):
+		self.keep_running = False
+		await asyncio.gather(*self.workers)
+		
 	def worker_thread(self, **kwargs):
 		print("blarg")
 	
