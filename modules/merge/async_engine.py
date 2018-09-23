@@ -4,20 +4,25 @@ import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from collections import defaultdict
 
+
 class AsyncEngine:
 	
 	queue_size = 60000
-	num_threads = 40
 	
-	def __init__(self):
+	def __init__(self, num_threads=40):
 		self.task_q = asyncio.Queue(maxsize=self.queue_size)
 		self.loop = asyncio.get_event_loop()
 		self.thread_exec = ThreadPoolExecutor(max_workers=self.num_threads)
 		self.tasks = []
+		self.num_threads = num_threads
 	
-	def start(self):
-		for x in range(0, self.num_threads):
-			self.tasks.append(asyncio.async(self._worker(x)))
+	def worker_init(self):
+		pass
+	
+	def start(self, enable_workers=True):
+		if enable_workers is True:
+			for x in range(0, self.num_threads):
+				self.tasks.append(asyncio.async(self._worker(x)))
 		print(len(self.tasks), "Tasks")
 		# run forever
 		self.loop.run_until_complete(asyncio.gather(*self.tasks))
@@ -31,6 +36,7 @@ class AsyncEngine:
 	
 	async def _worker(self, worker_num):
 		print("Worker number %s." % worker_num)
+		
 		while True:
 			kwargs = defaultdict(lambda: None, await self.task_q.get())
 			await self.worker_thread(**kwargs)

@@ -6,6 +6,7 @@ import sys
 from collections import defaultdict, OrderedDict
 from datetime import datetime
 import asyncio
+import threading
 
 sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "../../modules")))
 import merge.merge_utils as mu
@@ -20,9 +21,6 @@ from fixups.foundations import KitFoundation, KitRatingString, KitStabilityRatin
 
 foundation = KitFoundation(config)
 
-def getMySQLDatabase():
-	from merge.db_core import FastPullDatabase
-	return FastPullDatabase()
 
 # We want to reset 'kitted_catpkgs' at certain points. The 'kit_order' variable below is used to control this, and we
 # normally don't need to touch it. 'kitted_order' above tells the code to generate 'prime', then 'shared' (without
@@ -135,7 +133,7 @@ def getKitSourceInstance(kit_dict):
 # regenerating it. The kitted_catpkgs argument is a dictionary which is also written to and used to keep track of
 # catpkgs copied between runs of updateKit.
 
-async def updateKit(release, kit_dict, prev_kit_dict, kit_group, cpm_logger, db=None, create=False, push=False, now=None, fixup_repo=None):
+async def updateKit(release, kit_dict, prev_kit_dict, kit_group, cpm_logger, create=False, push=False, now=None, fixup_repo=None):
 	# secondary_kit means: we're the second (or third, etc.) xorg-kit or other kit to be processed. The first kind of
 	# each kit processed has secondary_kit = False, and later ones have secondary_kit = True. We need special processing
 	# to grab any 'orphan' packages that were selected as part of prior kit scans (and thus will not be included in
@@ -455,25 +453,28 @@ def generate_kit_metadata(release, meta_repo, output_sha1s):
 
 class AsyncMergeAllKits(AsyncEngine):
 	
-	db = None
+	def worker_init(self):
+		from merge.db_core import FastPullDatabase
+		threading.local().db = FastPullDatabase()
 	
 	async def worker_thread(self, **kwargs):
 		print("Performing work: ", kwargs)
-		with self.db.get_session() as session:
+		db = threading.local().db
+		with db.get_session() as session:
 			f = kwargs["file"]
-			existing = session.query(self.db.Distfile).filter(self.db.Distfile.id == kwargs["digest"]).first()
+			existing = session.query(db.Distfile).filter(db.Distfile.id == kwargs["digest"]).first()
 			# TODO: maybe it already exists, but under a different filename. If so, we still want to create a distfile entry for it so it can be downloaded...
 			
 			if existing:
 				return
 			
 			# Don't create multiple queued downloads for the same distfile:
-			if session.query(self.db.QueuedDistfile).filter(self.db.QueuedDistfile.filename == f).filter(self.db.QueuedDistfile.size == kwargs["size"]).first() is not None:
+			if session.query(db.QueuedDistfile).filter(db.QueuedDistfile.filename == f).filter(db.QueuedDistfile.size == kwargs["size"]).first() is not None:
 				return
 			
 			# Queue the distfile for downloading...
 			
-			qd = self.db.QueuedDistfile()
+			qd = db.QueuedDistfile()
 			qd.filename = f
 			qd.catpkg = kwargs["catpkg"]
 			qd.kit = kwargs["kit_name"]
@@ -486,7 +487,7 @@ class AsyncMergeAllKits(AsyncEngine):
 			qd.priority = 1 if kwargs["bestmatch"] else 0
 			session.add(qd)
 			session.commit()
-
+	
 	
 	async def main_thread(self):
 		# let workers start before we hog things...
@@ -505,7 +506,7 @@ class AsyncMergeAllKits(AsyncEngine):
 			
 			for kit_dict in foundation.kit_groups[release]:
 				print("Regenerating kit ", kit_dict)
-				head = await updateKit(release, kit_dict, prev_kit_dict, release, cpm_logger, db=db, create=not push, push=push, now=now, fixup_repo=fixup_repo)
+				head = await updateKit(release, kit_dict, prev_kit_dict, release, cpm_logger, create=not push, push=push, now=now, fixup_repo=fixup_repo)
 				kit_name = kit_dict["name"]
 				if kit_name not in output_sha1s:
 					output_sha1s[kit_name] = {}
@@ -532,16 +533,15 @@ if __name__ == "__main__":
 		push = True if "push" in sys.argv else False
 	
 	if "db" in sys.argv:
-		db = getMySQLDatabase()
+		num_threads = 40
 	else:
-		db = None
+		num_threads = 0
 	
 	# Start an asyncio loop. Main thread regenerates kits. Background thread queries MySQL db and processes potential distfiles for spider.
 	
-	async_engine = AsyncMergeAllKits()
-	async_engine.db = db
+	async_engine = AsyncMergeAllKits(num_threads=num_threads)
 	async_engine.add_worker(async_engine.main_thread())
-	async_engine.start()
+	async_engine.start(enable_workers = True if num_threads != 0 else False)
 
 
 # vim: ts=4 sw=4 noet tw=140

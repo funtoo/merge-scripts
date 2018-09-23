@@ -33,7 +33,7 @@ class FastPullDatabase(Database):
 
 	def __init__(self):
 		
-		self.engine = create_engine(app_config.db_connection("fastpull"), poolclass=SingletonThreadPool)
+		self.engine = create_engine(app_config.db_connection("fastpull"), poolclass=SingletonThreadPool, strategy='threadlocal')
 
 		class Distfile(self.Base):
 
