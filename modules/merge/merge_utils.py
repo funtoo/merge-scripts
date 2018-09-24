@@ -2095,8 +2095,8 @@ class Minify(MergeStep):
 	"Minify removes ChangeLogs and shrinks Manifests."
 
 	async def run(self,tree):
-		runShell("( cd %s && find -iname ChangeLog -exec rm -f {} \; )" % tree.root )
-		runShell("( cd %s && find -iname Manifest -exec sed -n -i -e \"/DIST/p\" {} \; )" % tree.root )
+		runShell("( cd %s && find -iname ChangeLog | xargs rm )" % tree.root )
+		runShell("( cd %s && find -iname Manifest | xargs -i@ sed -ni '/^DIST/p' @ )" % tree.root )
 
 
 
