@@ -526,7 +526,8 @@ async def main_thread():
 	
 	try:
 		await kit_qa_check()
-	except KitQualityError:
+	except KitQualityError as e:
+		print("Kit QA Error detected:", str(e))
 		sys.exit(1)
 
 	num_threads = 40
