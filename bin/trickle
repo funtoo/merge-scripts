@@ -8,13 +8,7 @@ from datetime import datetime
 sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "../../modules")))
 import merge.merge_utils as mu
 from merge.config import config
-
-fixup_repo = mu.GitTree("kit-fixups", config.branch("kit-fixups"), url=config.kit_fixups, root=config.source_trees+"/kit-fixups")
-meta_repo = mu.GitTree("meta-repo", config.branch("meta-repo"), url=config.base_url("meta-repo"), root=config.dest_trees+"/meta-repo")
-
-sys.path.insert(0, fixup_repo.root + "/modules")
-from fixups.foundations import KitFoundation, KitRatingString, KitStabilityRating
-foundation = KitFoundation(config)
+import asyncio
 
 
 repo_name = sys.argv[1]
@@ -38,6 +32,9 @@ def get_audit_cycle(path):
 		return None
 
 def default_audit_cycle(kit, branch):
+	global KitStabilityRating
+	global foundation
+	
 	for release, rdict in foundation.release_defs.items():
 		if kit in rdict and  branch in rdict[kit]:
 			return 30
@@ -60,60 +57,76 @@ if not os.path.exists(repo_name):
 	print("path does not exist. Exiting.")
 	sys.exit(1)
 
-catpkg_list = []
-now = datetime.now()
-utcnow = datetime.utcnow()
-for kit in os.listdir(repo_name):
-	if kit == ".git":
-		continue
-	kit_path = os.path.join(repo_name, kit)
-	if not os.path.isdir(kit_path):
-		continue
-	if kit == "profiles":
-		continue
-	kit_audit_cycle = get_audit_cycle(kit_path)
-	for branch in os.listdir(kit_path):
-		branch_path = os.path.join(kit_path, branch)
-		if not os.path.isdir(branch_path):
+async def main_thread():
+	fixup_repo = mu.GitTree("kit-fixups", config.branch("kit-fixups"), url=config.kit_fixups, root=config.source_trees + "/kit-fixups")
+	fixup_repo.initialize()
+	#meta_repo = mu.GitTree("meta-repo", config.branch("meta-repo"), url=config.base_url("meta-repo"), root=config.dest_trees + "/meta-repo")
+	#meta_repo.initialize()
+	
+	sys.path.insert(0, fixup_repo.root + "/modules")
+	from fixups.foundations import KitFoundation, KitStabilityRating
+	globals()["foundation"] = KitFoundation(config)
+	globals()["KitStabilityRating"] = KitStabilityRating
+	catpkg_list = []
+	now = datetime.now()
+	utcnow = datetime.utcnow()
+	for kit in os.listdir(repo_name):
+		if kit == ".git":
 			continue
-		audit_cycle = get_audit_cycle(branch_path) or kit_audit_cycle or default_audit_cycle(kit, branch)
-		print(kit, branch, audit_cycle)
-		for cat in os.listdir(branch_path):
-			if "-" not in cat and cat != "virtual":
+		kit_path = os.path.join(repo_name, kit)
+		if not os.path.isdir(kit_path):
+			continue
+		if kit == "profiles":
+			continue
+		kit_audit_cycle = get_audit_cycle(kit_path)
+		for branch in os.listdir(kit_path):
+			branch_path = os.path.join(kit_path, branch)
+			if not os.path.isdir(branch_path):
 				continue
-			cat_path = os.path.join(branch_path, cat)
-			if not os.path.isdir(cat_path):
-				continue
-			for pkg in os.listdir(cat_path):
-				catpkg = cat + "/" + pkg
-				auditfile = cat + "/" + pkg + "/.audit"
-				if os.path.exists(auditfile):
-					datecheckfile = pkg + "/.audit"
-				else:
-					datecheckfile = pkg
-				out = run ("(cd %s; git log -n 1 --oneline -- %s)" % ( cat_path, datecheckfile ))
-				sha1 = out.split(" ")[0]
-				out = run ("(cd %s; git show --no-patch --format=%%ce_%%cD %s)" % ( cat_path, sha1))
-				email, isodate = out.split("_")
-				dt = (now - datetime.fromtimestamp(mktime(parsedate(isodate))))
-				if dt.days >= audit_cycle:
-					days_delta = dt.days - audit_cycle
-					catpkg_list.append((days_delta, dt, kit, branch, catpkg, email))
-				#"git log -n 1 --oneline -- ."
-				#"git show --no-patch --format=%ce,%cI 68dc82e"
-print('<html><head><title>kit-fixups that need review</title><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous"></head><body>'
-      '<div class="container"><div class="row"><div class="col-md" style="margin-top: 50px;"><h2>Funtoo Linux Stale Packages QA List</h2>'
-      '<div class="alert alert-primary" style="margin-top: 50px;">This page lists catpkgs in kit-fixups that are <i>stale</i>. These catpkgs should be reviewed and updated; when they are updated in git, they will no longer be stale and will be removed automatically from this list.</div>'
-		'<div class="alert alert-dark"><p>If you review a catpkg and determine that it does not need an update, it is still possible to remove it from this list. Add a <tt>.audit</tt> file to the catpkg directory containing a text description of your review and commit it. This will result in the catpkg being \'reviewed\' and it will drop from this list.'
-		'<p>By default, catpkgs will be up for review after <b>60</b> days. To change this threshold, you can create a <tt>.audit-cycle</tt> file in the kit or branch directory containing an integer number of days after which catpkgs in the kit or branch should be considered stale.</p><p><a href="https://github.com/funtoo/kit-fixups">Visit kit-fixups on GitHub</a></p>'
-      '<p>Please ensure catpkgs are not stale. Ideally review them every 30 days or less; please do not let catpkgs go without review for 60 days or more. Also note that because Funtoo doesn\'t have official maintainers for packages, the \'last modified by\' column is listed for convenience so you can coordinate with the previous committer if necessary.</p></div>'
-      '<div style="text-align: right; width: 100%;"><p style="font-size: 8pt;"><i>This page was last updated on ' + now.strftime("%Y-%m-%d %H:%M:%S %p %Z local time") + " (" + utcnow.strftime("%y-%m-%d %H:%M") + " UTC)</i></p></div>"
-      '</div></div></div>'
-      '<table class="table table-striped"><thead class="thead-dark"><th>days late</th><th>days stale</th><th>kit</th><th>branch</th><th>catpkg</th><th>last modified by</th></thead>')
-catpkg_list.sort(key=lambda x: x[0], reverse=True)
-for item in catpkg_list:
-	days_delta = item[0]
-	if days_delta > 100:
-		days_delta = '<b><span style="color: #ff0000;">' + str(days_delta) + '</span></b>'
-	print("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>" % ( days_delta, item[1].days, item[2], item[3], item[4], item[5]))
-print("</table></body></html>")
+			audit_cycle = get_audit_cycle(branch_path) or kit_audit_cycle or default_audit_cycle(kit, branch)
+			print(kit, branch, audit_cycle)
+			for cat in os.listdir(branch_path):
+				if "-" not in cat and cat != "virtual":
+					continue
+				cat_path = os.path.join(branch_path, cat)
+				if not os.path.isdir(cat_path):
+					continue
+				for pkg in os.listdir(cat_path):
+					catpkg = cat + "/" + pkg
+					auditfile = cat + "/" + pkg + "/.audit"
+					if os.path.exists(auditfile):
+						datecheckfile = pkg + "/.audit"
+					else:
+						datecheckfile = pkg
+					out = run ("(cd %s; git log -n 1 --oneline -- %s)" % ( cat_path, datecheckfile ))
+					sha1 = out.split(" ")[0]
+					out = run ("(cd %s; git show --no-patch --format=%%ce_%%cD %s)" % ( cat_path, sha1))
+					email, isodate = out.split("_")
+					dt = (now - datetime.fromtimestamp(mktime(parsedate(isodate))))
+					if dt.days >= audit_cycle:
+						days_delta = dt.days - audit_cycle
+						catpkg_list.append((days_delta, dt, kit, branch, catpkg, email))
+					#"git log -n 1 --oneline -- ."
+					#"git show --no-patch --format=%ce,%cI 68dc82e"
+	print('<html><head><title>kit-fixups that need review</title><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous"></head><body>'
+		  '<div class="container"><div class="row"><div class="col-md" style="margin-top: 50px;"><h2>Funtoo Linux Stale Packages QA List</h2>'
+		  '<div class="alert alert-primary" style="margin-top: 50px;">This page lists catpkgs in kit-fixups that are <i>stale</i>. These catpkgs should be reviewed and updated; when they are updated in git, they will no longer be stale and will be removed automatically from this list.</div>'
+			'<div class="alert alert-dark"><p>If you review a catpkg and determine that it does not need an update, it is still possible to remove it from this list. Add a <tt>.audit</tt> file to the catpkg directory containing a text description of your review and commit it. This will result in the catpkg being \'reviewed\' and it will drop from this list.'
+			'<p>By default, catpkgs will be up for review after <b>60</b> days. To change this threshold, you can create a <tt>.audit-cycle</tt> file in the kit or branch directory containing an integer number of days after which catpkgs in the kit or branch should be considered stale.</p><p><a href="https://github.com/funtoo/kit-fixups">Visit kit-fixups on GitHub</a></p>'
+		  '<p>Please ensure catpkgs are not stale. Ideally review them every 30 days or less; please do not let catpkgs go without review for 60 days or more. Also note that because Funtoo doesn\'t have official maintainers for packages, the \'last modified by\' column is listed for convenience so you can coordinate with the previous committer if necessary.</p></div>'
+		  '<div style="text-align: right; width: 100%;"><p style="font-size: 8pt;"><i>This page was last updated on ' + now.strftime("%Y-%m-%d %H:%M:%S %p %Z local time") + " (" + utcnow.strftime("%y-%m-%d %H:%M") + " UTC)</i></p></div>"
+		  '</div></div></div>'
+		  '<table class="table table-striped"><thead class="thead-dark"><th>days late</th><th>days stale</th><th>kit</th><th>branch</th><th>catpkg</th><th>last modified by</th></thead>')
+	catpkg_list.sort(key=lambda x: x[0], reverse=True)
+	for item in catpkg_list:
+		days_delta = item[0]
+		if days_delta > 100:
+			days_delta = '<b><span style="color: #ff0000;">' + str(days_delta) + '</span></b>'
+		print("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>" % ( days_delta, item[1].days, item[2], item[3], item[4], item[5]))
+	print("</table></body></html>")
+
+
+if __name__ == "__main__":
+	loop = asyncio.get_event_loop()
+	loop.run_until_complete(main_thread())
+	sys.exit(0)

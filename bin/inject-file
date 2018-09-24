@@ -53,7 +53,7 @@ qdsf.size = os.path.getsize(fn)
 qdsf.digest_type = "sha512"
 qdsf.digest = get_sha512(fn)
 with db.get_session() as session:
-    # get_sha512() can take a long time; session can time out.
-    session.add(qdsf)
-    session.commit()
+	# get_sha512() can take a long time; session can time out.
+	session.add(qdsf)
+	session.commit()
 print("Injected file %s into queued distfiles." % fn)
