@@ -1361,13 +1361,13 @@ def headSHA1(tree):
 	return None
 
 
-async def getcommandoutput(*args):
+async def getcommandoutput(args):
 	# Slight modification of the function getstatusoutput present in:
 	# https://docs.python.org/3/library/asyncio-subprocess.html#example
-	if isinstance(args, list):
-		proc = await asyncio.create_subprocess_exec(*args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-	else:
+	if isinstance(args, str):
 		proc = await asyncio.create_subprocess_shell(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+	else:
+		proc = await asyncio.create_subprocess_exec(*args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	try:
 		stdout, stderr = await proc.communicate()
 	except:
@@ -1536,7 +1536,7 @@ class SyncDir(MergeStep):
 		if self.delete:
 			cmd += "--delete --delete-excluded "
 		cmd += "%s %s" % ( src, dest )
-		runShell(cmd)
+		await runShell(cmd)
 
 class CopyAndRename(MergeStep):
 	def __init__(self, src, dest, ren_fun):
@@ -1550,7 +1550,7 @@ class CopyAndRename(MergeStep):
 		for f in os.listdir(srcpath):
 			destfile = os.path.join(tree.root,self.dest)
 			destfile = os.path.join(destfile,self.ren_fun(f))
-			runShell("( cp -a %s/%s %s )" % ( srcpath, f, destfile ))
+			await runShell("( cp -a %s/%s %s )" % ( srcpath, f, destfile ))
 
 class SyncFiles(MergeStep):
 	def __init__(self, srcroot, files):
@@ -1622,7 +1622,7 @@ class CleanTree(MergeStep):
 				continue
 			if fn in self.exclude:
 				continue
-			runShell("rm -rf %s/%s" % (tree.root, fn))
+			await runShell("rm -rf %s/%s" % (tree.root, fn))
 
 class SyncFromTree(SyncDir):
 	# sync a full portage tree, deleting any excess files in the target dir:
@@ -1728,7 +1728,7 @@ class InsertFilesFromSubdir(MergeStep):
 				if self.skip.match(e):
 					continue
 			real_dst = os.path.basename(os.path.join(dst, e))
-			runShell("cp -a %s/%s %s" % ( src, e, dst))
+			await runShell("cp -a %s/%s %s" % ( src, e, dst))
 
 class InsertEclasses(InsertFilesFromSubdir):
 
