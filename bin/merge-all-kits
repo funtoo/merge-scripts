@@ -492,6 +492,27 @@ def generate_kit_metadata(release, meta_repo, output_sha1s):
 	with open(meta_repo.root + "/metadata/version.json", "w") as a:
 		a.write(json.dumps(foundation.metadata_version_info[release], sort_keys=True, indent=4, ensure_ascii=False))
 
+class KitQualityError(Exception):
+	
+	pass
+
+async def kit_qa_check():
+
+	# Make sure we don't redefine the same kit branch -- it's bad.
+	
+	all_kit_branches = defaultdict(dict)
+	for release, kit_list in foundation.kit_groups.items():
+		for kit in kit_list:
+			if "regenerate" in kit and kit["regenerate"] is False:
+				# we don't need to check these for dup listings:
+				continue
+			kit_name = kit["name"]
+			kit_branch = kit["branch"]
+			if kit_branch in all_kit_branches[kit_name]:
+				raise KitQualityError("Kit %s branch %s is defined multiple times. Exiting." % (kit_name, kit_branch))
+			all_kit_branches[kit_name][kit_branch] = kit
+	return True
+
 
 async def main_thread():
 	# one global timestamp for each run of this tool -- for mysql db
@@ -503,6 +524,11 @@ async def main_thread():
 	else:
 		push = True if "push" in sys.argv else False
 	
+	try:
+		await kit_qa_check()
+	except KitQualityError:
+		sys.exit(1)
+
 	num_threads = 40
 	async_engine = None
 	
