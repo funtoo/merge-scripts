@@ -14,10 +14,10 @@ async def gentoo_staging_update():
 	await gentoo_staging_w.initialize()
 	#gentoo_src = mu.GitTree("gentoo-x86", "master", "https://github.com/gentoo/gentoo.git", pull=True)
 	gentoo_src = mu.GitTree("gentoo-x86", "master", "https://anongit.gentoo.org/git/repo/gentoo.git")
-	gentoo_src.initialize()
+	await gentoo_src.initialize()
 	#gentoo_src = CvsTree("gentoo-x86",":pserver:anonymous@anoncvs.gentoo.org:/var/cvsroot")
 	gentoo_glsa = mu.GitTree("gentoo-glsa", "master", "git://anongit.gentoo.org/data/glsa.git")
-	gentoo_glsa.initialize()
+	await gentoo_glsa.initialize()
 	# This is the gentoo-staging tree, stored in a different place locally, so we can simultaneously be updating gentoo-staging and reading
 	# from it without overwriting ourselves:
 
