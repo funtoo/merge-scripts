@@ -580,6 +580,6 @@ if __name__ == "__main__":
 	
 	loop = asyncio.get_event_loop()
 	loop.run_until_complete(main_thread())
-	loop.close()
+	sys.exit(0)
 
 # vim: ts=4 sw=4 noet tw=140
