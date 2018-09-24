@@ -545,9 +545,9 @@ async def main_thread():
 		async_engine = AsyncMergeAllKits(num_threads=num_threads)
 		async_engine.start_threads(enable_workers = True if num_threads != 0 else False)
 	
-	cpm_logger = mu.CatPkgMatchLogger(log_xml=push)
-	
 	for release in foundation.kit_groups.keys():
+		
+		cpm_logger = mu.CatPkgMatchLogger(log_xml=push)
 		if not release.endswith("-release"):
 			continue
 		
