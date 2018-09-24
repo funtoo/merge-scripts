@@ -445,7 +445,7 @@ aliases = gentoo
 				else:
 					px = portage.catsplit(a)
 					cmd = '( eval $(cat %s/%s/%s/%s.ebuild | grep ^PYTHON_COMPAT); echo "${PYTHON_COMPAT[@]}" )' % ( cur_tree, cp[0], cp[1], px[1] )
-					outp = subprocess.getstatusoutput(cmd)
+					outp = await getcommandoutput(cmd)
 					imps = outp[1].split()
 					ebs[a] = imps
 			if len(ebs.keys()) == 0:
