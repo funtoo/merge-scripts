@@ -1364,8 +1364,10 @@ def headSHA1(tree):
 async def getcommandoutput(*args):
 	# Slight modification of the function getstatusoutput present in:
 	# https://docs.python.org/3/library/asyncio-subprocess.html#example
-	proc = await asyncio.create_subprocess_exec(*args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
+	if isinstance(args, list):
+		proc = await asyncio.create_subprocess_exec(*args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+	else:
+		proc = await asyncio.create_subprocess_shell(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	try:
 		stdout, stderr = await proc.communicate()
 	except:
@@ -1380,8 +1382,6 @@ async def getcommandoutput(*args):
 async def runShell(cmd_list, abort_on_failure=True):
 	if debug:
 		print("running: %r" % cmd_list)
-	if isinstance(cmd_list, str):
-		cmd_list = cmd_list.split(" ")
 	out = await getcommandoutput(cmd_list)
 	if out[0] != 0:
 		print("Error executing %r" % cmd_list)
