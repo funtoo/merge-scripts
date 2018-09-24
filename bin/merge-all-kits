@@ -12,14 +12,6 @@ import merge.merge_utils as mu
 from merge.config import config
 from merge.async_engine import AsyncEngine
 
-fixup_repo = mu.GitTree("kit-fixups", config.branch("kit-fixups"), url=config.kit_fixups, root=config.source_trees + "/kit-fixups")
-meta_repo = mu.GitTree("meta-repo", config.branch("meta-repo"), url=config.base_url("meta-repo"), root=config.dest_trees + "/meta-repo")
-
-sys.path.insert(0, fixup_repo.root + "/modules")
-from fixups.foundations import KitFoundation, KitRatingString, KitStabilityRating
-
-foundation = KitFoundation(config)
-
 
 class AsyncMergeAllKits(AsyncEngine):
 	_db = None
@@ -517,6 +509,16 @@ async def kit_qa_check():
 async def main_thread():
 	# one global timestamp for each run of this tool -- for mysql db
 	now = datetime.utcnow()
+	
+	fixup_repo = mu.GitTree("kit-fixups", config.branch("kit-fixups"), url=config.kit_fixups, root=config.source_trees + "/kit-fixups")
+	fixup_repo.initialize()
+	meta_repo = mu.GitTree("meta-repo", config.branch("meta-repo"), url=config.base_url("meta-repo"), root=config.dest_trees + "/meta-repo")
+	meta_repo.initialize()
+	
+	sys.path.insert(0, fixup_repo.root + "/modules")
+	from fixups.foundations import KitFoundation, KitRatingString, KitStabilityRating
+	
+	foundation = KitFoundation(config)
 	
 	if len(sys.argv) < 2 or sys.argv[1] not in ["push", "nopush"]:
 		print("Please specify push or nopush as an argument.")
