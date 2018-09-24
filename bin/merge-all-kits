@@ -503,7 +503,7 @@ async def kit_qa_check():
 	all_kit_branches = defaultdict(dict)
 	for release, kit_list in foundation.kit_groups.items():
 		for kit in kit_list:
-			if "regenerate" in kit and kit["regenerate"] is False:
+			if "generate" in kit and kit["generate"] is False:
 				# we don't need to check these for dup listings:
 				continue
 			kit_name = kit["name"]
