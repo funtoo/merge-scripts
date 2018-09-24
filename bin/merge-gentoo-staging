@@ -5,20 +5,19 @@ import sys
 sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "../../modules")))
 import merge.merge_utils as mu
 from merge.config import config
-
-gentoo_staging_w = mu.GitTree("gentoo-staging", "master", "repos@git.funtoo.org:ports/gentoo-staging.git", root=config.dest_trees + "/gentoo-staging")
+import asyncio
 
 # This function updates the gentoo-staging tree with all the latest gentoo updates:
 
-def gentoo_staging_update():
-	gentoo_use_rsync = False
-	if gentoo_use_rsync:
-		gentoo_src = mu.RsyncTree("gentoo")
-	else:
-		#gentoo_src = mu.GitTree("gentoo-x86", "master", "https://github.com/gentoo/gentoo.git", pull=True)
-		gentoo_src = mu.GitTree("gentoo-x86", "master", "https://anongit.gentoo.org/git/repo/gentoo.git")
-		#gentoo_src = CvsTree("gentoo-x86",":pserver:anonymous@anoncvs.gentoo.org:/var/cvsroot")
-		gentoo_glsa = mu.GitTree("gentoo-glsa", "master", "git://anongit.gentoo.org/data/glsa.git")
+async def gentoo_staging_update():
+	gentoo_staging_w = mu.GitTree("gentoo-staging", "master", "repos@git.funtoo.org:ports/gentoo-staging.git", root=config.dest_trees + "/gentoo-staging")
+	await gentoo_staging_w.initialize()
+	#gentoo_src = mu.GitTree("gentoo-x86", "master", "https://github.com/gentoo/gentoo.git", pull=True)
+	gentoo_src = mu.GitTree("gentoo-x86", "master", "https://anongit.gentoo.org/git/repo/gentoo.git")
+	gentoo_src.initialize()
+	#gentoo_src = CvsTree("gentoo-x86",":pserver:anonymous@anoncvs.gentoo.org:/var/cvsroot")
+	gentoo_glsa = mu.GitTree("gentoo-glsa", "master", "git://anongit.gentoo.org/data/glsa.git")
+	gentoo_glsa.initialize()
 	# This is the gentoo-staging tree, stored in a different place locally, so we can simultaneously be updating gentoo-staging and reading
 	# from it without overwriting ourselves:
 
@@ -26,16 +25,16 @@ def gentoo_staging_update():
 		mu.GitCheckout("master"),
 		mu.SyncFromTree(gentoo_src, exclude=[".gitignore", "eclass/.gitignore", "metadata/.gitignore", "/metadata/cache/**", "dev-util/metro"]),
 		# Only include 2012 and up GLSA's:
-		mu.SyncDir(gentoo_glsa.root, srcdir=None, destdir="metadata/glsa", exclude=["glsa-200*.xml","glsa-2010*.xml", "glsa-2011*.xml"]) if not gentoo_use_rsync else None,
+		mu.SyncDir(gentoo_glsa.root, srcdir=None, destdir="metadata/glsa", exclude=["glsa-200*.xml","glsa-2010*.xml", "glsa-2011*.xml"]),
 	]
 
-	gentoo_staging_w.run(all_steps)
-	gentoo_staging_w.gitCommit(message="gentoo updates")
+	await gentoo_staging_w.run(all_steps)
+	await gentoo_staging_w.gitCommit(message="gentoo updates")
 
-#	for s in shard_names:
-#		shards[s].run(shard_steps[s])
-#		shards[s].gitCommit(message="gentoo updates", branch="master")
-
-gentoo_staging_update()
+if __name__ == "__main__":
+	
+	loop = asyncio.get_event_loop()
+	loop.run_until_complete(gentoo_staging_update())
+	sys.exit(0)
 
 # vim: ts=4 sw=4 noet
