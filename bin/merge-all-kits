@@ -137,7 +137,7 @@ def getKitPrepSteps(repos, kit_dict, gentoo_staging, fixup_repo):
 # a particular kit's kit_source, in the order that they should be processed (in the order they are defined in
 # kit_source_defs, in other words.)
 
-async def getKitSourceInstance(kit_dict):
+async def getKitSourceInstance(foundation, kit_dict):
 	source_name = kit_dict['source']
 	
 	repos = []
@@ -166,7 +166,7 @@ async def getKitSourceInstance(kit_dict):
 # regenerating it. The kitted_catpkgs argument is a dictionary which is also written to and used to keep track of
 # catpkgs copied between runs of updateKit.
 
-async def updateKit(release, async_engine : AsyncMergeAllKits, kit_dict, prev_kit_dict, cpm_logger, create=False, push=False, now=None, fixup_repo=None):
+async def updateKit(foundation, release, async_engine : AsyncMergeAllKits, kit_dict, prev_kit_dict, cpm_logger, create=False, push=False, now=None, fixup_repo=None):
 	# secondary_kit means: we're the second (or third, etc.) xorg-kit or other kit to be processed. The first kind of
 	# each kit processed has secondary_kit = False, and later ones have secondary_kit = True. We need special processing
 	# to grab any 'orphan' packages that were selected as part of prior kit scans (and thus will not be included in
@@ -201,7 +201,7 @@ async def updateKit(release, async_engine : AsyncMergeAllKits, kit_dict, prev_ki
 		])
 		return tree.head()
 	
-	repos = kit_dict["repo_obj"] = await getKitSourceInstance(kit_dict)
+	repos = kit_dict["repo_obj"] = await getKitSourceInstance(foundation, kit_dict)
 	
 	# get a handy variable reference to gentoo_staging:
 	gentoo_staging = None
@@ -429,13 +429,16 @@ async def updateKit(release, async_engine : AsyncMergeAllKits, kit_dict, prev_ki
 	return tree.head()
 
 
-def generate_kit_metadata(release, meta_repo, output_sha1s):
+def generate_kit_metadata(foundation, release, meta_repo, output_sha1s):
 	"""
 	Generates the metadata in /var/git/meta-repo/metadata/...
 	:param release: the release string, like "1.3-release".
 	:param meta_repo: the meta-repo GitTree.
 	:return: None.
 	"""
+	
+	global KitRatingString
+	global KitStabilityRating
 	
 	if not os.path.exists(meta_repo.root + "/metadata"):
 		os.makedirs(meta_repo.root + "/metadata")
@@ -488,7 +491,7 @@ class KitQualityError(Exception):
 	
 	pass
 
-async def kit_qa_check():
+async def kit_qa_check(foundation):
 
 	# Make sure we don't redefine the same kit branch -- it's bad.
 	
@@ -511,14 +514,17 @@ async def main_thread():
 	now = datetime.utcnow()
 	
 	fixup_repo = mu.GitTree("kit-fixups", config.branch("kit-fixups"), url=config.kit_fixups, root=config.source_trees + "/kit-fixups")
-	fixup_repo.initialize()
+	await fixup_repo.initialize()
 	meta_repo = mu.GitTree("meta-repo", config.branch("meta-repo"), url=config.base_url("meta-repo"), root=config.dest_trees + "/meta-repo")
-	meta_repo.initialize()
+	await meta_repo.initialize()
 	
 	sys.path.insert(0, fixup_repo.root + "/modules")
 	from fixups.foundations import KitFoundation, KitRatingString, KitStabilityRating
 	
 	foundation = KitFoundation(config)
+	# Now that we imported, set these guys to be globals:
+	globals()['KitRatingString'] = KitRatingString
+	globals()['KitStabilityRating'] = KitStabilityRating
 	
 	if len(sys.argv) < 2 or sys.argv[1] not in ["push", "nopush"]:
 		print("Please specify push or nopush as an argument.")
@@ -527,7 +533,7 @@ async def main_thread():
 		push = True if "push" in sys.argv else False
 	
 	try:
-		await kit_qa_check()
+		await kit_qa_check(foundation)
 	except KitQualityError as e:
 		print("Kit QA Error detected:", str(e))
 		sys.exit(1)
@@ -553,13 +559,13 @@ async def main_thread():
 		
 		for kit_dict in foundation.kit_groups[release]:
 			print("Regenerating kit ", kit_dict)
-			head = await updateKit(release, async_engine, kit_dict, prev_kit_dict, cpm_logger, create=not push, push=push, now=now, fixup_repo=fixup_repo)
+			head = await updateKit(foundation, release, async_engine, kit_dict, prev_kit_dict, cpm_logger, create=not push, push=push, now=now, fixup_repo=fixup_repo)
 			kit_name = kit_dict["name"]
 			if kit_name not in output_sha1s:
 				output_sha1s[kit_name] = {}
 			output_sha1s[kit_name][kit_dict["branch"]] = head
 			prev_kit_dict = kit_dict
-		generate_kit_metadata(release, meta_repo, output_sha1s)
+		generate_kit_metadata(foundation, release, meta_repo, output_sha1s)
 		
 		await meta_repo.gitCommit(message="kit updates", push=False)
 	
