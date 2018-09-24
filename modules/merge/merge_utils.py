@@ -20,6 +20,7 @@ from portage.util.futures.iter_completed import async_iter_completed
 from merge.config import config
 from merge.async_engine import AsyncEngine
 from merge.async_portage import async_xmatch
+import asyncio
 
 debug = False
 
@@ -62,12 +63,12 @@ class GitTree(Tree):
 		self.reponame = reponame
 		self.create = create
 		self.has_cleaned = False
-		
-		self.initializeTree(branch, commit_sha1)
+		self.initialized = False
+		self.initial_future = self.initialize_tree(branch, commit_sha1)
 	
 	# if we don't specify root destination tree, assume we are source only:
 	
-	def initializeTree(self, branch, commit_sha1=None):
+	async def initialize_tree(self, branch, commit_sha1=None):
 		self.branch = branch
 		self.commit_sha1 = commit_sha1
 		if self.root is None:
@@ -82,20 +83,20 @@ class GitTree(Tree):
 			if self.create:
 				# we have been told to create this repo. This works even if we have a remote clone URL specified
 				os.makedirs(self.root)
-				runShell("( cd %s && git init )" % self.root)
-				runShell("echo 'created by merge.py' > %s/README" % self.root)
-				runShell("( cd %s &&  git add README; git commit -a -m 'initial commit by merge.py' )" % self.root)
-				runShell("( cd %s && git remote add origin %s )" % (self.root, self.url))
+				await runShell("( cd %s && git init )" % self.root)
+				await runShell("echo 'created by merge.py' > %s/README" % self.root)
+				await runShell("( cd %s &&  git add README; git commit -a -m 'initial commit by merge.py' )" % self.root)
+				await runShell("( cd %s && git remote add origin %s )" % (self.root, self.url))
 			elif self.url:
 				if not os.path.exists(base):
 					os.makedirs(base)
 				# we aren't supposed to create it from scratch -- can we clone it?
-				runShell("(cd %s && git clone %s %s)" % (base, self.url, os.path.basename(self.root)))
+				await runShell("(cd %s && git clone %s %s)" % (base, self.url, os.path.basename(self.root)))
 			else:
 				# we've run out of options
 				print("Error: tree %s does not exist, but no clone URL specified. Exiting." % self.root)
 				sys.exit(1)
-		
+
 		# if we've gotten here, we can assume that the repo exists at self.root.
 		if self.url is not None:
 			retval, out = subprocess.getstatusoutput("(cd %s && git remote get-url origin)" % self.root)
@@ -115,22 +116,28 @@ class GitTree(Tree):
 				raise GitTreeError("%s: Git origin mismatch." % self.root)
 		# first, we will clean up any messes:
 		if not self.has_cleaned:
-			runShell("(cd %s &&  git reset --hard && git clean -fd )" % self.root)
+			await runShell("(cd %s &&  git reset --hard && git clean -fd )" % self.root)
 			self.has_cleaned = True
 		
 		# git fetch will run as part of this:
-		self.gitCheckout(self.branch)
+		await self.gitCheckout(self.branch, from_init=True)
 		
 		# point to specified sha1:
 		
 		if self.commit_sha1:
-			runShell("(cd %s && git checkout %s )" % (self.root, self.commit_sha1))
+			await runShell("(cd %s && git checkout %s )" % (self.root, self.commit_sha1))
 			if self.head() != self.commit_sha1:
 				raise GitTreeError("%s: Was not able to check out specified SHA1: %s." % (self.root, self.commit_sha1))
 		elif self.pull:
 			# we are on the right branch, but we want to make sure we have the latest updates
-			runShell("(cd %s && git pull -f || true)" % self.root)
+			await runShell("(cd %s && git pull -f || true)" % self.root)
 	
+		self.initialized = True
+		
+	async def initialize(self):
+		if not self.initialized:
+			await self.initial_future
+			
 	@property
 	def currentLocalBranch(self):
 		s, branch = subprocess.getstatusoutput("( cd %s && git symbolic-ref --short -q HEAD )" % self.root)
@@ -174,22 +181,24 @@ class GitTree(Tree):
 	def catpkg_exists(self, catpkg):
 		return os.path.exists(self.root + "/" + catpkg)
 	
-	def gitCheckout(self, branch="master"):
-		runShell("(cd %s && git fetch)" % self.root)
+	async def gitCheckout(self, branch="master", from_init=False):
+		if not from_init:
+			await self.initialize()
+		await runShell("(cd %s && git fetch)" % self.root)
 		if self.localBranchExists(branch):
-			runShell("(cd %s && git checkout %s && git pull -f || true)" % (self.root, branch))
+			await runShell("(cd %s && git checkout %s && git pull -f || true)" % (self.root, branch))
 		elif self.remoteBranchExists(branch):
-			runShell("(cd %s && git checkout -b %s --track origin/%s)" % (self.root, branch, branch))
+			await runShell("(cd %s && git checkout -b %s --track origin/%s)" % (self.root, branch, branch))
 		else:
-			runShell("(cd %s && git checkout -b %s)" % (self.root, branch))
+			await runShell("(cd %s && git checkout -b %s)" % (self.root, branch))
 		if self.currentLocalBranch != branch:
 			raise GitTreeError("%s: On branch %s. not able to check out branch %s." % (self.root, self.currentLocalBranch, branch))
 	
-	def gitPush(self):
-		runShell("(cd %s && git push --mirror)" % self.root)
+	async def gitPush(self):
+		await runShell("(cd %s && git push --mirror)" % self.root)
 	
-	def gitCommit(self, message="", push=True):
-		runShell("( cd %s && git add . )" % self.root)
+	async def gitCommit(self, message="", push=True):
+		await runShell("( cd %s && git add . )" % self.root)
 		cmd = "( cd %s && [ -n \"$(git status --porcelain)\" ] && git commit -a -F - << EOF || exit 0\n" % self.root
 		if message != "":
 			cmd += "%s\n\n" % message
@@ -212,7 +221,7 @@ class GitTree(Tree):
 			print("Commit failed.")
 			sys.exit(1)
 		if push == True and self.create == False:
-			runShell("(cd %s && git push --mirror)" % self.root)
+			await runShell("(cd %s && git push --mirror)" % self.root)
 		else:
 			print("Pushing disabled.")
 	
@@ -235,7 +244,6 @@ class GitTree(Tree):
 			if hasattr(srctree, "origroot"):
 				self.merged.append([srctree.name, headSHA1(srctree.origroot)])
 				return
-			
 			self.merged.append([srctree.name, srctree.head()])
 
 
@@ -261,7 +269,7 @@ class SvnTree(Tree):
 		if not os.path.exists(base):
 			os.makedirs(base)
 		if os.path.exists(self.root):
-			runShell("(cd %s && svn up)" % self.root, abortOnFail=False)
+			runShell("(cd %s && svn up)" % self.root, abort_on_failure=False)
 		else:
 			runShell("(cd %s && svn co %s %s)" % (base, self.url, self.name))
 
@@ -277,7 +285,7 @@ class CvsTree(Tree):
 		if not os.path.exists(base):
 			os.makedirs(base)
 		if os.path.exists(self.root):
-			runShell("(cd %s && cvs update -dP)" % self.root, abortOnFail=False)
+			runShell("(cd %s && cvs update -dP)" % self.root, abort_on_failure=False)
 		else:
 			runShell("(cd %s && cvs -d %s co %s)" % (base, self.url, path))
 
@@ -1352,45 +1360,40 @@ def headSHA1(tree):
 		return out.strip()
 	return None
 
-def runShell(string,abortOnFail=True):
+
+async def getcommandoutput(*args):
+	# Slight modification of the function getstatusoutput present in:
+	# https://docs.python.org/3/library/asyncio-subprocess.html#example
+	proc = await asyncio.create_subprocess_exec(*args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+	try:
+		stdout, stderr = await proc.communicate()
+	except:
+		proc.kill()
+		await proc.wait()
+		raise
+
+	exitcode = await proc.wait()
+	return exitcode, stdout, stderr
+
+
+async def runShell(cmd_list, abort_on_failure=True):
 	if debug:
-		print("running: %r" % string)
-	out = subprocess.getstatusoutput(string)
+		print("running: %r" % cmd_list)
+	if isinstance(cmd_list, str):
+		cmd_list = cmd_list.split(" ")
+	out = await getcommandoutput(cmd_list)
 	if out[0] != 0:
-		print("Error executing %r" % string)
+		print("Error executing %r" % cmd_list)
 		print()
 		print("output:")
 		print(out[1])
-		if abortOnFail:
-			sys.exit(1)
-		else:
-			return False
-	return True
-
-def run_command(args, *, abort_on_failure=True, **kwargs):
-	if debug:
-		print("running: %r" % args)
-	stdout = kwargs.pop("stdout", subprocess.PIPE)
-	stderr = kwargs.pop("stderr", subprocess.PIPE)
-	try:
-		with subprocess.Popen(args, stdout=stdout, stderr=stderr, **kwargs) as process:
-			status = process.wait()
-			stdout_content = process.stdout.read().decode()
-			stderr_content = process.stderr.read().decode()
-	except OSError as e:
-		status = -1
-		stdout_content = ""
-		stderr_content = e.strerror
-	if status != 0:
-		print("Error executing %r" % args)
-		print()
-		print("stdout: %s" % stdout_content)
-		print("stderr: %s" % stderr_content)
 		if abort_on_failure:
 			sys.exit(1)
 		else:
 			return False
 	return True
+
 
 class AutoGlobMask(MergeStep):
 
@@ -1759,11 +1762,13 @@ class ZapMatchingEbuilds(MergeStep):
 	def __init__(self,srctree,select="all",branch=None):
 		self.select = select
 		self.srctree = srctree
-		if branch is not None:
-			# Allow dynamic switching to different branches/commits to grab things we want:
-			self.srctree.gitCheckout(branch)
+		self.branch = branch
 
-	async def run(self,desttree):
+
+	async def run(self, desttree):
+		if self.branch is not None:
+			# Allow dynamic switching to different branches/commits to grab things we want:
+			await self.srctree.gitCheckout(self.branch)
 		# Figure out what categories to process:
 		dest_cat_path = os.path.join(desttree.root, "profiles/categories")
 		if os.path.exists(dest_cat_path):
@@ -1785,7 +1790,7 @@ class ZapMatchingEbuilds(MergeStep):
 				if not os.path.exists(dest_pkgdir):
 					# don't need to zap as it doesn't exist
 					continue
-				runShell("rm -rf %s" % dest_pkgdir)
+				await runShell("rm -rf %s" % dest_pkgdir)
 
 
 class RecordAllCatPkgs(MergeStep):
@@ -1857,10 +1862,8 @@ class InsertEbuilds(MergeStep):
 			self.select_only = []
 		else:
 			self.select_only = select_only
+		self.branch = branch
 
-		if branch is not None:
-			# Allow dynamic switching to different branches/commits to grab things we want:
-			self.srctree.gitCheckout(branch)
 
 		self.ebuildloc = ebuildloc
 
@@ -1868,7 +1871,9 @@ class InsertEbuilds(MergeStep):
 		return "<InsertEbuilds: %s>" % self.srctree.root
 
 	async def run(self,desttree):
-
+		if self.branch is not None:
+			# Allow dynamic switching to different branches/commits to grab things we want:
+			await self.srctree.gitCheckout(self.branch)
 		# Just for clarification, I'm breaking these out to separate variables:
 		branch = desttree.branch
 		kit = desttree.name
@@ -1961,14 +1966,14 @@ class InsertEbuilds(MergeStep):
 				if self.replace is True or (isinstance(self.replace, list) and (catpkg in self.replace)):
 					if not os.path.exists(tcatdir):
 						os.makedirs(tcatdir)
-					runShell("rm -rf %s; cp -a %s %s" % (tpkgdir, pkgdir, tpkgdir ))
+					await runShell("rm -rf %s; cp -a %s %s" % (tpkgdir, pkgdir, tpkgdir ))
 					copied = True
 				else:
 					if not os.path.exists(tpkgdir):
 						copied = True
 					if not os.path.exists(tcatdir):
 						os.makedirs(tcatdir)
-					runShell("[ ! -e %s ] && cp -a %s %s || echo \"# skipping %s/%s\"" % (tpkgdir, pkgdir, tpkgdir, cat, pkg ))
+					await runShell("[ ! -e %s ] && cp -a %s %s || echo \"# skipping %s/%s\"" % (tpkgdir, pkgdir, tpkgdir, cat, pkg ))
 				if copied:
 					# log XML here.
 					if self.cpm_logger:
@@ -2001,7 +2006,7 @@ class ProfileDepFix(MergeStep):
 				sp = line.split()
 				if len(sp) >= 2:
 					prof_path = sp[1]
-					runShell("rm -f %s/profiles/%s/deprecated" % ( tree.root, prof_path ))
+					await runShell("rm -f %s/profiles/%s/deprecated" % ( tree.root, prof_path ))
 
 class RunSed(MergeStep):
 
@@ -2020,7 +2025,7 @@ class RunSed(MergeStep):
 	async def run(self, tree):
 		commands = list(itertools.chain.from_iterable(("-e", command) for command in self.commands))
 		files = [os.path.join(tree.root, file) for file in self.files]
-		run_command(["sed"] + commands + ["-i"] + files)
+		await runShell(["sed"] + commands + ["-i"] + files)
 
 class GenCache(MergeStep):
 
@@ -2060,7 +2065,7 @@ class GenCache(MergeStep):
 			if not os.path.exists(self.cache_dir):
 				os.makedirs(self.cache_dir)
 				os.chown(self.cache_dir, pwd.getpwnam('portage').pw_uid, grp.getgrnam('portage').gr_gid)
-		run_command(cmd, abort_on_failure=True)
+		await runShell(cmd, abort_on_failure=True)
 
 class GenUseLocalDesc(MergeStep):
 
@@ -2071,7 +2076,7 @@ class GenUseLocalDesc(MergeStep):
 			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = %s/core-kit\n\n[%s]\nlocation = %s\n" % (config.dest_trees, tree.reponame if tree.reponame else tree.name, tree.root)
 		else:
 			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = %s/core-kit\n" % config.dest_trees
-		run_command(["egencache", "--update-use-local-desc", "--tolerant", "--repo", tree.reponame if tree.reponame else tree.name, "--repositories-configuration" , repos_conf ], abort_on_failure=False)
+		await runShell(["egencache", "--update-use-local-desc", "--tolerant", "--repo", tree.reponame if tree.reponame else tree.name, "--repositories-configuration" , repos_conf ], abort_on_failure=False)
 
 class GitCheckout(MergeStep):
 
@@ -2079,7 +2084,7 @@ class GitCheckout(MergeStep):
 		self.branch = branch
 
 	async def run(self,tree):
-		runShell("(cd %s && git checkout %s || git checkout -b %s --track origin/%s || git checkout -b %s)" % ( tree.root, self.branch, self.branch, self.branch, self.branch ))
+		await runShell("(cd %s && git checkout %s || git checkout -b %s --track origin/%s || git checkout -b %s)" % ( tree.root, self.branch, self.branch, self.branch, self.branch ))
 
 class CreateBranch(MergeStep):
 
@@ -2087,7 +2092,7 @@ class CreateBranch(MergeStep):
 		self.branch = branch
 
 	async def run(self,tree):
-		runShell("( cd %s && git checkout -b %s --track origin/%s )" % ( tree.root, self.branch, self.branch ))
+		await runShell("( cd %s && git checkout -b %s --track origin/%s )" % ( tree.root, self.branch, self.branch ))
 
 
 class Minify(MergeStep):
@@ -2095,8 +2100,8 @@ class Minify(MergeStep):
 	"Minify removes ChangeLogs and shrinks Manifests."
 
 	async def run(self,tree):
-		runShell("( cd %s && find -iname ChangeLog | xargs rm )" % tree.root )
-		runShell("( cd %s && find -iname Manifest | xargs -i@ sed -ni '/^DIST/p' @ )" % tree.root )
+		await runShell("( cd %s && find -iname ChangeLog | xargs rm )" % tree.root )
+		await runShell("( cd %s && find -iname Manifest | xargs -i@ sed -ni '/^DIST/p' @ )" % tree.root )
 
 
 

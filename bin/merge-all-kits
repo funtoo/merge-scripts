@@ -6,7 +6,6 @@ import sys
 from collections import defaultdict, OrderedDict
 from datetime import datetime
 import asyncio
-import threading
 
 sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "../../modules")))
 import merge.merge_utils as mu
@@ -146,7 +145,7 @@ def getKitPrepSteps(repos, kit_dict, gentoo_staging, fixup_repo):
 # a particular kit's kit_source, in the order that they should be processed (in the order they are defined in
 # kit_source_defs, in other words.)
 
-def getKitSourceInstance(kit_dict):
+async def getKitSourceInstance(kit_dict):
 	source_name = kit_dict['source']
 	
 	repos = []
@@ -165,6 +164,7 @@ def getKitSourceInstance(kit_dict):
 		else:
 			path = repo_name
 		repo = repo_obj(repo_name, url=repo_url, root="%s/%s" % (config.source_trees, path), branch=repo_branch, commit_sha1=repo_sha1)
+		await repo.initialize()
 		repos.append({"name": repo_name, "repo": repo, "overlay_def": foundation.overlays[repo_name]})
 	
 	return repos
@@ -203,12 +203,13 @@ async def updateKit(release, async_engine : AsyncMergeAllKits, kit_dict, prev_ki
 	if "generate" in kit_dict and kit_dict["generate"] is not True:
 		# independently-maintained repo. Don't regenerate. Just record all catpkgs in this kit as belonging ot this kit so they don't get into other kits:
 		tree = mu.GitTree(kit_dict["name"], kit_dict["branch"], url="https://github.com/funtoo/%s" % kit_dict["name"], root=config.source_trees + "/" + kit_dict["name"])
+		await tree.initialize()
 		await tree.run([
 			mu.RecordAllCatPkgs(tree, cpm_logger)
 		])
 		return tree.head()
 	
-	repos = kit_dict["repo_obj"] = getKitSourceInstance(kit_dict)
+	repos = kit_dict["repo_obj"] = await getKitSourceInstance(kit_dict)
 	
 	# get a handy variable reference to gentoo_staging:
 	gentoo_staging = None
@@ -226,7 +227,7 @@ async def updateKit(release, async_engine : AsyncMergeAllKits, kit_dict, prev_ki
 	kit_dict['tree'] = tree = mu.GitTree(kit_dict['name'], kit_dict['branch'],
 										 url=config.base_url(kit_dict['name']), create=create,
 										 root="%s/%s" % (config.dest_trees, kit_dict['name']))
-	
+	await tree.initialize()
 	if "stability" in kit_dict and kit_dict["stability"] == KitStabilityRating.DEPRECATED:
 		# no longer update this kit.
 		return tree.head()
@@ -432,7 +433,7 @@ async def updateKit(release, async_engine : AsyncMergeAllKits, kit_dict, prev_ki
 	]
 	
 	await tree.run(post_steps)
-	tree.gitCommit(message="updates", push=push)
+	await tree.gitCommit(message="updates", push=push)
 	return tree.head()
 
 
@@ -516,7 +517,7 @@ async def main_thread():
 			continue
 		
 		target_branch = "master" if release == "1.2-release" else release
-		meta_repo.gitCheckout(target_branch)
+		await meta_repo.gitCheckout(target_branch)
 		
 		output_sha1s = {}
 		prev_kit_dict = None
@@ -531,11 +532,11 @@ async def main_thread():
 			prev_kit_dict = kit_dict
 		generate_kit_metadata(release, meta_repo, output_sha1s)
 		
-		meta_repo.gitCommit(message="kit updates", push=False)
+		await meta_repo.gitCommit(message="kit updates", push=False)
 	
 	if push is True:
 		print("Pushing meta-repo...")
-		meta_repo.gitPush()
+		await meta_repo.gitPush()
 		
 	await async_engine.wait_for_workers_to_finish()
 
