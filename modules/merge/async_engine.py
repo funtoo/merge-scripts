@@ -5,7 +5,7 @@ from concurrent.futures import ThreadPoolExecutor
 from collections import defaultdict
 from queue import Queue, Empty
 
-class AsyncEngine:
+class WorkerThreadEngine:
 	
 	queue_size = 60000
 	

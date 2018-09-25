@@ -18,7 +18,7 @@ import multiprocessing
 from collections import defaultdict
 from portage.util.futures.iter_completed import async_iter_completed
 from merge.config import config
-from merge.async_engine import AsyncEngine
+from merge.async_engine import WorkerThreadEngine
 from merge.async_portage import async_xmatch
 import asyncio
 
@@ -64,13 +64,20 @@ class GitTree(Tree):
 		self.create = create
 		self.has_cleaned = False
 		self.initialized = False
-		self.initial_future = self.initialize_tree(branch, commit_sha1)
+		self.branch = branch
+		self.commit_sha1 = commit_sha1
+
+		self.lock = asyncio.Lock()
 	
 	# if we don't specify root destination tree, assume we are source only:
 	
-	async def initialize_tree(self, branch, commit_sha1=None):
-		self.branch = branch
-		self.commit_sha1 = commit_sha1
+	async def _initialize_tree(self, branch=None, commit_sha1=None):
+		if branch is not None:
+			self.branch = branch
+			if commit_sha1 is not None:
+				self.commit_sha1 = commit_sha1
+			else:
+				self.commit_sha1 = None
 		if self.root is None:
 			base = config.source_trees
 			self.root = "%s/%s" % (base, self.name)
@@ -120,7 +127,7 @@ class GitTree(Tree):
 			self.has_cleaned = True
 		
 		# git fetch will run as part of this:
-		await self.gitCheckout(self.branch, from_init=True)
+		await self.gitCheckout(self.branch)
 		
 		# point to specified sha1:
 		
@@ -134,9 +141,8 @@ class GitTree(Tree):
 	
 		self.initialized = True
 		
-	async def initialize(self):
-		if not self.initialized:
-			await self.initial_future
+	async def initialize(self, branch=None, commit_sha1=None):
+		await self._initialize_tree(branch=branch, commit_sha1=commit_sha1)
 			
 	@property
 	def currentLocalBranch(self):
@@ -181,9 +187,7 @@ class GitTree(Tree):
 	def catpkg_exists(self, catpkg):
 		return os.path.exists(self.root + "/" + catpkg)
 	
-	async def gitCheckout(self, branch="master", from_init=False):
-		if not from_init:
-			await self.initialize()
+	async def gitCheckout(self, branch="master"):
 		await runShell("(cd %s && git fetch)" % self.root)
 		if self.localBranchExists(branch):
 			await runShell("(cd %s && git checkout %s && git pull -f || true)" % (self.root, branch))
@@ -758,7 +762,7 @@ def extract_uris(src_uri):
 
 class CatPkgScan(MergeStep):
 
-	def __init__(self, now, engine : AsyncEngine = None):
+	def __init__(self, now, engine : WorkerThreadEngine = None):
 		self.now = now
 		self.engine = engine
 

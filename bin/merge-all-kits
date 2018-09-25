@@ -6,14 +6,15 @@ import sys
 from collections import defaultdict, OrderedDict
 from datetime import datetime
 import asyncio
+from concurrent.futures import ThreadPoolExecutor
 
 sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "../../modules")))
 import merge.merge_utils as mu
 from merge.config import config
-from merge.async_engine import AsyncEngine
+from merge.async_engine import WorkerThreadEngine
 
 
-class AsyncMergeAllKits(AsyncEngine):
+class FastPullClientEngine(WorkerThreadEngine):
 	_db = None
 	
 	@property
@@ -166,7 +167,7 @@ async def getKitSourceInstance(foundation, kit_dict):
 # regenerating it. The kitted_catpkgs argument is a dictionary which is also written to and used to keep track of
 # catpkgs copied between runs of updateKit.
 
-async def updateKit(foundation, release, async_engine : AsyncMergeAllKits, kit_dict, prev_kit_dict, cpm_logger, create=False, push=False, now=None, fixup_repo=None):
+async def updateKit(foundation, release, async_engine : FastPullClientEngine, kit_dict, prev_kit_dict, cpm_logger, create=False, push=False, now=None, fixup_repo=None):
 	# secondary_kit means: we're the second (or third, etc.) xorg-kit or other kit to be processed. The first kind of
 	# each kit processed has secondary_kit = False, and later ones have secondary_kit = True. We need special processing
 	# to grab any 'orphan' packages that were selected as part of prior kit scans (and thus will not be included in
@@ -195,11 +196,12 @@ async def updateKit(foundation, release, async_engine : AsyncMergeAllKits, kit_d
 	if "generate" in kit_dict and kit_dict["generate"] is not True:
 		# independently-maintained repo. Don't regenerate. Just record all catpkgs in this kit as belonging ot this kit so they don't get into other kits:
 		tree = mu.GitTree(kit_dict["name"], kit_dict["branch"], url="https://github.com/funtoo/%s" % kit_dict["name"], root=config.source_trees + "/" + kit_dict["name"])
-		await tree.initialize()
-		await tree.run([
-			mu.RecordAllCatPkgs(tree, cpm_logger)
-		])
-		return tree.head()
+		async with tree.lock:
+			await tree.initialize()
+			await tree.run([
+				mu.RecordAllCatPkgs(tree, cpm_logger)
+			])
+			return tree.head()
 	
 	repos = kit_dict["repo_obj"] = await getKitSourceInstance(foundation, kit_dict)
 	
@@ -219,214 +221,215 @@ async def updateKit(foundation, release, async_engine : AsyncMergeAllKits, kit_d
 	kit_dict['tree'] = tree = mu.GitTree(kit_dict['name'], kit_dict['branch'],
 										 url=config.base_url(kit_dict['name']), create=create,
 										 root="%s/%s" % (config.dest_trees, kit_dict['name']))
-	await tree.initialize()
-	if "stability" in kit_dict and kit_dict["stability"] == KitStabilityRating.DEPRECATED:
-		# no longer update this kit.
-		return tree.head()
-	
-	# Phase 1: prep the kit
-	pre_steps = [
-		mu.GitCheckout(kit_dict['branch']),
-		mu.CleanTree()
-	]
-	
-	prep_steps = getKitPrepSteps(repos, kit_dict, gentoo_staging, fixup_repo)
-	pre_steps += prep_steps[0]
-	copy_steps = prep_steps[1]
-	post_steps = prep_steps[2]
-	
-	await tree.run(pre_steps)
-	
-	# Phase 2: copy core set of ebuilds
-	
-	# Here we generate our main set of ebuild copy steps, based on the contents of the package-set file for the kit. The logic works as
-	# follows. We apply our package-set logic to each repo in succession. If copy ebuilds were actually copied (we detect this by
-	# looking for changed catpkg count in our dest_kit,) then we also run additional steps: "copyfiles" and "eclasses". "copyfiles"
-	# specifies files like masks to copy over to the dest_kit, and "eclasses" specifies eclasses from the overlay that we need to
-	# copy over to the dest_kit. We don't need to specify eclasses that we need from gentoo_staging -- these are automatically detected
-	# and copied, but if there are any special eclasses from the overlay then we want to copy these over initially.
-	
-	copycount = cpm_logger.copycount
-	for repo_dict in repos:
-		steps = []
-		select_clause = "all"
-		overlay_def = repo_dict["overlay_def"]
+	async with tree.lock:
+		await tree.initialize()
+		if "stability" in kit_dict and kit_dict["stability"] == KitStabilityRating.DEPRECATED:
+			# no longer update this kit.
+			return tree.head()
 		
-		if "select" in overlay_def:
-			select_clause = overlay_def["select"]
+		# Phase 1: prep the kit
+		pre_steps = [
+			mu.GitCheckout(kit_dict['branch']),
+			mu.CleanTree()
+		]
 		
-		# If the repo has a "filter" : [ "foo", "bar", "oni" ], then construct a list of repos with those names and put
-		# them in filter_repos. We will pass this list of repo objects to InsertEbuilds inside generateKitSteps, and if
-		# a catpkg exists in any of these repos, then it will NOT be copied if it is scheduled to be copied for this
-		# repo. This is a way we can lock down overlays to not insert any catpkgs that are already defined in gentoo --
-		# just add: filter : [ "gentoo-staging" ] and if the catpkg exists in gentoo-staging, it won't get copied. This
-		# way we can more safely choose to include all ebuilds from 'potpurri' overlays like faustoo without exposing
-		# ourself to too much risk from messing stuff up.
+		prep_steps = getKitPrepSteps(repos, kit_dict, gentoo_staging, fixup_repo)
+		pre_steps += prep_steps[0]
+		copy_steps = prep_steps[1]
+		post_steps = prep_steps[2]
 		
-		filter_repos = []
-		if "filter" in overlay_def:
-			for filter_repo_name in overlay_def["filter"]:
-				for x in repos:
-					if x["name"] == filter_repo_name:
-						filter_repos.append(x["repo"])
+		await tree.run(pre_steps)
 		
-		if kit_dict["name"] == "nokit":
-			# grab all remaining ebuilds to put in nokit
-			steps += [mu.InsertEbuilds(repo_dict["repo"], select_only=select_clause, move_maps=move_maps, skip=None, replace=False, cpm_logger=cpm_logger)]
-		else:
-			steps += await mu.generateKitSteps(release, kit_dict['name'], repo_dict["repo"], fixup_repo=fixup_repo, select_only=select_clause,
-										 filter_repos=filter_repos, force=overlay_def["force"] if "force" in overlay_def else None,
-										 cpm_logger=cpm_logger, move_maps=move_maps, secondary_kit=secondary_kit)
-		await tree.run(steps)
-		if copycount != cpm_logger.copycount:
-			# this means some catpkgs were installed from the repo we are currently processing. This means we also want to execute
-			# 'copyfiles' and 'eclasses' copy logic:
-			
-			ov = foundation.overlays[repo_dict["name"]]
-			
-			if "copyfiles" in ov and len(ov["copyfiles"]):
-				# since we copied over some ebuilds, we also want to make sure we copy over things like masks, etc:
-				steps += [mu.SyncFiles(repo_dict["repo"].root, ov["copyfiles"])]
-			if "eclasses" in ov:
-				# we have eclasses to copy over, too:
-				ec_files = {}
-				for eclass in ov["eclasses"]:
-					ecf = "/eclass/" + eclass + ".eclass"
-					ec_files[ecf] = ecf
-				steps += [mu.SyncFiles(repo_dict["repo"].root, ec_files)]
+		# Phase 2: copy core set of ebuilds
+		
+		# Here we generate our main set of ebuild copy steps, based on the contents of the package-set file for the kit. The logic works as
+		# follows. We apply our package-set logic to each repo in succession. If copy ebuilds were actually copied (we detect this by
+		# looking for changed catpkg count in our dest_kit,) then we also run additional steps: "copyfiles" and "eclasses". "copyfiles"
+		# specifies files like masks to copy over to the dest_kit, and "eclasses" specifies eclasses from the overlay that we need to
+		# copy over to the dest_kit. We don't need to specify eclasses that we need from gentoo_staging -- these are automatically detected
+		# and copied, but if there are any special eclasses from the overlay then we want to copy these over initially.
+		
 		copycount = cpm_logger.copycount
-	
-	# Phase 3: copy eclasses, licenses, profile info, and ebuild/eclass fixups from the kit-fixups repository. 
-	
-	# First, we are going to process the kit-fixups repository and look for ebuilds and eclasses to replace. Eclasses can be
-	# overridden by using the following paths inside kit-fixups:
-	
-	# kit-fixups/eclass <--------------------- global eclasses, get installed to all kits unconditionally (overrides those above)
-	# kit-fixups/<kit>/global/eclass <-------- global eclasses for a particular kit, goes in all branches (overrides those above)
-	# kit-fixups/<kit>/global/profiles <------ global profile info for a particular kit, goes in all branches (overrides those above)
-	# kit-fixups/<kit>/<branch>/eclass <------ eclasses to install in just a specific branch of a specific kit (overrides those above)
-	# kit-fixups/<kit>/<branch>/profiles <---- profile info to install in just a specific branch of a specific kit (overrides those above)
-	
-	# Note that profile repo_name and categories files are excluded from any copying.
-	
-	# Ebuilds can be installed to kits by putting them in the following location(s):
-	
-	# kit-fixups/<kit>/global/cat/pkg <------- install cat/pkg into all branches of a particular kit
-	# kit-fixups/<kit>/<branch>/cat/pkg <----- install cat/pkg into a particular branch of a kit
-	
-	# Remember that at this point, we may be missing a lot of eclasses and licenses from Gentoo. We will then perform a final sweep
-	# of all catpkgs in the dest_kit and auto-detect missing eclasses from Gentoo and copy them to our dest_kit. Remember that if you
-	# need a custom eclass from a third-party overlay, you will need to specify it in the overlay's overlays["ov_name"]["eclasses"]
-	# list. Or alternatively you can copy the eclasses you need to kit-fixups and maintain them there :)
-	
-	steps = []
-	
-	# Here is the core logic that copies all the fix-ups from kit-fixups (eclasses and ebuilds) into place:
-	
-	if os.path.exists(fixup_repo.root + "/eclass"):
-		steps += [mu.InsertEclasses(fixup_repo, select="all", skip=None)]
-	if kit_dict["branch"] == "master":
-		fixup_dirs = ["global", "master"]
-	else:
-		fixup_dirs = ["global", "curated", kit_dict["branch"]]
-	for fixup_dir in fixup_dirs:
-		fixup_path = kit_dict['name'] + "/" + fixup_dir
-		if os.path.exists(fixup_repo.root + "/" + fixup_path):
-			if os.path.exists(fixup_repo.root + "/" + fixup_path + "/eclass"):
-				steps += [
-					mu.InsertFilesFromSubdir(fixup_repo, "eclass", ".eclass", select="all", skip=None, src_offset=fixup_path)
-				]
-			if os.path.exists(fixup_repo.root + "/" + fixup_path + "/licenses"):
-				steps += [
-					mu.InsertFilesFromSubdir(fixup_repo, "licenses", None, select="all", skip=None, src_offset=fixup_path)
-				]
-			if os.path.exists(fixup_repo.root + "/" + fixup_path + "/profiles"):
-				steps += [
-					mu.InsertFilesFromSubdir(fixup_repo, "profiles", None, select="all", skip=["repo_name", "categories"], src_offset=fixup_path)
-				]
-			# copy appropriate kit readme into place:
-			readme_path = fixup_path + "/README.rst"
-			if os.path.exists(fixup_repo.root + "/" + readme_path):
-				steps += [
-					mu.SyncFiles(fixup_repo.root, {
-						readme_path: "README.rst"
-					})
-				]
+		for repo_dict in repos:
+			steps = []
+			select_clause = "all"
+			overlay_def = repo_dict["overlay_def"]
 			
-			# We now add a step to insert the fixups, and we want to record them as being copied so successive kits
-			# don't get this particular catpkg. Assume we may not have all these catpkgs listed in our package-set
-			# file...
+			if "select" in overlay_def:
+				select_clause = overlay_def["select"]
 			
-			steps += [
-				mu.InsertEbuilds(fixup_repo, ebuildloc=fixup_path, select="all", skip=None, replace=True,
-								 cpm_logger=cpm_logger, is_fixup=True)
-			]
-	await tree.run(steps)
-	
-	# Now we want to perform a scan of any eclasses in the Gentoo repo that we need to copy over to our dest_kit so that it contains all
-	# eclasses and licenses it needs within itself, without having to reference any in the Gentoo repo.
-	
-	copy_steps = []
-	
-	# For eclasses we perform a much more conservative scan. We will only scour missing eclasses from gentoo-staging, not
-	# eclasses. If you need a special eclass, you need to specify it in the eclasses list for the overlay explicitly.
-	
-	await tree.run(copy_steps)
-	copy_steps = []
-	
-	# copy all available licenses that have not been copied in fixups from gentoo-staging over to the kit.
-	# We will remove any unused licenses below...
-	
-	copy_steps += [mu.InsertLicenses(gentoo_staging, select=mu.simpleGetAllLicenses(tree, gentoo_staging))]
-	await tree.run(copy_steps)
-	
-	# Phase 4: finalize and commit
-	
-	# remove unused licenses...
-	used_licenses = await mu.getAllLicenses(tree)
-	to_remove = []
-	for license in os.listdir(tree.root + "/licenses"):
-		if license not in used_licenses["dest_kit"]:
-			to_remove.append(tree.root + "/licenses/" + license)
-	for file in to_remove:
-		os.unlink(file)
-	
-	post_steps += [
-		mu.ELTSymlinkWorkaround(),
-		mu.CreateCategories(gentoo_staging),
-		# multi-plex this and store in different locations so that different selections can be made based on which python-kit is enabled.
-		# python-kit itself only needs one set which will be enabled by default.
-	]
-	
-	if kit_dict["name"] == "python_kit":
-		# on the python-kit itself, we only need settings for ourselves (not other branches)
-		python_settings = foundation.python_kit_settings[kit_dict["name"]]
-	else:
-		# all other kits -- generate multiple settings, depending on what version of python-kit is active -- epro will select the right one for us.
-		python_settings = foundation.python_kit_settings
-	
-	# TODO: GenPythonUse now references core-kit in the repository config in order to find needed eclasses for
-	# TODO: metadata generation. For now, core-kit is going to be pointing to 1.2, and this should work, but in the
-	# TODO: future, we may want more control over exactly what core-kit is chosen.
-	
-	for branch, py_settings in python_settings.items():
-		post_steps += [mu.GenPythonUse(py_settings, "funtoo/kits/python-kit/%s" % branch)]
-	
-	# TODO: note that GenCache has been modified to utilize eclasses from core-kit as well.
-	
-	post_steps += [
-		mu.Minify(),
-		mu.GenUseLocalDesc(),
-		mu.GenCache(cache_dir="/var/cache/edb/%s-%s" % (kit_dict['name'], kit_dict['branch'])),
-	]
-	
-	post_steps += [
-		mu.CatPkgScan(now=now, engine=async_engine)
-	]
-	
-	await tree.run(post_steps)
-	await tree.gitCommit(message="updates", push=push)
-	return tree.head()
+			# If the repo has a "filter" : [ "foo", "bar", "oni" ], then construct a list of repos with those names and put
+			# them in filter_repos. We will pass this list of repo objects to InsertEbuilds inside generateKitSteps, and if
+			# a catpkg exists in any of these repos, then it will NOT be copied if it is scheduled to be copied for this
+			# repo. This is a way we can lock down overlays to not insert any catpkgs that are already defined in gentoo --
+			# just add: filter : [ "gentoo-staging" ] and if the catpkg exists in gentoo-staging, it won't get copied. This
+			# way we can more safely choose to include all ebuilds from 'potpurri' overlays like faustoo without exposing
+			# ourself to too much risk from messing stuff up.
+			
+			filter_repos = []
+			if "filter" in overlay_def:
+				for filter_repo_name in overlay_def["filter"]:
+					for x in repos:
+						if x["name"] == filter_repo_name:
+							filter_repos.append(x["repo"])
+			
+			if kit_dict["name"] == "nokit":
+				# grab all remaining ebuilds to put in nokit
+				steps += [mu.InsertEbuilds(repo_dict["repo"], select_only=select_clause, move_maps=move_maps, skip=None, replace=False, cpm_logger=cpm_logger)]
+			else:
+				steps += await mu.generateKitSteps(release, kit_dict['name'], repo_dict["repo"], fixup_repo=fixup_repo, select_only=select_clause,
+											 filter_repos=filter_repos, force=overlay_def["force"] if "force" in overlay_def else None,
+											 cpm_logger=cpm_logger, move_maps=move_maps, secondary_kit=secondary_kit)
+			await tree.run(steps)
+			if copycount != cpm_logger.copycount:
+				# this means some catpkgs were installed from the repo we are currently processing. This means we also want to execute
+				# 'copyfiles' and 'eclasses' copy logic:
+				
+				ov = foundation.overlays[repo_dict["name"]]
+				
+				if "copyfiles" in ov and len(ov["copyfiles"]):
+					# since we copied over some ebuilds, we also want to make sure we copy over things like masks, etc:
+					steps += [mu.SyncFiles(repo_dict["repo"].root, ov["copyfiles"])]
+				if "eclasses" in ov:
+					# we have eclasses to copy over, too:
+					ec_files = {}
+					for eclass in ov["eclasses"]:
+						ecf = "/eclass/" + eclass + ".eclass"
+						ec_files[ecf] = ecf
+					steps += [mu.SyncFiles(repo_dict["repo"].root, ec_files)]
+			copycount = cpm_logger.copycount
+		
+		# Phase 3: copy eclasses, licenses, profile info, and ebuild/eclass fixups from the kit-fixups repository.
+		
+		# First, we are going to process the kit-fixups repository and look for ebuilds and eclasses to replace. Eclasses can be
+		# overridden by using the following paths inside kit-fixups:
+		
+		# kit-fixups/eclass <--------------------- global eclasses, get installed to all kits unconditionally (overrides those above)
+		# kit-fixups/<kit>/global/eclass <-------- global eclasses for a particular kit, goes in all branches (overrides those above)
+		# kit-fixups/<kit>/global/profiles <------ global profile info for a particular kit, goes in all branches (overrides those above)
+		# kit-fixups/<kit>/<branch>/eclass <------ eclasses to install in just a specific branch of a specific kit (overrides those above)
+		# kit-fixups/<kit>/<branch>/profiles <---- profile info to install in just a specific branch of a specific kit (overrides those above)
+		
+		# Note that profile repo_name and categories files are excluded from any copying.
+		
+		# Ebuilds can be installed to kits by putting them in the following location(s):
+		
+		# kit-fixups/<kit>/global/cat/pkg <------- install cat/pkg into all branches of a particular kit
+		# kit-fixups/<kit>/<branch>/cat/pkg <----- install cat/pkg into a particular branch of a kit
+		
+		# Remember that at this point, we may be missing a lot of eclasses and licenses from Gentoo. We will then perform a final sweep
+		# of all catpkgs in the dest_kit and auto-detect missing eclasses from Gentoo and copy them to our dest_kit. Remember that if you
+		# need a custom eclass from a third-party overlay, you will need to specify it in the overlay's overlays["ov_name"]["eclasses"]
+		# list. Or alternatively you can copy the eclasses you need to kit-fixups and maintain them there :)
+		
+		steps = []
+		
+		# Here is the core logic that copies all the fix-ups from kit-fixups (eclasses and ebuilds) into place:
+		
+		if os.path.exists(fixup_repo.root + "/eclass"):
+			steps += [mu.InsertEclasses(fixup_repo, select="all", skip=None)]
+		if kit_dict["branch"] == "master":
+			fixup_dirs = ["global", "master"]
+		else:
+			fixup_dirs = ["global", "curated", kit_dict["branch"]]
+		for fixup_dir in fixup_dirs:
+			fixup_path = kit_dict['name'] + "/" + fixup_dir
+			if os.path.exists(fixup_repo.root + "/" + fixup_path):
+				if os.path.exists(fixup_repo.root + "/" + fixup_path + "/eclass"):
+					steps += [
+						mu.InsertFilesFromSubdir(fixup_repo, "eclass", ".eclass", select="all", skip=None, src_offset=fixup_path)
+					]
+				if os.path.exists(fixup_repo.root + "/" + fixup_path + "/licenses"):
+					steps += [
+						mu.InsertFilesFromSubdir(fixup_repo, "licenses", None, select="all", skip=None, src_offset=fixup_path)
+					]
+				if os.path.exists(fixup_repo.root + "/" + fixup_path + "/profiles"):
+					steps += [
+						mu.InsertFilesFromSubdir(fixup_repo, "profiles", None, select="all", skip=["repo_name", "categories"], src_offset=fixup_path)
+					]
+				# copy appropriate kit readme into place:
+				readme_path = fixup_path + "/README.rst"
+				if os.path.exists(fixup_repo.root + "/" + readme_path):
+					steps += [
+						mu.SyncFiles(fixup_repo.root, {
+							readme_path: "README.rst"
+						})
+					]
+				
+				# We now add a step to insert the fixups, and we want to record them as being copied so successive kits
+				# don't get this particular catpkg. Assume we may not have all these catpkgs listed in our package-set
+				# file...
+				
+				steps += [
+					mu.InsertEbuilds(fixup_repo, ebuildloc=fixup_path, select="all", skip=None, replace=True,
+									 cpm_logger=cpm_logger, is_fixup=True)
+				]
+		await tree.run(steps)
+		
+		# Now we want to perform a scan of any eclasses in the Gentoo repo that we need to copy over to our dest_kit so that it contains all
+		# eclasses and licenses it needs within itself, without having to reference any in the Gentoo repo.
+		
+		copy_steps = []
+		
+		# For eclasses we perform a much more conservative scan. We will only scour missing eclasses from gentoo-staging, not
+		# eclasses. If you need a special eclass, you need to specify it in the eclasses list for the overlay explicitly.
+		
+		await tree.run(copy_steps)
+		copy_steps = []
+		
+		# copy all available licenses that have not been copied in fixups from gentoo-staging over to the kit.
+		# We will remove any unused licenses below...
+		
+		copy_steps += [mu.InsertLicenses(gentoo_staging, select=mu.simpleGetAllLicenses(tree, gentoo_staging))]
+		await tree.run(copy_steps)
+		
+		# Phase 4: finalize and commit
+		
+		# remove unused licenses...
+		used_licenses = await mu.getAllLicenses(tree)
+		to_remove = []
+		for license in os.listdir(tree.root + "/licenses"):
+			if license not in used_licenses["dest_kit"]:
+				to_remove.append(tree.root + "/licenses/" + license)
+		for file in to_remove:
+			os.unlink(file)
+		
+		post_steps += [
+			mu.ELTSymlinkWorkaround(),
+			mu.CreateCategories(gentoo_staging),
+			# multi-plex this and store in different locations so that different selections can be made based on which python-kit is enabled.
+			# python-kit itself only needs one set which will be enabled by default.
+		]
+		
+		if kit_dict["name"] == "python_kit":
+			# on the python-kit itself, we only need settings for ourselves (not other branches)
+			python_settings = foundation.python_kit_settings[kit_dict["name"]]
+		else:
+			# all other kits -- generate multiple settings, depending on what version of python-kit is active -- epro will select the right one for us.
+			python_settings = foundation.python_kit_settings
+		
+		# TODO: GenPythonUse now references core-kit in the repository config in order to find needed eclasses for
+		# TODO: metadata generation. For now, core-kit is going to be pointing to 1.2, and this should work, but in the
+		# TODO: future, we may want more control over exactly what core-kit is chosen.
+		
+		for branch, py_settings in python_settings.items():
+			post_steps += [mu.GenPythonUse(py_settings, "funtoo/kits/python-kit/%s" % branch)]
+		
+		# TODO: note that GenCache has been modified to utilize eclasses from core-kit as well.
+		
+		post_steps += [
+			mu.Minify(),
+			mu.GenUseLocalDesc(),
+			mu.GenCache(cache_dir="/var/cache/edb/%s-%s" % (kit_dict['name'], kit_dict['branch'])),
+		]
+		
+		post_steps += [
+			mu.CatPkgScan(now=now, engine=async_engine)
+		]
+		
+		await tree.run(post_steps)
+		await tree.gitCommit(message="updates", push=push)
+		return tree.head()
 
 
 def generate_kit_metadata(foundation, release, meta_repo, output_sha1s):
@@ -522,6 +525,26 @@ async def kit_qa_check(foundation):
 	return True
 
 
+async def release_thread(async_engine, foundation, release, fixup_repo, push, now):
+	
+	cpm_logger = mu.CatPkgMatchLogger(log_xml=push)
+	
+	output_sha1s = {}
+	prev_kit_dict = None
+	
+	for kit_dict in foundation.kit_groups[release]:
+		print("Regenerating kit ", kit_dict)
+		head = await updateKit(foundation, release, async_engine, kit_dict, prev_kit_dict, cpm_logger, create=not push, push=push, now=now,
+							   fixup_repo=fixup_repo)
+		kit_name = kit_dict["name"]
+		if kit_name not in output_sha1s:
+			output_sha1s[kit_name] = {}
+		output_sha1s[kit_name][kit_dict["branch"]] = head
+		prev_kit_dict = kit_dict
+		
+	return output_sha1s
+
+
 async def main_thread():
 	# one global timestamp for each run of this tool -- for mysql db
 	now = datetime.utcnow()
@@ -529,7 +552,6 @@ async def main_thread():
 	fixup_repo = mu.GitTree("kit-fixups", config.branch("kit-fixups"), url=config.kit_fixups, root=config.source_trees + "/kit-fixups")
 	await fixup_repo.initialize()
 	meta_repo = mu.GitTree("meta-repo", config.branch("meta-repo"), url=config.base_url("meta-repo"), root=config.dest_trees + "/meta-repo")
-	await meta_repo.initialize()
 	
 	sys.path.insert(0, fixup_repo.root + "/modules")
 	from fixups.foundations import KitFoundation, KitRatingString, KitStabilityRating
@@ -552,41 +574,47 @@ async def main_thread():
 		sys.exit(1)
 
 	num_threads = 40
-	async_engine = None
+	fastpull_client = None
 	
 	if "db" in sys.argv:
-		async_engine = AsyncMergeAllKits(num_threads=num_threads)
-		async_engine.start_threads(enable_workers = True if num_threads != 0 else False)
+		fastpull_client = FastPullClientEngine(num_threads=num_threads)
+		fastpull_client.start_threads(enable_workers = True if num_threads != 0 else False)
+
+
+	# TODO: create a master set of GitTree objects for all source repositories. These objects must be locked as well,
+	# TODO: so they don't get clobbered by one another.
+	
+	release_threadpool = ThreadPoolExecutor()
+	release_futures = []
+	
+	# Submit each release to a thread pool to execute concurrently. We lock GitTrees using Locks to make sure that a GitTree
+	# will be used exclusively by only one of these threads at a time. We ensure our GitTrees are initialized after we
+	# acquire the lock to ensure they point to the correct branch.
 	
 	for release in foundation.kit_groups.keys():
-		
-		cpm_logger = mu.CatPkgMatchLogger(log_xml=push)
 		if not release.endswith("-release"):
 			continue
-		
-		target_branch = "master" if release == "1.2-release" else release
-		await meta_repo.gitCheckout(target_branch)
-		
-		output_sha1s = {}
-		prev_kit_dict = None
-		
-		for kit_dict in foundation.kit_groups[release]:
-			print("Regenerating kit ", kit_dict)
-			head = await updateKit(foundation, release, async_engine, kit_dict, prev_kit_dict, cpm_logger, create=not push, push=push, now=now, fixup_repo=fixup_repo)
-			kit_name = kit_dict["name"]
-			if kit_name not in output_sha1s:
-				output_sha1s[kit_name] = {}
-			output_sha1s[kit_name][kit_dict["branch"]] = head
-			prev_kit_dict = kit_dict
-		generate_kit_metadata(foundation, release, meta_repo, output_sha1s)
-		
-		await meta_repo.gitCommit(message="kit updates", push=False)
+		rfut = release_threadpool.submit(release_thread, fastpull_client, foundation, release, fixup_repo, push, now)
+		release_futures.append(rfut)
+	
+	# Now that we have submitted our work to the release thread pool, wait for each release to complete. When done, grab
+	# the result, commit the necessary data to that branch of meta-repo, and then wait for the next one:
+	
+	for result in asyncio.as_completed(release_futures):
+		release, output_sha1s = await result
+		async with meta_repo.lock:
+			target_branch = "master" if release == "1.2-release" else release
+			await meta_repo.initialize(branch=target_branch)
+			generate_kit_metadata(foundation, release, meta_repo, output_sha1s)
+			await meta_repo.gitCommit(message="kit updates", push=False)
+	
+	# Now, all our releases have been processed, so we can push up meta-repo:
 	
 	if push is True:
 		print("Pushing meta-repo...")
 		await meta_repo.gitPush()
 		
-	await async_engine.wait_for_workers_to_finish()
+	await fastpull_client.wait_for_workers_to_finish()
 
 
 if __name__ == "__main__":
