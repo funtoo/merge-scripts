@@ -496,19 +496,29 @@ async def kit_qa_check(foundation):
 	# Make sure we don't redefine the same kit branch -- it's bad.
 	
 	all_kit_branches = defaultdict(dict)
-	independent_kits = set()
+	independent_kits = defaultdict(set)
+	master_independent_kits = defaultdict(set)
 	for release, kit_list in foundation.kit_groups.items():
 		for kit in kit_list:
-			if "generate" in kit and kit["generate"] is False:
-				independent_kits.add(kit["name"])
-				continue
-			kit_name = kit["name"]
-			kit_branch = kit["branch"]
-			if kit_branch in all_kit_branches[kit_name]:
-				raise KitQualityError("Kit %s branch %s is defined multiple times. Exiting." % (kit_name, kit_branch))
-			if kit_name in independent_kits:
-				raise KitQualityError("Kit %s is already tagged as independently-maintained but auto-generated entry exists. This is not allowed. Exiting." % kit_name)
-			all_kit_branches[kit_name][kit_branch] = kit
+			if release != "independently-maintained":
+				if "generate" in kit and kit["generate"] is False:
+					independent_kits[kit["name"]].add(kit["branch"])
+					continue
+				kit_name = kit["name"]
+				kit_branch = kit["branch"]
+				if kit_branch in all_kit_branches[kit_name]:
+					raise KitQualityError("Kit %s branch %s is defined multiple times. Exiting." % (kit_name, kit_branch))
+				if kit_name in independent_kits:
+					raise KitQualityError("Kit %s is already tagged as independently-maintained but auto-generated entry exists. This is not allowed. Exiting." % kit_name)
+				all_kit_branches[kit_name][kit_branch] = kit
+			else:
+				master_independent_kits[kit["name"]].add(kit["branch"])
+	for kit_name, branch_set in independent_kits.items():
+		if kit_name not in master_independent_kits:
+			raise KitQualityError("Kit %s is defined as not auto-generated, so should be listed in 'independently-maintained' kit_groups. Exiting." % kit_name)
+		undefined_set = branch_set - master_independent_kits[kit_name]
+		if len(undefined_set):
+			raise KitQualityError("Kit %s has the following branches that are not defined in 'independently-maintained' kit_groups section: %s. Exiting." % (kit_name, str(list(undefined_set))))
 	return True
 
 
