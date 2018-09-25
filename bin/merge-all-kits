@@ -496,15 +496,18 @@ async def kit_qa_check(foundation):
 	# Make sure we don't redefine the same kit branch -- it's bad.
 	
 	all_kit_branches = defaultdict(dict)
+	independent_kits = set()
 	for release, kit_list in foundation.kit_groups.items():
 		for kit in kit_list:
 			if "generate" in kit and kit["generate"] is False:
-				# we don't need to check these for dup listings:
+				independent_kits.add(kit["name"])
 				continue
 			kit_name = kit["name"]
 			kit_branch = kit["branch"]
 			if kit_branch in all_kit_branches[kit_name]:
 				raise KitQualityError("Kit %s branch %s is defined multiple times. Exiting." % (kit_name, kit_branch))
+			if kit_name in independent_kits:
+				raise KitQualityError("Kit %s is already tagged as independently-maintained but auto-generated entry exists. This is not allowed. Exiting." % kit_name)
 			all_kit_branches[kit_name][kit_branch] = kit
 	return True
 
