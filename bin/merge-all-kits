@@ -496,6 +496,14 @@ class KitQualityError(Exception):
 
 async def kit_qa_check(foundation):
 
+	"""
+	This function performs a variety of quality checks on the integrity of foundation data to make sure things are consistent and errors that may cause
+	issues are not detected.
+	
+	:param foundation:  KitFoundation object.
+	:return: either True, upon success, or a KitQualityError will be raised.
+	"""
+
 	# Make sure we don't redefine the same kit branch -- it's bad.
 	
 	all_kit_branches = defaultdict(dict)
@@ -516,6 +524,13 @@ async def kit_qa_check(foundation):
 				all_kit_branches[kit_name][kit_branch] = kit
 			else:
 				master_independent_kits[kit["name"]].add(kit["branch"])
+		python_kits = list(filter(lambda x: x["name"] == "python-kit", kit_list))
+		if len(python_kits) < 1:
+			raise KitQualityError("Python-kit not defined for release %s. Exiting." % release)
+		for python_kit in python_kits:
+			branch_name = python_kit["branch"]
+			if not branch_name in foundation.python_kit_settings:
+				raise KitQualityError("Python-kit %s defined in release %s has no corresponding python_kit_settings defined. Please fix. Exiting." % ( branch_name, release))
 	for kit_name, branch_set in independent_kits.items():
 		if kit_name not in master_independent_kits:
 			raise KitQualityError("Kit %s is defined as not auto-generated, so should be listed in 'independently-maintained' kit_groups. Exiting." % kit_name)
