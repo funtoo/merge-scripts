@@ -10,7 +10,7 @@ import asyncio
 # This function updates the gentoo-staging tree with all the latest gentoo updates:
 
 async def gentoo_staging_update():
-	gentoo_staging_w = mu.GitTree("gentoo-staging", "master", url=config.base_url("gentoo-staging"), root=config.dest_trees+"/gentoo-staging")
+	gentoo_staging_w = mu.GitTree("gentoo-staging", "master", url=config.gentoo_staging, root=config.dest_trees+"/gentoo-staging")
 	await gentoo_staging_w.initialize()
 	#gentoo_src = mu.GitTree("gentoo-x86", "master", "https://github.com/gentoo/gentoo.git", pull=True)
 	gentoo_src = mu.GitTree("gentoo-x86", "master", "https://anongit.gentoo.org/git/repo/gentoo.git")
