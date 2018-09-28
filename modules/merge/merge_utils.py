@@ -1633,7 +1633,7 @@ class SyncFromTree(SyncDir):
 		SyncDir.__init__(self,srctree.root,srcdir=None,destdir=None,exclude=exclude,delete=True)
 
 	async def run(self, desttree):
-		SyncDir.run(self,desttree)
+		await SyncDir.run(self,desttree)
 		desttree.logTree(self.srctree)
 
 
