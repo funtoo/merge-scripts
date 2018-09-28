@@ -100,7 +100,7 @@ def getKitPrepSteps(repos, kit_dict, gentoo_staging, fixup_repo):
 		},
 		'nokit': {'pre': [
 			mu.GenerateRepoMetadata("nokit", masters=["core-kit"], priority=-2000),
-		]
+			]
 		}
 	}
 	
@@ -405,14 +405,8 @@ async def updateKit(foundation, release, async_engine : AsyncMergeAllKits, kit_d
 		# all other kits -- generate multiple settings, depending on what version of python-kit is active -- epro will select the right one for us.
 		python_settings = foundation.python_kit_settings
 	
-	# TODO: GenPythonUse now references core-kit in the repository config in order to find needed eclasses for
-	# TODO: metadata generation. For now, core-kit is going to be pointing to 1.2, and this should work, but in the
-	# TODO: future, we may want more control over exactly what core-kit is chosen.
-	
 	for branch, py_settings in python_settings.items():
 		post_steps += [mu.GenPythonUse(py_settings, "funtoo/kits/python-kit/%s" % branch)]
-	
-	# TODO: note that GenCache has been modified to utilize eclasses from core-kit as well.
 	
 	post_steps += [
 		mu.Minify(),

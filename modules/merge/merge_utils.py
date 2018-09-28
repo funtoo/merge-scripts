@@ -459,7 +459,7 @@ aliases = gentoo
 			# of the catpkg, since there are differences. This saves space in our python-use file while keeping everything correct.
 
 			split = False
-			for key,val in ebs.items():
+			for key, val in ebs.items():
 				if oldval is None:
 					oldval = val
 				else:
