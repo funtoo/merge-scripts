@@ -550,7 +550,7 @@ async def main_thread():
 	
 	if "db" in sys.argv:
 		async_engine = AsyncMergeAllKits(num_threads=num_threads)
-		async_engine.start_threads(enable_workers = True if num_threads != 0 else False)
+		async_engine.start_threads(enable_workers=True if num_threads != 0 else False)
 	
 	for release in foundation.kit_groups.keys():
 		
