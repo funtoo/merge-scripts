@@ -579,8 +579,9 @@ async def main_thread():
 	if push is True:
 		print("Pushing meta-repo...")
 		await meta_repo.gitPush()
-		
-	await async_engine.wait_for_workers_to_finish()
+	
+	if async_engine is not None:
+		await async_engine.wait_for_workers_to_finish()
 
 
 if __name__ == "__main__":
