@@ -536,7 +536,7 @@ async def main_thread():
 	import argparse
 
 	parser = argparse.ArgumentParser()
-	parser.add_argument("release", type="string", default="all", help="specify release to generate. Defaults to 'all'.")
+	parser.add_argument("release", type=str, default="all", help="specify release to generate. Defaults to 'all'.")
 	parser.add_argument("--nopush", action="store_true", help="Don't push changes upstream at all.")
 	parser.add_argument("--db", action="store_true", help="Connect to fastpull database to update to-be-fetched file list.")
 	args = parser.parse_args()
