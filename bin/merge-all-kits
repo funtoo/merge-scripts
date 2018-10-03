@@ -532,12 +532,16 @@ async def main_thread():
 	# Now that we imported, set these guys to be globals:
 	globals()['KitRatingString'] = KitRatingString
 	globals()['KitStabilityRating'] = KitStabilityRating
-	
-	if len(sys.argv) < 2 or sys.argv[1] not in ["push", "nopush"]:
-		print("Please specify push or nopush as an argument.")
-		sys.exit(1)
-	else:
-		push = True if "push" in sys.argv else False
+
+	import argparse
+
+	parser = argparse.ArgumentParser()
+	parser.add_argument("release", type="string", default="all", help="specify release to generate. Defaults to 'all'.")
+	parser.add_argument("--nopush", action="store_true", help="Don't push changes upstream at all.")
+	parser.add_argument("--db", action="store_true", help="Connect to fastpull database to update to-be-fetched file list.")
+	args = parser.parse_args()
+
+	push = not args.nopush
 	
 	try:
 		await kit_qa_check(foundation)
@@ -548,11 +552,20 @@ async def main_thread():
 	num_threads = 40
 	async_engine = None
 	
-	if "db" in sys.argv:
+	if args.db is True:
 		async_engine = AsyncMergeAllKits(num_threads=num_threads)
 		async_engine.start_threads(enable_workers=True if num_threads != 0 else False)
-	
-	for release in foundation.kit_groups.keys():
+
+	if args.release == "all":
+		releases = foundation.kit_groups.keys()
+	else:
+		if args.release not in foundation.kit_groups.keys():
+			print("Error: cannot find release \"%s\"." % args.release)
+			sys.exit(1)
+		else:
+			releases = [args.release]
+
+	for release in releases:
 		
 		cpm_logger = mu.CatPkgMatchLogger(log_xml=push)
 		if not release.endswith("-release"):

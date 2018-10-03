@@ -758,13 +758,11 @@ def extract_uris(src_uri):
 
 class CatPkgScan(MergeStep):
 
-	def __init__(self, now, engine : AsyncEngine = None):
+	def __init__(self, now, engine: AsyncEngine = None):
 		self.now = now
 		self.engine = engine
 
 	async def run(self, cur_overlay: GitTree):
-		if self.engine is None:
-			return
 		cur_tree = cur_overlay.root
 		try:
 			with open(os.path.join(cur_tree, 'profiles/repo_name')) as f:
