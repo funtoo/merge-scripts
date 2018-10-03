@@ -166,8 +166,16 @@ class GitTree(Tree):
 	
 	def getAllCatPkgs(self):
 		with open(self.root + "/profiles/categories", "r") as a:
-			cats = a.read().split()
+			cats = set(a.read().split())
+		for item in glob.glob(self.root + "/*-*"):
+			if os.path.isdir(item):
+				cat = os.path.basename(item)
+				if cat not in cats:
+					print("!!! WARNING: category %s not in categories... should be added to profiles/categories!" % item)
+				cats.add(cat)
+		cats = sorted(list(cats))
 		catpkgs = {}
+		
 		for cat in cats:
 			if not os.path.exists(self.root + "/" + cat):
 				continue
@@ -1363,9 +1371,9 @@ async def getcommandoutput(args):
 	# Slight modification of the function getstatusoutput present in:
 	# https://docs.python.org/3/library/asyncio-subprocess.html#example
 	if isinstance(args, str):
-		proc = await asyncio.create_subprocess_shell(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		proc = await asyncio.create_subprocess_shell(args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 	else:
-		proc = await asyncio.create_subprocess_exec(*args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		proc = await asyncio.create_subprocess_exec(*args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 	try:
 		stdout, stderr = await proc.communicate()
 	except:
@@ -1804,7 +1812,7 @@ class RecordAllCatPkgs(MergeStep):
 		
 	async def run(self, desttree=None):
 		for catpkg in self.srctree.getAllCatPkgs():
-			self.cpm_logger.record(desttree.name, catpkg, is_fixup=False)
+			self.cpm_logger.record(self.srctree.name, catpkg, is_fixup=False)
 			
 
 class InsertEbuilds(MergeStep):
