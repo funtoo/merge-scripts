@@ -193,7 +193,7 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 
 	if "generate" in kit_dict and kit_dict["generate"] is not True:
 		# independently-maintained repo. Don't regenerate. Just record all catpkgs in this kit as belonging ot this kit so they don't get into other kits:
-		tree = mu.GitTree(kit_dict["name"], kit_dict["branch"], url="https://github.com/funtoo/%s" % kit_dict["name"], root=config.source_trees + "/" + kit_dict["name"])
+		tree = mu.GitTree(kit_dict["name"], kit_dict["branch"], config=config, url="https://github.com/funtoo/%s" % kit_dict["name"], root=config.source_trees + "/" + kit_dict["name"])
 		await tree.initialize()
 		await tree.run([
 			mu.RecordAllCatPkgs(tree, cpm_logger)
@@ -215,7 +215,7 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 		print("Gentoo staging mismatch -- name is %s" % gentoo_staging["name"])
 	
 	# If we have gotten here, we are automatically generating a kit...
-	kit_dict['tree'] = tree = mu.GitTree(kit_dict['name'], kit_dict['branch'],
+	kit_dict['tree'] = tree = mu.GitTree(kit_dict['name'], kit_dict['branch'], config=config,
 										 url=config.base_url(kit_dict['name']), create=create,
 										 root="%s/%s" % (config.dest_trees, kit_dict['name']))
 	await tree.initialize()
