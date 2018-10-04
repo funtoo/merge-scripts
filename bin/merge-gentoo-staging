@@ -4,19 +4,21 @@ import os
 import sys
 sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "../../modules")))
 import merge.merge_utils as mu
-from merge.config import config
+from merge.config import Configuration
 import asyncio
+
+config = Configuration()
 
 # This function updates the gentoo-staging tree with all the latest gentoo updates:
 
 async def gentoo_staging_update():
-	gentoo_staging_w = mu.GitTree("gentoo-staging", "master", url=config.gentoo_staging, root=config.dest_trees+"/gentoo-staging")
+	gentoo_staging_w = mu.GitTree("gentoo-staging", "master", url=config.gentoo_staging, root=config.dest_trees+"/gentoo-staging", config=config)
 	await gentoo_staging_w.initialize()
 	#gentoo_src = mu.GitTree("gentoo-x86", "master", "https://github.com/gentoo/gentoo.git", pull=True)
-	gentoo_src = mu.GitTree("gentoo-x86", "master", "https://anongit.gentoo.org/git/repo/gentoo.git")
+	gentoo_src = mu.GitTree("gentoo-x86", branch="master", url="https://anongit.gentoo.org/git/repo/gentoo.git", config=config)
 	await gentoo_src.initialize()
 	#gentoo_src = CvsTree("gentoo-x86",":pserver:anonymous@anoncvs.gentoo.org:/var/cvsroot")
-	gentoo_glsa = mu.GitTree("gentoo-glsa", "master", "git://anongit.gentoo.org/data/glsa.git")
+	gentoo_glsa = mu.GitTree("gentoo-glsa", branch="master", url="git://anongit.gentoo.org/data/glsa.git", config=config)
 	await gentoo_glsa.initialize()
 	# This is the gentoo-staging tree, stored in a different place locally, so we can simultaneously be updating gentoo-staging and reading
 	# from it without overwriting ourselves:

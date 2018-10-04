@@ -9,9 +9,8 @@ import asyncio
 
 sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "../../modules")))
 import merge.merge_utils as mu
-from merge.config import config
+from merge.config import Configuration
 from merge.async_engine import AsyncEngine
-
 
 class AsyncMergeAllKits(AsyncEngine):
 	_db = None
@@ -137,7 +136,7 @@ def getKitPrepSteps(repos, kit_dict, gentoo_staging, fixup_repo):
 # a particular kit's kit_source, in the order that they should be processed (in the order they are defined in
 # kit_source_defs, in other words.)
 
-async def getKitSourceInstance(foundation, kit_dict):
+async def getKitSourceInstance(foundation, config, kit_dict):
 	source_name = kit_dict['source']
 	
 	repos = []
@@ -155,7 +154,7 @@ async def getKitSourceInstance(foundation, kit_dict):
 			path = foundation.overlays[repo_name]["dirname"]
 		else:
 			path = repo_name
-		repo = repo_obj(repo_name, url=repo_url, root="%s/%s" % (config.source_trees, path), branch=repo_branch, commit_sha1=repo_sha1)
+		repo = repo_obj(repo_name, url=repo_url, config=config, root="%s/%s" % (config.source_trees, path), branch=repo_branch, commit_sha1=repo_sha1)
 		await repo.initialize()
 		repos.append({"name": repo_name, "repo": repo, "overlay_def": foundation.overlays[repo_name]})
 	
@@ -166,7 +165,7 @@ async def getKitSourceInstance(foundation, kit_dict):
 # regenerating it. The kitted_catpkgs argument is a dictionary which is also written to and used to keep track of
 # catpkgs copied between runs of updateKit.
 
-async def updateKit(foundation, release, async_engine : AsyncMergeAllKits, kit_dict, prev_kit_dict, cpm_logger, create=False, push=False, now=None, fixup_repo=None):
+async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKits, kit_dict, prev_kit_dict, cpm_logger, create=False, push=False, now=None, fixup_repo=None):
 	# secondary_kit means: we're the second (or third, etc.) xorg-kit or other kit to be processed. The first kind of
 	# each kit processed has secondary_kit = False, and later ones have secondary_kit = True. We need special processing
 	# to grab any 'orphan' packages that were selected as part of prior kit scans (and thus will not be included in
@@ -201,7 +200,7 @@ async def updateKit(foundation, release, async_engine : AsyncMergeAllKits, kit_d
 		])
 		return tree.head()
 	
-	repos = kit_dict["repo_obj"] = await getKitSourceInstance(foundation, kit_dict)
+	repos = kit_dict["repo_obj"] = await getKitSourceInstance(foundation, config, kit_dict)
 	
 	# get a handy variable reference to gentoo_staging:
 	gentoo_staging = None
@@ -516,15 +515,16 @@ async def kit_qa_check(foundation):
 	return True
 
 
-async def main_thread():
+async def main_thread(config, args):
 	# one global timestamp for each run of this tool -- for mysql db
 	now = datetime.utcnow()
 	
-	fixup_repo = mu.GitTree("kit-fixups", config.branch("kit-fixups"), url=config.kit_fixups, root=config.source_trees + "/kit-fixups")
+	fixup_repo = mu.GitTree("kit-fixups", config.branch("kit-fixups"),  config=config, url=config.kit_fixups, root=config.source_trees + "/kit-fixups")
 	await fixup_repo.initialize()
-	meta_repo = mu.GitTree("meta-repo", config.branch("meta-repo"), url=config.base_url("meta-repo"), root=config.dest_trees + "/meta-repo")
+	meta_repo = mu.GitTree("meta-repo", config.branch("meta-repo"), config=config, url=config.base_url("meta-repo"), root=config.dest_trees + "/meta-repo")
 	await meta_repo.initialize()
 	
+	# once the correct branch is checked out, then we want to do this import:
 	sys.path.insert(0, fixup_repo.root + "/modules")
 	from fixups.foundations import KitFoundation, KitRatingString, KitStabilityRating
 	
@@ -532,17 +532,8 @@ async def main_thread():
 	# Now that we imported, set these guys to be globals:
 	globals()['KitRatingString'] = KitRatingString
 	globals()['KitStabilityRating'] = KitStabilityRating
-
-	import argparse
-
-	parser = argparse.ArgumentParser()
-	parser.add_argument("release", type=str, default="all", help="specify release to generate. Defaults to 'all'.")
-	parser.add_argument("--nopush", action="store_true", help="Don't push changes upstream at all.")
-	parser.add_argument("--db", action="store_true", help="Connect to fastpull database to update to-be-fetched file list.")
-	args = parser.parse_args()
-
 	push = not args.nopush
-	
+
 	try:
 		await kit_qa_check(foundation)
 	except KitQualityError as e:
@@ -579,7 +570,7 @@ async def main_thread():
 		
 		for kit_dict in foundation.kit_groups[release]:
 			print("Regenerating kit ", kit_dict)
-			head = await updateKit(foundation, release, async_engine, kit_dict, prev_kit_dict, cpm_logger, create=not push, push=push, now=now, fixup_repo=fixup_repo)
+			head = await updateKit(foundation, config, release, async_engine, kit_dict, prev_kit_dict, cpm_logger, create=not push, push=push, now=now, fixup_repo=fixup_repo)
 			kit_name = kit_dict["name"]
 			if kit_name not in output_sha1s:
 				output_sha1s[kit_name] = {}
@@ -598,9 +589,18 @@ async def main_thread():
 
 
 if __name__ == "__main__":
+	import argparse
 	
+	parser = argparse.ArgumentParser()
+	parser.add_argument("release", type=str, default="all", help="specify release to generate. Defaults to 'all'.")
+	parser.add_argument("--nopush", action="store_true", help="Don't push changes upstream at all.")
+	parser.add_argument("--db", action="store_true", help="Connect to fastpull database to update to-be-fetched file list.")
+	parser.add_argument("--config", type=str, default=None, help="Specify config file. Defaults to ~/.merge.")
+	args = parser.parse_args()
+
+	config = Configuration(args.config)
 	loop = asyncio.get_event_loop()
-	loop.run_until_complete(main_thread())
+	loop.run_until_complete(main_thread(config, args))
 	sys.exit(0)
 
 # vim: ts=4 sw=4 noet tw=140
