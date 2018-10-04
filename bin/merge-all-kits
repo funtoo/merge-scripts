@@ -592,7 +592,7 @@ if __name__ == "__main__":
 	import argparse
 	
 	parser = argparse.ArgumentParser()
-	parser.add_argument("release", type=str, default="all", required=False, help="specify release to generate. Defaults to 'all'.")
+	parser.add_argument("release", type=str, default="all", nargs="?", help="specify release to generate. Defaults to 'all'.")
 	parser.add_argument("--nopush", action="store_true", help="Don't push changes upstream at all.")
 	parser.add_argument("--db", action="store_true", help="Connect to fastpull database to update to-be-fetched file list.")
 	parser.add_argument("--config", type=str, default=None, help="Specify config file. Defaults to ~/.merge.")
