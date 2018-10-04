@@ -414,7 +414,7 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 	]
 	
 	post_steps += [
-		mu.CatPkgScan(now=now, engine=async_engine)
+		mu.FastPullScan(now=now, engine=async_engine)
 	]
 	
 	await tree.run(post_steps)
