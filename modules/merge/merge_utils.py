@@ -21,20 +21,111 @@ from merge.config import config
 from merge.async_engine import AsyncEngine
 from merge.async_portage import async_xmatch
 import asyncio
+from concurrent.futures import ThreadPoolExecutor
+from multiprocessing import cpu_count
+import jinja2
 
 debug = False
 
 
-class MergeStep(object):
-	
-	async def run(self):
+class RepositoryStepsCollector:
+
+	"""
+	This class is designed to "hold" a bunch of repository steps and also provide these repository steps with
+	access to important information, which is stored in the properties of the collector object.
+	"""
+
+	def __init__(self, fixup_root, dest_tree, cpm_logger=None):
+		self.fixup_root = fixup_root
+		self.dest_tree = dest_tree
+		self.cpm_logger = cpm_logger
+		self.steps = []
+
+	def add_step(self, new_step):
+		"""Add a step to our collection and also link our step to the collector."""
+		new_step.collector = self
+		self.steps.append(new_step)
+
+	async def run_steps_in_tree(self, tree):
+		for step in self.steps:
+			await step.run(tree)
+
+class MergeStep:
+
+	loop = asyncio.get_event_loop()
+	cpu_bound_executor = ThreadPoolExecutor(max_workers=cpu_count())
+	collector = None
+
+	def run_async_in_executor(self, corofn, *args):
+
+		"""
+
+		Use this method to run an asynchronous worker within a ThreadPoolExecutor.
+		Without this special wrapper, this normally doesn't work, and the ThreadPoolExecutor will not allow async calls.
+		But with this wrapper, our worker and its subsequent calls can be async.
+
+		Use as follows::
+
+			futures =[
+				self.loop.run_in_executor(self.cpu_bound_executor, self.run_async_in_executor, self.worker_async, worker_async_arg1, ...)
+				for meta_pkg_ebuild_path in all_meta_pkg_ebuilds
+			]
+			for future in asyncio.as_completed(futures):
+				...
+
+		"""
+		loop = asyncio.new_event_loop()
+		try:
+			future = corofn(*args)
+			asyncio.set_event_loop(loop)
+			return loop.run_until_complete(future)
+		finally:
+			loop.close()
+
+	async def run(self, tree):
 		pass
 
 
-class Tree(object):
-	def __init__(self, name, root):
-		self.name = name
-		self.root = root
+def get_catpkg_from_ebuild_path(path):
+	"""Simple method to take an ebuild path and extract the Portage catpkg atom from it."""
+
+	spl = path.rstrip(".ebuild").split("/")
+	return spl[-3] + "/" + spl[-1]
+
+
+class RunRepositoryStepsIfAvailable(MergeStep):
+
+	def __init__(self, fixup_root, cpm_logger):
+		self.fixup_root = fixup_root
+		self.cpm_logger = cpm_logger
+
+	async def run(self, tree):
+		kit_fixup_root = os.path.join(fixup_root, tree.name)
+		kit_fixup_branch_root = os.path.join(kit_fixup_root, tree.branch)
+		# TODO: finish
+
+class CreateEbuildFromTemplate(MergeStep):
+
+	def __init__(self, file_subpath, template_text, template_params=None):
+		self.file_subpath = file_subpath
+		self.template_text = template_text
+		if template_params is None:
+			self.template_params = {}
+		else:
+			self.template_params = template_params
+
+	async def run(self, tree):
+		outfile = os.path.join(tree.root, self.file_subpath)
+		outdir = os.path.dirname(outfile)
+		if not os.path.exists(outdir):
+			os.makedirs(outdir)
+		with open(outfile, "w") as f:
+			print('Generating %s...' % outfile)
+			template = jinja2.Template(self.template_text)
+			f.write(template.render(**self.template_params))
+
+
+class Tree:
 	
 	def head(self):
 		return "None"
