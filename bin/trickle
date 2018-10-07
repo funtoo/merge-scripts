@@ -7,9 +7,10 @@ from datetime import datetime
 
 sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "../../modules")))
 import merge.merge_utils as mu
-from merge.config import config
+from merge.config import Configuration
 import asyncio
 
+config = Configuration
 
 repo_name = sys.argv[1]
 
@@ -58,7 +59,7 @@ if not os.path.exists(repo_name):
 	sys.exit(1)
 
 async def main_thread():
-	fixup_repo = mu.GitTree("kit-fixups", config.branch("kit-fixups"), url=config.kit_fixups, root=config.source_trees + "/kit-fixups")
+	fixup_repo = mu.GitTree("kit-fixups", config=config, branch=config.branch("kit-fixups"), url=config.kit_fixups, root=config.source_trees + "/kit-fixups")
 	fixup_repo.initialize()
 	#meta_repo = mu.GitTree("meta-repo", config.branch("meta-repo"), url=config.base_url("meta-repo"), root=config.dest_trees + "/meta-repo")
 	#meta_repo.initialize()

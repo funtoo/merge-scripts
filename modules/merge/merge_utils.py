@@ -17,7 +17,6 @@ import pwd
 import multiprocessing
 from collections import defaultdict
 from portage.util.futures.iter_completed import async_iter_completed
-from merge.config import config
 from merge.async_engine import AsyncEngine
 from merge.async_portage import async_xmatch
 import asyncio
@@ -85,7 +84,6 @@ class MergeStep:
 	async def run(self, tree):
 		pass
 
-
 def get_catpkg_from_ebuild_path(path):
 	"""Simple method to take an ebuild path and extract the Portage catpkg atom from it."""
 
@@ -96,11 +94,12 @@ def get_catpkg_from_ebuild_path(path):
 class RunRepositoryStepsIfAvailable(MergeStep):
 
 	def __init__(self, fixup_root, cpm_logger):
-		self.fixup_root = fixup_root
+		self.fixup_root = fixup_root # the "master" repo root
 		self.cpm_logger = cpm_logger
 
 	async def run(self, tree):
-		kit_fixup_root = os.path.join(fixup_root, tree.name)
+		# fixup_root below is not the same as fixup_root above. maybe rename this var:
+		kit_fixup_root = os.path.join(self.collector.fixup_root, tree.name)
 		kit_fixup_branch_root = os.path.join(kit_fixup_root, tree.branch)
 		# TODO: finish
 
@@ -126,7 +125,7 @@ class CreateEbuildFromTemplate(MergeStep):
 
 
 class Tree:
-	
+
 	def head(self):
 		return "None"
 
@@ -138,14 +137,14 @@ class GitTreeError(Exception):
 class GitTree(Tree):
 	"A Tree (git) that we can use as a source for work jobs, and/or a target for running jobs."
 	
-	def __init__(self, name: str, branch: str = "master", url: str = None, commit_sha1: str = None,
+	def __init__(self, name: str, branch: str = "master", config=None, url: str = None, commit_sha1: str = None,
 				 root: str = None,
 				 create: bool = False,
 				 reponame: str = None):
 		
 		# note that if create=True, we are in a special 'local create' mode which is good for testing. We create the repo locally from
 		# scratch if it doesn't exist, as well as any branches. And we don't push.
-		
+		self.config = config
 		self.name = name
 		self.root = root
 		self.url = url
@@ -163,7 +162,7 @@ class GitTree(Tree):
 		self.branch = branch
 		self.commit_sha1 = commit_sha1
 		if self.root is None:
-			base = config.source_trees
+			base = self.config.source_trees
 			self.root = "%s/%s" % (base, self.name)
 		if not os.path.isdir("%s/.git" % self.root):
 			# repo does not exist? - needs to be cloned or created
@@ -347,10 +346,11 @@ class GitTree(Tree):
 
 
 class RsyncTree(Tree):
-	def __init__(self, name, url="rsync://rsync.us.gentoo.org/gentoo-portage/"):
+	def __init__(self, name, config=None, url="rsync://rsync.us.gentoo.org/gentoo-portage/"):
 		self.name = name
 		self.url = url
-		base = config.source_trees
+		self.config = config
+		base = self.config.source_trees
 		self.root = "%s/%s" % (base, self.name)
 		if not os.path.exists(base):
 			os.makedirs(base)
@@ -360,10 +360,11 @@ class RsyncTree(Tree):
 
 
 class SvnTree(Tree):
-	def __init__(self, name, url=None):
+	def __init__(self, name, config=None, url=None):
 		self.name = name
 		self.url = url
-		base = config.source_trees
+		self.config = config
+		base = self.config.source_trees
 		self.root = "%s/%s" % (base, self.name)
 		if not os.path.exists(base):
 			os.makedirs(base)
@@ -374,12 +375,13 @@ class SvnTree(Tree):
 
 
 class CvsTree(Tree):
-	def __init__(self, name, url=None, path=None):
+	def __init__(self, name, config=None, url=None, path=None):
 		self.name = name
 		self.url = url
 		if path is None:
 			path = self.name
-		base = config.source_trees
+		self.config = config
+		base = self.config.source_trees
 		self.root = "%s/%s" % (base, path)
 		if not os.path.exists(base):
 			os.makedirs(base)
@@ -513,7 +515,7 @@ aliases = gentoo
 
 [%s]
 location = %s
-''' % (config.dest_trees, cur_name, cur_tree)
+''' % (cur_overlay.config.dest_trees, cur_name, cur_tree)
 		else:
 			env['PORTAGE_REPOSITORIES'] = '''
 [DEFAULT]
@@ -522,7 +524,7 @@ main-repo = core-kit
 [core-kit]
 location = %s/core-kit
 aliases = gentoo
-''' % config.dest_trees
+''' % cur_overlay.config.dest_trees
 		p = portage.portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
 
 		pkg_use = []
@@ -611,7 +613,7 @@ async def getDependencies(cur_overlay, catpkgs, levels=0, cur_level=0):
 
 	[%s]
 	location = %s
-	''' % (config.dest_trees, cur_name, cur_tree)
+	''' % (cur_overlay.config.dest_trees, cur_name, cur_tree)
 	else:
 		env['PORTAGE_REPOSITORIES'] = '''
 	[DEFAULT]
@@ -620,7 +622,7 @@ async def getDependencies(cur_overlay, catpkgs, levels=0, cur_level=0):
 	[core-kit]
 	location = %s/core-kit
 	aliases = gentoo
-	''' % config.dest_trees
+	''' % cur_overlay.config.dest_trees
 	p = portage.portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
 	mypkgs = set()
 
@@ -713,7 +715,7 @@ async def getPackagesWithEclass(cur_overlay, eclass):
 
 	[%s]
 	location = %s
-	''' % (config.dest_trees, cur_name, cur_tree)
+	''' % (cur_overlay.config.dest_trees, cur_name, cur_tree)
 	else:
 		env['PORTAGE_REPOSITORIES'] = '''
 	[DEFAULT]
@@ -722,7 +724,7 @@ async def getPackagesWithEclass(cur_overlay, eclass):
 	[core-kit]
 	location = /%s/core-kit
 	aliases = gentoo
-	''' % config.dest_trees
+	''' % cur_overlay.config.dest_trees
 	p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
 	mypkgs = set()
 
@@ -774,7 +776,7 @@ async def getPackagesInCatWithEclass(cur_overlay, cat, eclass):
 
 	[%s]
 	location = %s
-	''' % (config.dest_trees, cur_name, cur_tree)
+	''' % (cur_overlay.config.dest_trees, cur_name, cur_tree)
 	else:
 		env['PORTAGE_REPOSITORIES'] = '''
 	[DEFAULT]
@@ -783,7 +785,7 @@ async def getPackagesInCatWithEclass(cur_overlay, cat, eclass):
 	[core-kit]
 	location = %s/core-kit
 	aliases = gentoo
-	''' % config.dest_trees
+	''' % cur_overlay.config.dest_trees
 	p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
 	mypkgs = set()
 
@@ -855,13 +857,15 @@ def extract_uris(src_uri):
 
 	return fn_urls, new_files
 
-class CatPkgScan(MergeStep):
+class FastPullScan(MergeStep):
 
 	def __init__(self, now, engine: AsyncEngine = None):
 		self.now = now
 		self.engine = engine
 
 	async def run(self, cur_overlay: GitTree):
+		if self.engine is None:
+			return
 		cur_tree = cur_overlay.root
 		try:
 			with open(os.path.join(cur_tree, 'profiles/repo_name')) as f:
@@ -880,7 +884,7 @@ class CatPkgScan(MergeStep):
 
 		[%s]
 		location = %s
-		''' % (config.dest_trees, cur_name, cur_tree)
+		''' % (cur_overlay.config.dest_trees, cur_name, cur_tree)
 		else:
 			env['PORTAGE_REPOSITORIES'] = '''
 		[DEFAULT]
@@ -889,7 +893,7 @@ class CatPkgScan(MergeStep):
 		[core-kit]
 		location = %s/core-kit
 		aliases = gentoo
-		''' % config.dest_trees
+		''' % cur_overlay.config.dest_trees
 		env['ACCEPT_KEYWORDS'] = "~amd64 amd64"
 		p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
 
@@ -1089,7 +1093,7 @@ async def getAllMeta(metadata, dest_kit):
 
 	[%s]
 	location = %s
-		''' % ( config.dest_trees, dest_kit.name, dest_kit.root)
+		''' % ( dest_kit.config.dest_trees, dest_kit.name, dest_kit.root)
 	else:
 		# we are testing a stand-alone kit that should have everything it needs included
 		env['PORTAGE_REPOSITORIES'] = '''
@@ -2134,7 +2138,7 @@ class GenCache(MergeStep):
 	async def run(self,tree):
 
 		if tree.name != "core-kit":
-			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = %s/core-kit\n\n[%s]\nlocation = %s\n" % (config.dest_trees, tree.reponame if tree.reponame else tree.name, tree.root)
+			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = %s/core-kit\n\n[%s]\nlocation = %s\n" % (tree.config.dest_trees, tree.reponame if tree.reponame else tree.name, tree.root)
 
 			# Perform QA check to ensure all eclasses are in place prior to performing egencache, as not having this can
 			# cause egencache to hang.
@@ -2144,7 +2148,7 @@ class GenCache(MergeStep):
 				missing_eclasses = []
 				for ec in result[None]:
 					# if a missing eclass is not in core-kit, then we'll be concerned:
-					if not os.path.exists("%s/core-kit/eclass/%s" % (config.dest_trees, ec)):
+					if not os.path.exists("%s/core-kit/eclass/%s" % (tree.config.dest_trees, ec)):
 						missing_eclasses.append(ec)
 				if len(missing_eclasses):
 					print("!!! Error: QA check on kit %s failed -- missing eclasses:" % tree.name)
@@ -2153,7 +2157,7 @@ class GenCache(MergeStep):
 						"!!!      : Please be sure to use kit-fixups or the overlay's eclass list to copy these necessary eclasses into place.")
 					sys.exit(1)
 		else:
-			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = %s/core-kit\n" % config.dest_trees
+			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = %s/core-kit\n" % tree.config.dest_trees
 		cmd = ["egencache", "--update", "--tolerant", "--repo", tree.reponame if tree.reponame else tree.name,
 			   "--repositories-configuration" , repos_conf ,
 			   "--jobs", repr(multiprocessing.cpu_count()+1)]
@@ -2170,9 +2174,9 @@ class GenUseLocalDesc(MergeStep):
 
 	async def run(self,tree):
 		if tree.name != "core-kit":
-			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = %s/core-kit\n\n[%s]\nlocation = %s\n" % (config.dest_trees, tree.reponame if tree.reponame else tree.name, tree.root)
+			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = %s/core-kit\n\n[%s]\nlocation = %s\n" % (tree.config.dest_trees, tree.reponame if tree.reponame else tree.name, tree.root)
 		else:
-			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = %s/core-kit\n" % config.dest_trees
+			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = %s/core-kit\n" % tree.config.dest_trees
 		await runShell(["egencache", "--update-use-local-desc", "--tolerant", "--repo", tree.reponame if tree.reponame else tree.name, "--repositories-configuration" , repos_conf ], abort_on_failure=False)
 
 class GitCheckout(MergeStep):

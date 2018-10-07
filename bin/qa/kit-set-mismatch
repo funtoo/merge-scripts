@@ -9,8 +9,9 @@ import sys
 import os
 sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "../../../modules")))
 import merge.merge_utils as mu
-from merge.config import config
+from merge.config import Configuration
 from collections import defaultdict
+config = Configuration
 
 fixup_repo = mu.GitTree("kit-fixups", config.branch("kit-fixups"), url=config.kit_fixups, root=config.source_trees+"/kit-fixups")
 meta_repo = mu.GitTree("meta-repo", config.branch("meta-repo"), url=config.base_url("meta-repo"), root=config.dest_trees+"/meta-repo")

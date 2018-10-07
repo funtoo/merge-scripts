@@ -7,9 +7,12 @@ from configparser import ConfigParser
 
 class Configuration:
 
-	def __init__(self):
-		home_dir = os.path.expanduser("~")
-		self.config_path = os.path.join(home_dir, ".merge")
+	def __init__(self, filename=None):
+		if filename is None:
+			home_dir = os.path.expanduser("~")
+			self.config_path = os.path.join(home_dir, ".merge")
+		else:
+			self.config_path = filename
 		if not os.path.exists(self.config_path):
 			print("""
 Merge scripts now use a configuration file. Create a ~/.merge file with the following format. Note that
@@ -97,5 +100,3 @@ destination = /var/git/dest-trees
 	@property
 	def dest_trees(self):
 		return self.get_option("work", "destination", "/var/git/dest-trees")
-
-config = Configuration()
