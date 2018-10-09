@@ -53,7 +53,6 @@ class MergeStep:
 
 	loop = asyncio.get_event_loop()
 	cpu_bound_executor = ThreadPoolExecutor(max_workers=cpu_count())
-	collector = None
 
 	def run_async_in_executor(self, corofn, *args):
 
@@ -99,7 +98,7 @@ class RunRepositoryStepsIfAvailable(MergeStep):
 
 	async def run(self, tree):
 		
-		root = os.path.join(self.collector.fixup_root, tree.name)
+		root = os.path.join(self.fixup_root, tree.name)
 		global_root = os.path.join(root, "global", "generate.py")
 		curated_root = os.path.join(root, "curated", "generate.py")
 		branch_root = os.path.join(root, tree.branch, "generate.py")
@@ -117,7 +116,7 @@ class RunRepositoryStepsIfAvailable(MergeStep):
 		mod = importlib.util.module_from_spec(spec)
 		spec.loader.exec_module(mod)
 		
-		repo_steps_collector = RepositoryStepsCollector(fixup_root=self.collector.fixup_root, dest_tree=tree.root, cpm_logger=self.collector.cpm_logger)
+		repo_steps_collector = RepositoryStepsCollector(fixup_root=self.fixup_root, dest_tree=tree.root, cpm_logger=self.cpm_logger)
 		mod.add_steps(repo_steps_collector)
 		await repo_steps_collector.run_steps_in_tree(tree)
 		
