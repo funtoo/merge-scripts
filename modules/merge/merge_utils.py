@@ -100,6 +100,9 @@ class RunRepositoryStepsIfAvailable(MergeStep):
 
 	async def run(self, tree):
 		
+		# We look in various directories for the generate.py file -- and use standard kit-fixups approach to overriding:
+		# branch > curated > global:
+		
 		root = os.path.join(self.fixup_root, tree.name)
 		global_root = os.path.join(root, "global", "generate.py")
 		curated_root = os.path.join(root, "curated", "generate.py")
@@ -118,7 +121,10 @@ class RunRepositoryStepsIfAvailable(MergeStep):
 		mod = importlib.util.module_from_spec(spec)
 		spec.loader.exec_module(mod)
 		
-		repo_steps_collector = RepositoryStepsCollector(fixup_root=self.fixup_root, dest_tree=tree.root, cpm_logger=self.cpm_logger)
+		# When actually running generate.py, we will lock the fixup_root passed to the RepositoryStepsCollector to
+		# wherever we found the generate.py file:
+		
+		repo_steps_collector = RepositoryStepsCollector(fixup_root=p, dest_tree=tree.root, cpm_logger=self.cpm_logger)
 		mod.add_steps(repo_steps_collector)
 		await repo_steps_collector.run_steps_in_tree(tree)
 		
