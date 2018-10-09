@@ -360,6 +360,10 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 				mu.InsertEbuilds(fixup_repo, ebuildloc=fixup_path, select="all", skip=None, replace=True,
 								 cpm_logger=cpm_logger, is_fixup=True)
 			]
+	steps += [
+		mu.RunRepositoryStepsIfAvailable(fixup_root=fixup_repo.root, cpm_logger=cpm_logger)
+	]
+	
 	await tree.run(steps)
 	
 	# Now we want to perform a scan of any eclasses in the Gentoo repo that we need to copy over to our dest_kit so that it contains all

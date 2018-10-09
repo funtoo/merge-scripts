@@ -98,10 +98,29 @@ class RunRepositoryStepsIfAvailable(MergeStep):
 		self.cpm_logger = cpm_logger
 
 	async def run(self, tree):
-		# fixup_root below is not the same as fixup_root above. maybe rename this var:
-		kit_fixup_root = os.path.join(self.collector.fixup_root, tree.name)
-		kit_fixup_branch_root = os.path.join(kit_fixup_root, tree.branch)
-		# TODO: finish
+		
+		root = os.path.join(self.collector.fixup_root, tree.name)
+		global_root = os.path.join(root, "global", "generate.py")
+		curated_root = os.path.join(root, "curated", "generate.py")
+		branch_root = os.path.join(root, tree.branch, "generate.py")
+		if os.path.exists(branch_root):
+			p = branch_root
+		elif os.path.exists(curated_root):
+			p = curated_root
+		elif os.path.exists(global_root):
+			p = global_root
+		else:
+			return
+		
+		import importlib.util
+		spec = importlib.util.spec_from_file_location('repository_steps', p)
+		mod = importlib.util.module_from_spec(spec)
+		spec.loader.exec_module(mod)
+		
+		repo_steps_collector = RepositoryStepsCollector(fixup_root=self.collector.fixup_root, dest_tree=tree.root, cpm_logger=self.collector.cpm_logger)
+		mod.add_steps(repo_steps_collector)
+		await repo_steps_collector.run_steps_in_tree(tree)
+		
 
 class CreateEbuildFromTemplate(MergeStep):
 
