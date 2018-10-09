@@ -53,6 +53,8 @@ class MergeStep:
 
 	loop = asyncio.get_event_loop()
 	cpu_bound_executor = ThreadPoolExecutor(max_workers=cpu_count())
+	# This is only used for Repository Steps:
+	collector = None
 
 	def run_async_in_executor(self, corofn, *args):
 

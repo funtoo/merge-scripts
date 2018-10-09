@@ -104,7 +104,7 @@ src_install() { return 0; }
 		:return: None
 		"""
 
-		all_meta_pkg_ebuilds = list(glob(self.collector.fixup_repo_root + "/x11-base/xorg-proto/xorg-proto-*.ebuild"))
+		all_meta_pkg_ebuilds = list(glob(self.collector.fixup_root + "/x11-base/xorg-proto/xorg-proto-*.ebuild"))
 		futures =[
 			self.loop.run_in_executor(self.cpu_bound_executor, self.run_async_in_executor, self.worker_async, meta_pkg_ebuild_path)
 			for meta_pkg_ebuild_path in all_meta_pkg_ebuilds
@@ -118,7 +118,7 @@ src_install() { return 0; }
 		for pv_key, all_meta_atoms in meta_mappings.items():
 			pkg, ver = pv_key
 			all_meta_atoms = sorted(list(all_meta_atoms))
-			output_ebuild = self.collector.fixup_repo_root + "/x11-proto/%s/%s-%s.ebuild" % (pkg, pkg, ver)
+			output_ebuild = self.collector.fixup_root + "/x11-proto/%s/%s-%s.ebuild" % (pkg, pkg, ver)
 			output_dir = os.path.dirname(output_ebuild)
 			if not os.path.exists(output_dir):
 				os.makedirs(output_dir)
@@ -128,4 +128,4 @@ src_install() { return 0; }
 				file_subpath = "x11-proto/%s/%s-%s.ebuild" % ( pkg, pkg, ver )
 			)
 			await step.run(tree)
-			self.collector.cpm_logger.record(self.collector.kit_name, get_catpkg_from_ebuild_path(output_ebuild), is_fixup=True)
+			self.collector.cpm_logger.record(tree.name, get_catpkg_from_ebuild_path(output_ebuild), is_fixup=True)
