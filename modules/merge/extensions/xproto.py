@@ -22,7 +22,7 @@ EAPI=6
 
 inherit multilib-minimal
 
-DESCRIPTION="X.Org Protocol ${proto} package stub (provided by {{master_cpv}})."
+DESCRIPTION="X.Org Protocol ${proto} package stub ."
 
 KEYWORDS="*"
 
@@ -124,7 +124,7 @@ src_install() { return 0; }
 				os.makedirs(output_dir)
 			step = CreateEbuildFromTemplate(
 				template_text=self.template_text,
-				template_params=all_meta_atoms,
+				template_params={ "all_meta_atoms" : all_meta_atoms },
 				file_subpath = "x11-proto/%s/%s-%s.ebuild" % ( pkg, pkg, ver )
 			)
 			await step.run(tree)
