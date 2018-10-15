@@ -6,6 +6,7 @@ import sys
 from collections import defaultdict, OrderedDict
 from datetime import datetime
 import asyncio
+import atexit
 
 sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "../../modules")))
 import merge.merge_utils as mu
@@ -550,7 +551,8 @@ async def main_thread(config, args):
 	if args.db is True:
 		async_engine = AsyncMergeAllKits(num_threads=num_threads)
 		async_engine.start_threads(enable_workers=True if num_threads != 0 else False)
-
+		atexit.register(async_engine.exit_handler)
+		
 	if args.release == "all":
 		releases = foundation.kit_groups.keys()
 	else:
@@ -587,10 +589,6 @@ async def main_thread(config, args):
 	if push is True:
 		print("Pushing meta-repo...")
 		await meta_repo.gitPush()
-	
-	if async_engine is not None:
-		await async_engine.wait_for_workers_to_finish()
-
 
 if __name__ == "__main__":
 	import argparse

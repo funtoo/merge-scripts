@@ -41,6 +41,13 @@ class AsyncEngine:
 		self.keep_running = False
 		await asyncio.gather(*self.workers)
 		
+	def exit_handler(self):
+		"""something for atexit.register"""
+		self.loop.run_until_complete(asyncio.gather(
+			asyncio.ensure_future(self.wait_for_workers_to_finish())
+		))
+	
+		
 	def worker_thread(self, **kwargs):
 		print("blarg")
 	

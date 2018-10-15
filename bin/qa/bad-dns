@@ -1,0 +1,23 @@
+#!/usr/bin/python3
+
+"""
+test for bad DNS
+"""
+
+import sys
+import os
+sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "../../../modules")))
+import merge.merge_utils as mu
+import asyncio
+from merge.config import Configuration
+
+async def main_thread():
+	mytree = mu.GitTree("blah", branch="master", url="https://babasdasdflkdsjfasdfx.xyz/git/repo/gentoo.git", config=Configuration())
+	await mytree.initialize()
+	print("howdy")
+
+if __name__ == "__main__":
+
+	loop = asyncio.get_event_loop()
+	loop.run_until_complete(main_thread())
+	sys.exit(0)
