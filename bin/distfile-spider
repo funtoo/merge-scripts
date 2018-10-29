@@ -205,12 +205,8 @@ async def keep_getting_files(db, task_num, q):
 					session.delete(d)
 					session.commit()
 				except sqlalchemy.exc.InvalidRequestError:
-					# already deleted by someone else
 					pass
-				# move to next file...
-				d.last_attempted_on = datetime.utcnow()
-				session.add(d)
-				session.commit()
+					# already deleted by someone else
 				progress_set.remove(d_id)
 				continue
 		
