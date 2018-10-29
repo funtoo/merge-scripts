@@ -20,8 +20,8 @@ class RedirectHandler(tornado.web.RequestHandler):
 	# redirect_url = "https://storage.googleapis.com/fastpull-us/%s/%s/%s"
 	
 	# or send people to us...
-	redirect_url = "/%s/%s/%s"
-
+	#redirect_url = "/%s/%s/%s"
+	redirect_url = "https://1153732560.rsc.cdn77.org/%s/%s/%s"
 	def get(self,fn):
 		fn = os.path.basename(fn)
 		success = False

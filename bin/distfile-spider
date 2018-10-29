@@ -225,12 +225,47 @@ async def keep_getting_files(db, task_num, q):
 			if d.digest_type == "sha512" and d.digest is not None:
 				existing = session.query(db.Distfile).filter(db.Distfile.id == d.digest).first()
 				if existing:
-					print("%s already downloaded; skipping." % d.filename)
+					if d.filename == existing.filename:
+						print("%s already downloaded; skipping." % d.filename)
+						session.delete(d)
+						session.commit()
+						# move to next file....
+						progress_set.remove(d_id)
+						continue
+					else:
+						print("Filename %s exists under another SHA1 (%s) -- adding a mapping..." % (d.filename, existing.filename))
+						d_final = db.Distfile()
+						d_final.id = existing.id
+						d_final.rand_id = existing.rand_id
+						d_final.filename = d.filename
+						d_final.digest_type = d.digest_type
+						if d.digest_type != "sha512":
+							d_final.alt_digest = digest
+						d_final.size = d.size
+						d_final.catpkg = d.catpkg
+						d_final.kit = d.kit
+						d_final.src_uri = d.src_uri
+						d_final.mirror = d.mirror
+						d_final.last_fetched_on = existing.last_fetched_on
+						session.delete(d)
+						session.add(d_final)
+						session.commit()
+					try:
+						fastpull_file = fastpull_index(outfile, d_final)
+						# add to queue to upload to google:
+						# loop = asyncio.get_event_loop()
+						# loop.run_in_executor(thread_exec, google_upload, fastpull_file)
+
+					except FileNotFoundError:
+						# something went bad, couldn't find file for indexing.
+						fail_mode = "notfound"
+						continue
+
+					session.add(d_final)
 					session.delete(d)
 					session.commit()
-					# move to next file....
-					progress_set.remove(d_id)
-					continue
+
+	
 			session.expunge_all()
 
 		# force session close before download by exiting "with"
