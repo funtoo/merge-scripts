@@ -82,10 +82,10 @@ destination = /var/git/dest-trees
 
 	@property
 	def gentoo_staging(self):
-		return self.get_option("sources", "gentoo-staging", "repos@git.funtoo.org:ports/gentoo-staging.git")
+		return self.get_option("sources", "gentoo-staging", "git@github.com:funtoo/gentoo-staging.git")
 
 	def base_url(self, repo):
-		base = self.get_option("destinations", "base_url", "repos@git.funtoo.org:kits/")
+		base = self.get_option("destinations", "base_url", "git@github.com:funtoo/")
 		if not base.endswith("/"):
 			base += "/"
 		return base + repo
