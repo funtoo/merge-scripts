@@ -82,7 +82,9 @@ src_install() { return 0; }
 
 		sdata = meta_pkg_ebuild_path.rstrip(".ebuild").split("/")
 		master_cpv = sdata[-3] + "/" + sdata[-1]
-		await runShell("(cd %s; ebuild %s clean unpack)" % (os.path.dirname(meta_pkg_ebuild_path), os.path.basename(meta_pkg_ebuild_path)), abort_on_failure=True)
+		success = await runShell("(cd %s; ebuild %s clean unpack)" % (os.path.dirname(meta_pkg_ebuild_path), os.path.basename(meta_pkg_ebuild_path)), abort_on_failure=False)
+		if not success:
+			return defaultdict(set)
 		meson_file = os.path.expanduser("~portage/%s/work/xorg*proto-*/meson.build" % master_cpv)
 		meson_file = glob(meson_file)
 		if len(meson_file) != 1 or not os.path.exists(meson_file[0]):
@@ -92,7 +94,7 @@ src_install() { return 0; }
 		meta_mappings = defaultdict(set)
 		for master_cpv, pkg, ver in itertools.chain(self.get_pkgs_from_meson(master_cpv, meson_file), self.get_pkgs_from_meson(master_cpv, meson_file, "legacy_pcs")):
 			meta_mappings[(pkg, ver)].add(master_cpv)
-		await runShell("(cd %s; ebuild %s clean)" % (os.path.dirname(meta_pkg_ebuild_path), os.path.basename(meta_pkg_ebuild_path)), abort_on_failure=True)
+		await runShell("(cd %s; ebuild %s clean)" % (os.path.dirname(meta_pkg_ebuild_path), os.path.basename(meta_pkg_ebuild_path)), abort_on_failure=False)
 		return meta_mappings
 		
 	async def run(self, tree):
