@@ -301,7 +301,7 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 	# First, we are going to process the kit-fixups repository and look for ebuilds and eclasses to replace. Eclasses can be
 	# overridden by using the following paths inside kit-fixups:
 	
-	# kit-fixups/eclass <--------------------- global eclasses, get installed to all kits unconditionally (overrides those above)
+	# kit-fixups/eclass/1.2-release <--------- global eclasses, get installed to all kits unconditionally for release (overrides those above)
 	# kit-fixups/<kit>/global/eclass <-------- global eclasses for a particular kit, goes in all branches (overrides those above)
 	# kit-fixups/<kit>/global/profiles <------ global profile info for a particular kit, goes in all branches (overrides those above)
 	# kit-fixups/<kit>/<branch>/eclass <------ eclasses to install in just a specific branch of a specific kit (overrides those above)
@@ -322,9 +322,9 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 	steps = []
 	
 	# Here is the core logic that copies all the fix-ups from kit-fixups (eclasses and ebuilds) into place:
-	
-	if os.path.exists(fixup_repo.root + "/eclass"):
-		steps += [mu.InsertEclasses(fixup_repo, select="all", skip=None)]
+	eclass_release_path = "eclass/%s" % release
+	if os.path.exists(os.path.join(fixup_repo.root, eclass_release_path)):
+		steps += [mu.InsertFilesFromSubdir(fixup_repo, "eclass", ".eclass", select="all", skip=None, src_offset=eclass_release_path)]
 	if kit_dict["branch"] == "master":
 		fixup_dirs = ["global", "master"]
 	else:
@@ -358,8 +358,7 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 			# file...
 			
 			steps += [
-				mu.InsertEbuilds(fixup_repo, ebuildloc=fixup_path, select="all", skip=None, replace=True,
-								 cpm_logger=cpm_logger, is_fixup=True)
+				mu.InsertEbuilds(fixup_repo, ebuildloc=fixup_path, select="all", skip=None, replace=True, cpm_logger=cpm_logger, is_fixup=True)
 			]
 	steps += [
 		mu.RunRepositoryStepsIfAvailable(fixup_root=fixup_repo.root, cpm_logger=cpm_logger)
