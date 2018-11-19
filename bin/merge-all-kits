@@ -324,7 +324,7 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 	# Here is the core logic that copies all the fix-ups from kit-fixups (eclasses and ebuilds) into place:
 	eclass_release_path = "eclass/%s" % release
 	if os.path.exists(os.path.join(fixup_repo.root, eclass_release_path)):
-		steps += [mu.SyncDir(fixup_repo, eclass_release_path, "eclass")]
+		steps += [mu.SyncDir(fixup_repo.root, eclass_release_path, "eclass")]
 	if kit_dict["branch"] == "master":
 		fixup_dirs = ["global", "master"]
 	else:
