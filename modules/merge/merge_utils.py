@@ -574,6 +574,9 @@ aliases = gentoo
 					cmd = '( eval $(cat %s/%s/%s/%s.ebuild | grep ^PYTHON_COMPAT); echo "${PYTHON_COMPAT[@]}" )' % ( cur_tree, cp[0], cp[1], px[1] )
 					outp = await getcommandoutput(cmd)
 					imps = outp[1].decode("ascii").split()
+					if len(imps) == 0:
+						print("!!! WARNING: ebuild %s in %s has blank or undefined PYTHON_COMPAT; this should be fixed!" % (a, cur_overlay.name))
+						continue
 					ebs[a] = imps
 			if len(ebs.keys()) == 0:
 				continue
