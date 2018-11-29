@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 
+import asyncio
+import atexit
 import json
 import os
 import sys
 from collections import defaultdict, OrderedDict
 from datetime import datetime
-import asyncio
-import atexit
 
 sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "../../modules")))
 import merge.merge_utils as mu
@@ -66,7 +66,7 @@ class AsyncMergeAllKits(AsyncEngine):
 # 'regular-kits'. These actions are appended to any kit that is not core-kit or nokit. In addition to 'pre' and 'post'
 # steps, there is also a 'copy' step that is not currently used (but is supported by getKitPrepSteps()).
 
-def getKitPrepSteps(repos, kit_dict, gentoo_staging, fixup_repo):
+def getKitPrepSteps(release, repos, kit_dict, gentoo_staging, fixup_repo):
 	kit_steps = {
 		'core-kit': {'pre': [
 			mu.GenerateRepoMetadata("core-kit", aliases=["gentoo"], priority=1000),
@@ -100,6 +100,14 @@ def getKitPrepSteps(repos, kit_dict, gentoo_staging, fixup_repo):
 			]
 		}
 	}
+	
+	# pure64 support for legacy releases:
+	if release in ["1.2-release", "funtoo-current"]:
+		kit_steps['core-kit']['post'].insert(0,
+											 # We copy files into funtoo's profile structure as post-steps because we rely on kit-fixups step to get the initial structure into place
+											 mu.CopyAndRename("profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/subarch",
+															  "profiles/funtoo/1.0/linux-gnu/arch/pure64/subarch", lambda x: os.path.basename(x) + "-pure64"),
+											 )
 	
 	out_pre_steps = []
 	out_copy_steps = []
@@ -227,7 +235,7 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 		mu.CleanTree()
 	]
 	
-	prep_steps = getKitPrepSteps(repos, kit_dict, gentoo_staging, fixup_repo)
+	prep_steps = getKitPrepSteps(release, repos, kit_dict, gentoo_staging, fixup_repo)
 	pre_steps += prep_steps[0]
 	copy_steps = prep_steps[1]
 	post_steps = prep_steps[2]
