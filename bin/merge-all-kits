@@ -75,9 +75,6 @@ def getKitPrepSteps(repos, kit_dict, gentoo_staging, fixup_repo):
 			mu.SyncDir(gentoo_staging.root, "eclass"),
 		],
 			'post': [
-				# We copy files into funtoo's profile structure as post-steps because we rely on kit-fixups step to get the initial structure into place
-				mu.CopyAndRename("profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/subarch", "profiles/funtoo/1.0/linux-gnu/arch/pure64/subarch",
-								 lambda x: os.path.basename(x) + "-pure64"),
 				# news items are not included here anymore
 				mu.SyncDir(fixup_repo.root, "metadata", exclude=["cache", "md5-cache", "layout.conf"]),
 				# add funtoo stuff to thirdpartymirrors
