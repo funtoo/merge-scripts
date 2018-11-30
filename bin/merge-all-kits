@@ -331,7 +331,9 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 	if os.path.exists(os.path.join(fixup_repo.root, eclass_release_path)):
 		steps += [mu.SyncDir(fixup_repo.root, eclass_release_path, "eclass")]
 	if kit_dict["branch"] == "master":
-		fixup_dirs = ["global", "master"]
+		# if a branch has "master" as its branch, we will look for a fixup directory of its *release* (like "1.2-release") just so it's clear
+		# for maintainers ("master" would be ambiguous in kit-fixups.)
+		fixup_dirs = ["global", release]
 	else:
 		fixup_dirs = ["global", "curated", kit_dict["branch"]]
 	for fixup_dir in fixup_dirs:
