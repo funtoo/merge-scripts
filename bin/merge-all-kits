@@ -103,11 +103,7 @@ def getKitPrepSteps(release, repos, kit_dict, gentoo_staging, fixup_repo):
 	
 	# pure64 support for legacy releases:
 	if release in ["1.2-release", "funtoo-current"]:
-		kit_steps['core-kit']['post'].insert(0,
-											 # We copy files into funtoo's profile structure as post-steps because we rely on kit-fixups step to get the initial structure into place
-											 mu.CopyAndRename("1.2-release/profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/subarch",
-															  "profiles/funtoo/1.0/linux-gnu/arch/pure64/subarch", lambda x: os.path.basename(x) + "-pure64"),
-											 )
+		kit_steps['core-kit']['post'].insert(0, mu.CopyAndRename("profiles/funtoo/1.0/linux-gnu/arch/x86-64bit/subarch", "profiles/funtoo/1.0/linux-gnu/arch/pure64/subarch", lambda x: os.path.basename(x) + "-pure64"))
 	
 	out_pre_steps = []
 	out_copy_steps = []
