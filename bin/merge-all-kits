@@ -453,7 +453,7 @@ async def generate_kit_metadata(foundation, release, meta_repo, output_sha1s):
 	with open(outf, 'w') as a:
 		k_info = {}
 		out = []
-		out_settings = defaultdict(lambda: defaultdict(str))
+		out_settings = defaultdict(lambda: defaultdict(dict))
 		for kit_dict in foundation.kit_groups[release]:
 			kit_name = kit_dict["name"]
 			if kit_name not in out:
