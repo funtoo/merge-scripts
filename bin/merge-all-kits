@@ -583,7 +583,7 @@ async def main_thread(config, args):
 			kit_name = kit_dict["name"]
 			output_sha1s[kit_name][kit_dict["branch"]] = {
 				"sha1": head,
-				"depth": kit_dict["repo_obj"].getDepthOfCommit(head)
+				"depth": kit_dict["tree"].getDepthOfCommit(head)
 			}
 			prev_kit_dict = kit_dict
 		await generate_kit_metadata(foundation, release, meta_repo, output_sha1s)
