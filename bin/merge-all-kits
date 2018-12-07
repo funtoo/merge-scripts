@@ -431,7 +431,7 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 	return tree.head()
 
 
-def generate_kit_metadata(foundation, release, meta_repo, output_sha1s):
+async def generate_kit_metadata(foundation, release, meta_repo, output_sha1s):
 	"""
 	Generates the metadata in /var/git/meta-repo/metadata/...
 	:param release: the release string, like "1.3-release".
@@ -453,15 +453,14 @@ def generate_kit_metadata(foundation, release, meta_repo, output_sha1s):
 	with open(outf, 'w') as a:
 		k_info = {}
 		out = []
-		out_settings = defaultdict(dict)
+		out_settings = defaultdict(lambda: defaultdict(str))
 		for kit_dict in foundation.kit_groups[release]:
 			kit_name = kit_dict["name"]
 			if kit_name not in out:
 				out.append(kit_name)
 			# specific keywords that can be set for each branch to identify its current quality level
-			if 'stability' not in out_settings[kit_name]:
-				out_settings[kit_name]['stability'] = {}
 			out_settings[kit_name]['stability'][kit_dict["branch"]] = KitRatingString(kit_dict["stability"])
+
 		k_info["kit_order"] = out
 		k_info["kit_settings"] = out_settings
 		
@@ -575,19 +574,19 @@ async def main_thread(config, args):
 		target_branch = "master" if release == "1.2-release" else release
 		await meta_repo.gitCheckout(target_branch)
 		
-		output_sha1s = {}
+		output_sha1s = defaultdict(lambda: defaultdict(dict))
 		prev_kit_dict = None
 		
 		for kit_dict in foundation.kit_groups[release]:
 			print("Regenerating kit ", kit_dict)
 			head = await updateKit(foundation, config, release, async_engine, kit_dict, prev_kit_dict, cpm_logger, create=not push, push=push, now=now, fixup_repo=fixup_repo)
 			kit_name = kit_dict["name"]
-			if kit_name not in output_sha1s:
-				output_sha1s[kit_name] = {}
-			output_sha1s[kit_name][kit_dict["branch"]] = head
+			output_sha1s[kit_name][kit_dict["branch"]] = {
+				"sha1": head,
+				"depth": kit_dict["repo_obj"].getDepthOfCommit(head)
+			}
 			prev_kit_dict = kit_dict
-		generate_kit_metadata(foundation, release, meta_repo, output_sha1s)
-		
+		await generate_kit_metadata(foundation, release, meta_repo, output_sha1s)
 		await meta_repo.gitCommit(message="kit updates", push=False)
 	
 	if push is True:
