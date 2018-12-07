@@ -1517,7 +1517,7 @@ async def runShell(cmd_list, abort_on_failure=True):
 		print("Error executing %r" % cmd_list)
 		print()
 		print("output:")
-		print(out[1])
+		print(out[1].decode("utf-8"))
 		if abort_on_failure:
 			sys.exit(1)
 		else:
@@ -2189,6 +2189,7 @@ class GenCache(MergeStep):
 			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = %s/core-kit\n" % tree.config.dest_trees
 		cmd = ["egencache", "--update", "--tolerant", "--repo", tree.reponame if tree.reponame else tree.name,
 			   "--repositories-configuration" , repos_conf ,
+                           "--config-root=/tmp",
 			   "--jobs", repr(multiprocessing.cpu_count()+1)]
 		if self.cache_dir:
 			cmd += [ "--cache-dir", self.cache_dir ]
@@ -2206,7 +2207,7 @@ class GenUseLocalDesc(MergeStep):
 			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = %s/core-kit\n\n[%s]\nlocation = %s\n" % (tree.config.dest_trees, tree.reponame if tree.reponame else tree.name, tree.root)
 		else:
 			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = %s/core-kit\n" % tree.config.dest_trees
-		await runShell(["egencache", "--update-use-local-desc", "--tolerant", "--repo", tree.reponame if tree.reponame else tree.name, "--repositories-configuration" , repos_conf ], abort_on_failure=False)
+		await runShell(["egencache", "--update-use-local-desc", "--tolerant", "--config-root=/tmp", "--repo", tree.reponame if tree.reponame else tree.name, "--repositories-configuration" , repos_conf ], abort_on_failure=False)
 
 class GitCheckout(MergeStep):
 
