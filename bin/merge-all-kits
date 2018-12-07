@@ -581,12 +581,16 @@ async def main_thread(config, args):
 			print("Regenerating kit ", kit_dict)
 			head = await updateKit(foundation, config, release, async_engine, kit_dict, prev_kit_dict, cpm_logger, create=not push, push=push, now=now, fixup_repo=fixup_repo)
 			kit_name = kit_dict["name"]
+			if release == "1.2-release":
+				output_sha1s[kit_name][kit_dict["branch"]] = head
+			else:
+				output_sha1s[kit_name][kit_dict["branch"]] = head
 			# TODO: enable in future...
 			# output_sha1s[kit_name][kit_dict["branch"]] = {
 			#	"sha1": head,
 			#	"depth": kit_dict["tree"].getDepthOfCommit(head)
 			#}
-			output_sha1s[kit_name][kit_dict["branch"]] = head
+			# TODO: maybe look at tweaking 1.3-release metadata some more as well..... since we should be able to.
 			prev_kit_dict = kit_dict
 		await generate_kit_metadata(foundation, release, meta_repo, output_sha1s)
 		await meta_repo.gitCommit(message="kit updates", push=False)
