@@ -532,6 +532,7 @@ async def main_thread(config, args):
 	# Now that we imported, set these guys to be globals:
 	globals()['KitRatingString'] = KitRatingString
 	globals()['KitStabilityRating'] = KitStabilityRating
+	globals()['KitType'] = KitType
 	push = not args.nopush
 
 	try:
