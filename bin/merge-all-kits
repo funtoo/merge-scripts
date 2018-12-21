@@ -502,7 +502,7 @@ async def kit_qa_check(foundation):
 	independent_kits = defaultdict(set)
 	for release, kit_list in foundation.kit_groups.items():
 		for kit in kit_list:
-			if "type" in kit and kit["type"].value == KitType.INDEPENDENTLY_MAINTAINED:
+			if "type" in kit and kit["type"] == KitType.INDEPENDENTLY_MAINTAINED:
 				independent_kits[kit["name"]].add(kit["branch"])
 				continue
 			kit_name = kit["name"]
