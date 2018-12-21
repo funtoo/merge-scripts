@@ -535,11 +535,7 @@ async def main_thread(config, args):
 	globals()['KitType'] = KitType
 	push = not args.nopush
 
-	try:
-		await kit_qa_check(foundation)
-	except KitQualityError as e:
-		print("Kit QA Error detected:", str(e))
-		sys.exit(1)
+	await kit_qa_check(foundation)
 
 	num_threads = 40
 	async_engine = None
