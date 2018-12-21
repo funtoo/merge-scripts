@@ -441,6 +441,7 @@ async def generate_kit_metadata(foundation, release, meta_repo, output_sha1s):
 	
 	global KitRatingString
 	global KitStabilityRating
+	global KitType
 	
 	if not os.path.exists(meta_repo.root + "/metadata"):
 		os.makedirs(meta_repo.root + "/metadata")
@@ -495,6 +496,7 @@ class KitQualityError(Exception):
 async def kit_qa_check(foundation):
 
 	# Make sure we don't redefine the same kit branch -- it's bad.
+	global KitType
 	
 	all_kit_branches = defaultdict(dict)
 	independent_kits = defaultdict(set)
