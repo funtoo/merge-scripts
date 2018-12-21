@@ -460,7 +460,7 @@ async def generate_kit_metadata(foundation, release, meta_repo, output_sha1s):
 				out.append(kit_name)
 			# specific keywords that can be set for each branch to identify its current quality level
 			out_settings[kit_name]['stability'][kit_dict["branch"]] = KitRatingString(kit_dict["stability"])
-
+			out_settings[kit_name]['type'] = kit_dict["type"].value if "type" in kit_dict else foundation.KitType.AUTOMATICALLY_GENERATED.value
 		k_info["kit_order"] = out
 		k_info["kit_settings"] = out_settings
 		
@@ -476,9 +476,9 @@ async def generate_kit_metadata(foundation, release, meta_repo, output_sha1s):
 			for def_kit in filter(lambda x: x["name"] == kit_name and x["stability"] not in [KitStabilityRating.DEPRECATED], foundation.kit_groups[release]):
 				rdefs[kit_name].append(def_kit["branch"])
 	
-		if release in [ "1.2-release"]:
+		if release in ["1.2-release"]:
 			# metadata format version 1:
-			k_info["release_defs"] = { "1.2" : rdefs }
+			k_info["release_defs"] = {"1.2": rdefs }
 		else:
 			# newer metadata format version 10: drop release version dict:
 			k_info["release_defs"] = rdefs
@@ -500,7 +500,7 @@ async def kit_qa_check(foundation):
 	independent_kits = defaultdict(set)
 	for release, kit_list in foundation.kit_groups.items():
 		for kit in kit_list:
-			if "type" in kit and kit["type"] == foundation.KitType.INDEPENDENTLY_MAINTAINED.value:
+			if "type" in kit and kit["type"].value == foundation.KitType.INDEPENDENTLY_MAINTAINED.value:
 				independent_kits[kit["name"]].add(kit["branch"])
 				continue
 			kit_name = kit["name"]
