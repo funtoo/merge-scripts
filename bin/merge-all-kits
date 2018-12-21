@@ -195,7 +195,7 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 	
 	# get set of source repos used to grab catpkgs from:
 
-	if "type" in kit_dict and kit_dict["type"] == KitType.INDEPENDENTLY_MAINTAINED.value:
+	if "type" in kit_dict and kit_dict["type"] == KitType.INDEPENDENTLY_MAINTAINED:
 		# independently-maintained repo. Don't regenerate. Just record all catpkgs in this kit as belonging ot this kit so they don't get into other kits:
 		kit_dict["tree"] = tree = mu.GitTree(kit_dict["name"], kit_dict["branch"], config=config, url="https://github.com/funtoo/%s" % kit_dict["name"], root=config.source_trees + "/" + kit_dict["name"])
 		await tree.initialize()
@@ -502,7 +502,7 @@ async def kit_qa_check(foundation):
 	independent_kits = defaultdict(set)
 	for release, kit_list in foundation.kit_groups.items():
 		for kit in kit_list:
-			if "type" in kit and kit["type"].value == KitType.INDEPENDENTLY_MAINTAINED.value:
+			if "type" in kit and kit["type"].value == KitType.INDEPENDENTLY_MAINTAINED:
 				independent_kits[kit["name"]].add(kit["branch"])
 				continue
 			kit_name = kit["name"]
