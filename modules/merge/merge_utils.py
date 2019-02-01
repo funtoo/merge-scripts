@@ -26,6 +26,50 @@ import jinja2
 
 debug = False
 
+class RepositoryConfig:
+	
+	def __init__(self, kit_name, kit_root, kit_branch, config):
+		self.kit_name = kit_name
+		self.kit_root = kit_root
+		self.kit_branch = kit_branch
+		self.env = os.environ.copy()
+		self.cache_dir = self.env['PORTAGE_DEPCACHEDIR'] = '/var/cache/edb/%s-%s-meta' % (kit_name, kit_branch)
+		if kit_name == "core-kit":
+			self.repos_conf = self.env['PORTAGE_REPOSITORIES'] = """
+[DEFAULT]
+main-repo = core-kit
+
+[core-kit]
+location = %s
+aliases = gentoo
+				""" % kit_root
+		else:
+			self.repos_conf = self.repo_config = self.env['PORTAGE_REPOSITORIES'] = """
+[DEFAULT]
+main-repo = core-kit
+
+[core-kit]
+location = %s/core-kit
+aliases = gentoo
+
+[%s]
+location = %s
+				""" % (config.dest_trees, kit_name, kit_root)
+		self.portdbapi = portage.portdbapi(mysettings=portage.config(env=self.env, config_profile_path=''))
+		
+
+def generatePythonUSEUpdateSteps(repo_config, foundation, kit_name):
+	out_step_list = []
+	if kit_name == "python_kit":
+		# on the python-kit itself, we only need settings for ourselves (not other branches)
+		python_settings = foundation.python_kit_settings[kit_name]
+	else:
+		# all other kits -- generate multiple settings, depending on what version of python-kit is active -- epro will select the right one for us.
+		python_settings = foundation.python_kit_settings
+	
+	for branch, py_settings in python_settings.items():
+		out_step_list += [GenPythonUse(repo_config, py_settings, "funtoo/kits/python-kit/%s" % branch)]
+	return out_step_list
 
 class RepositoryStepsCollector:
 
@@ -515,7 +559,8 @@ def do_package_use_line(pkg, def_python, bk_python, imps):
 
 class GenPythonUse(MergeStep):
 
-	def __init__(self, py_settings, out_subpath):
+	def __init__(self, repo_config, py_settings, out_subpath):
+		self.repo_config = repo_config
 		self.def_python = py_settings["primary"]
 		self.bk_python = py_settings["alternate"]
 		self.mask = py_settings["mask"]
@@ -523,36 +568,7 @@ class GenPythonUse(MergeStep):
 	
 	async def run(self, cur_overlay):
 		cur_tree = cur_overlay.root
-		try:
-			with open(os.path.join(cur_tree, 'profiles/repo_name')) as f:
-				cur_name = f.readline().strip()
-		except FileNotFoundError:
-			cur_name = cur_overlay.name
-		env = os.environ.copy()
-		env['PORTAGE_DEPCACHEDIR'] = '/var/cache/edb/%s-%s-meta' % ( cur_overlay.name, cur_overlay.branch )
-		if cur_name != "core-kit":
-			env['PORTAGE_REPOSITORIES'] = '''
-[DEFAULT]
-main-repo = core-kit
-
-[core-kit]
-location = %s/core-kit
-aliases = gentoo
-
-[%s]
-location = %s
-''' % (cur_overlay.config.dest_trees, cur_name, cur_tree)
-		else:
-			env['PORTAGE_REPOSITORIES'] = '''
-[DEFAULT]
-main-repo = core-kit
-
-[core-kit]
-location = %s/core-kit
-aliases = gentoo
-''' % cur_overlay.config.dest_trees
-		p = portage.portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
-
+		p = self.repo_config.portdbapi
 		pkg_use = []
 
 		for pkg in p.cp_all():
@@ -609,7 +625,7 @@ aliases = gentoo
 			for l in sorted(x for x in pkg_use if x is not None):
 				f.write(l + "\n")
 		# for core-kit, set good defaults as well.
-		if cur_name == "core-kit":
+		if self.repo_config.kit_name == "core-kit":
 			outpath = cur_tree + '/profiles/' + self.out_subpath + '/make.defaults'
 			a = open(outpath, "w")
 			a.write('PYTHON_TARGETS="%s %s"\n' % ( self.def_python, self.bk_python ))
@@ -623,36 +639,8 @@ aliases = gentoo
 				a.write(self.mask + "\n")
 				a.close()
 
-async def getDependencies(cur_overlay, catpkgs, levels=0, cur_level=0):
-	cur_tree = cur_overlay.root
-	try:
-		with open(os.path.join(cur_tree, 'profiles/repo_name')) as f:
-			cur_name = f.readline().strip()
-	except FileNotFoundError:
-			cur_name = cur_overlay.name
-	env = os.environ.copy()
-	if cur_overlay.name != "core-kit":
-		env['PORTAGE_REPOSITORIES'] = '''
-	[DEFAULT]
-	main-repo = core-kit
-
-	[core-kit]
-	location = %s/core-kit
-	aliases = gentoo
-
-	[%s]
-	location = %s
-	''' % (cur_overlay.config.dest_trees, cur_name, cur_tree)
-	else:
-		env['PORTAGE_REPOSITORIES'] = '''
-	[DEFAULT]
-	main-repo = core-kit
-
-	[core-kit]
-	location = %s/core-kit
-	aliases = gentoo
-	''' % cur_overlay.config.dest_trees
-	p = portage.portdbapi(mysettings=portage.config(env=env,config_profile_path=''))
+async def getDependencies(repo_config, catpkgs, levels=0, cur_level=0):
+	p = repo_config.portdbapi
 	mypkgs = set()
 
 	future_aux = {}
@@ -686,7 +674,7 @@ async def getDependencies(cur_overlay, catpkgs, levels=0, cur_level=0):
 					if mypkg not in mypkgs:
 						mypkgs.add(mypkg)
 					if levels != cur_level:
-						mypkgs = mypkgs.union(await getDependencies(cur_overlay, mypkg, levels=levels, cur_level=cur_level+1))
+						mypkgs = mypkgs.union(await getDependencies(repo_config, mypkg, levels=levels, cur_level=cur_level+1))
 	return mypkgs
 
 def getPackagesInCatWithMaintainer(cur_overlay, my_cat, my_email):
@@ -725,40 +713,12 @@ def getPackagesMatchingRegex(cur_overlay, my_regex):
 			insert_list.append(candy_strip)
 	return insert_list
 
-async def getPackagesWithEclass(cur_overlay, eclass):
-	cur_tree = cur_overlay.root
-	try:
-		with open(os.path.join(cur_tree, 'profiles/repo_name')) as f:
-			cur_name = f.readline().strip()
-	except FileNotFoundError:
-			cur_name = cur_overlay.name
-	env = os.environ.copy()
-	if cur_name != "core-kit":
-		env['PORTAGE_REPOSITORIES'] = '''
-	[DEFAULT]
-	main-repo = core-kit
-
-	[core-kit]
-	location = %s/core-kit
-	aliases = gentoo
-
-	[%s]
-	location = %s
-	''' % (cur_overlay.config.dest_trees, cur_name, cur_tree)
-	else:
-		env['PORTAGE_REPOSITORIES'] = '''
-	[DEFAULT]
-	main-repo = core-kit
-
-	[core-kit]
-	location = /%s/core-kit
-	aliases = gentoo
-	''' % cur_overlay.config.dest_trees
-	p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
+async def getPackagesWithEclass(repo_config: RepositoryConfig, eclass):
 	mypkgs = set()
 
 	future_aux = {}
 	cpv_map = {}
+	p = repo_config.portdbapi
 
 	def future_generator():
 		for catpkg in p.cp_all():
@@ -767,7 +727,7 @@ async def getPackagesWithEclass(cur_overlay, eclass):
 					print("No match for %s" % catpkg)
 					continue
 				cpv_map[my_cpv] = catpkg
-				my_future = p.async_aux_get(my_cpv, [ "INHERITED"])
+				my_future = p.async_aux_get(my_cpv, ["INHERITED"])
 				future_aux[id(my_future)] = my_cpv
 				yield my_future
 
@@ -786,40 +746,12 @@ async def getPackagesWithEclass(cur_overlay, eclass):
 						mypkgs.add(cp)
 	return mypkgs
 
-async def getPackagesInCatWithEclass(cur_overlay, cat, eclass):
-	cur_tree = cur_overlay.root
-	try:
-		with open(os.path.join(cur_tree, 'profiles/repo_name')) as f:
-			cur_name = f.readline().strip()
-	except FileNotFoundError:
-			cur_name = cur_overlay.name
-	env = os.environ.copy()
-	if cur_name != "core-kit":
-		env['PORTAGE_REPOSITORIES'] = '''
-	[DEFAULT]
-	main-repo = core-kit
-
-	[core-kit]
-	location = %s/core-kit
-	aliases = gentoo
-
-	[%s]
-	location = %s
-	''' % (cur_overlay.config.dest_trees, cur_name, cur_tree)
-	else:
-		env['PORTAGE_REPOSITORIES'] = '''
-	[DEFAULT]
-	main-repo = core-kit
-
-	[core-kit]
-	location = %s/core-kit
-	aliases = gentoo
-	''' % cur_overlay.config.dest_trees
-	p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
+async def getPackagesInCatWithEclass(repo_config, cat, eclass):
 	mypkgs = set()
 
 	future_aux = {}
 	cpv_map = {}
+	p = repo_config.portdbapi
 
 	def future_generator():
 		for catpkg in p.cp_all(categories=[cat]):
@@ -888,43 +820,17 @@ def extract_uris(src_uri):
 
 class FastPullScan(MergeStep):
 
-	def __init__(self, now, engine: AsyncEngine = None):
+	def __init__(self, repo_config: RepositoryConfig, now, engine: AsyncEngine = None):
+		self.repo_config = repo_config
 		self.now = now
 		self.engine = engine
 
 	async def run(self, cur_overlay: GitTree):
 		if self.engine is None:
 			return
-		cur_tree = cur_overlay.root
-		try:
-			with open(os.path.join(cur_tree, 'profiles/repo_name')) as f:
-				cur_name = f.readline().strip()
-		except FileNotFoundError:
-				cur_name = cur_overlay.name
-		env = os.environ.copy()
-		if cur_name != "core-kit":
-			env['PORTAGE_REPOSITORIES'] = '''
-		[DEFAULT]
-		main-repo = core-kit
-
-		[core-kit]
-		location = %s/core-kit
-		aliases = gentoo
-
-		[%s]
-		location = %s
-		''' % (cur_overlay.config.dest_trees, cur_name, cur_tree)
-		else:
-			env['PORTAGE_REPOSITORIES'] = '''
-		[DEFAULT]
-		main-repo = core-kit
-
-		[core-kit]
-		location = %s/core-kit
-		aliases = gentoo
-		''' % cur_overlay.config.dest_trees
-		env['ACCEPT_KEYWORDS'] = "~amd64 amd64"
-		p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
+		
+		p = self.repo_config.portdbapi
+		self.repo_config.env['ACCEPT_KEYWORDS'] = "~amd64 amd64"
 
 		for pkg in p.cp_all(trees=[cur_overlay.root]):
 
@@ -965,7 +871,7 @@ class FastPullScan(MergeStep):
 					fn_meta[fn]["bestmatch"] = cpv == bm
 
 			man_info = {}
-			man_file = cur_tree + "/" + pkg + "/Manifest"
+			man_file = self.repo_config.kit_root + "/" + pkg + "/Manifest"
 			if os.path.exists(man_file):
 				man_f = open(man_file, "r")
 				for line in man_f.readlines():
@@ -1044,9 +950,9 @@ def repoName(cur_overlay):
 # None			: list of all eclasses that were NOT found. This is an error and indicates we need some kit-fixups or
 #				  overlay-specific eclasses.
 
-async def _getAllDriver(metadata, path_prefix, dest_kit):
+async def _getAllDriver(metadata, path_prefix, dest_kit, repo_config: RepositoryConfig):
 	# these may be eclasses or licenses -- we use the term 'eclass' here:
-	eclasses = await getAllMeta(metadata, dest_kit)
+	eclasses = await getAllMeta(metadata, dest_kit, repo_config)
 	out = { None: [], "dest_kit" : [] }
 	for eclass in eclasses:
 		ep = os.path.join(dest_kit.root, path_prefix, eclass)
@@ -1083,11 +989,11 @@ def simpleGetAllEclasses(dest_kit, parent_repo):
 	return out
 
 
-async def getAllEclasses(dest_kit):
-	return await _getAllDriver("INHERITED", "eclass", dest_kit)
+async def getAllEclasses(dest_kit, repo_config: RepositoryConfig):
+	return await _getAllDriver("INHERITED", "eclass", dest_kit, repo_config)
 
-async def getAllLicenses(dest_kit):
-	return await _getAllDriver("LICENSE", "licenses", dest_kit)
+async def getAllLicenses(dest_kit, repo_config: RepositoryConfig):
+	return await _getAllDriver("LICENSE", "licenses", dest_kit, repo_config)
 
 # getAllMeta uses the Portage API to query metadata out of a set of repositories. It is designed to be used to figure
 # out what licenses or eclasses to copy from a parent repository to the current kit so that the current kit contains a
@@ -1105,49 +1011,22 @@ async def getAllLicenses(dest_kit):
 #  getAllMeta() returns a set of actual files (without directories) that are used, so [ 'foo.eclass', 'bar.eclass'] 
 #  or [ 'GPL-2', 'bleh' ].
 #
-async def getAllMeta(metadata, dest_kit):
+async def getAllMeta(metadata, dest_kit, repo_config: RepositoryConfig):
 	metadict = { "LICENSE" : 0, "INHERITED" : 1 }
 	metapos = metadict[metadata]
-	
-	env = os.environ.copy()
-	env['PORTAGE_DEPCACHEDIR'] = '/var/cache/edb/%s-%s-meta' % ( dest_kit.name, dest_kit.branch )
-	if dest_kit.name != "core-kit":
-		env['PORTAGE_REPOSITORIES'] = '''
-	[DEFAULT]
-	main-repo = core-kit
-
-	[core-kit]
-	location = %s/core-kit
-	aliases = gentoo
-
-	[%s]
-	location = %s
-		''' % ( dest_kit.config.dest_trees, dest_kit.name, dest_kit.root)
-	else:
-		# we are testing a stand-alone kit that should have everything it needs included
-		env['PORTAGE_REPOSITORIES'] = '''
-	[DEFAULT]
-	main-repo = core-kit
-
-	[%s]
-	location = %s
-	aliases = gentoo
-		''' % ( dest_kit.name, dest_kit.root )
-
-	p = portage.portdbapi(mysettings=portage.config(env=env, config_profile_path=''))
 	mymeta = set()
 
 	future_aux = {}
 	cpv_map = {}
-
+	portdbapi = repo_config.portdbapi
 	def future_generator():
-		for catpkg in p.cp_all(trees=[dest_kit.root]):
-			for cpv in p.cp_list(catpkg, mytree=dest_kit.root):
+		for catpkg in portdbapi.cp_all(trees=[dest_kit.root]):
+			for cpv in portdbapi.cp_list(catpkg, mytree=dest_kit.root):
 				if cpv == '':
 					print("No match for %s" % catpkg)
 					continue
 				cpv_map[cpv] = catpkg
-				my_future = p.async_aux_get(cpv, [ "LICENSE", "INHERITED" ], mytree=dest_kit.root)
+				my_future = portdbapi.async_aux_get(cpv, [ "LICENSE", "INHERITED" ], mytree=dest_kit.root)
 				future_aux[id(my_future)] = cpv
 				yield my_future
 
@@ -1174,7 +1053,7 @@ async def getAllMeta(metadata, dest_kit):
 	return mymeta
 
 
-async def generateKitSteps(release, kit_name, from_tree, select_only="all", fixup_repo=None, cpm_logger=None, filter_repos=None, move_maps=None, force=None, secondary_kit=False):
+async def generateKitSteps(release, kit_name, from_tree, select_only="all", fixup_repo=None, cpm_logger=None, filter_repos=None, move_maps=None, force=None, secondary_kit=False, repo_config: RepositoryConfig=None):
 	if force is None:
 		force = set()
 	else:
@@ -1199,7 +1078,7 @@ async def generateKitSteps(release, kit_name, from_tree, select_only="all", fixu
 		elif pattern.startswith("@depsincat@:"):
 			patsplit = pattern.split(":")
 			catpkg = patsplit[1]
-			dep_pkglist = await getDependencies( from_tree, [ catpkg ] )
+			dep_pkglist = await getDependencies( repo_config, [ catpkg ] )
 			if len(patsplit) == 3:
 				dep_pkglist, dep_pkglist_nomatch = filterInCategory(dep_pkglist, patsplit[2])
 			pkglist += list(dep_pkglist)
@@ -1209,12 +1088,12 @@ async def generateKitSteps(release, kit_name, from_tree, select_only="all", fixu
 		elif pattern.startswith("@has_eclass@:"):
 			patsplit = pattern.split(":")
 			eclass = patsplit[1]
-			eclass_pkglist = await getPackagesWithEclass( from_tree, eclass )
+			eclass_pkglist = await getPackagesWithEclass( repo_config, eclass )
 			pkglist += list(eclass_pkglist)
 		elif pattern.startswith("@cat_has_eclass@:"):
 			patsplit = pattern.split(":")
 			cat, eclass = patsplit[1:]
-			cat_pkglist = await getPackagesInCatWithEclass( from_tree, cat, eclass )
+			cat_pkglist = await getPackagesInCatWithEclass( repo_config, cat, eclass )
 			pkglist += list(cat_pkglist)
 		else:
 			linesplit = pattern.split()
@@ -1592,9 +1471,9 @@ class ApplyPatchSeries(MergeStep):
 				continue
 			if line[0:4] == "EXEC":
 				ls = line.split()
-				runShell( "( cd %s && %s/%s )" % ( tree.root, self.path, ls[1] ))
+				await runShell("( cd %s && %s/%s )" % (tree.root, self.path, ls[1]))
 			else:
-				runShell( "( cd %s && git apply %s/%s )" % ( tree.root, self.path, line[:-1] ))
+				await runShell("( cd %s && git apply %s/%s )" % (tree.root, self.path, line[:-1]))
 
 class GenerateRepoMetadata(MergeStep):
 	def __init__(self, name, masters=None, aliases=None, priority=None):
@@ -1636,7 +1515,7 @@ class RemoveFiles(MergeStep):
 	async def run(self, tree):
 		for glob in self.globs:
 			cmd = "rm -rf %s/%s" % ( tree.root, glob )
-			runShell(cmd)
+			await runShell(cmd)
 
 class SyncDir(MergeStep):
 	def __init__(self,srcroot,srcdir=None,destdir=None,exclude=None,delete=False):
@@ -2159,20 +2038,19 @@ class RunSed(MergeStep):
 
 class GenCache(MergeStep):
 
-	def __init__(self,cache_dir=None):
-		self.cache_dir = cache_dir
+	def __init__(self, repo_config: RepositoryConfig):
+		self.repo_config = repo_config
 
 	"GenCache runs egencache --update to update metadata."
 
 	async def run(self,tree):
 
 		if tree.name != "core-kit":
-			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = %s/core-kit\n\n[%s]\nlocation = %s\n" % (tree.config.dest_trees, tree.reponame if tree.reponame else tree.name, tree.root)
-
+			
 			# Perform QA check to ensure all eclasses are in place prior to performing egencache, as not having this can
 			# cause egencache to hang.
 
-			result = await getAllEclasses(tree)
+			result = await getAllEclasses(tree, self.repo_config)
 			if None in result and len(result[None]):
 				missing_eclasses = []
 				for ec in result[None]:
@@ -2188,19 +2066,20 @@ class GenCache(MergeStep):
 		else:
 			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = %s/core-kit\n" % tree.config.dest_trees
 		cmd = ["egencache", "--update", "--tolerant", "--repo", tree.reponame if tree.reponame else tree.name,
-			   "--repositories-configuration" , repos_conf ,
+			   "--repositories-configuration" , self.repo_config.repos_conf ,
                            "--config-root=/tmp",
 			   "--jobs", repr(multiprocessing.cpu_count()+1)]
-		if self.cache_dir:
-			cmd += [ "--cache-dir", self.cache_dir ]
-			if not os.path.exists(self.cache_dir):
-				os.makedirs(self.cache_dir)
-				os.chown(self.cache_dir, pwd.getpwnam('portage').pw_uid, grp.getgrnam('portage').gr_gid)
+		if self.repo_config.cache_dir:
+			cmd += [ "--cache-dir", self.repo_config.cache_dir ]
+			if not os.path.exists(self.repo_config.cache_dir):
+				os.makedirs(self.repo_config.cache_dir)
+				os.chown(self.repo_config.cache_dir, pwd.getpwnam('portage').pw_uid, grp.getgrnam('portage').gr_gid)
 		await runShell(cmd, abort_on_failure=True)
+
 
 class GenUseLocalDesc(MergeStep):
 
-	"GenUseLocalDesc runs egencache to update use.local.desc"
+	"""GenUseLocalDesc runs egencache to update use.local.desc"""
 
 	async def run(self,tree):
 		if tree.name != "core-kit":
@@ -2209,6 +2088,7 @@ class GenUseLocalDesc(MergeStep):
 			repos_conf = "[DEFAULT]\nmain-repo = core-kit\n\n[core-kit]\nlocation = %s/core-kit\n" % tree.config.dest_trees
 		await runShell(["egencache", "--update-use-local-desc", "--tolerant", "--config-root=/tmp", "--repo", tree.reponame if tree.reponame else tree.name, "--repositories-configuration" , repos_conf ], abort_on_failure=False)
 
+
 class GitCheckout(MergeStep):
 
 	def __init__(self,branch):
@@ -2216,6 +2096,7 @@ class GitCheckout(MergeStep):
 
 	async def run(self,tree):
 		await runShell("(cd %s && git checkout %s || git checkout -b %s --track origin/%s || git checkout -b %s)" % ( tree.root, self.branch, self.branch, self.branch, self.branch ))
+
 
 class CreateBranch(MergeStep):
 
