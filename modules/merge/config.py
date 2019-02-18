@@ -48,7 +48,7 @@ destination = /var/git/dest-trees
 
 		valids = {
 			"sources": [ "flora", "kit-fixups", "gentoo-staging" ],
-			"destinations": [ "base_url" ],
+			"destinations": [ "base_url", "mirror", "indy_url" ],
 			"branches": [ "flora", "kit-fixups", "meta-repo" ],
 			"work": [ "source", "destination" ]
 		}
