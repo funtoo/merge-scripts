@@ -223,7 +223,7 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 	kit_name = kit_dict['name']
 	kit_branch = kit_dict['branch']
 	kit_root = "%s/%s" % (config.dest_trees, kit_dict['name'])
-	repo_config = mu.RepositoryConfig(kit_name, kit_root, kit_branch, config)
+	repo_config = mu.RepositoryConfig(kit_name, kit_branch, kit_root, config)
 	
 	# If we have gotten here, we are automatically generating a kit...
 	kit_dict['tree'] = tree = mu.GitTree(kit_dict['name'], kit_dict['branch'], config=config,
@@ -398,7 +398,7 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 	# Phase 4: finalize and commit
 	
 	# remove unused licenses...
-	used_licenses = await mu.getAllLicenses(tree, repo_config=repo_config)
+	used_licenses = await mu.getAllLicenses(tree)
 	to_remove = []
 	for license in os.listdir(tree.root + "/licenses"):
 		if license not in used_licenses["dest_kit"]:
