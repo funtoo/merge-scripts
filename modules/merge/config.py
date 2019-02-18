@@ -78,7 +78,7 @@ destination = /var/git/dest-trees
 
 	@property
 	def kit_fixups(self):
-		return self.get_option("sources", "kit-fixups", "ssh://git@code.funtoo.org:7999/auto/kit-fixups.git")
+		return self.get_option("sources", "kit-fixups", "ssh://git@code.funtoo.org:7999/core/kit-fixups.git")
 
 	@property
 	def gentoo_staging(self):
