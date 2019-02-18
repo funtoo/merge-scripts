@@ -82,7 +82,7 @@ destination = /var/git/dest-trees
 
 	@property
 	def mirror(self):
-		return self.get_option("destinations", "mirror", "https://github.com/funtoo/")
+		return self.get_option("destinations", "mirror", None)
 
 	@property
 	def gentoo_staging(self):
