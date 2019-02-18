@@ -362,10 +362,10 @@ class GitTree(Tree):
 		if self.currentLocalBranch != branch:
 			raise GitTreeError("%s: On branch %s. not able to check out branch %s." % (self.root, self.currentLocalBranch, branch))
 	
-	async def gitMirrorPush(self):
+	async def gitPush(self):
 		await runShell("(cd %s && git push --mirror)" % self.root)
 	
-	async def gitCommit(self, message="", push=True, mirror=True):
+	async def gitCommit(self, message="", push=True):
 		await runShell("( cd %s && git add . )" % self.root)
 		cmd = "( cd %s && [ -n \"$(git status --porcelain)\" ] && git commit -a -F - << EOF || exit 0\n" % self.root
 		if message != "":
@@ -389,10 +389,7 @@ class GitTree(Tree):
 			print("Commit failed.")
 			sys.exit(1)
 		if push == True and self.create == False:
-			if mirror is True:
-				await runShell("(cd %s && git push --mirror)" % self.root)
-			else:
-				await runShell("(cd %s && git push)" % self.root)
+			await runShell("(cd %s && git push --mirror)" % self.root)
 		else:
 			print("Pushing disabled.")
 	

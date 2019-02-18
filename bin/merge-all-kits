@@ -585,7 +585,7 @@ async def main_thread(config, args):
 	
 	if push is True:
 		print("Pushing meta-repo...")
-		await meta_repo.gitMirrorPush()
+		await meta_repo.gitPush()
 
 if __name__ == "__main__":
 	import argparse
