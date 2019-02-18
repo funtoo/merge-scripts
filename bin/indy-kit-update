@@ -54,29 +54,42 @@ async def main_thread(config, args):
 	# developer specified a path to a git repo on the command-line, now we will look in all defined releases for independently-maintained kits with this
 	# name and process all defined branches:
 	
+	already_processed_kit_keys = set()
+	
 	for path in args.kit_paths:
 		path = os.path.realpath(path)
 		print('Processing path %s' % path)
 		if not os.path.isdir(path):
 			print("Error: %s does not exist or is not a directory. Skipping." % path)
 			continue
+			
 		kit_name = os.path.basename(path)
-
 		for release, release_kits in foundation.kit_groups.items():
 			for kit_dict in release_kits:
+
+				# Don't process kits that don't match:
+				kit_branch = kit_dict["branch"]
 				if "type" not in kit_dict or kit_dict["type"] != KitType.INDEPENDENTLY_MAINTAINED:
 					continue
 				if "name" not in kit_dict or kit_dict["name"] != kit_name:
 					continue
+				
+				# Don't repeatedly process the same kit (can be defined in multiple releases)
+				kit_key = "%s/%s" % (kit_name, kit_branch)
+				if kit_key in already_processed_kit_keys:
+					continue
+				else:
+					already_processed_kit_keys.add(kit_key)
+
 				# OK, if we got here, we have something to process --
 				print("Processing branch %s" % kit_dict["branch"])
 				repo_config = mu.RepositoryConfig(kit_name, path, kit_dict["branch"], config)
-				tree = mu.GitTree(name=kit_name, root=path, config=config, branch=kit_dict["branch"], create=False)
-				await tree.initialize()
+				indy_kit = 'type' in kit_dict and kit_dict['type'] == KitType.INDEPENDENTLY_MAINTAINED
+				tree = mu.GitTree(name=kit_name, root=path, config=config, url=config.base_url(kit_name) if indy_kit else config.indy_url(kit_name), branch=kit_dict["branch"], create=False)
+				await tree.gitCheckout(branch=kit_dict["branch"])
 				steps = [ mu.GenCache(repo_config) ] + mu.generatePythonUSEUpdateSteps(repo_config, foundation, kit_name)
 				await tree.run(steps)
-				await tree.gitCommit(message="python USE setting and metadata cache updates", push=True)
-
+				await tree.gitCommit(message="python USE setting and metadata cache updates", push=True, mirror=False)
 
 if __name__ == "__main__":
 	import argparse

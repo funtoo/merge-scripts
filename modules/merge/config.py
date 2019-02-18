@@ -74,20 +74,30 @@ destination = /var/git/dest-trees
 
 	@property
 	def flora(self):
-		return self.get_option("sources", "flora", "https://github.com/funtoo/flora")
+		return self.get_option("sources", "flora", "ssh://git@code.funtoo.org:7999/co/flora.git")
 
 	@property
 	def kit_fixups(self):
-		return self.get_option("sources", "kit-fixups", "https://github.com/funtoo/kit-fixups")
+		return self.get_option("sources", "kit-fixups", "ssh://git@code.funtoo.org:7999/auto/kit-fixups.git")
 
 	@property
 	def gentoo_staging(self):
-		return self.get_option("sources", "gentoo-staging", "git@github.com:funtoo/gentoo-staging.git")
+		return self.get_option("sources", "gentoo-staging", "ssh://git@code.funtoo.org:7999/auto/gentoo-staging.git")
 
 	def base_url(self, repo):
-		base = self.get_option("destinations", "base_url", "git@github.com:funtoo/")
+		base = self.get_option("destinations", "base_url", "ssh://git@code.funtoo.org:7999/auto/")
 		if not base.endswith("/"):
 			base += "/"
+		if not repo.endswith(".git"):
+			repo += ".git"
+		return base + repo
+
+	def indy_url(self, repo):
+		base = self.get_option("destinations", "indy_url", "ssh://git@code.funtoo.org:7999/indy/")
+		if not base.endswith("/"):
+			base += "/"
+		if not repo.endswith(".git"):
+			repo += ".git"
 		return base + repo
 
 	def branch(self, key):
