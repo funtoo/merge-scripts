@@ -81,6 +81,10 @@ destination = /var/git/dest-trees
 		return self.get_option("sources", "kit-fixups", "ssh://git@code.funtoo.org:7999/core/kit-fixups.git")
 
 	@property
+	def mirror(self):
+		return self.get_option("destinations", "mirror", "https://github.com/funtoo/")
+
+	@property
 	def gentoo_staging(self):
 		return self.get_option("sources", "gentoo-staging", "ssh://git@code.funtoo.org:7999/auto/gentoo-staging.git")
 

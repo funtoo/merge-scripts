@@ -268,7 +268,21 @@ class GitTree(Tree):
 			return False
 		else:
 			return True
-	
+
+	def getRemoteURL(self, remote):
+		s, o = subprocess.getstatusoutput("( cd %s %% git remote get-url %s" % (self.root, remote))
+		if s:
+			return None
+		else:
+			return o.strip()
+
+	def setRemoteURL(self, name, url):
+		s, o = subprocess.getstatusoutput("( cd %s %% git remote add %s %s" % (self.root, name, url))
+		if s:
+			return False
+		else:
+			return True
+
 	def remoteBranchExists(self, branch):
 		s, o = subprocess.getstatusoutput("( cd %s && git show-branch remotes/origin/%s )" % (self.root, branch))
 		if s:
@@ -318,8 +332,8 @@ class GitTree(Tree):
 		if self.currentLocalBranch != branch:
 			raise GitTreeError("%s: On branch %s. not able to check out branch %s." % (self.root, self.currentLocalBranch, branch))
 	
-	async def gitPush(self):
-		await runShell("(cd %s && git push --mirror)" % self.root)
+	async def gitMirrorPush(self, origin="origin"):
+		await runShell("(cd %s && git push --mirror %s)" % (self.root, origin))
 	
 	async def gitCommit(self, message="", push=True):
 		await runShell("( cd %s && git add . )" % self.root)
