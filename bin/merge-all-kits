@@ -218,17 +218,10 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 	elif gentoo_staging.name != "gentoo-staging":
 		print("Gentoo staging mismatch -- name is %s" % gentoo_staging["name"])
 	
-	# Initialize a portdbapi that is specific to this specific kit. We can re-use this.
-	
-	kit_name = kit_dict['name']
-	kit_branch = kit_dict['branch']
-	kit_root = "%s/%s" % (config.dest_trees, kit_dict['name'])
-	repo_config = mu.RepositoryConfig(kit_name, kit_branch, kit_root, config)
-	
 	# If we have gotten here, we are automatically generating a kit...
 	kit_dict['tree'] = tree = mu.GitTree(kit_dict['name'], kit_dict['branch'], config=config,
 										 url=config.base_url(kit_dict['name']), create=create,
-										 root=kit_root)
+										 root="%s/%s" % (config.dest_trees, kit_dict['name']))
 	await tree.initialize()
 	if "stability" in kit_dict and kit_dict["stability"] == KitStabilityRating.DEPRECATED:
 		# no longer update this kit.
@@ -286,7 +279,7 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 		else:
 			steps += await mu.generateKitSteps(release, kit_dict['name'], repo_dict["repo"], fixup_repo=fixup_repo, select_only=select_clause,
 										 filter_repos=filter_repos, force=overlay_def["force"] if "force" in overlay_def else None,
-										 cpm_logger=cpm_logger, move_maps=move_maps, secondary_kit=secondary_kit, repo_config=repo_config)
+										 cpm_logger=cpm_logger, move_maps=move_maps, secondary_kit=secondary_kit)
 		await tree.run(steps)
 		if copycount != cpm_logger.copycount:
 			# this means some catpkgs were installed from the repo we are currently processing. This means we also want to execute
@@ -413,16 +406,24 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 		# python-kit itself only needs one set which will be enabled by default.
 	]
 	
-	post_steps += mu.generatePythonUSEUpdateSteps(repo_config, foundation, kit_dict["name"])
+	if kit_dict["name"] == "python_kit":
+		# on the python-kit itself, we only need settings for ourselves (not other branches)
+		python_settings = foundation.python_kit_settings[kit_dict["name"]]
+	else:
+		# all other kits -- generate multiple settings, depending on what version of python-kit is active -- epro will select the right one for us.
+		python_settings = foundation.python_kit_settings
+	
+	for branch, py_settings in python_settings.items():
+		post_steps += [mu.GenPythonUse(py_settings, "funtoo/kits/python-kit/%s" % branch)]
 	
 	post_steps += [
 		mu.Minify(),
 		mu.GenUseLocalDesc(),
-		mu.GenCache(repo_config),
+		mu.GenCache(cache_dir="/var/cache/edb/%s-%s" % (kit_dict['name'], kit_dict['branch'])),
 	]
 	
 	post_steps += [
-		mu.FastPullScan(repo_config, now=now, engine=async_engine)
+		mu.FastPullScan(now=now, engine=async_engine)
 	]
 	
 	await tree.run(post_steps)
