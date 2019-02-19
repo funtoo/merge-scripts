@@ -208,10 +208,13 @@ class GitTree(Tree):
 					os.makedirs(base)
 				# we aren't supposed to create it from scratch -- can we clone it?
 				await runShell("(cd %s && git clone %s %s)" % (base, self.url, os.path.basename(self.root)))
+
 			else:
 				# we've run out of options
 				print("Error: tree %s does not exist, but no clone URL specified. Exiting." % self.root)
 				sys.exit(1)
+		# create local tracking branches for all remote branches. - we want to do this for every initialization.
+		await runShell("(cd %s && for remote in `git branch -r | grep -v /HEAD`; do git checkout --track $remote ; done)" % base)
 
 		# if we've gotten here, we can assume that the repo exists at self.root.
 		if self.url is not None:
@@ -246,7 +249,7 @@ class GitTree(Tree):
 				raise GitTreeError("%s: Was not able to check out specified SHA1: %s." % (self.root, self.commit_sha1))
 		elif self.pull:
 			# we are on the right branch, but we want to make sure we have the latest updates
-			await runShell("(cd %s && git pull -f || true)" % self.root)
+			await runShell("(cd %s && git pull -f --all || true)" % self.root)
 	
 		self.initialized = True
 		
@@ -324,7 +327,7 @@ class GitTree(Tree):
 			await self.initialize()
 		await runShell("(cd %s && git fetch)" % self.root)
 		if self.localBranchExists(branch):
-			await runShell("(cd %s && git checkout %s && git pull -f || true)" % (self.root, branch))
+			await runShell("(cd %s && git checkout %s && git pull -f --all || true)" % (self.root, branch))
 		elif self.remoteBranchExists(branch):
 			await runShell("(cd %s && git checkout -b %s --track origin/%s)" % (self.root, branch, branch))
 		else:
