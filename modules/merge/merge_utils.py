@@ -213,8 +213,15 @@ class GitTree(Tree):
 				# we've run out of options
 				print("Error: tree %s does not exist, but no clone URL specified. Exiting." % self.root)
 				sys.exit(1)
+
 		# create local tracking branches for all remote branches. - we want to do this for every initialization.
-		await runShell("(cd %s && for remote in `git branch -r | grep -v /HEAD`; do git checkout --track $remote ; done)" % self.root)
+		s, o = subprocess.getstatusoutput("(cd %s && git branch -r | grep -v /HEAD)" % self.root)
+		if s != 0:
+			print("Error listing local branches.")
+			sys.exit(1)
+		for branch in o.split():
+			if not self.localBranchExists(branch):
+				await runShell("( cd %s && git checkout --track %s)" % (self.root, branch))
 
 		# if we've gotten here, we can assume that the repo exists at self.root.
 		if self.url is not None:
