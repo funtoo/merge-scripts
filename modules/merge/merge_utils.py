@@ -214,7 +214,7 @@ class GitTree(Tree):
 				print("Error: tree %s does not exist, but no clone URL specified. Exiting." % self.root)
 				sys.exit(1)
 		# create local tracking branches for all remote branches. - we want to do this for every initialization.
-		await runShell("(cd %s && for remote in `git branch -r | grep -v /HEAD`; do git checkout --track $remote ; done)" % base)
+		await runShell("(cd %s && for remote in `git branch -r | grep -v /HEAD`; do git checkout --track $remote ; done)" % self.root)
 
 		# if we've gotten here, we can assume that the repo exists at self.root.
 		if self.url is not None:
