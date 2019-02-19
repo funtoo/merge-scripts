@@ -220,8 +220,9 @@ class GitTree(Tree):
 			print("Error listing local branches.")
 			sys.exit(1)
 		for branch in o.split():
+			branch = branch.split("/")[-1]
 			if not self.localBranchExists(branch):
-				await runShell("( cd %s && git checkout --track %s)" % (self.root, branch))
+				await runShell("( cd %s && git checkout %s)" % (self.root, branch))
 
 		# if we've gotten here, we can assume that the repo exists at self.root.
 		if self.url is not None:
