@@ -430,7 +430,7 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 	await tree.gitCommit(message="updates", push=push)
 	if push and config.mirror:
 		if not tree.getRemoteURL("mirror"):
-			tree.setRemoteURL("mirror", config.mirror)
+			tree.setRemoteURL("mirror", config.mirror, kit_dict["name"])
 		await tree.gitMirrorPush("mirror")
 	return tree.head()
 
@@ -593,7 +593,7 @@ async def main_thread(config, args):
 		await meta_repo.gitMirrorPush()
 		if config.mirror:
 			if not meta_repo.getRemoteURL("mirror"):
-				meta_repo.setRemoteURL("mirror", config.mirror)
+				meta_repo.setRemoteURL("mirror", config.mirror, kit_name)
 			await meta_repo.gitMirrorPush("mirror")
 
 if __name__ == "__main__":
