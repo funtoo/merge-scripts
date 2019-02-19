@@ -270,14 +270,14 @@ class GitTree(Tree):
 			return True
 
 	def getRemoteURL(self, remote):
-		s, o = subprocess.getstatusoutput("( cd %s && git remote get-url %s" % (self.root, remote))
+		s, o = subprocess.getstatusoutput("( cd %s && git remote get-url %s )" % (self.root, remote))
 		if s:
 			return None
 		else:
 			return o.strip()
 
 	def setRemoteURL(self, name, url):
-		s, o = subprocess.getstatusoutput("( cd %s && git remote add %s %s" % (self.root, name, url))
+		s, o = subprocess.getstatusoutput("( cd %s && git remote add %s %s )" % (self.root, name, url))
 		if s:
 			return False
 		else:
