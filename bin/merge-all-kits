@@ -593,7 +593,7 @@ async def main_thread(config, args):
 		await meta_repo.gitMirrorPush()
 		if config.mirror:
 			if not meta_repo.getRemoteURL("mirror"):
-				meta_repo.setRemoteURL("mirror", config.mirror, kit_name)
+				meta_repo.setRemoteURL("mirror", config.mirror, "meta-repo")
 			await meta_repo.gitMirrorPush("mirror")
 
 if __name__ == "__main__":
