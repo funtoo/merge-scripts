@@ -166,7 +166,8 @@ class GitTree(Tree):
 	def __init__(self, name: str, branch: str = "master", config=None, url: str = None, commit_sha1: str = None,
 				 root: str = None,
 				 create: bool = False,
-				 reponame: str = None):
+				 reponame: str = None,
+				 mirror: str = None):
 		
 		# note that if create=True, we are in a special 'local create' mode which is good for testing. We create the repo locally from
 		# scratch if it doesn't exist, as well as any branches. And we don't push.
@@ -181,6 +182,7 @@ class GitTree(Tree):
 		self.has_cleaned = False
 		self.initialized = False
 		self.initial_future = self.initialize_tree(branch, commit_sha1)
+		self.mirror = mirror
 	
 	# if we don't specify root destination tree, assume we are source only:
 	
@@ -342,9 +344,21 @@ class GitTree(Tree):
 			await runShell("(cd %s && git checkout -b %s)" % (self.root, branch))
 		if self.currentLocalBranch != branch:
 			raise GitTreeError("%s: On branch %s. not able to check out branch %s." % (self.root, self.currentLocalBranch, branch))
-	
+
+	async def secondaryMirrorPush(self):
+		if self.mirror:
+			print("Attempting to push to secondary mirror %s..." % self.mirror)
+			if self.getRemoteURL("mirror") is False:
+				retval = self.setRemoteURL("mirror", self.remote)
+				if retval != 0:
+						raise GitTreeError("Not able to set remote 'mirror' to %s" % self.mirror)
+				await runShell("(cd %s && git push --mirror mirror)" % self.root)
+
+
 	async def gitMirrorPush(self, origin="origin"):
 		await runShell("(cd %s && git push --mirror %s)" % (self.root, origin))
+		if self.mirror:
+			await self.secondaryMirrorPush()
 	
 	async def gitCommit(self, message="", push=True):
 		await runShell("( cd %s && git add . )" % self.root)
@@ -371,6 +385,8 @@ class GitTree(Tree):
 			sys.exit(1)
 		if push is True and self.create is False:
 			await runShell("(cd %s && git push --mirror)" % self.root)
+			if self.mirror:
+				await self.secondaryMirrorPush()
 		else:
 			print("Pushing disabled.")
 	

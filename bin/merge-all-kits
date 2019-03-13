@@ -221,7 +221,8 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 	# If we have gotten here, we are automatically generating a kit...
 	kit_dict['tree'] = tree = mu.GitTree(kit_dict['name'], kit_dict['branch'], config=config,
 										 url=config.base_url(kit_dict['name']), create=create,
-										 root="%s/%s" % (config.dest_trees, kit_dict['name']))
+										 root="%s/%s" % (config.dest_trees, kit_dict['name']),
+										 mirror = config.mirror.rstrip("/") + "/" + kit_dict["name"] if config.mirror else None)
 	await tree.initialize()
 	if "stability" in kit_dict and kit_dict["stability"] == KitStabilityRating.DEPRECATED:
 		# no longer update this kit.
@@ -428,10 +429,6 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 	
 	await tree.run(post_steps)
 	await tree.gitCommit(message="updates", push=push)
-	if push and config.mirror:
-		if not tree.getRemoteURL("mirror"):
-			tree.setRemoteURL("mirror", config.mirror, kit_dict["name"])
-		await tree.gitMirrorPush("mirror")
 	return tree.head()
 
 
@@ -525,7 +522,7 @@ async def main_thread(config, args):
 	
 	fixup_repo = mu.GitTree("kit-fixups", config.branch("kit-fixups"),  config=config, url=config.kit_fixups, root=config.source_trees + "/kit-fixups")
 	await fixup_repo.initialize()
-	meta_repo = mu.GitTree("meta-repo", config.branch("meta-repo"), config=config, url=config.base_url("meta-repo"), root=config.dest_trees + "/meta-repo")
+	meta_repo = mu.GitTree("meta-repo", config.branch("meta-repo"), config=config, url=config.base_url("meta-repo"), root=config.dest_trees + "/meta-repo", mirror = config.mirror.rstrip("/") + "/meta-repo" if config.mirror else None)
 	await meta_repo.initialize()
 	
 	# once the correct branch is checked out, then we want to do this import:
@@ -591,10 +588,7 @@ async def main_thread(config, args):
 	if push is True:
 		print("Pushing meta-repo...")
 		await meta_repo.gitMirrorPush()
-		if config.mirror:
-			if not meta_repo.getRemoteURL("mirror"):
-				meta_repo.setRemoteURL("mirror", config.mirror, "meta-repo")
-			await meta_repo.gitMirrorPush("mirror")
+
 
 if __name__ == "__main__":
 	import argparse
