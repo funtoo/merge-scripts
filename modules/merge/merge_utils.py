@@ -349,7 +349,7 @@ class GitTree(Tree):
 		if self.mirror:
 			print("Attempting to push to secondary mirror %s..." % self.mirror)
 			if not self.getRemoteURL("mirror"):
-				retval = self.setRemoteURL("mirror", self.remote)
+				retval = self.setRemoteURL("mirror", self.mirror)
 				if retval != 0:
 					raise GitTreeError("Not able to set remote 'mirror' to %s" % self.mirror)
 			await runShell("(cd %s && git push --mirror mirror)" % self.root)
