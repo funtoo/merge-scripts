@@ -295,7 +295,7 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 				# we have eclasses to copy over, too:
 				ec_files = {}
 				for eclass in ov["eclasses"]:
-					ecf = "/eclass/" + eclass + ".eclass"
+					ecf = "eclass/" + eclass + ".eclass"
 					ec_files[ecf] = ecf
 				steps += [mu.SyncFiles(repo_dict["repo"].root, ec_files)]
 		copycount = cpm_logger.copycount
