@@ -289,8 +289,8 @@ class GitTree(Tree):
 		else:
 			return o.strip()
 
-	def setRemoteURL(self, mirror_name, url, repo_name):
-		s, o = subprocess.getstatusoutput("( cd %s && git remote add %s %s )" % (self.root, mirror_name, url.rstrip("/") + "/" + repo_name))
+	def setRemoteURL(self, mirror_name, url):
+		s, o = subprocess.getstatusoutput("( cd %s && git remote add %s %s )" % (self.root, mirror_name, url))
 		if s:
 			return False
 		else:
@@ -349,8 +349,8 @@ class GitTree(Tree):
 		if self.mirror:
 			print("Attempting to push to secondary mirror %s..." % self.mirror)
 			if not self.getRemoteURL("mirror"):
-				retval = self.setRemoteURL("mirror", self.mirror)
-				if retval != 0:
+				success = self.setRemoteURL("mirror", self.mirror)
+				if not success:
 					raise GitTreeError("Not able to set remote 'mirror' to %s" % self.mirror)
 			await runShell("(cd %s && git push --mirror mirror)" % self.root)
 
