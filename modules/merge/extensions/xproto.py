@@ -59,24 +59,24 @@ class XProtoStepGenerator(MergeStep):
 		env['PORTAGE_DEPCACHEDIR'] = '/var/cache/edb/%s-%s-meta' % (tree.name, tree.branch)
 		if tree.name != "core-kit":
 			env['PORTAGE_REPOSITORIES'] = '''
-		[DEFAULT]
-		main-repo = core-kit
+[DEFAULT]
+main-repo = core-kit
 
-		[core-kit]
-		location = %s/core-kit
-		aliases = gentoo
+[core-kit]
+location = %s/core-kit
+aliases = gentoo
 
-		[%s]
-		location = %s
+[%s]
+location = %s
 		''' % (tree.config.dest_trees, tree.name, tree.root)
 		else:
 			env['PORTAGE_REPOSITORIES'] = '''
-		[DEFAULT]
-		main-repo = core-kit
+[DEFAULT]
+main-repo = core-kit
 
-		[core-kit]
-		location = %s/core-kit
-		aliases = gentoo
+[core-kit]
+location = %s/core-kit
+aliases = gentoo
 		''' % tree.config.dest_trees
 
 		sdata = meta_pkg_ebuild_path.rstrip(".ebuild").split("/")
