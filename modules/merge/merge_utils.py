@@ -1740,7 +1740,8 @@ class SyncFiles(MergeStep):
 				print("%s exists, attempting to unlink..." % dest)
 				try:
 					os.unlink(dest)
-				except:
+				except (IOError, PermissionError) as e:
+					print("Unlinking failed: %s" % str(e))
 					pass
 			dest_dir = os.path.dirname(dest)
 			if os.path.exists(dest_dir) and os.path.isfile(dest_dir):

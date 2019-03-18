@@ -249,8 +249,7 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 	# specifies files like masks to copy over to the dest_kit, and "eclasses" specifies eclasses from the overlay that we need to
 	# copy over to the dest_kit. We don't need to specify eclasses that we need from gentoo_staging -- these are automatically detected
 	# and copied, but if there are any special eclasses from the overlay then we want to copy these over initially.
-	
-	copycount = cpm_logger.copycount
+
 	for repo_dict in repos:
 		steps = []
 		select_clause = "all"
@@ -282,9 +281,8 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 										 filter_repos=filter_repos, force=overlay_def["force"] if "force" in overlay_def else None,
 										 cpm_logger=cpm_logger, move_maps=move_maps, secondary_kit=secondary_kit)
 		await tree.run(steps)
-		if copycount != cpm_logger.copycount:
-			# this means some catpkgs were installed from the repo we are currently processing. This means we also want to execute
-			# 'copyfiles' and 'eclasses' copy logic:
+		if tree.name == "core-kit":
+			# execute "copyfiles" and "eclasses" copy logic only for core-kit.
 			
 			ov = foundation.overlays[repo_dict["name"]]
 			
@@ -298,7 +296,6 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 					ecf = "eclass/" + eclass + ".eclass"
 					ec_files[ecf] = ecf
 				steps += [mu.SyncFiles(repo_dict["repo"].root, ec_files)]
-		copycount = cpm_logger.copycount
 	
 	# Phase 3: copy eclasses, licenses, profile info, and ebuild/eclass fixups from the kit-fixups repository. 
 	
