@@ -46,7 +46,7 @@ class XProtoStepGenerator(MergeStep):
 						ver = ls[1].strip().strip("'")
 						yield master_cpv, pkg, ver
 	
-	async def worker_async(self, meta_pkg_ebuild_path):
+	async def worker_async(self, meta_pkg_ebuild_path, tree):
 		"""
 		This is a worker method that will extract an xproto ebuild using the ebuild command, then use the get_pkgs_from_meson
 		helper method to grab all package names from meson, and then will return the results.
@@ -55,9 +55,33 @@ class XProtoStepGenerator(MergeStep):
 		the meson package name, and the meson version.
 		"""
 
+		env = os.environ.copy()
+		env['PORTAGE_DEPCACHEDIR'] = '/var/cache/edb/%s-%s-meta' % (tree.name, tree.branch)
+		if tree.name != "core-kit":
+			env['PORTAGE_REPOSITORIES'] = '''
+		[DEFAULT]
+		main-repo = core-kit
+
+		[core-kit]
+		location = %s/core-kit
+		aliases = gentoo
+
+		[%s]
+		location = %s
+		''' % (tree.config.dest_trees, tree.name, tree.root)
+		else:
+			env['PORTAGE_REPOSITORIES'] = '''
+		[DEFAULT]
+		main-repo = core-kit
+
+		[core-kit]
+		location = %s/core-kit
+		aliases = gentoo
+		''' % tree.config.dest_trees
+
 		sdata = meta_pkg_ebuild_path.rstrip(".ebuild").split("/")
 		master_cpv = sdata[-3] + "/" + sdata[-1]
-		success = await runShell("(cd %s; ebuild %s clean unpack)" % (os.path.dirname(meta_pkg_ebuild_path), os.path.basename(meta_pkg_ebuild_path)), abort_on_failure=False)
+		success = await runShell("(cd %s; ebuild %s clean unpack)" % (os.path.dirname(meta_pkg_ebuild_path), os.path.basename(meta_pkg_ebuild_path)), abort_on_failure=False, env=env)
 		if not success:
 			return defaultdict(set)
 		meson_file = os.path.expanduser("~portage/%s/work/xorg*proto-*/meson.build" % master_cpv)
@@ -69,7 +93,7 @@ class XProtoStepGenerator(MergeStep):
 		meta_mappings = defaultdict(set)
 		for master_cpv, pkg, ver in itertools.chain(self.get_pkgs_from_meson(master_cpv, meson_file), self.get_pkgs_from_meson(master_cpv, meson_file, "legacy_pcs")):
 			meta_mappings[(pkg, ver)].add(master_cpv)
-		await runShell("(cd %s; ebuild %s clean)" % (os.path.dirname(meta_pkg_ebuild_path), os.path.basename(meta_pkg_ebuild_path)), abort_on_failure=False)
+		await runShell("(cd %s; ebuild %s clean)" % (os.path.dirname(meta_pkg_ebuild_path), os.path.basename(meta_pkg_ebuild_path)), abort_on_failure=False, env=env)
 		return meta_mappings
 		
 	async def run(self, tree):
@@ -81,9 +105,34 @@ class XProtoStepGenerator(MergeStep):
 		:return: None
 		"""
 
+		env = os.environ.copy()
+		env['PORTAGE_DEPCACHEDIR'] = '/var/cache/edb/%s-%s-meta' % (tree.name, tree.branch)
+		if tree.name != "core-kit":
+			env['PORTAGE_REPOSITORIES'] = '''
+		[DEFAULT]
+		main-repo = core-kit
+
+		[core-kit]
+		location = %s/core-kit
+		aliases = gentoo
+
+		[%s]
+		location = %s
+		''' % (tree.config.dest_trees, tree.name, tree.root)
+		else:
+			env['PORTAGE_REPOSITORIES'] = '''
+		[DEFAULT]
+		main-repo = core-kit
+
+		[core-kit]
+		location = %s/core-kit
+		aliases = gentoo
+		''' % tree.config.dest_trees
+
+
 		all_meta_pkg_ebuilds = list(glob(tree.root + "/x11-base/xorg-proto/xorg-proto-*.ebuild"))
 		futures =[
-			self.loop.run_in_executor(self.cpu_bound_executor, self.run_async_in_executor, self.worker_async, meta_pkg_ebuild_path)
+			self.loop.run_in_executor(self.cpu_bound_executor, self.run_async_in_executor, self.worker_async, meta_pkg_ebuild_path, tree)
 			for meta_pkg_ebuild_path in all_meta_pkg_ebuilds
 		]
 		meta_mappings = defaultdict(set)

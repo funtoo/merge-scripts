@@ -123,7 +123,7 @@ class RunRepositoryStepsIfAvailable(MergeStep):
 		
 		# When actually running generate.py, we will lock the fixup_root passed to the RepositoryStepsCollector to
 		# wherever we found the generate.py file:
-		
+
 		repo_steps_collector = RepositoryStepsCollector(fixup_root=p, dest_tree=tree.root, cpm_logger=self.cpm_logger)
 		mod.add_steps(repo_steps_collector)
 		await repo_steps_collector.run_steps_in_tree(tree)
@@ -1532,13 +1532,13 @@ def headSHA1(tree):
 	return None
 
 
-async def getcommandoutput(args):
+async def getcommandoutput(args, env=None):
 	# Slight modification of the function getstatusoutput present in:
 	# https://docs.python.org/3/library/asyncio-subprocess.html#example
 	if isinstance(args, str):
-		proc = await asyncio.create_subprocess_shell(args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+		proc = await asyncio.create_subprocess_shell(args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=env)
 	else:
-		proc = await asyncio.create_subprocess_exec(*args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+		proc = await asyncio.create_subprocess_exec(*args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=env)
 	try:
 		stdout, stderr = await proc.communicate()
 	except:
@@ -1550,10 +1550,10 @@ async def getcommandoutput(args):
 	return exitcode, stdout, stderr
 
 
-async def runShell(cmd_list, abort_on_failure=True):
+async def runShell(cmd_list, abort_on_failure=True, env=None):
 	if debug:
 		print("running: %r" % cmd_list)
-	out = await getcommandoutput(cmd_list)
+	out = await getcommandoutput(cmd_list, env=env)
 	if out[0] != 0:
 		print("Error executing %r" % cmd_list)
 		print()
