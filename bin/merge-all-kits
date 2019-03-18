@@ -238,6 +238,22 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 	pre_steps += prep_steps[0]
 	copy_steps = prep_steps[1]
 	post_steps = prep_steps[2]
+
+	for repo_dict in repos:
+		# do the eclass and copyfiles steps first, in case they are needed for prior steps.
+		if tree.name == "core-kit":
+			# execute "copyfiles" and "eclasses" copy logic only for core-kit.
+			ov = foundation.overlays[repo_dict["name"]]
+			if "copyfiles" in ov and len(ov["copyfiles"]):
+				# since we copied over some ebuilds, we also want to make sure we copy over things like masks, etc:
+				pre_steps += [mu.SyncFiles(repo_dict["repo"].root, ov["copyfiles"])]
+			if "eclasses" in ov:
+				# we have eclasses to copy over, too:
+				ec_files = {}
+				for eclass in ov["eclasses"]:
+					ecf = "eclass/" + eclass + ".eclass"
+					ec_files[ecf] = ecf
+				pre_steps += [mu.SyncFiles(repo_dict["repo"].root, ec_files)]
 	
 	await tree.run(pre_steps)
 	
@@ -281,21 +297,6 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 										 filter_repos=filter_repos, force=overlay_def["force"] if "force" in overlay_def else None,
 										 cpm_logger=cpm_logger, move_maps=move_maps, secondary_kit=secondary_kit)
 		await tree.run(steps)
-		if tree.name == "core-kit":
-			# execute "copyfiles" and "eclasses" copy logic only for core-kit.
-			
-			ov = foundation.overlays[repo_dict["name"]]
-			
-			if "copyfiles" in ov and len(ov["copyfiles"]):
-				# since we copied over some ebuilds, we also want to make sure we copy over things like masks, etc:
-				steps += [mu.SyncFiles(repo_dict["repo"].root, ov["copyfiles"])]
-			if "eclasses" in ov:
-				# we have eclasses to copy over, too:
-				ec_files = {}
-				for eclass in ov["eclasses"]:
-					ecf = "eclass/" + eclass + ".eclass"
-					ec_files[ecf] = ecf
-				steps += [mu.SyncFiles(repo_dict["repo"].root, ec_files)]
 	
 	# Phase 3: copy eclasses, licenses, profile info, and ebuild/eclass fixups from the kit-fixups repository. 
 	
