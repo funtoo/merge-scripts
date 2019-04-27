@@ -361,7 +361,6 @@ class GitTree(Tree):
 	
 	async def gitCommit(self, message="", push=True):
 		await runShell("( cd %s && git add . )" % self.root)
-		#cmd = "( cd %s && [ -n \"$(git status --porcelain)\" ] && git commit -a -F - << EOF || exit 0\n" % self.root
 		cmd = "( cd %s && [ -n \"$(git status --porcelain)\" ] && git commit -a -F - << EOF\n" % self.root
 		if message != "":
 			cmd += "%s\n\n" % message
@@ -382,6 +381,7 @@ class GitTree(Tree):
 		myenv = os.environ.copy()
 		if os.geteuid() == 0:
 			# make sure HOME is set if we are root (maybe we entered to a minimal environment -- this will mess git up.)
+			# In particular, a new tmux window will have HOME set to /root but NOT exported. Which will mess git up. (It won't know where to find ~/.gitconfig.)
 			myenv["HOME"] = "/root"
 		cp = subprocess.run(cmd, shell=True, env=myenv)
 		retval = cp.returncode
