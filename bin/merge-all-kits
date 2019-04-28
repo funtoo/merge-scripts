@@ -330,7 +330,7 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 	if kit_dict["branch"] == "master":
 		# if a branch has "master" as its branch, we will look for a fixup directory of its *release* (like "1.2-release") just so it's clear
 		# for maintainers ("master" would be ambiguous in kit-fixups.)
-		fixup_dirs = ["global", release]
+		fixup_dirs = ["global", "curated", release]
 	else:
 		fixup_dirs = ["global", "curated", kit_dict["branch"]]
 	for fixup_dir in fixup_dirs:
