@@ -335,7 +335,7 @@ class GitTree(Tree):
 	async def gitCheckout(self, branch="master", from_init=False):
 		if not from_init:
 			await self.initialize()
-		await runShell("(cd %s && git fetch)" % self.root)
+		await runShell("(cd %s && git fetch --verbose)" % self.root)
 		if self.localBranchExists(branch):
 			await runShell("(cd %s && git checkout %s && git pull -f --all || true)" % (self.root, branch))
 		elif self.remoteBranchExists(branch):
@@ -361,7 +361,7 @@ class GitTree(Tree):
 	
 	async def gitCommit(self, message="", push=True):
 		await runShell("( cd %s && git add . )" % self.root)
-		cmd = "( cd %s && [ -n \"$(git status --porcelain)\" ] && git commit -a -F - << EOF || exit 0\n" % self.root
+		cmd = "( cd %s && [ -n \"$(git status --porcelain)\" ] && git commit -a -F - << EOF\n" % self.root
 		if message != "":
 			cmd += "%s\n\n" % message
 		names = []
@@ -378,8 +378,16 @@ class GitTree(Tree):
 		cmd += ")\n"
 		print("running: %s" % cmd)
 		# we use os.system because this multi-line command breaks runShell() - really, breaks commands.getstatusoutput().
-		retval = os.system(cmd)
-		if retval != 0:
+		myenv = os.environ.copy()
+		if os.geteuid() == 0:
+			# make sure HOME is set if we are root (maybe we entered to a minimal environment -- this will mess git up.)
+			# In particular, a new tmux window will have HOME set to /root but NOT exported. Which will mess git up. (It won't know where to find ~/.gitconfig.)
+			myenv["HOME"] = "/root"
+		cp = subprocess.run(cmd, shell=True, env=myenv)
+		retval = cp.returncode
+		if retval not in [ 0, 1 ]: # can return 1
+			print("retval is: %s" % retval)
+			print(cp)
 			print("Commit failed.")
 			sys.exit(1)
 		if push is True and self.create is False:
