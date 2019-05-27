@@ -167,7 +167,8 @@ class GitTree(Tree):
 				 root: str = None,
 				 create: bool = False,
 				 reponame: str = None,
-				 mirror: str = None):
+				 mirror: str = None,
+				 origin_check: bool = True):
 		
 		# note that if create=True, we are in a special 'local create' mode which is good for testing. We create the repo locally from
 		# scratch if it doesn't exist, as well as any branches. And we don't push.
@@ -183,6 +184,7 @@ class GitTree(Tree):
 		self.initialized = False
 		self.initial_future = self.initialize_tree(branch, commit_sha1)
 		self.mirror = mirror
+		self.origin_check = origin_check
 	
 	# if we don't specify root destination tree, assume we are source only:
 	
@@ -232,7 +234,7 @@ class GitTree(Tree):
 				await runShell("( cd %s && git checkout %s)" % (self.root, branch))
 
 		# if we've gotten here, we can assume that the repo exists at self.root.
-		if self.url is not None:
+		if self.url is not None and self.origin_check:
 			retval, out = subprocess.getstatusoutput("(cd %s && git remote get-url origin)" % self.root)
 			my_url = self.url
 			if my_url.endswith(".git"):

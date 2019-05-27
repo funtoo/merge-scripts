@@ -158,7 +158,7 @@ async def getKitSourceInstance(foundation, config, kit_dict):
 			path = foundation.overlays[repo_name]["dirname"]
 		else:
 			path = repo_name
-		repo = repo_obj(repo_name, url=repo_url, config=config, root="%s/%s" % (config.source_trees, path), branch=repo_branch, commit_sha1=repo_sha1)
+		repo = repo_obj(repo_name, url=repo_url, config=config, root="%s/%s" % (config.source_trees, path), branch=repo_branch, commit_sha1=repo_sha1, origin_check=False)
 		await repo.initialize()
 		repos.append({"name": repo_name, "repo": repo, "overlay_def": foundation.overlays[repo_name]})
 	
@@ -197,7 +197,7 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 
 	if "type" in kit_dict and kit_dict["type"] == KitType.INDEPENDENTLY_MAINTAINED:
 		# independently-maintained repo. Don't regenerate. Just record all catpkgs in this kit as belonging ot this kit so they don't get into other kits:
-		kit_dict["tree"] = tree = mu.GitTree(kit_dict["name"], kit_dict["branch"], config=config, url=config.indy_url(kit_dict["name"]), root=config.source_trees + "/" + kit_dict["name"])
+		kit_dict["tree"] = tree = mu.GitTree(kit_dict["name"], kit_dict["branch"], config=config, url=config.indy_url(kit_dict["name"]), root=config.source_trees + "/" + kit_dict["name"], origin_check=False)
 		await tree.initialize()
 		await tree.run([
 			mu.RecordAllCatPkgs(tree, cpm_logger)
@@ -222,7 +222,8 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 	kit_dict['tree'] = tree = mu.GitTree(kit_dict['name'], kit_dict['branch'], config=config,
 										 url=config.base_url(kit_dict['name']), create=create,
 										 root="%s/%s" % (config.dest_trees, kit_dict['name']),
-										 mirror = config.mirror.rstrip("/") + "/" + kit_dict["name"] if config.mirror else None)
+										 mirror = config.mirror.rstrip("/") + "/" + kit_dict["name"] if config.mirror else None,
+										 origin_check=True)
 	await tree.initialize()
 	if "stability" in kit_dict and kit_dict["stability"] == KitStabilityRating.DEPRECATED:
 		# no longer update this kit.
