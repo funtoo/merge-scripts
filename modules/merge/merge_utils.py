@@ -219,8 +219,12 @@ class GitTree(Tree):
 		# create local tracking branches for all remote branches. - we want to do this for every initialization.
 		s, o = subprocess.getstatusoutput("(cd %s && git branch -r | grep -v /HEAD)" % self.root)
 		if s != 0:
-			print("Error listing local branches.")
-			sys.exit(1)
+			# if repo is totally unitialized (like gitolite wildrepo) -- initialize it with a first commit.
+			await runShell("(cd %s && touch README && git add README && git commit -a -m 'first commit' && git push)" % self.root)
+			s, o = subprocess.getstatusoutput("(cd %s && git branch -r | grep -v /HEAD)" % self.root)
+			if s != 0:
+				print("Error listing local branches.")
+				sys.exit(1)
 		for branch in o.split():
 			branch = branch.split("/")[-1]
 			if not self.localBranchExists(branch):
