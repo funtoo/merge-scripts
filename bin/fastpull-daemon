@@ -14,6 +14,12 @@ import sqlalchemy.exc
 sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "../../modules")))
 from merge.db_core import *
 
+class UptimeHandler(tornado.web.RequestHandler):
+
+	def get(self):
+		self.set_status(200)
+		return
+
 class RedirectHandler(tornado.web.RequestHandler):
 
 	# send people to google...
@@ -67,6 +73,7 @@ class Application(tornado.web.Application):
 	handlers = [
 		(r"/distfiles/distfiles/(.*)", RedirectHandler),
 		(r"/distfiles/(.*)", RedirectHandler),
+		(r"/up", UptimeHandler),
 		(r"/(.*)", RedirectHandler),
 	]
 

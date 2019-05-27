@@ -48,7 +48,7 @@ destination = /var/git/dest-trees
 
 		valids = {
 			"sources": [ "flora", "kit-fixups", "gentoo-staging" ],
-			"destinations": [ "base_url" ],
+			"destinations": [ "base_url", "mirror", "indy_url" ],
 			"branches": [ "flora", "kit-fixups", "meta-repo" ],
 			"work": [ "source", "destination" ]
 		}
@@ -79,6 +79,10 @@ destination = /var/git/dest-trees
 	@property
 	def kit_fixups(self):
 		return self.get_option("sources", "kit-fixups", "ssh://git@code.funtoo.org:7999/core/kit-fixups.git")
+
+	@property
+	def mirror(self):
+		return self.get_option("destinations", "mirror", None)
 
 	@property
 	def gentoo_staging(self):
