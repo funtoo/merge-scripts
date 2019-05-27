@@ -2250,7 +2250,18 @@ class GenCache(MergeStep):
 			if not os.path.exists(self.cache_dir):
 				os.makedirs(self.cache_dir)
 				os.chown(self.cache_dir, pwd.getpwnam('portage').pw_uid, grp.getgrnam('portage').gr_gid)
-		await runShell(cmd, abort_on_failure=True)
+		attempts = 10
+		attempt = 1
+		while attempt <= attempts:
+			if attempt != 1:
+				print("Restarting egencache -- sometimes it dies... this is expected.")
+			success = await runShell(cmd, abort_on_failure=False)
+			if success:
+				break
+			attempt += 1
+		if attempt > attempts:
+			print("Couldn't get egencache to finish. Exiting.")
+			sys.exit(1)
 
 class GenUseLocalDesc(MergeStep):
 
