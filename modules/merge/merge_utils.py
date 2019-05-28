@@ -408,9 +408,9 @@ class GitTree(Tree):
 			print("Commit failed.")
 			sys.exit(1)
 		if push is True and self.create is False:
-			await runShell("(cd %s && git push --mirror)" % self.root)
+			await self.mirrorLocalBranches()
 			if self.mirror:
-				await self.secondaryMirrorPush()
+				await self.mirrorUpstreamRepository(mirror=self.mirror)
 		else:
 			print("Pushing disabled.")
 	
