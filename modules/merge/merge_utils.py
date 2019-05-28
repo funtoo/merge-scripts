@@ -363,7 +363,7 @@ class GitTree(Tree):
 		if mirror is None:
 			mirror = self.url
 		# This is a special push command that will push local tags and branches *only*
-		await runShell("(cd %s && git push --mirror %s +refs/heads/* +refs/tags/*)" % (self.root, mirror))
+		await runShell("(cd %s && git push %s +refs/heads/* +refs/tags/*)" % (self.root, mirror))
 
 	async def mirrorUpstreamRepository(self, mirror):
 		# This is a special push command that will push all the stuff from origin (branches and tags) *only*
