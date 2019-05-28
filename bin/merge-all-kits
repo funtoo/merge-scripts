@@ -169,7 +169,7 @@ async def getKitSourceInstance(foundation, config, kit_dict):
 # regenerating it. The kitted_catpkgs argument is a dictionary which is also written to and used to keep track of
 # catpkgs copied between runs of updateKit.
 
-async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKits, kit_dict, prev_kit_dict, cpm_logger, create=False, push=False, now=None, fixup_repo=None):
+async def updateKit(foundation, config, args, release, async_engine : AsyncMergeAllKits, kit_dict, prev_kit_dict, cpm_logger, create=False, push=False, now=None, fixup_repo=None):
 	# secondary_kit means: we're the second (or third, etc.) xorg-kit or other kit to be processed. The first kind of
 	# each kit processed has secondary_kit = False, and later ones have secondary_kit = True. We need special processing
 	# to grab any 'orphan' packages that were selected as part of prior kit scans (and thus will not be included in
@@ -202,6 +202,10 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 		await tree.run([
 			mu.RecordAllCatPkgs(tree, cpm_logger)
 		])
+		if args.indypush:
+			# If --indypush is specified, we want to mirror the independent kit to the same destination as the kits we
+			# are auto-generating. This does it:
+			await tree.mirrorUpstreamRepository(mirror=config.base_url(kit_dict['name']))
 		return tree.head()
 	
 	repos = kit_dict["repo_obj"] = await getKitSourceInstance(foundation, config, kit_dict)
@@ -568,7 +572,7 @@ async def main_thread(config, args):
 		
 		for kit_dict in foundation.kit_groups[release]:
 			print("Regenerating kit ", kit_dict)
-			head = await updateKit(foundation, config, release, async_engine, kit_dict, prev_kit_dict, cpm_logger, create=not push, push=push, now=now, fixup_repo=fixup_repo)
+			head = await updateKit(foundation, config, args, release, async_engine, kit_dict, prev_kit_dict, cpm_logger, create=not push, push=push, now=now, fixup_repo=fixup_repo)
 			kit_name = kit_dict["name"]
 			if release == "1.2-release":
 				output_sha1s[kit_name][kit_dict["branch"]] = head
