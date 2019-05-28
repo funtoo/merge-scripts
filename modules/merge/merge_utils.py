@@ -359,9 +359,11 @@ class GitTree(Tree):
 		if self.currentLocalBranch != branch:
 			raise GitTreeError("%s: On branch %s. not able to check out branch %s." % (self.root, self.currentLocalBranch, branch))
 
-	async def mirrorLocalBranches(self):
+	async def mirrorLocalBranches(self, mirror=None):
+		if mirror is None:
+			mirror = self.url
 		# This is a special push command that will push local tags and branches *only*
-		await runShell("(cd %s && git push --mirror %s +refs/heads/* +refs/tags/*)" % self.root)
+		await runShell("(cd %s && git push --mirror %s +refs/heads/* +refs/tags/*)" % (self.root, mirror))
 
 	async def mirrorUpstreamRepository(self, mirror):
 		# This is a special push command that will push all the stuff from origin (branches and tags) *only*
