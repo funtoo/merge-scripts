@@ -227,7 +227,7 @@ async def updateKit(foundation, config, args, release, async_engine : AsyncMerge
 										 url=config.base_url(kit_dict['name']), create=create,
 										 root="%s/%s" % (config.dest_trees, kit_dict['name']),
 										 mirror = config.mirror.rstrip("/") + "/" + kit_dict["name"] if config.mirror else None,
-										 origin_check=True)
+										 origin_check=True, destfix=args.destfix)
 	await tree.initialize()
 	if "stability" in kit_dict and kit_dict["stability"] == KitStabilityRating.DEPRECATED:
 		# no longer update this kit.
@@ -525,7 +525,7 @@ async def main_thread(config, args):
 	
 	fixup_repo = mu.GitTree("kit-fixups", config.branch("kit-fixups"),  config=config, url=config.kit_fixups, root=config.source_trees + "/kit-fixups")
 	await fixup_repo.initialize()
-	meta_repo = mu.GitTree("meta-repo", config.branch("meta-repo"), config=config, url=config.base_url("meta-repo"), root=config.dest_trees + "/meta-repo", mirror = config.mirror.rstrip("/") + "/meta-repo" if config.mirror else None)
+	meta_repo = mu.GitTree("meta-repo", config.branch("meta-repo"), config=config, url=config.base_url("meta-repo"), root=config.dest_trees + "/meta-repo", mirror = config.mirror.rstrip("/") + "/meta-repo" if config.mirror else None, origin_check=True, destfix=args.destfix)
 	await meta_repo.initialize()
 	
 	# once the correct branch is checked out, then we want to do this import:
@@ -601,6 +601,7 @@ if __name__ == "__main__":
 	parser.add_argument("--nopush", action="store_true", help="Don't push changes upstream at all.")
 	parser.add_argument("--db", action="store_true", help="Connect to fastpull database to update to-be-fetched file list.")
 	parser.add_argument("--indypush", action="store_true", help="Push up independent kits (good for developer mode.)")
+	parser.add_argument("--destfix", action="store_true", help="Auto-fix invalid git destinations.)")
 	parser.add_argument("--config", type=str, default=None, help="Specify config file. Defaults to ~/.merge.")
 	args = parser.parse_args()
 

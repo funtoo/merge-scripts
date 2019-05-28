@@ -168,7 +168,8 @@ class GitTree(Tree):
 				 create: bool = False,
 				 reponame: str = None,
 				 mirror: str = None,
-				 origin_check: bool = True):
+				 origin_check: bool = True,
+				 destfix: bool = False):
 		
 		# note that if create=True, we are in a special 'local create' mode which is good for testing. We create the repo locally from
 		# scratch if it doesn't exist, as well as any branches. And we don't push.
@@ -185,7 +186,8 @@ class GitTree(Tree):
 		self.initial_future = self.initialize_tree(branch, commit_sha1)
 		self.mirror = mirror
 		self.origin_check = origin_check
-	
+		self.destfix = destfix
+
 	# if we don't specify root destination tree, assume we are source only:
 	
 	async def initialize_tree(self, branch, commit_sha1=None):
@@ -242,14 +244,19 @@ class GitTree(Tree):
 			if out.endswith(".git"):
 				out = out[:-4]
 			if out != my_url:
-				print()
-				print("Error: remote url for origin at %s is:" % self.root)
-				print()
-				print("  existing:", out)
-				print("  expected:", self.url)
-				print()
-				print("Please fix or delete any repos that are cloned from the wrong origin.")
-				raise GitTreeError("%s: Git origin mismatch." % self.root)
+				if self.destfix:
+					print("WARNING: fixing remote URL for origin to point to %s" % my_url)
+					self.setRemoteURL('origin', my_url)
+				else:
+					print()
+					print("Error: remote url for origin at %s is:" % self.root)
+					print()
+					print("  existing:", out)
+					print("  expected:", self.url)
+					print()
+					print("Please fix or delete any repos that are cloned from the wrong origin.")
+					print("To do this automatically, use the --destfix option with merge-all-kits.")
+					raise GitTreeError("%s: Git origin mismatch." % self.root)
 		# first, we will clean up any messes:
 		if not self.has_cleaned:
 			await runShell("(cd %s &&  git reset --hard && git clean -fd )" % self.root)
