@@ -352,20 +352,21 @@ class GitTree(Tree):
 		if self.currentLocalBranch != branch:
 			raise GitTreeError("%s: On branch %s. not able to check out branch %s." % (self.root, self.currentLocalBranch, branch))
 
-	async def secondaryMirrorPush(self):
-		if self.mirror:
-			print("Attempting to push to secondary mirror %s..." % self.mirror)
-			if not self.getRemoteURL("mirror"):
-				success = self.setRemoteURL("mirror", self.mirror)
-				if not success:
-					raise GitTreeError("Not able to set remote 'mirror' to %s" % self.mirror)
-			await runShell("(cd %s && git push --mirror mirror)" % self.root)
+	async def mirrorLocalBranches(self):
+		# This is a special push command that will push local tags and branches *only*
+		await runShell("(cd %s && git push --mirror %s +refs/heads/* +refs/tags/*)" % self.root)
 
-	async def gitMirrorPush(self, origin="origin"):
-		await runShell("(cd %s && git push --mirror %s)" % (self.root, origin))
+	async def mirrorUpstreamRepository(self, mirror):
+		# This is a special push command that will push all the stuff from origin (branches and tags) *only*
+		# It will skip local branches.
+		await runShell("(cd %s && git fetch --prune)" % self.root)
+		await runShell("(cd %s && git push --prune %s +refs/remotes/origin/*:refs/heads/* +refs/tags/*:refs/tags/*)" % (self.root, mirror))
+
+	async def gitMirrorPush(self):
+		await self.mirrorLocalBranches()
 		if self.mirror:
-			await self.secondaryMirrorPush()
-	
+			await self.mirrorUpstreamRepository(self.mirror)
+
 	async def gitCommit(self, message="", push=True):
 		await runShell("( cd %s && git add . )" % self.root)
 		cmd = "( cd %s && [ -n \"$(git status --porcelain)\" ] && git commit -a -F - << EOF\n" % self.root

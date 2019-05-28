@@ -196,7 +196,7 @@ async def updateKit(foundation, config, release, async_engine : AsyncMergeAllKit
 	# get set of source repos used to grab catpkgs from:
 
 	if "type" in kit_dict and kit_dict["type"] == KitType.INDEPENDENTLY_MAINTAINED:
-		# independently-maintained repo. Don't regenerate. Just record all catpkgs in this kit as belonging ot this kit so they don't get into other kits:
+		# independently-maintained repo. Don't regenerate. Just record all catpkgs in this kit as belonging to this kit so they don't get into other kits:
 		kit_dict["tree"] = tree = mu.GitTree(kit_dict["name"], kit_dict["branch"], config=config, url=config.indy_url(kit_dict["name"]), root=config.source_trees + "/" + kit_dict["name"], origin_check=False)
 		await tree.initialize()
 		await tree.run([
@@ -596,6 +596,7 @@ if __name__ == "__main__":
 	parser.add_argument("release", type=str, default="all", nargs="?", help="specify release to generate. Defaults to 'all'.")
 	parser.add_argument("--nopush", action="store_true", help="Don't push changes upstream at all.")
 	parser.add_argument("--db", action="store_true", help="Connect to fastpull database to update to-be-fetched file list.")
+	parser.add_argument("--indypush", action="store_true", help="Push up independent kits (good for developer mode.)")
 	parser.add_argument("--config", type=str, default=None, help="Specify config file. Defaults to ~/.merge.")
 	args = parser.parse_args()
 
