@@ -587,8 +587,8 @@ async def main_thread(config, args):
 			prev_kit_dict = kit_dict
 		await generate_kit_metadata(foundation, release, meta_repo, output_sha1s)
 		await meta_repo.gitCommit(message="kit updates", push=False)
-		if release == "1.3-release" and push is True:
-			cpm_logger.writeXML()
+		if args.xmlout:
+			cpm_logger.writeXML(args.xmlout)
 	
 	if push is True:
 		print("Pushing meta-repo...")
