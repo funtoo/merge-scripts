@@ -379,6 +379,9 @@ class GitTree(Tree):
 		await runShell("(cd %s && git push --prune %s +refs/remotes/origin/*:refs/heads/* +refs/tags/*:refs/tags/*)" % (self.root, mirror))
 
 	async def gitMirrorPush(self):
+		await runShell(
+			"(cd %s && ( git rev-parse --abbrev-ref --symbolic-full-name @{u} || git branch --set-upstream-to origin/%s))" % (
+			self.root, self.branch))
 		await self.mirrorLocalBranches()
 		if self.mirror:
 			await self.mirrorUpstreamRepository(self.mirror)
