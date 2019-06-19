@@ -12,7 +12,7 @@ sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "..
 import merge.merge_utils as mu
 from merge.config import Configuration
 from merge.merge_utils import AsyncMergeAllKits, updateKit
-from merge.merge_utils import KitStabilityRating, KitType
+from merge.merge_utils import KitStabilityRating, KitType, KitRatingString
 
 
 async def generate_kit_metadata(foundation, release, meta_repo, output_sha1s):
@@ -22,10 +22,6 @@ async def generate_kit_metadata(foundation, release, meta_repo, output_sha1s):
 	:param meta_repo: the meta-repo GitTree.
 	:return: None.
 	"""
-	
-	global KitRatingString
-	global KitStabilityRating
-	global KitType
 	
 	if not os.path.exists(meta_repo.root + "/metadata"):
 		os.makedirs(meta_repo.root + "/metadata")
