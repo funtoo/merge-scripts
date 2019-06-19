@@ -76,7 +76,6 @@ class KitQualityError(Exception):
 async def kit_qa_check(foundation):
 
 	# Make sure we don't redefine the same kit branch -- it's bad.
-	global KitType
 	
 	all_kit_branches = defaultdict(dict)
 	independent_kits = defaultdict(set)
