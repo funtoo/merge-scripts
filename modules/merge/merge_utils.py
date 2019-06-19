@@ -169,7 +169,8 @@ class GitTree(Tree):
 				 reponame: str = None,
 				 mirror: str = None,
 				 origin_check: bool = True,
-				 destfix: bool = False):
+				 destfix: bool = False,
+				 reclone: bool = False):
 		
 		# note that if create=True, we are in a special 'local create' mode which is good for testing. We create the repo locally from
 		# scratch if it doesn't exist, as well as any branches. And we don't push.
@@ -187,15 +188,21 @@ class GitTree(Tree):
 		self.mirror = mirror
 		self.origin_check = origin_check
 		self.destfix = destfix
+		self.reclone = reclone
 
 	# if we don't specify root destination tree, assume we are source only:
 	
 	async def initialize_tree(self, branch, commit_sha1=None):
 		self.branch = branch
 		self.commit_sha1 = commit_sha1
+
 		if self.root is None:
 			base = self.config.source_trees
 			self.root = "%s/%s" % (base, self.name)
+
+		if os.path.isdir("%s/.git" % self.root) and self.reclone:
+			await runShell("rm -rf %s" % self.root)
+
 		if not os.path.isdir("%s/.git" % self.root):
 			# repo does not exist? - needs to be cloned or created
 			if os.path.exists(self.root):
@@ -950,6 +957,7 @@ def extract_uris(src_uri):
 			pos += 1
 
 	return fn_urls, new_files
+
 
 class FastPullScan(MergeStep):
 

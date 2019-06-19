@@ -140,7 +140,7 @@ def getKitPrepSteps(release, repos, kit_dict, gentoo_staging, fixup_repo):
 # a particular kit's kit_source, in the order that they should be processed (in the order they are defined in
 # kit_source_defs, in other words.)
 
-async def getKitSourceInstance(foundation, config, kit_dict):
+async def getKitSourceInstances(foundation, config, kit_dict):
 	source_name = kit_dict['source']
 	
 	repos = []
@@ -158,9 +158,9 @@ async def getKitSourceInstance(foundation, config, kit_dict):
 			path = foundation.overlays[repo_name]["dirname"]
 		else:
 			path = repo_name
-		repo = repo_obj(repo_name, url=repo_url, config=config, root="%s/%s" % (config.source_trees, path), branch=repo_branch, commit_sha1=repo_sha1, origin_check=False)
+		repo = repo_obj(repo_name, url=repo_url, config=config, root="%s/%s" % (config.source_trees, path), branch=repo_branch, commit_sha1=repo_sha1, origin_check=False, reclone=foundation.overlays[repo_name]["reclone"] if "reclone" in foundation.overlays[repo_name] else False)
 		await repo.initialize()
-		repos.append({"name": repo_name, "repo": repo, "overlay_def": foundation.overlays[repo_name]})
+		repos.append({"name": repo_name, "repo": repo, "is_fixup": source_def['is_fixup'] if 'is_fixup' in source_def else False, "overlay_def": foundation.overlays[repo_name]})
 	
 	return repos
 
@@ -207,8 +207,10 @@ async def updateKit(foundation, config, args, release, async_engine : AsyncMerge
 			# are auto-generating. This does it:
 			await tree.mirrorUpstreamRepository(mirror=config.base_url(kit_dict['name']))
 		return tree.head()
-	
-	repos = kit_dict["repo_obj"] = await getKitSourceInstance(foundation, config, kit_dict)
+
+	if "repo_obj" not in kit_dict:
+		kit_dict["repo_obj"] = await getKitSourceInstances(foundation, config, kit_dict)
+	repos = kit_dict["repo_obj"]
 	
 	# get a handy variable reference to gentoo_staging:
 	gentoo_staging = None
@@ -227,7 +229,8 @@ async def updateKit(foundation, config, args, release, async_engine : AsyncMerge
 										 url=config.base_url(kit_dict['name']), create=create,
 										 root="%s/%s" % (config.dest_trees, kit_dict['name']),
 										 mirror = config.mirror.rstrip("/") + "/" + kit_dict["name"] if config.mirror else None,
-										 origin_check=True, destfix=args.destfix)
+										 origin_check=True,
+										 destfix=args.destfix)
 	await tree.initialize()
 	if "stability" in kit_dict and kit_dict["stability"] == KitStabilityRating.DEPRECATED:
 		# no longer update this kit.
@@ -294,8 +297,8 @@ async def updateKit(foundation, config, args, release, async_engine : AsyncMerge
 					if x["name"] == filter_repo_name:
 						filter_repos.append(x["repo"])
 		
-		if kit_dict["name"] == "nokit":
-			# grab all remaining ebuilds to put in nokit
+		if kit_dict["name"] == "nokit" or ("is_fixup" in repo_dict and repo_dict["is_fixup"] is True):
+			# grab all remaining ebuilds
 			steps += [mu.InsertEbuilds(repo_dict["repo"], select_only=select_clause, move_maps=move_maps, skip=None, replace=False, cpm_logger=cpm_logger)]
 		else:
 			steps += await mu.generateKitSteps(release, kit_dict['name'], repo_dict["repo"], fixup_repo=fixup_repo, select_only=select_clause,
