@@ -9,6 +9,7 @@ sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "..
 import merge.merge_utils as mu
 from merge.config import Configuration
 import asyncio
+from merge.merge_utils import KitStabilityRating, KitType
 
 config = Configuration
 
@@ -65,9 +66,8 @@ async def main_thread():
 	#meta_repo.initialize()
 	
 	sys.path.insert(0, fixup_repo.root + "/modules")
-	from fixups.foundations import KitFoundation, KitStabilityRating
-	globals()["foundation"] = KitFoundation(config)
-	globals()["KitStabilityRating"] = KitStabilityRating
+	from fixups.foundations import KitFoundation
+	globals()["foundation"] = 	foundation = KitFoundation(config, KitStabilityRating, KitType)
 	catpkg_list = []
 	now = datetime.now()
 	utcnow = datetime.utcnow()

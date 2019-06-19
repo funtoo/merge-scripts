@@ -28,6 +28,8 @@ debug = False
 from merge.async_engine import AsyncEngine
 from enum import Enum
 
+# These should be kept in-sync with definitions that are in foundations.py.
+
 class KitStabilityRating(Enum):
 	PRIME = 0  # Kit is enterprise-quality
 	NEAR_PRIME = 1  # Kit is approaching enterprise-quality

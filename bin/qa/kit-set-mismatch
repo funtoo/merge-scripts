@@ -12,6 +12,7 @@ import merge.merge_utils as mu
 from merge.config import Configuration
 from collections import defaultdict
 config = Configuration
+from merge.merge_utils import KitStabilityRating, KitType
 
 fixup_repo = mu.GitTree("kit-fixups", config.branch("kit-fixups"), url=config.kit_fixups, root=config.source_trees+"/kit-fixups")
 meta_repo = mu.GitTree("meta-repo", config.branch("meta-repo"), url=config.base_url("meta-repo"), root=config.dest_trees+"/meta-repo")
@@ -19,7 +20,7 @@ meta_repo = mu.GitTree("meta-repo", config.branch("meta-repo"), url=config.base_
 sys.path.insert(0, fixup_repo.root + "/modules")
 from fixups.foundations import KitFoundation
 
-foundation = KitFoundation(config)
+foundation = KitFoundation(config, KitStabilityRating, KitType)
 
 kit_order = [ 'prime' ]
 

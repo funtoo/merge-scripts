@@ -40,7 +40,7 @@ sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "..
 import merge.merge_utils as mu
 from merge.config import Configuration
 import asyncio
-from merge.merge_utils import KitType
+from merge.merge_utils import KitStabilityRating, KitType
 
 async def main_thread(config, args):
 	
@@ -50,7 +50,7 @@ async def main_thread(config, args):
 	sys.path.insert(0, fixup_repo.root + "/modules")
 	from fixups.foundations import KitFoundation
 	
-	foundation = KitFoundation(config)
+	foundation = KitFoundation(config, KitStabilityRating, KitType)
 	
 	# developer specified a path to a git repo on the command-line, now we will look in all defined releases for independently-maintained kits with this
 	# name and process all defined branches:

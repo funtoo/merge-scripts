@@ -110,12 +110,8 @@ async def main_thread(config, args):
 	# once the correct branch is checked out, then we want to do this import:
 	sys.path.insert(0, fixup_repo.root + "/modules")
 	from fixups.foundations import KitFoundation
-	
-	foundation = KitFoundation(config)
-	# Now that we imported, set these guys to be globals:
-	globals()['KitRatingString'] = KitRatingString
-	globals()['KitStabilityRating'] = KitStabilityRating
-	globals()['KitType'] = KitType
+
+	foundation = KitFoundation(config, KitStabilityRating, KitType)
 	push = not args.nopush
 
 	await kit_qa_check(foundation)
