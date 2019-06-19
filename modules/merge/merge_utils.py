@@ -1558,9 +1558,9 @@ class CatPkgMatchLogger(object):
 	# literal, and a caller-specified number of matches for regexes. This tally is used by merge-all-kits.py to determine the
 	# total number of catpkgs copied to each kit.
 
-	def writeXML(self):
+	def writeXML(self, fn):
 		if self.xml_recorder:
-			self.xml_recorder.write("/home/ports/packages.xml")
+			self.xml_recorder.write(fn)
 
 	def recordCopyToXML(self, srctree, kit, catpkg):
 		if self.xml_recorder:
