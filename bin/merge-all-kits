@@ -608,6 +608,7 @@ if __name__ == "__main__":
 	parser.add_argument("--indypush", action="store_true", help="Push up independent kits (good for developer mode.)")
 	parser.add_argument("--destfix", action="store_true", help="Auto-fix invalid git destinations.)")
 	parser.add_argument("--config", type=str, default=None, help="Specify config file. Defaults to ~/.merge.")
+	parser.add_argument("--xmlout", type=str, default=None, help="Specify where to write XML package info (default: don't)")
 	args = parser.parse_args()
 
 	config = Configuration(args.config)
