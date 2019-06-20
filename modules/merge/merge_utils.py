@@ -2494,7 +2494,7 @@ async def getKitSourceInstances(foundation, config, kit_dict):
 	for source_def in source_defs:
 
 		repo_name = source_def['repo']
-		repo_branch = source_def['src_branch'] if "src_branch" in source_def else "master"
+		repo_branch = source_def['branch'] if "branch" in source_def else "master"
 		repo_sha1 = source_def["src_sha1"] if "src_sha1" in source_def else None
 		repo_obj = GitTree
 		repo_url = foundation.overlays[repo_name]["url"]
