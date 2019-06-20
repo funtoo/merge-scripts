@@ -1,0 +1,60 @@
+#!/usr/bin/python3
+
+import asyncio
+import os
+import sys
+
+sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "../../modules")))
+import merge.merge_utils as mu
+from merge.config import Configuration
+from merge.merge_utils import KitType, KitStabilityRating, getKitSourceInstances, GitTree, copyFromSourceRepositoriesSteps
+
+
+# This script is designed to re-copy a fresh set of ebuilds to a kit that is typically independently-maintained. So
+# it will "re-generate" the kit using the package-sets, and also apply any fixups that might still exist. It can be
+# used to update an independently-maintained kit to a new snapshot. It should be used on a test branch which could
+# then be merged into the official branch.
+
+async def main_thread(config, args):
+    fixup_repo = mu.GitTree("kit-fixups", config.branch("kit-fixups"), config=config, url=config.kit_fixups,
+                            root=config.source_trees + "/kit-fixups")
+    await fixup_repo.initialize()
+
+    # once the correct branch is checked out, then we want to do this import:
+    sys.path.insert(0, fixup_repo.root + "/modules")
+    from fixups.foundations import KitFoundation
+
+    foundation = KitFoundation(config, kitType=KitType, stabilityRating=KitStabilityRating)
+    release = args.release
+
+    kit_dict = foundation.kit_groups[release][args.kit]
+    repos = getKitSourceInstances(foundation, config, kit_dict)
+
+    tree = GitTree(kit_dict['name'], args.branch, config=config,
+                   url=config.base_url(kit_dict['name']), create=False,
+                   root="%s/%s" % (config.dest_trees, kit_dict['name']),
+                   origin_check=False)
+
+    for repo_dict in repos:
+        steps = await copyFromSourceRepositoriesSteps(repo_dict=repo_dict, kit_dict=kit_dict, source_defs=repos,
+                                                      release=release, secondary_kit=False,
+                                                      fixup_repo=fixup_repo, cpm_logger=None, move_maps=dict())
+        await tree.run(steps)
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("release", type=str, default=None, required=True, help="Specify release to generate.")
+    parser.add_argument("kit", type=str, default=None, required=True, help="Specify kit to generate.")
+    parser.add_argument("branch", type=str, default=None, required=True, help="Specify branch to write to.")
+    parser.add_argument("--config", type=str, default=None, help="Specify config file. Defaults to ~/.merge.")
+    args = parser.parse_args()
+
+    config = Configuration(args.config)
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main_thread(config, args))
+    sys.exit(0)
+
+# vim: ts=4 sw=4 noet tw=140
