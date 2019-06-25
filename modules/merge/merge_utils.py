@@ -2779,12 +2779,8 @@ async def updateKit(foundation, config, release, async_engine: AsyncMergeAllKits
 		# python-kit itself only needs one set which will be enabled by default.
 	]
 
-	if kit_dict["name"] == "python_kit":
-		# on the python-kit itself, we only need settings for ourselves (not other branches)
-		python_settings = foundation.python_kit_settings[kit_dict["name"]]
-	else:
-		# all other kits -- generate multiple settings, depending on what version of python-kit is active -- epro will select the right one for us.
-		python_settings = foundation.python_kit_settings
+	
+	python_settings = foundation.python_kit_settings[release]
 
 	for py_branch, py_settings in python_settings.items():
 		post_steps += [GenPythonUse(py_settings, "funtoo/kits/python-kit/%s" % py_branch)]
