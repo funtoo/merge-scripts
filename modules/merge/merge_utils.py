@@ -2253,7 +2253,8 @@ class InsertEbuilds(MergeStep):
 						copied = True
 					if not os.path.exists(tcatdir):
 						os.makedirs(tcatdir)
-					await runShell("[ ! -e %s ] && cp -a %s %s || echo \"# skipping %s/%s\"" % (tpkgdir, pkgdir, tpkgdir, cat, pkg ))
+					if not os.path.exists(tpkgdir):
+						await runShell("cp -a %s %s" % (pkgdir, tpkgdir))
 				if copied:
 					# log XML here.
 					if self.cpm_logger:
