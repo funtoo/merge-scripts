@@ -2494,7 +2494,7 @@ async def getKitSourceInstances(foundation, config, kit_dict):
 
 	global prev_source_defs
 	global prev_repos
-	
+
 	source_name = kit_dict['source']
 
 	repos = []
@@ -2502,7 +2502,7 @@ async def getKitSourceInstances(foundation, config, kit_dict):
 	source_defs = foundation.kit_source_defs[source_name]
 
 	if source_defs == prev_source_defs:
-		return repos
+		return prev_repos
 
 	for source_def in source_defs:
 
