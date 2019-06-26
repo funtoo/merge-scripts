@@ -1096,15 +1096,17 @@ class FastPullScan(MergeStep):
 			for cpv in await async_xmatch(p, "match-all", pkg):
 				if len(cpv) == 0:
 					continue
-
-				aux_info = await p.async_aux_get(cpv, ["SRC_URI", "RESTRICT" ], mytree=cur_overlay.root)
-
-				restrict = aux_info[1].split()
-				mirror_restrict = False
-				for r in restrict:
-					if r == "mirror":
-						mirror_restrict = True
-						break
+				try:
+					aux_info = await p.async_aux_get(cpv, ["SRC_URI", "RESTRICT" ], mytree=cur_overlay.root)
+					restrict = aux_info[1].split()
+					mirror_restrict = False
+					for r in restrict:
+						if r == "mirror":
+							mirror_restrict = True
+							break
+				except portage.exception.PortageKeyError:
+					print("!!! PortageKeyError on %s" % cpv)
+					continue
 
 				# record our own metadata about each file...
 				new_fn_urls, new_files = extract_uris(aux_info[0])
