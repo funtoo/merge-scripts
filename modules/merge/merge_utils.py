@@ -2757,7 +2757,7 @@ async def updateKit(foundation, config, release, async_engine: AsyncMergeAllKits
 	# This is an improved faster sync of all licenses. We will remove missing ones later:
 
 	pre_steps += [
-		SyncDir(gentoo_staging.root, "licenses", tree.root, "licenses")
+		SyncDir(gentoo_staging.root, "licenses")
 	]
 
 	await tree.run(pre_steps)
