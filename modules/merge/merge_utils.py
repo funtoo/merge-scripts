@@ -2484,12 +2484,25 @@ def getKitPrepSteps(release, repos, kit_dict, gentoo_staging, fixup_repo):
 # a particular kit's kit_source, in the order that they should be processed (in the order they are defined in
 # kit_source_defs, in other words.)
 
+prev_source_defs = None
+prev_repos = None
+
 async def getKitSourceInstances(foundation, config, kit_dict):
+
+	# We use a 'cache last repos' scheme to avoid unnecessarily reinitializing repos when they have already been
+	# initialized properly for us. This should help speed up the merge scripts.
+
+	global prev_source_defs
+	global prev_repos
+	
 	source_name = kit_dict['source']
 
 	repos = []
 
 	source_defs = foundation.kit_source_defs[source_name]
+
+	if source_defs == prev_source_defs:
+		return repos
 
 	for source_def in source_defs:
 
@@ -2511,6 +2524,8 @@ async def getKitSourceInstances(foundation, config, kit_dict):
 			{"name": repo_name, "repo": repo, "is_fixup": source_def['is_fixup'] if 'is_fixup' in source_def else False,
 			 "overlay_def": foundation.overlays[repo_name]})
 
+	prev_source_defs = source_defs
+	prev_repos = repos
 	return repos
 
 async def copyFromSourceRepositoriesSteps(repo_dict=None, release=None, source_defs=None, kit_dict=None, secondary_kit=False, fixup_repo=None, cpm_logger=None, move_maps=None):
