@@ -2692,7 +2692,8 @@ async def updateKit(foundation, config, release, async_engine: AsyncMergeAllKits
 											 root=config.source_trees + "/" + kit_dict["name"], origin_check=False)
 		await tree.initialize()
 		await tree.run([
-			RecordAllCatPkgs(tree, cpm_logger)
+			RecordAllCatPkgs(tree, cpm_logger),
+			FastPullScan(now=now, engine=async_engine)
 		])
 		if indypush:
 			# If --indypush is specified, we want to mirror the independent kit to the same destination as the kits we
