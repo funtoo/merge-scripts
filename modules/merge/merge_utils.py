@@ -2739,9 +2739,13 @@ async def updateKit(foundation, config, release, async_engine: AsyncMergeAllKits
 					ec_files[ecf] = ecf
 				pre_steps += [SyncFiles(repo_dict["repo"].root, ec_files)]
 
+	# This is an improved faster sync of all licenses. We will remove missing ones later:
+
+	pre_steps += [
+		SyncDir(gentoo_staging.root, "licenses", tree.root)
+	]
+
 	await tree.run(pre_steps)
-
-
 
 	for repo_dict in repos:
 		steps = await copyFromSourceRepositoriesSteps(repo_dict=repo_dict, kit_dict=kit_dict, source_defs=repos, release=release, secondary_kit=secondary_kit, fixup_repo=fixup_repo, cpm_logger=cpm_logger, move_maps=move_maps)
@@ -2758,8 +2762,8 @@ async def updateKit(foundation, config, release, async_engine: AsyncMergeAllKits
 	# copy all available licenses that have not been copied in fixups from gentoo-staging over to the kit.
 	# We will remove any unused licenses below...
 
-	copy_steps = [InsertLicenses(gentoo_staging, select=simpleGetAllLicenses(tree, gentoo_staging))]
-	await tree.run(copy_steps)
+	#copy_steps = [InsertLicenses(gentoo_staging, select=simpleGetAllLicenses(tree, gentoo_staging))]
+	#await tree.run(copy_steps)
 
 	# Phase 4: finalize and commit
 
@@ -2779,7 +2783,7 @@ async def updateKit(foundation, config, release, async_engine: AsyncMergeAllKits
 		# python-kit itself only needs one set which will be enabled by default.
 	]
 
-	
+
 	python_settings = foundation.python_kit_settings[release]
 
 	for py_branch, py_settings in python_settings.items():
