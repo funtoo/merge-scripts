@@ -663,11 +663,12 @@ def do_package_use_line(pkg, def_python, bk_python, imps):
 
 class GenPythonUse(MergeStep):
 
-	def __init__(self, py_settings, out_subpath):
+	def __init__(self, py_settings, out_subpath, release):
 		self.def_python = py_settings["primary"]
 		self.bk_python = py_settings["alternate"]
 		self.mask = py_settings["mask"]
 		self.out_subpath = out_subpath
+		self.release = release
 	
 	async def run(self, cur_overlay):
 		cur_tree = cur_overlay.root
@@ -677,7 +678,7 @@ class GenPythonUse(MergeStep):
 		except FileNotFoundError:
 			cur_name = cur_overlay.name
 		env = os.environ.copy()
-		env['PORTAGE_DEPCACHEDIR'] = '/var/cache/edb/%s-%s-meta' % ( cur_overlay.name, cur_overlay.branch )
+		env['PORTAGE_DEPCACHEDIR'] = '/var/cache/edb/%s-%s-%s-meta' % ( self.release, cur_overlay.name, cur_overlay.branch )
 		if cur_name != "core-kit":
 			env['PORTAGE_REPOSITORIES'] = '''
 [DEFAULT]
@@ -1195,9 +1196,9 @@ def repoName(cur_overlay):
 # None			: list of all eclasses that were NOT found. This is an error and indicates we need some kit-fixups or
 #				  overlay-specific eclasses.
 
-async def _getAllDriver(metadata, path_prefix, dest_kit):
+async def _getAllDriver(metadata, path_prefix, dest_kit, release):
 	# these may be eclasses or licenses -- we use the term 'eclass' here:
-	eclasses = await getAllMeta(metadata, dest_kit)
+	eclasses = await getAllMeta(metadata, dest_kit, release)
 	out = { None: [], "dest_kit" : [] }
 	for eclass in eclasses:
 		ep = os.path.join(dest_kit.root, path_prefix, eclass)
@@ -1234,11 +1235,11 @@ def simpleGetAllEclasses(dest_kit, parent_repo):
 	return out
 
 
-async def getAllEclasses(dest_kit):
-	return await _getAllDriver("INHERITED", "eclass", dest_kit)
+async def getAllEclasses(dest_kit, release):
+	return await _getAllDriver("INHERITED", "eclass", dest_kit, release)
 
-async def getAllLicenses(dest_kit):
-	return await _getAllDriver("LICENSE", "licenses", dest_kit)
+async def getAllLicenses(dest_kit, release):
+	return await _getAllDriver("LICENSE", "licenses", dest_kit, release)
 
 # getAllMeta uses the Portage API to query metadata out of a set of repositories. It is designed to be used to figure
 # out what licenses or eclasses to copy from a parent repository to the current kit so that the current kit contains a
@@ -1256,12 +1257,13 @@ async def getAllLicenses(dest_kit):
 #  getAllMeta() returns a set of actual files (without directories) that are used, so [ 'foo.eclass', 'bar.eclass'] 
 #  or [ 'GPL-2', 'bleh' ].
 #
-async def getAllMeta(metadata, dest_kit):
+
+async def getAllMeta(metadata, dest_kit, release):
 	metadict = { "LICENSE" : 0, "INHERITED" : 1 }
 	metapos = metadict[metadata]
 	
 	env = os.environ.copy()
-	env['PORTAGE_DEPCACHEDIR'] = '/var/cache/edb/%s-%s-meta' % ( dest_kit.name, dest_kit.branch )
+	env['PORTAGE_DEPCACHEDIR'] = '/var/cache/edb/%s-%s-%s-meta' % ( release, dest_kit.name, dest_kit.branch )
 	if dest_kit.name != "core-kit":
 		env['PORTAGE_REPOSITORIES'] = '''
 	[DEFAULT]
@@ -2312,9 +2314,9 @@ class RunSed(MergeStep):
 
 class GenCache(MergeStep):
 
-	def __init__(self,cache_dir=None):
+	def __init__(self,cache_dir=None, release=None):
 		self.cache_dir = cache_dir
-
+		self.release = release
 	"GenCache runs egencache --update to update metadata."
 
 	async def run(self,tree):
@@ -2325,7 +2327,7 @@ class GenCache(MergeStep):
 			# Perform QA check to ensure all eclasses are in place prior to performing egencache, as not having this can
 			# cause egencache to hang.
 
-			result = await getAllEclasses(tree)
+			result = await getAllEclasses(tree, self.release)
 			if None in result and len(result[None]):
 				missing_eclasses = []
 				for ec in result[None]:
@@ -2787,7 +2789,7 @@ async def updateKit(foundation, config, release, async_engine: AsyncMergeAllKits
 	# Phase 4: finalize and commit
 
 	# remove unused licenses...
-	used_licenses = await getAllLicenses(tree)
+	used_licenses = await getAllLicenses(tree, release)
 	to_remove = []
 	for license in os.listdir(tree.root + "/licenses"):
 		if license not in used_licenses["dest_kit"]:
@@ -2811,7 +2813,7 @@ async def updateKit(foundation, config, release, async_engine: AsyncMergeAllKits
 	post_steps += [
 		Minify(),
 		GenUseLocalDesc(),
-		GenCache(cache_dir="/var/cache/edb/%s-%s" % (kit_dict['name'], branch)),
+		GenCache(cache_dir="/var/cache/edb/%s-%s-%s" % (release, kit_dict['name'], branch)),
 	]
 
 	post_steps += [
