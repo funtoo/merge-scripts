@@ -2808,7 +2808,7 @@ async def updateKit(foundation, config, release, async_engine: AsyncMergeAllKits
 	python_settings = foundation.python_kit_settings[release]
 
 	for py_branch, py_settings in python_settings.items():
-		post_steps += [GenPythonUse(py_settings, "funtoo/kits/python-kit/%s" % py_branch)]
+		post_steps += [GenPythonUse(py_settings, "funtoo/kits/python-kit/%s" % py_branch, release=release)]
 
 	post_steps += [
 		Minify(),
