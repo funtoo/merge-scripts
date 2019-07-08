@@ -2813,7 +2813,7 @@ async def updateKit(foundation, config, release, async_engine: AsyncMergeAllKits
 	post_steps += [
 		Minify(),
 		GenUseLocalDesc(),
-		GenCache(cache_dir="/var/cache/edb/%s-%s-%s" % (release, kit_dict['name'], branch)),
+		GenCache(cache_dir="/var/cache/edb/%s-%s-%s" % (release, kit_dict['name'], branch), release=release),
 	]
 
 	post_steps += [
