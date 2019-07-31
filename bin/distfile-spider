@@ -244,7 +244,7 @@ async def keep_getting_files(db, task_num, q):
 						d_final.size = d.size
 						d_final.catpkg = d.catpkg
 						d_final.kit = d.kit
-						d_final.src_uri = d.src_uri
+						d_final.src_uri = existing.src_uri
 						d_final.mirror = d.mirror
 						d_final.last_fetched_on = existing.last_fetched_on
 						session.delete(d)
