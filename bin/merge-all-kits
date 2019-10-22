@@ -8,12 +8,40 @@ import sys
 from collections import defaultdict, OrderedDict
 from datetime import datetime
 
+submod_path = os.path.normpath(os.path.join(os.path.realpath(__file__), "../../submodules"))
+has_submodules = set()
+for repo_path in os.listdir(submod_path):
+	if os.path.exists(os.path.join(submod_path, repo_path, "modules")):
+		sys.path.insert(0, os.path.join(submod_path, repo_path, "modules"))
+		has_submodules.add(os.path.dirname(submod_path))
 sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "../../modules")))
+
 import merge.merge_utils as mu
 from merge.config import Configuration
 from merge.merge_utils import AsyncMergeAllKits, updateKit
 from merge.merge_utils import KitStabilityRating, KitType, KitRatingString
 
+if "pyservices" not in has_submodules:
+	hub_client = None
+
+	def send_msg(json_dict):
+		pass
+
+else:
+	from pyservices.modules.pyservices.zmq.http_server import HubClient, HubClientMode
+	from pyservices.modules.pyservices.zmq.zmq_msg_breezyops import BreezyMessage, MessageType
+	hub_client = HubClient("merge-scripts", mode=HubClientMode.EXTERNAL)
+
+	def send_msg(json_dict):
+		if "pyservices" not in has_submodules:
+			return
+		msg_obj = BreezyMessage(
+			service="webhook",
+			action="task-event",
+			msg_type=MessageType.INFO,
+			json_dict=json_dict
+		)
+		hub_client.send_nowait(msg_obj)
 
 async def generate_kit_metadata(foundation, release, meta_repo, output_sha1s):
 	"""
@@ -69,9 +97,11 @@ async def generate_kit_metadata(foundation, release, meta_repo, output_sha1s):
 	with open(meta_repo.root + "/metadata/version.json", "w") as a:
 		a.write(json.dumps(foundation.metadata_version_info[release], sort_keys=True, indent=4, ensure_ascii=False))
 
+
 class KitQualityError(Exception):
 	
 	pass
+
 
 async def kit_qa_check(foundation):
 
@@ -95,9 +125,18 @@ async def kit_qa_check(foundation):
 
 
 async def main_thread(config, args):
+
+	if hub_client is not None:
+		asyncio.create_task(hub_client.start())
 	# one global timestamp for each run of this tool -- for mysql db
 	now = datetime.utcnow()
-	
+
+	send_msg({
+		"task": "merge-all-kits",
+		"event": "started",
+		"arguments": sys.argv,
+	})
+
 	fixup_repo = mu.GitTree("kit-fixups", config.branch("kit-fixups"),  config=config, url=config.kit_fixups, root=config.source_trees + "/kit-fixups")
 	await fixup_repo.initialize()
 	meta_repo = mu.GitTree("meta-repo", config.branch("meta-repo"), config=config, url=config.base_url("meta-repo"), root=config.dest_trees + "/meta-repo", mirror = config.mirror.rstrip("/") + "/meta-repo" if config.mirror else None, origin_check=True, destfix=args.destfix)
@@ -156,6 +195,18 @@ async def main_thread(config, args):
 		print("Pushing meta-repo...")
 		await meta_repo.gitMirrorPush()
 
+	elapsed_time = datetime.utcnow() - now
+
+	send_msg({
+		"task": "merge-all-kits",
+		"event": "complete",
+		"arguments": sys.argv,
+		"elapsed-time": {
+			"days": elapsed_time.days,
+			"seconds": elapsed_time.seconds,
+			"microseconds": elapsed_time.microseconds
+		}
+	})
 
 if __name__ == "__main__":
 	import argparse

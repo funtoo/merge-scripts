@@ -1,0 +1,3 @@
+[submodule "submodules/pyservices"]
+	path = submodules/pyservices
+	url = ssh://git@code.funtoo.org:7999/~drobbins/pyservices.git
