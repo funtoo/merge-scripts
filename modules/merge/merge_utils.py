@@ -1327,7 +1327,7 @@ async def getAllMeta(metadata, dest_kit, release):
 	return mymeta
 
 
-async def generateKitSteps(release, kit_name, from_tree, select_only="all", fixup_repo=None, cpm_logger=None, filter_repos=None, move_maps=None, force=None, secondary_kit=False):
+async def generateKitSteps(release, kit_name, from_tree, select_only="all", fixup_repo=None, cpm_logger=None, filter_repos=None, filter_cats=None, move_maps=None, force=None, secondary_kit=False):
 	if force is None:
 		force = set()
 	else:
@@ -1406,7 +1406,18 @@ async def generateKitSteps(release, kit_name, from_tree, select_only="all", fixu
 
 	# filter out any catpkgs that exist in any of the filter_repos:
 	new_set = set()
+	if filter_cats is None:
+		filter_cats = set()
+	else:
+		filter_cats = set(filter_cats)
 	for catpkg in to_insert:
+
+		# filter unwanted categories first
+		cat = catpkg.split("/")[0]
+		if cat in filter_cats:
+			continue
+
+		# filter unwanted catpkgs:
 		do_skip = False
 		for filter_repo in filter_repos:
 			if filter_repo.catpkg_exists(catpkg):
@@ -2566,16 +2577,22 @@ async def copyFromSourceRepositoriesSteps(repo_dict=None, release=None, source_d
 				if x["name"] == filter_repo_name:
 					filter_repos.append(x["repo"])
 
+	if "filter-categories" in overlay_def:
+		filter_cats = overlay_def["filter-categories"]
+	else:
+		filter_cats = []
+
 	if kit_dict["name"] == "nokit" or ("is_fixup" in repo_dict and repo_dict["is_fixup"] is True):
 		# grab all remaining ebuilds
 		steps += [InsertEbuilds(repo_dict["repo"], select_only=select_clause, move_maps=move_maps, skip=None,
-								   replace=False, cpm_logger=cpm_logger)]
+								replace=False, cpm_logger=cpm_logger)]
 	else:
 		steps += await generateKitSteps(release, kit_dict['name'], repo_dict["repo"], fixup_repo=fixup_repo,
-										   select_only=select_clause,
-										   filter_repos=filter_repos,
-										   force=overlay_def["force"] if "force" in overlay_def else None,
-										   cpm_logger=cpm_logger, move_maps=move_maps, secondary_kit=secondary_kit)
+						select_only=select_clause,
+						filter_repos=filter_repos,
+						filter_cats=filter_cats,
+						force=overlay_def["force"] if "force" in overlay_def else None,
+						cpm_logger=cpm_logger, move_maps=move_maps, secondary_kit=secondary_kit)
 	return steps
 
 
