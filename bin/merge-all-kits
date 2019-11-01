@@ -13,7 +13,7 @@ has_submodules = set()
 for repo_path in os.listdir(submod_path):
 	if os.path.exists(os.path.join(submod_path, repo_path, "modules")):
 		sys.path.insert(0, os.path.join(submod_path, repo_path, "modules"))
-		has_submodules.add(os.path.dirname(submod_path))
+		has_submodules.add(repo_path)
 sys.path.insert(0, os.path.normpath(os.path.join(os.path.realpath(__file__), "../../modules")))
 
 import merge.merge_utils as mu
@@ -21,15 +21,17 @@ from merge.config import Configuration
 from merge.merge_utils import AsyncMergeAllKits, updateKit
 from merge.merge_utils import KitStabilityRating, KitType, KitRatingString
 
-if "pyservices" not in has_submodules:
+if True:
+#"pyservices" not in has_submodules:
 	hub_client = None
 
 	def send_msg(json_dict):
 		pass
 
 else:
-	from pyservices.modules.pyservices.zmq.http_server import HubClient, HubClientMode
-	from pyservices.modules.pyservices.zmq.zmq_msg_breezyops import BreezyMessage, MessageType
+	print("Initializing pyservices.")
+	from pyservices.zmq.http_server import HubClient, HubClientMode
+	from pyservices.zmq.zmq_msg_breezyops import BreezyMessage, MessageType
 	hub_client = HubClient("merge-scripts", mode=HubClientMode.EXTERNAL)
 
 	def send_msg(json_dict):
